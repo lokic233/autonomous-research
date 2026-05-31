@@ -12,12 +12,29 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L3 committee killer ablations BOTH SURVIVE all 3 harnesses -> burstiness
+  EARNED. (1) TOOL-STRATIFIED permutation null (N=2500, permute fail labels only within
+  same tool_name per session, canonical=raw tool_name): whole->stratified Z survives
+  negative all 3 -- CC -4.15->-2.38(p~.009), Codex -15.72->-13.51(p<<1e-10), Gemini
+  -3.82->-3.43(p~3e-4). Rate-heterogeneity (Cox mixture) alternative REJECTED. Caveat:
+  a verb-level OVER-CONTROL (split Codex exec_command by command verb, 42 strata)
+  collapses Codex to -1.90(ns) -- but that over-controls by conditioning on the signal
+  locus; tool_name is the principled granularity (reported as stouffer_strat_overctrl).
+  (2) RETRY-CASCADE collapse (fuzzy same-intent: same tool + token-Jaccard>=0.6 on
+  arg-text; exact match rarely fires bc real retries modify the cmd): collapse fail->retry->fail
+  to root event, removes <=0.7% CC/Codex calls 6.4% Gemini; Z survives -- CC -3.79,
+  Codex -13.94, Gemini -4.34(strengthens). Retry-control-flow alternative REJECTED.
+  Dispersion stays>1, B stays>0 all 3. (3) 2-comp Poisson mixture BIC-preferred all
+  3 -> rate-heterogeneity COEXISTS but does not explain away the memory (killer1 already
+  removed it). RECOMMEND GREEN, no reframe needed. Guardrails: CC leg thinnest (strat
+  Z carried by Stouffer, per-sess median 0); frame as ''over-dispersion w/ within-tool
+  temporal-memory component surviving rate-stratification'' (memory+mixture coexist);
+  report both stratification granularities; keep purely descriptive. Files: experiments/2026-05-31/EXP-0041/{impl/burst_L3.py,result.md,results/harness_summary_L3.csv,per_session_L3.csv}'
+result_effect: support
 artifacts_path: experiments/2026-05-31/EXP-0041/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T23:04:52Z'
 prompt_version: ''

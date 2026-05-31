@@ -137,43 +137,74 @@ def burstiness_B(gaps):
 #  Rationale (committee): CC has no call_id-analog dedup like Codex EXP-0033; this is the
 #  reasonable same-intent-retry collapse for ALL harnesses.
 # ----------------------------------------------------------------------------
-def arg_sig(tool, args):
-    """normalized signature of a call's intent. args is a dict or str."""
+def arg_text(tool, args):
+    """raw normalized intent text of a call (for similarity-based retry detection)."""
     if isinstance(args, dict):
-        # canonical json of sorted top-level items, trimmed
+        # prefer the salient free-text field (command/cmd/path/pattern/query); else full json
+        for k in ('command', 'cmd', 'path', 'file_path', 'pattern', 'query',
+                  'natural_language_query', 'old_string', 'content'):
+            if k in args and isinstance(args[k], str):
+                return args[k][:600]
         try:
-            s = json.dumps(args, sort_keys=True, default=str)[:400]
+            return json.dumps(args, sort_keys=True, default=str)[:600]
         except Exception:
-            s = str(args)[:400]
-    else:
-        s = str(args)[:400]
-    return tool + '|' + hashlib.md5(s.encode('utf-8','ignore')).hexdigest()[:12]
+            return str(args)[:600]
+    if isinstance(args, str):
+        # codex stores arguments as a json STRING
+        try:
+            a = json.loads(args)
+            return arg_text(tool, a) if isinstance(a, dict) else args[:600]
+        except Exception:
+            return args[:600]
+    return str(args)[:600]
 
-def collapse_retries(events):
-    """events = list of (is_err, tool_name, arg_signature). Returns collapsed 0/1 seq
-    + collapsed tool list. A same-intent retry = same signature as the immediately
-    preceding call AND the preceding call failed. Collapse maximal such runs into one
-    root event (label = OR of the run; tool = root's tool)."""
+def arg_sig(tool, args):
+    """exact normalized signature (kept for stratification grouping helpers)."""
+    s = arg_text(tool, args)
+    return tool + '|' + hashlib.md5(s.encode('utf-8', 'ignore')).hexdigest()[:12]
+
+_TOK = re.compile(r"[A-Za-z0-9_./-]+")
+def _tokens(s):
+    return set(t.lower() for t in _TOK.findall(s) if len(t) > 1)
+
+def jaccard(a, b):
+    if not a and not b: return 1.0
+    if not a or not b: return 0.0
+    inter = len(a & b); uni = len(a | b)
+    return inter / uni if uni else 0.0
+
+def same_intent(ev_prev, ev_cur, thresh):
+    """ev = (is_err, canonical_tool, refined_tool, arg_text). Same-intent retry iff
+    same REFINED tool (finer = right for retry detection) AND token-Jaccard(arg_text)
+    >= thresh. thresh=1.0 -> exact arg match; lower -> fuzzy retry."""
+    if ev_prev[2] != ev_cur[2]:
+        return False
+    if thresh >= 1.0:
+        return ev_prev[3] == ev_cur[3]
+    return jaccard(_tokens(ev_prev[3]), _tokens(ev_cur[3])) >= thresh
+
+def collapse_retries(events, thresh=0.6):
+    """events = list of (is_err, canonical_tool, refined_tool, arg_text). Collapse
+    maximal runs of [attempt, same-intent-retry-of-a-FAILED-attempt, ...] into ONE
+    root event whose failure label = OR over the run. Returns (collapsed 0/1 seq,
+    collapsed canonical-tool list)."""
     if not events:
         return [], []
     out_seq = []; out_tools = []
-    i = 0
-    n = len(events)
+    i = 0; n = len(events)
     while i < n:
-        err0, tool0, sig0 = events[i]
+        err0, ctool0 = events[i][0], events[i][1]
         j = i + 1
         run_err = err0
-        # extend run while next call is a same-intent retry of a FAILED attempt
         while j < n:
-            prev_err = events[j-1][0]
-            same_intent = (events[j][2] == sig0)
-            if prev_err == 1 and same_intent:
+            prev = events[j-1]
+            if prev[0] == 1 and same_intent(prev, events[j], thresh):
                 run_err = run_err or events[j][0]
                 j += 1
             else:
                 break
         out_seq.append(1 if run_err else 0)
-        out_tools.append(tool0)
+        out_tools.append(ctool0)
         i = j
     return out_seq, out_tools
 
@@ -265,8 +296,8 @@ def parse_cc():
                         is_err = 1 if b.get('is_error') else 0
                         tid = b.get('tool_use_id')
                         tname, targs = idmap.get(tid, ('unknown', {}))
-                        sig = arg_sig(tname, targs)
-                        seq.append((is_err, tname, sig))
+                        atxt = arg_text(tname, targs)
+                        seq.append((is_err, tname, tname, atxt))
         if len(seq) >= MIN_TRIALS:
             out[f] = seq
     return out
@@ -302,7 +333,9 @@ def parse_codex():
                 if m and m.group(1) != '0': err = 1
                 elif 'error' in out_s[:120].lower() and 'code 0' not in out_s: err = 1
                 tname, targs = callmap.get(cid, ('unknown', ''))
-                # for codex exec_command, refine intent by first cmd token (sub-tool)
+                # CANONICAL strata = raw tool_name (what the harness exposes as a tool).
+                # exec:verb sub-classification is an OVER-CONTROL (absorbs within-tool
+                # temporal memory into the strata) -> reported separately, not canonical.
                 refined = tname
                 if tname == 'exec_command':
                     try:
@@ -312,8 +345,9 @@ def parse_codex():
                         refined = 'exec:' + os.path.basename(verb)[:24]
                     except Exception:
                         refined = 'exec:sh'
-                sig = arg_sig(refined, targs)
-                seq.append((err, refined, sig))
+                atxt = arg_text(tname, targs)
+                # 4-tuple: (err, canonical_tool, refined_tool(overcontrol), arg_text)
+                seq.append((err, tname, refined, atxt))
         if len(seq) >= MIN_TRIALS:
             out[f] = seq
     return out
@@ -331,8 +365,8 @@ def parse_gemini():
                 if st not in ('success', 'error'): continue
                 is_err = 1 if st == 'error' else 0
                 tname = tc.get('name', '?')
-                sig = arg_sig(tname, tc.get('args', {}))
-                seq.append((is_err, tname, sig))
+                atxt = arg_text(tname, tc.get('args', {}))
+                seq.append((is_err, tname, tname, atxt))
         if len(seq) >= MIN_TRIALS:
             out[f] = seq
     return out
@@ -340,54 +374,58 @@ def parse_gemini():
 # ----------------------------------------------------------------------------
 # Per-harness analysis: base (L2 whole-session) + tool-stratified + retry-collapsed
 # ----------------------------------------------------------------------------
+COLLAPSE_THRESHOLDS = [1.0, 0.6, 0.4]  # exact, fuzzy same-intent, generous
+
 def analyze(name, parsed):
     base_seqs = []
-    z_whole = []; z_strat = []
+    z_whole = []; z_strat = []; z_strat_oc = []
     p_whole = []; p_strat = []
-    collapsed_seqs = []
-    z_whole_coll = []; p_whole_coll = []
-    n_tools_total = set()
+    coll = {th: {'seqs': [], 'z': [], 'p': [], 'removed': 0} for th in COLLAPSE_THRESHOLDS}
+    n_tools_total = set(); n_tools_refined = set()
     sess_rows = []
     tot = errs = 0
-    n_collapsed_removed = 0
     strat_shufflable_sessions = 0
     for key, events in parsed.items():
         seq = [e[0] for e in events]
-        tools = [e[1] for e in events]
+        tools = [e[1] for e in events]        # canonical tool_name
+        rtools = [e[2] for e in events]       # refined (over-control) tool
         tot += len(seq); errs += sum(seq)
         for t in tools: n_tools_total.add(t)
+        for t in rtools: n_tools_refined.add(t)
         if not (0 < sum(seq) < len(seq)):
             continue
         base_seqs.append(seq)
-        # BASE whole-session
         rw = perm_runs_whole(seq)
         az = runs_z(seq)
-        # TOOL-STRATIFIED
-        rs = perm_runs_tool_stratified(seq, tools)
+        rs = perm_runs_tool_stratified(seq, tools)       # CANONICAL killer
+        rs_oc = perm_runs_tool_stratified(seq, rtools)    # OVER-CONTROL (finer strata)
         if rs and rs['shufflable']:
             strat_shufflable_sessions += 1
-        # RETRY-COLLAPSED
-        cseq, ctools = collapse_retries(events)
-        n_collapsed_removed += (len(seq) - len(cseq))
-        rc = None
-        if 0 < sum(cseq) < len(cseq):
-            rc = perm_runs_whole(cseq)
-            collapsed_seqs.append(cseq)
         if rw:
             z_whole.append(rw['z_perm']); p_whole.append(rw['p_clustered'])
         if rs:
             z_strat.append(rs['z_strat']); p_strat.append(rs['p_clustered'])
-        if rc:
-            z_whole_coll.append(rc['z_perm']); p_whole_coll.append(rc['p_clustered'])
-        sess_rows.append({
+        if rs_oc:
+            z_strat_oc.append(rs_oc['z_strat'])
+        row = {
             'harness': name, 'session': os.path.basename(key), 'n': len(seq), 'fails': sum(seq),
             'analytic_z': round(az, 3) if az is not None else None,
             'z_whole_perm': round(rw['z_perm'], 3) if rw else None,
             'z_tool_strat': round(rs['z_strat'], 3) if rs else None,
+            'z_strat_overctrl': round(rs_oc['z_strat'], 3) if rs_oc else None,
             'strat_shufflable': rs['shufflable'] if rs else None,
-            'n_collapsed': len(cseq), 'fails_collapsed': sum(cseq),
-            'z_whole_coll': round(rc['z_perm'], 3) if rc else None,
-        })
+        }
+        for th in COLLAPSE_THRESHOLDS:
+            cseq, _ = collapse_retries(events, thresh=th)
+            coll[th]['removed'] += (len(seq) - len(cseq))
+            if 0 < sum(cseq) < len(cseq):
+                rc = perm_runs_whole(cseq)
+                coll[th]['seqs'].append(cseq)
+                coll[th]['z'].append(rc['z_perm']); coll[th]['p'].append(rc['p_clustered'])
+                if th == 0.6:
+                    row['n_collapsed_06'] = len(cseq); row['fails_collapsed_06'] = sum(cseq)
+                    row['z_whole_coll_06'] = round(rc['z_perm'], 3)
+        sess_rows.append(row)
     def stouffer(zs):
         return round(sum(zs)/math.sqrt(len(zs)), 3) if zs else None
     res = {
@@ -396,33 +434,37 @@ def analyze(name, parsed):
         'total_trials': tot, 'total_fails': errs,
         'fail_rate': round(errs/tot, 4) if tot else 0,
         'n_distinct_tools': len(n_tools_total),
-        # BASE (replicates L2)
+        'n_distinct_tools_refined': len(n_tools_refined),
         'stouffer_whole_perm': stouffer(z_whole),
         'median_z_whole': round(statistics.median(z_whole), 3) if z_whole else None,
         'frac_whole_sig': round(sum(1 for p in p_whole if p < 0.05)/len(p_whole), 3) if p_whole else None,
-        # KILLER 1: tool-stratified
+        # KILLER 1 (CANONICAL: raw tool_name strata)
         'stouffer_tool_strat': stouffer(z_strat),
         'median_z_strat': round(statistics.median(z_strat), 3) if z_strat else None,
         'frac_strat_sig': round(sum(1 for p in p_strat if p < 0.05)/len(p_strat), 3) if p_strat else None,
         'n_strat_shufflable_sessions': strat_shufflable_sessions,
-        # KILLER 2: retry-collapsed
-        'n_sessions_collapsed': len(collapsed_seqs),
-        'n_calls_removed_by_collapse': n_collapsed_removed,
-        'pct_calls_removed': round(100*n_collapsed_removed/tot, 2) if tot else None,
-        'stouffer_whole_coll': stouffer(z_whole_coll),
-        'median_z_coll': round(statistics.median(z_whole_coll), 3) if z_whole_coll else None,
-        'frac_coll_sig': round(sum(1 for p in p_whole_coll if p < 0.05)/len(p_whole_coll), 3) if p_whole_coll else None,
-        # dispersion under each
+        # KILLER 1 OVER-CONTROL (finer strata: exec:verb / identical for CC,Gemini)
+        'stouffer_strat_overctrl': stouffer(z_strat_oc),
         'dispersion_base': round(dispersion_index(base_seqs), 3) if dispersion_index(base_seqs) else None,
-        'dispersion_collapsed': round(dispersion_index(collapsed_seqs), 3) if collapsed_seqs and dispersion_index(collapsed_seqs) else None,
     }
-    # burstiness B base vs collapsed
-    gb = []; 
+    # KILLER 2: retry-collapsed at each threshold
+    for th in COLLAPSE_THRESHOLDS:
+        tag = str(th).replace('.', '')
+        d = coll[th]
+        res[f'pct_removed_{tag}'] = round(100*d['removed']/tot, 2) if tot else None
+        res[f'stouffer_coll_{tag}'] = stouffer(d['z'])
+        res[f'median_z_coll_{tag}'] = round(statistics.median(d['z']), 3) if d['z'] else None
+        res[f'frac_coll_sig_{tag}'] = round(sum(1 for p in d['p'] if p < 0.05)/len(d['p']), 3) if d['p'] else None
+        di = dispersion_index(d['seqs']) if d['seqs'] else None
+        res[f'dispersion_coll_{tag}'] = round(di, 3) if di else None
+        gc = []
+        for s in d['seqs']: gc.extend(interfailure_gaps(s))
+        bb = burstiness_B(gc)
+        res[f'B_coll_{tag}'] = round(bb, 4) if bb is not None else None
+    # burstiness B base
+    gb = []
     for s in base_seqs: gb.extend(interfailure_gaps(s))
     res['B_base'] = round(burstiness_B(gb), 4) if burstiness_B(gb) is not None else None
-    gc = []
-    for s in collapsed_seqs: gc.extend(interfailure_gaps(s))
-    res['B_collapsed'] = round(burstiness_B(gc), 4) if burstiness_B(gc) is not None else None
     # mixture vs single Poisson (window counts) base
     wc = window_counts(base_seqs)
     if len(wc) >= 8:
@@ -453,12 +495,14 @@ def main():
         res, rows = analyze(name, parsed)
         results.append(res); all_rows.extend(rows)
         print(f"=== {name} ===")
-        for k in ('n_sessions','total_trials','total_fails','fail_rate','n_distinct_tools',
+        for k in ('n_sessions','total_trials','total_fails','fail_rate','n_distinct_tools','n_distinct_tools_refined',
                   'stouffer_whole_perm','median_z_whole','frac_whole_sig',
                   'stouffer_tool_strat','median_z_strat','frac_strat_sig','n_strat_shufflable_sessions',
-                  'n_sessions_collapsed','n_calls_removed_by_collapse','pct_calls_removed',
-                  'stouffer_whole_coll','median_z_coll','frac_coll_sig',
-                  'dispersion_base','dispersion_collapsed','B_base','B_collapsed',
+                  'stouffer_strat_overctrl',
+                  'pct_removed_10','stouffer_coll_10','frac_coll_sig_10','dispersion_coll_10','B_coll_10',
+                  'pct_removed_06','stouffer_coll_06','frac_coll_sig_06','dispersion_coll_06','B_coll_06',
+                  'pct_removed_04','stouffer_coll_04','frac_coll_sig_04','dispersion_coll_04','B_coll_04',
+                  'dispersion_base','B_base',
                   'poisson_LR_2dll','poisson_BIC_single','poisson_BIC_mix','mixture_preferred','mix_params_w_l1_l2'):
             if k in res: print(f"   {k:28}: {res.get(k)}")
         print()
@@ -466,19 +510,21 @@ def main():
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     rdir = os.path.join(base, 'results'); os.makedirs(rdir, exist_ok=True)
     with open(os.path.join(rdir, 'harness_summary_L3.csv'), 'w', newline='') as fh:
-        cols = ['harness','n_sessions','total_trials','total_fails','fail_rate','n_distinct_tools',
+        cols = ['harness','n_sessions','total_trials','total_fails','fail_rate','n_distinct_tools','n_distinct_tools_refined',
                 'stouffer_whole_perm','median_z_whole','frac_whole_sig',
                 'stouffer_tool_strat','median_z_strat','frac_strat_sig','n_strat_shufflable_sessions',
-                'n_sessions_collapsed','n_calls_removed_by_collapse','pct_calls_removed',
-                'stouffer_whole_coll','median_z_coll','frac_coll_sig',
-                'dispersion_base','dispersion_collapsed','B_base','B_collapsed',
+                'stouffer_strat_overctrl',
+                'pct_removed_10','stouffer_coll_10','median_z_coll_10','frac_coll_sig_10','dispersion_coll_10','B_coll_10',
+                'pct_removed_06','stouffer_coll_06','median_z_coll_06','frac_coll_sig_06','dispersion_coll_06','B_coll_06',
+                'pct_removed_04','stouffer_coll_04','median_z_coll_04','frac_coll_sig_04','dispersion_coll_04','B_coll_04',
+                'dispersion_base','B_base',
                 'poisson_single_ll','poisson_mix_ll','poisson_LR_2dll','poisson_BIC_single',
                 'poisson_BIC_mix','mixture_preferred','mix_params_w_l1_l2']
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction='ignore'); w.writeheader()
         for r in results: w.writerow(r)
     with open(os.path.join(rdir, 'per_session_L3.csv'), 'w', newline='') as fh:
         cols = ['harness','session','n','fails','analytic_z','z_whole_perm','z_tool_strat',
-                'strat_shufflable','n_collapsed','fails_collapsed','z_whole_coll']
+                'z_strat_overctrl','strat_shufflable','n_collapsed_06','fails_collapsed_06','z_whole_coll_06']
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction='ignore'); w.writeheader()
         for r in all_rows: w.writerow(r)
     print(f"CSVs -> {rdir}/harness_summary_L3.csv , per_session_L3.csv")
