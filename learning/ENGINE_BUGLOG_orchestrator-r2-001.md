@@ -575,3 +575,26 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - SILVER LINING: path (2) (oracle-PIC roofline, EXP-0027) needed only torch (unaffected), and it gave the
   MORE INFORMATIVE answer anyway — CDC's serving advantage is CONDITIONAL vs a fused PIC (vindicating the
   committee's re-impl skepticism). So the broken-env detour still produced the decisive honest result.
+
+### LESSON (orchestration topology) — researcher locked to GPU node can't see the instance/ros.py (which live on the control node)
+- I dispatched researcher-0002-harness locked to cli:devgpu014 to build the EXP-0030 connector harness. It
+  correctly STOPPED: the research-os instance + ros.py + EXP-0026/0027/0030 artifacts are on cli:dengcchi-mac
+  (control node), NOT devgpu014 (GPU node, which has only the vllm/lmcache science env). A single-node-locked
+  researcher can't register/heartbeat/read-background/write-deliverable for a cross-node experiment.
+- The cross-node GPU workflow (proven in EXP-0026/0021/0025) is: ORCHESTRATOR writes the script to
+  devgpu014:/tmp, runs it in ros-vllm, copies results back to the Mac instance. GPU experiments are
+  inherently orchestrator-driven (INVARIANT 3) — a GPU-node-locked researcher can't bridge to the instance.
+- LESSON: do NOT delegate cross-node GPU-harness work to a node-locked researcher. Either (a) orchestrator
+  builds it directly (cross-node), or (b) give the researcher BOTH nodes + the explicit instance path on the Mac.
+- Researcher's env verification was valuable: lmcache LMCacheConnectorV1 lives at
+  integration/vllm/lmcache_connector_v1.py + vllm_v1_adapter.py; it needs the LIVE vLLM v1 engine forward-context
+  to get correctly-shaped kv_caches (confirms the full-connector integration is the real path — the flagged
+  "30-day step" — not a quick harness).
+
+### EXP-0030 DECISION — true-lmcache kernel deferred as documented future-work; CLAIM-0006 to committee on the HONEST BRACKET
+- A faithful real-lmcache measurement requires the full vLLM-v1 + LMCacheConnectorV1 integration (live engine
+  forward-context for correct KV shapes). That is too costly to build correctly tonight, and a shortcut risks
+  crashes/misleading numbers (worse than the honest bracket). Per operator guidance, taking the BRACKET to the
+  committee: EXP-0026 (CDC wins vs re-impl PIC) + EXP-0027 (CDC conditional vs oracle/fused PIC) bracket the
+  answer; true kernel lands between -> CDC serving advantage is inj/seq-CONDITIONAL, magnitude pending full
+  integration. EXP-0030 stays a documented future-work item (the connector harness, ~the science's "30-day step").
