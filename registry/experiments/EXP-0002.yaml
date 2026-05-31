@@ -1,0 +1,30 @@
+exp_id: EXP-0002
+project_id: PROJ-0000
+claim_id: CLAIM-0006
+session_id: ''
+level: 0
+hardware: ''
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.25
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: true
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2%
+  anchor (CTX=4000,inj=40: 2.0-2.4%). Full surface: min0.02/median1.34/max53.05% recompute.
+  LAW: recompute% tracks injection_tokens/seq_len (slope~1), NOT edit position (position
+  spread median 0.39pp, max 5.07pp). 2% bar holds ONLY where inj/seq<=~1% (66/100
+  cells); BREAKS to 5.3%@200tok/4k, 20%@1000tok/4k, 49-53%@1000tok/1k. So ~2% is a
+  conditional cost-map contour, not a universal CDC property; edit position (prepend/terminal/depth)
+  is not the cost driver, injection size relative to context is. Weakens unconditional
+  2% framing; supports CLAIM-0006 reframe to conditional regime (inj/seq).'
+result_effect: weaken
+artifacts_path: experiments/EXP-0002/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T11:50:40Z'
+prompt_version: ''

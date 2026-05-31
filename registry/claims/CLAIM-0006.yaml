@@ -1,7 +1,7 @@
 claim_id: CLAIM-0006
 project_id: PROJ-0002
 stage: candidate
-status: promoted
+status: weakened
 claim: 'The Prefix-Cache Invalidation Law: mid-prompt tool injection breaks the hash
   chain; chained-decode-cache (CDC) repair achieves ~2% recompute vs full, verified
   wall-clock.'
@@ -15,7 +15,17 @@ academic_map_nodes:
 - MAP-0001
 supporting_evidence:
 - summary: CDC v2 microbench wall-clock
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0002
+  summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
+    (CTX=4000,inj=40: 2.0-2.4%). Full surface: min0.02/median1.34/max53.05% recompute.
+    LAW: recompute% tracks injection_tokens/seq_len (slope~1), NOT edit position (position
+    spread median 0.39pp, max 5.07pp). 2% bar holds ONLY where inj/seq<=~1% (66/100
+    cells); BREAKS to 5.3%@200tok/4k, 20%@1000tok/4k, 49-53%@1000tok/1k. So ~2% is
+    a conditional cost-map contour, not a universal CDC property; edit position (prepend/terminal/depth)
+    is not the cost driver, injection size relative to context is. Weakens unconditional
+    2% framing; supports CLAIM-0006 reframe to conditional regime (inj/seq).'
+  data_path: experiments/EXP-0002/
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
@@ -24,4 +34,4 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:50:40Z'
