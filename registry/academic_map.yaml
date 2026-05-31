@@ -292,7 +292,11 @@ nodes:
     yet 0/152 reactive redirects -> not abandoning for lack of twin). BUT error-message-naming confound
     LIVE (redirect co-varies w/ whether error names an alt) + EXP-0031 measurement error (uniform strict
     def collapses CC 66/66->2/43). Surviving = PREEMPT-vs-ISOLATE harness regime (CC parallel-fires twin
-    0.93 lenient vs Codex isolates 0.09), NOT clean reactive redirect.'
+    0.93 lenient vs Codex isolates 0.09), NOT clean reactive redirect. | EXP-0033 CORRECTION: the cross-harness
+    modality contrast (CC-redirect vs Codex-abandon) was a DOUBLE-LOG ARTIFACT — Codex logs tool calls
+    twice; deduped, Codex PREEMPTS 152/152 (same bucket as CC). The 3-harness ''modality differs per harness''
+    claim LARGELY DISSOLVES; only Gemini shows reactive redirect (2/9) and it''s confounded with error-naming.
+    routing-vs-prompt-vs-model UNRESOLVED on-node -> off-node GATE-1 interventional.'
   - 'CLAIM-0011 model-vs-harness confound (arXiv:2603.02277): per-MODEL disengagement (GPT-5.2 92% / Claude
     0%) maps onto the harness lineup (Codex=OpenAI / CC+Gemini=Claude+Google) -> modality difference could
     be MODEL disposition, NOT routing. GATE-1 interventional (same-model cross-harness) is now the BINDING
@@ -302,7 +306,7 @@ nodes:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T20:34:49Z'
+  last_updated: '2026-05-31T21:06:22Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
@@ -320,7 +324,8 @@ nodes:
     confound 3-HARNESS-CONFIRMED; CLAIM-0011 supported | +GATE-3 (2026-05-31): prior-art positioned (MAST/Reflexion/tau-bench/LangGraph);
     model-vs-harness near-collision 2603.02277 makes GATE-1 binding | +GATE-2/EXP-0032 (2026-05-31): CLAIM-0011
     weakened+restated (preempt-vs-isolate); tool-inventory confound refuted, error-naming confound live;
-    GATE-1 doubly-binding'
+    GATE-1 doubly-binding | +EXP-0033 (2026-05-31): Codex double-log correction largely REFUTES CLAIM-0011
+    cross-harness contrast; methodology is the durable contribution'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

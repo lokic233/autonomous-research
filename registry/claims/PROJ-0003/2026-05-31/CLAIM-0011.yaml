@@ -2,17 +2,17 @@ claim_id: CLAIM-0011
 project_id: PROJ-0003
 stage: seed
 status: weakened
-claim: 'Agentic failure-recovery exhibits a PREEMPT-vs-ISOLATE harness regime difference
-  independent of error TEXT: on a redirectable hard-block, some harnesses fire the
-  blocked tool + its sanctioned twin in a PARALLEL batch (Claude Code: lenient any-after-window
-  0.93) while others ISOLATE the blocked call (Codex: 0.09), DESPITE both having a
-  fully-available in-inventory twin (twin-availability 100% across harnesses). The
-  tool-inventory confound is refuted (Codex has+uses a twin yet doesn''t redirect).
-  CAVEAT: the STRICT reactive in-thread redirect rate co-varies with whether the error
-  message NAMES an alternative (error-naming confound LIVE); and under a uniform strict
-  definition CC''s redirect collapses 66/66->2/43. So the surviving claim is preempt-vs-isolate
-  as a harness/routing fact, NOT ''error-class/error-text drives reactive redirect''.
-  Causal model-vs-harness separation needs GATE-1 interventional.'
+claim: '[WEAKENED toward refutation, EXP-0033] The cross-harness recovery-MODALITY
+  difference originally claimed (CC redirects vs Codex abandons) DOES NOT survive
+  clean data: Codex double-logs tool calls; deduped, Codex PREEMPTS 152/152 (same
+  modality bucket as CC), so CC-vs-Codex is NOT a routing-regime contrast. The only
+  nonzero in-thread reactive redirect (Gemini 2/9) is perfectly confounded with whether
+  the error message NAMES an in-inventory alternative (only Gemini''s does) -> the
+  residual signal is consistent with PROMPT/error-naming-driven, NOT harness-routing-driven.
+  SURVIVING (weak): preemptive parallel twin-firing is common across harnesses (CC
+  79%, Codex 100%) but that is NOT error-class- or harness-routing-determined modality.
+  The original thesis is largely REFUTED on-node; any residual routing-vs-prompt-vs-model
+  separation needs the off-node GATE-1 interventional.'
 why_it_matters: 'The durable, cross-harness-CONFIRMED finding from the PROJ-0003 lineage
   (CLAIM-0008 occurrence refuted, 0009 config-fact, 0010 deflated): the recovery-modality
   signal that looked like error-class prediction is actually the harness routing layer,
@@ -52,6 +52,21 @@ negative_evidence:
     NET: WEAKEN - one confound discharged, one not; claim must be restated around
     preempt-vs-isolate + strict numbers; GATE-2 only PARTIALLY passed.'
   data_path: experiments/2026-05-31/EXP-0032/
+- exp_id: EXP-0033
+  summary: 'ERROR-NAMING confound NOT discharged + preempt-vs-isolate REFUTED under
+    deduped uniform def. Naming has ZERO within-harness variance in CC(0/43)/Codex(0/152)
+    so within-harness naming test unestimable there; Gemini (only harness w/ both
+    buckets) named 0.222 vs unnamed 0.157 overlapping CIs (naming non-significant,
+    n=9 tiny). CRITICAL: Codex logs every call twice (function_call+mcp_tool_call_end);
+    EXP-0032 double-counted (304). Deduped to 152 canonical blocks: web twin fires
+    BEFORE block 152/152 -> Codex PREEMPTS 100%, does NOT isolate. CC 79% preempt/0.116
+    reactive, Codex 100% preempt/0.000 reactive -> both preempt, reactive rates overlap
+    near zero. The CC-preempt-vs-Codex-isolate harness regime (CLAIM-0011''s surviving
+    form) does NOT reproduce once Codex double-log fixed. Only Gemini shows nonzero
+    in-thread reactive redirect (2/9) and is the ONLY harness whose error names in-inventory
+    tools -> modality perfectly confounded w/ naming, consistent w/ naming/prompt-driven
+    NOT routing. Net WEAKEN; clean separation needs off-node GATE-1.'
+  data_path: experiments/2026-05-31/EXP-0033/
 verdict_history:
 - verdict_id: VERDICT-0036
   date: '2026-05-31'
@@ -62,17 +77,23 @@ verdict_history:
 - verdict_id: VERDICT-0039
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0040
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0033 result, then ros exp complete --exp EXP-0033 --effect
-  ...
+lifecycle_state: verdict_recorded
+next_action: 'LARGELY REFUTED on-node (EXP-0033 data-bug: Codex double-log -> pure
+  preempt 152/152, cross-harness contrast dissolves; naming confound makes Gemini
+  residual prompt-consistent). Restated to honest weak form. Durable contribution
+  = the measurement-artifact-catching METHODOLOGY (double-log dedup + naming-confound
+  control + uniform-definition). routing-vs-prompt-vs-model separation = off-node
+  GATE-1 interventional only. Candidate to wind down to methods/negative-note.'
 blocking_on: ''
-active_experiments:
-- EXP-0033
+active_experiments: []
 created_at: '2026-05-31T20:08:55Z'
-last_updated: '2026-05-31T20:54:14Z'
+last_updated: '2026-05-31T21:06:22Z'
 closest_prior_work:
 - work: MAST/Cemri 2025
   id: arXiv:2503.13657

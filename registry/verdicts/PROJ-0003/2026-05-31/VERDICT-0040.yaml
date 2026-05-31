@@ -1,0 +1,42 @@
+verdict_id: VERDICT-0040
+claim_id: CLAIM-0011
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0033
+experiment_paths:
+- experiments/2026-05-31/EXP-0033
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'DATA-BUG CORRECTION largely REFUTES the cross-harness contrast: Codex double-logs
+  tool calls (function_call + mcp_tool_call_end)'
+- EXP-0031/0032 double-counted. Deduped, Codex PREEMPTS 152/152 (100%) = SAME modality
+  bucket as CC -> the CC-redirect-vs-Codex-abandon contrast (core of CLAIM-0011) does
+  NOT reproduce
+- ERROR-NAMING confound perfectly confounded with harness (only Gemini errors name
+  in-inv alts)
+- the only nonzero reactive redirect (Gemini 2/9) IS the naming harness -> residual
+  signal consistent w/ PROMPT-driven not routing
+- original thesis largely REFUTED on-node
+required_evidence:
+- 'RESTATED to the honest weak form (DONE). The original cross-harness routing-determines-modality
+  thesis is largely refuted by the Codex-double-log correction + naming confound.
+  Residual routing-vs-prompt-vs-model separation needs the off-node GATE-1 interventional
+  (same model, 2 harnesses, identical error +/- named alternative). Consider winding
+  CLAIM-0011 down to a methods/negative-note (the durable contribution = the measurement-artifact-catching
+  methodology: double-log dedup, naming-confound control, uniform-definition discipline)'
+map_delta_proposals:
+- 'MAP-0002: CLAIM-0011 LARGELY REFUTED on-node (EXP-0033 data-bug correction: Codex
+  deduped = pure preempt 152/152, NOT abandon'
+- cross-harness contrast dissolves
+- naming confound makes Gemini's residual prompt-consistent). EXP-0031/0032 Codex
+  'abandon 0/142' was a double-log artifact. Surviving = methodology + honest negative
+- routing-vs-prompt-vs-model needs off-node interventional.
+baseline_requirements: []
+created_at: '2026-05-31T21:05:50Z'

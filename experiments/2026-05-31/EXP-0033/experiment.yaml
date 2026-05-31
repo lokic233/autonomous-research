@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'ERROR-NAMING confound NOT discharged + preempt-vs-isolate REFUTED
+  under deduped uniform def. Naming has ZERO within-harness variance in CC(0/43)/Codex(0/152)
+  so within-harness naming test unestimable there; Gemini (only harness w/ both buckets)
+  named 0.222 vs unnamed 0.157 overlapping CIs (naming non-significant, n=9 tiny).
+  CRITICAL: Codex logs every call twice (function_call+mcp_tool_call_end); EXP-0032
+  double-counted (304). Deduped to 152 canonical blocks: web twin fires BEFORE block
+  152/152 -> Codex PREEMPTS 100%, does NOT isolate. CC 79% preempt/0.116 reactive,
+  Codex 100% preempt/0.000 reactive -> both preempt, reactive rates overlap near zero.
+  The CC-preempt-vs-Codex-isolate harness regime (CLAIM-0011''s surviving form) does
+  NOT reproduce once Codex double-log fixed. Only Gemini shows nonzero in-thread reactive
+  redirect (2/9) and is the ONLY harness whose error names in-inventory tools -> modality
+  perfectly confounded w/ naming, consistent w/ naming/prompt-driven NOT routing.
+  Net WEAKEN; clean separation needs off-node GATE-1.'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0033/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0040
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T21:03:22Z'
 prompt_version: ''
