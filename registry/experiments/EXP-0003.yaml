@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: true
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'CPU recompute-fraction microbench, mid-prefix insertion. CDC <=2.38%
+  (position-independent) vs vLLM APC / RadixAttention / FlashInfer all ~(1-f) = 10.1-90.1%
+  (position-dependent). KEY: SGLang RadixAttention token-granularity does NOT make
+  this cheap (10.1-90.1%, ~= vLLM in token terms) -> CLAIM-0006 does NOT collapse
+  into DEAD-0006 (radix min 10.1% >> CDC max 2.38%). FlashInfer has no cache policy
+  (==host engine). CDC advantage over binding baseline (Radix) = 8.3x (late inject
+  f=.9,4k) to 465x (early inject f=.1,32k), grows with ctx. Scope: count model not
+  wall-clock (NT2_WALLCLOCK H100 already confirmed translation). All 3 mandatory baselines
+  now positioned head-to-head.'
+result_effect: keep-exploring
 artifacts_path: experiments/EXP-0003/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T11:52:15Z'
 prompt_version: ''

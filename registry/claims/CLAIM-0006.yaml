@@ -15,6 +15,17 @@ academic_map_nodes:
 - MAP-0001
 supporting_evidence:
 - summary: CDC v2 microbench wall-clock
+- exp_id: EXP-0003
+  summary: 'CPU recompute-fraction microbench, mid-prefix insertion. CDC <=2.38% (position-independent)
+    vs vLLM APC / RadixAttention / FlashInfer all ~(1-f) = 10.1-90.1% (position-dependent).
+    KEY: SGLang RadixAttention token-granularity does NOT make this cheap (10.1-90.1%,
+    ~= vLLM in token terms) -> CLAIM-0006 does NOT collapse into DEAD-0006 (radix
+    min 10.1% >> CDC max 2.38%). FlashInfer has no cache policy (==host engine). CDC
+    advantage over binding baseline (Radix) = 8.3x (late inject f=.9,4k) to 465x (early
+    inject f=.1,32k), grows with ctx. Scope: count model not wall-clock (NT2_WALLCLOCK
+    H100 already confirmed translation). All 3 mandatory baselines now positioned
+    head-to-head.'
+  data_path: experiments/EXP-0003/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
@@ -34,4 +45,4 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T11:50:40Z'
+last_updated: '2026-05-31T11:52:15Z'

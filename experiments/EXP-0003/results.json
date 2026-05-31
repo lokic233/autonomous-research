@@ -1,0 +1,163 @@
+{
+  "experiment": "EXP-0003",
+  "claim": "CLAIM-0006",
+  "device": "CPU",
+  "model": "recompute-fraction (token-count) under single mid-prefix insertion",
+  "tool_insert_len": 40,
+  "rows": [
+    {
+      "ctx": 4000,
+      "inject_frac": 0.1,
+      "vllm_apc_recompute_pct": 90.08,
+      "radix_recompute_pct": 90.1,
+      "flashinfer_recompute_pct": 90.1,
+      "cdc_recompute_pct": 1.36,
+      "cdc_vs_radix_x": 66.2,
+      "cdc_vs_vllm_x": 66.0
+    },
+    {
+      "ctx": 4000,
+      "inject_frac": 0.25,
+      "vllm_apc_recompute_pct": 75.4,
+      "radix_recompute_pct": 75.25,
+      "flashinfer_recompute_pct": 75.25,
+      "cdc_recompute_pct": 2.38,
+      "cdc_vs_radix_x": 31.7,
+      "cdc_vs_vllm_x": 31.7
+    },
+    {
+      "ctx": 4000,
+      "inject_frac": 0.5,
+      "vllm_apc_recompute_pct": 50.4,
+      "radix_recompute_pct": 50.5,
+      "flashinfer_recompute_pct": 50.5,
+      "cdc_recompute_pct": 1.88,
+      "cdc_vs_radix_x": 26.8,
+      "cdc_vs_vllm_x": 26.7
+    },
+    {
+      "ctx": 4000,
+      "inject_frac": 0.75,
+      "vllm_apc_recompute_pct": 25.79,
+      "radix_recompute_pct": 25.74,
+      "flashinfer_recompute_pct": 25.74,
+      "cdc_recompute_pct": 1.93,
+      "cdc_vs_radix_x": 13.3,
+      "cdc_vs_vllm_x": 13.3
+    },
+    {
+      "ctx": 4000,
+      "inject_frac": 0.9,
+      "vllm_apc_recompute_pct": 10.71,
+      "radix_recompute_pct": 10.89,
+      "flashinfer_recompute_pct": 10.89,
+      "cdc_recompute_pct": 1.31,
+      "cdc_vs_radix_x": 8.3,
+      "cdc_vs_vllm_x": 8.2
+    },
+    {
+      "ctx": 8000,
+      "inject_frac": 0.1,
+      "vllm_apc_recompute_pct": 90.04,
+      "radix_recompute_pct": 90.05,
+      "flashinfer_recompute_pct": 90.05,
+      "cdc_recompute_pct": 0.61,
+      "cdc_vs_radix_x": 147.8,
+      "cdc_vs_vllm_x": 147.6
+    },
+    {
+      "ctx": 8000,
+      "inject_frac": 0.25,
+      "vllm_apc_recompute_pct": 75.1,
+      "radix_recompute_pct": 75.12,
+      "flashinfer_recompute_pct": 75.12,
+      "cdc_recompute_pct": 0.7,
+      "cdc_vs_radix_x": 107.9,
+      "cdc_vs_vllm_x": 107.7
+    },
+    {
+      "ctx": 8000,
+      "inject_frac": 0.5,
+      "vllm_apc_recompute_pct": 50.2,
+      "radix_recompute_pct": 50.25,
+      "flashinfer_recompute_pct": 50.25,
+      "cdc_recompute_pct": 0.76,
+      "cdc_vs_radix_x": 66.2,
+      "cdc_vs_vllm_x": 66.1
+    },
+    {
+      "ctx": 8000,
+      "inject_frac": 0.75,
+      "vllm_apc_recompute_pct": 25.3,
+      "radix_recompute_pct": 25.37,
+      "flashinfer_recompute_pct": 25.37,
+      "cdc_recompute_pct": 0.82,
+      "cdc_vs_radix_x": 30.9,
+      "cdc_vs_vllm_x": 30.8
+    },
+    {
+      "ctx": 8000,
+      "inject_frac": 0.9,
+      "vllm_apc_recompute_pct": 10.36,
+      "radix_recompute_pct": 10.45,
+      "flashinfer_recompute_pct": 10.45,
+      "cdc_recompute_pct": 0.9,
+      "cdc_vs_radix_x": 11.7,
+      "cdc_vs_vllm_x": 11.6
+    },
+    {
+      "ctx": 32000,
+      "inject_frac": 0.1,
+      "vllm_apc_recompute_pct": 90.01,
+      "radix_recompute_pct": 90.01,
+      "flashinfer_recompute_pct": 90.01,
+      "cdc_recompute_pct": 0.19,
+      "cdc_vs_radix_x": 465.2,
+      "cdc_vs_vllm_x": 465.0
+    },
+    {
+      "ctx": 32000,
+      "inject_frac": 0.25,
+      "vllm_apc_recompute_pct": 75.02,
+      "radix_recompute_pct": 75.03,
+      "flashinfer_recompute_pct": 75.03,
+      "cdc_recompute_pct": 0.2,
+      "cdc_vs_radix_x": 375.6,
+      "cdc_vs_vllm_x": 375.5
+    },
+    {
+      "ctx": 32000,
+      "inject_frac": 0.5,
+      "vllm_apc_recompute_pct": 50.05,
+      "radix_recompute_pct": 50.06,
+      "flashinfer_recompute_pct": 50.06,
+      "cdc_recompute_pct": 0.27,
+      "cdc_vs_radix_x": 188.7,
+      "cdc_vs_vllm_x": 188.6
+    },
+    {
+      "ctx": 32000,
+      "inject_frac": 0.75,
+      "vllm_apc_recompute_pct": 25.07,
+      "radix_recompute_pct": 25.09,
+      "flashinfer_recompute_pct": 25.09,
+      "cdc_recompute_pct": 0.15,
+      "cdc_vs_radix_x": 164.1,
+      "cdc_vs_vllm_x": 163.9
+    },
+    {
+      "ctx": 32000,
+      "inject_frac": 0.9,
+      "vllm_apc_recompute_pct": 10.09,
+      "radix_recompute_pct": 10.11,
+      "flashinfer_recompute_pct": 10.11,
+      "cdc_recompute_pct": 0.17,
+      "cdc_vs_radix_x": 58.9,
+      "cdc_vs_vllm_x": 58.8
+    }
+  ],
+  "radix_min_recompute_pct": 10.11,
+  "radix_max_recompute_pct": 90.1,
+  "cdc_max_recompute_pct": 2.38,
+  "DEAD0006_collapse": false
+}
