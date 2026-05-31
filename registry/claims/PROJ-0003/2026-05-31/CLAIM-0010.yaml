@@ -40,6 +40,26 @@ negative_evidence:
     web_disabled-carried coarse + context-conditioned fine w/ quantified residual
     floor); single-harness blocker remains.'
   data_path: experiments/2026-05-31/EXP-0029/
+- exp_id: EXP-0035
+  effect: weaken
+  summary: "FINAL rigor-check (arithmetic re-verification + Wilson CIs, EXP-0033 strict/deduped\
+    \ correction applied to the web_disabled cell the coarse layer rests on). COARSE\
+    \ LAYER COLLAPSES: 91% of the coarse signal (Theil U 0.381->0.034 dropping web_disabled,\
+    \ upper-CI 0.091) is the single REDIRECTABLE/web_disabled cell, whose \"deterministic\
+    \ redirect modality\" (normH=0, 68/68) was computed under the LENIENT any-after-window\
+    \ def EXP-0033 corrected -> strict/deduped the cell is ~79% PREEMPT/~12% reactive\
+    \ (5/43, Wilson[0.051,0.245]); the \"redirect modality\" label is preemptive parallel\
+    \ twin-firing mislabeled. EXP-0012 then reduces the whole coarse layer to the\
+    \ 1-bit gate-type config-fact (<=0.2% over it). FINE layer: its only non-tiny\
+    \ lift (+12.6pt REDIRECTABLE) is INSIDE that same artifact cell (CC-parallel-batching\
+    \ policy hook, single-harness); TRANSIENT +3pt tiny; the durable part is the NEGATIVE\
+    \ residual-entropy floor (~0.6-0.74, ~48% situation-dependent \u2014 not a routing\
+    \ table, not adaptive). VERDICT: both pillars dissolve into config-fact + a known\
+    \ measurement artifact + residual-floor negative; two-layer NOT defensible standalone;\
+    \ collapses into PROJ-0003 negative-result synthesis (CLAIM-0011 analog). VERDICT-0035\
+    \ required_evidence FORECLOSED (cross-harness went the wrong way; carrying cell\
+    \ is a CC-specific policy hook w/ artifact modality)."
+  data_path: experiments/2026-05-31/EXP-0035/
 verdict_history:
 - verdict_id: VERDICT-0030
   date: '2026-05-31'
@@ -47,14 +67,28 @@ verdict_history:
 - verdict_id: VERDICT-0035
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0044
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0035 result, then ros exp complete --exp EXP-0035 --effect
-  ...
+lifecycle_state: done
+next_action: 'DONE-as-deflated (EXP-0035/VERDICT): two-layer dissolves into config-fact
+  + EXP-0033 artifact + residual-floor negative; folded into PROJ-0003 PAPER_SYNTHESIS.
+  All 4 PROJ-0003 claims (0008 refuted, 0009 config-fact, 0010 deflated, 0011 refuted)
+  now resolved -> negative-result + M1-M11 methodology paper. Revival = off-node v2
+  interventional (turnkey protocol filed).'
 blocking_on: ''
 active_experiments:
 - EXP-0035
 created_at: '2026-05-31T18:26:07Z'
-last_updated: '2026-05-31T22:06:18Z'
+last_updated: '2026-05-31T22:10:41Z'
+disposition: 'DONE-as-deflated (researcher-0010-reframe, 2026-05-31; the CLAIM-0011
+  analog). Two-layer dissolves: coarse = web_disabled-cell artifact (lenient-def,
+  corrected by EXP-0033 to ~79% preempt) reducing to the 1-bit gate-type config-fact;
+  fine = a CC-specific parallel-batching policy hook + a NEGATIVE residual-entropy
+  floor. NOT a standalone claim (true bits non-novel/already in MAP-0002). FOLD into
+  PROJ-0003 PAPER_SYNTHESIS as a deflated negative. NOT cemetery (methodology + residual-floor
+  + off-node v2 revival salvageable). VERDICT-0035 required_evidence foreclosed (no
+  green path on-node).'

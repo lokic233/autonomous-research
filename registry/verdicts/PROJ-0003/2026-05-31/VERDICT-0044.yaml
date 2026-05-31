@@ -1,0 +1,33 @@
+verdict_id: VERDICT-0044
+claim_id: CLAIM-0010
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0035
+experiment_paths:
+- experiments/2026-05-31/EXP-0035
+committee_version: final-determination
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'FINAL: two-layer DISSOLVES (EXP-0035 rigor-check). Coarse = web_disabled-cell artifact
+  (lenient-def corrected by EXP-0033 to ~79% preempt) -> 1-bit gate-type config-fact
+  (EXP-0012 <=0.2%)'
+- fine = CC-specific parallel-batching policy hook + NEGATIVE residual-entropy floor
+  (~0.6-0.74, ~48% situation-dependent). NOT defensible standalone
+- VERDICT-0035 required_evidence foreclosed (cross-harness went the wrong way)
+required_evidence:
+- WIND DOWN to negative-note, fold into PROJ-0003 PAPER_SYNTHESIS (DONE-as-deflated,
+  CLAIM-0011 analog). Durable = methodology + residual-floor characterization
+- revival = off-node v2 interventional only. NOT cemetery
+map_delta_proposals:
+- 'MAP-0002: CLAIM-0010 DONE-as-deflated (two-layer dissolves -> config-fact + EXP-0033
+  artifact + residual-floor negative)'
+- fold into synthesis
+- off-node v2 = revival
+baseline_requirements: []
+created_at: '2026-05-31T22:10:06Z'

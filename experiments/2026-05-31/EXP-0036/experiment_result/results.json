@@ -1,0 +1,70 @@
+{
+  "exp": "EXP-0036",
+  "agent": "researcher-0002-adjacent2",
+  "claim": "none (cross-project new-idea probe)",
+  "hypothesis": "harness recovery-routing (redirect vs abandon) shifts inj/seq win-region beyond EXP-0015 prior envelope",
+  "gate_hit_rate": 0.12,
+  "sweep": [
+    {
+      "redirect_share": 0.0,
+      "n_injections": 145293,
+      "count_frac_win1": 0.13902252689393158,
+      "count_frac_win1_bigctx": 0.36382544861337685,
+      "median_inj_seq": 0.05380835380835381,
+      "n_bigctx": 24520
+    },
+    {
+      "redirect_share": 0.25,
+      "n_injections": 190232,
+      "count_frac_win1": 0.16351612767568022,
+      "count_frac_win1_bigctx": 0.3857282184655397,
+      "median_inj_seq": 0.04419488826258626,
+      "n_bigctx": 43064
+    },
+    {
+      "redirect_share": 0.5,
+      "n_injections": 257930,
+      "count_frac_win1": 0.19620439654169736,
+      "count_frac_win1_bigctx": 0.41013983342248034,
+      "median_inj_seq": 0.035225453758216965,
+      "n_bigctx": 78522
+    },
+    {
+      "redirect_share": 0.75,
+      "n_injections": 379558,
+      "count_frac_win1": 0.24064569841763314,
+      "count_frac_win1_bigctx": 0.4389915571006613,
+      "median_inj_seq": 0.026869305117084453,
+      "n_bigctx": 153028
+    },
+    {
+      "redirect_share": 1.0,
+      "n_injections": 607246,
+      "count_frac_win1": 0.2974395879100068,
+      "count_frac_win1_bigctx": 0.46771285581219113,
+      "median_inj_seq": 0.019994088964493346,
+      "n_bigctx": 316705
+    }
+  ],
+  "win1_range_observed": [
+    0.13902252689393158,
+    0.2974395879100068
+  ],
+  "win1_bigctx_range_observed": [
+    0.36382544861337685,
+    0.46771285581219113
+  ],
+  "exp0015_envelope": {
+    "win1": [
+      0.175,
+      0.408
+    ],
+    "win1_bigctx": [
+      0.411,
+      0.52
+    ]
+  },
+  "escapes_win1": true,
+  "escapes_win1_bigctx": true,
+  "verdict": "PASS-NEW-AXIS"
+}
