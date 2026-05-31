@@ -1,0 +1,70 @@
+verdict_id: VERDICT-0046
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0037
+- EXP-0038
+- EXP-0041
+experiment_paths:
+- experiments/2026-05-31/EXP-0037
+- experiments/2026-05-31/EXP-0038
+- experiments/2026-05-31/EXP-0041
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "6/6 YELLOW \u2014 BOTH discriminating ablations PASSED (EXP-0041: tool-stratified\
+  \ permutation rejects rate-heterogeneity, retry-collapse rejects control-flow, 3-harness)\
+  \ so the over-dispersion + within-tool-memory is REAL, BUT three blocking gaps remain"
+- 'PRIOR-ART INCOMPLETE: live external sweep could not run (web unavailable) -> fails
+  the >=2-source novelty bar'
+- the phenomenon is near-universal (Barabasi 2005) so the right NULL is universal-burstiness
+  NOT Poisson -> contribution altitude unproven without comparative placement
+- "CC LEG: per-session median strat-Z=0 is STRUCTURALLY IDENTICAL to the EXP-0040\
+  \ failure mode the project JUST KILLED (Stouffer-aggregation overstating a per-session-null\
+  \ result) \u2014 holding CLAIM-0012 to the project's OWN evidentiary standard requires\
+  \ addressing it"
+- 'Cox-vs-Hawkes: tool-stratified permutation rejects pure-rate-heterogeneity but
+  NOT Cox-with-finer-latent-state'
+- '''both contribute'' asserted not quantified'
+required_evidence:
+- '[BLOCKING] live external prior-art sweep + written related-work citing/distinguishing
+  Goh-Barabasi 2008, Barabasi 2005 (universal-burstiness null), Kim-Jo 2016, Hawkes
+  1971, SRE failure-clustering/neg-binomial, LLM compounding-error 2604.14528'
+- '[BLOCKING] CC-leg robustness: per-session strat-Z DISTRIBUTION (not just median+aggregate)
+  + size-weighted vs unweighted Stouffer + LOSO sensitivity (per-session median strat-Z=0
+  == the EXP-0040 killed failure mode)'
+- '[HIGH] (B,M)-plane placement of agent traces vs >=1 SRE-cluster dataset + >=1 human-activity
+  baseline (else reduces to ''agents bursty like everything else'' under Barabasi-2005
+  null)'
+- '[HIGH] Cox-only vs Cox+Hawkes BIC (quantify rate-heterogeneity vs self-excitation)'
+- '[MED] heuristic-failure-label audit (>=100 bursts manual) + multiple-comparison
+  correction (CC p~0.009 borderline post-Bonferroni)'
+map_delta_proposals:
+- "MAP-0002: CLAIM-0012 6/6 YELLOW \u2014 both discriminating ablations PASSED (real\
+  \ over-dispersion + within-tool memory) but GREEN BLOCKED on: live prior-art sweep\
+  \ (web-gated), CC-leg per-session-Z-distribution (same bar as the EXP-0040 kill),\
+  \ comparative (B,M)-plane vs SRE+human baselines (vs the universal-burstiness null),\
+  \ Cox-vs-Hawkes BIC. Phenomenon real"
+- contribution-altitude vs universal-burstiness null unproven. Several CPU-doable.
+baseline_requirements:
+- Goh-Barabasi (B,M) on agent traces vs >=1 SRE-cluster + >=1 human-activity dataset
+  (universal-burstiness null)
+- human-annotated failure-label ground truth
+- Cox-only vs Cox+Hawkes BIC
+created_at: '2026-05-31T23:11:47Z'

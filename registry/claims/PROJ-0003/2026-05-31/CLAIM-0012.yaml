@@ -92,14 +92,20 @@ verdict_history:
 - verdict_id: VERDICT-0045
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0046
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: committee_pending
-next_action: 're-review (run_17): BOTH VERDICT-0045 discriminating ablations PASSED
-  (EXP-0041 tool-stratified + retry-collapse survive 3-harness; burstiness EARNED).
-  GREEN now or YELLOW pending prior-art sweep / thicker CC n?'
+lifecycle_state: evidence_ready
+next_action: '6/6 YELLOW (VERDICT-0046). Both discriminating ablations PASSED (real
+  over-dispersion+within-tool memory). GREEN needs (several CPU-doable): live prior-art
+  sweep + related-work (Barabasi/Goh/Hawkes/SRE/2604.14528); CC-leg per-session-strat-Z
+  distribution + size-weighted Stouffer + LOSO (same bar as EXP-0040 kill); (B,M)-plane
+  vs SRE+human baselines (universal-burstiness null); Cox-vs-Hawkes BIC; label audit
+  + Bonferroni. Phenomenon real; altitude unproven.'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T23:06:44Z'
+last_updated: '2026-05-31T23:12:26Z'

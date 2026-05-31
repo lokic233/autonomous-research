@@ -380,7 +380,12 @@ nodes:
     burstiness from rate-heterogeneity/tool-mixing) + (2) RETRY-CASCADE collapse (separates stochastic
     arrival from deterministic control-flow). If both survive -> GREEN; if either kills -> reframe to
     ''non-stationary failure rate'' (lower-altitude D&B). + prior-art sweep (Goh-Barabasi/Barabasi-2005/SRE-failure-clustering/LLM-error-compounding
-    2604.14528).'
+    2604.14528). | VERDICT-0046 (6/6 YELLOW): both discriminating ablations PASSED (EXP-0041 real over-dispersion
+    + within-tool memory) but GREEN-blocked on: live prior-art sweep (web-gated; universal-burstiness
+    null per Barabasi-2005 = the right baseline not Poisson), CC-leg per-session-strat-Z distribution
+    (median=0 is the SAME bar that killed EXP-0040), comparative (B,M)-plane vs SRE+human baselines, Cox-vs-Hawkes
+    BIC. Phenomenon REAL; contribution-altitude vs universal-burstiness null unproven. Several CPU-doable
+    -> potential GREEN path.'
   red_zones:
   - 'harness-routing-as-confound (CLAIM-0009 CONFIRMED (observationally inseparable, EXP-0012: error-class
     lift over gate-type-only = -0.0043; LOCO -33%)): recovery modality may be determined by the harness
@@ -414,7 +419,7 @@ nodes:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T22:52:32Z'
+  last_updated: '2026-05-31T23:12:26Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
@@ -440,7 +445,8 @@ nodes:
     OpenCode-pivot factorial (C1-C6, GLM, power n=50/cell) = the runnable PROJ-0003 revival path, off-node-gated
     | +EXP-0035 (2026-05-31): CLAIM-0010 DONE-as-deflated; PROJ-0003 lineage fully resolved (all 4 claims
     refuted/deflated -> negative-result+methodology paper) | +VERDICT-0045 (2026-05-31): CLAIM-0012 6/6
-    YELLOW, GREEN-gated on tool-stratified-permutation + retry-collapse ablations (CPU) + prior-art sweep'
+    YELLOW, GREEN-gated on tool-stratified-permutation + retry-collapse ablations (CPU) + prior-art sweep
+    | +VERDICT-0046 + PROJ-0003 paper red-team GO (2026-05-31)'
   project_status: 'PROJ-0003 = DONE / negative-result + methodology paper FINALIZED (researcher-0003-synth,
     2026-05-31; synthesis at prior_art/PROJ-0003/PAPER_SYNTHESIS.md). NEGATIVE RESULT: error-class does
     NOT predict recovery occurrence (REFUTED EXP-0008) or modality (DEFLATED to a 1-bit gate flag, error-class
@@ -454,6 +460,13 @@ nodes:
     pre-registered off-node v2 factorial). VENUE: NeurIPS D&B (negative+methodology). WEAKEST LINK / revival
     = the off-node interventional gap (v2 OpenCode-pivot, on-node-blocked). CLAIM-0008/0009/0010/0011
     all DONE/refuted-or-deflated; fold into this synthesis.'
+  paper_status: ' | PROJ-0003 negative-result+methodology paper RED-TEAM = GO after minor-revisions (researcher-0003-redteam,
+    2026-05-31): PAPER_REVIEW_REDTEAM.md. Negative-result framing in-scope+defensible; refuted-vs-survives
+    boundary honest; ZERO untraced numbers; ZERO refuted-prediction over-claims; M5 double-log-dedup +
+    M2 LOSO-vs-LOCO are decisive non-generic traps; off-node gap honestly in-body w/ turnkey protocol.
+    PUNCH-LIST (none block): N1 unify CC strict on 5/43 (footnote 2/43); P4 lead w/ four-lies thesis +
+    M5/M2; P3 reframe generic M1/M4/M10; P1 state taxonomy non-novel-standalone; P2 soften ''harness-agnostic''
+    (thin n); N2/N3/P5 minor.'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
