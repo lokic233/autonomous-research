@@ -51,14 +51,35 @@ supporting_evidence:
     over-dispersion claim solid; single-scalar B only CI-clean on strong Codex leg.
     Stayed purely descriptive.'
   data_path: experiments/2026-05-31/EXP-0038/
+- exp_id: EXP-0038
+  effect: support
+  summary: "L2 STRENGTHENING (CPU, 3-harness + permutation null + burstiness coeff\
+    \ CIs). (1) GEMINI 3rd harness REPLICATES (D&B bar met): 10 sess/172 results/30.2%\
+    \ fail, Stouffer analytic Z=-3.84, permutation Z=-3.90, 80-90% sess Z<0, dispersion\
+    \ 1.94 \u2014 same sign as CC(-4.07)+Codex(-15.07). (2) PER-SESSION PERMUTATION\
+    \ null (N=2000 within-session shuffles) HOLDS all 3, near-identical to analytic\
+    \ Z (CC -4.07, Codex -15.14, Gemini -3.90) -> analytic null NOT fragile to small-n/heuristic-labels;\
+    \ thin CC leg survives. (3) Burstiness coeff B [bootstrap 95% CI], finite-size-corrected\
+    \ (Kim&Jo 2016), pooled inter-failure gaps: Codex B=0.270 [0.072,0.395] CLEAN\
+    \ >0; CC B=0.417 [0.001,0.453] barely clears 0; Gemini B=0.213 [-0.419,0.319]\
+    \ CROSSES 0 (only 42 gaps/10 sess) inconclusive. Dispersion index >1 all 3 (1.41-1.94).\
+    \ Per-session raw B negative is the known Goh-Barabasi FINITE-SIZE BIAS (3-8 fail/sess),\
+    \ NOT anti-bursting. (4) M4 web_disabled ablation HOLDS under permutation+all\
+    \ 3 (CC strengthens -4.07->-4.93, Codex ~unchanged, Gemini no-op). VERDICT: core\
+    \ over-dispersion claim SOLID + 3-harness-replicated under permutation null; HONEST\
+    \ weakening = single scalar B clean only on Codex leg. FRAMING: lead w/ runs/permutation\
+    \ over-dispersion + dispersion index (robust all 3); report B w/ per-harness CIs\
+    \ + finite-size caveat. Stayed PURELY descriptive."
+  data_path: experiments/2026-05-31/EXP-0038/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0038; convene committee if candidate-grade
+lifecycle_state: committee_pending
+next_action: 'committee review (run_16): 3-harness over-dispersion claim. GREEN as
+  D&B measurement or YELLOW pending larger-n/CI-clean-B?'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T22:38:07Z'
+last_updated: '2026-05-31T22:39:57Z'
