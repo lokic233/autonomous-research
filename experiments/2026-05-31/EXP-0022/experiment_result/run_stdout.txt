@@ -1,0 +1,58 @@
+corpus: 79 sessions, 3547 calls, 375 ground-truth failures
+gate-type distribution: {'TRANSIENT': 227, 'REDIRECTABLE': 111, 'GRANT_REQUIRED': 37}
+
+================ Q1: LAYER SEPARATION ================
+recovered failures with a modality: 233
+  GLOBAL modality norm-entropy=1.000 top1=0.506  ({'SAME_TOOL_RETRY': 115, 'CROSS_TOOL_REDIRECT': 118})
+  per-gate modality determinism (coarse layer output):
+    REDIRECTABLE    n=  68 modality_normH=0.000 top1=1.000  {'CROSS_TOOL_REDIRECT': 68}
+    GRANT_REQUIRED  n=  19 modality_normH=0.629 top1=0.842  {'SAME_TOOL_RETRY': 16, 'CROSS_TOOL_REDIRECT': 3}
+    TRANSIENT       n= 146 modality_normH=0.906 top1=0.678  {'SAME_TOOL_RETRY': 99, 'CROSS_TOOL_REDIRECT': 47}
+  => modality norm-entropy: GLOBAL=1.000 -> given-gate(weighted)=0.619
+  => COARSE-LAYER variance EXPLAINED by gate-type = +0.381 norm-entropy units
+  => Theil's U (modality | gate-type) = 0.381  (1=gate fully determines modality)
+
+  GLOBAL next-tool norm-entropy=0.714 top1=0.301
+  per-gate FINE tool-choice entropy (fine layer):
+    REDIRECTABLE    n= 111 tool_normH=0.722 top1=0.396  modal=WebSearch(44/111)
+    GRANT_REQUIRED  n=  37 tool_normH=0.775 top1=0.432  modal=mcp__plugin_meta_mux__three_pai_external_web_search(16/37)
+    TRANSIENT       n= 227 tool_normH=0.740 top1=0.357  modal=mcp__plugin_meta_mux__three_pai_external_web_search(81/227)
+  => next-tool norm-entropy: GLOBAL=0.714 -> given-gate(weighted)=0.738
+  => Theil's U (next-tool | gate-type) = 0.135  (how much gate determines the FINE tool)
+
+  TWO-LAYER CONTRAST:
+    COARSE  Theil U(modality|gate) = 0.381   residual modality normH = 0.619
+    FINE    Theil U(tool|gate)     = 0.135   residual tool normH     = 0.738
+    => If U_mod >> U_tool AND fine residual entropy stays HIGH, the two-layer split HOLDS.
+
+================ Q2: FINE-LAYER ADAPTIVITY (within-gate, LOO) ================
+  REDIRECTABLE: n=111 tools=10 toolH_norm=0.722 top1=0.396
+       within-gate MODAL baseline LOO-acc = 0.396
+       CONTEXT model           LOO-acc = 0.586  (lift +0.189)
+       -> context DOES add signal (+0.189): a learnable mapping exists (weakens 'pure adaptive', toward routing/context-table)
+  GRANT_REQUIRED: n=37 tools=15 toolH_norm=0.775 top1=0.432
+       within-gate MODAL baseline LOO-acc = 0.432
+       CONTEXT model           LOO-acc = 0.541  (lift +0.108)
+       -> context DOES add signal (+0.108): a learnable mapping exists (weakens 'pure adaptive', toward routing/context-table)
+  TRANSIENT: n=227 tools=40 toolH_norm=0.740 top1=0.357
+       within-gate MODAL baseline LOO-acc = 0.357
+       CONTEXT model           LOO-acc = 0.445  (lift +0.088)
+       -> context DOES add signal (+0.088): a learnable mapping exists (weakens 'pure adaptive', toward routing/context-table)
+
+================ Q3: HONEST CRUX (bootstrap CIs, LOCO, df-vs-n) ================
+  fine-layer within-gate tool norm-entropy = 0.738  bootstrap 95% CI [0.718,0.789]
+  (HIGH and tightly bounded above ~0.5 => fine layer is genuinely diffuse, not small-n=0 noise)
+  df-vs-n control (observed within-gate normH vs resampled-from-own-dist expected normH):
+    REDIRECTABLE    n= 111 observed_normH=0.722  resample-from-own-dist normH=0.745 [0.685,0.812]
+    GRANT_REQUIRED  n=  37 observed_normH=0.775  resample-from-own-dist normH=0.785 [0.661,0.889]
+    TRANSIENT       n= 227 observed_normH=0.740  resample-from-own-dist normH=0.752 [0.705,0.797]
+    (observed == resample band by construction; the point: even the TRUE underlying dist is
+     this diffuse -> the entropy is a property of the distribution, not just undersampling.)
+  leave-one-CLASS-out on COARSE Theil U(modality|gate):
+    full U=0.381; LOCO U range [0.034,0.499] median=0.385
+    most-influential class to drop: policy.web_disabled -> U=0.034
+  leave-one-SESSION-out on fine-layer within-gate tool norm-entropy:
+    full=0.738; LOSO range [0.713,0.755] median=0.738
+
+CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0022/impl/../experiment_result/layer_decomposition.csv
+CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0022/impl/../experiment_result/per_gate.csv

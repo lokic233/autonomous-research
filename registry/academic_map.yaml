@@ -85,7 +85,13 @@ nodes:
     bridge): CDC wall-clock advantage ROBUST to serving overheads (0/8 cells invert, band worst[1.00,1.28]);
     break-even overlap physically impossible -> TTFT-sign solid. Owed serving cell now MODERATELY (not
     critically) load-bearing — for magnitude + a batched-THROUGHPUT risk at inj/seq>=5% (outside win-region)
-    + PagedAttention non-contiguous layout.'
+    + PagedAttention non-contiguous layout. | VERDICT-0029 (6/6 GREEN-decision = HOLD YELLOW, 1 green/5
+    yellow): novelty NOT the blocker (gate-A GREEN); blocker = EXPERIMENTAL COMPLETENESS. The analytic
+    bridge CANNOT settle whether CDC''s advantage SIGN survives vLLM PagedAttention''s NON-CONTIGUOUS
+    KV layout (it may invalidate the contiguity premise). PATH TO GREEN: real vLLM+CacheBlend serving
+    cell (E2E TTFT + batched throughput incl inj/seq>=5% PIC-favorable regime) on ANY accessible GPU node,
+    OR rescope to kernel-characterization + MEASURED throughput-negative table. Needs a vLLM-capable env
+    (not available on devgpu014/499).'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -129,7 +135,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T18:44:21Z'
+  last_updated: '2026-05-31T18:51:37Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -148,7 +154,8 @@ nodes:
     +VERDICT-0025: CLAIM-0006 gate-A GREEN, gate-B advanced | +EXP-0015/0021 (2026-05-31): win-region
     conditional-only (token-frac negligible), GPU wall-clock CIs all exclude 1.0; serving-cell the last
     GREEN piece | +EXP-0023 (2026-05-31): analytic serving bridge — TTFT-sign robust, serving cell de-risked
-    to moderate'
+    to moderate | +VERDICT-0029 (2026-05-31): GREEN-decision HOLD-YELLOW; serving cell load-bearing for
+    sign under PagedAttention; bounded path to GREEN'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

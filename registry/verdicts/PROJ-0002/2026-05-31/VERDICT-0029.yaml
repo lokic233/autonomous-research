@@ -1,0 +1,73 @@
+verdict_id: VERDICT-0029
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0014
+- EXP-0021
+- EXP-0023
+- EXP-0015
+experiment_paths:
+- experiments/2026-05-31/EXP-0014
+- experiments/2026-05-31/EXP-0021
+- experiments/2026-05-31/EXP-0023
+- experiments/2026-05-31/EXP-0015
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'GREEN-DECISION = HOLD YELLOW (1 green/5 yellow). Novelty NOT the blocker (gate-A
+  GREEN, uncontested). The blocker is EXPERIMENTAL COMPLETENESS: no real serving-stack
+  validation'
+- "PagedAttention's NON-CONTIGUOUS native KV layout is not a timing overhead the analytic\
+  \ bridge (EXP-0023) can absorb \u2014 it may invalidate CDC's CONTIGUITY PREMISE\
+  \ itself (the bridge assumes contiguous-kernel costs are correct"
+- PagedAttention may change those costs). So the bridge structurally cannot settle
+  the advantage SIGN under the dominant production architecture
+- EXP-0023 '0/8 invert' is ONE analytic model at 3 operating points (not 3 independent
+  robustness checks) with paper-cited version-specific overhead constants
+- the physically-impossible-gather-overlap argument is asserted not derived
+- "throughput at inj/seq>=5% (PIC-favorable regime, OUTSIDE win-region) is UNMEASURED\
+  \ \u2014 'did you avoid the cell where your method loses?'"
+required_evidence:
+- 'Run a real vLLM+CacheBlend serving cell on ANY accessible GPU node (cloud H100/Colab
+  A100/equiv): measure E2E TTFT AND batched THROUGHPUT, INCLUDING the inj/seq>=5%
+  regime where PIC may win (a measured negative result is publishable'
+- an unmeasured concession is not)
+- "mandatory baselines: vLLM PagedAttention (non-contiguous native KV \u2014 directly\
+  \ challenges CDC contiguity premise) + LMCache/CacheBlend on vLLM (the PIC side\
+  \ MUST be measured through this, not a kernel proxy)"
+- OR rescope to 'kernel-level characterization with analytic serving extrapolation'
+  AND convert the throughput-axis concession to a MEASURED negative-result table (not
+  a residual-list item)
+- if vLLM-capable node inaccessible after 2 more cycles, consider permanent-yellow-ceiling
+  rescope
+map_delta_proposals:
+- 'CLAIM-0006: HOLD at YELLOW (1 green/5 yellow)'
+- gate-A GREEN/uncontested
+- 'gate-B blocked on EXPERIMENTAL COMPLETENESS not novelty. The serving cell would
+  settle whether the CDC advantage SIGN survives PagedAttention''s non-contiguous
+  layout (the analytic bridge structurally cannot model this). Do NOT promote until
+  >=1 required-evidence item delivered. PATH: real vLLM+CacheBlend serving cell (TTFT+throughput
+  incl inj/seq>=5%) on any accessible node, OR rescope to kernel-characterization
+  + measured throughput-negative table.'
+baseline_requirements:
+- vLLM PagedAttention (non-contiguous native KV)
+- LMCache/CacheBlend on vLLM (PIC side, measured not proxied)
+- kernel wall-clock CIs EXP-0021
+- analytic bridge EXP-0023 (interim, not validation)
+created_at: '2026-05-31T18:51:07Z'
