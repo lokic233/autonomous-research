@@ -321,3 +321,17 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
 - NEW: `ros resume` lists in-flight claims + next_action; `ros claim advance --state <vocab> --next ...`
   maintains the resume pointer. lifecycle states: blocked/committee_pending/done/drafted/evidence_ready/
   experiment_designing/experiment_running/prior_art_pending/verdict_recorded.
+
+## BUG-10 STILL OPEN after engine 4a610ee (regression-survivor)
+- The 4a610ee update fixed BUG-3/12/13/14 but NOT BUG-10. runtime/agents/<id>.yaml still torn-writes on the
+  heartbeat->report race; `ros report` still crashes with a yaml parse traceback when it does; role still
+  reset to 'unknown' by the heartbeat writer. Recurred + manually repaired again this session.
+- Still needs: atomic write (tmp + os.replace) for runtime/agents + parse-tolerant load_yaml + role preserved
+  by heartbeat. HIGH because it's triggered by the prescribed heartbeat+report cadence.
+
+## BUG-10 STILL OPEN after engine 4a610ee (regression-survivor)
+- The 4a610ee update fixed BUG-3/12/13/14 but NOT BUG-10. runtime/agents/<id>.yaml still torn-writes on the
+  heartbeat->report race; `ros report` still crashes with a yaml parse traceback when it does; role still
+  reset to 'unknown' by the heartbeat writer. Recurred + manually repaired again this session.
+- Still needs: atomic write (tmp + os.replace) for runtime/agents + parse-tolerant load_yaml + role preserved
+  by heartbeat. HIGH because it's triggered by the prescribed heartbeat+report cadence.
