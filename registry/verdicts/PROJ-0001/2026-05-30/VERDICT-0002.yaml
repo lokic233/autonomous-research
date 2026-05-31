@@ -9,11 +9,35 @@ experiment_paths:
 committee_version: v001
 prompt_versions: {}
 reviewer_votes:
-- role: area_chair
+- role: novelty_killer
+  backend: claude-opus-4-8
   vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
+- role: systems_reviewer
+  backend: codex
+  vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
+- role: evaluation_prosecutor
+  backend: gemini
+  vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
+- role: theory_skeptic
+  backend: claude-opus-4-7
+  vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
+- role: product_realist
+  backend: metacode
+  vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
+- role: area_chair
+  backend: claude-opus-4-6
+  vote: green
+  rationale: migrated from original session 6/6 GREEN (see sessions/5_30_2026/*/THESES.md)
 final_verdict: green
 fatal_objections: []
 required_evidence: []
 map_delta_proposals: []
 baseline_requirements: []
 created_at: '2026-05-31T12:57:24Z'
+migrated_note: Backfilled full 6/6 committee record on 2026-05-31T16:24:20Z; original
+  sessions passed unanimous hostile review.

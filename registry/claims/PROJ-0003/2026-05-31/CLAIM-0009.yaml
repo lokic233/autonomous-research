@@ -1,7 +1,7 @@
 claim_id: CLAIM-0009
 project_id: PROJ-0003
 stage: seed
-status: seed
+status: weakened
 claim: 'Gate-type + harness-routing characterizes agent recovery MODALITY (same-tool-retry
   vs cross-tool-redirect) on a single-harness (Claude Code) corpus: V=0.717, but ~60%
   of recovered-failure mass sits on 2 definitionally-determined cells (web_disabled
@@ -40,7 +40,19 @@ supporting_evidence:
     at n>=10; single-harness (Claude Code). SUPPORTS CLAIM-0009 as a predictive characterization;
     promotion to general law needs cross-harness + sampled terminal class + interventional.'
   data_path: experiments/2026-05-31/EXP-0009/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0012
+  summary: 'ABLATION+BASELINES (VERDICT-0020): web_disabled-ablated V 0.714->0.449
+    but out-of-sample LOO-Brier collapses +40.1%->+2.2% (negative once perm_denied
+    also removed). Leave-one-CLASS-out CV = -33% (predictor WORSE than null on unseen
+    classes; per-class rates memorized, not generalizable). Lift of error-class over
+    gate-type-only LOO-Brier = -0.0043 (NEGATIVE); single REDIRECTABLE bit recovers
+    39.4% vs full 17-class 40.1%. error-class->gate-type is a perfect function; within-REDIRECTABLE
+    finer-class V=0.000, within-TRANSIENT out-of-sample-null. CONFIRMS definitional-inflation
+    + predictor-misattribution. error-class & gate-type OBSERVATIONALLY INSEPARABLE
+    single-harness. Surviving claim = gate-type+routing characterization (config fact),
+    NOT error-class prediction.'
+  data_path: experiments/2026-05-31/EXP-0012/
 verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-05-31'
@@ -51,11 +63,10 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0011 result, then ros exp complete --exp EXP-0011 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0012; convene committee if candidate-grade
 blocking_on: ''
 active_experiments:
 - EXP-0011
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T16:15:49Z'
+last_updated: '2026-05-31T16:24:23Z'

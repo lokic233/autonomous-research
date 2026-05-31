@@ -1,0 +1,55 @@
+sessions=76 total_tool_calls=3530 failures=369  K_WINDOW=6
+
+RECOVERED N=233  SAME=115  REDIRECT=118  NULL p0=0.5064
+
+=== SANITY: full-taxonomy headline (must reproduce EXP-0009 V=0.717) ===
+  error-class -> modality: V=0.7135 perm_p=0.0002  LOO-Brier null=0.2500 cc=0.1497 improve=+0.1002 (40.1%)
+
+=== REQUIRED 1a: web_disabled REMOVED (the definitionally-determined redirect=1.0 cell) ===
+  removed 66 web_disabled recovered failures; remaining N=167
+  ABLATED error-class -> modality: V=0.4490 perm_p=0.0006
+  ABLATED LOO-Brier: null=0.2144 cc=0.2097 improve=+0.0047 (2.2%)
+  ==> headline V 0.714 -> 0.449 after ablation (SURVIVES (weakened))
+
+  [also remove perm_denied -> only TRANSIENT classes remain, N=153]
+  TRANSIENT-only error-class -> modality: V=0.4088 perm_p=0.0058 LOO-Brier improve=-0.0043 (-1.9%)
+
+=== REQUIRED 1b: leave-one-CLASS-out CV (predict held-out class from REMAINING classes) ===
+  FULL taxonomy LOCO: null=0.2500 loco=0.3326 improve=-0.0826 (-33.0%)
+  ABLATED (no web_disabled) LOCO: null=0.2144 loco=0.2219 improve=-0.0075 (-3.5%)
+  (LOCO improve <=0 => per-class rates do NOT transfer to unseen classes => 'signal' is memorized
+   per-class rates, not a generalizable error-class->modality regularity.)
+  per-class held-out detail (class | n | actual_redir_rate | predicted_from_rest | brier_vs_null_delta):
+    other                  n= 67 actual=0.343 pred_from_rest=0.572 brier_delta=-0.0258
+    policy.web_disabled    n= 66 actual=1.000 pred_from_rest=0.311 brier_delta=-0.2306
+    cancelled              n= 34 actual=0.147 pred_from_rest=0.568 brier_delta=-0.0479
+    fs.notfound            n= 16 actual=0.312 pred_from_rest=0.521 brier_delta=-0.0058
+    policy.perm_denied     n= 14 actual=0.000 pred_from_rest=0.539 brier_delta=-0.0338
+    proc.exit_nodetail     n= 12 actual=0.667 pred_from_rest=0.498 brier_delta=-0.0029
+    ssh.auth               n=  5 actual=0.600 pred_from_rest=0.504 brier_delta=-0.0004
+
+=== REQUIRED 2: INFORMED BASELINES (lift over static-mapping AND gate-type-only) ===
+  NULL (constant p0=0.506) in-sample Brier            = 0.2500  [variance floor]
+  static error-class->Mode(modality) [0/1] : acc=0.820  Brier=0.1803
+  gate-type-ONLY (3-level) cc-prob          : in-sample Brier=0.1435  V=0.6525  LOO-Brier improve=+0.1045 (41.8%)
+  gate-BINARY-ONLY (REDIRECTABLE flag)      : in-sample Brier=0.1496  V=0.6338  LOO-Brier improve=+0.0986 (39.4%)
+  full error-class cc-prob                  : in-sample Brier=0.1227  V=0.7135  LOO-Brier improve=+0.1002 (40.1%)
+
+  LIFT of error-class OVER gate-type-only (LOO-Brier): -0.0043  (-0.0043 abs Brier reduction)
+  LIFT of error-class OVER gate-binary-only (LOO-Brier): +0.0017  (+0.0017 abs Brier reduction)
+  LIFT of error-class OVER static-mapping (Brier):       +0.0576
+
+=== COLINEARITY DIAGNOSTIC: is error-class -> gate-type a function (perfect colinearity)? ===
+  every error-class maps to exactly ONE gate-type? True  (=> ec determines gate-type deterministically)
+  within-gate-type, does finer error-class add modality signal? (the ONLY observational way
+  to credit error-class over gate-type):
+    REDIRECTABLE  : n=68 classes=2 within-V=0.0000 perm_p=1.0000 LOO-Brier_improve=+0.0000 (0.0%)
+    TERMINAL_GRANT: n=14 but only 1 error-class -> error-class==gate-type here (no finer signal possible)
+    TRANSIENT     : n=151 classes=13 within-V=0.3810 perm_p=0.0170 LOO-Brier_improve=-0.0103 (-4.7%)
+
+  gate-type composition (which error-classes fall in each, among recovered):
+    REDIRECTABLE  : policy.web_disabled=66, policy.input_filter=2
+    TERMINAL_GRANT: policy.perm_denied=14
+    TRANSIENT     : other=67, cancelled=34, fs.notfound=16, proc.exit_nodetail=12, ssh.auth=5, code.build=4, edit.other=4, proc.timeout=3, net.http=2, read.too_large=1, net.dns=1, net.conn=1, code.test=1
+
+wrote /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0012/experiment_result/ablation_baselines.csv

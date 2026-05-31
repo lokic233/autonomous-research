@@ -1,0 +1,32 @@
+exp_id: EXP-0012
+project_id: PROJ-0003
+claim_id: CLAIM-0009
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'ABLATION+BASELINES (VERDICT-0020): web_disabled-ablated V 0.714->0.449
+  but out-of-sample LOO-Brier collapses +40.1%->+2.2% (negative once perm_denied also
+  removed). Leave-one-CLASS-out CV = -33% (predictor WORSE than null on unseen classes;
+  per-class rates memorized, not generalizable). Lift of error-class over gate-type-only
+  LOO-Brier = -0.0043 (NEGATIVE); single REDIRECTABLE bit recovers 39.4% vs full 17-class
+  40.1%. error-class->gate-type is a perfect function; within-REDIRECTABLE finer-class
+  V=0.000, within-TRANSIENT out-of-sample-null. CONFIRMS definitional-inflation +
+  predictor-misattribution. error-class & gate-type OBSERVATIONALLY INSEPARABLE single-harness.
+  Surviving claim = gate-type+routing characterization (config fact), NOT error-class
+  prediction.'
+result_effect: weaken
+artifacts_path: experiments/2026-05-31/EXP-0012/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T16:24:23Z'
+prompt_version: ''
