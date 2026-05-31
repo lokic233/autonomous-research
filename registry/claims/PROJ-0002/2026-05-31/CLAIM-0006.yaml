@@ -2,23 +2,27 @@ claim_id: CLAIM-0006
 project_id: PROJ-0002
 stage: candidate
 status: weakened
-claim: 'Prefix-Cache Invalidation Law (characterization): a mid-prompt tool injection of size R into a
-  reused prefix of length S forces recompute fraction that tracks inj/seq = R/S (slope ~1), independent
-  of edit position. Chained-decode-cache (CDC) repair attains <=~2.38% recompute and beats vLLM-APC /
-  SGLang-RadixAttention / FlashInfer by 8x-465x (token-recompute), but ONLY in its win-region inj/seq<=~1%;
-  over a realistic agentic mix the median inj/seq~2.8% so the ~2% headline is a best-case contour, not
-  the common case (CDC wins ~25% of injections overall, ~46% when conditioned on large reused context
-  S>=50k).'
-why_it_matters: 'Maps + bounds the win-region of CDC-style prefix-cache repair under agentic tool injection:
-  the contribution is the COST-MAP / invalidation LAW + honest head-to-head positioning, not the CDC mechanism
-  (known: Irminsul, the PIC family, CDC storage-dedup).'
-novelty_hypothesis: 'MECHANISM (CDC content-defined repair over a radix/prefix cache) is NOT novel: collides
-  with Irminsul arXiv:2605.05696 (single-source flag) + the PIC family EPIC arXiv:2410.15332 / MEPIC arXiv:2512.16822
-  / CacheBlend arXiv:2405.16444 / Cache-Craft arXiv:2502.15734 (multi-source), and rests on decades-old
-  CDC storage-dedup (FastCDC/Rabin). NOVEL = the Prefix-Cache Invalidation LAW: conditional recompute
-  cost-map (recompute% ~ inj/seq, slope~1; win iff inj/seq<=~1%), its measured win-region over a realistic
-  agentic workload distribution, and the head-to-head recompute-fraction positioning vs vLLM-APC/SGLang-Radix/FlashInfer.
-  No prior work found drawing this contour.'
+claim: 'Prefix-Cache Invalidation Law (characterization): a mid-prompt tool injection
+  of size R into a reused prefix of length S forces recompute fraction that tracks
+  inj/seq = R/S (slope ~1), independent of edit position. Chained-decode-cache (CDC)
+  repair attains <=~2.38% recompute and beats vLLM-APC / SGLang-RadixAttention / FlashInfer
+  by 8x-465x (token-recompute), but ONLY in its win-region inj/seq<=~1%; over a realistic
+  agentic mix the median inj/seq~2.8% so the ~2% headline is a best-case contour,
+  not the common case (CDC wins ~25% of injections overall, ~46% when conditioned
+  on large reused context S>=50k).'
+why_it_matters: 'Maps + bounds the win-region of CDC-style prefix-cache repair under
+  agentic tool injection: the contribution is the COST-MAP / invalidation LAW + honest
+  head-to-head positioning, not the CDC mechanism (known: Irminsul, the PIC family,
+  CDC storage-dedup).'
+novelty_hypothesis: 'MECHANISM (CDC content-defined repair over a radix/prefix cache)
+  is NOT novel: collides with Irminsul arXiv:2605.05696 (single-source flag) + the
+  PIC family EPIC arXiv:2410.15332 / MEPIC arXiv:2512.16822 / CacheBlend arXiv:2405.16444
+  / Cache-Craft arXiv:2502.15734 (multi-source), and rests on decades-old CDC storage-dedup
+  (FastCDC/Rabin). NOVEL = the Prefix-Cache Invalidation LAW: conditional recompute
+  cost-map (recompute% ~ inj/seq, slope~1; win iff inj/seq<=~1%), its measured win-region
+  over a realistic agentic workload distribution, and the head-to-head recompute-fraction
+  positioning vs vLLM-APC/SGLang-Radix/FlashInfer. No prior work found drawing this
+  contour.'
 mandatory_baselines:
 - vLLM APC
 - SGLang RadixAttention
@@ -28,12 +32,14 @@ academic_map_nodes:
 supporting_evidence:
 - exp_id: EXP-0003
   summary: 'CPU recompute-fraction microbench, mid-prefix insertion. CDC <=2.38% (position-independent)
-    vs vLLM APC / RadixAttention / FlashInfer all ~(1-f) = 10.1-90.1% (position-dependent). KEY: SGLang
-    RadixAttention token-granularity does NOT make this cheap (10.1-90.1%, ~= vLLM in token terms) ->
-    CLAIM-0006 does NOT collapse into DEAD-0006 (radix min 10.1% >> CDC max 2.38%). FlashInfer has no
-    cache policy (==host engine). CDC advantage over binding baseline (Radix) = 8.3x (late inject f=.9,4k)
-    to 465x (early inject f=.1,32k), grows with ctx. Scope: count model not wall-clock (NT2_WALLCLOCK
-    H100 already confirmed translation). All 3 mandatory baselines now positioned head-to-head.'
+    vs vLLM APC / RadixAttention / FlashInfer all ~(1-f) = 10.1-90.1% (position-dependent).
+    KEY: SGLang RadixAttention token-granularity does NOT make this cheap (10.1-90.1%,
+    ~= vLLM in token terms) -> CLAIM-0006 does NOT collapse into DEAD-0006 (radix
+    min 10.1% >> CDC max 2.38%). FlashInfer has no cache policy (==host engine). CDC
+    advantage over binding baseline (Radix) = 8.3x (late inject f=.9,4k) to 465x (early
+    inject f=.1,32k), grows with ctx. Scope: count model not wall-clock (NT2_WALLCLOCK
+    H100 already confirmed translation). All 3 mandatory baselines now positioned
+    head-to-head.'
   data_path: experiments/2026-05-31/EXP-0003/
 - exp_id: EXP-A006
   effect: support
@@ -49,145 +55,172 @@ supporting_evidence:
   artifacts: experiments/2026-05-30/EXP-D007/
 - exp_id: EXP-0005
   effect: weaken-then-condition
-  summary: 'Workload realism (CPU token-proxy, 20k tasks/291k injections, cited sizes): median inj/seq~2.8%
-    (>1%); CDC-wins(<=1%) 24.6% of injections / 3.7% of tokens; degrade(>5%) 36.5% / 80.7% of tokens.
-    Conditioned on large reused ctx S>=50k: CDC-wins 45.7%, degrade 10.4%. Weakens unconditional framing;
-    supports doubly-gated conditional.'
+  summary: 'Workload realism (CPU token-proxy, 20k tasks/291k injections, cited sizes):
+    median inj/seq~2.8% (>1%); CDC-wins(<=1%) 24.6% of injections / 3.7% of tokens;
+    degrade(>5%) 36.5% / 80.7% of tokens. Conditioned on large reused ctx S>=50k:
+    CDC-wins 45.7%, degrade 10.4%. Weakens unconditional framing; supports doubly-gated
+    conditional.'
   artifacts: experiments/2026-05-31/EXP-0005/
 - exp_id: EXP-0014
-  summary: 'GPU wall-clock (H100 devgpu014, SDPA kernel proxy): CDC contiguous recompute is FASTER than
-    PIC scattered-HKVD in ALL 8 decision cells (PIC/CDC 1.02-2.68x). The recompute-fraction tie at inj/seq>=5%
-    (EXP-0006) does NOT become a wall-clock loss — CDC stays 1.27-1.42x faster (contiguous higher arithmetic
-    intensity vs scattered gather overhead); largest advantage 2.68x at win-region corner (32k ctx/0.1%
-    inj). vs whole-suffix CDC 1.3x-41x faster. SUPPORTS CLAIM-0006 win-region. CAVEAT: kernel proxy, not
-    full vLLM/CacheBlend serving (vllm not installed on node).'
+  summary: "GPU wall-clock (H100 devgpu014, SDPA kernel proxy): CDC contiguous recompute\
+    \ is FASTER than PIC scattered-HKVD in ALL 8 decision cells (PIC/CDC 1.02-2.68x).\
+    \ The recompute-fraction tie at inj/seq>=5% (EXP-0006) does NOT become a wall-clock\
+    \ loss \u2014 CDC stays 1.27-1.42x faster (contiguous higher arithmetic intensity\
+    \ vs scattered gather overhead); largest advantage 2.68x at win-region corner\
+    \ (32k ctx/0.1% inj). vs whole-suffix CDC 1.3x-41x faster. SUPPORTS CLAIM-0006\
+    \ win-region. CAVEAT: kernel proxy, not full vLLM/CacheBlend serving (vllm not\
+    \ installed on node)."
   data_path: experiments/2026-05-31/EXP-0014/
 - exp_id: EXP-0021
-  summary: 'GPU CI run (H100, 30 reps/cell, bootstrap CIs): ALL 8 cells PIC/CDC CI95 EXCLUDES 1.0 incl
-    the prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> ''CDC faster in all 8 cells'' now statistically
-    supported (resolves area_chair objection). PIC-faithfulness sensitivity small (1.39 vs 1.44 @32k/5%,
-    robust). Req#2 end-to-end serving cell HONESTLY NOT MET (vLLM not installable on node, prod paths
-    block pip) — still owed for full GREEN, NOT fabricated.'
+  summary: "GPU CI run (H100, 30 reps/cell, bootstrap CIs): ALL 8 cells PIC/CDC CI95\
+    \ EXCLUDES 1.0 incl the prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> 'CDC faster\
+    \ in all 8 cells' now statistically supported (resolves area_chair objection).\
+    \ PIC-faithfulness sensitivity small (1.39 vs 1.44 @32k/5%, robust). Req#2 end-to-end\
+    \ serving cell HONESTLY NOT MET (vLLM not installable on node, prod paths block\
+    \ pip) \u2014 still owed for full GREEN, NOT fabricated."
   data_path: experiments/2026-05-31/EXP-0021/
 - exp_id: EXP-0023
-  summary: 'ANALYTIC serving-overhead bridge (CPU, model not measurement) from H100 kernel-proxy (EXP-0014/0021)
-    to end-to-end TTFT. Adds per-call sched tax, extra kernel-launch overhead, and CacheBlend-style gather/HBM
-    overlap, using cited vLLM/CacheBlend/CUDA-graph overhead figures. RESULT: end-to-end PIC/CDC band
-    [1.10,2.03] nominal, [1.00,1.28] worst-for-CDC; 0/8 cells INVERT under ANY plausible overhead assignment.
-    Break-even overlap=1/g_attr>=1 (impossible) => gather-overlap alone CANNOT flip CDC''s advantage;
-    only an implausible per-call asymmetry favoring PIC could. Win-region (32k,inj<=1%) holds 1.04-1.28x
-    worst-case. CONCLUSION: kernel advantage PLAUSIBLY SURVIVES serving (supports CLAIM-0006 pending real
-    confirmation); the missing vLLM+CacheBlend serving cell is MODERATELY (not critically) load-bearing
-    for TTFT sign, but STILL OWED to settle magnitude + the one un-modeled risk: batched-throughput at
-    inj/seq>=5% (outside win-region) where CDC''s larger contiguous recompute could favor PIC aggregate
-    throughput. CPU-only, stdlib, no GPU/model/mem-probe.'
+  summary: 'ANALYTIC serving-overhead bridge (CPU, model not measurement) from H100
+    kernel-proxy (EXP-0014/0021) to end-to-end TTFT. Adds per-call sched tax, extra
+    kernel-launch overhead, and CacheBlend-style gather/HBM overlap, using cited vLLM/CacheBlend/CUDA-graph
+    overhead figures. RESULT: end-to-end PIC/CDC band [1.10,2.03] nominal, [1.00,1.28]
+    worst-for-CDC; 0/8 cells INVERT under ANY plausible overhead assignment. Break-even
+    overlap=1/g_attr>=1 (impossible) => gather-overlap alone CANNOT flip CDC''s advantage;
+    only an implausible per-call asymmetry favoring PIC could. Win-region (32k,inj<=1%)
+    holds 1.04-1.28x worst-case. CONCLUSION: kernel advantage PLAUSIBLY SURVIVES serving
+    (supports CLAIM-0006 pending real confirmation); the missing vLLM+CacheBlend serving
+    cell is MODERATELY (not critically) load-bearing for TTFT sign, but STILL OWED
+    to settle magnitude + the one un-modeled risk: batched-throughput at inj/seq>=5%
+    (outside win-region) where CDC''s larger contiguous recompute could favor PIC
+    aggregate throughput. CPU-only, stdlib, no GPU/model/mem-probe.'
   data_path: experiments/2026-05-31/EXP-0023/
 - exp_id: EXP-0025
-  summary: 'Measured GPU kernel-THROUGHPUT (H100, inj/seq>=5% x batch{1,8,32}): PIC wins only 2/24 cells,
-    both MARGINAL (0.993-0.994x) at 8k/5% corner; CDC wins 22/24 by 1.08-1.74x. CDC''s contiguous advantage
-    extends to THROUGHPUT not just TTFT; the predicted PIC-favorable high-inj/seq regime actually favors
-    CDC MORE (1.5-1.74x at 50%). CLOSES VERDICT-0029 option-b (measured throughput-negative table, not
+  summary: 'Measured GPU kernel-THROUGHPUT (H100, inj/seq>=5% x batch{1,8,32}): PIC
+    wins only 2/24 cells, both MARGINAL (0.993-0.994x) at 8k/5% corner; CDC wins 22/24
+    by 1.08-1.74x. CDC''s contiguous advantage extends to THROUGHPUT not just TTFT;
+    the predicted PIC-favorable high-inj/seq regime actually favors CDC MORE (1.5-1.74x
+    at 50%). CLOSES VERDICT-0029 option-b (measured throughput-negative table, not
     a concession). Still kernel-level not full vLLM serving.'
   data_path: experiments/2026-05-31/EXP-0025/
 - exp_id: EXP-0026
-  summary: 'REAL vLLM PagedAttention E2E serving cell (H100, Qwen2.5-7B): CDC contiguous-recompute wins
-    ALL 12 cells on BOTH metrics. TTFT PIC/CDC=1.05-1.79x (CDC faster), throughput CDC/PIC=1.00-1.13x
-    (CDC higher); PIC wins 0/12. Advantage STRONGER at 28k/B8 (TTFT 1.79x, thru 1.13x). inj/seq>=5% regime
-    still CDC. The advantage SIGN SURVIVES the non-contiguous paged KV layout (VERDICT-0029 load-bearing
-    question ANSWERED, analytic-bridge prediction CONFIRMED on real vLLM). LIMITATION: lmcache absent
-    -> PIC arm is a faithful re-impl vs vLLM PagedAttention, NOT the published lmcache kernel.'
+  summary: 'REAL vLLM PagedAttention E2E serving cell (H100, Qwen2.5-7B): CDC contiguous-recompute
+    wins ALL 12 cells on BOTH metrics. TTFT PIC/CDC=1.05-1.79x (CDC faster), throughput
+    CDC/PIC=1.00-1.13x (CDC higher); PIC wins 0/12. Advantage STRONGER at 28k/B8 (TTFT
+    1.79x, thru 1.13x). inj/seq>=5% regime still CDC. The advantage SIGN SURVIVES
+    the non-contiguous paged KV layout (VERDICT-0029 load-bearing question ANSWERED,
+    analytic-bridge prediction CONFIRMED on real vLLM). LIMITATION: lmcache absent
+    -> PIC arm is a faithful re-impl vs vLLM PagedAttention, NOT the published lmcache
+    kernel.'
   data_path: experiments/2026-05-31/EXP-0026/
 - exp_id: EXP-0030
-  summary: 'REAL published lmcache CacheBlend gather kernel (source-built, live vLLM PagedAttention, discovered
-    format NL_X_TWO_NB_BS_NH_HS, NOT re-impl): CDC contiguous gather cheaper than PIC scattered in ALL
-    12 cells, CI excludes 1.0 in 11/12 (only 8k/0.5% is a tie), PIC/CDC 1.01-1.27x. RESOLVES the bracket
-    (VERDICT-0037): the EXP-0027 oracle''s zero-overhead assumption was too generous — the REAL fused
-    kernel still pays scatter cost so CDC''s contiguous gather WINS (closer to re-impl EXP-0026 than to
-    oracle). SCOPE: gather-kernel cost (not full E2E TTFT incl attention FLOPs); EXP-0026 already showed
-    E2E CDC-wins vs re-impl. Both axes favor CDC w/ the real kernel.'
+  summary: "REAL published lmcache CacheBlend gather kernel (source-built, live vLLM\
+    \ PagedAttention, discovered format NL_X_TWO_NB_BS_NH_HS, NOT re-impl): CDC contiguous\
+    \ gather cheaper than PIC scattered in ALL 12 cells, CI excludes 1.0 in 11/12\
+    \ (only 8k/0.5% is a tie), PIC/CDC 1.01-1.27x. RESOLVES the bracket (VERDICT-0037):\
+    \ the EXP-0027 oracle's zero-overhead assumption was too generous \u2014 the REAL\
+    \ fused kernel still pays scatter cost so CDC's contiguous gather WINS (closer\
+    \ to re-impl EXP-0026 than to oracle). SCOPE: gather-kernel cost (not full E2E\
+    \ TTFT incl attention FLOPs); EXP-0026 already showed E2E CDC-wins vs re-impl.\
+    \ Both axes favor CDC w/ the real kernel."
   data_path: experiments/2026-05-31/EXP-0030/
 - exp_id: EXP-0034
-  summary: 'COMBINED real-lmcache E2E-TTFT (composition-fallacy control): real CacheBlend kernels (gather+HKVD-select+blend,
-    28 layers) INLINE in prefill/decode window + real decode -> CDC faster E2E in ALL 12 cells (PIC/CDC
-    1.003-1.029x). Composition fallacy CONTROLLED: per-component CDC wins (gather EXP-0030 + E2E re-impl
-    EXP-0026) DO compose to an E2E win with the real kernel, margins compress (overlap partially hides
-    cost) but net favors CDC. SCOPED: real-blend-in-window, NOT true async connector (vLLM 0.6.6 lacks
-    V1 KVConnector; needs >=0.7/0.8). Both serving axes (gather + E2E) now favor CDC, measured.'
+  summary: 'COMBINED real-lmcache E2E-TTFT (composition-fallacy control): real CacheBlend
+    kernels (gather+HKVD-select+blend, 28 layers) INLINE in prefill/decode window
+    + real decode -> CDC faster E2E in ALL 12 cells (PIC/CDC 1.003-1.029x). Composition
+    fallacy CONTROLLED: per-component CDC wins (gather EXP-0030 + E2E re-impl EXP-0026)
+    DO compose to an E2E win with the real kernel, margins compress (overlap partially
+    hides cost) but net favors CDC. SCOPED: real-blend-in-window, NOT true async connector
+    (vLLM 0.6.6 lacks V1 KVConnector; needs >=0.7/0.8). Both serving axes (gather
+    + E2E) now favor CDC, measured.'
   data_path: experiments/2026-05-31/EXP-0034/
 negative_evidence:
 - exp_id: EXP-0002
-  summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor (CTX=4000,inj=40:
-    2.0-2.4%). Full surface: min0.02/median1.34/max53.05% recompute. LAW: recompute% tracks injection_tokens/seq_len
-    (slope~1), NOT edit position (position spread median 0.39pp, max 5.07pp). 2% bar holds ONLY where
-    inj/seq<=~1% (66/100 cells); BREAKS to 5.3%@200tok/4k, 20%@1000tok/4k, 49-53%@1000tok/1k. So ~2% is
+  summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
+    (CTX=4000,inj=40: 2.0-2.4%). Full surface: min0.02/median1.34/max53.05% recompute.
+    LAW: recompute% tracks injection_tokens/seq_len (slope~1), NOT edit position (position
+    spread median 0.39pp, max 5.07pp). 2% bar holds ONLY where inj/seq<=~1% (66/100
+    cells); BREAKS to 5.3%@200tok/4k, 20%@1000tok/4k, 49-53%@1000tok/1k. So ~2% is
     a conditional cost-map contour, not a universal CDC property; edit position (prepend/terminal/depth)
-    is not the cost driver, injection size relative to context is. Weakens unconditional 2% framing; supports
-    CLAIM-0006 reframe to conditional regime (inj/seq).'
+    is not the cost driver, injection size relative to context is. Weakens unconditional
+    2% framing; supports CLAIM-0006 reframe to conditional regime (inj/seq).'
   data_path: experiments/2026-05-31/EXP-0002/
 - exp_id: EXP-0005
-  summary: 'WORKLOAD REALISM (CPU token-proxy, 20k tasks/291k injections, cited sizes): over a realistic
-    agentic tool-use mix the MEDIAN inj/seq=2.8% (ABOVE the 1% CDC-wins-big threshold); only ~25% of injections
-    fall in inj/seq<=1% (recompute<~2.4%), ~37% in the >5% degrade regime, and ~81% of injected TOKENS
-    are in the degrade regime (large file/code/RAG/JSON dumps dominate volume). Confirms the committee
-    crux: the ~2% headline is a best-case contour, NOT the common case. CONDITIONAL caveat (fair-to-CDC):
-    given large reused context S>=50k (the regime SWE-ContextBench shows dominates real long-horizon work,
-    >97% cache-read) CDC wins on 46% and degrades on only 10%. Net: WEAKEN the unconditional framing;
-    conditional claim survives only gated on (large reused ctx AND bounded injection). Proxy, not wall-clock;
+  summary: 'WORKLOAD REALISM (CPU token-proxy, 20k tasks/291k injections, cited sizes):
+    over a realistic agentic tool-use mix the MEDIAN inj/seq=2.8% (ABOVE the 1% CDC-wins-big
+    threshold); only ~25% of injections fall in inj/seq<=1% (recompute<~2.4%), ~37%
+    in the >5% degrade regime, and ~81% of injected TOKENS are in the degrade regime
+    (large file/code/RAG/JSON dumps dominate volume). Confirms the committee crux:
+    the ~2% headline is a best-case contour, NOT the common case. CONDITIONAL caveat
+    (fair-to-CDC): given large reused context S>=50k (the regime SWE-ContextBench
+    shows dominates real long-horizon work, >97% cache-read) CDC wins on 46% and degrades
+    on only 10%. Net: WEAKEN the unconditional framing; conditional claim survives
+    only gated on (large reused ctx AND bounded injection). Proxy, not wall-clock;
     modeled distribution not live-trace; robust across 3 sensitivities.'
   data_path: experiments/2026-05-31/EXP-0005/
 - source: VERDICT-0011 (committee 6/6 yellow)
-  summary: 'Wall-clock gap: count->TTFT validated only at inj/seq~1% anchor, not across the cost surface.
-    Workload distribution is modeled (Monte-Carlo over cited sizes), not sampled from real agentic traces.
-    Mechanism (CDC-over-radix) not novel (Irminsul single-source flag + PIC family); contribution is the
-    cost-map/law characterization only.'
+  summary: 'Wall-clock gap: count->TTFT validated only at inj/seq~1% anchor, not across
+    the cost surface. Workload distribution is modeled (Monte-Carlo over cited sizes),
+    not sampled from real agentic traces. Mechanism (CDC-over-radix) not novel (Irminsul
+    single-source flag + PIC family); contribution is the cost-map/law characterization
+    only.'
 - exp_id: EXP-0006
-  summary: 'FAIR PIC-family baseline (EPIC/CacheBlend/MEPIC/Irminsul-modeled: recompute R new + boundary
-    window W + selective fraction p of reused tokens) head-to-head vs CDC, CPU recompute-fraction proxy,
-    full inj/seq surface {0.1,1,5,25,100%} x seq {4k,8k,32k}. FINDING: CDC 8x-465x advantage was a STRUCTURAL
-    ARTIFACT of the contiguous EXP-0003 baselines (they recompute whole suffix). Against a fair PIC baseline
-    CDC median advantage = 1.69x (p=1%,W=256), collapsing to TIE (1.0-1.2x) at inj/seq>=5%. With leanest
-    honest PIC (W=0,p=1%) CDC median = 1.1x. Durable CDC edge ONLY at inj/seq~0.1% corner (~2-6x). Scope:
-    token-count proxy != wall-clock; recompute-fraction tie != wall-clock tie. WEAKENS competitive framing;
-    surviving contribution = cost-map characterization only. CDC mechanism is itself PIC-family (no mechanism
-    novelty).'
+  summary: 'FAIR PIC-family baseline (EPIC/CacheBlend/MEPIC/Irminsul-modeled: recompute
+    R new + boundary window W + selective fraction p of reused tokens) head-to-head
+    vs CDC, CPU recompute-fraction proxy, full inj/seq surface {0.1,1,5,25,100%} x
+    seq {4k,8k,32k}. FINDING: CDC 8x-465x advantage was a STRUCTURAL ARTIFACT of the
+    contiguous EXP-0003 baselines (they recompute whole suffix). Against a fair PIC
+    baseline CDC median advantage = 1.69x (p=1%,W=256), collapsing to TIE (1.0-1.2x)
+    at inj/seq>=5%. With leanest honest PIC (W=0,p=1%) CDC median = 1.1x. Durable
+    CDC edge ONLY at inj/seq~0.1% corner (~2-6x). Scope: token-count proxy != wall-clock;
+    recompute-fraction tie != wall-clock tie. WEAKENS competitive framing; surviving
+    contribution = cost-map characterization only. CDC mechanism is itself PIC-family
+    (no mechanism novelty).'
   data_path: experiments/2026-05-31/EXP-0006/
 - exp_id: EXP-0013
-  summary: 'STATS PASS (CPU, stdlib): slope~1 does NOT survive per-engine decomposition as a cross-engine
-    law. CDC alone: slope=0.958 95%CI[0.937,0.980] R2=0.972 (low regime inj/seq<=5%), stable per-seq (0.93-0.99,
-    R2->0.999), position-flat (0.13pp spread) -- but this is the already-demoted CDC accounting identity,
-    now CI-quantified. The 3 contiguous baseline engines (vLLM-APC/SGLang-Radix/FlashInfer) have R2=0.0007
-    vs inj/seq (slope CI spans 0) -- they are POSITION-driven (~70pp position spread), NOT inj/seq-driven.
-    theory_skeptic CONFIRMED: engine-averaged slope~1 is an artifact (avg3 slope 0.258 R2 0.075). Headline
-    CIs: CDC-vs-lean-PIC median margin 1.77x[1.56,1.87] all / 6.20x[5.15,6.86] at inj/seq<=1% / tie 1.29x[1.25,1.33]
-    at >=5%. Win-region inj/seq<=1% = 100% [Wilson 0.972,1.0]. Attention-sink first-chunk fraction per
-    engine: CDC 0.12%, vLLM-APC 0.22%, Radix 0.014%, PIC 3.47%. WEAKENS cross-engine slope-law framing;
-    surviving claim = workload-conditioned win-region on CDC accounting line, not a slope discovery. Token-count
-    proxy; GPU wall-clock (gate-B) still the long pole.'
+  summary: 'STATS PASS (CPU, stdlib): slope~1 does NOT survive per-engine decomposition
+    as a cross-engine law. CDC alone: slope=0.958 95%CI[0.937,0.980] R2=0.972 (low
+    regime inj/seq<=5%), stable per-seq (0.93-0.99, R2->0.999), position-flat (0.13pp
+    spread) -- but this is the already-demoted CDC accounting identity, now CI-quantified.
+    The 3 contiguous baseline engines (vLLM-APC/SGLang-Radix/FlashInfer) have R2=0.0007
+    vs inj/seq (slope CI spans 0) -- they are POSITION-driven (~70pp position spread),
+    NOT inj/seq-driven. theory_skeptic CONFIRMED: engine-averaged slope~1 is an artifact
+    (avg3 slope 0.258 R2 0.075). Headline CIs: CDC-vs-lean-PIC median margin 1.77x[1.56,1.87]
+    all / 6.20x[5.15,6.86] at inj/seq<=1% / tie 1.29x[1.25,1.33] at >=5%. Win-region
+    inj/seq<=1% = 100% [Wilson 0.972,1.0]. Attention-sink first-chunk fraction per
+    engine: CDC 0.12%, vLLM-APC 0.22%, Radix 0.014%, PIC 3.47%. WEAKENS cross-engine
+    slope-law framing; surviving claim = workload-conditioned win-region on CDC accounting
+    line, not a slope discovery. Token-count proxy; GPU wall-clock (gate-B) still
+    the long pole.'
   data_path: experiments/2026-05-31/EXP-0013/
 - exp_id: EXP-0015
-  summary: 'Win-region map w/ bootstrap CIs + 4x4 workload-prior sweep. Reproduces EXP-0005 points (count-frac
-    inj/seq<=1% = 0.246 [0.243,0.250]; token-frac = 0.037 [0.036,0.038]). KEY: token-weighted win-region
-    is NEGLIGIBLE under EVERY prior (2.7-8.1%, median 3.7%) -- >=92% of injected tokens fall outside CDC''s
-    win-region in all 16 cells. Conditioned on large reused ctx S>=50k, CDC wins ~48% of injections, prior-ROBUST
-    (41-52% across grid). Verdict WEAKEN: unconditional/token-weighted framing unsupported; only the CONDITIONAL
-    count-level win-region (S>=50k AND inj/seq<=1%) survives -- real, prior-robust, meaningful minority
-    of injections but small minority of tokens. Quantifies VERDICT-0023''s surviving leg with CIs; does
-    not weaken further. CPU proxy; gate-B GPU untouched.'
+  summary: 'Win-region map w/ bootstrap CIs + 4x4 workload-prior sweep. Reproduces
+    EXP-0005 points (count-frac inj/seq<=1% = 0.246 [0.243,0.250]; token-frac = 0.037
+    [0.036,0.038]). KEY: token-weighted win-region is NEGLIGIBLE under EVERY prior
+    (2.7-8.1%, median 3.7%) -- >=92% of injected tokens fall outside CDC''s win-region
+    in all 16 cells. Conditioned on large reused ctx S>=50k, CDC wins ~48% of injections,
+    prior-ROBUST (41-52% across grid). Verdict WEAKEN: unconditional/token-weighted
+    framing unsupported; only the CONDITIONAL count-level win-region (S>=50k AND inj/seq<=1%)
+    survives -- real, prior-robust, meaningful minority of injections but small minority
+    of tokens. Quantifies VERDICT-0023''s surviving leg with CIs; does not weaken
+    further. CPU proxy; gate-B GPU untouched.'
   data_path: experiments/2026-05-31/EXP-0015/
 - exp_id: EXP-0021
   effect: support
-  summary: 'GPU wall-clock CIs (H100, 30 reps/cell, bootstrap): ALL 8 cells PIC/CDC CI95 EXCLUDES 1.0
-    incl prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> CDC contiguous faster than PIC scattered in all
-    8 cells now STATISTICALLY SUPPORTED. PIC-faithfulness sensitivity small (1.39 vs 1.44 @32k/5%, robust).
-    End-to-end serving cell still OWED (vLLM not installable on node) — NOT fabricated.'
+  summary: "GPU wall-clock CIs (H100, 30 reps/cell, bootstrap): ALL 8 cells PIC/CDC\
+    \ CI95 EXCLUDES 1.0 incl prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> CDC contiguous\
+    \ faster than PIC scattered in all 8 cells now STATISTICALLY SUPPORTED. PIC-faithfulness\
+    \ sensitivity small (1.39 vs 1.44 @32k/5%, robust). End-to-end serving cell still\
+    \ OWED (vLLM not installable on node) \u2014 NOT fabricated."
   data_path: experiments/2026-05-31/EXP-0021/
 - exp_id: EXP-0027
-  summary: 'ORACLE-PIC roofline (VERDICT-0033 path 2): vs the theoretically-best fused PIC (zero gather
-    overhead), CDC''s serving advantage is CONDITIONAL — CDC wins ONLY 2/6 cells (high inj/seq 25%: 1.05-1.18x),
-    LOSES at low inj/seq (1-5%: oraclePIC/CDC 0.61-0.99x incl the win-region corner). EXP-0026''s ''CDC
-    wins all 12'' was PARTLY the re-impl PIC''s gather overhead, as committee suspected. WEAKENS the unconditional
-    serving framing: vs a fused PIC, CDC''s advantage is itself conditional on inj/seq. Caveat: CDC pays
-    a boundary window the oracle PIC skips (conservative PIC-favorable bound).'
+  summary: "ORACLE-PIC roofline (VERDICT-0033 path 2): vs the theoretically-best fused\
+    \ PIC (zero gather overhead), CDC's serving advantage is CONDITIONAL \u2014 CDC\
+    \ wins ONLY 2/6 cells (high inj/seq 25%: 1.05-1.18x), LOSES at low inj/seq (1-5%:\
+    \ oraclePIC/CDC 0.61-0.99x incl the win-region corner). EXP-0026's 'CDC wins all\
+    \ 12' was PARTLY the re-impl PIC's gather overhead, as committee suspected. WEAKENS\
+    \ the unconditional serving framing: vs a fused PIC, CDC's advantage is itself\
+    \ conditional on inj/seq. Caveat: CDC pays a boundary window the oracle PIC skips\
+    \ (conservative PIC-favorable bound)."
   data_path: experiments/2026-05-31/EXP-0027/
 verdict_history:
 - verdict: VERDICT-0006
@@ -248,11 +281,12 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T21:44:14Z'
+last_updated: '2026-05-31T21:45:34Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
-  relation: MECHANISM collision (CDC-over-radix repair); single-source flag; no inj/seq cost-map
+  relation: MECHANISM collision (CDC-over-radix repair); single-source flag; no inj/seq
+    cost-map
 - work: EPIC (PIC)
   id: arXiv:2410.15332
   relation: umbrella mechanism family (Position-Independent Caching)
@@ -261,25 +295,30 @@ closest_prior_work:
   relation: selective partial recompute of reused KV
 - work: Don't Break the Cache
   id: arXiv:2601.06007
-  relation: closest empirical cost-axis neighbor (black-box, no recompute-fraction law)
-committee_status: 'yellow-6/6 (VERDICT-0011); upgrade-path: wall-clock-across-surface + real-trace workload'
+  relation: closest empirical cost-axis neighbor (black-box, no recompute-fraction
+    law)
+committee_status: 'yellow-6/6 (VERDICT-0011); upgrade-path: wall-clock-across-surface
+  + real-trace workload'
 required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0034; convene committee if candidate-grade
+lifecycle_state: committee_pending
+next_action: 're-review #10 (run_15): composition-fallacy gate MEASURED (EXP-0034
+  CDC wins E2E 12/12). GREEN now or YELLOW pending true-async-connector (env-upgrade-gated)?'
 active_experiments: []
 blocking_on: ''
 writeup_notes:
-- 'PATH-B WRITEUP READY (2026-05-31, researcher-0002-writeup): prior_art/PROJ-0002/CLAIM-0006/WRITEUP_SYNTHESIS.md
-  — CLAIM-0006 is SUBMITTABLE TODAY as an honest-conditional-characterization paper. Cost-map GREEN (accounting
-  identity vs measured boundary stated), win-region GREEN-as-conditional (token-weighted <=8% so token
-  framing UNSUPPORTED; conditional count-level win|S>=50k&inj/seq<=1% = 0.457 [0.453,0.461]), novelty
-  gate-A GREEN/uncontested, competitive bracket committee-vetted. Sole binding residual = EXP-0030 measured
-  crossover (future work); paper claims do NOT depend on it. Status stays YELLOW (6/6 committee bar for
-  GREEN promote); the WRITEUP is the path-b submittable artifact.'
+- "PATH-B WRITEUP READY (2026-05-31, researcher-0002-writeup): prior_art/PROJ-0002/CLAIM-0006/WRITEUP_SYNTHESIS.md\
+  \ \u2014 CLAIM-0006 is SUBMITTABLE TODAY as an honest-conditional-characterization\
+  \ paper. Cost-map GREEN (accounting identity vs measured boundary stated), win-region\
+  \ GREEN-as-conditional (token-weighted <=8% so token framing UNSUPPORTED; conditional\
+  \ count-level win|S>=50k&inj/seq<=1% = 0.457 [0.453,0.461]), novelty gate-A GREEN/uncontested,\
+  \ competitive bracket committee-vetted. Sole binding residual = EXP-0030 measured\
+  \ crossover (future work); paper claims do NOT depend on it. Status stays YELLOW\
+  \ (6/6 committee bar for GREEN promote); the WRITEUP is the path-b submittable artifact."
 - 'PATH-B PAPER DRAFT complete (2026-05-31, researcher-0006-prose): prior_art/PROJ-0002/CLAIM-0006/PAPER_DRAFT.md
-  (222 lines, all sections, exact numbers+EXP ids, EXP-0030 folded as resolving result, EXP-0034 framed
-  as GREEN-gating future-work w/ the true-connector-infeasibility caveat honestly stated). Submittable
-  as the honest-conditional characterization; flips EXP-0034 to closing-result if it lands.'
+  (222 lines, all sections, exact numbers+EXP ids, EXP-0030 folded as resolving result,
+  EXP-0034 framed as GREEN-gating future-work w/ the true-connector-infeasibility
+  caveat honestly stated). Submittable as the honest-conditional characterization;
+  flips EXP-0034 to closing-result if it lands.'
