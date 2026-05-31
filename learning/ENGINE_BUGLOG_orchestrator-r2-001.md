@@ -268,7 +268,7 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   BUG-3 (green_rule), BUG-10 (atomic runtime writes), BUG-7 (liveness retire), lifecycle advance/resume.
 - TODO carryover: BUG-2 CLOSED; BUG-4 data-fixed + engine-gap logged; BUG-6 confirmed LIVE (mitigated);
   BUG-1 partial (fallback works).
-- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — fixed data, engine-validator gap stands),
+- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — self-fixed), BUG-16 (area_chair parallel-race — FIXED by engine 6667c9e: chair-last ordering),
   BUG-16 (area_chair parallel-race miscounts — benign, latent), BUG-17 (map-delta ';' split nit),
   BUG-18 (verdict write non-idempotent under retry -> duplicate orphan — remediated).
 
@@ -286,6 +286,11 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   BUG-3 (green_rule), BUG-10 (atomic runtime writes), BUG-7 (liveness retire), lifecycle advance/resume.
 - TODO carryover: BUG-2 CLOSED; BUG-4 data-fixed + engine-gap logged; BUG-6 confirmed LIVE (mitigated);
   BUG-1 partial (fallback works).
-- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — fixed data, engine-validator gap stands),
+- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — self-fixed), BUG-16 (area_chair parallel-race — FIXED by engine 6667c9e: chair-last ordering),
   BUG-16 (area_chair parallel-race miscounts — benign, latent), BUG-17 (map-delta ';' split nit),
   BUG-18 (verdict write non-idempotent under retry -> duplicate orphan — remediated).
+
+### BUG-16 — FIXED by engine 6667c9e (verified). run_committee.sh now runs 5 reviewers in parallel,
+  `wait`s, then runs area_chair LAST with the 5 finished reviewer .out files injected into its prompt
+  ("=== REVIEWER VOTES TO AGGREGATE ==="). Chair quorum is now real, not raced. Confirmed at source
+  (engine/run_committee.sh L71-83 + L38-58).
