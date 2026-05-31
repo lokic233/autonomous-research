@@ -109,6 +109,9 @@ nodes:
   known_baselines:
   - class-agnostic recovery rate (NULL)
   - modality-agnostic redirect rate (NULL)
+  - static deterministic error-class->Mode(modality) mapping
+  - gate-type-only predictor (REDIRECTABLE/TERMINAL flag)
+  - web_disabled-ablated NULL variant
   open_gaps:
   - 'error-class -> recovery competence (CLAIM-0008, YELLOW): EXP-0007 real-trace census (70 Claude Code
     sessions/356 failures) CONFIRMS predictive (Cramer V=0.644; out-of-sample LOO-Brier +0.087; permanent
@@ -123,17 +126,28 @@ nodes:
     REFUTED: error-class->modality V=0.717, out-of-sample LOO-Brier -40.6%, LOSO V 0.70-0.78, perm-p=0.0002,
     robust to all knobs that washed out occurrence. REDIRECTABLE-vs-TERMINAL is a property of the GATE
     not the policy label (web_disabled 100% redirect vs perm_denied 0% redirect, same policy family).
-    GREEN needs: committee 6/6, cross-harness, a sampled TERMINAL class (under-sampled here), interventional.'
-  red_zones: []
+    GREEN needs: committee 6/6, cross-harness, a sampled TERMINAL class (under-sampled here), interventional.
+    | VERDICT-0020 (real 6/6 YELLOW): SHARPENED — V=0.717 headline has 60% mass on 2 DEFINITIONALLY-determined
+    cells (web_disabled redirect=1.0 by construction; perm_denied=0.0 by construction). error-class &
+    GATE-TYPE are COLINEAR -> signal may be gate-type+harness-routing, NOT error-class per se (PREDICTOR
+    MISATTRIBUTION). GREEN needs: web_disabled-ablated V + leave-one-CLASS-out CV; lift over static-mapping
+    + gate-type-only baselines; >=2-src self-healing prior-art sweep; sampled TERMINAL class n>=10; cross-harness;
+    interventional (alter routing, check modality follows RULE not class).'
+  red_zones:
+  - 'harness-routing-as-confound (CLAIM-0009 OPEN_RISK): recovery modality may be determined by the harness
+    routing table (gate-type), not the error-class — these are colinear in the Claude Code corpus; needs
+    interventional/ablation to separate before any ''error-class predicts modality'' claim.'
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T16:00:11Z'
+  last_updated: '2026-05-31T16:13:11Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
-    +EXP-0009/VERDICT-0018 (2026-05-31): recovery-modality supported; gate-property taxonomy'
+    +EXP-0009/VERDICT-0018 (2026-05-31): recovery-modality supported; gate-property taxonomy | +VERDICT-0020
+    (2026-05-31, real 6/6): predictor-misattribution + definitional-inflation; scope narrowed; new baselines
+    + confound node'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

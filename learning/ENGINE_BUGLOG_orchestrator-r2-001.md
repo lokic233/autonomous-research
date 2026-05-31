@@ -470,3 +470,20 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - NOTE: run_3 succeeded because (per launch.log) its timing happened to let the loop read all 6 before
   any gemini drain took effect on that run; it was timing-luck, consistent with the operator's earlier
   observation. The stdin-drain is the deterministic root cause that makes drops recur.
+
+### BUG-22 — FIXED by engine 953dbc3 (VERIFIED end-to-end in committee_run_6). 
+- Source verified: gemini now </dev/null (line 62+73), all run_one children </dev/null, launch loop reads on
+  FD 9 (`while read ... <&9; done 9< $MEMBERS_FILE`) so no child can drain it, ALL_ROLES computed via awk
+  over the members file INDEPENDENTLY (line 89) so the gate always sees all 6.
+- committee_run_6 (CLAIM-0009): clean gated 6/6 — _status=ALL_COMMITTEE_DONE, all 6 .out present + non-empty
+  with real vote blocks, ZERO members dropped (the BUG-21/22 false-DONE is gone). BUG-20b auto-retry recovered
+  3 transient claude/codex/metacode empties mid-run; final = real 6/6 YELLOW. Wrote parity VERDICT-0020
+  (--allow-dup to supersede the 1-vote VERDICT-0018; idempotency guard correctly blocked the plain re-write).
+- The full committee runner is now ROBUST across all 4 failure modes my runs exposed: nested-sandbox (20),
+  claude-concurrency-empties (20b), false-ALL_DONE-with-missing (21), gemini-stdin-drain (22).
+
+### COMMITTEE VALUE DEMONSTRATED: VERDICT-0020 (6/6) was SHARPER than my 1-vote VERDICT-0018.
+- The committee surfaced the PREDICTOR-MISATTRIBUTION confound (error-class vs gate-type are colinear in the
+  corpus; the signal may be the harness routing table, not error-class) — an objection my single-vote review
+  MISSED. This is the concrete payoff of the full-committee bar over a 1-vote evidence-update: it caught an
+  overclaim. Scope of CLAIM-0009 narrowed accordingly; harness-routing-as-confound added to MAP-0002 red_zones.

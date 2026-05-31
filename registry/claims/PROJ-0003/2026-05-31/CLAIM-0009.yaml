@@ -2,16 +2,21 @@ claim_id: CLAIM-0009
 project_id: PROJ-0003
 stage: seed
 status: seed
-claim: 'Error-class predicts agent recovery MODALITY (same-tool-retry vs cross-tool-redirect),
-  not recovery occurrence: failure provenance determines HOW an agent recovers, conditioned
-  on whether a policy/permission gate is REDIRECTABLE (blocked tool -> sanctioned
-  alternative) vs TERMINAL.'
+claim: 'Gate-type + harness-routing characterizes agent recovery MODALITY (same-tool-retry
+  vs cross-tool-redirect) on a single-harness (Claude Code) corpus: V=0.717, but ~60%
+  of recovered-failure mass sits on 2 definitionally-determined cells (web_disabled
+  redirect=1.0, perm_denied=0.0). WHETHER the predictor is error-class PROPER vs gate-type
+  (colinear here) is UNRESOLVED pending ablation/intervention. REDIRECTABLE-vs-TERMINAL
+  is a property of the GATE, not the policy label.'
 why_it_matters: 'EXP-0008 refuted CLAIM-0008 (occurrence) but surfaced a sharper,
   defensible signal: error-class predicts the MODALITY of recovery. This re-seeds
   the surviving kernel as its own falsifiable claim.'
 novelty_hypothesis: ''
 mandatory_baselines:
-- modality-agnostic redirect rate (NULL baseline)
+- static deterministic error-class->Mode(modality) mapping
+- gate-type-only predictor
+- modality-agnostic NULL p0 (floor)
+- web_disabled-ablated variant
 academic_map_nodes:
 - MAP-0002
 supporting_evidence:
@@ -40,14 +45,19 @@ verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0020
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: committee_pending
-next_action: real 6/6 committee running (BUG-22 fixed, run_6) on EXP-0009 modality
-  evidence; check _status=ALL_COMMITTEE_DONE + each .err before counting; supersede
-  1-vote VERDICT-0018
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0020 real 6/6 YELLOW (supersedes 1-vote VERDICT-0018). Sharpened:
+  error-class vs gate-type COLINEAR -> predictor misattribution; V=0.717 has 60% mass
+  on 2 definitional cells. CPU-doable GREEN steps: (1) web_disabled-ablated V + leave-one-CLASS-out
+  CV; (2) static-mapping + gate-type-only baselines; (3) >=2-src self-healing prior-art
+  sweep. Then cross-harness + interventional [need new harness/data].'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T16:06:23Z'
+last_updated: '2026-05-31T16:13:11Z'

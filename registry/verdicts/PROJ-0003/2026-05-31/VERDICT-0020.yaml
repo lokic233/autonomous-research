@@ -1,0 +1,64 @@
+verdict_id: VERDICT-0020
+claim_id: CLAIM-0009
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0009
+experiment_paths:
+- experiments/2026-05-31/EXP-0009
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "DEFINITIONAL INFLATION: V=0.717 headline substantially carried by web_disabled\
+  \ (n=109, redirect-share=1.0 BY CONSTRUCTION \u2014 hard tool-block cannot be same-tool-retried)"
+- non-circular content (perm_denied contrast + within-transient 0.15-0.33 spread)
+  not isolated as headline
+- 'PREDICTOR MISATTRIBUTION (sharpest, unrebutted): error-class and GATE-TYPE colinear
+  in this corpus'
+- "signal is in gate-type+harness-routing, not error-class per se \u2014 title overclaims\
+  \ until ablation/intervention separates"
+- 'STRAWMAN NULL: LOO-Brier vs maximally-uninformative p0=0.504'
+- honest comparator = static error-class->Mode(modality) or gate-type-only
+- 'PRIOR-ART SWEEP INCOMPLETE: live 2024-2026 self-healing/error-recovery-trace retrieval
+  permission-blocked'
+- neighbors from memory only (same >=2-source blocker as CLAIM-0006)
+required_evidence:
+- 'ABLATED HEADLINE: re-report V+LOO-Brier with web_disabled REMOVED + leave-one-CLASS-out
+  CV (if V collapses, claim is config fact not regularity)'
+- 'INFORMED BASELINES: lift over static error-class->Mode mapping + gate-type-only,
+  not just NULL'
+- PRIOR-ART LIVE SWEEP >=2-source 2024-2026 body-verified
+- 'TERMINAL POLE: demonstrate cleanly-terminal class n>=10 (OOM/refusal/unrecoverable-parse)'
+- 'CROSS-HARNESS: >=1 non-Claude-Code harness to break routing-as-constant confound'
+- 'INTERVENTIONAL: alter routing for one class + verify modality follows RULE not
+  error-class'
+map_delta_proposals:
+- 'MAP-0002: error-class->modality CANDIDATE-OPEN FLAGGED novelty-unverified (self-healing
+  prior-art sweep owed)'
+- known_baselines ADD static-mapping + gate-type-only + web_disabled-ablated (NULL=floor
+  only)
+- 'NARROW CLAIM-0009: ''gate-type+harness-routing characterizes modality, single-harness,
+  V=0.717 w/ 60% mass on 2 definitional cells'' until ablation localizes to error-class'
+- ADD node harness-routing-as-confound linked CLAIM-0009 OPEN_RISK
+- 'TODO: terminal-pole-sampling, cross-harness, leave-one-class-out-CV, interventional'
+baseline_requirements:
+- static error-class->Mode(modality) mapping
+- gate-type-only predictor
+- NULL p0=0.504 (floor)
+- web_disabled-ablated NULL
+created_at: '2026-05-31T16:12:41Z'
