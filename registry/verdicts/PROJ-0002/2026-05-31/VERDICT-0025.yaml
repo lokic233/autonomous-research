@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0025
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0006
+- EXP-0013
+- EXP-0014
+experiment_paths:
+- experiments/2026-05-31/EXP-0006
+- experiments/2026-05-31/EXP-0013
+- experiments/2026-05-31/EXP-0014
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'NOVELTY GATE-A = CLOSED/GREEN (novelty_killer voted GREEN: 10/10 neighbors body-read,
+  injection 0x, no >=2-source collision'
+- surviving win-region novelty genuine-but-thin). NOT unanimous (1 green/5 yellow)
+  so claim stays YELLOW per green_rule
+- "Gate-B kernel-proxy CONFIRMS expected GPU arithmetic-intensity ordering (contiguous>scattered)\
+  \ \u2014 confirms first principles, not a discovery"
+- needs serving-stack validation
+- "EXP-0014 'CDC faster in ALL 8 cells' is OVERSTATED w/o CIs \u2014 the 32k/1% cell\
+  \ (1.02x) is statistically indistinguishable from unity"
+required_evidence:
+- EXP-0014 replicate with CIs on all 8 cells (the 1.02x cell must show CI excluding
+  <1.0)
+- ">=1 END-TO-END serving-stack wall-clock cell (vLLM+CacheBlend/PIC, even single\
+  \ config e.g. 32k/0.1%) to anchor the kernel-proxy ratios vs a real serving baseline\
+  \ \u2014 4/5 reviewers require this"
+- 'PIC scattered-HKVD impl PROVENANCE: published kernel vs faithful re-impl vs naive
+  gather (unstated faithfulness confounds all 8 ratios)'
+- 'mandatory baselines: vLLM PagedAttention native (CDC contiguous assumption incompatible)
+  + CacheBlend selective-recompute fusion kernel'
+map_delta_proposals:
+- 'CLAIM-0006: gate-A (novelty) -> CLOSED/GREEN (novelty_killer GREEN, 10/10 body-verified)'
+- 'gate-B (GPU wall-clock) -> ADVANCED/YELLOW (kernel-proxy done, EXP-0014: CDC contiguous
+  wall-clock-faster than PIC scattered 1.02-2.68x but confirms-expected + needs CIs
+  + 1 serving cell + impl provenance)'
+- surviving-novelty-scope = workload-conditioned win-region + honest margin-collapse
+  negative (characterization, not mechanism)
+- slope~1 = CDC-specific accounting identity NOT cross-engine law
+- designated must-cite mechanism-twin = Irminsul 2605.05696
+baseline_requirements:
+- vLLM PagedAttention native
+- CacheBlend selective-recompute fusion kernel
+- real PIC artifact end-to-end serving (gate-B)
+- per-engine slope CI (EXP-0013)
+- H100 kernel wall-clock (EXP-0014)
+created_at: '2026-05-31T18:23:54Z'

@@ -525,3 +525,24 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   guard so gc never reaps an in-flight experiment.
 - LESSON for orchestrator: run `ros exp gc` only when NO researchers are active (check liveness first), or
   pass a dry-run + eyeball the list before --apply. I ran --apply while a researcher was mid-flight.
+
+### BUG-25 (NEW, HIGH / data-integrity) — `ros exp complete --effect kill --claim <X>` will KILL a PROMOTED 6/6-GREEN claim with NO guard
+- researcher-0001-laneA was told (by my task) to `exp register --claim CLAIM-0002` for the idle-window
+  speculative-prefill GAP. But CLAIM-0002 is the PROMOTED 6/6-GREEN mapping-ceiling thesis — the gap merely
+  REFERENCES it as adjacent in MAP-0001; the gap is NOT itself a registered claim. When the researcher ran
+  `exp complete --effect kill`, the engine auto-flipped CLAIM-0002 status promoted->killed AND buried it as
+  DEAD-0010 — destroying a promoted claim.
+- ROOT CAUSE: `exp complete --effect kill` unconditionally transitions the bound claim to killed + writes a
+  cemetery entry, with NO check that the claim is promoted/GREEN (which should be near-immutable) and no
+  confirmation. A single mis-bound experiment can erase a top result.
+- TWO bugs here: (a) ENGINE: a kill on a promoted claim must REQUIRE explicit override/confirmation (promoted
+  claims are near-terminal; killing one should not be a silent side-effect of an experiment completion);
+  (b) ORCHESTRATOR (mine): my researcher task said `--claim CLAIM-0002` when the gap is not that claim — I
+  pointed it at a promoted claim. Researcher tasks for a GAP that isn't a registered claim must NOT bind to an
+  existing claim id; either seed a fresh claim first or use `--claim none`.
+- REMEDIATION (researcher self-repaired, orchestrator verified): CLAIM-0002 restored to status=promoted/
+  stage=paper-track/lifecycle=done (matches committed good state a2908b3, git diff vs HEAD empty = correct).
+  DEAD-0010 rewritten to record the GAP idea (original_claim_id:'' + flag note), NOT CLAIM-0002's death.
+- Severity: HIGH — silent destruction of a promoted 6/6-GREEN claim. Engine fix: guard kill-on-promoted.
+- LESSON: when dispatching a researcher on a MAP open_gap that is not a registered claim, do NOT pass an
+  existing --claim id (esp. a promoted one). Seed the claim first, or scope the experiment to --claim none.

@@ -29,12 +29,13 @@ nodes:
   - 'variable-size-block arXiv:2604.23994 [BODY-VERIFIED distinct: discrete-diffusion LM block-COMMIT
     generation-quality (NF/FA self-containedness); NOT autoregressive KV-prefix invalidation; NO inj/seq
     cost-map. ''injection''/''prefix cache'' 0x]'
+  - arXiv:2511.20048 (agent idle-gap speculation + overhead model; speculation-during-tool-latency)
+  - arXiv:2605.06472 (prediction-based KV-cache prefill for agent workflows)
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
   - FlashInfer
   open_gaps:
-  - idle-window speculative prefill (CLAIM-0002 poc, YELLOW)
   - 'prefix-cache invalidation COST-MAP / inj-seq invalidation law (CLAIM-0006, committee 6/6 YELLOW VERDICT-0011;
     mechanism NOT novel vs Irminsul/PIC, surviving novelty=characterization; GREEN needs wall-clock-across-surface
     + real-trace workload) | EXP-0006: CDC edge over FAIR PIC family is only ~1.1-1.7x median (CPU proxy),
@@ -70,7 +71,12 @@ nodes:
     slope~1 = ARTIFACT, theory_skeptic upheld). Margin median 1.77x [1.56,1.87]; tie 1.29x [1.25,1.33]
     at inj/seq>=5%; win-region inj/seq<=1% = 100% Wilson[0.972,1.0]; sink frac CDC 0.12%/PIC 3.47%. Surviving
     contribution = the workload-conditioned WIN-REGION on CDC accounting line, NOT a slope discovery.
-    ONLY remaining GREEN-blocker = gate-B GPU wall-clock on real PIC artifact [human-go INVARIANT 3].'
+    ONLY remaining GREEN-blocker = gate-B GPU wall-clock on real PIC artifact [human-go INVARIANT 3].
+    | VERDICT-0025 (6/6, novelty_killer GREEN): gate-A CLOSED/GREEN (novelty genuine: workload-conditioned
+    win-region + honest margin-collapse negative; slope~1=CDC accounting identity; must-cite twin Irminsul
+    2605.05696). gate-B ADVANCED (EXP-0014 kernel wall-clock: CDC contiguous faster than PIC scattered
+    1.02-2.68x but confirms-expected). To GREEN: replicate CIs (32k/1% 1.02x cell), >=1 end-to-end serving
+    cell (vLLM+CacheBlend), PIC-impl provenance. CLOSE.'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -89,6 +95,11 @@ nodes:
     only with a clean isolated >linear measurement
   - layer-stratified positional KV reuse capped at 1.5% real incidence (DEAD-0007); revive only if real-trace
     incidence > 2%
+  - 'idle-window speculative prefill = DEAD (DEAD-0010, EXP-0018): break-even h*f>=alpha/(1+alpha) is
+    a generic speculate-or-skip accounting identity (nothing KV-specific); occupied by arXiv:2511.20048
+    (agent idle-gap speculation+overhead model) + arXiv:2605.06472 (prediction-based KV prefill). Revive
+    only if a speculative-prefill operating point is body-distinct from those AND beats the break-even
+    identity.'
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -107,8 +118,9 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   - DEAD-0009
+  - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T18:20:07Z'
+  last_updated: '2026-05-31T18:24:27Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -122,7 +134,9 @@ nodes:
     6/6): gate-A overstatement corrected (8/10, 2 MEDIUM pending); stats-rigor pass required; gate-B GPU
     is the long pole | +EXP-0013/VERDICT-0023 (2026-05-31): gate-A FULLY CLOSED (10/10); slope~1 = CDC-specific
     accounting identity not cross-engine law; only gate-B GPU remains | +laneB completeness audit (2026-05-31):
-    D1 CLAIM-0005 backlink, D3 DEAD-0004/0007 red_zones; PROJ-0001 assessed SATURATED/mature'
+    D1 CLAIM-0005 backlink, D3 DEAD-0004/0007 red_zones; PROJ-0001 assessed SATURATED/mature | +EXP-0018/DEAD-0010
+    (2026-05-31): idle-window speculative prefill DEAD (occupied 2511.20048/2605.06472 + accounting identity);
+    +VERDICT-0025: CLAIM-0006 gate-A GREEN, gate-B advanced'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
@@ -143,48 +157,44 @@ nodes:
   - gate-type-only predictor (REDIRECTABLE/TERMINAL flag)
   - web_disabled-ablated NULL variant
   open_gaps:
-  - 'error-class -> recovery competence (CLAIM-0008, YELLOW): EXP-0007 real-trace census (70 Claude Code
-    sessions/356 failures) CONFIRMS predictive (Cramer V=0.644; out-of-sample LOO-Brier +0.087; permanent
-    harness/policy gates ~unrecoverable 0.25 vs transient 0.705, phi=0.454). Dominant axis=provenance/permanence.
-    GREEN needs cross-harness + interventional + decoupled outcome. | EXP-0008 (outcome-def decoupling,
-    cross-tool workarounds counted): signal WASHES OUT — V 0.644->0.239 (n.s.), LOO-Brier gain ->~0, permanence
-    phi 0.454->0.138. EXP-0007 headline was outcome-def-dependent (web_disabled 0/109 was a REDIRECTABLE
-    gate, not terminal). Truth bracketed: EXP-0007 lower / EXP-0008 upper. Defensible reframe = error-class
-    predicts recovery MODALITY not OCCURRENCE.'
+  - 'terminal pole DEMONSTRATED un-demonstrable on Claude Code corpus (EXP-0020): NO n>=10 class cleanly/near-terminal;
+    terminality window-dependent (term_rate 0.53->0.16 as K 3->24) AND class-INDEPENDENT (V=0.238, perm_p=0.133
+    n.s.); session-ending failure only 1.6-3.2%. redirectable-vs-terminal taxonomy stays at TWO demonstrated
+    poles (REDIRECTABLE=web_disabled; SAME-TOOL=perm_denied+transients); terminal pole needs a crash/refusal-heavy
+    corpus, NOT finer Claude-Code analysis.'
   - real-trace failure census
-  - 'CLAIM-0009 recovery-MODALITY SUPPORTED on real traces where occurrence-prediction (CLAIM-0008) was
-    REFUTED: error-class->modality V=0.717, out-of-sample LOO-Brier -40.6%, LOSO V 0.70-0.78, perm-p=0.0002,
-    robust to all knobs that washed out occurrence. REDIRECTABLE-vs-TERMINAL is a property of the GATE
-    not the policy label (web_disabled 100% redirect vs perm_denied 0% redirect, same policy family).
-    GREEN needs: committee 6/6, cross-harness, a sampled TERMINAL class (under-sampled here), interventional.
-    | VERDICT-0020 (real 6/6 YELLOW): SHARPENED — V=0.717 headline has 60% mass on 2 DEFINITIONALLY-determined
-    cells (web_disabled redirect=1.0 by construction; perm_denied=0.0 by construction). error-class &
-    GATE-TYPE are COLINEAR -> signal may be gate-type+harness-routing, NOT error-class per se (PREDICTOR
-    MISATTRIBUTION). GREEN needs: web_disabled-ablated V + leave-one-CLASS-out CV; lift over static-mapping
-    + gate-type-only baselines; >=2-src self-healing prior-art sweep; sampled TERMINAL class n>=10; cross-harness;
-    interventional (alter routing, check modality follows RULE not class). | EXP-0012/VERDICT-0021: BOTH
-    objections DATA-CONFIRMED. Ablating web_disabled collapses LOO-Brier +40.1%->+2.2%; leave-one-CLASS-out
-    -33%; error-class lift over gate-type-only = -0.0043 (1 REDIRECTABLE bit ~= full 17-class taxonomy).
-    error-class->gate-type is a perfect function -> OBSERVATIONALLY INSEPARABLE. error-class framing RETIRED;
-    surviving = gate-type+routing CHARACTERIZATION (config fact). Remaining GREEN (non-CPU): >=2-src prior-art
-    sweep, sampled TERMINAL pole n>=10, cross-harness, interventional.'
+  - 'terminal pole DEMONSTRATED un-demonstrable on Claude Code corpus (EXP-0020): NO n>=10 class cleanly/near-terminal;
+    terminality window-dependent (term_rate 0.53->0.16 as K 3->24) AND class-INDEPENDENT (V=0.238, perm_p=0.133
+    n.s.); session-ending failure only 1.6-3.2%. redirectable-vs-terminal taxonomy stays at TWO demonstrated
+    poles (REDIRECTABLE=web_disabled; SAME-TOOL=perm_denied+transients); terminal pole needs a crash/refusal-heavy
+    corpus, NOT finer Claude-Code analysis.'
+  - 'OPEN (candidate, EXP-0019): TWO-LAYER recovery characterization — coarse gate-TYPE routing is deterministic
+    (config fact) but fine intra-gate recovery-tool SELECTION is high-entropy/adaptive (a decision, not
+    a table lookup). Cleaner than the retired error-class or flat routing-table framings. GREEN path =
+    cross-harness + interventional (force a route, check recovery degrades).'
   red_zones:
   - 'harness-routing-as-confound (CLAIM-0009 CONFIRMED (observationally inseparable, EXP-0012: error-class
     lift over gate-type-only = -0.0043; LOCO -33%)): recovery modality may be determined by the harness
     routing table (gate-type), not the error-class — these are colinear in the Claude Code corpus; needs
-    interventional/ablation to separate before any ''error-class predicts modality'' claim.'
+    interventional/ablation to separate before any ''error-class predicts modality'' claim. | REFINED
+    (EXP-0019): the confound is at the COARSE gate-type layer ONLY; the FINE intra-gate tool-selection
+    layer is ADAPTIVE/high-entropy (per-class next-tool norm-entropy 0.738 ~= global 0.714; collapse CI
+    [-0.052,+0.009] P=0.073; routing-only recovery predictor -8.5% vs null; modal route <44%). An adaptive-recovery
+    claim is NOT dead at tool granularity.'
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T16:26:43Z'
+  last_updated: '2026-05-31T18:25:28Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
     +EXP-0009/VERDICT-0018 (2026-05-31): recovery-modality supported; gate-property taxonomy | +VERDICT-0020
     (2026-05-31, real 6/6): predictor-misattribution + definitional-inflation; scope narrowed; new baselines
     + confound node | +EXP-0012/VERDICT-0021 (2026-05-31): both committee objections data-confirmed; confound
-    CONFIRMED; error-class framing retired -> gate-type characterization'
+    CONFIRMED; error-class framing retired -> gate-type characterization | +EXP-0020 (2026-05-31): terminal
+    pole un-demonstrable on this corpus (discharged-as-negative) | +EXP-0019 (2026-05-31): routing-table
+    thesis refuted; two-layer (coarse-deterministic/fine-adaptive) candidate surfaced'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

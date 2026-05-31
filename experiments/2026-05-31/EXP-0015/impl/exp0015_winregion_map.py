@@ -126,6 +126,61 @@ def region_fractions(tasks):
         "token_frac_win1_GIVEN_large": (t_win1_large / tok_large) if tok_large else 0.0,
     }
 
+
+# ============================================================================
+# FAST cluster-bootstrap support: precompute per-TASK summary vectors ONCE, then resample the
+# small per-task vectors (O(B*n_tasks)) instead of rescanning all injections (O(B*n_injections)).
+# The resampled fractions are IDENTICAL to scanning resampled raw injections (sums are linear).
+# Each task aggregate = (n, tok, c_win1, t_win1, c_winJ, t_winJ, n_large, tok_large,
+#                        c_win1_large, t_win1_large)
+# ============================================================================
+def task_aggregates(tasks):
+    aggs = []
+    for recs in tasks:
+        n=tok=c_win1=t_win1=c_winJ=t_winJ=n_large=tok_large=c_w1l=t_w1l=0
+        for ratio, R, S in recs:
+            n+=1; tok+=R
+            w1 = ratio <= 0.01; lg = S >= LARGE_CTX
+            if w1: c_win1+=1; t_win1+=R
+            if lg: n_large+=1; tok_large+=R
+            if w1 and lg: c_winJ+=1; t_winJ+=R; c_w1l+=1; t_w1l+=R
+        aggs.append((n,tok,c_win1,t_win1,c_winJ,t_winJ,n_large,tok_large,c_w1l,t_w1l))
+    return aggs
+
+def fractions_from_aggs(aggs):
+    N=TOK=C1=T1=CJ=TJ=NL=TL=CWL=TWL=0
+    for a in aggs:
+        N+=a[0];TOK+=a[1];C1+=a[2];T1+=a[3];CJ+=a[4];TJ+=a[5];NL+=a[6];TL+=a[7];CWL+=a[8];TWL+=a[9]
+    if N==0: return None
+    return {
+        "n_injections": N, "n_tokens": TOK,
+        "count_frac_win1": C1/N,
+        "token_frac_win1": T1/TOK,
+        "count_frac_joint_win1_large": CJ/N,
+        "token_frac_joint_win1_large": TJ/TOK,
+        "large_ctx_share_count": NL/N,
+        "large_ctx_share_token": TL/TOK,
+        "count_frac_win1_GIVEN_large": (CWL/NL) if NL else 0.0,
+        "token_frac_win1_GIVEN_large": (TWL/TL) if TL else 0.0,
+    }
+
+def fast_bootstrap(tasks, B, rng, keys):
+    aggs = task_aggregates(tasks)
+    n = len(aggs)
+    samples = {k: [] for k in keys}
+    for _ in range(B):
+        boot = [aggs[rng.randrange(n)] for _ in range(n)]
+        rf = fractions_from_aggs(boot)
+        for k in keys:
+            samples[k].append(rf[k])
+    out={}
+    for k in keys:
+        srt=sorted(samples[k])
+        lo=srt[int(0.025*len(srt))]; hi=srt[min(len(srt)-1,int(0.975*len(srt)))]
+        out[k]={"mean":round(statistics.mean(srt),4),"ci95":[round(lo,4),round(hi,4)],
+                "sd":round(statistics.pstdev(srt),4)}
+    return out
+
 # ============================================================================
 # Nonparametric cluster bootstrap: resample TASKS with replacement, recompute fractions, B times.
 # Report mean + percentile 95% CI for each fraction of interest.
@@ -176,7 +231,7 @@ base_tasks = simulate_tasks(rng, N_TASKS, 1.0, 1.0)
 results["baseline_point"] = {k: round(v,4) if isinstance(v,float) else v
                              for k,v in region_fractions(base_tasks).items()}
 boot_rng = random.Random(MASTER_SEED + 1)
-results["baseline_bootstrap_ci"] = bootstrap(base_tasks, B, boot_rng, KEYS)
+results["baseline_bootstrap_ci"] = fast_bootstrap(base_tasks, B, boot_rng, KEYS)
 
 # --- SYSTEMATIC WORKLOAD-PRIOR SWEEP ---
 TAIL_SCALES = [0.5, 1.0, 2.0, 3.0]
@@ -190,7 +245,7 @@ for ts in TAIL_SCALES:
         tks = simulate_tasks(rng_s, N_TASKS, ts, cs)
         pt = region_fractions(tks)
         brng = random.Random(rseed + 7)
-        bci = bootstrap(tks, 300, brng, SWEEP_KEYS)
+        bci = fast_bootstrap(tks, 300, brng, SWEEP_KEYS)
         sweep.append({
             "tail_scale": ts, "ctx_scale": cs,
             "count_frac_win1": round(pt["count_frac_win1"],4),

@@ -1,0 +1,32 @@
+verdict_id: VERDICT-0027
+claim_id: CLAIM-0009
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0019
+experiment_paths:
+- experiments/2026-05-31/EXP-0019
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "ROUTING-TABLE thesis REFUTED (EXP-0019): harness has NO low-entropy per-class fallback\
+  \ table \u2014 per-class next-tool norm-entropy 0.738 ~= global 0.714 (collapse\
+  \ CI [-0.052,+0.009], P=0.073)"
+- routing-only recovery predictor -8.5% vs null
+- modal route taken <44%. web_disabled redirect-target chosen ADAPTIVELY among {WebSearch,external_web_search,curl,...}
+required_evidence:
+- 'NEW two-layer characterization worth seeding: coarse gate-TYPE routing is deterministic
+  (config fact, the confound) BUT fine intra-gate tool-selection is high-entropy/ADAPTIVE
+  -> rehabilitates an adaptive-recovery story at tool granularity. GREEN path: cross-harness
+  + interventional (force a route, check recovery degrades)'
+map_delta_proposals:
+- 'MAP-0002 harness-routing-as-confound: confound is at COARSE gate-type layer ONLY'
+- FINE tool-selection layer is ADAPTIVE (EXP-0019 entropy 0.738~global, routing-predictor
+  -8.5% vs null). Adaptive-recovery NOT dead at tool granularity.
+baseline_requirements: []
+created_at: '2026-05-31T18:24:56Z'

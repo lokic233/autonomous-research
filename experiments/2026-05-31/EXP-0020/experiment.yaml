@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'TERMINAL-POLE census (copied EXP-0009 parse/classify). 78 sessions/3544
+  calls/373 failures; global broad-recovery 0.625 (matches EXP-0008/0009). RESULT:
+  terminal pole NOT demonstrable on this corpus. NO class at n>=10 is cleanly-/near-TERMINAL
+  (rec_rate<=0.10 & redir=0). Most terminal-leaning n>=10 class = policy.perm_denied
+  (term_rate 0.533) but recovers 47%/0 redirect = the already-demonstrated SAME-TOOL
+  pole, not a new terminal pole. Session-ending failure is rare: 6/373 last-call (1.6%),
+  12/373 no-success-after (3.2%). DECISIVE supplementary: terminality is window-dependent
+  (term_rate 0.53->0.16 as K 3->24) and class-INDEPENDENT (K=6 class->terminal CramersV=0.238,
+  perm_p=0.133 n.s.; no n>=10 class >=0.90 terminal at any K) -> diffuse goal-abandonment,
+  not a terminal error class. Converts VERDICT-0020/0021 ''under-sampled'' caveat
+  into a demonstrated fact: trichotomy stays at TWO poles (REDIRECTABLE+SAME-TOOL);
+  terminal pole provably needs a different (crash/refusal-heavy) corpus, not more
+  CPU analysis of Claude Code traces.'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0020/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0026
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T18:22:47Z'
 prompt_version: ''

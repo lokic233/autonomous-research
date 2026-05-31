@@ -173,7 +173,8 @@ def broad_recovered(calls, i):
     return same_tool or cross_tool, same_tool, cross_tool
 
 def main():
-    files = sorted(glob.glob(os.path.join(ROOT, "*", "*.jsonl")))
+    # recursive glob to include subagent traces (legitimate agent tool-use logs); maximizes n
+    files = sorted(glob.glob(os.path.join(ROOT, "**", "*.jsonl"), recursive=True))
     n_sessions=0; n_calls=0
     # failures: list of dicts {class, next_tool(or None), recovered, modal_route_taken-later}
     failures=[]
@@ -308,3 +309,55 @@ def main():
 
 if __name__=="__main__":
     main()
+
+
+def robustness():
+    """Bootstrap CI on the entropy-collapse statistic + a STRICT tool-name-only routing variant.
+    Decisive Q: is per-class next-tool entropy RELIABLY below global (routing-table) or not (adaptive)?"""
+    files = sorted(glob.glob(os.path.join(ROOT, "**", "*.jsonl"), recursive=True))
+    failrows=[]  # (cls, next_tool)
+    for path in files:
+        calls=parse_session(path)
+        if len(calls)<2: continue
+        for i,c in enumerate(calls):
+            if not c["is_error"]: continue
+            cls=classify_error(c["name"],c["cmd"],c["text"])
+            nxt=calls[i+1] if i+1<len(calls) else None
+            nt=routing_tool(nxt) if nxt is not None else "(END)"
+            failrows.append((cls,nt))
+    big={cls for cls in Counter(c for c,_ in failrows) if Counter(c for c,_ in failrows)[cls]>=10}
+
+    def collapse_stat(rows):
+        g=Counter(nt for _,nt in rows)
+        _,gHn,_=entropy_bits(g)
+        per=defaultdict(Counter)
+        for cls,nt in rows:
+            if cls in big: per[cls][nt]+=1
+        tot=0; wHn=0.0
+        for cls,ctr in per.items():
+            n=sum(ctr.values()); _,Hn,_=entropy_bits(ctr); wHn+=Hn*n; tot+=n
+        wHn=wHn/tot if tot else 0.0
+        return gHn - wHn   # positive => class collapses entropy (routing); <=0 => no collapse (adaptive)
+
+    obs=collapse_stat(failrows)
+    # bootstrap over failures
+    B=2000; stats=[]
+    n=len(failrows)
+    for _ in range(B):
+        samp=[failrows[random.randrange(n)] for _ in range(n)]
+        stats.append(collapse_stat(samp))
+    stats.sort()
+    lo=stats[int(0.025*B)]; hi=stats[int(0.975*B)]
+    frac_pos=sum(1 for s in stats if s>0)/B
+    print("\n=== ROBUSTNESS: entropy-collapse (global_normH - per_class_normH), n>=10 classes ===")
+    print(f"observed collapse = {obs:+.4f} bits-normalized (POSITIVE => routing collapses entropy)")
+    print(f"bootstrap 95% CI  = [{lo:+.4f}, {hi:+.4f}]   P(collapse>0) = {frac_pos:.3f}")
+    if hi < 0.05 and obs < 0.05:
+        print("-> per-class entropy is NOT meaningfully below global: ADAPTIVE next-move, REFUTES routing-table thesis")
+    elif lo > 0.10:
+        print("-> per-class entropy reliably below global: SUPPORTS routing-table thesis")
+    else:
+        print("-> inconclusive collapse")
+
+if __name__=="__main__":
+    robustness()

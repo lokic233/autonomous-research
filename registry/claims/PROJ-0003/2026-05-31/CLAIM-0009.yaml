@@ -54,6 +54,32 @@ negative_evidence:
     single-harness. Surviving claim = gate-type+routing characterization (config fact),
     NOT error-class prediction.'
   data_path: experiments/2026-05-31/EXP-0012/
+- exp_id: EXP-0020
+  summary: 'TERMINAL-POLE census (copied EXP-0009 parse/classify). 78 sessions/3544
+    calls/373 failures; global broad-recovery 0.625 (matches EXP-0008/0009). RESULT:
+    terminal pole NOT demonstrable on this corpus. NO class at n>=10 is cleanly-/near-TERMINAL
+    (rec_rate<=0.10 & redir=0). Most terminal-leaning n>=10 class = policy.perm_denied
+    (term_rate 0.533) but recovers 47%/0 redirect = the already-demonstrated SAME-TOOL
+    pole, not a new terminal pole. Session-ending failure is rare: 6/373 last-call
+    (1.6%), 12/373 no-success-after (3.2%). DECISIVE supplementary: terminality is
+    window-dependent (term_rate 0.53->0.16 as K 3->24) and class-INDEPENDENT (K=6
+    class->terminal CramersV=0.238, perm_p=0.133 n.s.; no n>=10 class >=0.90 terminal
+    at any K) -> diffuse goal-abandonment, not a terminal error class. Converts VERDICT-0020/0021
+    ''under-sampled'' caveat into a demonstrated fact: trichotomy stays at TWO poles
+    (REDIRECTABLE+SAME-TOOL); terminal pole provably needs a different (crash/refusal-heavy)
+    corpus, not more CPU analysis of Claude Code traces.'
+  data_path: experiments/2026-05-31/EXP-0020/
+- exp_id: EXP-0019
+  summary: 'REFUTE the routing-table thesis (weakens routing-table characterization;
+    rehabilitates adaptive-recovery at tool granularity). Per-class next-tool norm-entropy=0.738
+    ~ global 0.714 (entropy-collapse=-0.024, bootstrap95%CI[-0.052,+0.009], P(collapse>0)=0.073);
+    modal-route share 0.423; routing-only recovery predictor WORSE than null (LOO-Brier
+    -8.5%); only 44% of recovered failures used class modal route. Even web_disabled:
+    norm-entropy 0.738, modal WebSearch 40%, recovers 45% -> redirect target chosen
+    ADAPTIVELY not routed. Harness has NO low-entropy per-class fallback table. gate-TYPE
+    config fact (EXP-0012) is coarse-layer only; intra-gate tool selection is adaptive.
+    78 sess/3544 calls/373 failures. CPU-only.'
+  data_path: experiments/2026-05-31/EXP-0019/
 verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-05-31'
@@ -64,21 +90,24 @@ verdict_history:
 - verdict_id: VERDICT-0021
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0026
+  date: '2026-05-31'
+  result: yellow
+- verdict_id: VERDICT-0027
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0020 result, then ros exp complete --exp EXP-0020 --effect
-  ...
-blocking_on: 'All remaining GREEN-gates are NON-CPU / need human or new data: (1)
-  live >=2-src self-healing prior-art sweep [web-search permission-blocked on node];
-  (2) sampled TERMINAL error-class n>=10 [corpus under-samples it]; (3) cross-harness
-  replication [need a 2nd non-Claude-Code agent harness]; (4) interventional routing-alteration
-  [need harness control].'
+lifecycle_state: verdict_recorded
+next_action: 'Two CPU lanes done: terminal pole un-demonstrable on this corpus (EXP-0020,
+  discharged-negative); routing-table thesis REFUTED but surfaced a cleaner TWO-LAYER
+  thesis (coarse gate-type deterministic / fine tool-selection adaptive, EXP-0019).
+  Consider seeding two-layer as new claim. Remaining gates: cross-harness + interventional
+  (need new corpus/harness control).'
+blocking_on: ''
 active_experiments:
 - EXP-0016
 - EXP-0017
-- EXP-0019
-- EXP-0020
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T18:19:18Z'
+last_updated: '2026-05-31T18:25:28Z'

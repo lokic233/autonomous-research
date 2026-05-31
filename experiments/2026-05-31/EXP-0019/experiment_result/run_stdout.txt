@@ -1,19 +1,20 @@
-corpus: 53 sessions, 1710 calls, 114 ground-truth failures
+corpus: 78 sessions, 3544 calls, 373 ground-truth failures
 
-GLOBAL next-tool dist: entropy=4.673 bits, norm=0.884, top1-share=0.149, support=39 | mode=('Bash:ls', 17)
+GLOBAL next-tool dist: entropy=3.924 bits, norm=0.714, top1-share=0.300, support=45 | mode=('mcp__plugin_meta_mux__three_pai_external_web_search', 112)
 
 === PER-CLASS DE-FACTO ROUTING TABLE (next-tool distribution) ===
 class                     n  H_bits  Hnorm   top1 rec_rate  modal_route -> recovery_of_that_route
-other                    60   4.341  0.913  0.117    0.550  mcp__plugin_meta_mux__three_pai_external_web_search (7/60, rec=0.14)
-fs.notfound              18   2.370  0.844  0.389    0.889  Bash:ls (7/18, rec=0.86)
+other                   113   3.448  0.703  0.451    0.593  mcp__plugin_meta_mux__three_pai_external_web_search (51/113, rec=0.63)
+policy.web_disabled     109   2.339  0.738  0.404    0.606  WebSearch (44/109, rec=0.45)
+cancelled                59   2.852  0.749  0.373    0.576  mcp__plugin_meta_mux__three_pai_external_web_search (22/59, rec=0.86)
+policy.perm_denied       30   2.282  0.720  0.533    0.467  mcp__plugin_meta_mux__three_pai_external_web_search (16/30, rec=0.56)
+fs.notfound              20   2.702  0.852  0.350    0.800  Bash:ls (7/20, rec=0.86)
+proc.exit_nodetail       14   2.217  0.858  0.429    0.857  mcp__plugin_meta_mux__three_pai_external_web_search (6/14, rec=0.83)
 ssh.auth                  6   2.252  0.970  0.333    0.833  Bash:ls (2/6, rec=1.00)  (small-n)
-policy.web_disabled       5   1.371  0.865  0.600    0.200  WebSearch (3/5, rec=0.00)  (small-n)
 edit.other                5   1.922  0.961  0.400    0.800  Read (2/5, rec=1.00)  (small-n)
-cancelled                 5   2.322  1.000  0.200    1.000  Bash:cat (1/5, rec=1.00)  (small-n)
+code.build                4   2.000  1.000  0.250    1.000  mcp__plugin_meta_mux__three_pai_external_web_search (1/4, rec=1.00)  (small-n)
+proc.timeout              4   2.000  1.000  0.250    0.750  Bash:# (1/4, rec=1.00)  (small-n)
 policy.input_filter       2   1.000  1.000  0.500    1.000  mcp__plugin_meta_mux__knowledge_load (1/2, rec=1.00)  (small-n)
-code.build                2   1.000  1.000  0.500    1.000  Bash:export (1/2, rec=1.00)  (small-n)
-proc.exit_nodetail        2   1.000  1.000  0.500    1.000  Bash:build (1/2, rec=1.00)  (small-n)
-proc.timeout              2   1.000  1.000  0.500    0.500  Bash:# (1/2, rec=1.00)  (small-n)
 net.http                  2   1.000  1.000  0.500    1.000  Bash:npx (1/2, rec=1.00)  (small-n)
 read.too_large            1   0.000  0.000  1.000    1.000  Read (1/1, rec=1.00)  (small-n)
 net.dns                   1   0.000  0.000  1.000    1.000  Bash:curl (1/1, rec=1.00)  (small-n)
@@ -21,20 +22,66 @@ net.conn                  1   0.000  0.000  1.000    1.000  Bash:curl (1/1, rec=
 code.test                 1   0.000  0.000  1.000    1.000  Bash:cat (1/1, rec=1.00)  (small-n)
 fs.perm                   1   0.000  0.000  1.000    0.000  Bash:npx (1/1, rec=0.00)  (small-n)
 
-n>=10 classes: failure-weighted norm-entropy=0.897, failure-weighted top1-route-share=0.179
-GLOBAL norm-entropy=0.884.  Entropy COLLAPSE from knowing class = -0.013 (norm units)
+n>=10 classes: failure-weighted norm-entropy=0.738, failure-weighted top1-route-share=0.423
+GLOBAL norm-entropy=0.714.  Entropy COLLAPSE from knowing class = -0.024 (norm units)
 
 === ROUTING-EXPLAINED RECOVERY (honest leave-one-out) ===
-NULL LOO-Brier (global recovery rate)        = 0.2231
-ROUTING-table LOO-Brier (class modal route)  = 0.2927
-Routing-table improvement over NULL          = -0.0696 (-31.2%)
+NULL LOO-Brier (global recovery rate)        = 0.2357
+ROUTING-table LOO-Brier (class modal route)  = 0.2557
+Routing-table improvement over NULL          = -0.0199 (-8.5%)
 
-Recovered failures routed via their class's MODAL next-tool: 21/77 = 0.273
+Recovered failures routed via their class's MODAL next-tool: 103/233 = 0.442
 
 CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0019/impl/../experiment_result/routing_table.csv
 CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0019/impl/../experiment_result/routing_distributions.csv
 
 === ROUTING-TABLE THESIS VERDICT (printed only) ===
-failure-weighted per-class norm-entropy = 0.897 (0=deterministic route, 1=uniform/adaptive)
-failure-weighted top1 route share       = 0.179
--> HIGH per-class entropy = REFUTES routing-table framing (next move looks adaptive)
+failure-weighted per-class norm-entropy = 0.738 (0=deterministic route, 1=uniform/adaptive)
+failure-weighted top1 route share       = 0.423
+-> MIXED
+corpus: 78 sessions, 3544 calls, 373 ground-truth failures
+
+GLOBAL next-tool dist: entropy=3.924 bits, norm=0.714, top1-share=0.300, support=45 | mode=('mcp__plugin_meta_mux__three_pai_external_web_search', 112)
+
+=== PER-CLASS DE-FACTO ROUTING TABLE (next-tool distribution) ===
+class                     n  H_bits  Hnorm   top1 rec_rate  modal_route -> recovery_of_that_route
+other                   113   3.448  0.703  0.451    0.593  mcp__plugin_meta_mux__three_pai_external_web_search (51/113, rec=0.63)
+policy.web_disabled     109   2.339  0.738  0.404    0.606  WebSearch (44/109, rec=0.45)
+cancelled                59   2.852  0.749  0.373    0.576  mcp__plugin_meta_mux__three_pai_external_web_search (22/59, rec=0.86)
+policy.perm_denied       30   2.282  0.720  0.533    0.467  mcp__plugin_meta_mux__three_pai_external_web_search (16/30, rec=0.56)
+fs.notfound              20   2.702  0.852  0.350    0.800  Bash:ls (7/20, rec=0.86)
+proc.exit_nodetail       14   2.217  0.858  0.429    0.857  mcp__plugin_meta_mux__three_pai_external_web_search (6/14, rec=0.83)
+ssh.auth                  6   2.252  0.970  0.333    0.833  Bash:ls (2/6, rec=1.00)  (small-n)
+edit.other                5   1.922  0.961  0.400    0.800  Read (2/5, rec=1.00)  (small-n)
+code.build                4   2.000  1.000  0.250    1.000  mcp__plugin_meta_mux__three_pai_external_web_search (1/4, rec=1.00)  (small-n)
+proc.timeout              4   2.000  1.000  0.250    0.750  Bash:# (1/4, rec=1.00)  (small-n)
+policy.input_filter       2   1.000  1.000  0.500    1.000  mcp__plugin_meta_mux__knowledge_load (1/2, rec=1.00)  (small-n)
+net.http                  2   1.000  1.000  0.500    1.000  Bash:npx (1/2, rec=1.00)  (small-n)
+read.too_large            1   0.000  0.000  1.000    1.000  Read (1/1, rec=1.00)  (small-n)
+net.dns                   1   0.000  0.000  1.000    1.000  Bash:curl (1/1, rec=1.00)  (small-n)
+net.conn                  1   0.000  0.000  1.000    1.000  Bash:curl (1/1, rec=1.00)  (small-n)
+code.test                 1   0.000  0.000  1.000    1.000  Bash:cat (1/1, rec=1.00)  (small-n)
+fs.perm                   1   0.000  0.000  1.000    0.000  Bash:npx (1/1, rec=0.00)  (small-n)
+
+n>=10 classes: failure-weighted norm-entropy=0.738, failure-weighted top1-route-share=0.423
+GLOBAL norm-entropy=0.714.  Entropy COLLAPSE from knowing class = -0.024 (norm units)
+
+=== ROUTING-EXPLAINED RECOVERY (honest leave-one-out) ===
+NULL LOO-Brier (global recovery rate)        = 0.2357
+ROUTING-table LOO-Brier (class modal route)  = 0.2557
+Routing-table improvement over NULL          = -0.0199 (-8.5%)
+
+Recovered failures routed via their class's MODAL next-tool: 103/233 = 0.442
+
+CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0019/impl/../experiment_result/routing_table.csv
+CSV: /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0019/impl/../experiment_result/routing_distributions.csv
+
+=== ROUTING-TABLE THESIS VERDICT (printed only) ===
+failure-weighted per-class norm-entropy = 0.738 (0=deterministic route, 1=uniform/adaptive)
+failure-weighted top1 route share       = 0.423
+-> MIXED
+
+=== ROBUSTNESS: entropy-collapse (global_normH - per_class_normH), n>=10 classes ===
+observed collapse = -0.0237 bits-normalized (POSITIVE => routing collapses entropy)
+bootstrap 95% CI  = [-0.0519, +0.0094]   P(collapse>0) = 0.073
+-> per-class entropy is NOT meaningfully below global: ADAPTIVE next-move, REFUTES routing-table thesis

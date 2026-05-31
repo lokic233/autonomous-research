@@ -1,0 +1,67 @@
+sessions=78 total_tool_calls=3544 failures=373  K_WINDOW=6
+
+GLOBAL terminal (broad-recovery did NOT fire, K=6): 140/373 = 0.375
+  (=> broad recovery rate 0.625, matches EXP-0008/0009 ~0.64)
+session-ending signals (K-independent):
+  failure is the LITERAL last tool call:        6/373 = 0.016
+  NO successful tool call anywhere after fail:  12/373 = 0.032
+
+=== Per-class TERMINAL census (Wilson 95% CI on terminal-share). n_fail desc ===
+class                     n  term  t_rate redir  rec lastc nosuc rep>=3  term_rate_CI
+other                   113    46   0.407    23   67     4     9     29  [0.321,0.499]
+policy.web_disabled     109    43   0.394    66   66     1     1     43  [0.308,0.488]
+cancelled                59    25   0.424     5   34     0     0     23  [0.306,0.551]
+policy.perm_denied       30    16   0.533     0   14     1     2     14  [0.361,0.698]
+fs.notfound              20     4   0.200     5   16     0     0      1  [0.081,0.416]
+proc.exit_nodetail       14     2   0.143     8   12     0     0      0  [0.040,0.399]
+ssh.auth                  6     1   0.167     3    5     0     0      2  [0.030,0.564]
+edit.other                5     1   0.200     0    4     0     0      0  [0.036,0.624]
+code.build                4     0   0.000     1    4     0     0      0  [0.000,0.490]
+proc.timeout              4     1   0.250     2    3     0     0      0  [0.046,0.699]
+policy.input_filter       2     0   0.000     2    2     0     0      0  [0.000,0.658]
+net.http                  2     0   0.000     1    2     0     0      0  [0.000,0.658]
+read.too_large            1     0   0.000     1    1     0     0      0  [0.000,0.793]
+net.dns                   1     0   0.000     1    1     0     0      0  [0.000,0.793]
+net.conn                  1     0   0.000     0    1     0     0      0  [0.000,0.793]
+code.test                 1     0   0.000     0    1     0     0      0  [0.000,0.793]
+fs.perm                   1     1   1.000     0    0     0     0      0  [0.207,1.000]
+
+=== TERMINAL-POLE candidates (n_fail>=10) ===
+  cleanly-TERMINAL  := rec_rate<=0.10 AND redirect==0  (no modality available)
+  near-TERMINAL     := rec_rate<=0.25 AND redirect<=1
+  other                  n=113 rec_rate=0.593 term_rate=0.407 CI[0.321,0.499] redir=23 -> not-terminal (recovers)
+  policy.web_disabled    n=109 rec_rate=0.606 term_rate=0.394 CI[0.308,0.488] redir=66 -> not-terminal (recovers)
+  cancelled              n= 59 rec_rate=0.576 term_rate=0.424 CI[0.306,0.551] redir=5 -> not-terminal (recovers)
+  policy.perm_denied     n= 30 rec_rate=0.467 term_rate=0.533 CI[0.361,0.698] redir=0 -> not-terminal (recovers)
+  fs.notfound            n= 20 rec_rate=0.800 term_rate=0.200 CI[0.081,0.416] redir=5 -> not-terminal (recovers)
+  proc.exit_nodetail     n= 14 rec_rate=0.857 term_rate=0.143 CI[0.040,0.399] redir=8 -> not-terminal (recovers)
+
+=== Session-ending terminal sub-census: classes where 'no success after' is common (n>=10) ===
+  other                  n=113 no_success_after=  9 (0.080) CI[0.042,0.144] last_call=4
+  policy.perm_denied     n= 30 no_success_after=  2 (0.067) CI[0.018,0.213] last_call=1
+  policy.web_disabled    n=109 no_success_after=  1 (0.009) CI[0.002,0.050] last_call=1
+  fs.notfound            n= 20 no_success_after=  0 (0.000) CI[0.000,0.161] last_call=0
+  proc.exit_nodetail     n= 14 no_success_after=  0 (0.000) CI[0.000,0.215] last_call=0
+  cancelled              n= 59 no_success_after=  0 (0.000) CI[0.000,0.061] last_call=0
+
+=== Repeated-identical-hard-error runs (same intent & error-class failed >=3x consecutively) ===
+  total fail-points that begin a >=3-run: 112
+     43x  policy.web_disabled
+     29x  other
+     23x  cancelled
+     14x  policy.perm_denied
+      2x  ssh.auth
+      1x  fs.notfound
+
+=== TERMINAL-POLE DEMONSTRABILITY (honest) ===
+  UNDER-SAMPLED: NO class at n>=10 is cleanly- or near-TERMINAL.
+  -> the terminal pole CANNOT be demonstrated on this corpus (honest limitation).
+
+  Most terminal-leaning n>=10 class: policy.perm_denied (term_rate=0.533)
+    e.g. [mcp__plugin_meta_mux__three_pai_external_web_search] Permission to use mcp__plugin_meta_mux__three_pai_external_web_search has been d
+    e.g. [mcp__plugin_meta_mux__three_pai_external_web_search] Permission to use mcp__plugin_meta_mux__three_pai_external_web_search has been d
+    e.g. [mcp__plugin_meta_mux__three_pai_external_web_search] Permission to use mcp__plugin_meta_mux__three_pai_external_web_search has been d
+    e.g. [mcp__plugin_meta_mux__three_pai_external_web_search] Permission to use mcp__plugin_meta_mux__three_pai_external_web_search has been d
+    e.g. [mcp__plugin_meta_mux__three_pai_external_web_search] Permission to use mcp__plugin_meta_mux__three_pai_external_web_search has been d
+
+wrote /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0020/experiment_result/terminal_pole_per_class.csv
