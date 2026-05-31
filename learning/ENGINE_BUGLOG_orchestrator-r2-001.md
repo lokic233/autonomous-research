@@ -47,3 +47,17 @@ Bug numbering continues from round-1 (last was BUG-14). New bugs start at BUG-15
   inconsistent across subcommands (not a bug, ergonomics).
 
 ## IN-PROGRESS: real committee runner end-to-end (BUG-12/13 newly-fixed path) — see below.
+
+## ✅ BUG-10 CLOSED + VERIFIED LIVE (engine e1a1b6f, after the 4a610ee report)
+The "still open" report was on engine 4a610ee — the atomic-write fix landed in e1a1b6f moments later.
+Fix: dump_yaml atomic (tmp+fsync+os.replace) + load_yaml parse-tolerant + heartbeat preserves role.
+VERIFIED on the LIVE autonomous-research instance: 30 concurrent interleaved heartbeat+report writes ->
+file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. Resume normal cadence.
+(heartbeat_count is now last-writer-wins under concurrency — benign, not corruption.)
+
+## ✅ BUG-10 CLOSED + VERIFIED LIVE (engine e1a1b6f, after the 4a610ee report)
+The "still open" report was on engine 4a610ee — the atomic-write fix landed in e1a1b6f moments later.
+Fix: dump_yaml atomic (tmp+fsync+os.replace) + load_yaml parse-tolerant + heartbeat preserves role.
+VERIFIED on the LIVE autonomous-research instance: 30 concurrent interleaved heartbeat+report writes ->
+file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. Resume normal cadence.
+(heartbeat_count is now last-writer-wins under concurrency — benign, not corruption.)
