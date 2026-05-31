@@ -1,41 +1,34 @@
-> **🌐 PUBLIC SANITIZED REPO.** Meta-internal identifiers (hostnames, cert paths, internal tool
-> names, usernames) are replaced with `<PLACEHOLDERS>`. The full science — theses, benchmarks,
-> committee traces, votes, measured data — is complete and unaltered. The private companion repo
-> `autonomous-research-private` holds the placeholder→real mapping + resume glue (Meta-internal).
-> **A resuming agent reads BOTH repos** (see CONTRIBUTING.md §"Two-repo workflow").
-
 # autonomous-research
 
-Autonomous multi-agent research committee — a self-evolving system where 6 heterogeneous LLM
-agents (Claude Opus 4.8/4.7/4.6, Agent-D, Codex 5.5, Gemini 3.5) converge on top-tier
-systems-research theses by running REAL benchmarks and voting under hostile review. A thesis is
-GREEN only when all 6 agents independently agree it survives.
+A **research-os instance** — durable, version-controlled research state for autonomous AI-systems research.
+Runs on the [research-os](https://github.com/lokic233/research-os) engine. First-class objects, not session logs.
 
-**Core principle:** measured artifacts are the source of truth — not LLM speculation or chat memory.
+## Structure (research-os compliant)
+```
+registry/
+  claims/      CLAIM-xxxx.yaml   — first-class claims (seed/active/weakened/killed/promoted)
+  experiments/ EXP-xxxx.yaml     — registered experiments (no compute without one)
+  verdicts/    VERDICT-xxxx.yaml — committee verdicts
+  cemetery/    DEAD-xxxx.yaml    — killed ideas (resurrection-guarded)
+  academic_map.yaml · baselines.yaml · projects.yaml
+experiments/   EXP-xxxx/         — experiment artifacts (results, analysis)
+prior_art/     CLAIM-xxxx/       — prior-art packets
+sessions/      raw execution logs (forensic only — NOT source of truth)
+learning/      crash postmortems + operational lessons
+projects/      project lifecycle
+```
+Config (`research-os.config.yaml`) is git-ignored here (Meta-internal: nodes, committee backends, cert glue)
+— it lives in the private `research-os-meta` repo.
 
-## Layout & conventions
-Sessions are filed by `<M_D_YYYY>/<session_id>/`. Each session folder is a self-contained handoff
-(read its `CURRENT_STATUS.md` then `README.md` first) with: committee traces, raw agent votes, exact
-prompts, benchmark code, measured data CSVs, and operational lessons.
+## Current state (migrated from sessions 511ce2e2 / 048fcb0d / c48efa79)
+**Theme (PROJ-0001):** GPU CUDA-VMM is the wrong abstraction for agentic KV branching.
+- **Promoted (6/6 GREEN):** CLAIM-0001 (HW CoW dominated), 0002 (NVIDIA mapping-ceiling cliff),
+  0003 (compounding throughput collapse), 0004 (mapping-budget wall), 0006 (prefix-cache invalidation
+  law + CDC repair), 0007 (attention-visible write-after-share, bit-identical).
+- **Active/YELLOW:** CLAIM-0005 (injection penalty — sub-quadratic, capped), 0008 (error-class→recovery).
+- **Cemetery (8 killed):** HW isolation primitive, handle-attestation, VMM decision-procedure, super-linear
+  artifact, segmented-hash, KV-divergence model, layer-stratified reusability, interior KV-repair.
 
-**Every contributing agent MUST follow `CONTRIBUTING.md`** (repo root) — it defines the exact folder
-structure, the committee discipline (6/6 GREEN rule, anti-coping, document-the-vetoes), commit
-conventions, and the read-order for resuming. Same date → new `<session_id>` subfolder; append, never overwrite.
-
-## Sessions
-- **`5_30_2026/511ce2e2-b74f-4612-8c8f-5edef3094245/`** — First run. Goal: 3 theses at 6/6 GREEN.
-  **Achieved.** 3 GREEN (GPU CUDA-VMM is the wrong abstraction for agentic KV branching: C\*
-  dominated negative result, A\* vendor portability cliff, T-TAX throughput collapse). 4 ideas
-  honestly rejected (B sub-quadratic, E software-equivalent, J not HW-attested, I superseded).
-  Measured on H100 + AMD MI350X. See that folder's README for full resume instructions.
-
-## ⚠️ READ FIRST: `learning/`
-Global, cross-session lessons that apply to EVERY agent on EVERY node. Currently:
-- `learning/MI350X_CRASH_POSTMORTEM.md` — how one agent crashed the AMD MI350X devgpu **three times**
-  in a single session (one triggered a 4–5h hardware repair), and the rules to never repeat it.
-  **Read before running any GPU VMM / large-mapping / large-allocation probe.**
-
-## Resuming
-A new agent session: read `learning/` first, then the latest session's `README.md`, then its
-`committee_traces/STATE.md` (live scoreboard) and §7 "NEXT WORK". Heed the operational lessons —
-VMM probes can crash nodes at BOTH allocation and teardown.
+## Lineage
+Sessions under `sessions/5_30_2026/` are the raw forensic logs that produced this state. The registry —
+not those logs — is the source of truth. New work goes through the engine (`ros seed/exp/...`).

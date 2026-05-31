@@ -1,0 +1,16 @@
+dead_id: DEAD-0008
+original_claim_id: ''
+original_claim: Interior KV-repair claim (mid-sequence edit repairable)
+reason_killed: 'Correctness bug: K/V diverges at every layer >=1 (max|dK| 4.04); interior
+  repair is not bit-safe. Reframed to conditional cost-map (CLAIM-0006).'
+killing_verdict: ''
+killing_experiments:
+- E4b/E4c
+duplicate_patterns:
+- Interior KV-repair claim (mid-sequence edit repairable)
+- claim edit interior kv mid repair repairable sequence
+revival_conditions: only for terminal/prepend edits, not interior (already captured
+  by CLAIM-0006)
+related_prior_work: []
+date_killed: '2026-05-31T11:39:58Z'
+source: sess c48efa79

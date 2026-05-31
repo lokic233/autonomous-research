@@ -1,0 +1,26 @@
+claim_id: CLAIM-0003
+project_id: PROJ-0001
+stage: paper-track
+status: promoted
+claim: 'Ceiling + CoW + slowdown COMPOUND into end-to-end throughput collapse: HW
+  wins 0/8 fanout regimes, crashes for all B>=128, software scales 280->800 tok/s.'
+why_it_matters: Unifies the negative results into an architectural indictment.
+novelty_hypothesis: ''
+mandatory_baselines:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+academic_map_nodes:
+- MAP-0001
+supporting_evidence:
+- summary: E-T high-fanout sweep
+negative_evidence: []
+verdict_history:
+- verdict: VERDICT-0003
+  result: green-6/6
+revival_conditions: ''
+owner: sess 511ce2e2
+target_venue: MLSys
+prompt_version: migrated-v001
+created_at: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:39:13Z'

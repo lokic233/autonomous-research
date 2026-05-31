@@ -1,0 +1,25 @@
+families:
+- claim_family: GPU KV-cache CoW / VMM branching
+  mandatory_baselines:
+  - name: vLLM APC
+    why: software prefix-sharing, the strong baseline
+  - name: SGLang RadixAttention
+    why: radix prefix sharing
+  - name: FlashInfer
+    why: production paged kernel
+  comparison_metrics:
+  - fork latency
+  - peak HBM
+  - throughput tok/s
+  - max branches
+  kill_conditions:
+  - software beats HW on latency AND capacity AND throughput -> HW CoW dead
+  min_acceptable_evidence: end-to-end on real model, >=3 reps, multi-fanout
+  known_dominant_baselines:
+  - vLLM APC
+  - FlashInfer
+  tested_by:
+  - E-C
+  - E-T
+  - E-A1
+  - E-A2

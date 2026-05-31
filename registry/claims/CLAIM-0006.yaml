@@ -1,0 +1,27 @@
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+stage: candidate
+status: promoted
+claim: 'The Prefix-Cache Invalidation Law: mid-prompt tool injection breaks the hash
+  chain; chained-decode-cache (CDC) repair achieves ~2% recompute vs full, verified
+  wall-clock.'
+why_it_matters: Workload model + a measured repair for agentic prefix-cache invalidation.
+novelty_hypothesis: ''
+mandatory_baselines:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+academic_map_nodes:
+- MAP-0001
+supporting_evidence:
+- summary: CDC v2 microbench wall-clock
+negative_evidence: []
+verdict_history:
+- verdict: VERDICT-0006
+  result: green-6/6
+revival_conditions: ''
+owner: sess 048fcb0d (=c48efa79 T2)
+target_venue: MLSys
+prompt_version: migrated-v001
+created_at: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:39:13Z'

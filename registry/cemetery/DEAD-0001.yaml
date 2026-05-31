@@ -1,0 +1,17 @@
+dead_id: DEAD-0001
+original_claim_id: ''
+original_claim: Write-after-fork bit-identical isolation as a runtime SAFETY primitive
+reason_killed: Software refcounted prefix-sharing matches HW isolation EXACTLY and
+  is 240x faster at fork; HW's only delta (driver-handle proof) is not load-bearing
+  for isolation.
+killing_verdict: ''
+killing_experiments:
+- E-E gating experiment
+duplicate_patterns:
+- Write-after-fork bit-identical isolation as a runtime SAFETY primitive
+- a after as bit fork identical isolation primitive runtime safety write
+revival_conditions: only if a use-case needs HW-rooted attestation that software structurally
+  cannot provide
+related_prior_work: []
+date_killed: '2026-05-31T11:39:58Z'
+source: sess 511ce2e2 (E)

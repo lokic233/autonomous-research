@@ -1,0 +1,52 @@
+nodes:
+- node_id: MAP-0001
+  area: GPU memory systems for agentic LLM KV-cache (VMM/CoW/branching)
+  occupied_territory: vAttention (VMM KV), ChunkAttention, vLLM PagedAttention/APC,
+    SGLang RadixAttention, FlashInfer, Continuum (KV-TTL)
+  key_prior_work:
+  - vAttention arXiv 2405.04437
+  - PagedAttention SOSP'23
+  - RadixAttention NeurIPS'24
+  - Continuum arXiv 2511.02230
+  known_baselines:
+  - vLLM APC
+  - SGLang RadixAttention
+  - FlashInfer
+  open_gaps:
+  - idle-window speculative prefill (CLAIM-0002 poc, YELLOW)
+  - prefix-cache invalidation repair (CLAIM-0006)
+  red_zones:
+  - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
+  - HW isolation primitive (DEAD-0001)
+  - handle attestation (DEAD-0002)
+  associated_claims:
+  - CLAIM-0001
+  - CLAIM-0002
+  - CLAIM-0003
+  - CLAIM-0004
+  - CLAIM-0006
+  - CLAIM-0007
+  associated_dead_ideas:
+  - DEAD-0001
+  - DEAD-0002
+  - DEAD-0003
+  - DEAD-0004
+  - DEAD-0005
+  - DEAD-0006
+  - DEAD-0007
+  - DEAD-0008
+  status: yellow
+  last_updated: '2026-05-31T11:39:58Z'
+- node_id: MAP-0002
+  area: Agent failure attribution & recovery
+  occupied_territory: failure taxonomy work; replayable traces
+  key_prior_work: []
+  known_baselines: []
+  open_gaps:
+  - error-class -> recovery competence (CLAIM-0008, YELLOW)
+  red_zones: []
+  associated_claims:
+  - CLAIM-0008
+  associated_dead_ideas: []
+  status: yellow
+  last_updated: '2026-05-31T11:39:58Z'

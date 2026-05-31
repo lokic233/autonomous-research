@@ -1,0 +1,16 @@
+dead_id: DEAD-0006
+original_claim_id: ''
+original_claim: Agentic KV-Divergence Workload Model (token-prefix predicts KV sharing)
+reason_killed: Token-prefix sharing PREDICTS KV sharing -> RadixAttention already
+  captures it. 6/6 KILL.
+killing_verdict: ''
+killing_experiments:
+- E-control
+duplicate_patterns:
+- Agentic KV-Divergence Workload Model (token-prefix predicts KV sharing)
+- agentic divergence kv model predicts prefix sharing token workload
+revival_conditions: only if a KV-sharing regime exists that token-prefix sharing does
+  NOT capture
+related_prior_work: []
+date_killed: '2026-05-31T11:39:58Z'
+source: sess c48efa79 (T3)

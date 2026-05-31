@@ -1,0 +1,27 @@
+claim_id: CLAIM-0001
+project_id: PROJ-0001
+stage: paper-track
+status: promoted
+claim: HW VMM CoW is dominated for agent KV (0/12 win-region; 1.06-2.20x slower than
+  software prefix-sharing, 41-152x slower than FlashInfer).
+why_it_matters: 'Negative result: tells the field not to build HW VMM CoW for agent
+  KV.'
+novelty_hypothesis: ''
+mandatory_baselines:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+academic_map_nodes:
+- MAP-0001
+supporting_evidence:
+- summary: measured end-to-end (E-C)
+negative_evidence: []
+verdict_history:
+- verdict: VERDICT-0001
+  result: green-6/6
+revival_conditions: ''
+owner: sess 511ce2e2
+target_venue: ATC/EuroSys
+prompt_version: migrated-v001
+created_at: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:39:13Z'

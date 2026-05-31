@@ -1,0 +1,27 @@
+claim_id: CLAIM-0002
+project_id: PROJ-0001
+stage: paper-track
+status: promoted
+claim: The NVIDIA ~520K CUDA-VMM per-context mapping ceiling is a vendor-specific
+  portability cliff (reproduced 523,404 +/-0.6% at cuMemSetAccess; AMD no wall at
+  80M = 153x).
+why_it_matters: VMM-based KV designs that scale on AMD hit a hard wall on NVIDIA.
+novelty_hypothesis: ''
+mandatory_baselines:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+academic_map_nodes:
+- MAP-0001
+supporting_evidence:
+- summary: E-A2 independent repro + E-A1 cross-vendor
+negative_evidence: []
+verdict_history:
+- verdict: VERDICT-0002
+  result: green-6/6
+revival_conditions: ''
+owner: sess 511ce2e2
+target_venue: ATC/EuroSys/OSDI
+prompt_version: migrated-v001
+created_at: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:39:13Z'

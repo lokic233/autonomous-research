@@ -1,0 +1,17 @@
+dead_id: DEAD-0002
+original_claim_id: ''
+original_claim: Driver-handle physical-provenance / multi-tenant attestation primitive
+reason_killed: 'cuMemRetainAllocationHandle == int(the cuMemCreate handle): a process-local
+  userspace integer, NOT a hardware-rooted forge-resistant attestation. An untrusted
+  runtime can fabricate it.'
+killing_verdict: ''
+killing_experiments:
+- E-J 60s pre-flight
+duplicate_patterns:
+- Driver-handle physical-provenance / multi-tenant attestation primitive
+- attestation driver handle multi physical primitive provenance tenant
+revival_conditions: only if a CC/SPDM-bound hardware attestation token replaces the
+  userspace handle
+related_prior_work: []
+date_killed: '2026-05-31T11:39:58Z'
+source: sess 511ce2e2 (J)

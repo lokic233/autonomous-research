@@ -1,0 +1,26 @@
+claim_id: CLAIM-0004
+project_id: PROJ-0001
+stage: candidate
+status: promoted
+claim: "The Mapping-Budget Wall: a conserved per-context VMM mapping budget governs\
+  \ branch fanout (root-caused, cross-vendor) \u2014 sharper version of CLAIM-0002."
+why_it_matters: Predictive resource model for VMM branch capacity.
+novelty_hypothesis: ''
+mandatory_baselines:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+academic_map_nodes:
+- MAP-0001
+supporting_evidence:
+- summary: E3a/c/d traces; E3b super-linear overclaim retracted
+negative_evidence: []
+verdict_history:
+- verdict: VERDICT-0004
+  result: green-6/6
+revival_conditions: ''
+owner: sess 048fcb0d
+target_venue: ATC/EuroSys
+prompt_version: migrated-v001
+created_at: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:39:13Z'
