@@ -598,3 +598,10 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   committee: EXP-0026 (CDC wins vs re-impl PIC) + EXP-0027 (CDC conditional vs oracle/fused PIC) bracket the
   answer; true kernel lands between -> CDC serving advantage is inj/seq-CONDITIONAL, magnitude pending full
   integration. EXP-0030 stays a documented future-work item (the connector harness, ~the science's "30-day step").
+
+### DISCIPLINE NOTE (self) — always pass ALL 6 --votes incl area_chair
+- VERDICT-0041 was written with 5 --votes (omitted area_chair, which DID vote yellow in committee_run_14).
+  final_verdict was correctly yellow (no green fabricated) but the record was incomplete. Monitor flagged it.
+  FIX: patched VERDICT-0041 to include area_chair:yellow (+ corrections note). LESSON: when parsing a committee
+  run, ALWAYS tally all 6 .out (5 reviewers + area_chair) into --votes — a GREEN promote REQUIRES a true 6/6,
+  and even YELLOW records should be complete. Re-verify the area_chair .out vote token every run.
