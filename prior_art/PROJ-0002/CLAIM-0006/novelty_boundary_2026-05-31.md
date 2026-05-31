@@ -169,3 +169,124 @@ the slope~1 "law" and position-independence (mechanism-derived accounting identi
 5. **[MINOR] position-independence must caveat the p=0 attention-sink** (Irminsul body shows sink is
    sequence-start-local and genuinely position-dependent there). CLAIM-0006 should state "position-
    independent EXCEPT the sequence-start sink chunk," else a reviewer with Irminsul in hand dings it.
+
+================================================================================
+## PIC-FAMILY BODY DISTINCTION (researcher-pic-bodies-0006, 2026-05-31)
+## — closes the LOW residual GREEN-blocker (PIC bodies were abstract-only)
+================================================================================
+reporting to: orchestrator 22bd6bef | scope: VERDICT-0017 GREEN-gate (A), PIC side only.
+TASK: the prior researcher body-read 2601.06007 + Irminsul but only ABSTRACT-read the PIC
+family. I retrieved & parsed the FULL LaTeXML HTML BODIES of all 6 PIC-family neighbors and
+checked each for: (a) recompute-fraction-vs-injection-size cost-map / inj-seq law, (b) a
+position-INDEPENDENCE-OF-COST finding (not a position-independent *caching mechanism*), (c)
+engine-internal recompute-fraction granularity.
+
+### PROVENANCE (anti-hallucination — exactly what I read)
+- **FULL HTML BODY retrieved & parsed** for ALL SIX via https://arxiv.org/html/<id>
+  (real LaTeXML bodies, title-verified, not no-HTML stubs). Text files on cli:dengcchi-mac:
+  /tmp/pictxt_2410.15332.txt (EPIC, 56k chars), /tmp/pictxt_2405.16444.txt (CacheBlend, 76k),
+  /tmp/pictxt_2502.15734.txt (Cache-Craft, 148k), /tmp/pictxt_2512.16822.txt (MEPIC, 65k),
+  /tmp/pictxt_2507.07400.txt (KVFlow, 44k), /tmp/pictxt_2510.10129.txt (CacheClip, 67k).
+- These are now BODY-LEVEL reads (sections + figure captions + eqn text), NOT abstract-only.
+  I grep-verified the full text of each for the cost-map signature set + read the context of
+  every near-miss hit (Cache-Craft CCI/CFO model, CacheBlend r% knob, EPIC O(15%N^2) note).
+- **DECISIVE GLOBAL GREP RESULT (all 6 bodies):** ZERO occurrences of any of {inj/seq,
+  injection ratio, injection-to-sequence, injection size/length, cost map, cost contour,
+  recompute fraction (as a measured law), recompute as a function of injection, position-
+  independent cost, cost is independent of position, slope}. The word "injection" appears
+  **0 times** in EVERY ONE of the six bodies. None frames the agentic mid-prefix *injection*
+  problem at all; all six are RAG-chunk-reuse / multi-agent-prefix-reuse papers.
+
+### Per-work body-distinction table (does it publish CLAIM-0006's surviving leg?)
+Leg = engine-internal recompute-FRACTION-vs-inj/seq COST-MAP + position-not-the-cost-driver finding.
+| Work | id | (a) inj/seq recompute cost-map? | (b) position-INDEP-OF-COST finding? | (c) engine-internal recompute granularity | Read depth | VERIFIED? |
+|---|---|---|---|---|---|---|
+| **EPIC** | 2410.15332 | **NO** — metric = TTFT (up-to-8x) + throughput (7x) + accuracy; no inj/seq axis. The one cost-vs-size statement is `O(15%·N²)` (a COMPLEXITY note about CacheBlend's quadratic cost vs absolute prompt length N — NOT recompute% vs injection ratio). LegoLink recomputes each chunk's first-k tokens (a fixed structural rule), not a fraction fit to injection size. | **NO** — "position-independent" = the *caching mechanism* (reuse chunks regardless of prefix position); never a finding that recompute COST is flat in position. | engine (LegoLink over PIC) | FULL BODY | **VERIFIED distinct** |
+| **CacheBlend** | 2405.16444 | **NO** — `r%` is a *fixed control knob*: "if we recompute r% of tokens per layer, the total compute overhead will be r% of full prefill" — an *accounting identity stated as a tuning dial*, chosen to minimize *attention deviation* (quality), NOT a measured map of recompute% as f(inj/seq). Metrics = TTFT/throughput/quality (F1/ROUGE). The token-selection is by KV-deviation magnitude, not injection size. | **NO** — fuses caches "regardless of prefix or not" (mechanism); no position-cost contour. | engine (selective KV recompute) | FULL BODY | **VERIFIED distinct** |
+| **Cache-Craft** | 2502.15734 | **NO (closest near-miss, resolved)** — its model is `CFO as a function of CCI`. CCI (Cache Context Impact) = sigmoid of an outside-vs-inside contextualization ratio = a *reusability/quality* proxy per chunk; CFO/output-deviation drives a recompute-token *selection* model (which & how many tokens to fix to preserve ROUGE). This is a recompute-SELECTION-vs-QUALITY model, **not** a recompute-FRACTION-vs-INJECTION-RATIO cost contour. Headline "-51% redundant compute" is a single aggregate RAG number. "any position" = the *mechanism* (reuse chunks at non-prefix order), not a cost finding. | **NO** — "reuse at any position" is the mechanism claim; no cost-vs-position law. | engine (chunk-cache + selective recomp) | FULL BODY | **VERIFIED distinct** |
+| **MEPIC** | 2512.16822 | **NO** — contribution = shifting recompute from token-level to BLOCK-level so "only the first block is request-specific" + RoPE fusion for shareability; goal = MEMORY/HBM footprint reduction under concurrency. No inj/seq axis; "injection" absent. Mentions tool-using agents as a *reuse-amplifier* motivation, not an injection-cost study. | **NO** — "position-independent" = mechanism (chunk KV reuse across positions/requests/batches). | engine (paged block-level PIC) | FULL BODY | **VERIFIED distinct** |
+| **KVFlow** | 2507.07400 | **NO** — workflow-aware EVICTION priority + KV PREFETCH/scheduling for multi-agent radix caches. Zero "injection", zero "fraction", no "invalidat*". Recompute appears only as the *penalty of eviction* ("evicted → recomputed from scratch upon reuse"). Metrics = throughput/latency/speedup. Pure scheduling work. | **NO** | engine (SGLang radix scheduling) | FULL BODY | **VERIFIED distinct** |
+| **CacheClip** | 2510.10129 | **NO** — RAG KV-reuse via auxiliary-small-model-guided token SELECTION for selective recomputation (exploits attention sparsity: top 10-20% of tokens carry most attention). Metric = TTFT. Recompute is selection-by-attention-importance, not a fraction fit to injection size. Zero "injection"/"fraction(-cost)". | **NO** — position handling = position-ID rearrangement (mechanism), no cost-vs-position finding. | engine (calibration + token selection) | FULL BODY | **VERIFIED distinct** |
+
+### KEY VERIFIED FINDINGS
+1. **NO COLLISION. None of the 6 PIC-family bodies pre-empts CLAIM-0006's cost-map leg.** All six
+   are mechanism/systems papers measured on TTFT / throughput / quality / memory / redundant-compute.
+   None has an injection-to-sequence axis (the word "injection" is absent from all six), none
+   reports recompute-FRACTION as a measured *law/contour* over inj/seq, and none states a
+   position-INDEPENDENCE-OF-COST finding (their "position-independent"/"any position" language is
+   uniformly about the *caching mechanism*, not a cost contour).
+2. **The two near-misses are body-resolved, not asserted away:**
+   - **CacheBlend `r%`** is a *tuning knob* whose identity ("overhead = r% of full prefill") is the
+     SAME contiguous/selective-recompute accounting CLAIM-0006 itself reduces to (cf. the slope~1
+     identity section above) — but CacheBlend uses it as a dial to trade quality, it does NOT *map*
+     recompute% as a function of injection/sequence ratio. So it CORROBORATES that the accounting is
+     known (reinforcing: the slope~1 piece is NOT novel) while NOT pre-empting the *characterization
+     over an injection surface conditioned on real agentic traffic*.
+   - **Cache-Craft CFO(CCI)** is a quality-driven recompute-*selection* model, not an inj/seq cost map.
+3. **EPIC `O(15%·N²)`** is the nearest cost-vs-size statement in the whole family, but it is a
+   *complexity bound vs absolute prompt length N* of CacheBlend's quadratic selective-recompute — it
+   is NOT recompute-fraction vs injection-to-sequence ratio, and EPIC raises it to *motivate killing*
+   that quadratic cost, not to characterize it as a law.
+
+### SECONDARY NOTE FOR THE COMMITTEE (does NOT change gate-A, flag for honesty)
+CacheBlend's stated "recompute r% ⇒ r% of full-prefill overhead" makes explicit, in a published
+EuroSys'25 Best-Paper body, the linear recompute%↔compute accounting that CLAIM-0006's slope~1 leg
+rests on. This is FURTHER body-level support for the committee's existing demotion of slope~1 from
+"law" to "accounting identity" (VERDICT-0017). It does NOT touch the surviving cost-map leg (which is
+the *empirical inj/seq surface + workload-conditioned win-region*, not the slope identity), but the
+writeup should cite CacheBlend §4 for the r%↔overhead identity so a reviewer can't claim the identity
+is uncited/over-claimed.
+
+================================================================================
+## GATE-A STATUS AFTER THIS WORK
+================================================================================
+**Novelty GREEN-gate (A) is now FULLY CLOSED at body level for the cost-map leg.**
+- 2601.06007 "Don't Break the Cache": BODY-VERIFIED distinct (prior researcher) — black-box $/TTFT
+  vs prompt-size & tool-count, no inj/seq cost-map. [the #1 collapse-fear, refuted]
+- Irminsul 2605.05696: BODY-VERIFIED mechanism twin (CDC-over-radix), no cost-map; 2-indexed. [mechanism dead, cost-map intact]
+- PIC family (EPIC, CacheBlend, Cache-Craft, MEPIC, KVFlow, CacheClip): **all 6 now BODY-VERIFIED
+  distinct** (this work). No appendix cost-map exists; "injection" absent from all six. The LOW
+  residual flagged by the prior researcher (#1 in their residual list) is CLOSED — no cost-map
+  collision in any PIC neighbor.
+
+**Residual after this work (none on the novelty/gate-A axis):**
+- The ONLY remaining binding GREEN-blocker is the ORTHOGONAL **Eval gate (B)**: GPU wall-clock TTFT
+  on a REAL PIC artifact (CacheBlend/EPIC published) across the inj/seq surface at the ~5% crossover
+  (CPU proxy conflates contiguous-chunk vs scattered-HKVD). Untouched here (GPU, human-go). NOT a
+  novelty residual.
+- MINOR carry-over (from prior researcher, unchanged): position-independence must caveat the p=0
+  attention-sink chunk (Irminsul carves it out as genuinely position-dependent).
+- HONEST SCOPE NOTE: I body-read these 6 via arXiv LaTeXML HTML. That captures section text + figure
+  captions + equation glosses. I did NOT separately fetch external figure-image pixels or any
+  ancillary/supplementary PDF beyond the arXiv HTML render; a cost-map encoded ONLY as an unlabeled
+  plotted curve with no caption/axis text is not something HTML-grep can see. Risk this changes the
+  verdict is VERY LOW (every paper's stated metric framing, figure captions, and axis labels are
+  TTFT/throughput/quality/memory; none mentions injection or an inj/seq axis anywhere in caption text),
+  but I flag it rather than assert pixel-level reading I did not do.
+
+================================================================================
+## PROPOSED MAP-0001 DELTAS (PROPOSE-ONLY — orchestrator applies)
+================================================================================
+1. CLAIM-0006 open_gaps entry — append: "PIC-family (EPIC/CacheBlend/Cache-Craft/MEPIC/KVFlow/
+   CacheClip) all BODY-VERIFIED distinct from the inj/seq cost-map leg (pic-bodies-0006, 2026-05-31):
+   ZERO 'injection' axis in any of the 6 bodies, no recompute%-vs-inj/seq contour, no position-
+   independence-OF-COST finding (their 'position-independent' = caching mechanism only). Novelty
+   GREEN-gate (A) now FULLY CLOSED at body level; only binding residual = eval gate (B) GPU wall-clock
+   [human-go]."
+2. key_prior_work annotations — refine the PIC entries to body-verified status:
+   - EPIC 2410.15332: "(PIC/LegoLink; TTFT/throughput metrics; recompute=first-k-tokens-per-chunk
+     structural rule + O(15%N^2) complexity note re CacheBlend; NO inj/seq cost-map — BODY-VERIFIED)"
+   - CacheBlend 2405.16444: "(EuroSys'25; selective KV recompute; r% is a quality-tuning knob with
+     identity 'r% recompute => r% prefill overhead' — cite for the slope~1 accounting identity; NO
+     inj/seq cost-map — BODY-VERIFIED)"
+   - Cache-Craft 2502.15734: "(chunk-cache RAG; CFO(CCI) is a recompute-SELECTION-vs-quality model,
+     not an inj/seq cost contour; -51% redundant-compute is one aggregate; NO cost-map — BODY-VERIFIED)"
+   - MEPIC 2512.16822: "(block-level recompute for HBM efficiency; NO inj/seq cost-map — BODY-VERIFIED)"
+   - KVFlow 2507.07400: "(workflow-aware eviction/prefetch scheduling; NO invalidation law/cost-map — BODY-VERIFIED)"
+   - CacheClip 2510.10129: "(RAG KV reuse, aux-model token selection via attn sparsity; TTFT; NO cost-map — BODY-VERIFIED)"
+3. red_zones — no change to mechanism red-zone (CDC-over-radix stays DEAD). OPTIONAL add a clarifying
+   note: "PIC-family selective-recompute (CacheBlend r%, Cache-Craft CFO/CCI, CacheClip aux-model
+   selection) occupies the recompute-token-SELECTION mechanism genus — distinct from, and does NOT
+   pre-empt, the engine-internal inj/seq recompute COST-MAP characterization (gate-A body-closed)."
+4. Update MAP-0001 last_updated + source line to record "+pic-bodies-0006 (2026-05-31): all 6 PIC
+   bodies body-verified distinct, novelty gate-A fully closed, only eval gate-B residual."

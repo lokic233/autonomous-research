@@ -43,11 +43,11 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: EXP-0009 SUPPORTS modality claim (V=0.717, LOO-Brier -40.6%, robust).
-  VERDICT-0018 yellow. Needs committee 6/6 (pending BUG-22), cross-harness, sampled
-  TERMINAL class, interventional.
+lifecycle_state: committee_pending
+next_action: real 6/6 committee running (BUG-22 fixed, run_6) on EXP-0009 modality
+  evidence; check _status=ALL_COMMITTEE_DONE + each .err before counting; supersede
+  1-vote VERDICT-0018
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T16:00:32Z'
+last_updated: '2026-05-31T16:06:23Z'

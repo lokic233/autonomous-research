@@ -127,7 +127,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T16:00:32Z'
+last_updated: '2026-05-31T16:07:38Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -150,9 +150,11 @@ required_evidence_for_green:
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
 lifecycle_state: evidence_ready
-next_action: 'Novelty gate-A SUBSTANTIALLY CLOSED (body-verified: 2601.06007 lacks
-  inj/seq cost-map; Irminsul twin 2-indexed; slope~1=accounting identity). RESIDUAL:
-  PIC-family body-reads (LOW, ~1hr CPU) + GPU eval gate [human-go]. Re-run committee
-  after PIC-body leg + BUG-22 fix. Add attn-sink position-dep caveat.'
+next_action: "NOVELTY GATE-A FULLY CLOSED at body level (2601.06007+Irminsul+all 6\
+  \ PIC bodies verified distinct; 'injection' 0x in PIC bodies; no cost-map collision).\
+  \ ONLY remaining GREEN-blocker = eval gate-B: GPU wall-clock vs REAL PIC artifact\
+  \ at ~5% crossover [INVARIANT 3 human-go]. Can re-run committee now (BUG-22 fixed)\
+  \ to refresh verdict reflecting closed novelty; cite CacheBlend \xA74 for slope~1\
+  \ accounting identity; add attn-sink position-dep caveat."
 active_experiments: []
 blocking_on: ''

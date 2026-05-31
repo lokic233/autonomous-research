@@ -11,16 +11,17 @@ nodes:
   - Irminsul arXiv 2605.05696 (CDC-over-radix MECHANISM TWIN, body-verified; indexed SemScholar+OpenAlex
     — no longer single-source; publishes token-recovery%/prefill-energy/attn-sink, NOT the inj/seq recompute
     cost-map)
-  - EPIC arXiv 2410.15332 (PIC)
-  - MEPIC arXiv 2512.16822
-  - CacheBlend arXiv 2405.16444 (EuroSys'25)
-  - Cache-Craft arXiv 2502.15734
+  - 'EPIC arXiv 2410.15332 (PIC) [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map: pic-bodies-0006]'
+  - 'MEPIC arXiv 2512.16822 [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map: pic-bodies-0006]'
+  - 'CacheBlend arXiv 2405.16444 (EuroSys''25) [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map:
+    pic-bodies-0006]'
+  - 'Cache-Craft arXiv 2502.15734 [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map: pic-bodies-0006]'
   - Don't Break the Cache arXiv 2601.06007 (BLACK-BOX provider-API $/TTFT vs prompt-size & tool-count;
     NO recompute-fraction cost-map, NO inj/seq axis, NO position-indep — BODY-VERIFIED distinguishable;
     cite as motivation)
   - FastCDC/Rabin (CDC insertion-resilience, foundational)
-  - KVFlow arXiv:2507.07400 (agentic/multi-agent prefix-cache; scheduling/reuse, NO inj/seq invalidation
-    law)
+  - 'KVFlow arXiv:2507.07400 (agentic/multi-agent prefix-cache; scheduling/reuse, NO inj/seq invalidation
+    law) [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map: pic-bodies-0006]'
   - Pope et al. arXiv:2211.05102 (KV accounting — slope~1 is derivable accounting identity, NOT emergent)
   known_baselines:
   - vLLM APC
@@ -45,7 +46,13 @@ nodes:
     (A) substantially CLOSED — 2601.06007 body-read lacks inj/seq cost-map (replication fear REFUTED);
     Irminsul body-read = mechanism twin w/ no cost-map, now 2-indexed. RESIDUAL: PIC-family bodies abstract-only
     (LOW); eval/GPU gate (B) still binding [human-go]. Add caveat: position-indep EXCEPT the sequence-start
-    attn-sink chunk (Irminsul carves it out).'
+    attn-sink chunk (Irminsul carves it out). | pic-bodies-0006 (2026-05-31, BODY-LEVEL all 6 PIC neighbors):
+    EPIC/CacheBlend/Cache-Craft/MEPIC/KVFlow/CacheClip ALL body-verified distinct — word ''injection''
+    appears 0x in all 6 bodies, no inj/seq cost-map, no position-independence-OF-COST; near-misses (CacheBlend
+    r% = tuning knob; Cache-Craft CFO = recompute-token selection) resolved, no collision. NOVELTY GATE-A
+    NOW FULLY CLOSED at body level. ONLY residual = eval gate-B (GPU wall-clock vs real PIC at ~5% crossover)
+    [human-go]. Caveat: pixel-only unlabeled-curve risk VERY LOW. CacheBlend §4 cites the r%<->overhead
+    accounting identity (use for slope~1 demotion).'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -75,7 +82,7 @@ nodes:
   - DEAD-0008
   - DEAD-0009
   status: yellow
-  last_updated: '2026-05-31T16:04:01Z'
+  last_updated: '2026-05-31T16:07:21Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -84,7 +91,8 @@ nodes:
     (2026-05-31, real 6/6 committee): single-leg framing, 2 legs retired, novelty+eval gates open, Pope/Kwon
     accounting-identity merge | +novelty-boundary-0006 (2026-05-31): 2601.06007 body-verified distinct,
     Irminsul 2-indexed twin, gate-A substantially closed | +EXP-0010/VERDICT-0019 (2026-05-31): k~1.3
-    is regime-local crossover slope (DEAD-0009), not a characterizable law'
+    is regime-local crossover slope (DEAD-0009), not a characterizable law | +pic-bodies-0006 (2026-05-31):
+    all 6 PIC bodies body-verified distinct, novelty gate-A FULLY CLOSED'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
