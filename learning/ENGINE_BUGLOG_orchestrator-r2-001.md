@@ -336,3 +336,14 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - ACTION: the EXP-0006 finding already has a recorded verdict (VERDICT-0014, evidence-update). A fresh
   6/6 committee re-vote is BLOCKED on backend-CLI health (codex/gemini reinstall + sandbox headroom),
   which is operator/infra territory, not engine.
+
+### BUG-18 — FIXED by engine 60e0032 (verified). `ros verdict write` is now IDEMPOTENT: a repeat write
+  with same claim+experiments+final is a no-op ("↩︎ idempotent: VERDICT-0014 already records yellow for
+  CLAIM-0006 citing ['EXP-0006'] — not creating a duplicate"). Verdict count stayed 13, no orphan.
+  --allow-dup forces a real duplicate if ever needed. Closes the retry-orphan class.
+
+### STATUS: committee BLOCKED (operator). CLAIM-0006 lifecycle=blocked, blocking_on="committee backend
+  CLIs down (codex profile.sb / gemini pty.node / claude sandbox_apply) — operator reinstall needed".
+  Valid verdict preserved: VERDICT-0012 (6/6 YELLOW) + VERDICT-0014 (EXP-0006 evidence-update). NO forced
+  verdict. Committee re-runs paused until operator restores codex+gemini+claude CLIs. Continuing CPU-only
+  registry/lifecycle/research work meanwhile.
