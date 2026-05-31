@@ -36,17 +36,59 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   status: yellow
-  last_updated: '2026-05-31T11:39:58Z'
+  last_updated: '2026-05-31T12:48:48Z'
+  source: sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/
 - node_id: MAP-0002
-  area: Agent failure attribution & recovery
-  occupied_territory: failure taxonomy work; replayable traces
-  key_prior_work: []
+  area: Agent failure attribution & recovery (workload models)
+  occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel
+    (deterministic only)
+  key_prior_work:
+  - rr/ReVirt (process replay)
+  - ReproZip (fs provenance)
+  - CRIU/Docker checkpoint
+  - LangGraph time-travel
+  - Temporal/Inngest (workflow retries)
   known_baselines: []
   open_gaps:
   - error-class -> recovery competence (CLAIM-0008, YELLOW)
+  - real-trace failure census
   red_zones: []
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T11:39:58Z'
+  last_updated: '2026-05-31T12:48:48Z'
+- node_id: MAP-0003
+  area: Branchable replay / counterfactual execution for long-horizon agents
+  occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs),
+    LMCache/Mooncake (KV reuse, no replay), CRIU (full snapshot, no partial), LangGraph
+    (needs deterministic LLM), Temporal/Inngest (workflow retries)'
+  key_prior_work:
+  - rr
+  - ReVirt
+  - ReproZip
+  - CRIU
+  - LangGraph time-travel
+  - Temporal
+  - Inngest
+  - LMCache
+  - Mooncake
+  known_baselines:
+  - rr
+  - CRIU
+  - LangGraph time-travel
+  open_gaps:
+  - "LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG\
+    \ / kernel-batch / tool-RPC / retrieval-drift / world-state \u2014 the INTERSECTION\
+    \ is empty (per 3-CLI framing debate)"
+  red_zones:
+  - "'Failure Attribution' as the contribution (dies at every systems venue \u2014\
+    \ must be the EVAL, not the pitch)"
+  - '''Agent Trace OS'' framing (''OS for X'' = marketing death at OSDI)'
+  - Checkpointing-only framing (CRIU comparison kills it)
+  associated_claims: []
+  associated_dead_ideas: []
+  status: yellow
+  source: 'github.com/lokic233/agent-failure-attribution-research (framing_debate
+    CHAIR_SYNTHESIS: ''Branchable Replay'' GREEN framing B)'
+  last_updated: '2026-05-31T12:48:48Z'
