@@ -3,21 +3,31 @@ project_id: PROJ-0002
 claim_id: CLAIM-0006
 session_id: ''
 level: 0
-hardware: 'CPU-only (dengcchi-mac); token-count proxy'
+hardware: CPU-only (dengcchi-mac); token-count proxy
 resource_budget:
   max_wall_clock_minutes: 15
   max_gpu_hours: 0
   max_memory_gb: 0
   host_mem_floor_gb: 0
-needs_gpu: false  # CORRECTED: CPU-only token-proxy analysis, no GPU (engine mis-tagged level-0 as GPU)
+needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'WORKLOAD REALISM (CPU token-proxy, 20k tasks/291k injections, cited
+  sizes): over a realistic agentic tool-use mix the MEDIAN inj/seq=2.8% (ABOVE the
+  1% CDC-wins-big threshold); only ~25% of injections fall in inj/seq<=1% (recompute<~2.4%),
+  ~37% in the >5% degrade regime, and ~81% of injected TOKENS are in the degrade regime
+  (large file/code/RAG/JSON dumps dominate volume). Confirms the committee crux: the
+  ~2% headline is a best-case contour, NOT the common case. CONDITIONAL caveat (fair-to-CDC):
+  given large reused context S>=50k (the regime SWE-ContextBench shows dominates real
+  long-horizon work, >97% cache-read) CDC wins on 46% and degrades on only 10%. Net:
+  WEAKEN the unconditional framing; conditional claim survives only gated on (large
+  reused ctx AND bounded injection). Proxy, not wall-clock; modeled distribution not
+  live-trace; robust across 3 sensitivities.'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0005/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
-prompt_version: 'researcher_v001'
+completed_at: '2026-05-31T13:39:50Z'
+prompt_version: researcher_v001
