@@ -125,3 +125,112 @@ def region_fractions(tasks):
         "count_frac_win1_GIVEN_large": (c_win1_large / n_large) if n_large else 0.0,
         "token_frac_win1_GIVEN_large": (t_win1_large / tok_large) if tok_large else 0.0,
     }
+
+# ============================================================================
+# Nonparametric cluster bootstrap: resample TASKS with replacement, recompute fractions, B times.
+# Report mean + percentile 95% CI for each fraction of interest.
+# ============================================================================
+def bootstrap(tasks, B, rng, keys):
+    n = len(tasks)
+    samples = {k: [] for k in keys}
+    idx_range = range(n)
+    for _ in range(B):
+        boot = [tasks[rng.randrange(n)] for _ in idx_range]
+        rf = region_fractions(boot)
+        for k in keys:
+            samples[k].append(rf[k])
+    out = {}
+    for k in keys:
+        s = sorted(samples[k])
+        lo = s[int(0.025 * len(s))]
+        hi = s[min(len(s)-1, int(0.975 * len(s)))]
+        out[k] = {"mean": round(statistics.mean(s), 4),
+                  "ci95": [round(lo, 4), round(hi, 4)],
+                  "sd": round(statistics.pstdev(s), 4)}
+    return out
+
+KEYS = ["count_frac_win1", "token_frac_win1",
+        "count_frac_joint_win1_large", "token_frac_joint_win1_large",
+        "large_ctx_share_count", "large_ctx_share_token",
+        "count_frac_win1_GIVEN_large", "token_frac_win1_GIVEN_large"]
+
+# ============================================================================
+# MAIN
+# ============================================================================
+results = {
+    "experiment": "EXP-0015_winregion_map_bootstrap",
+    "claim": "CLAIM-0006", "level": 1, "device": "CPU-only, stdlib-only, NO GPU",
+    "method": ("CPU Monte-Carlo workload (EXP-0005 distributions) -> win-region fractions "
+               "(count + token-weighted) with cluster-bootstrap 95% CIs; marginal (inj/seq<=1%) "
+               "and joint (inj/seq<=1% AND S>=50k); systematic workload-prior sweep."),
+    "regime_basis": ("EXP-0002 recompute%~=inj/seq; EXP-0006 CDC-vs-fair-PIC margin ~1.1-1.7x median, "
+                     "tie at inj/seq>=5%; EXP-0013 CDC slope 0.958[0.937,0.980] is accounting identity."),
+    "win_region_def": "inj/seq<=1% (marginal); inj/seq<=1% AND S>=50k tokens (joint, CDC's home regime).",
+}
+
+N_TASKS = 20000
+B = 600
+
+rng = random.Random(MASTER_SEED)
+base_tasks = simulate_tasks(rng, N_TASKS, 1.0, 1.0)
+results["baseline_point"] = {k: round(v,4) if isinstance(v,float) else v
+                             for k,v in region_fractions(base_tasks).items()}
+boot_rng = random.Random(MASTER_SEED + 1)
+results["baseline_bootstrap_ci"] = bootstrap(base_tasks, B, boot_rng, KEYS)
+
+# --- SYSTEMATIC WORKLOAD-PRIOR SWEEP ---
+TAIL_SCALES = [0.5, 1.0, 2.0, 3.0]
+CTX_SCALES  = [0.5, 1.0, 2.0, 4.0]
+sweep = []
+SWEEP_KEYS = ["count_frac_win1", "token_frac_win1", "count_frac_win1_GIVEN_large", "large_ctx_share_count"]
+for ts in TAIL_SCALES:
+    for cs in CTX_SCALES:
+        rseed = MASTER_SEED + int(ts*100) + int(cs*1000)
+        rng_s = random.Random(rseed)
+        tks = simulate_tasks(rng_s, N_TASKS, ts, cs)
+        pt = region_fractions(tks)
+        brng = random.Random(rseed + 7)
+        bci = bootstrap(tks, 300, brng, SWEEP_KEYS)
+        sweep.append({
+            "tail_scale": ts, "ctx_scale": cs,
+            "count_frac_win1": round(pt["count_frac_win1"],4),
+            "count_frac_win1_ci95": bci["count_frac_win1"]["ci95"],
+            "token_frac_win1": round(pt["token_frac_win1"],4),
+            "token_frac_win1_ci95": bci["token_frac_win1"]["ci95"],
+            "count_frac_win1_GIVEN_large": round(pt["count_frac_win1_GIVEN_large"],4),
+            "count_frac_win1_GIVEN_large_ci95": bci["count_frac_win1_GIVEN_large"]["ci95"],
+            "large_ctx_share_count": round(pt["large_ctx_share_count"],4),
+        })
+results["prior_sweep"] = sweep
+
+cw = [s["count_frac_win1"] for s in sweep]
+tw = [s["token_frac_win1"] for s in sweep]
+cwl = [s["count_frac_win1_GIVEN_large"] for s in sweep]
+results["sweep_summary"] = {
+    "count_frac_win1_range": [round(min(cw),4), round(max(cw),4)],
+    "count_frac_win1_median": round(statistics.median(cw),4),
+    "token_frac_win1_range": [round(min(tw),4), round(max(tw),4)],
+    "token_frac_win1_median": round(statistics.median(tw),4),
+    "count_frac_win1_GIVEN_large_range": [round(min(cwl),4), round(max(cwl),4)],
+    "count_frac_win1_GIVEN_large_median": round(statistics.median(cwl),4),
+}
+
+with open(os.path.join(OUTDIR, "results.json"), "w") as f:
+    json.dump(results, f, indent=2)
+
+with open(os.path.join(OUTDIR, "results.csv"), "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["tail_scale","ctx_scale","count_frac_win1","count_frac_win1_lo","count_frac_win1_hi",
+                "token_frac_win1","token_frac_win1_lo","token_frac_win1_hi",
+                "count_frac_win1_GIVEN_large","cfg_GIVEN_large_lo","cfg_GIVEN_large_hi",
+                "large_ctx_share_count"])
+    for s in sweep:
+        w.writerow([s["tail_scale"], s["ctx_scale"],
+                    s["count_frac_win1"], s["count_frac_win1_ci95"][0], s["count_frac_win1_ci95"][1],
+                    s["token_frac_win1"], s["token_frac_win1_ci95"][0], s["token_frac_win1_ci95"][1],
+                    s["count_frac_win1_GIVEN_large"], s["count_frac_win1_GIVEN_large_ci95"][0],
+                    s["count_frac_win1_GIVEN_large_ci95"][1], s["large_ctx_share_count"]])
+
+print(json.dumps({"baseline_point": results["baseline_point"],
+                  "baseline_bootstrap_ci": results["baseline_bootstrap_ci"],
+                  "sweep_summary": results["sweep_summary"]}, indent=2))

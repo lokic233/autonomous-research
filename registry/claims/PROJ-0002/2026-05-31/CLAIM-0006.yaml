@@ -162,7 +162,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T18:17:44Z'
+last_updated: '2026-05-31T18:18:54Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -184,10 +184,10 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0014; convene committee if candidate-grade
+lifecycle_state: committee_pending
+next_action: 'committee re-review #4 (run_8): gate-A closed + gate-B GPU wall-clock
+  measured (EXP-0014). Does it flip GREEN? check _status=ALL_COMMITTEE_DONE + .err
+  before counting'
 active_experiments:
 - EXP-0015
-blocking_on: "ONLY remaining GREEN-gate is gate-B: GPU wall-clock TTFT on a real PIC\
-  \ artifact (CacheBlend/EPIC) across the inj/seq surface at ~5% crossover \u2014\
-  \ GPU + human-go (INVARIANT 3). All CPU gates DISCHARGED."
+blocking_on: ''

@@ -85,6 +85,10 @@ nodes:
   - slope~1 is CDC-mechanism-specific (per-engine 0.958 [0.937,0.980] R2=0.972, EXP-0013), an ACCOUNTING
     IDENTITY — NOT a characterizable cross-engine cost law (contiguous engines R2=0.0007, position-driven).
     Do not pitch slope~1 as a cross-engine/engine-internal law.
+  - super-linear multi-ctx VMM degradation = per-worker memory artifact, RETRACTED (DEAD-0004); revive
+    only with a clean isolated >linear measurement
+  - layer-stratified positional KV reuse capped at 1.5% real incidence (DEAD-0007); revive only if real-trace
+    incidence > 2%
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -92,6 +96,7 @@ nodes:
   - CLAIM-0004
   - CLAIM-0006
   - CLAIM-0007
+  - CLAIM-0005
   associated_dead_ideas:
   - DEAD-0001
   - DEAD-0002
@@ -103,7 +108,7 @@ nodes:
   - DEAD-0008
   - DEAD-0009
   status: yellow
-  last_updated: '2026-05-31T16:48:26Z'
+  last_updated: '2026-05-31T18:20:07Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -116,7 +121,8 @@ nodes:
     all 6 PIC bodies body-verified distinct, novelty gate-A FULLY CLOSED | +VERDICT-0022 (2026-05-31,
     6/6): gate-A overstatement corrected (8/10, 2 MEDIUM pending); stats-rigor pass required; gate-B GPU
     is the long pole | +EXP-0013/VERDICT-0023 (2026-05-31): gate-A FULLY CLOSED (10/10); slope~1 = CDC-specific
-    accounting identity not cross-engine law; only gate-B GPU remains'
+    accounting identity not cross-engine law; only gate-B GPU remains | +laneB completeness audit (2026-05-31):
+    D1 CLAIM-0005 backlink, D3 DEAD-0004/0007 red_zones; PROJ-0001 assessed SATURATED/mature'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
