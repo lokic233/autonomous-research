@@ -72,25 +72,20 @@ supporting_evidence:
     \ + finite-size caveat. Stayed PURELY descriptive."
   data_path: experiments/2026-05-31/EXP-0038/
 - exp_id: EXP-0041
-  summary: 'L3 committee killer ablations BOTH SURVIVE all 3 harnesses -> burstiness
-    EARNED. (1) TOOL-STRATIFIED permutation null (N=2500, permute fail labels only
-    within same tool_name per session, canonical=raw tool_name): whole->stratified
-    Z survives negative all 3 -- CC -4.15->-2.38(p~.009), Codex -15.72->-13.51(p<<1e-10),
-    Gemini -3.82->-3.43(p~3e-4). Rate-heterogeneity (Cox mixture) alternative REJECTED.
-    Caveat: a verb-level OVER-CONTROL (split Codex exec_command by command verb, 42
-    strata) collapses Codex to -1.90(ns) -- but that over-controls by conditioning
-    on the signal locus; tool_name is the principled granularity (reported as stouffer_strat_overctrl).
-    (2) RETRY-CASCADE collapse (fuzzy same-intent: same tool + token-Jaccard>=0.6
-    on arg-text; exact match rarely fires bc real retries modify the cmd): collapse
-    fail->retry->fail to root event, removes <=0.7% CC/Codex calls 6.4% Gemini; Z
-    survives -- CC -3.79, Codex -13.94, Gemini -4.34(strengthens). Retry-control-flow
-    alternative REJECTED. Dispersion stays>1, B stays>0 all 3. (3) 2-comp Poisson
-    mixture BIC-preferred all 3 -> rate-heterogeneity COEXISTS but does not explain
-    away the memory (killer1 already removed it). RECOMMEND GREEN, no reframe needed.
-    Guardrails: CC leg thinnest (strat Z carried by Stouffer, per-sess median 0);
-    frame as ''over-dispersion w/ within-tool temporal-memory component surviving
-    rate-stratification'' (memory+mixture coexist); report both stratification granularities;
-    keep purely descriptive. Files: experiments/2026-05-31/EXP-0041/{impl/burst_L3.py,result.md,results/harness_summary_L3.csv,per_session_L3.csv}'
+  summary: "L3 DISCRIMINATING ABLATIONS (VERDICT-0045 killers) \u2014 BOTH SURVIVE\
+    \ all 3 harnesses -> burstiness EARNED. KILLER-1 tool-stratified permutation (N=2500,\
+    \ strata=tool_name; rejects rate-heterogeneity/Cox-mixture): CC Z -4.15->-2.38\
+    \ (p~0.009, survives), Codex -15.72->-13.51 (p<<1e-10), Gemini -3.82->-3.43 (p~3e-4).\
+    \ KILLER-2 retry-cascade collapse (fuzzy same-intent token-Jaccard>=0.6; rejects\
+    \ deterministic control-flow): CC -4.15->-3.79, Codex -15.72->-13.94, Gemini -3.82->-4.34\
+    \ (strengthens). Mixture-of-Poissons: 2-comp BIC-preferred all 3 (rate-heterogeneity\
+    \ COEXISTS but does NOT explain away the within-tool temporal memory, already\
+    \ controlled by Killer-1). HONEST: CC thinnest leg (strat-Z=-2.38 Stouffer-carried,\
+    \ per-session median strat-Z=0); Codex strong, Gemini solid. Verb-level OVER-CONTROL\
+    \ collapses Codex to -1.90 ns (but conditions on the locus the memory lives in;\
+    \ tool_name is the principled granularity). FRAME: 'over-dispersion with a within-tool\
+    \ temporal-memory component that survives rate-stratification' \u2014 NOT pure\
+    \ temporal burstiness (both Cox-mixture + Hawkes-like memory contribute)."
   data_path: experiments/2026-05-31/EXP-0041/
 negative_evidence: []
 verdict_history:
@@ -100,9 +95,11 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0041; convene committee if candidate-grade
+lifecycle_state: committee_pending
+next_action: 're-review (run_17): BOTH VERDICT-0045 discriminating ablations PASSED
+  (EXP-0041 tool-stratified + retry-collapse survive 3-harness; burstiness EARNED).
+  GREEN now or YELLOW pending prior-art sweep / thicker CC n?'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T23:04:52Z'
+last_updated: '2026-05-31T23:06:44Z'
