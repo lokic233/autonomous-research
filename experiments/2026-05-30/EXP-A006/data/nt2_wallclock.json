@@ -1,0 +1,25 @@
+{
+  "experiment": "NT2_wallclock_prefill_recompute",
+  "H": 32,
+  "D": 128,
+  "block": 16,
+  "rows": [
+    {
+      "ctx_tokens": 8000,
+      "fixed_recompute_tokens": 6000,
+      "fixed_TTFT_ms": 0.613,
+      "cdc_recompute_tokens": 192,
+      "cdc_TTFT_ms_with_1.5x_overhead": 0.053,
+      "wallclock_speedup": 11.6
+    },
+    {
+      "ctx_tokens": 32000,
+      "fixed_recompute_tokens": 24000,
+      "fixed_TTFT_ms": 8.436,
+      "cdc_recompute_tokens": 768,
+      "cdc_TTFT_ms_with_1.5x_overhead": 0.071,
+      "wallclock_speedup": 119.6
+    }
+  ],
+  "verdict": "recompute-count reduction TRANSLATES to wall-clock even with pessimistic 1.5x CDC overhead"
+}

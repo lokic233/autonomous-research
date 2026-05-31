@@ -1,0 +1,26 @@
+# Prior-art packet for PROJ-0001 (GPU CUDA-VMM as wrong abstraction for agentic KV branching)
+# Migrated from sessions 511ce2e2/048fcb0d/c48efa79 EVIDENCE_BRIEF + committee traces. Anti-hallucination:
+# each entry is a real, retrievable source the committee verified.
+related_work:
+  - {paper_or_project: vAttention, type: paper, venue_or_source: arXiv 2405.04437, year: 2024,
+     core_idea: "CUDA VMM for KV cache, contiguous VA, unmodified attention kernel",
+     similarity_to_claim: high, difference_from_claim: "read-only sharing; no fork/CoW branching",
+     baseline_relevance: high, collision_risk: medium}
+  - {paper_or_project: vLLM PagedAttention, type: paper, venue_or_source: SOSP'23, year: 2023,
+     core_idea: "paged KV cache + prefix caching (APC)", similarity_to_claim: high,
+     difference_from_claim: "per-request lifecycle, software refcount; no branch CoW", baseline_relevance: high, collision_risk: medium}
+  - {paper_or_project: SGLang RadixAttention, type: paper, venue_or_source: NeurIPS'24, year: 2024,
+     core_idea: "radix-tree prefix sharing, software refcount", similarity_to_claim: high,
+     difference_from_claim: "software, not HW MMU CoW; captures token-prefix=KV sharing (=> DEAD-0006)", baseline_relevance: high, collision_risk: high}
+  - {paper_or_project: FlashInfer, type: repo, venue_or_source: github.com/flashinfer-ai, year: 2024,
+     core_idea: "production paged-attention kernels", similarity_to_claim: medium,
+     difference_from_claim: "kernel lib; the dominant perf baseline (41-152x faster than HW CoW)", baseline_relevance: high, collision_risk: low}
+  - {paper_or_project: Continuum, type: paper, venue_or_source: arXiv 2511.02230, year: 2025,
+     core_idea: "KV-cache TTL retention across pauses", similarity_to_claim: medium,
+     difference_from_claim: "retains existing KV; no speculative prefill of predicted continuation", baseline_relevance: medium, collision_risk: medium}
+  - {paper_or_project: Speculative Tool Calls, type: paper, venue_or_source: arXiv 2512.15834, year: 2025,
+     core_idea: "speculatively issue tool calls to fill idle gaps", similarity_to_claim: medium,
+     difference_from_claim: "speculates WHICH tool; not engine-side continuation prefill", baseline_relevance: medium, collision_risk: medium}
+collision_summary: "GPU CUDA-VMM for KV is occupied (vAttention/PagedAttention). Our contribution is the
+  NEGATIVE/characterization angle (CoW dominated, vendor ceiling cliff, compounding collapse) + the
+  attention-visible write-after-share capability delta — outside the read-only-sharing prior art."

@@ -1,0 +1,22 @@
+exp_id: EXP-D007
+date: '2026-05-30'
+source_session: c48efa79-2367-4225-9932-b005a2eb5a30
+claim_id: CLAIM-0006
+level: 1
+status: completed
+result_effect: kill
+result_summary: 'DEAD-0007: layer-stratified reusability ceiling 1.5% < 2% kill bar.'
+hardware: H100/MI350X (orig run)
+artifacts_path: experiments/2026-05-30/EXP-D007/
+impl_files:
+- E8_positional_kv_stratification__e9_gate.py
+- E8_positional_kv_stratification__probe_posdup.py
+- E8_positional_kv_stratification__probe_posdup2.py
+- E7_prefill_determinism_probe__probe_chunk.py
+- E7_prefill_determinism_probe__probe_gen.py
+data_files:
+- E8_positional_kv_stratification__e9.log
+- E8_positional_kv_stratification__probe_posdup.log
+- E7_prefill_determinism_probe__probe_chunk.log
+migrated: true
+completed_at: '2026-05-31T11:56:31Z'

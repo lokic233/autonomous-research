@@ -1,0 +1,21 @@
+exp_id: EXP-A005
+date: '2026-05-30'
+source_session: 511ce2e2-b74f-4612-8c8f-5edef3094245
+claim_id: CLAIM-0005
+level: 1
+status: completed
+result_effect: weaken
+result_summary: Injection penalty SUB-quadratic k=1.29-1.31 (3 engines) -> not a super-quadratic
+  discovery.
+hardware: H100/MI350X (orig run)
+artifacts_path: experiments/2026-05-30/EXP-A005/
+impl_files:
+- eb_runner_vllm.py
+- eb_runner_sglang.py
+- eb_runner_hf.py
+- analyze_eb.py
+- run_eb_all.sh
+data_files:
+- eb_injection_scaling.csv
+migrated: true
+completed_at: '2026-05-31T11:56:31Z'

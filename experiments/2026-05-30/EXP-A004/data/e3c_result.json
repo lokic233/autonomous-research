@@ -1,0 +1,40 @@
+{
+  "experiment": "E3c_relevance_deployment_envelope",
+  "K": 519936,
+  "toks_per_page": 16,
+  "rows": [
+    {
+      "scenario": "short chat prefix",
+      "ctx_tokens": 2000,
+      "prefix_pages": 125,
+      "max_branches_NT1_mapping_ceiling": 4159,
+      "max_branches_if_fullclone_HBM": 397,
+      "binding_constraint_under_CoW_sharing": "mapping-metadata (NT1 wall)"
+    },
+    {
+      "scenario": "RAG / 6k agent ctx",
+      "ctx_tokens": 8000,
+      "prefix_pages": 500,
+      "max_branches_NT1_mapping_ceiling": 1039,
+      "max_branches_if_fullclone_HBM": 99,
+      "binding_constraint_under_CoW_sharing": "mapping-metadata (NT1 wall)"
+    },
+    {
+      "scenario": "long coding-agent ctx",
+      "ctx_tokens": 32000,
+      "prefix_pages": 2000,
+      "max_branches_NT1_mapping_ceiling": 259,
+      "max_branches_if_fullclone_HBM": 24,
+      "binding_constraint_under_CoW_sharing": "mapping-metadata (NT1 wall)"
+    },
+    {
+      "scenario": "128k long-context",
+      "ctx_tokens": 128000,
+      "prefix_pages": 8000,
+      "max_branches_NT1_mapping_ceiling": 64,
+      "max_branches_if_fullclone_HBM": 6,
+      "binding_constraint_under_CoW_sharing": "mapping-metadata (NT1 wall)"
+    }
+  ],
+  "verdict": "NT1 ceiling BITES whenever shared-prefix CoW is used at scale: with sharing, HBM is no longer the limit, so the ~520K mapping budget becomes the binding cap on concurrent branches."
+}

@@ -14,7 +14,12 @@ mandatory_baselines:
 academic_map_nodes:
 - MAP-0001
 supporting_evidence:
-- summary: measured end-to-end (E-C)
+- exp_id: EXP-A001
+  effect: support
+  artifacts: experiments/2026-05-30/EXP-A001/
+- exp_id: EXP-D001
+  effect: kill-spawned DEAD-0001
+  artifacts: experiments/2026-05-30/EXP-D001/
 negative_evidence: []
 verdict_history:
 - verdict: VERDICT-0001
@@ -24,4 +29,4 @@ owner: sess 511ce2e2
 target_venue: ATC/EuroSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T11:39:13Z'
+last_updated: '2026-05-31T11:58:17Z'

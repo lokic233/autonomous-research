@@ -1,0 +1,22 @@
+exp_id: EXP-A006b
+date: '2026-05-30'
+source_session: c48efa79-2367-4225-9932-b005a2eb5a30
+claim_id: CLAIM-0006
+level: 1
+status: completed
+result_effect: support
+result_summary: Independent re-derivation of cost-map (T2=NT2) + real-trace census.
+  Interior-repair killed -> DEAD-0008.
+hardware: H100/MI350X (orig run)
+artifacts_path: experiments/2026-05-30/EXP-A006b/
+impl_files:
+- E3_edit_taxonomy__e3_edit_taxonomy.py
+- E4_repair__bench_e4_repair.py
+- E5_real_trace_census__e5_trace_analysis.py
+data_files:
+- E2_sglang_invalidation__raw_sglang_7b.log
+- E4_repair__raw_e4_sweep.log
+- E4_repair__raw_e4b_multilayer.log
+- E4_repair__raw_e4c_terminal.log
+migrated: true
+completed_at: '2026-05-31T11:56:31Z'
