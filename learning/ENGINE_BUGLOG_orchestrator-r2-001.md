@@ -253,3 +253,39 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - Severity: medium (data-integrity; silent duplicate; not caught by any engine check).
 
 ### NOTE: VERDICT-0004 gap is PRE-EXISTING (not mine) — present before round-2.
+
+### CONSISTENCY SWEEP (end of round-2 cycle)
+- All claim experiment back-link paths resolve to existing nested dirs ✓ (BUG-2 stays closed).
+- Orphan verdicts (not in any claim verdict_history): VERDICT-0010 ONLY — and it is PRE-EXISTING
+  (created 13:48:41Z round-1, commit d93bb5f/b80c998, a superseded GREEN on CLAIM-0006 before the
+  VERDICT-0011 reframe). NOT a round-2 dupe; left intact as historical record. The round-2 dupe
+  (VERDICT-0013, BUG-18) was already removed.
+- Lifecycle: 3 in-flight claims, all with current next_action; CLAIM-0006/0008 now evidence_ready with
+  clear GREEN-blockers (both require human go / GPU territory).
+
+### ROUND-2 BUG SCOREBOARD
+- CONFIRMED FIXED (newly-fixed paths held): committee runner e2e (BUG-12/13), BUG-14 (verdict detail),
+  BUG-3 (green_rule), BUG-10 (atomic runtime writes), BUG-7 (liveness retire), lifecycle advance/resume.
+- TODO carryover: BUG-2 CLOSED; BUG-4 data-fixed + engine-gap logged; BUG-6 confirmed LIVE (mitigated);
+  BUG-1 partial (fallback works).
+- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — fixed data, engine-validator gap stands),
+  BUG-16 (area_chair parallel-race miscounts — benign, latent), BUG-17 (map-delta ';' split nit),
+  BUG-18 (verdict write non-idempotent under retry -> duplicate orphan — remediated).
+
+### CONSISTENCY SWEEP (end of round-2 cycle)
+- All claim experiment back-link paths resolve to existing nested dirs ✓ (BUG-2 stays closed).
+- Orphan verdicts (not in any claim verdict_history): VERDICT-0010 ONLY — and it is PRE-EXISTING
+  (created 13:48:41Z round-1, commit d93bb5f/b80c998, a superseded GREEN on CLAIM-0006 before the
+  VERDICT-0011 reframe). NOT a round-2 dupe; left intact as historical record. The round-2 dupe
+  (VERDICT-0013, BUG-18) was already removed.
+- Lifecycle: 3 in-flight claims, all with current next_action; CLAIM-0006/0008 now evidence_ready with
+  clear GREEN-blockers (both require human go / GPU territory).
+
+### ROUND-2 BUG SCOREBOARD
+- CONFIRMED FIXED (newly-fixed paths held): committee runner e2e (BUG-12/13), BUG-14 (verdict detail),
+  BUG-3 (green_rule), BUG-10 (atomic runtime writes), BUG-7 (liveness retire), lifecycle advance/resume.
+- TODO carryover: BUG-2 CLOSED; BUG-4 data-fixed + engine-gap logged; BUG-6 confirmed LIVE (mitigated);
+  BUG-1 partial (fallback works).
+- NEW round-2: BUG-15 (CLAIM-0008 wrong map/baselines — fixed data, engine-validator gap stands),
+  BUG-16 (area_chair parallel-race miscounts — benign, latent), BUG-17 (map-delta ';' split nit),
+  BUG-18 (verdict write non-idempotent under retry -> duplicate orphan — remediated).
