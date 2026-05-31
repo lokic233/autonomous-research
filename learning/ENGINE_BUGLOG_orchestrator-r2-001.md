@@ -441,3 +441,32 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - Severity: HIGH — a false completion signal that bypasses the EMPTY-flag safety net could, with a less
   careful orchestrator, produce a verdict on a partial committee (the exact failure the green_rule + Rule-1
   + EMPTY-flag layers exist to prevent).
+
+### BUG-22 (NEW, HIGH) — gemini (no </dev/null) DRAINS the while-read loop's stdin -> last 2 members never launched; gate bypassed
+- committee_run_5 (engine fb4a63b, the BUG-21 gating fix): _status.txt = ALL_COMMITTEE_DONE, but only 4/6
+  members produced files. product_realist(metacode) + area_chair(claude-4-6) had NO .out AND NO .err —
+  the loop NEVER reached them. launch.log shows exactly 4 "done:" lines.
+- ROOT CAUSE (classic bash foot-gun): the launch loop is `while read -r role backend; do ... run_one & ...
+  done < "$MEMBERS_FILE"`. run_one invokes the backend CLI. claude/codex/metacode all use `</dev/null`,
+  but GEMINI does NOT (line 62 main + line 73 retry: `gemini --dangerously... -p "$full" >out 2>err` with
+  NO stdin redirect). When gemini is backgrounded (`&`), it INHERITS the loop's stdin fd = $MEMBERS_FILE
+  and READS/DRAINS the remaining lines. gemini (evaluation_prosecutor) is member 3; after it drains stdin,
+  the `while read` gets EOF -> loop exits having processed only the first 4 members it managed to read
+  before/around the drain; members 5 (product_realist) + 6 (area_chair) are silently dropped.
+- WHY THE BUG-21 GATE DIDN'T CATCH IT: the gate iterates `$ALL_ROLES`, which is accumulated INSIDE the
+  same loop — so it only ever contained the 4 roles the loop actually read. The gate verified 4/4 present
+  -> false ALL_COMMITTEE_DONE. The gate must verify against the AUTHORITATIVE member list (.members.txt /
+  config), NOT the loop-accumulated variable that the stdin-drain truncated.
+- FIX (two parts, both needed):
+  (1) add `</dev/null` to the gemini invocation in BOTH the main case (line 62) and the retry case (line
+      73) — matches claude/codex/metacode and stops the stdin drain. (Belt-and-suspenders: redirect the
+      whole loop's stdin, e.g. read on fd 3: `while read -r role backend <&3; do ...; done 3< "$FILE"`.)
+  (2) gate completion against the full member count from .members.txt/config, not $ALL_ROLES, so a
+      truncated loop can never yield a passing gate.
+- ORCHESTRATOR ACTION (Rule 1 held AGAIN): 4/6 only — did NOT write a verdict from run_5. VERDICT-0017
+  (run_3, verified 6 genuine vote blocks) remains the valid 6/6 record. Reported.
+- Severity: HIGH — same false-complete class as BUG-21 but via a different mechanism (stdin drain), and it
+  DEFEATS the BUG-21 gate. This is why the gate must key off the authoritative member list.
+- NOTE: run_3 succeeded because (per launch.log) its timing happened to let the loop read all 6 before
+  any gemini drain took effect on that run; it was timing-luck, consistent with the operator's earlier
+  observation. The stdin-drain is the deterministic root cause that makes drops recur.
