@@ -375,3 +375,33 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   to 🏁 retired so liveness stops nagging a handoff. Actual: it nags indefinitely as DEAD.
 - Impact: false "revive me" signal; a fresh orchestrator reading liveness could wrongly try to revive a
   superseded predecessor. Severity: low (cosmetic/operational), but pollutes the liveness dashboard.
+
+### NUMBERING NOTE: the operator labeled the committee-sandbox fix "BUG-19" (engine db3e67d). My buglog had
+  already used BUG-19 for the "no agent retire/complete" liveness gap. To avoid collision, the
+  committee-sandbox issue is recorded here as BUG-20.
+
+### BUG-20 (was operator's "BUG-19") — FIXED by engine db3e67d. NESTED-SANDBOX committee failure.
+- ROOT CAUSE (corrects my earlier "CLIs down/reinstall" hypothesis): the navi daemon runs UNSANDBOXED;
+  when run_committee.sh spawned claude/codex/gemini/metacode, each tried to apply its OWN inner macOS
+  sandbox -> `sandbox_apply: Operation not permitted` / `sandbox-exec` EXIT 71 -> empty output. That is
+  why run #2 hit 5/6 EMPTY_OUTPUT_NO_VOTE while run #1 (different process context) had succeeded.
+- FIX: run_committee.sh now passes --dangerously-disable-osx-sandbox to ALL 6 backends (claude via
+  ${CLAUDE_SANDBOX_FLAG:-...}, codex/gemini/metacode inline). Operator validated all 6 round-trip.
+- LESSON: the EMPTY_OUTPUT_NO_VOTE flag (BUG-12 fix) + Rule-1 (refuse verdict on <full committee) were
+  exactly right — they turned a silent nested-sandbox failure into a visible, safe block instead of a
+  fabricated verdict. The "reinstall" guess was wrong but the SAFE BEHAVIOR was correct.
+- My BUG-19 (no `ros agent retire/complete`) remains a separate, still-open low-sev finding.
+
+### COMMITTEE RUN #3 (engine db3e67d, BUG-20 sandbox fix) — CLEAN 6/6 ✓ (round-2 headline, fully closed)
+- After --dangerously-disable-osx-sandbox on all 6 backends: ALL_COMMITTEE_DONE, all 6 .out non-empty,
+  ZERO EMPTY_OUTPUT_NO_VOTE. All 6 distinct models voted YELLOW with REAL structured content (codex +
+  metacode both produced real votes this time, unlike sandbox-broken run #2).
+- BUG-16 chair-last VERIFIED in the live run: launch.log shows "(reviewers done; running area_chair to
+  aggregate)" THEN "done: area_chair" — chair saw all 5 finished reviewer votes (no race), aggregated a
+  correct 5/5 quorum (matching the on-disk truth). The round-1 area_chair race is gone.
+- Wrote VERDICT-0017 (Rule 1, all 6 --votes + enriched --fatal/--required/--map-delta/--baselines via the
+  BUG-14 flags; used --allow-dup since it's a genuine NEW committee verdict citing the same EXP set as the
+  prior evidence-update VERDICT-0014). Rule-3: MAP-0001 + prior_art merged (Pope/Kwon accounting identity,
+  2601.06007 distinction-unverified edge, two retired legs, single-leg framing).
+- NET: the full committee->verdict->map cycle now works end-to-end on macOS with all 6 real models. The
+  EMPTY_OUTPUT flag + Rule-1 refusal correctly bridged the sandbox-broken interval without a fake verdict.

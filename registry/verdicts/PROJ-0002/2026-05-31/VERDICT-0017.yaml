@@ -1,0 +1,83 @@
+verdict_id: VERDICT-0017
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0002
+- EXP-0003
+- EXP-0005
+- EXP-0006
+experiment_paths:
+- experiments/2026-05-31/EXP-0002
+- experiments/2026-05-31/EXP-0003
+- experiments/2026-05-31/EXP-0005
+- experiments/2026-05-31/EXP-0006
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(none \u2014 no unrebutted fatal objection at >=2 verified sources"
+- 'not RED). But TWO open GREEN-gates:'
+- 'NOVELTY GATE OPEN: surviving contribution is now a SINGLE leg (engine-internal
+  inj/seq recompute cost-map). Distinction from ''Don''t Break the Cache'' (2601.06007,
+  reports cost~injected-tokens/prompt-size, SAME functional form) reduces to measurement
+  granularity (engine-internal vs black-box) and is UNVERIFIED at body level. slope~1
+  + position-independence are mechanism-derived accounting identities (Pope 2211.05102,
+  Kwon 2309.06180), NOT emergent discoveries'
+- 'EVALUATION GATE OPEN: token-count proxy conflates CDC contiguous-chunk recompute
+  (high arithmetic intensity) vs PIC scattered-HKVD (gather/scatter, kernel overhead)'
+- at the ~5% fraction-tie crossover wall-clock could diverge 2-3x EITHER direction.
+  CPU proxy is not publishable at MLSys as sole systems metric
+required_evidence:
+- '[novelty] Body-level read of ''Don''t Break the Cache'' 2601.06007: confirm it
+  does NOT derive recompute as f(inj/seq) and does NOT report position-independence
+  (the single surviving novelty leg lives/dies here)'
+- '[novelty] Body-level read of Irminsul 2605.05696 + >=1 additional independent index
+  (Semantic Scholar/DBLP/venue) to firm the mechanism collision beyond single arXiv'
+- '[eval GREEN-blocker] GPU wall-clock TTFT on a REAL PIC artifact (CacheBlend/EPIC
+  published, NOT re-impl) across the inj/seq surface, esp ~5% crossover [INVARIANT
+  3 human-go]'
+- '[rigor] variance/CI/p95-p99 on the 1.69x median + per-(p,W) cell + n per cell +
+  multiple-comparison correction over the 16-cell sweep'
+- '[fairness] SYMMETRIC CDC hyperparameter sweep (chunk-size, Rabin min/avg/max) matching
+  PIC''s (p,W) envelope'
+- '[scope] real-trace inj/seq N>=100 independent traces (esp the 0.1% corner where
+  CDC''s 2-6x edge survives)'
+- '[framing] retire 8x-465x as competitive'
+- demote slope~1 'law'->'accounting identity we quantify'
+- position as 'characterization + honest narrow-edge negative result'
+- '[citation] body-level distinguish KVFlow 2507.07400, Cache-Craft 2502.15734, CacheClip
+  2510.10129, MEPIC 2512.16822'
+- '[repro] PIC re-impl must reproduce CacheBlend''s published numbers before use as
+  fair baseline'
+map_delta_proposals:
+- 'CLAIM-0006: surviving novelty = SINGLE leg (engine-internal inj/seq cost-map characterization)'
+- RETIRE leg-1 (8x-465x = structural artifact, EXP-0006) + leg-2 (slope~1 'law'/position-independence
+  = mechanism-derived accounting identity, naming not novelty)
+- 'ADD edges: CLAIM-0006->2601.06007 (closest-empirical-neighbor, distinction UNVERIFIED,
+  GREEN-blocker)'
+- CLAIM-0006->Pope 2211.05102 (slope~1 derivable from KV accounting identity)
+- 'EXP-0006 NARROWS CLAIM-0006: collapses head-to-head leg, cost-map leg survives
+  only as characterization'
+baseline_requirements:
+- "Hardware-backed PIC via CacheBlend or EPIC PUBLISHED artifact (not re-impl) \u2014\
+  \ GPU wall-clock TTFT across surface"
+- KVFlow 2507.07400 (cite+distinguish, carried from VERDICT-0012)
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+created_at: '2026-05-31T15:34:25Z'

@@ -51,3 +51,19 @@ See CLAIM-0006/fresh_priorart_note_LaneA-priorart.md + search_log_priorart-A.md 
 - **New baseline requirement**: PIC-family head-to-head (Irminsul or EPIC implementation) is now
   MANDATORY — the current 3 baselines are structurally incapable of position-independent recovery,
   making the 8x-465x advantage a structural gap, not a competitive benchmark.
+
+## Update 2026-05-31 (VERDICT-0017, real 6/6 committee — engine db3e67d nested-sandbox fix)
+- **Surviving novelty narrowed to a SINGLE leg**: the engine-internal inj/seq recompute cost-map
+  characterization. Two legs RETIRED by committee consensus:
+  1. The 8x-465x head-to-head = STRUCTURAL ARTIFACT of contiguous baselines (EXP-0006).
+  2. slope~1 "law" + position-independence = MECHANISM-DERIVED accounting identity, not an emergent
+     discovery — follows from contiguous-prefix KV accounting (**Pope et al. arXiv:2211.05102**,
+     **Kwon et al. PagedAttention arXiv:2309.06180**). Demote "law" -> "accounting identity we quantify".
+- **Novelty GREEN-gate (unverified)**: "Don't Break the Cache" (2601.06007) reports cost ~
+  injected-tool-tokens / prompt-size — the SAME functional form. Distinction reduces to measurement
+  granularity (engine-internal vs black-box) and is UNVERIFIED at body level. If 2601.06007 already
+  publishes the cost-map at comparable granularity, the contribution collapses to a replication.
+- **Eval GREEN-gate**: token-count proxy conflates CDC contiguous-chunk recompute (high arithmetic
+  intensity) vs PIC scattered-HKVD (gather/scatter, kernel overhead). At the ~5% fraction-tie crossover,
+  wall-clock could diverge 2-3x in either direction. MLSys needs GPU wall-clock on a REAL PIC artifact
+  (CacheBlend/EPIC published, not the re-impl).
