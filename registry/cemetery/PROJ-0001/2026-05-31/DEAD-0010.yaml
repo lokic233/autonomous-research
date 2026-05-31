@@ -1,0 +1,24 @@
+dead_id: DEAD-0010
+original_claim_id: CLAIM-0002
+original_claim: The NVIDIA ~520K CUDA-VMM per-context mapping ceiling is a vendor-specific
+  portability cliff (reproduced 523,404 +/-0.6% at cuMemSetAccess; AMD no wall at
+  80M = 153x).
+reason_killed: 'EARLY-KILL idle-window speculative prefill. CPU token-proxy break-even
+  = single dimensionless identity h*f >= alpha/(1+alpha) (W,R cancel); feasible win-region
+  narrow (P<=64, q>=0.95, alpha<=0.25). KILL leg 1: occupied by arXiv:2511.20048 (agent
+  idle-gap speculation + overhead model, DIRECT TWIN) + 2605.06472 (prediction-based
+  KV prefill), not previously in MAP-0001. KILL leg 2: break-even is textbook expected-value
+  accounting identity (DEAD-0009 pattern, no non-derivable anomaly). No red-zone collision.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0018
+duplicate_patterns:
+- The NVIDIA ~520K CUDA-VMM per-context mapping ceiling is a vendor-specific portability
+  cliff (reproduced 523,404 +/-0.6% at cuMemSetAccess; AMD no wall at 80M = 153x).
+- 153x 404 520k 523 80m amd ceiling cliff context cuda cumemsetaccess mapping nvidia
+  per portability reproduced specific vendor vmm wall
+revival_conditions: Only if a speculative-prefill operating point is measured that
+  is body-distinct from 2511.20048/2605.06472 AND shows benefit NOT predicted by h*f>=alpha/(1+alpha)
+  (genuine system anomaly e.g. attention-sink reuse breaking linear-token currency).
+related_prior_work: []
+date_killed: '2026-05-31T18:18:00Z'

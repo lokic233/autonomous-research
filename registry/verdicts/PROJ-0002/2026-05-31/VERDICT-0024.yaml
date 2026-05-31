@@ -1,0 +1,49 @@
+verdict_id: VERDICT-0024
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0006
+- EXP-0013
+experiment_paths:
+- experiments/2026-05-31/EXP-0006
+- experiments/2026-05-31/EXP-0013
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "Gate-A FULLY CLOSED (10/10 body-verified). Single remaining GREEN-blocker = gate-B\
+  \ GPU wall-clock: recompute-FRACTION tie at inj/seq>=5% (EXP-0006/0013) does NOT\
+  \ imply a WALL-CLOCK tie \u2014 CDC contiguous-chunk (high arithmetic intensity)\
+  \ vs PIC scattered-HKVD (gather/scatter+kernel overhead) could diverge 2-3x either\
+  \ direction"
+required_evidence:
+- 'EXP-0014 (APPROVED for GPU): wall-clock TTFT vs a real PIC artifact (CacheBlend/EPIC)
+  at the decision cells (inj/seq {0.1,1,5,25}% x seq {4k,32k}), median+p95, CDC/PIC
+  ratio AT the ~5% crossover. H100 devgpu014 preferred (non-fragile)'
+- bounded inference benchmark, os._exit teardown, host-mem-floor 300
+map_delta_proposals:
+- 'CLAIM-0006: gate-B GPU experiment EXP-0014 committee-APPROVED for autonomous queue
+  (no human gate per engine d1ed9e5). This is the sole remaining GREEN-blocker'
+- gate-A closed, stats done. Outcome decides GREEN (win-region holds in wall-clock)
+  vs further-weaken (fraction-tie becomes wall-clock loss).
+baseline_requirements:
+- "real PIC artifact CacheBlend/EPIC (GPU wall-clock) \u2014 EXP-0014"
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+created_at: '2026-05-31T18:09:35Z'

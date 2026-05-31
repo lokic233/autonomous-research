@@ -1,0 +1,31 @@
+exp_id: EXP-0014
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 2
+hardware: H100
+resource_budget:
+  max_wall_clock_minutes: 90
+  max_gpu_hours: 1.5
+  max_memory_gb: 80
+  host_mem_floor_gb: 300
+needs_gpu: true
+dispatched_by: gpu-scheduler
+node_lease: devgpu014:EXP-0014
+status: completed
+result_summary: "GPU wall-clock (H100 devgpu014, SDPA kernel proxy): CDC contiguous\
+  \ recompute is FASTER than PIC scattered-HKVD in ALL 8 decision cells (PIC/CDC 1.02-2.68x).\
+  \ The recompute-fraction tie at inj/seq>=5% (EXP-0006) does NOT become a wall-clock\
+  \ loss \u2014 CDC stays 1.27-1.42x faster (contiguous higher arithmetic intensity\
+  \ vs scattered gather overhead); largest advantage 2.68x at win-region corner (32k\
+  \ ctx/0.1% inj). vs whole-suffix CDC 1.3x-41x faster. SUPPORTS CLAIM-0006 win-region.\
+  \ CAVEAT: kernel proxy, not full vLLM/CacheBlend serving (vllm not installed on\
+  \ node)."
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0014/
+reproducibility: ''
+linked_verdicts: []
+started_at: '2026-05-31T18:09:50Z'
+completed_at: '2026-05-31T18:17:44Z'
+prompt_version: ''
+committee_approved: VERDICT-0024

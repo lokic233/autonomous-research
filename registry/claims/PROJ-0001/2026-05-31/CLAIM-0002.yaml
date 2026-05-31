@@ -1,7 +1,7 @@
 claim_id: CLAIM-0002
 project_id: PROJ-0001
 stage: paper-track
-status: promoted
+status: killed
 claim: The NVIDIA ~520K CUDA-VMM per-context mapping ceiling is a vendor-specific
   portability cliff (reproduced 523,404 +/-0.6% at cuMemSetAccess; AMD no wall at
   80M = 153x).
@@ -20,7 +20,16 @@ supporting_evidence:
 - exp_id: EXP-D002
   effect: kill-spawned DEAD-0002
   artifacts: experiments/2026-05-30/EXP-D002/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0018
+  summary: 'EARLY-KILL idle-window speculative prefill. CPU token-proxy break-even
+    = single dimensionless identity h*f >= alpha/(1+alpha) (W,R cancel); feasible
+    win-region narrow (P<=64, q>=0.95, alpha<=0.25). KILL leg 1: occupied by arXiv:2511.20048
+    (agent idle-gap speculation + overhead model, DIRECT TWIN) + 2605.06472 (prediction-based
+    KV prefill), not previously in MAP-0001. KILL leg 2: break-even is textbook expected-value
+    accounting identity (DEAD-0009 pattern, no non-derivable anomaly). No red-zone
+    collision.'
+  data_path: experiments/2026-05-31/EXP-0018/
 verdict_history:
 - verdict: VERDICT-0002
   result: green-6/6
@@ -32,8 +41,8 @@ owner: sess 511ce2e2
 target_venue: ATC/EuroSys/OSDI
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T13:55:50Z'
+last_updated: '2026-05-31T18:18:00Z'
 lifecycle_state: done
-next_action: promoted (6/6 GREEN); paper-track work
+next_action: killed -> cemetery; no further action
 blocking_on: ''
 active_experiments: []

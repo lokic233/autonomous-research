@@ -1,0 +1,28 @@
+exp_id: EXP-0018
+project_id: PROJ-0001
+claim_id: CLAIM-0002
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'EARLY-KILL idle-window speculative prefill. CPU token-proxy break-even
+  = single dimensionless identity h*f >= alpha/(1+alpha) (W,R cancel); feasible win-region
+  narrow (P<=64, q>=0.95, alpha<=0.25). KILL leg 1: occupied by arXiv:2511.20048 (agent
+  idle-gap speculation + overhead model, DIRECT TWIN) + 2605.06472 (prediction-based
+  KV prefill), not previously in MAP-0001. KILL leg 2: break-even is textbook expected-value
+  accounting identity (DEAD-0009 pattern, no non-derivable anomaly). No red-zone collision.'
+result_effect: kill
+artifacts_path: experiments/2026-05-31/EXP-0018/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T18:18:00Z'
+prompt_version: ''

@@ -61,6 +61,16 @@ supporting_evidence:
     CDC-wins 45.7%, degrade 10.4%. Weakens unconditional framing; supports doubly-gated
     conditional.'
   artifacts: experiments/2026-05-31/EXP-0005/
+- exp_id: EXP-0014
+  summary: "GPU wall-clock (H100 devgpu014, SDPA kernel proxy): CDC contiguous recompute\
+    \ is FASTER than PIC scattered-HKVD in ALL 8 decision cells (PIC/CDC 1.02-2.68x).\
+    \ The recompute-fraction tie at inj/seq>=5% (EXP-0006) does NOT become a wall-clock\
+    \ loss \u2014 CDC stays 1.27-1.42x faster (contiguous higher arithmetic intensity\
+    \ vs scattered gather overhead); largest advantage 2.68x at win-region corner\
+    \ (32k ctx/0.1% inj). vs whole-suffix CDC 1.3x-41x faster. SUPPORTS CLAIM-0006\
+    \ win-region. CAVEAT: kernel proxy, not full vLLM/CacheBlend serving (vllm not\
+    \ installed on node)."
+  data_path: experiments/2026-05-31/EXP-0014/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
@@ -144,12 +154,15 @@ verdict_history:
 - verdict_id: VERDICT-0023
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0024
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T16:48:26Z'
+last_updated: '2026-05-31T18:17:44Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -171,14 +184,10 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: blocked
-next_action: 'PARKED for human (GPU). Novelty gate-A FULLY CLOSED (10/10 neighbors
-  body-verified, VERDICT-0023). Surviving contribution = workload-conditioned WIN-REGION
-  on CDC''s accounting line (slope~1 is CDC-specific accounting identity, NOT cross-engine
-  law). Real 6/6 VERDICT-0022 stands. To reach GREEN: dispatch the GPU wall-clock-vs-real-PIC
-  experiment via ros exp dispatch (devgpu014 H100, NOT fragile devgpu499) + stats
-  already done.'
-active_experiments: []
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0014; convene committee if candidate-grade
+active_experiments:
+- EXP-0015
 blocking_on: "ONLY remaining GREEN-gate is gate-B: GPU wall-clock TTFT on a real PIC\
   \ artifact (CacheBlend/EPIC) across the inj/seq surface at ~5% crossover \u2014\
   \ GPU + human-go (INVARIANT 3). All CPU gates DISCHARGED."

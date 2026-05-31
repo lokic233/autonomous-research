@@ -67,17 +67,17 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: blocked
-next_action: 'PARKED for human. Real 6/6 VERDICT-0020 + ablation VERDICT-0021 stand:
-  surviving = gate-type+routing CHARACTERIZATION (config fact), error-class framing
-  retired (observationally inseparable). CPU required-evidence DISCHARGED (EXP-0012).
-  To resume: provide a 2nd agent-trace harness corpus OR enable live prior-art search
-  OR a routing-intervention.'
+lifecycle_state: experiment_running
+next_action: await EXP-0019 result, then ros exp complete --exp EXP-0019 --effect
+  ...
 blocking_on: 'All remaining GREEN-gates are NON-CPU / need human or new data: (1)
   live >=2-src self-healing prior-art sweep [web-search permission-blocked on node];
   (2) sampled TERMINAL error-class n>=10 [corpus under-samples it]; (3) cross-harness
   replication [need a 2nd non-Claude-Code agent harness]; (4) interventional routing-alteration
   [need harness control].'
-active_experiments: []
+active_experiments:
+- EXP-0016
+- EXP-0017
+- EXP-0019
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T16:45:02Z'
+last_updated: '2026-05-31T18:17:57Z'

@@ -1,0 +1,9 @@
+{
+  "device": "NVIDIA H100 (devgpu014)", "floor_gb": 300,
+  "note": "GPU kernel-level wall-clock proxy (SDPA, torch 2.5.1+cu124) on real H100: CDC contiguous-chunk recompute vs PIC scattered-HKVD selective recompute vs whole-suffix. NOT full vLLM/CacheBlend serving (vllm not installed on node); directly measures the committee's mechanism hypothesis (contiguous high-arithmetic-intensity vs scattered gather+kernel-overhead). Bounded benchmark, host-mem-floor 300GB watchdog, os._exit teardown; node healthy throughout.",
+  "summary_pic_over_cdc_wallclock": {
+    "seq4096": {"0.1%":1.450,"1%":1.539,"5%":1.449,"25%":1.613},
+    "seq32768": {"0.1%":2.679,"1%":1.024,"5%":1.421,"25%":1.269}
+  },
+  "key_finding": "CDC contiguous recompute is wall-clock FASTER than PIC scattered-HKVD across ALL 8 decision cells (PIC/CDC = 1.02-2.68x). The recompute-FRACTION tie at inj/seq>=5% (EXP-0006) does NOT become a wall-clock loss for CDC: CDC stays 1.27-1.42x faster because contiguous recompute has higher arithmetic intensity than scattered gather. Largest CDC advantage at the win-region corner (32k ctx, 0.1% inj: 2.68x). vs whole-suffix baseline CDC is 1.3x-41x faster at large ctx."
+}
