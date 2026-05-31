@@ -175,6 +175,12 @@ nodes:
   - 'compaction-as-prefix-invalidation (long-horizon) = DEAD (EXP-0028): CDC compaction recompute == CLAIM-0006
     R/S identity with R:=summary size (max_abs_err 0.0); ''when to compact'' break-even = generic accounting
     identity; footprint-savings angle = eviction/Continuum-KV-TTL (occupied). No new law.'
+  - harness-recovery-routing -> endogenous inj/seq distribution (cross-project PROJ-0003->PROJ-0002, EXP-0036)
+    = DEAD/reduces-to-CLAIM-0006-cost-map. Headline sweep escaped the EXP-0015 envelope BUT CONTROL-A
+    isolated the cause as trajectory TRUNCATION (already swept in EXP-0005, 'no-accumulation'->6.3%);
+    routing modality per se moves the win-region <1.5pp (flat 0.315->0.302 across redirect_share 0->1).
+    Reduces to cost-map ∘ workload-distribution = EXP-0005/0015 territory. PROJ-0002 saturation now TRIPLY-confirmed
+    (laneB + laneE + cross-project adjacent2).
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -195,7 +201,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T22:09:17Z'
+  last_updated: '2026-05-31T22:13:09Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -232,7 +238,8 @@ nodes:
     both serving axes favor CDC | +VERDICT-0043 (2026-05-31): 4 GREEN/2 yellow closest-yet, unanimous-rule
     held (no force); single gate = vLLM>=0.7 async-connector E2E (env-upgrade-gated) | +successor-scoping
     (2026-05-31): F-NEG premature-park (occupied tier published, unoccupied tier=identity); +5 fresh forward
-    works; no successor seed'
+    works; no successor seed | +EXP-0036 (2026-05-31): cross-project harness-routing angle KILLED (CONTROL-A:
+    escape was trajectory-truncation not routing, reduces to EXP-0005/0015); PROJ-0002 saturation triply-confirmed'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
