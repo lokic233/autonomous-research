@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'Two-layer decomposition (CLAIM-0010, 79 sess/375 fail). STRUCTURE
+  holds: COARSE modality|gate Theil U=0.381 (REDIRECTABLE fully deterministic normH=0;
+  GRANT_REQUIRED 0.629; TRANSIENT 0.906); FINE next-tool entropy stays high (0.74,
+  CI[0.718,0.789]), U_tool=0.135 << U_modality. BUT ''fine layer adaptive'' is OVERSTATED:
+  context model LOO-lift +0.09..+0.19 over modal baseline in every gate -> fine tool-choice
+  is a LEARNABLE context-conditioned mapping, not free/adaptive. NET weaken: supports
+  two-LAYER structure (coarse-deterministic/fine-higher-entropy-but-learnable), weakens
+  the ''adaptive decision not table-lookup'' framing. Single-harness. (Result.md assembled
+  by orchestrator from researcher''s own stalled-but-complete data.)'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0022/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0030
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T19:00:13Z'
 prompt_version: ''

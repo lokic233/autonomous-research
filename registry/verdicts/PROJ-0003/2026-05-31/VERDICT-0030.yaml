@@ -1,0 +1,40 @@
+verdict_id: VERDICT-0030
+claim_id: CLAIM-0010
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0022
+experiment_paths:
+- experiments/2026-05-31/EXP-0022
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- Two-layer STRUCTURE holds in shape (coarse U=0.381 >> fine U=0.135, fine entropy
+  0.74) BUT both layers SOFTER than claimed
+- 'COARSE determinism CARRIED BY web_disabled: LOCO drop collapses U 0.381->0.034
+  (GRANT_REQUIRED/TRANSIENT NOT deterministic)'
+- "FINE is NOT 'adaptive decision not table-lookup' \u2014 context model beats modal\
+  \ baseline +0.09..+0.19 (real, not a same-tool leak: survives dropping failed_tool)"
+- the fine layer is an INTERMEDIATE context-conditioned high-residual-entropy mapping,
+  not free adaptivity
+required_evidence:
+- 'Reframe CLAIM-0010: COARSE = partially-deterministic gate-type (carried by redirectable
+  hard-blocks) NOT fully deterministic'
+- FINE = context-conditioned (error-text+prior-tool predictable to ~0.55-0.59) high-residual-entropy
+  selection, NOT pure adaptive
+- cross-harness (single-harness)
+- the context-predictability ceiling (~41% residual) is the genuinely-adaptive remainder
+map_delta_proposals:
+- "MAP-0002: CLAIM-0010 two-layer structure HOLDS in shape (coarse modality|gate U=0.381\
+  \ vs fine tool|gate U=0.135) but WEAKENED \u2014 coarse determinism is web_disabled-carried\
+  \ (LOCO U->0.034)"
+- fine is context-PREDICTABLE (+0.09..0.19 LOO, not a same-tool leak) so it's an intermediate
+  context-conditioned layer NOT free adaptivity. Reframe to coarse-partial-table /
+  fine-context-conditioned-high-residual.
+baseline_requirements: []
+created_at: '2026-05-31T19:01:59Z'
