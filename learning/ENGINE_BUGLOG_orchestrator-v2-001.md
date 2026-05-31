@@ -293,3 +293,31 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
   though the replace SUCCEEDS (target ends up correct). Implies a concurrent watcher/process (engine git add,
   or an editor/indexer) removes *.tmp under the registry. Reinforces BUG-6: something races file ops in this
   repo. Workaround: write tmp OUTSIDE the repo (e.g. /tmp) then os.replace in, or tolerate the post-replace error.
+
+## VERIFICATION (engine research-os@4a610ee, by orchestrator-v2-001)
+- BUG-13 FIXED ✓: shipped run_committee.sh now runs ALL 6 members on macOS Bash 3.2 (smoke test:
+  ALL_COMMITTEE_DONE, "members: 6", no mapfile/unbound-variable/pyyaml errors).
+- BUG-12 FIXED ✓: metacode backend (product_realist) is now actually invoked by the shipped runner and
+  returned a real structured vote (not a `cat` no-op). New EMPTY_OUTPUT_NO_VOTE err-flag present for the
+  zero-output case (didn't trigger here since all 6 voted).
+- BUG-3 FIXED ✓: `ros verdict write --final green --votes area_chair:green` (1 of 6) is now REJECTED:
+  "green_rule=unanimous: green needs all 6 committee votes via --votes; got 1. (use --override-rule ...)".
+  Committee parity is now machine-enforced for green/promote.
+- BUG-14 FIXED ✓: `ros verdict write` now has --fatal/--required/--map-delta/--baselines (';'-sep).
+- NEW: `ros resume` lists in-flight claims + next_action; `ros claim advance --state <vocab> --next ...`
+  maintains the resume pointer. lifecycle states: blocked/committee_pending/done/drafted/evidence_ready/
+  experiment_designing/experiment_running/prior_art_pending/verdict_recorded.
+
+## VERIFICATION (engine research-os@4a610ee, by orchestrator-v2-001)
+- BUG-13 FIXED ✓: shipped run_committee.sh now runs ALL 6 members on macOS Bash 3.2 (smoke test:
+  ALL_COMMITTEE_DONE, "members: 6", no mapfile/unbound-variable/pyyaml errors).
+- BUG-12 FIXED ✓: metacode backend (product_realist) is now actually invoked by the shipped runner and
+  returned a real structured vote (not a `cat` no-op). New EMPTY_OUTPUT_NO_VOTE err-flag present for the
+  zero-output case (didn't trigger here since all 6 voted).
+- BUG-3 FIXED ✓: `ros verdict write --final green --votes area_chair:green` (1 of 6) is now REJECTED:
+  "green_rule=unanimous: green needs all 6 committee votes via --votes; got 1. (use --override-rule ...)".
+  Committee parity is now machine-enforced for green/promote.
+- BUG-14 FIXED ✓: `ros verdict write` now has --fatal/--required/--map-delta/--baselines (';'-sep).
+- NEW: `ros resume` lists in-flight claims + next_action; `ros claim advance --state <vocab> --next ...`
+  maintains the resume pointer. lifecycle states: blocked/committee_pending/done/drafted/evidence_ready/
+  experiment_designing/experiment_running/prior_art_pending/verdict_recorded.
