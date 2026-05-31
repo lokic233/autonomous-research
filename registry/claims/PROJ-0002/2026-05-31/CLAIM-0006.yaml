@@ -127,7 +127,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T15:41:16Z'
+last_updated: '2026-05-31T15:53:48Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -149,11 +149,9 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: verdict_recorded
-next_action: "VERDICT-0017 (run_3, verified 6/6 real votes) STANDS as the valid record.\
-  \ committee_run_4 re-run FAILED: BUG-21 (ALL_COMMITTEE_DONE with product_realist+area_chair\
-  \ MISSING \u2014 no .out/.err, EMPTY-flag net bypassed). Did NOT fabricate (Rule\
-  \ 1). GREEN-path unchanged: (A) CPU prior-art body-distinction from 2601.06007/Irminsul;\
-  \ (B) GPU wall-clock real PIC [human-go]."
+lifecycle_state: prior_art_pending
+next_action: 'researcher-novelty-boundary-0006 (CPU): firm cost-map novelty vs 2601.06007/Irminsul
+  body-distinction + Pope/Kwon accounting-identity. Committee re-run PARKED on BUG-22
+  (gemini stdin-drain drops members).'
 active_experiments: []
 blocking_on: ''
