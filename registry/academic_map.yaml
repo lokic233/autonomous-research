@@ -44,6 +44,10 @@ nodes:
   - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] CacheSolidarity arXiv:2603.10726 (prefix-share
     side-channel)'
   - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] Joint-Encoding arXiv:2601.03067'
+  - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] PolyKV arXiv:2604.24971'
+  - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Prefill-as-a-Service arXiv:2604.15039'
+  - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Strata arXiv:2508.18572'
+  - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Sparse Prefix Caching arXiv:2605.05219'
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
@@ -191,7 +195,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T21:52:29Z'
+  last_updated: '2026-05-31T22:09:17Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -226,7 +230,9 @@ nodes:
     FINALIZED (2026-05-31): paper outline + citation sweep clean + needs_attention reworded; DONE/writing-only
     | +EXP-0034 (2026-05-31): combined E2E composition control — CDC wins 12/12 E2E, fallacy controlled;
     both serving axes favor CDC | +VERDICT-0043 (2026-05-31): 4 GREEN/2 yellow closest-yet, unanimous-rule
-    held (no force); single gate = vLLM>=0.7 async-connector E2E (env-upgrade-gated)'
+    held (no force); single gate = vLLM>=0.7 async-connector E2E (env-upgrade-gated) | +successor-scoping
+    (2026-05-31): F-NEG premature-park (occupied tier published, unoccupied tier=identity); +5 fresh forward
+    works; no successor seed'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
@@ -247,6 +253,18 @@ nodes:
     frontier exhausted; paper outline (PAPER_OUTLINE.md) + readiness GO + citation sweep (no gaps) + stale
     re-probe notes corrected (driver-version-scoped). Remaining = PROSE WRITING only (+1 optional FlashInfer-cell
     polish, labeling suffices). No open research lane. Researchers can wind down.
+  successor_status: 'SUCCESSOR-PROJECT SCOPING (researcher-0001-successor, 2026-05-31): F-NEG cross-engine
+    SW-prefix-sharing scaling-cliff = PREMATURE-PARK (bordering occupied-kill), DO NOT seed. (a) claim
+    well-posed (bytes-vs-bookkeeping crossover F*); (b) PARTIALLY-OCCUPIED — ForkKV 2604.06370 (SW-CoW
+    multi-agent scaling), TokenDance 2604.03143 (scaling-gap quantified), 10X-KV-Stores 2511.16138 OWNS
+    the storage-tier metadata cliff; the only UNoccupied tier (in-GPU radix bookkeeping) is a trivial
+    accounting identity (the project''s own DEAD-0009/0010 kill-pattern); (c) experiment GPU-gated (fanout
+    10^4-10^6 serving); (d) premature/identity-bound. REVIVAL DOOR (GPU-go only): a capped probe finding
+    a NON-derivable cross-engine bookkeeping ANOMALY (super-linear/contention phase-transition not predicted
+    by node-count x refcount) = a genuine SW dual to the 520K ceiling; identity argument predicts none
+    -> if confirmed-no-anomaly, OCCUPIED-KILL permanently. NOT a PROJ-0001 extension (thesis COMPLETE).
+    +5 fresh 2026 forward works logged (PolyKV/Prefill-aaS/pred-KV/Strata/Sparse-Prefix), no must-cite
+    gap.'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
