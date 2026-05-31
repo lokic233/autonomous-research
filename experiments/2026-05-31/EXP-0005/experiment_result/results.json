@@ -1,0 +1,78 @@
+{
+  "experiment": "EXP-0005_workload_realism",
+  "method": "CPU Monte-Carlo, token-count PROXY for KV blocks; trajectory-aware inj/seq; NO GPU",
+  "regime_law": "recompute% ~= inj/seq (EXP-0002); CDC_WINS<=1% (recompute<~2.4%), DEGRADES>5%",
+  "main": {
+    "n_tasks": 20000,
+    "n_injections": 291454,
+    "compaction": true,
+    "count_fraction": {
+      "CDC_WINS(<=1%)": 0.2461,
+      "MID(1-5%)": 0.3886,
+      "CDC_DEGRADES(>5%)": 0.3654
+    },
+    "token_weighted_fraction": {
+      "CDC_WINS(<=1%)": 0.037,
+      "MID(1-5%)": 0.1559,
+      "CDC_DEGRADES(>5%)": 0.8071
+    },
+    "ratio_percentiles": {
+      "p10": 0.00371,
+      "p25": 0.01019,
+      "p50": 0.02819,
+      "p75": 0.09162,
+      "p90": 0.29304,
+      "p95": 0.61723,
+      "p99": 2.87457
+    },
+    "by_tool_count_fraction": {
+      "api_json": {
+        "CDC_WINS(<=1%)": 0.149,
+        "MID(1-5%)": 0.366,
+        "CDC_DEGRADES(>5%)": 0.485
+      },
+      "web_search": {
+        "CDC_WINS(<=1%)": 0.237,
+        "MID(1-5%)": 0.474,
+        "CDC_DEGRADES(>5%)": 0.289
+      },
+      "code_exec": {
+        "CDC_WINS(<=1%)": 0.274,
+        "MID(1-5%)": 0.382,
+        "CDC_DEGRADES(>5%)": 0.344
+      },
+      "rag_retrieve": {
+        "CDC_WINS(<=1%)": 0.147,
+        "MID(1-5%)": 0.412,
+        "CDC_DEGRADES(>5%)": 0.44
+      },
+      "file_read": {
+        "CDC_WINS(<=1%)": 0.179,
+        "MID(1-5%)": 0.396,
+        "CDC_DEGRADES(>5%)": 0.425
+      },
+      "small_status": {
+        "CDC_WINS(<=1%)": 0.968,
+        "MID(1-5%)": 0.032,
+        "CDC_DEGRADES(>5%)": 0.0
+      }
+    }
+  },
+  "sensitivity_no_accumulation": {
+    "CDC_WINS(<=1%)": 0.0625,
+    "MID(1-5%)": 0.1707,
+    "CDC_DEGRADES(>5%)": 0.7668
+  },
+  "sensitivity_heavy_tails_2x": {
+    "CDC_WINS(<=1%)": 0.3077,
+    "MID(1-5%)": 0.3274,
+    "CDC_DEGRADES(>5%)": 0.3648
+  },
+  "sensitivity_large_ctx_ge50k": {
+    "n_injections_in_large_ctx": 111990,
+    "fraction_of_all": 0.384,
+    "CDC_WINS(<=1%)": 0.4519,
+    "MID(1-5%)": 0.4432,
+    "CDC_DEGRADES(>5%)": 0.1049
+  }
+}

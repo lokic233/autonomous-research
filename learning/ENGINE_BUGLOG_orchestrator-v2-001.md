@@ -129,3 +129,41 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
 - Researcher had to hand-edit the experiment.yaml to needs_gpu:false. Level-0 (and any --hardware cpu)
   should default needs_gpu:false / max_gpu_hours:0. Confirmed twice (EXP-0002/3/4 by prior session, now
   EXP-0005). Severity: medium (mis-tag pollutes GPU accounting + could wrongly gate dispatch).
+
+## BUG-10 (HIGH, DATA CORRUPTION) — torn write of runtime/agents/<id>.yaml; ros report then CRASHES
+- Trigger: rapid `ros heartbeat` immediately followed by `ros report` on the same agent id (the exact
+  ~every-2min discipline the orchestrator prompt mandates). The two commands BOTH read-modify-write
+  runtime/agents/orchestrator-v2-001.yaml with no locking/atomic-rename/truncate.
+- Result: file became (see learning/BUG-10_corrupted_*.yaml.evidence):
+    line 7  note: awaiting EXP-0005 completion + priorart-A final ping; committee packet drafting
+    line 8  iorart-A final ping; committee packet drafting        <- STRAY trailing bytes (no truncate)
+    line 9  heartbeat_count: 12                                    <- DUPLICATE key
+    line 10 last_report_ts: '2026-05-31T13:36:22Z'
+  i.e. a shorter write was layered over a longer previous file's bytes (open('w') without truncate, OR
+  two writers interleaved), producing invalid YAML with a duplicate mapping key.
+- Then `ros report` crashes hard: cmd_report -> load_yaml -> yaml.safe_load raises on the torn file
+  (Traceback at ros.py:490). The orchestrator's OWN state file becoming unparseable BREAKS its mandated
+  reporting loop. Also note role got reset to 'unknown' (heartbeat writer doesn't preserve role).
+- FIX: write runtime/agent files atomically (tmp + os.replace) and/or single-writer; load_yaml should be
+  defensive (duplicate-key-tolerant / fall back to {} on parse error instead of crashing the whole CLI).
+- Severity: HIGH — self-inflicted by the prescribed heartbeat+report cadence; corrupts agent liveness
+  state and disables `ros report` until manually repaired.
+
+## BUG-10 (HIGH, DATA CORRUPTION) — torn write of runtime/agents/<id>.yaml; ros report then CRASHES
+- Trigger: rapid `ros heartbeat` immediately followed by `ros report` on the same agent id (the exact
+  ~every-2min discipline the orchestrator prompt mandates). The two commands BOTH read-modify-write
+  runtime/agents/orchestrator-v2-001.yaml with no locking/atomic-rename/truncate.
+- Result: file became (see learning/BUG-10_corrupted_*.yaml.evidence):
+    line 7  note: awaiting EXP-0005 completion + priorart-A final ping; committee packet drafting
+    line 8  iorart-A final ping; committee packet drafting        <- STRAY trailing bytes (no truncate)
+    line 9  heartbeat_count: 12                                    <- DUPLICATE key
+    line 10 last_report_ts: '2026-05-31T13:36:22Z'
+  i.e. a shorter write was layered over a longer previous file's bytes (open('w') without truncate, OR
+  two writers interleaved), producing invalid YAML with a duplicate mapping key.
+- Then `ros report` crashes hard: cmd_report -> load_yaml -> yaml.safe_load raises on the torn file
+  (Traceback at ros.py:490). The orchestrator's OWN state file becoming unparseable BREAKS its mandated
+  reporting loop. Also note role got reset to 'unknown' (heartbeat writer doesn't preserve role).
+- FIX: write runtime/agent files atomically (tmp + os.replace) and/or single-writer; load_yaml should be
+  defensive (duplicate-key-tolerant / fall back to {} on parse error instead of crashing the whole CLI).
+- Severity: HIGH — self-inflicted by the prescribed heartbeat+report cadence; corrupts agent liveness
+  state and disables `ros report` until manually repaired.
