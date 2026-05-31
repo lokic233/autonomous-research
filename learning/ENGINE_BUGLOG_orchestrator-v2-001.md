@@ -39,3 +39,23 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
 - Also needs_gpu: true is the DEFAULT even though these were CPU-only token-proxy runs (researchers
   noted this explicitly: "despite engine default tag"). hardware field left ''. Severity: medium
   (mis-tagged GPU-need could wrongly gate dispatch / pollute resource accounting).
+
+## BUG-6 (CONCURRENCY) — .git/index.lock race between engine writes and manual git commit
+- Symptom: `git add -A && git commit` intermittently fails with "Unable to create .git/index.lock:
+  File exists" even with NO git process running (ps shows none). Lock self-clears within ~1-2s.
+- Cause: `ros report`/`ros heartbeat`/etc. perform their own git staging/commit under .git/index.lock.
+  A manual `git add` issued while an engine call is mid-write collides.
+- IMPACT: orchestrator's mandated `git add -A && git commit` after milestones can fail spuriously and
+  look like a hung/locked repo. Need: serialize engine git ops, or have engine retry-with-backoff, or
+  document "engine owns git; do not run manual git concurrently". Severity: medium (operational footgun
+  for the exact commit discipline the orchestrator prompt mandates).
+
+## BUG-6 (CONCURRENCY) — .git/index.lock race between engine writes and manual git commit
+- Symptom: `git add -A && git commit` intermittently fails with "Unable to create .git/index.lock:
+  File exists" even with NO git process running (ps shows none). Lock self-clears within ~1-2s.
+- Cause: `ros report`/`ros heartbeat`/etc. perform their own git staging/commit under .git/index.lock.
+  A manual `git add` issued while an engine call is mid-write collides.
+- IMPACT: orchestrator's mandated `git add -A && git commit` after milestones can fail spuriously and
+  look like a hung/locked repo. Need: serialize engine git ops, or have engine retry-with-backoff, or
+  document "engine owns git; do not run manual git concurrently". Severity: medium (operational footgun
+  for the exact commit discipline the orchestrator prompt mandates).
