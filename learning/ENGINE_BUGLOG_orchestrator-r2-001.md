@@ -405,3 +405,39 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   2601.06007 distinction-unverified edge, two retired legs, single-leg framing).
 - NET: the full committee->verdict->map cycle now works end-to-end on macOS with all 6 real models. The
   EMPTY_OUTPUT flag + Rule-1 refusal correctly bridged the sandbox-broken interval without a fake verdict.
+
+### BUG-20b — FIXED by engine ad2bf6d (claude concurrency empties). + ORCHESTRATOR LESSON.
+- Root cause: 4 overlapping claude processes on the AI gateway -> 2 returned EMPTY despite starting (a
+  single claude call is fine). FIX: run_committee.sh now staggers member launches ~3s AND auto-retries
+  ONCE on empty output (EMPTY flag now annotated "(after 1 retry)").
+- ORCHESTRATOR INTEGRITY NOTE: in MY committee_run_3 all 6 .out happened to be non-empty with real vote
+  blocks (I verified sizes + grepped real VOTE: lines + read area_chair's full aggregation), so VERDICT-0017
+  was written on 6 genuine votes. But the operator flagged that claude-concurrency CAN empty 2 members
+  intermittently — run_3 got lucky on timing. LESSON: file-size alone is not sufficient proof of a vote;
+  always (a) check .err for EMPTY_OUTPUT_NO_VOTE AND (b) confirm each .out contains an actual
+  "ROLE: x VOTE: y" / "FINAL_VERDICT:" block before counting it. The stagger+retry fix makes 6/6 reliable
+  rather than timing-luck-dependent; re-running into committee_run_4 to confirm.
+
+### BUG-21 (NEW, HIGH) — run_committee.sh reports ALL_COMMITTEE_DONE with MISSING members (no .out AND no .err)
+- committee_run_4 (engine ad2bf6d, staggered launch): launch.log printed "done" for only 4 of 6 members
+  (gemini, theory_skeptic, codex, novelty_killer) yet wrote `ALL_COMMITTEE_DONE` + "members: 6".
+- product_realist (metacode) and area_chair (claude-opus-4-6) produced NEITHER a .out NOR a .err file —
+  they were effectively NEVER invoked / silently dropped. Confirmed: the only claude-opus-4-6 proc on the
+  box (PID 25397) started 07:30 = committee_run_3, NOT run_4 (08:36). No new metacode proc since 08:36.
+- WHY IT'S DANGEROUS: unlike BUG-12 (empty .out -> EMPTY_OUTPUT_NO_VOTE flag in .err), here there is NO
+  .err at all, so the EMPTY-flag safety net does NOT fire. A naive parser counting "votes present" would
+  see 4 YELLOW + ALL_COMMITTEE_DONE and could wrongly treat it as complete. The runner's completion
+  signal is decoupled from actual per-member output existence.
+- LIKELY CAUSE: the new stagger loop (`run_one & ; sleep 3` per member) + chair-last `wait` interacts
+  badly — product_realist (metacode, slow >5s to start) backgrounded then the loop/`wait`/chair path
+  dropped it; area_chair (chair-last, run AFTER `wait`) also never produced files. The `&` + `sleep 3` +
+  `wait` + sequential-chair sequence likely loses the metacode background job and/or the chair invocation
+  under certain timing. Needs: (a) the runner MUST verify each member has a .out (or an EMPTY .err flag)
+  before writing ALL_COMMITTEE_DONE — fail/flag MISSING_MEMBER otherwise; (b) ensure metacode's slow start
+  + chair-last are both actually awaited.
+- ORCHESTRATOR ACTION (Rule 1 held): did NOT fabricate the 2 missing votes. VERDICT-0017 (from run_3,
+  re-verified to contain all 6 GENUINE vote blocks) remains the valid 6/6 record for CLAIM-0006. No new
+  verdict written from the incomplete run_4. Reported via ros report.
+- Severity: HIGH — a false completion signal that bypasses the EMPTY-flag safety net could, with a less
+  careful orchestrator, produce a verdict on a partial committee (the exact failure the green_rule + Rule-1
+  + EMPTY-flag layers exist to prevent).
