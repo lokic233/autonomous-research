@@ -1,0 +1,40 @@
+exp_id: EXP-0008
+project_id: PROJ-0003
+claim_id: CLAIM-0008
+session_id: 0a500f46-3623-42e5-8a70-411d7f5cdc0e
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: orchestrator sess 22bd6bef-b84b-4827-a371-87443ea8602f
+node_lease: cli:dengcchi-mac
+status: completed
+result_summary: 'Re-census of EXP-0007 corpus (71 sessions, 357 failures) with SHARPENED
+  recovery def counting CROSS-TOOL WORKAROUNDS (bounded window K=6, pre-declared intent-class
+  map). WEAKENS CLAIM-0008. Global recovery 0.45->0.64. EXP-0007s headline permanent-gate
+  cell policy.web_disabled collapses 0/109 -> 0.606 (agent redirects blocked WebFetch
+  -> sanctioned external_web_search; 66/109, topically audited as genuine same-goal).
+  Under broad label error-class loses out-of-sample power: Cramers V 0.64->0.24 (perm_p=0.16
+  n.s.), LOO-Brier -35%->~0%. Permanence axis collapses phi 0.45->0.14. Crux hypothesis
+  (policy gates stay unrecoverable) REFUTED: web_disabled is a REDIRECTABLE gate,
+  the biggest workaround beneficiary. Residual weak signal only at tight K=3 (V=0.32)
+  / rare-collapse (V=0.21). EXP-0007 signal was largely manufactured by the same-intent
+  definition scoring a redirectable gate as 0/109. CPU/stdlib-only.'
+result_effect: weaken
+artifacts_path: experiments/2026-05-31/EXP-0008/
+reproducibility: CPU-only, stdlib-only. python3 impl/workaround_recovery_census.py
+linked_verdicts:
+- VERDICT-0016
+started_at: '2026-05-31T14:50:00Z'
+completed_at: '2026-05-31T15:05:00Z'
+prompt_version: researcher-recovery-outcome-r2
+notes: 'Re-census of EXP-0007 corpus (~/.claude/projects) with SHARPENED recovery
+  def counting CROSS-TOOL WORKAROUNDS within a bounded window (not just same-intent
+  retry). Measures: (1) workaround-vs-same-intent recovery lift per class; (2) does
+  error-class STILL predict recovery (Cramers V, LOO-Brier vs NULL) under broader
+  def; (3) does permanent(policy/harness gate) vs transient split survive. VERDICT-0015
+  GREEN-path item: decouple recovery outcome definition.'

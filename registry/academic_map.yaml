@@ -64,7 +64,9 @@ nodes:
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
     static failure taxonomies (MAST, AgentBench buckets) — novelty must be PREDICTIVE-vs-NULL on real
-    traces, not the taxonomy
+    traces, not the taxonomy; [EXP-0008 insight] policy/permission gates split into REDIRECTABLE (blocked
+    tool -> sanctioned alternative, e.g. WebFetch->external_web_search) vs TERMINAL — recovery prediction
+    must condition on this
   key_prior_work:
   - rr/ReVirt (process replay)
   - ReproZip (fs provenance)
@@ -77,16 +79,21 @@ nodes:
   - 'error-class -> recovery competence (CLAIM-0008, YELLOW): EXP-0007 real-trace census (70 Claude Code
     sessions/356 failures) CONFIRMS predictive (Cramer V=0.644; out-of-sample LOO-Brier +0.087; permanent
     harness/policy gates ~unrecoverable 0.25 vs transient 0.705, phi=0.454). Dominant axis=provenance/permanence.
-    GREEN needs cross-harness + interventional + decoupled outcome.'
+    GREEN needs cross-harness + interventional + decoupled outcome. | EXP-0008 (outcome-def decoupling,
+    cross-tool workarounds counted): signal WASHES OUT — V 0.644->0.239 (n.s.), LOO-Brier gain ->~0, permanence
+    phi 0.454->0.138. EXP-0007 headline was outcome-def-dependent (web_disabled 0/109 was a REDIRECTABLE
+    gate, not terminal). Truth bracketed: EXP-0007 lower / EXP-0008 upper. Defensible reframe = error-class
+    predicts recovery MODALITY not OCCURRENCE.'
   - real-trace failure census
   red_zones: []
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T14:31:58Z'
+  last_updated: '2026-05-31T14:56:12Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
-    (2026-05-31): real-trace failure census; NULL baseline added'
+    (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
+    outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

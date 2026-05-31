@@ -1,0 +1,41 @@
+verdict_id: VERDICT-0016
+claim_id: CLAIM-0008
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0008
+experiment_paths:
+- experiments/2026-05-31/EXP-0008
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'EXP-0007 result is OUTCOME-DEFINITION-DEPENDENT: under cross-tool-workaround scoring
+  the error-class->recovery signal WASHES OUT (Cramer V 0.644->0.239 n.s.'
+- LOO-Brier gain +0.087->~0)
+- "Permanence axis (the crux) REFUTED: phi 0.454->0.138 \u2014 policy.web_disabled\
+  \ is a REDIRECTABLE gate (blocked WebFetch->sanctioned external_web_search 61%),\
+  \ not a terminal one"
+- EXP-0007's 0/109 was an artifact of same-intent-only scoring
+required_evidence:
+- 'Reformulate CLAIM-0008 to the DEFENSIBLE narrower claim: error-class predicts recovery
+  MODALITY (same-tool retry vs cross-tool redirect), NOT recovery OCCURRENCE (different
+  claim, re-seed)'
+- Distinguish REDIRECTABLE policy gates from TERMINAL ones in the taxonomy
+- Cross-harness replication (signal + redirect behavior are single-harness/Claude-Code-specific)
+- Interventional test still outstanding
+map_delta_proposals:
+- 'MAP-0002: outcome-definition-decoupling open_gap ADDRESSED -> WEAKENS error-class->recovery
+  (workaround-counted V=0.24 n.s., LOO-Brier ~0, permanence phi=0.14)'
+- record EXP-0007 headline was outcome-def-dependent
+- "ADD distinction: policy gates can be REDIRECTABLE (web_disabled->external_web_search)\
+  \ not terminal \u2014 taxonomy must split redirectable vs terminal"
+- truth now BRACKETED (EXP-0007 lower / EXP-0008 upper bound)
+baseline_requirements:
+- "class-agnostic recovery rate (NULL) \u2014 EXP-0008 confirms no out-of-sample gain\
+  \ over it under broad outcome def"
+created_at: '2026-05-31T14:55:48Z'

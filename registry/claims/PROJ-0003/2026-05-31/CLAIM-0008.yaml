@@ -21,7 +21,24 @@ supporting_evidence:
     SUPPORTS/STRENGTHENS CLAIM-0008. NOTE BUG-15: claim metadata MAP-0001+KV baselines
     are wrong domain; correct domain MAP-0002.'
   data_path: experiments/2026-05-31/EXP-0007/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0008
+  effect: weaken
+  summary: "OUTCOME-DEFINITION DECOUPLING (CPU, same corpus 71 sessions/357 failures,\
+    \ recovery def broadened to count CROSS-TOOL workarounds within K=6, intent-class\
+    \ matched = UPPER bound vs EXP-0007 same-intent LOWER bound). FINDING: error-class\
+    \ signal WASHES OUT. Cramer V 0.644->0.239 (perm-p=0.164, NOT significant); out-of-sample\
+    \ LOO-Brier improvement +0.087 -> -0.0006 (~0%, no gain over class-agnostic null).\
+    \ Permanence axis (crux) COLLAPSES: permanent-vs-transient phi 0.454->0.138; permanent\
+    \ bucket recovery 0.250->0.580, transient barely moves 0.707->0.713. ROOT CAUSE:\
+    \ EXP-0007 headline was driven by policy.web_disabled scored 0/109 \u2014 but\
+    \ that is a REDIRECTABLE gate (blocked WebFetch -> sanctioned external_web_search,\
+    \ 66/109=0.606, all audited as genuine same-goal recoveries), NOT terminal. K-sensitivity\
+    \ confirms not a windowing artifact (signal weakens further as K grows). DEFENSIBLE\
+    \ narrower reformulation: error-class predicts recovery MODALITY (same-tool retry\
+    \ vs cross-tool redirect), NOT recovery OCCURRENCE \u2014 but that is a DIFFERENT\
+    \ claim than CLAIM-0008. Limits: single-harness; decisive cell n=109."
+  data_path: experiments/2026-05-31/EXP-0008/
 verdict_history:
 - verdict: VERDICT-0008
   result: yellow-5y
@@ -31,15 +48,19 @@ verdict_history:
 - verdict_id: VERDICT-0015
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0016
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess c48efa79 (T5)
 target_venue: NeurIPS D&B
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T14:47:08Z'
-lifecycle_state: experiment_running
-next_action: 'researcher-recovery-outcome-r2 (CPU): re-census with cross-tool-workaround
-  recovery def (EXP-0007 was same-intent lower-bound); does error-class still predict
-  vs NULL? does permanence axis hold? Awaiting numbers.'
+last_updated: '2026-05-31T14:56:37Z'
+lifecycle_state: verdict_recorded
+next_action: 'WEAKENED by EXP-0008 (VERDICT-0016): error-class->recovery signal washes
+  out under cross-tool-workaround scoring (V=0.24 n.s., permanence phi=0.14). Surviving
+  = recovery-MODALITY reframe (different claim). Needs re-seed + cross-harness + interventional.
+  Truth bracketed EXP-0007 lower/EXP-0008 upper.'
 blocking_on: ''
 active_experiments: []

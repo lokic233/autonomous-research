@@ -347,3 +347,19 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   Valid verdict preserved: VERDICT-0012 (6/6 YELLOW) + VERDICT-0014 (EXP-0006 evidence-update). NO forced
   verdict. Committee re-runs paused until operator restores codex+gemini+claude CLIs. Continuing CPU-only
   registry/lifecycle/research work meanwhile.
+
+### EXP-0008 — CLAIM-0008 WEAKENED (VERDICT-0016). Adversarial outcome-def decoupling: error-class->recovery
+  signal washes out when cross-tool workarounds are counted (V 0.644->0.239 n.s., LOO-Brier gain ->~0,
+  permanence phi 0.454->0.138). EXP-0007's headline was driven by web_disabled 0/109 = a REDIRECTABLE gate
+  scored as terminal. Rule-3: MAP-0002 + prior_art updated (redirectable-vs-terminal split, recovery-modality
+  reframe). The committee gauntlet philosophy worked at the EXPERIMENT level: the follow-up honestly killed
+  the strong framing. CLAIM-0008 stays weakened.
+
+### ONBOARDING NIT (not a bug) — `ros` is not on PATH for spawned researchers
+- researcher-recovery-outcome-r2 reported "ros is not an invocable CLI on cli:dengcchi-mac" and worked around
+  it by hand-authoring EXP-0008/experiment.yaml to match EXP-0007's schema (correct, no collision, engine
+  reads it fine). Cause: there is no `ros` shim on PATH; the engine is invoked as
+  `/usr/bin/python3 /Users/dengcchi/research-os/engine/ros.py --instance <ROOT> ...`. Researchers should be
+  TOLD the full invocation (I did include it in the task, but the agent still tried bare `ros`). Cheap fix:
+  add a `ros` wrapper script to /usr/local/bin, OR always pass researchers the full python invocation +
+  emphasize bare `ros` won't work. Not an engine bug.

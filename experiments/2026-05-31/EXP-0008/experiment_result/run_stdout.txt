@@ -1,0 +1,54 @@
+sessions=71 total_tool_calls=3416 failures=357  K_WINDOW=6
+
+GLOBAL recovery rates over N=357 failures:
+  EXP-0007 same-intent (unbounded)      p0 = 0.4510
+  same-intent within K=6                   = 0.3193
+  BROAD (same-intent OR workaround), K=6    = 0.6387   <-- PRIMARY sharpened
+  BROAD + textual channel C             = 0.7003   (reported, noisier)
+  workaround-only flag rate             = 0.4090
+
+=== per-class recovery: EXP-0007(same-intent unbounded) vs BROAD(workaround,K) ===
+class                       n  old_rate  broad_rate    LIFT
+policy.web_disabled       109     0.000       0.606  +0.606
+other                      98     0.745       0.643  -0.102
+cancelled                  59     0.559       0.576  +0.017
+policy.perm_denied         30     0.567       0.467  -0.100
+fs.notfound                19     0.632       0.789  +0.158
+proc.exit_nodetail         14     0.500       0.857  +0.357
+ssh.auth                    6     0.667       0.833  +0.167
+edit.other                  5     0.800       0.800  +0.000
+code.build                  4     1.000       1.000  +0.000
+proc.timeout                4     0.500       0.750  +0.250
+net.http                    2     1.000       1.000  +0.000
+policy.input_filter         2     0.000       1.000  +1.000
+code.test                   1     1.000       1.000  +0.000
+fs.perm                     1     1.000       0.000  -1.000
+net.conn                    1     1.000       1.000  +0.000
+net.dns                     1     0.000       1.000  +1.000
+read.too_large              1     0.000       1.000  +1.000
+
+=== Q2: predictiveness under BROAD label (full taxonomy) ===
+  null p0(broad)=0.6387  chi2=20.46 df=16  Cramers_V=0.2394  perm_p=0.1640
+  Brier null=0.2308  LOO class-cond=0.2314  improve=-0.0006  (-0.3% reduction)
+  [rare(n<10) collapsed] chi2=15.93 df=6 Cramers_V=0.2112 perm_p=0.0150
+
+=== Q3: PERMANENT vs TRANSIENT under BROAD label ===
+  permanent  n= 200 recovered= 116 rate=0.580
+  transient  n= 157 recovered= 112 rate=0.713
+  phi=0.1378  perm_p=0.0118
+  (EXP-0007 same-intent for comparison:)
+    permanent  rate=0.250
+    transient  rate=0.707
+
+=== Q3b: agent-UNCONTROLLABLE policy gates under BROAD (the crux cells) ===
+  policy.web_disabled    n=109  same-intent=0.000  BROAD=0.606  lift=+0.606
+  policy.perm_denied     n= 30  same-intent=0.567  BROAD=0.467  lift=-0.100
+  policy.input_filter    n=  2  same-intent=0.000  BROAD=1.000  lift=+1.000
+  cancelled              n= 59  same-intent=0.559  BROAD=0.576  lift=+0.017
+
+=== K-window sensitivity (BROAD global rate, V, perm/transient phi) ===
+  K= 3: broad_rate=0.476  V=0.320 (perm_p=0.0010)  perm=0.370 trans=0.611 phi=0.240
+  K= 6: broad_rate=0.639  V=0.239 (perm_p=0.1599)  perm=0.580 trans=0.713 phi=0.138
+  K=12: broad_rate=0.796  V=0.216 (perm_p=0.4133)  perm=0.760 trans=0.841 phi=0.099
+
+wrote /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0008/experiment_result/per_class_workaround_recovery.csv

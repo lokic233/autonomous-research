@@ -33,3 +33,17 @@ The strongest cell (policy.web_disabled 0/109) is partly mechanically circular: 
 unrecoverable partly because the agent cannot retry it to success. The genuinely non-trivial signal is the
 within-transient spread + the out-of-sample Brier gain. A hostile reviewer will push on the circularity;
 the defense is the LOO-Brier and the within-transient variation, not the 0/109 cell alone.
+
+## Update 2026-05-31 (EXP-0008 / VERDICT-0016 — orchestrator-r2-001)
+- **CLAIM-0008 WEAKENED by its own adversarial follow-up.** EXP-0007's error-class->recovery signal is
+  OUTCOME-DEFINITION-DEPENDENT. Counting cross-tool workarounds (EXP-0008): Cramér's V 0.644->0.239
+  (n.s.), out-of-sample LOO-Brier gain +0.087->~0, permanence φ 0.454->0.138. Truth is BRACKETED:
+  EXP-0007 = same-intent LOWER bound, EXP-0008 = intent-class UPPER bound.
+- **New taxonomy insight (map-worthy):** `policy.web_disabled` is a REDIRECTABLE gate, not terminal —
+  the agent reroutes blocked WebFetch -> sanctioned `external_web_search` 61% of the time (66/109,
+  audited as genuine same-goal recoveries). Failure-attribution taxonomies should split REDIRECTABLE
+  vs TERMINAL policy gates; "permanence" is not a property of the error class alone.
+- **Surviving defensible claim:** error-class predicts recovery MODALITY (same-tool retry vs cross-tool
+  redirect), NOT recovery OCCURRENCE — a narrower, different claim than CLAIM-0008. Would need a re-seed
+  + cross-harness + interventional evidence.
+- **Limits:** single-harness (Claude Code); decisive cell n=109; redirect behavior harness-specific.
