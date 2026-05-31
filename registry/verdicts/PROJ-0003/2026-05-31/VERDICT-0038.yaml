@@ -1,0 +1,56 @@
+verdict_id: VERDICT-0038
+claim_id: CLAIM-0011
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0031
+experiment_paths:
+- experiments/2026-05-31/EXP-0031
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "6/6 YELLOW \u2014 well-evidenced 3-harness characterization but 3 gates to GREEN"
+- "CONFOUND (theory_skeptic): 'routing determines modality' is observationally indistinguishable\
+  \ from 'SYSTEM-PROMPT determines modality' \u2014 CC/Gemini prompts ENUMERATE named\
+  \ alternatives, Codex may not"
+- must ablate
+- 'TOOL-INVENTORY confound: redirect availability (CC has WebSearch twin of WebFetch'
+- Codex may lack a twin) could explain modality without invoking 'routing'
+- 'CAUSAL claim untested: no same-model cross-harness interventional test (model-vs-harness
+  confound)'
+required_evidence:
+- 'GATE-1 [interventional, needs harness control]: same MODEL in 2 harnesses w/ divergent
+  routing, identical redirectable-error -> does modality flip with harness (causal
+  holds) or model override (falsified)'
+- "GATE-2 [CPU-DOABLE NOW]: system-prompt ablation \u2014 confirm named-alternative\
+  \ ENUMERATION in the prompt (vs routing-table) is not the causal driver"
+- + tool-inventory-overlap metric (does a redirect-target twin exist per harness?)
+- 'GATE-3 [CPU-DOABLE NOW]: cite + distinguish MAST/Cemri-2025 (failure taxonomy),
+  Reflexion/Self-Refine (model-driven recovery = the null being refuted), tau-bench/AgentBench/ToolEmu
+  (measurement genre), LangGraph ToolNode (framework-mediated recovery)'
+- foreground EXP-0012 <=0.2%-over-gate-bit as the delta vs tautology
+map_delta_proposals:
+- "MAP-0002: CLAIM-0011 6/6 YELLOW \u2014 3-harness characterization solid, 3 gates\
+  \ to GREEN: GATE-1 interventional (harness control), GATE-2 system-prompt+tool-inventory\
+  \ ablation (CPU), GATE-3 prior-art cite/distinguish MAST/Reflexion/tau-bench/LangGraph\
+  \ (CPU). Confound: routing-vs-prompt + tool-inventory-overlap must be discharged."
+baseline_requirements:
+- same-model cross-harness (isolate harness from model)
+- system-prompt-content control (ablate named-alternative enumeration)
+- tool-inventory-overlap metric
+created_at: '2026-05-31T20:24:21Z'
