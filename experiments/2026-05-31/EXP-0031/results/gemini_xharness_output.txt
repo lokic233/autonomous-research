@@ -1,0 +1,76 @@
+Gemini corpus: 62 session files, 18 with tool calls, 198 tool calls, 60 ground-truth failures (status==error)
+
+PER-ERROR-CLASS modality (n=failures; rec=recovered in K=6; redir_share=cross-tool / recovered):
+class                          n rec rec_rate redir same redir_share  gate
+schema.missing_param          30  24    0.800     6   18       0.250  TRANSIENT
+policy.workspace_boundary     20  15    0.750     4   11       0.267  GRANT_REQUIRED
+policy.tool_blocked            9   6    0.667     6    0       1.000  REDIRECTABLE
+arg.bad_regex                  1   0    0.000     0    0         nan  TRANSIENT
+
+PER-GATE-TYPE modality (the harness-agnostic taxonomy):
+gate               n rec redir same redir_share    Wilson95 (redir/rec)
+REDIRECTABLE       9   6     6    0       1.000  [0.610,1.000]
+GRANT_REQUIRED    20  15     4   11       0.267  [0.109,0.520]
+TRANSIENT         31  24     6   18       0.250  [0.120,0.449]
+
+======================================================================
+REDIRECTABLE-GATE ANCHOR: run_shell_command hard-block (Gemini's web-block analog)
+  block text: 'Tool "run_shell_command" not found. Did you mean grep_search/replace/cli_help?'
+  total run_shell_command blocks: 9
+  recovered IN-THREAD by cross-tool REDIRECT (success within K=6): 6
+  abandoned / no in-thread recovery: 3    same-blocked-tool 'success': 0
+  in-thread redirect-share (redir / all blocks): 6/9 = 0.667  Wilson95 [0.354,0.879]
+  redirect routes (blocked -> recovered-with):
+     run_shell_command -> grep_search x 3
+     run_shell_command -> glob x 1
+     run_shell_command -> write_file x 1
+     run_shell_command -> read_file x 1
+  redirect-share among RECOVERED (redir/(redir+same)): 6/6 = 1.000 Wilson95 [0.610,1.000]
+
+======================================================================
+QUALITATIVE in-thread check (each block -> next calls, same gemini turn = in-thread):
+
+  BLOCK #1 (sess 2, pos 4):  run_shell_command -> ERROR
+     +1  [OK ] glob               
+     +2  [ERR] read_file          (policy.workspace_boundary)
+     +3  [ERR] read_file          (policy.workspace_boundary)
+     +4  [ERR] read_file          (policy.workspace_boundary)
+     +5  [ERR] read_file          (policy.workspace_boundary)
+     +6  [OK ] grep_search        
+
+  BLOCK #2 (sess 2, pos 15):  run_shell_command -> ERROR
+
+  BLOCK #3 (sess 6, pos 0):  run_shell_command -> ERROR
+     +1  [OK ] grep_search        
+     +2  [ERR] list_directory     (schema.missing_param)
+     +3  [OK ] glob               
+     +4  [OK ] read_file          
+     +5  [OK ] grep_search        
+     +6  [OK ] grep_search        
+
+  BLOCK #4 (sess 7, pos 7):  run_shell_command -> ERROR
+
+  BLOCK #5 (sess 11, pos 4):  run_shell_command -> ERROR
+     +1  [OK ] grep_search        
+     +2  [OK ] read_file          
+     +3  [OK ] read_file          
+     +4  [OK ] read_file          
+     +5  [OK ] read_file          
+     +6  [OK ] list_directory     
+
+  BLOCK #6 (sess 11, pos 22):  run_shell_command -> ERROR
+
+  BLOCK #7 (sess 14, pos 0):  run_shell_command -> ERROR
+     +1  [ERR] write_file         (schema.missing_param)
+     +2  [ERR] write_file         (schema.missing_param)
+     +3  [ERR] write_file         (schema.missing_param)
+     +4  [ERR] write_file         (schema.missing_param)
+     +5  [ERR] write_file         (schema.missing_param)
+     +6  [OK ] write_file         
+
+  BLOCK #8 (sess 15, pos 15):  run_shell_command -> ERROR
+     +1  [OK ] grep_search        
+
+  BLOCK #9 (sess 17, pos 15):  run_shell_command -> ERROR
+     +1  [OK ] read_file          
+     +2  [ERR] activate_skill     (schema.missing_param)

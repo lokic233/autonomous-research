@@ -16,16 +16,34 @@ why_it_matters: 'The durable, cross-harness-CONFIRMED finding from the PROJ-0003
   errors. A clean, defensible characterization + a transferable measurement methodology.'
 novelty_hypothesis: ''
 mandatory_baselines: []
-academic_map_nodes: []
-supporting_evidence: []
+academic_map_nodes:
+- MAP-0002
+supporting_evidence:
+- exp_id: EXP-0031
+  summary: 'Gemini CLI 3rd-harness replication of CLAIM-0011. Corpus: 62 sessions
+    (18 w/ tool calls), 198 calls, 60 failures. Gate taxonomy CONSISTENT across 3
+    harnesses (each has a REDIRECTABLE block w/ named sanctioned alt: CC web_disabled,
+    Codex input_filter, Gemini run_shell_command-not-found). Gemini''s REDIRECTABLE
+    gate recovers 6/6 (1.000, Wilson[0.610,1.000]) by IN-THREAD cross-tool redirect
+    vs 0 same-tool (blocked tool not in inventory) -> matches Claude Code (66/66),
+    NOT Codex (0/142 abandon+preempt). Per-gate: REDIRECTABLE redir-share 1.000 [0.610,1.000]
+    vs GRANT_REQUIRED 0.267 [0.109,0.520] vs TRANSIENT 0.250 [0.120,0.449] (non-overlapping).
+    Promotes confound from 2-harness to robust 3-harness characterization: taxonomy
+    harness-agnostic, modality per-harness w/ 2 regimes (in-thread-redirect CC+Gemini;
+    abandon+preempt Codex). SUPPORT. Caveat: small n=9 blocks; Gemini anchor is tool-not-in-inventory
+    (structural twin), no web tool in corpus.'
+  data_path: experiments/2026-05-31/EXP-0031/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0036
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: drafted
-next_action: prior-art + skeptic check, then design a bounded probe
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0036=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T20:08:55Z'
-last_updated: '2026-05-31T20:08:55Z'
+last_updated: '2026-05-31T20:18:03Z'

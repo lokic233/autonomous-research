@@ -254,7 +254,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T20:00:38Z'
+last_updated: '2026-05-31T20:14:19Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -276,13 +276,10 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: experiment_designing
-next_action: "EXP-0030 (true lmcache kernel) INTEGRATION-BLOCKED: direct c_ops call\
-  \ hit illegal-mem-access (wrong hand-built shapes); needs the real vLLM-connector\
-  \ path (normalize_kv_and_discover_format from a live vLLM cache) \u2014 ~1-2h dedicated\
-  \ setup, NOT crash-retrying on a leased node. Evidence brackets the answer: EXP-0026\
-  \ (CDC wins vs re-impl) + EXP-0027 (CDC conditional vs oracle); true kernel lands\
-  \ between. Node released. Resume EXP-0030 with the connector harness next cycle."
+lifecycle_state: committee_pending
+next_action: "re-review #8 (run_12): GREEN-decision on HONEST-CONDITIONAL reframe\
+  \ (path 3) \u2014 true-lmcache magnitude deferred as filed future-work (EXP-0030\
+  \ design). GREEN-as-honest-characterization or YELLOW-pending-EXP-0030?"
 active_experiments:
 - EXP-0030
 blocking_on: ''

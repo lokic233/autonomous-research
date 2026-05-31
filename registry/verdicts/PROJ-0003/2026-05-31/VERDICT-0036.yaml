@@ -1,0 +1,35 @@
+verdict_id: VERDICT-0036
+claim_id: CLAIM-0011
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0031
+experiment_paths:
+- experiments/2026-05-31/EXP-0031
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(supporting evidence-update, not a kill) \u2014 3-harness replication SUPPORTS\
+  \ CLAIM-0011"
+required_evidence:
+- "Committee 6/6 review (the thesis is now well-evidenced across 3 harnesses \u2014\
+  \ strong GREEN candidate)"
+- "INTERVENTIONAL arm (force a route with error fixed) \u2014 needs off-node controllable\
+  \ harness"
+- off-node corpus diversity (SWE-agent/OpenHands) for non-research-workload generality
+- "small-n caveat (Gemini 9 blocks/6 recovered) \u2014 a larger Gemini/Codex window\
+  \ would power it"
+map_delta_proposals:
+- 'MAP-0002: CLAIM-0011 (modality=harness-routing not error-class) 3-HARNESS-SUPPORTED
+  (CC+Gemini redirect, Codex abandon'
+- taxonomy consistent, modality per-harness)
+- confound 3-HARNESS-CONFIRMED
+- cross-harness replication DISCHARGED on-node
+- remaining = interventional arm (off-node)
+baseline_requirements: []
+created_at: '2026-05-31T20:18:03Z'

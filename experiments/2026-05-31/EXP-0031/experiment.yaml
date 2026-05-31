@@ -1,0 +1,35 @@
+exp_id: EXP-0031
+project_id: PROJ-0003
+claim_id: CLAIM-0011
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'Gemini CLI 3rd-harness replication of CLAIM-0011. Corpus: 62 sessions
+  (18 w/ tool calls), 198 calls, 60 failures. Gate taxonomy CONSISTENT across 3 harnesses
+  (each has a REDIRECTABLE block w/ named sanctioned alt: CC web_disabled, Codex input_filter,
+  Gemini run_shell_command-not-found). Gemini''s REDIRECTABLE gate recovers 6/6 (1.000,
+  Wilson[0.610,1.000]) by IN-THREAD cross-tool redirect vs 0 same-tool (blocked tool
+  not in inventory) -> matches Claude Code (66/66), NOT Codex (0/142 abandon+preempt).
+  Per-gate: REDIRECTABLE redir-share 1.000 [0.610,1.000] vs GRANT_REQUIRED 0.267 [0.109,0.520]
+  vs TRANSIENT 0.250 [0.120,0.449] (non-overlapping). Promotes confound from 2-harness
+  to robust 3-harness characterization: taxonomy harness-agnostic, modality per-harness
+  w/ 2 regimes (in-thread-redirect CC+Gemini; abandon+preempt Codex). SUPPORT. Caveat:
+  small n=9 blocks; Gemini anchor is tool-not-in-inventory (structural twin), no web
+  tool in corpus.'
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0031/
+reproducibility: ''
+linked_verdicts:
+- VERDICT-0036
+started_at: ''
+completed_at: '2026-05-31T20:16:15Z'
+prompt_version: ''
