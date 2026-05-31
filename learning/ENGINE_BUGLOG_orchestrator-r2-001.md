@@ -605,3 +605,10 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   FIX: patched VERDICT-0041 to include area_chair:yellow (+ corrections note). LESSON: when parsing a committee
   run, ALWAYS tally all 6 .out (5 reviewers + area_chair) into --votes — a GREEN promote REQUIRES a true 6/6,
   and even YELLOW records should be complete. Re-verify the area_chair .out vote token every run.
+
+### CLI NIT (researcher-flagged, minor) — `ros agent heartbeat` invalid; heartbeat is TOP-LEVEL `ros heartbeat --agent <id>`
+- Multiple researchers tried `ros agent heartbeat ...` (mirroring `ros agent register`) and hit "invalid choice"; the
+  correct form is the top-level `ros heartbeat --agent <id>`. The `ros agent register` output even suggests the
+  top-level form, but the parallel-structure expectation (register under `ros agent`, so heartbeat under `ros agent`)
+  trips researchers. Cosmetic/ergonomics — suggest either aliasing `ros agent heartbeat` -> `ros heartbeat`, or
+  documenting it prominently in the researcher prompt. NOT blocking (researchers still register + complete work).
