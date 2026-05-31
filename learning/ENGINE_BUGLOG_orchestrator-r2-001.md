@@ -294,3 +294,45 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   `wait`s, then runs area_chair LAST with the 5 finished reviewer .out files injected into its prompt
   ("=== REVIEWER VOTES TO AGGREGATE ==="). Chair quorum is now real, not raced. Confirmed at source
   (engine/run_committee.sh L71-83 + L38-58).
+
+### INFRA NOTE (NOT an engine bug) — committee re-run #2 hit 5/6 EMPTY_OUTPUT (backend CLI breakage)
+- Ran the real committee a SECOND time (engine 6667c9e, chair-last) on the EXP-0006 fair-PIC packet.
+  launch.log CONFIRMS BUG-16 fix: "(reviewers done; running area_chair to aggregate)" — chair ran LAST.
+- BUT 5/6 outputs were empty, all correctly flagged EMPTY_OUTPUT_NO_VOTE (BUG-12 fix working as designed):
+  - claude-opus-4-8/4-7/4-6 (novelty_killer/theory_skeptic/area_chair): `sandbox-exec: sandbox_apply:
+    Operation not permitted` — macOS sandbox profile cannot be applied (likely resource/concurrency
+    pressure; ~55 stale backend procs were lingering from prior runs).
+  - codex (systems_reviewer): `Could not locate macOS sandbox profile profile.sb` — codex CLI
+    install/profile issue (PERSISTENT, needs reinstall).
+  - gemini (evaluation_prosecutor): `Cannot find module '../build/Debug/pty.node'` — gemini CLI
+    node-pty native module broken (PERSISTENT, needs reinstall).
+  - metacode (product_realist): returned only "4 skills discovered" (40B) — explored fs, never voted.
+- ENGINE BEHAVED CORRECTLY: every failure surfaced as EMPTY_OUTPUT_NO_VOTE; no silent miscount. I wrote
+  NO verdict (Rule 1: never infer/fabricate missing votes). Reverted CLAIM-0006 to evidence_ready.
+- DISTINCTION FROM ROUND 1: run #1 (~40min earlier, packet v1) got a clean 6/6 with the SAME backends,
+  so the claude `sandbox_apply` is plausibly transient (load); but codex profile.sb + gemini pty.node
+  look like genuine install breakage that will recur until those CLIs are reinstalled on the node.
+- ACTION: the EXP-0006 finding already has a recorded verdict (VERDICT-0014, evidence-update). A fresh
+  6/6 committee re-vote is BLOCKED on backend-CLI health (codex/gemini reinstall + sandbox headroom),
+  which is operator/infra territory, not engine.
+
+### INFRA NOTE (NOT an engine bug) — committee re-run #2 hit 5/6 EMPTY_OUTPUT (backend CLI breakage)
+- Ran the real committee a SECOND time (engine 6667c9e, chair-last) on the EXP-0006 fair-PIC packet.
+  launch.log CONFIRMS BUG-16 fix: "(reviewers done; running area_chair to aggregate)" — chair ran LAST.
+- BUT 5/6 outputs were empty, all correctly flagged EMPTY_OUTPUT_NO_VOTE (BUG-12 fix working as designed):
+  - claude-opus-4-8/4-7/4-6 (novelty_killer/theory_skeptic/area_chair): `sandbox-exec: sandbox_apply:
+    Operation not permitted` — macOS sandbox profile cannot be applied (likely resource/concurrency
+    pressure; ~55 stale backend procs were lingering from prior runs).
+  - codex (systems_reviewer): `Could not locate macOS sandbox profile profile.sb` — codex CLI
+    install/profile issue (PERSISTENT, needs reinstall).
+  - gemini (evaluation_prosecutor): `Cannot find module '../build/Debug/pty.node'` — gemini CLI
+    node-pty native module broken (PERSISTENT, needs reinstall).
+  - metacode (product_realist): returned only "4 skills discovered" (40B) — explored fs, never voted.
+- ENGINE BEHAVED CORRECTLY: every failure surfaced as EMPTY_OUTPUT_NO_VOTE; no silent miscount. I wrote
+  NO verdict (Rule 1: never infer/fabricate missing votes). Reverted CLAIM-0006 to evidence_ready.
+- DISTINCTION FROM ROUND 1: run #1 (~40min earlier, packet v1) got a clean 6/6 with the SAME backends,
+  so the claude `sandbox_apply` is plausibly transient (load); but codex profile.sb + gemini pty.node
+  look like genuine install breakage that will recur until those CLIs are reinstalled on the node.
+- ACTION: the EXP-0006 finding already has a recorded verdict (VERDICT-0014, evidence-update). A fresh
+  6/6 committee re-vote is BLOCKED on backend-CLI health (codex/gemini reinstall + sandbox headroom),
+  which is operator/infra territory, not engine.
