@@ -10,15 +10,17 @@ resource_budget:
   max_memory_gb: 95
   host_mem_floor_gb: 300
 needs_gpu: true
-dispatched_by: gpu-scheduler
-node_lease: devgpu014:EXP-0030
-status: running
+dispatched_by: ''
+node_lease: ''
+status: pending
 result_summary: ''
 result_effect: ''
 artifacts_path: experiments/2026-05-31/EXP-0030/
 reproducibility: ''
 linked_verdicts: []
-started_at: '2026-05-31T19:49:17Z'
+started_at: ''
 completed_at: ''
 prompt_version: ''
 committee_approved: VERDICT-0034
+note: INTEGRATION-BLOCKED on direct c_ops call (illegal-mem-access from hand-built shapes). Reset to pending;
+  awaiting validated vLLM-connector harness (CPU smoke test) before GPU-queue. NOT dangling-running.
