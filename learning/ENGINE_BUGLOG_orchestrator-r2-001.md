@@ -193,3 +193,63 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   silently dropped. Fix: either (a) run area_chair in a SECOND phase after the other 5 complete (sequential
   aggregation), or (b) document that area_chair output is advisory and the orchestrator must re-tally .out.
   Severity: low (no current miscount) but a latent committee-integrity foot-gun.
+
+### BUG-15 — CONFIRMED + FIXED this run (CLAIM-0008 wrong map/baselines)
+- researcher-failattr-r2 independently re-confirmed CLAIM-0008 had academic_map_nodes:[MAP-0001] +
+  KV-cache mandatory_baselines. Fixed: academic_map_nodes:[MAP-0002], mandatory_baselines:
+  ['class-agnostic recovery rate (NULL baseline)']. Engine still has NO validator (gap stands).
+
+### BUG-18 (NEW, medium, data-integrity) — `ros verdict write` is NON-IDEMPOTENT under retry -> duplicate orphan verdict
+- Symptom: a SINGLE EXP-0006 `ros verdict write` produced TWO verdict files — VERDICT-0013 AND
+  VERDICT-0014 — with BYTE-IDENTICAL content (same claim, same EXP-0006, same fatal/required/map-delta)
+  and the SAME created_at timestamp (14:30:43Z). Only VERDICT-0014 was back-linked into the claim's
+  verdict_history + EXP-0006.linked_verdicts; VERDICT-0013 was an ORPHAN (no claim/exp references it).
+- Engine analysis: cmd_verdict_write (ros.py ~L537) has exactly ONE def, ONE set_defaults, ONE
+  dump_yaml(path) — the engine does NOT double-write internally. So the duplicate came from the COMMAND
+  being invoked TWICE (a harness/transport retry of the tool call within the same wall-clock second:
+  first call wrote 0013, the retry recomputed next_id->0014 and wrote again). Same BUG-6/retry family:
+  non-idempotent writes + retries => duplicates.
+- Why it matters: next_id() scans existing files for max+1, so a retry does NOT collide on the ID; it
+  SILENTLY creates a second, higher-numbered verdict. The registry ends with a duplicate verdict and a
+  dangling ID gap; a naive reader counting verdicts or trusting the latest-id is misled. The orphan is
+  invisible from the claim side (not in verdict_history).
+- Expected: verdict write should be idempotent OR detect "this exact (claim, experiments, votes, content)
+  verdict already exists for today" and refuse/return the existing id. Actual: writes a duplicate.
+- Fix options: (a) content-fingerprint dedup (like cemetery_conflict already does for DEAD ideas — reuse
+  _fingerprint) before writing; (b) make next_id+write atomic (lock or O_EXCL create) so a retry is a
+  no-op; (c) the orchestrator/engine should own a request-id to dedupe retries.
+- Remediation this run: removed orphan VERDICT-0013 (verified zero references first); VERDICT-0014 is the
+  canonical EXP-0006 verdict. CLAIM-0008's VERDICT-0015 did NOT dupe (single write succeeded once).
+- Severity: medium (data-integrity; silent duplicate; not caught by any engine check).
+
+### NOTE: VERDICT-0004 gap is PRE-EXISTING (not mine) — present before round-2.
+
+### BUG-15 — CONFIRMED + FIXED this run (CLAIM-0008 wrong map/baselines)
+- researcher-failattr-r2 independently re-confirmed CLAIM-0008 had academic_map_nodes:[MAP-0001] +
+  KV-cache mandatory_baselines. Fixed: academic_map_nodes:[MAP-0002], mandatory_baselines:
+  ['class-agnostic recovery rate (NULL baseline)']. Engine still has NO validator (gap stands).
+
+### BUG-18 (NEW, medium, data-integrity) — `ros verdict write` is NON-IDEMPOTENT under retry -> duplicate orphan verdict
+- Symptom: a SINGLE EXP-0006 `ros verdict write` produced TWO verdict files — VERDICT-0013 AND
+  VERDICT-0014 — with BYTE-IDENTICAL content (same claim, same EXP-0006, same fatal/required/map-delta)
+  and the SAME created_at timestamp (14:30:43Z). Only VERDICT-0014 was back-linked into the claim's
+  verdict_history + EXP-0006.linked_verdicts; VERDICT-0013 was an ORPHAN (no claim/exp references it).
+- Engine analysis: cmd_verdict_write (ros.py ~L537) has exactly ONE def, ONE set_defaults, ONE
+  dump_yaml(path) — the engine does NOT double-write internally. So the duplicate came from the COMMAND
+  being invoked TWICE (a harness/transport retry of the tool call within the same wall-clock second:
+  first call wrote 0013, the retry recomputed next_id->0014 and wrote again). Same BUG-6/retry family:
+  non-idempotent writes + retries => duplicates.
+- Why it matters: next_id() scans existing files for max+1, so a retry does NOT collide on the ID; it
+  SILENTLY creates a second, higher-numbered verdict. The registry ends with a duplicate verdict and a
+  dangling ID gap; a naive reader counting verdicts or trusting the latest-id is misled. The orphan is
+  invisible from the claim side (not in verdict_history).
+- Expected: verdict write should be idempotent OR detect "this exact (claim, experiments, votes, content)
+  verdict already exists for today" and refuse/return the existing id. Actual: writes a duplicate.
+- Fix options: (a) content-fingerprint dedup (like cemetery_conflict already does for DEAD ideas — reuse
+  _fingerprint) before writing; (b) make next_id+write atomic (lock or O_EXCL create) so a retry is a
+  no-op; (c) the orchestrator/engine should own a request-id to dedupe retries.
+- Remediation this run: removed orphan VERDICT-0013 (verified zero references first); VERDICT-0014 is the
+  canonical EXP-0006 verdict. CLAIM-0008's VERDICT-0015 did NOT dupe (single write succeeded once).
+- Severity: medium (data-integrity; silent duplicate; not caught by any engine check).
+
+### NOTE: VERDICT-0004 gap is PRE-EXISTING (not mine) — present before round-2.
