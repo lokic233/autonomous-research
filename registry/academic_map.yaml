@@ -197,6 +197,12 @@ nodes:
   - CRIU/Docker checkpoint
   - LangGraph time-travel
   - Temporal/Inngest (workflow retries)
+  - MAST/Cemri arXiv:2503.13657 (failure taxonomy axis)
+  - Reflexion arXiv:2303.11366 (model-driven recovery = refuted null)
+  - tau-bench arXiv:2406.12045 / ToolEmu arXiv:2309.15817 (measurement genre)
+  - LangGraph ToolNode (framework error-handling — pre-empts GENERIC phrasing; CLAIM-0011 must stay narrow)
+  - Container Sandbox Escape arXiv:2603.02277 (per-MODEL disengagement — model-vs-harness pressure on
+    GATE-1)
   known_baselines:
   - class-agnostic recovery rate (NULL)
   - modality-agnostic redirect rate (NULL)
@@ -225,7 +231,10 @@ nodes:
   - 'cross-harness replication DISCHARGED across 3 on-node corpora (CC/Codex/Gemini, EXP-0031): CLAIM-0011
     (routing-determined modality) 3-harness-SUPPORTED. Remaining green-path blocker = INTERVENTIONAL arm
     (force a route, error fixed) — needs off-node controllable harness; off-node corpus diversity (SWE-agent/OpenHands)
-    would add non-research-workload generality.'
+    would add non-research-workload generality. | GATE-3 DISCHARGED (2026-05-31, body-where-readable):
+    no prior pre-empts the narrow cross-harness routing-flip claim; LangGraph pre-empts the GENERIC phrasing
+    (state narrowly); EXP-0012 <=0.2%-over-gate-bit is the anti-tautology delta. NEW: GATE-1 reinforced
+    by 2603.02277 model-vs-harness confound.'
   red_zones:
   - 'harness-routing-as-confound (CLAIM-0009 CONFIRMED (observationally inseparable, EXP-0012: error-class
     lift over gate-type-only = -0.0043; LOCO -33%)): recovery modality may be determined by the harness
@@ -241,11 +250,16 @@ nodes:
     | +Gemini (EXP-0031): REDIRECTABLE gate=run_shell_command block, recovers 6/6 in-thread redirect [Wilson
     0.610,1.000], MATCHES Claude Code (66/66) NOT Codex (0/142). Taxonomy consistent across 3 harnesses;
     modality per-harness, 2 regimes (in-thread-redirect CC+Gemini / abandon+preempt Codex). 3-HARNESS-CONFIRMED.'
+  - 'CLAIM-0011 model-vs-harness confound (arXiv:2603.02277): per-MODEL disengagement (GPT-5.2 92% / Claude
+    0%) maps onto the harness lineup (Codex=OpenAI / CC+Gemini=Claude+Google) -> modality difference could
+    be MODEL disposition, NOT routing. GATE-1 interventional (same-model cross-harness) is now the BINDING
+    load-bearing evidence, not a formality. Also: ''framework mediates recovery'' is PRE-EMPTED by LangGraph
+    -> claim must be stated narrowly.'
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T20:18:02Z'
+  last_updated: '2026-05-31T20:30:34Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
@@ -260,7 +274,8 @@ nodes:
     = 1 narrow surviving thesis + methodology; wind down to methods/negative-note if cross-harness fails
     | +cross-harness Codex (2026-05-31): modality is harness-specific routing (confirmed across 2 harnesses)
     | +EXP-0031 (2026-05-31): Gemini 3rd-harness — taxonomy-consistent, modality matches Claude Code,
-    confound 3-HARNESS-CONFIRMED; CLAIM-0011 supported'
+    confound 3-HARNESS-CONFIRMED; CLAIM-0011 supported | +GATE-3 (2026-05-31): prior-art positioned (MAST/Reflexion/tau-bench/LangGraph);
+    model-vs-harness near-collision 2603.02277 makes GATE-1 binding'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
