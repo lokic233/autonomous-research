@@ -1,0 +1,26 @@
+dead_id: DEAD-0009
+original_claim_id: CLAIM-0005
+original_claim: 'Mid-prompt tool-call injection recompute scales as a characterizable sub-quadratic
+  power law (k~1.3) — a regularity in its own right (after the super-quadratic framing was weakened).'
+reason_killed: 'EXP-0010 (CPU, analytic FLOP proxy R2>=0.998 + bootstrap re-fit of EXP-A005 GPU TTFT):
+  k is NOT a conserved exponent. It DRIFTS MONOTONICALLY 1.02 -> 1.99 as context grows 256 -> 8M tokens
+  (MLP/linear-bound at small ctx, attention/quadratic-bound at huge ctx). k~1.3 is merely the LOCAL
+  attention/MLP-crossover slope for a 7B model at few-k-32k context, and is fully derivable from textbook
+  prefill FLOP accounting (Pope arXiv:2211.05102 / Kwon PagedAttention arXiv:2309.06180). Same
+  accounting-identity retirement as CLAIM-0006 slope~1. No discovery, sub- or super-quadratic.'
+killing_verdict: VERDICT-0019
+killing_experiments:
+- EXP-0010
+- EXP-A005
+duplicate_patterns:
+- mid-prompt injection recompute sub-quadratic power law k 1.3 characterization regularity
+- tool-call injection recompute exponent k characterizable law
+- injection recompute scaling exponent discovery
+revival_conditions: 'Only if an injection-recompute exponent is measured that is NOT predicted by prefill
+  FLOP accounting (i.e. deviates from the MLP->attention crossover) AND is stable (non-drifting) across
+  a wide context range — a genuinely anomalous exponent, not a regime-local crossover slope.'
+related_prior_work:
+- Pope et al. arXiv:2211.05102 (prefill FLOP accounting)
+- Kwon et al. PagedAttention arXiv:2309.06180
+date_killed: '2026-05-31T16:10:00Z'
+source: orchestrator-r2-001 (EXP-0010, researcher-subquad-0005)

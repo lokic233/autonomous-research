@@ -1,0 +1,40 @@
+verdict_id: VERDICT-0019
+claim_id: CLAIM-0005
+project_id: PROJ-0001
+date: '2026-05-31'
+experiment_ids:
+- EXP-0010
+experiment_paths:
+- experiments/2026-05-31/EXP-0010
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- Super-quadratic framing DEAD (EXP-A005 + EXP-0010 both sub-quadratic, all CI-upper<1.85)
+- "The sub-quadratic k~1.3 is NOT a law: analytic FLOP proxy (R2>=0.998) shows k DRIFTS\
+  \ 1.02->1.99 with context (256->8M) \u2014 regime-local attention/MLP-crossover\
+  \ slope, not a conserved exponent"
+- "Derivable from prefill FLOP accounting (Pope 2211.05102/Kwon 2309.06180) \u2014\
+  \ explained, not anomalous (same accounting-identity retirement as CLAIM-0006 slope~1)"
+- No discovery sub- or super-quadratic
+required_evidence:
+- "NONE actionable toward a discovery \u2014 recommend RETIRE: super-quadratic stays\
+  \ DEAD"
+- bury the 'k~1.3 characterizable regularity' sub-hypothesis as a facet of the same
+  non-finding (cemetery)
+map_delta_proposals:
+- 'MAP-0001 red_zones ADD: mid-prompt injection recompute exponent k(~1.3) = regime-local
+  attention/MLP-crossover slope, NOT a law'
+- drifts 1.0->2.0 with ctx
+- derivable from Pope/Kwon accounting (same accounting-identity retirement as CLAIM-0006
+  slope~1)
+baseline_requirements:
+- naive whole-suffix recompute (accounting baseline)
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+created_at: '2026-05-31T16:03:13Z'
