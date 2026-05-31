@@ -6,15 +6,21 @@ claim: Error-class predicts agent recovery competence.
 why_it_matters: Failure-attribution workload model.
 novelty_hypothesis: ''
 mandatory_baselines:
-- vLLM APC
-- SGLang RadixAttention
-- FlashInfer
+- class-agnostic recovery rate (NULL baseline)
 academic_map_nodes:
-- MAP-0001
+- MAP-0002
 supporting_evidence:
 - exp_id: EXP-A008
   effect: weaken
   artifacts: experiments/2026-05-30/EXP-A008/
+- exp_id: EXP-0007
+  summary: 'Real-trace (70 Claude Code sessions, 356 failures) error-class->recovery
+    census. Error-class is strongly+out-of-sample predictive of recovery vs class-agnostic
+    null: Cramers V=0.64, LOO-Brier -35% vs null, permanent-vs-transient phi=0.45
+    (web_disabled 0/109 unrecoverable). Robust to rare-class collapse and leave-one-session-out.
+    SUPPORTS/STRENGTHENS CLAIM-0008. NOTE BUG-15: claim metadata MAP-0001+KV baselines
+    are wrong domain; correct domain MAP-0002.'
+  data_path: experiments/2026-05-31/EXP-0007/
 negative_evidence: []
 verdict_history:
 - verdict: VERDICT-0008
@@ -22,15 +28,18 @@ verdict_history:
 - verdict_id: VERDICT-0009
   date: '2026-05-30'
   result: yellow
+- verdict_id: VERDICT-0015
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess c48efa79 (T5)
 target_venue: NeurIPS D&B
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T14:23:07Z'
-lifecycle_state: experiment_designing
-next_action: 'researcher-failattr-r2 dispatched: real failure-census / error-class->recovery
-  vs null baseline (MAP-0002 domain; CLAIM-0008 has WRONG map_node MAP-0001 + KV baselines
-  = BUG-15, needs metadata fix)'
+last_updated: '2026-05-31T14:32:23Z'
+lifecycle_state: evidence_ready
+next_action: EXP-0007 real-trace census SUPPORTS (V=0.644, LOO-Brier +0.087) -> VERDICT-0015
+  yellow. BUG-15 fixed (MAP-0002+NULL baseline). GREEN needs cross-harness replication
+  + interventional test + decoupled outcome def.
 blocking_on: ''
 active_experiments: []

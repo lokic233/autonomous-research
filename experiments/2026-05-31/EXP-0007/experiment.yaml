@@ -1,0 +1,29 @@
+exp_id: EXP-0007
+project_id: PROJ-0003
+claim_id: CLAIM-0008
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'Real-trace (70 Claude Code sessions, 356 failures) error-class->recovery
+  census. Error-class is strongly+out-of-sample predictive of recovery vs class-agnostic
+  null: Cramers V=0.64, LOO-Brier -35% vs null, permanent-vs-transient phi=0.45 (web_disabled
+  0/109 unrecoverable). Robust to rare-class collapse and leave-one-session-out. SUPPORTS/STRENGTHENS
+  CLAIM-0008. NOTE BUG-15: claim metadata MAP-0001+KV baselines are wrong domain;
+  correct domain MAP-0002.'
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0007/
+reproducibility: ''
+linked_verdicts:
+- VERDICT-0015
+started_at: ''
+completed_at: '2026-05-31T14:30:05Z'
+prompt_version: ''

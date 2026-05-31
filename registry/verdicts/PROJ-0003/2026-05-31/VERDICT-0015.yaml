@@ -1,0 +1,44 @@
+verdict_id: VERDICT-0015
+claim_id: CLAIM-0008
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0007
+experiment_paths:
+- experiments/2026-05-31/EXP-0007
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- Single-harness corpus (Claude Code only) -> policy/permission-block taxonomy is
+  harness-specific
+- cross-harness generality UNMEASURED
+- Strongest cell (policy.web_disabled 0/109) is partly mechanically circular (hard
+  blocks not retried to success)
+- No interventional/causal test (does revealing error-class causally change recovery?)
+required_evidence:
+- Cross-harness replication (>=2 distinct agent harnesses) to show provenance/permanence
+  axis generalizes
+- 'Decouple recovery outcome definition: count cross-tool workarounds, not only same-intent
+  retry (current = lower bound)'
+- Interventional test of error-class -> recovery causality
+- Static failure taxonomy is OCCUPIED (MAST/AgentBench/LangGraph time-travel) -> surviving
+  novelty is the PREDICTIVE characterization vs a NULL on real traces, must be framed
+  that way
+map_delta_proposals:
+- 'MAP-0002: add open_gap RESULT = real-trace failure census done (EXP-0007, 70 sessions/356
+  failures)'
+- error-class predicts recovery (V=0.644, LOO-Brier +0.087 out-of-sample)
+- dominant axis = provenance/permanence (permanent harness/policy gates ~unrecoverable
+  0.25 vs transient 0.705)
+- add mandatory NULL baseline (class-agnostic recovery rate) for error-class->recovery
+  claims
+- static taxonomy = occupied (MAST/AgentBench/LangGraph), novelty = predictive-vs-null
+  on real traces
+baseline_requirements:
+- "class-agnostic recovery rate (NULL) \u2014 positioned (EXP-0007)"
+created_at: '2026-05-31T14:31:25Z'

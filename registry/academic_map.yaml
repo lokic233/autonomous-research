@@ -23,9 +23,14 @@ nodes:
   - FlashInfer
   open_gaps:
   - idle-window speculative prefill (CLAIM-0002 poc, YELLOW)
-  - prefix-cache invalidation COST-MAP / inj-seq invalidation law (CLAIM-0006, committee 6/6 YELLOW VERDICT-0011;
+  - 'prefix-cache invalidation COST-MAP / inj-seq invalidation law (CLAIM-0006, committee 6/6 YELLOW VERDICT-0011;
     mechanism NOT novel vs Irminsul/PIC, surviving novelty=characterization; GREEN needs wall-clock-across-surface
-    + real-trace workload)
+    + real-trace workload) | EXP-0006: CDC edge over FAIR PIC family is only ~1.1-1.7x median (CPU proxy),
+    TIE at inj/seq>=5%; 8x-465x was a structural artifact of contiguous baselines; durable CDC win-region
+    narrowed to inj/seq<=~1% small/mid ctx (residual ~2-6x); GREEN-blocker now = GPU wall-clock vs real
+    PIC impl | EXP-0006: CDC edge over FAIR PIC family is only ~1.1-1.7x median (CPU proxy), TIE at inj/seq>=5%;
+    8x-465x was a structural artifact of contiguous baselines; durable CDC win-region narrowed to inj/seq<=~1%
+    small/mid ctx (residual ~2-6x); GREEN-blocker now = GPU wall-clock vs real PIC impl'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -49,30 +54,39 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   status: yellow
-  last_updated: '2026-05-31T14:19:10Z'
+  last_updated: '2026-05-31T14:31:58Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
-    for green'
+    for green | +EXP-0006/VERDICT-0014 (2026-05-31): fair-PIC head-to-head collapses CDC competitive margin
+    | +EXP-0006/VERDICT-0014 (2026-05-31): fair-PIC head-to-head collapses CDC competitive margin'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
-  occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only)
+  occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
+    static failure taxonomies (MAST, AgentBench buckets) — novelty must be PREDICTIVE-vs-NULL on real
+    traces, not the taxonomy
   key_prior_work:
   - rr/ReVirt (process replay)
   - ReproZip (fs provenance)
   - CRIU/Docker checkpoint
   - LangGraph time-travel
   - Temporal/Inngest (workflow retries)
-  known_baselines: []
+  known_baselines:
+  - class-agnostic recovery rate (NULL)
   open_gaps:
-  - error-class -> recovery competence (CLAIM-0008, YELLOW)
+  - 'error-class -> recovery competence (CLAIM-0008, YELLOW): EXP-0007 real-trace census (70 Claude Code
+    sessions/356 failures) CONFIRMS predictive (Cramer V=0.644; out-of-sample LOO-Brier +0.087; permanent
+    harness/policy gates ~unrecoverable 0.25 vs transient 0.705, phi=0.454). Dominant axis=provenance/permanence.
+    GREEN needs cross-harness + interventional + decoupled outcome.'
   - real-trace failure census
   red_zones: []
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T12:48:48Z'
+  last_updated: '2026-05-31T14:31:58Z'
+  source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
+    (2026-05-31): real-trace failure census; NULL baseline added'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
@@ -93,11 +107,11 @@ nodes:
   - CRIU
   - LangGraph time-travel
   open_gaps:
-  - "LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG / kernel-batch /\
-    \ tool-RPC / retrieval-drift / world-state \u2014 the INTERSECTION is empty (per 3-CLI framing debate)"
+  - LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG / kernel-batch /
+    tool-RPC / retrieval-drift / world-state — the INTERSECTION is empty (per 3-CLI framing debate)
   red_zones:
-  - "'Failure Attribution' as the contribution (dies at every systems venue \u2014 must be the EVAL, not\
-    \ the pitch)"
+  - '''Failure Attribution'' as the contribution (dies at every systems venue — must be the EVAL, not
+    the pitch)'
   - '''Agent Trace OS'' framing (''OS for X'' = marketing death at OSDI)'
   - Checkpointing-only framing (CRIU comparison kills it)
   associated_claims: []

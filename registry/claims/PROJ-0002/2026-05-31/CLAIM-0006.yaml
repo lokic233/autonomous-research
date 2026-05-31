@@ -91,6 +91,19 @@ negative_evidence:
     not sampled from real agentic traces. Mechanism (CDC-over-radix) not novel (Irminsul
     single-source flag + PIC family); contribution is the cost-map/law characterization
     only.'
+- exp_id: EXP-0006
+  summary: 'FAIR PIC-family baseline (EPIC/CacheBlend/MEPIC/Irminsul-modeled: recompute
+    R new + boundary window W + selective fraction p of reused tokens) head-to-head
+    vs CDC, CPU recompute-fraction proxy, full inj/seq surface {0.1,1,5,25,100%} x
+    seq {4k,8k,32k}. FINDING: CDC 8x-465x advantage was a STRUCTURAL ARTIFACT of the
+    contiguous EXP-0003 baselines (they recompute whole suffix). Against a fair PIC
+    baseline CDC median advantage = 1.69x (p=1%,W=256), collapsing to TIE (1.0-1.2x)
+    at inj/seq>=5%. With leanest honest PIC (W=0,p=1%) CDC median = 1.1x. Durable
+    CDC edge ONLY at inj/seq~0.1% corner (~2-6x). Scope: token-count proxy != wall-clock;
+    recompute-fraction tie != wall-clock tie. WEAKENS competitive framing; surviving
+    contribution = cost-map characterization only. CDC mechanism is itself PIC-family
+    (no mechanism novelty).'
+  data_path: experiments/2026-05-31/EXP-0006/
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
@@ -103,12 +116,15 @@ verdict_history:
 - verdict_id: VERDICT-0012
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0014
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T14:23:07Z'
+last_updated: '2026-05-31T14:32:23Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -130,10 +146,11 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: experiment_running
-next_action: 'researcher-pic-baseline-r2 dispatched: EXP-0006 PIC-family (EPIC/CacheBlend-style)
-  baseline head-to-head vs CDC recompute-fraction across inj/seq surface (committee
-  #1 GREEN-blocker; CPU). Await numbers.'
+lifecycle_state: evidence_ready
+next_action: EXP-0006 shows CDC competitive margin collapses vs fair PIC (1.1-1.7x,
+  tie at inj/seq>=5%) -> VERDICT-0014 yellow. Surviving=cost-map only. Next GREEN-blocker
+  = GPU wall-clock vs real PIC impl (INVARIANT 3 human-go) + real-trace N>=100. Rewrite
+  to drop 8x-465x competitive framing.
 blocking_on: ''
 active_experiments:
 - EXP-0006

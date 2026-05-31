@@ -1,0 +1,45 @@
+sessions=70 total_tool_calls=3396 failures=356
+
+=== per-class recovery rate vs NULL p0=0.449 ===
+| class | n | recovered | rate | delta_vs_null |
+|---|---|---|---|---|
+| policy.web_disabled | 109 | 0 | 0.000 | -0.449 |
+| other | 97 | 72 | 0.742 | +0.293 |
+| cancelled | 59 | 33 | 0.559 | +0.110 |
+| policy.perm_denied | 30 | 17 | 0.567 | +0.117 |
+| fs.notfound | 19 | 12 | 0.632 | +0.182 |
+| proc.exit_nodetail | 14 | 7 | 0.500 | +0.051 |
+| ssh.auth | 6 | 4 | 0.667 | +0.217 |
+| edit.other | 5 | 4 | 0.800 | +0.351 |
+| code.build | 4 | 4 | 1.000 | +0.551 |
+| proc.timeout | 4 | 2 | 0.500 | +0.051 |
+| net.http | 2 | 2 | 1.000 | +0.551 |
+| policy.input_filter | 2 | 0 | 0.000 | -0.449 |
+| code.test | 1 | 1 | 1.000 | +0.551 |
+| fs.perm | 1 | 1 | 1.000 | +0.551 |
+| net.conn | 1 | 1 | 1.000 | +0.551 |
+| net.dns | 1 | 0 | 0.000 | -0.449 |
+| read.too_large | 1 | 0 | 0.000 | -0.449 |
+
+N_failures=356  global_recovery(p0)=0.4494
+chi2=147.790  df=16  CramersV=0.6443
+permutation_p = 0.0002  (B=5000)
+Brier(null const p0) = 0.2474
+Brier(class in-sample) = 0.1447  improve=+0.1027
+Brier(class LOO HONEST) = 0.1605  improve=+0.0870
+
+=== ROBUSTNESS 1: rare(n<10) collapsed ===
+  policy.web_disabled    n=109 rec=  0 rate=0.000 (-0.449)
+  other                  n= 97 rec= 72 rate=0.742 (+0.293)
+  cancelled              n= 59 rec= 33 rate=0.559 (+0.110)
+  policy.perm_denied     n= 30 rec= 17 rate=0.567 (+0.117)
+  rare                   n= 28 rec= 19 rate=0.679 (+0.229)
+  fs.notfound            n= 19 rec= 12 rate=0.632 (+0.182)
+  proc.exit_nodetail     n= 14 rec=  7 rate=0.500 (+0.051)
+  chi2=135.772 df=6 CramersV=0.6176 perm_p=0.0002
+
+=== ROBUSTNESS 2: theory split PERMANENT vs TRANSIENT ===
+  permanent    n=200 rec= 50 rate=0.250 (-0.199)
+  transient    n=156 rec=110 rate=0.705 (+0.256)
+  chi2=73.366 df=1 CramersV(phi)=0.4540 perm_p=0.0002
+wrote /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0007/experiment_result/per_class_recovery.csv
