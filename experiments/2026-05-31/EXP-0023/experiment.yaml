@@ -1,0 +1,35 @@
+exp_id: EXP-0023
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'ANALYTIC serving-overhead bridge (CPU, model not measurement) from
+  H100 kernel-proxy (EXP-0014/0021) to end-to-end TTFT. Adds per-call sched tax, extra
+  kernel-launch overhead, and CacheBlend-style gather/HBM overlap, using cited vLLM/CacheBlend/CUDA-graph
+  overhead figures. RESULT: end-to-end PIC/CDC band [1.10,2.03] nominal, [1.00,1.28]
+  worst-for-CDC; 0/8 cells INVERT under ANY plausible overhead assignment. Break-even
+  overlap=1/g_attr>=1 (impossible) => gather-overlap alone CANNOT flip CDC''s advantage;
+  only an implausible per-call asymmetry favoring PIC could. Win-region (32k,inj<=1%)
+  holds 1.04-1.28x worst-case. CONCLUSION: kernel advantage PLAUSIBLY SURVIVES serving
+  (supports CLAIM-0006 pending real confirmation); the missing vLLM+CacheBlend serving
+  cell is MODERATELY (not critically) load-bearing for TTFT sign, but STILL OWED to
+  settle magnitude + the one un-modeled risk: batched-throughput at inj/seq>=5% (outside
+  win-region) where CDC''s larger contiguous recompute could favor PIC aggregate throughput.
+  CPU-only, stdlib, no GPU/model/mem-probe.'
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0023/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T18:42:58Z'
+prompt_version: ''

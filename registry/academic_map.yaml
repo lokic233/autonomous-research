@@ -81,7 +81,11 @@ nodes:
     conditional count-frac win GIVEN S>=50k = 0.457 [0.453,0.461] prior-stable 41-52%. EXP-0021 (GPU CIs):
     all 8 cells PIC/CDC CI excludes 1.0 (32k/1%=1.129 [1.128,1.151]) -> CDC wall-clock faster statistically
     SUPPORTED; PIC-faithfulness robust. To unanimous GREEN: ONE end-to-end vLLM+CacheBlend serving cell
-    (owed; node env blocks vLLM install) — the single remaining piece.'
+    (owed; node env blocks vLLM install) — the single remaining piece. | EXP-0023 (analytic kernel->serving
+    bridge): CDC wall-clock advantage ROBUST to serving overheads (0/8 cells invert, band worst[1.00,1.28]);
+    break-even overlap physically impossible -> TTFT-sign solid. Owed serving cell now MODERATELY (not
+    critically) load-bearing — for magnitude + a batched-THROUGHPUT risk at inj/seq>=5% (outside win-region)
+    + PagedAttention non-contiguous layout.'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -125,7 +129,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T18:29:19Z'
+  last_updated: '2026-05-31T18:44:21Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -143,7 +147,8 @@ nodes:
     (2026-05-31): idle-window speculative prefill DEAD (occupied 2511.20048/2605.06472 + accounting identity);
     +VERDICT-0025: CLAIM-0006 gate-A GREEN, gate-B advanced | +EXP-0015/0021 (2026-05-31): win-region
     conditional-only (token-frac negligible), GPU wall-clock CIs all exclude 1.0; serving-cell the last
-    GREEN piece'
+    GREEN piece | +EXP-0023 (2026-05-31): analytic serving bridge — TTFT-sign robust, serving cell de-risked
+    to moderate'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

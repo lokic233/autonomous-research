@@ -1,20 +1,24 @@
 dead_id: DEAD-0010
-original_claim_id: ''  # NOT CLAIM-0002 (promoted GREEN mapping-ceiling claim, restored). This buries the MAP-0001 open_gap 'idle-window speculative prefill', mis-bound to CLAIM-0002 by EXP-0018 register; orchestrator please verify.
-original_claim: 'Idle-window speculative prefill (engine-side speculative continuation prefill during idle windows) [MAP-0001 open_gap, NOT a registered claim].'
-reason_killed: 'EARLY-KILL idle-window speculative prefill. CPU token-proxy break-even
-  = single dimensionless identity h*f >= alpha/(1+alpha) (W,R cancel); feasible win-region
-  narrow (P<=64, q>=0.95, alpha<=0.25). KILL leg 1: occupied by arXiv:2511.20048 (agent
-  idle-gap speculation + overhead model, DIRECT TWIN) + 2605.06472 (prediction-based
-  KV prefill), not previously in MAP-0001. KILL leg 2: break-even is textbook expected-value
-  accounting identity (DEAD-0009 pattern, no non-derivable anomaly). No red-zone collision.'
+original_claim_id: ''
+original_claim: Idle-window speculative prefill (engine-side speculative continuation prefill during idle
+  windows) [MAP-0001 open_gap, NOT a registered claim].
+reason_killed: 'EARLY-KILL idle-window speculative prefill. CPU token-proxy break-even = single dimensionless
+  identity h*f >= alpha/(1+alpha) (W,R cancel); feasible win-region narrow (P<=64, q>=0.95, alpha<=0.25).
+  KILL leg 1: occupied by arXiv:2511.20048 (agent idle-gap speculation + overhead model, DIRECT TWIN)
+  + 2605.06472 (prediction-based KV prefill), not previously in MAP-0001. KILL leg 2: break-even is textbook
+  expected-value accounting identity (DEAD-0009 pattern, no non-derivable anomaly). No red-zone collision.'
 killing_verdict: ''
 killing_experiments:
 - EXP-0018
 duplicate_patterns:
 - idle-window speculative prefill engine-side continuation prefill break-even wasted compute hit rate
 - speculative continuation prefill idle gap agent tool latency TTFT
-revival_conditions: Only if a speculative-prefill operating point is measured that
-  is body-distinct from 2511.20048/2605.06472 AND shows benefit NOT predicted by h*f>=alpha/(1+alpha)
-  (genuine system anomaly e.g. attention-sink reuse breaking linear-token currency).
+revival_conditions: Only if a speculative-prefill operating point is measured that is body-distinct from
+  2511.20048/2605.06472 AND shows benefit NOT predicted by h*f>=alpha/(1+alpha) (genuine system anomaly
+  e.g. attention-sink reuse breaking linear-token currency).
 related_prior_work: []
 date_killed: '2026-05-31T18:18:00Z'
+note: 'Legit early-kill of the MAP-0001 open_gap ''idle-window speculative prefill'' (EXP-0018). NOT a
+  claim death: the gap was never a registered claim; it only referenced the promoted CLAIM-0002 as adjacent.
+  CLAIM-0002 (promoted 6/6 GREEN mapping-ceiling) is intact. (BUG-25 since fixed in engine 477b82c: kill-on-promoted
+  now guarded.)'

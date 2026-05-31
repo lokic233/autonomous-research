@@ -1,0 +1,15 @@
+{
+  "device": "NVIDIA H100 (devgpu014)", "reps_per_cell": 30, "ci_method": "bootstrap B=2000 on per-rep PIC/CDC ratio",
+  "rows": [
+    {"seq":4096,"inj_frac":0.001,"cdc_ms":0.1152,"pic_ms":0.1454,"pic_over_cdc":1.256,"ci95_lo":1.245,"ci95_hi":1.270,"ci_excludes_1":true},
+    {"seq":4096,"inj_frac":0.01,"cdc_ms":0.1166,"pic_ms":0.1552,"pic_over_cdc":1.329,"ci95_lo":1.317,"ci95_hi":1.336,"ci_excludes_1":true},
+    {"seq":4096,"inj_frac":0.05,"cdc_ms":0.1461,"pic_ms":0.1764,"pic_over_cdc":1.205,"ci95_lo":1.189,"ci95_hi":1.207,"ci_excludes_1":true},
+    {"seq":4096,"inj_frac":0.25,"cdc_ms":0.3445,"pic_ms":0.4694,"pic_over_cdc":1.364,"ci95_lo":1.365,"ci95_hi":1.391,"ci_excludes_1":true},
+    {"seq":32768,"inj_frac":0.001,"cdc_ms":0.6623,"pic_ms":1.7514,"pic_over_cdc":2.627,"ci95_lo":2.587,"ci95_hi":2.637,"ci_excludes_1":true},
+    {"seq":32768,"inj_frac":0.01,"cdc_ms":1.5742,"pic_ms":1.7819,"pic_over_cdc":1.129,"ci95_lo":1.128,"ci95_hi":1.151,"ci_excludes_1":true},
+    {"seq":32768,"inj_frac":0.05,"cdc_ms":3.5027,"pic_ms":4.7628,"pic_over_cdc":1.354,"ci95_lo":1.347,"ci95_hi":1.371,"ci_excludes_1":true},
+    {"seq":32768,"inj_frac":0.25,"cdc_ms":15.349,"pic_ms":19.7078,"pic_over_cdc":1.282,"ci95_lo":1.271,"ci95_hi":1.319,"ci_excludes_1":true}
+  ],
+  "pic_faithfulness_sensitivity_32k_5pct": {"faithful":1.39,"naive_gather":1.435},
+  "serving_cell": "NOT RUN — vLLM/lmcache not installed on node + prod paths block pip; end-to-end serving cell OWED (honest, not fabricated)."
+}
