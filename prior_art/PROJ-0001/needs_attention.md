@@ -4,9 +4,9 @@ Open prior-art risks / things to recheck before promoting further:
 1. **vAttention overlap (CLAIM-0001/0007):** read-only VMM-KV is theirs; our delta is fork/CoW + the
    negative result. Keep the boundary sharp; recheck if vAttention adds branching.
 2. **Cross-vendor ceiling (CLAIM-0002/0004):** measured NVIDIA 520K vs AMD no-wall (see
-   511ce2e2__CROSSVENDOR_RESULT.md). A driver update could change the number — re-probe before paper-track.
+   511ce2e2__CROSSVENDOR_RESULT.md). The ceiling (523,404 ±0.6%) was measured under CUDA 12.8 / driver 580.82.07 on H100 (2 MiB granule); AMD MI350X showed no wall to 80M maps (153×). This is a DRIVER-VERSION-SCOPED characterization — future NVIDIA driver versions are a scoped limitation / threat-to-validity to STATE IN THE PAPER, NOT a re-probe instruction (re-probing the mapping ceiling is FORBIDDEN per learning/MI350X_CRASH_POSTMORTEM.md).
 3. **CLAIM-0005 (injection penalty):** sub-quadratic; needs a 3rd independent engine (TensorRT-LLM) to settle.
-4. Freshness: LLM-inference area moves fast — re-run prior-art search before any candidate→paper-track promotion.
+4. Freshness: DISCHARGED — the 2026-era forward neighbors are logged in MAP-0001 key_prior_work (see FRONTIER_SCAN_2026-05-31). No further prior-art re-run is required for the 5 promoted claims; this note applies only to NEW candidates, of which there are none (frontier exhausted, 1-degree + 2-degree closed).
 
 
 ## UPDATE 2026-05-31 (orchestrator-r2-001, via laneB audit D4)
