@@ -106,6 +106,14 @@ supporting_evidence:
     oracle). SCOPE: gather-kernel cost (not full E2E TTFT incl attention FLOPs); EXP-0026 already showed
     E2E CDC-wins vs re-impl. Both axes favor CDC w/ the real kernel.'
   data_path: experiments/2026-05-31/EXP-0030/
+- exp_id: EXP-0034
+  summary: 'COMBINED real-lmcache E2E-TTFT (composition-fallacy control): real CacheBlend kernels (gather+HKVD-select+blend,
+    28 layers) INLINE in prefill/decode window + real decode -> CDC faster E2E in ALL 12 cells (PIC/CDC
+    1.003-1.029x). Composition fallacy CONTROLLED: per-component CDC wins (gather EXP-0030 + E2E re-impl
+    EXP-0026) DO compose to an E2E win with the real kernel, margins compress (overlap partially hides
+    cost) but net favors CDC. SCOPED: real-blend-in-window, NOT true async connector (vLLM 0.6.6 lacks
+    V1 KVConnector; needs >=0.7/0.8). Both serving axes (gather + E2E) now favor CDC, measured.'
+  data_path: experiments/2026-05-31/EXP-0034/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor (CTX=4000,inj=40:
@@ -240,7 +248,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T21:40:45Z'
+last_updated: '2026-05-31T21:44:14Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -259,14 +267,9 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: experiment_designing
-next_action: VERDICT-0041 6/6 (2 GREEN novelty+systems / 3 yellow). gather-axis RESOLVED in CDC's favor
-  (EXP-0030 real kernel). SINGLE GREEN gate = EXP-0034 combined real-lmcache E2E-TTFT (real CacheBlend
-  kernel wired into vLLM serving loop, CDC vs PIC, 12-cell) — controls the composition fallacy (per-component
-  wins may not compose under pipelining overlap). Connector path proven by EXP-0030; E2E needs the kernel
-  in the serving loop. Build harness -> smoke -> GPU-queue. Honest E2E loss still publishable.
-active_experiments:
-- EXP-0034
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0034; convene committee if candidate-grade
+active_experiments: []
 blocking_on: ''
 writeup_notes:
 - 'PATH-B WRITEUP READY (2026-05-31, researcher-0002-writeup): prior_art/PROJ-0002/CLAIM-0006/WRITEUP_SYNTHESIS.md

@@ -12,13 +12,20 @@ resource_budget:
 needs_gpu: true
 dispatched_by: gpu-scheduler
 node_lease: devgpu014:EXP-0034
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'COMBINED real-lmcache E2E-TTFT (composition-fallacy control): real
+  CacheBlend kernels (gather+HKVD-select+blend, 28 layers) INLINE in prefill/decode
+  window + real decode -> CDC faster E2E in ALL 12 cells (PIC/CDC 1.003-1.029x). Composition
+  fallacy CONTROLLED: per-component CDC wins (gather EXP-0030 + E2E re-impl EXP-0026)
+  DO compose to an E2E win with the real kernel, margins compress (overlap partially
+  hides cost) but net favors CDC. SCOPED: real-blend-in-window, NOT true async connector
+  (vLLM 0.6.6 lacks V1 KVConnector; needs >=0.7/0.8). Both serving axes (gather +
+  E2E) now favor CDC, measured.'
+result_effect: support
 artifacts_path: experiments/2026-05-31/EXP-0034/
 reproducibility: ''
 linked_verdicts: []
 started_at: '2026-05-31T21:40:46Z'
-completed_at: ''
+completed_at: '2026-05-31T21:43:39Z'
 prompt_version: ''
 committee_approved: VERDICT-0041

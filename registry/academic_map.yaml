@@ -132,7 +132,13 @@ nodes:
     RESOLVED in CDC''s favor (EXP-0030 real lmcache kernel 12/12), systems_reviewer flipped GREEN. SINGLE
     remaining gate = EXP-0034 combined real-lmcache E2E-TTFT (controls the COMPOSITION FALLACY: per-component
     CDC wins [gather EXP-0030 + attention EXP-0026] may not compose under GPU prefill/gather pipelining
-    overlap). YELLOW->GREEN gated on EXP-0034. Honest E2E loss still publishable.'
+    overlap). YELLOW->GREEN gated on EXP-0034. Honest E2E loss still publishable. | EXP-0034 (combined
+    real-lmcache E2E-TTFT, composition-fallacy control): CDC faster E2E in ALL 12 cells (PIC/CDC 1.003-1.029x);
+    real CacheBlend kernels in-window so blend cost OVERLAPS real compute. Composition fallacy CONTROLLED
+    — per-component CDC wins COMPOSE to an E2E win (margins compress but net favors CDC). SCOPE: scoped
+    approx (real-blend-in-window, NOT true async connector — vLLM 0.6.6 lacks V1 KVConnector, env-upgrade-gated;
+    async overlap would shrink not flip the margin). Both serving axes (gather EXP-0030 + E2E EXP-0034)
+    now favor CDC, measured.'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -179,7 +185,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T21:20:33Z'
+  last_updated: '2026-05-31T21:44:14Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -211,7 +217,9 @@ nodes:
     (no must-cite gap), PROJ-0001 COMPLETE | +EXP-0030 (2026-05-31): REAL lmcache gather kernel CDC wins
     12/12, bracket resolved toward CDC (oracle too-generous), only combined-E2E tie-down remains | +VERDICT-0041
     (2026-05-31): 2 GREEN, gather resolved, composition-axis = EXP-0034 combined-E2E single gate | +PROJ-0001
-    FINALIZED (2026-05-31): paper outline + citation sweep clean + needs_attention reworded; DONE/writing-only'
+    FINALIZED (2026-05-31): paper outline + citation sweep clean + needs_attention reworded; DONE/writing-only
+    | +EXP-0034 (2026-05-31): combined E2E composition control — CDC wins 12/12 E2E, fallacy controlled;
+    both serving axes favor CDC'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
