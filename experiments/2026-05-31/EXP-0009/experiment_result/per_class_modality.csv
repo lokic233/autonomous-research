@@ -1,0 +1,21 @@
+class,n_fail,recovered,recovery_rate,same_tool_retry,cross_tool_redirect,redirect_share,redir_share_lo,redir_share_hi,gate_label
+policy.web_disabled,109,66,0.6055,0,66,1.0000,0.9450,1.0000,REDIRECTABLE
+other,104,66,0.6346,44,22,0.3333,0.2316,0.4534,SAME-TOOL
+cancelled,59,34,0.5763,29,5,0.1471,0.0645,0.3013,SAME-TOOL
+policy.perm_denied,30,14,0.4667,14,0,0.0000,0.0000,0.2153,SAME-TOOL
+fs.notfound,20,16,0.8000,11,5,0.3125,0.1416,0.5560,SAME-TOOL
+proc.exit_nodetail,14,12,0.8571,4,8,0.6667,0.3906,0.8619,REDIRECTABLE
+ssh.auth,6,5,0.8333,2,3,0.6000,0.2307,0.8824,small-n
+edit.other,5,4,0.8000,4,0,0.0000,0.0000,0.4899,small-n
+code.build,4,4,1.0000,3,1,0.2500,0.0456,0.6994,small-n
+proc.timeout,4,3,0.7500,1,2,0.6667,0.2077,0.9385,small-n
+policy.input_filter,2,2,1.0000,0,2,1.0000,0.3424,1.0000,small-n
+net.http,2,2,1.0000,1,1,0.5000,0.0945,0.9055,small-n
+read.too_large,1,1,1.0000,0,1,1.0000,0.2065,1.0000,small-n
+net.dns,1,1,1.0000,0,1,1.0000,0.2065,1.0000,small-n
+net.conn,1,1,1.0000,1,0,0.0000,0.0000,0.7935,small-n
+code.test,1,1,1.0000,1,0,0.0000,0.0000,0.7935,small-n
+fs.perm,1,0,0.0000,0,0,0.0000,0.0000,0.0000,small-n
+# N_recovered=232,redirect=117,same_tool=115,NULL_redirect_rate=0.5043
+# T1_full_taxonomy: CramersV=0.7173,perm_p=0.0002,LOO_Brier_improve=+0.1015
+# T1_rare_collapsed: CramersV=0.6823,perm_p=0.0002,LOO_Brier_improve=+0.1068

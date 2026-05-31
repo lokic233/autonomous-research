@@ -10,20 +10,44 @@ why_it_matters: 'EXP-0008 refuted CLAIM-0008 (occurrence) but surfaced a sharper
   defensible signal: error-class predicts the MODALITY of recovery. This re-seeds
   the surviving kernel as its own falsifiable claim.'
 novelty_hypothesis: ''
-mandatory_baselines: []
-academic_map_nodes: []
-supporting_evidence: []
+mandatory_baselines:
+- modality-agnostic redirect rate (NULL baseline)
+academic_map_nodes:
+- MAP-0002
+supporting_evidence:
+- exp_id: EXP-0009
+  summary: 'Recovery-MODALITY census (same corpus, CPU/stdlib, copied parse/classify
+    from EXP-0007/0008). Among 232 broad-recovered failures (of 364; rate 0.637 matches
+    EXP-0008), modality split SAME_TOOL_RETRY 115 / CROSS_TOOL_REDIRECT 117 (NULL
+    p0=0.504). T1: error-class STRONGLY predicts modality where it FAILED to predict
+    occurrence: Cramers V=0.717 (perm-p=0.0002), out-of-sample LOO-Brier null 0.250->0.149
+    = +0.102 (40.6% reduction). Robust to every knob that killed the occurrence claim:
+    B-priority tie-break V=0.616/+0.065; STRICT cross-tool-NAME-only V=0.869/+0.163
+    (69.7%); K=3/6/12 V=0.64-0.72; LOSO V min0.698/med0.716/max0.776. REDIRECTABLE-vs-TERMINAL
+    taxonomy HOLDS within policy family: policy.web_disabled redirect-share=1.000
+    (66/66, CI[0.945,1]) = clean REDIRECTABLE gate (WebFetch/WebSearch->external_web_search);
+    policy.perm_denied redirect-share=0.000 (CI[0,0.215]) = recovers ONLY same-tool
+    (gate must be opened). Transient (fs.notfound/cancelled/other) SAME-TOOL dominant
+    (redir 0.15-0.33). HONEST LIMITS: decisive contrast rests on 2 cells (web_disabled
+    n=109 + perm_denied n=30); web_disabled redirect=1.0 is partly definitional (hard
+    block=redirect-only) so the non-circular evidence is the CONTRAST with perm_denied
+    + within-transient spread; no cleanly-TERMINAL (0-recov,0-redir) class is sampled
+    at n>=10; single-harness (Claude Code). SUPPORTS CLAIM-0009 as a predictive characterization;
+    promotion to general law needs cross-harness + sampled terminal class + interventional.'
+  data_path: experiments/2026-05-31/EXP-0009/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0018
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_designing
-next_action: 'researcher-recovery-modality-0009 (CPU): test error-class->recovery
-  MODALITY (same-tool-retry vs cross-tool-redirect) + redirectable-vs-terminal gate
-  taxonomy on Claude Code traces.'
+lifecycle_state: evidence_ready
+next_action: EXP-0009 SUPPORTS modality claim (V=0.717, LOO-Brier -40.6%, robust).
+  VERDICT-0018 yellow. Needs committee 6/6 (pending BUG-22), cross-harness, sampled
+  TERMINAL class, interventional.
 blocking_on: ''
-active_experiments:
-- EXP-0009
+active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T15:53:48Z'
+last_updated: '2026-05-31T16:00:32Z'

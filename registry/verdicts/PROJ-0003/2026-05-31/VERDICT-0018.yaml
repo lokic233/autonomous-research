@@ -1,0 +1,45 @@
+verdict_id: VERDICT-0018
+claim_id: CLAIM-0009
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0009
+experiment_paths:
+- experiments/2026-05-31/EXP-0009
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- Decisive REDIRECTABLE-vs-TERMINAL contrast rests on 2 cells (web_disabled n=109,
+  perm_denied n=30)
+- other policy cells n<=2
+- "web_disabled redirect-share=1.0 is partly DEFINITIONAL (a hard tool-block cannot\
+  \ be same-tool-retried) \u2014 non-circular evidence is the CONTRAST with perm_denied\
+  \ + within-transient spread"
+- "a cleanly-TERMINAL pole (0 recovery AND 0 redirect) is UNDER-SAMPLED at n>=10 \u2014\
+  \ the TERMINAL pole is asserted by structure, not demonstrated"
+- single-harness (Claude Code)
+- redirect/re-approval modalities are harness-specific
+required_evidence:
+- Committee 6/6 review (pending BUG-22 runner fix)
+- "Cross-harness replication (>=2 agent harnesses) \u2014 modality + redirect behavior\
+  \ are Claude-Code-specific"
+- Sample a cleanly-TERMINAL error class at n>=10 to demonstrate (not assert) the terminal
+  pole
+- Interventional confirmation (does exposing error-class causally change modality
+  choice?)
+map_delta_proposals:
+- "MAP-0002: CLAIM-0009 (recovery MODALITY) SUPPORTED on real traces where occurrence-prediction\
+  \ (CLAIM-0008) was REFUTED \u2014 V=0.717, out-of-sample LOO-Brier -40.6%, LOSO\
+  \ V 0.70-0.78, perm-p=0.0002, robust to all knobs"
+- REDIRECTABLE-vs-TERMINAL is a property of the GATE not the 'policy' label (web_disabled
+  100% redirect vs perm_denied 0% redirect, same policy family)
+- add NULL baseline = modality-agnostic redirect rate
+- TERMINAL pole under-sampled in Claude Code corpus
+baseline_requirements:
+- "modality-agnostic redirect rate (NULL) \u2014 positioned (EXP-0009)"
+created_at: '2026-05-31T15:59:35Z'

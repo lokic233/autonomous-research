@@ -67,3 +67,48 @@ See CLAIM-0006/fresh_priorart_note_LaneA-priorart.md + search_log_priorart-A.md 
   intensity) vs PIC scattered-HKVD (gather/scatter, kernel overhead). At the ~5% fraction-tie crossover,
   wall-clock could diverge 2-3x in either direction. MLSys needs GPU wall-clock on a REAL PIC artifact
   (CacheBlend/EPIC published, not the re-impl).
+
+## Update 2026-05-31 (researcher-novelty-boundary-0006) — BODY-LEVEL distinction (closes VERDICT-0017 gate A, mostly)
+Full per-neighbor analysis: CLAIM-0006/novelty_boundary_2026-05-31.md. I retrieved & parsed the FULL
+HTML BODIES of the two GREEN-gate works (2601.06007, 2605.05696) — body-level, not abstract-only. PIC
+family = abstract-level reads (scoped honestly below).
+
+### Per-neighbor distinction table — does it publish CLAIM-0006's surviving leg?
+Leg = engine-internal recompute-FRACTION-vs-inj/seq COST-MAP + position-not-driver finding.
+| Work | (a) recompute% vs inj-size cost-map | (b) position-indep-OF-COST finding | (c) engine-internal vs black-box | Read depth | VERIFIED? |
+|---|---|---|---|---|---|
+| **Don't Break the Cache** 2601.06007 | **NO** (measures $-cost & ms-TTFT, axes = prompt-SIZE + tool-COUNT, not inj/seq) | **NO** (only layout heuristic "put dynamic content at end") | **BLACK-BOX provider API** (no vLLM/SGLang/engine) | FULL BODY §1-7+App | **VERIFIED** — collapse-to-replication worry is FALSE |
+| **Irminsul** 2605.05696 | **NO** (metrics = token-recovery%, prefill ENERGY, hit-rate, attn-sink fractions; partition-shift diagnostic predicts its OWN recovery, not a cost contour) | NO (does an attn-sink/first-chunk analysis, not a cost-vs-position law) | engine (SGLang radix) | FULL BODY §1-8+App | **VERIFIED** — mechanism TWIN, but no cost-map |
+| EPIC 2410.15332 | NO (TTFT, up-to-8x) | NO | engine | abstract | partial (abstract) |
+| CacheBlend 2405.16444 | NO (selective recompute; speedup/quality) | NO | engine | abstract | partial (abstract) |
+| Cache-Craft 2502.15734 | NO (-51% redundant compute, single RAG aggregate, not f(inj/seq)) | NO | engine | abstract | partial (abstract) |
+| MEPIC 2512.16822 | NO (block-level recompute, mem-efficient PIC) | NO | engine | abstract | partial (abstract) |
+| KVFlow 2507.07400 | NO (workflow-aware EVICTION/prefetch, not invalidation) | NO | engine | abstract | partial (abstract) |
+| CacheClip 2510.10129 | NO (RAG KV reuse, TTFT) | NO | engine | abstract | partial (abstract) |
+
+### Key verified findings
+1. **2601.06007 does NOT collapse CLAIM-0006.** BODY: §3.3 "we measure two primary metrics: API cost
+   and TTFT"; "linear" = $-savings vs PROMPT-SIZE (500-50k) and flat vs TOOL-COUNT (3-50). It has NO
+   inj/seq axis, NO recompute-FRACTION, NO engine, NO position-independence finding (grep-confirmed:
+   zero hits for vLLM/SGLang/radix/recompute-fraction/inj-seq/slope/cost-map). The "same functional
+   form" fear (VERDICT-0017) is refuted at body level. This was the #1 GREEN-blocker → now CLOSED.
+2. **Irminsul is the mechanism TWIN** (CDC content-hash keying over SGLang radix + Gear-hash rolling
+   boundaries) — CDC-over-radix MECHANISM novelty is DEAD (body-confirmed). But Irminsul publishes NO
+   inj/seq recompute-fraction cost-map; its metrics are token-recovery% + prefill energy + hit-rate +
+   attn-sink fractions. CLAIM-0006's surviving leg is genuinely distinct from Irminsul's deliverable.
+3. **Irminsul >=2-INDEX rule now SATISFIED** (was the LaneA single-source flag): Semantic Scholar
+   (CorpusId 288013360) + OpenAlex (W7160639578) both index it as of 2026-05-31. (DBLP "irminsul" hit
+   is a DIFFERENT work — discard.) Caveat: same primary work indexed x2, not 2 independent corroborating
+   works; independent mechanism-genus corroboration comes from the PIC family (multi-source).
+4. **slope~1 is an ACCOUNTING IDENTITY, not a law** — CONFIRMED. recompute=(R+W)/S ≈ R/S=inj/seq by
+   contiguous-chunk KV bookkeeping (Pope 2211.05102 / Kwon PagedAttention 2309.06180). Position-flatness
+   is the same identity, EXCEPT the p=0 attention-sink (Irminsul body confirms sink is sequence-start-
+   local → genuinely position-dependent there; CLAIM-0006 must caveat). Only the achieved near-W=0
+   re-sync on realistic inserts + the empirical inj/seq workload distribution (EXP-0005) are *measured*.
+
+### Residual GREEN-blockers (assertion-only / not body-verified)
+- PIC-family (EPIC/CacheBlend/Cache-Craft/MEPIC/KVFlow/CacheClip) distinction is ABSTRACT-level only —
+  cannot 100%-exclude an appendix cost-map. LOW risk, cheap to close (CPU body reads). RECOMMEND before
+  committee re-vote.
+- Eval GREEN-gate (GPU wall-clock on REAL PIC artifact at ~5% crossover) is ORTHOGONAL and still the
+  binding blocker — untouched here (GPU, human-go).

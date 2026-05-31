@@ -1,0 +1,76 @@
+sessions=74 total_tool_calls=3508 failures=364  K_WINDOW=6
+
+RECOVERED failures (broad def, K=6): N=232  (of 364 failures = 0.637)
+  SAME_TOOL_RETRY    = 115  (0.496)
+  CROSS_TOOL_REDIRECT= 117  (0.504)   <-- modality-agnostic NULL redirect rate
+
+=== T1: error-class -> recovery MODALITY (redirect vs same-tool-retry), among recovered ===
+  modality-agnostic NULL redirect rate p0=0.5043
+  full taxonomy: chi2=119.38 df=15  Cramers_V=0.7173  perm_p=0.0002
+  LOO-Brier: null=0.2500 class-cond=0.1485 improve=+0.1015 (40.6% reduction)
+  [rare(n<10)->'rare' collapsed] chi2=108.02 df=6 Cramers_V=0.6823 perm_p=0.0002  LOO-Brier improve=+0.1068 (42.7%)
+
+=== Per-class modality + recovery (Wilson 95% CI). 'redir_share' = redirect / recovered ===
+class                  n_fail  recov rec_rate  same redir  redir_share  redir_share_CI
+policy.web_disabled       109     66    0.606     0    66        1.000  [0.945,1.000]
+other                     104     66    0.635    44    22        0.333  [0.232,0.453]
+cancelled                  59     34    0.576    29     5        0.147  [0.064,0.301]
+policy.perm_denied         30     14    0.467    14     0        0.000  [0.000,0.215]
+fs.notfound                20     16    0.800    11     5        0.312  [0.142,0.556]
+proc.exit_nodetail         14     12    0.857     4     8        0.667  [0.391,0.862]
+ssh.auth                    6      5    0.833     2     3        0.600  [0.231,0.882]
+edit.other                  5      4    0.800     4     0        0.000  [0.000,0.490]
+code.build                  4      4    1.000     3     1        0.250  [0.046,0.699]
+proc.timeout                4      3    0.750     1     2        0.667  [0.208,0.939]
+policy.input_filter         2      2    1.000     0     2        1.000  [0.342,1.000]
+net.http                    2      2    1.000     1     1        0.500  [0.095,0.905]
+read.too_large              1      1    1.000     0     1        1.000  [0.207,1.000]
+net.dns                     1      1    1.000     0     1        1.000  [0.207,1.000]
+net.conn                    1      1    1.000     1     0        0.000  [0.000,0.793]
+code.test                   1      1    1.000     1     0        0.000  [0.000,0.793]
+fs.perm                     1      0    0.000     0     0        0.000  [0.000,0.000]
+
+=== REDIRECTABLE vs TERMINAL gate taxonomy (criteria: classes with n_fail>=10) ===
+  REDIRECTABLE = recovered & redirect-share materially >0 (sanctioned alternative path exists)
+  SAME-TOOL    = recovered mostly by retrying the same tool (transient/fixable in place)
+  TERMINAL     = recovery rate ~0 AND ~no redirects (no modality available)
+  policy.web_disabled    n=109 rec_rate=0.606 redir_share=1.000  -> REDIRECTABLE
+  other                  n=104 rec_rate=0.635 redir_share=0.333  -> SAME-TOOL
+  cancelled              n= 59 rec_rate=0.576 redir_share=0.147  -> SAME-TOOL
+  policy.perm_denied     n= 30 rec_rate=0.467 redir_share=0.000  -> SAME-TOOL
+  fs.notfound            n= 20 rec_rate=0.800 redir_share=0.312  -> SAME-TOOL
+  proc.exit_nodetail     n= 14 rec_rate=0.857 redir_share=0.667  -> REDIRECTABLE
+
+=== Redirect winning-tool audit (failtool -> winning tool), top pairs ===
+   34x  policy.web_disabled  WebSearch -> mcp__plugin_meta_mux__three_pai_external_web_search
+   26x  policy.web_disabled  WebFetch -> mcp__plugin_meta_mux__three_pai_external_web_search
+   17x  other                Bash -> Bash
+    6x  policy.web_disabled  WebFetch -> Bash
+    5x  proc.exit_nodetail   Bash -> mcp__plugin_meta_mux__three_pai_external_web_search
+    3x  fs.notfound          Read -> Glob
+    3x  proc.exit_nodetail   Bash -> Bash
+    3x  cancelled            Bash -> Bash
+    3x  ssh.auth             Bash -> Bash
+    2x  other                mcp__plugin_meta_mux__three_pai_external_web_search -> WebFetch
+    2x  policy.input_filter  mcp__plugin_meta_mux__knowledge_load -> mcp__plugin_meta_mux__three_pai_external_web_search
+    2x  proc.timeout         Bash -> Write
+    1x  read.too_large       Read -> Read
+    1x  fs.notfound          Read -> Read
+    1x  cancelled            WebSearch -> mcp__plugin_meta_mux__three_pai_external_web_search
+
+=== T2: leave-one-session-out (LOSO) robustness of modality-V and web_disabled redir-share ===
+  LOSO Cramers_V over 36 drops: min=0.698 median=0.716 max=0.776
+  LOSO web_disabled redirect-share: min=1.000 median=1.000 max=1.000
+
+=== Sensitivity: B-priority modality (redirect wins A/B ties) ===
+  redirect rate p0=0.6422  Cramers_V=0.6158 perm_p=0.0002  LOO-Brier improve=+0.0647 (28.2%)
+
+=== Sensitivity: STRICT redirect (cross-tool-NAME only; Bash->Bash counts as same-tool) ===
+  strict redirect rate p0=0.3707  Cramers_V=0.8687 perm_p=0.0002  LOO-Brier improve=+0.1626 (69.7%)
+
+=== K-window sensitivity of modality signal ===
+  K= 3: recovered=174 redirect_rate=0.506 V=0.644 (perm_p=0.0005) LOO-Brier_improve=+0.0681
+  K= 6: recovered=232 redirect_rate=0.504 V=0.717 (perm_p=0.0005) LOO-Brier_improve=+0.1015
+  K=12: recovered=288 redirect_rate=0.552 V=0.655 (perm_p=0.0005) LOO-Brier_improve=+0.0885
+
+wrote /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0009/experiment_result/per_class_modality.csv

@@ -8,12 +8,16 @@ nodes:
   - PagedAttention SOSP'23
   - RadixAttention NeurIPS'24
   - Continuum arXiv 2511.02230
-  - Irminsul arXiv 2605.05696 (CDC-over-radix, single-source flag)
+  - Irminsul arXiv 2605.05696 (CDC-over-radix MECHANISM TWIN, body-verified; indexed SemScholar+OpenAlex
+    — no longer single-source; publishes token-recovery%/prefill-energy/attn-sink, NOT the inj/seq recompute
+    cost-map)
   - EPIC arXiv 2410.15332 (PIC)
   - MEPIC arXiv 2512.16822
   - CacheBlend arXiv 2405.16444 (EuroSys'25)
   - Cache-Craft arXiv 2502.15734
-  - Don't Break the Cache arXiv 2601.06007 (agentic prompt-cache cost eval)
+  - Don't Break the Cache arXiv 2601.06007 (BLACK-BOX provider-API $/TTFT vs prompt-size & tool-count;
+    NO recompute-fraction cost-map, NO inj/seq axis, NO position-indep — BODY-VERIFIED distinguishable;
+    cite as motivation)
   - FastCDC/Rabin (CDC insertion-resilience, foundational)
   - KVFlow arXiv:2507.07400 (agentic/multi-agent prefix-cache; scheduling/reuse, NO inj/seq invalidation
     law)
@@ -37,13 +41,19 @@ nodes:
     ''law''/position-independence = mechanism-derived accounting identity (Pope 2211.05102/Kwon 2309.06180).
     GREEN-gates: (A) body-level distinction from ''Don''t Break the Cache'' 2601.06007 (same cost~inj/prompt
     form — UNVERIFIED) + Irminsul 2nd index; (B) GPU wall-clock on REAL PIC artifact across surface (proxy
-    conflates contiguous-chunk vs scattered-HKVD).'
+    conflates contiguous-chunk vs scattered-HKVD). | novelty-boundary-0006 (BODY-LEVEL, 2026-05-31): GREEN-gate
+    (A) substantially CLOSED — 2601.06007 body-read lacks inj/seq cost-map (replication fear REFUTED);
+    Irminsul body-read = mechanism twin w/ no cost-map, now 2-indexed. RESIDUAL: PIC-family bodies abstract-only
+    (LOW); eval/GPU gate (B) still binding [human-go]. Add caveat: position-indep EXCEPT the sequence-start
+    attn-sink chunk (Irminsul carves it out).'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
   - handle attestation (DEAD-0002)
-  - 'CDC-over-radix repair MECHANISM as a novelty claim (occupied: Irminsul/PIC family; novelty must be
-    characterization, not mechanism)'
+  - CDC-over-radix repair MECHANISM as a novelty claim — DEAD. Body-confirmed twin Irminsul 2605.05696
+    (CDC content-hash keying over SGLang radix + Gear-hash boundaries), indexed x2 (SemScholar CorpusId
+    288013360 / OpenAlex W7160639578) + PIC genus (EPIC/CacheBlend/Cache-Craft/MEPIC) multi-source. Novelty
+    must be the engine-internal inj/seq COST-MAP characterization, not the mechanism.
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -61,14 +71,15 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   status: yellow
-  last_updated: '2026-05-31T15:34:48Z'
+  last_updated: '2026-05-31T16:00:11Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
     for green | +EXP-0006/VERDICT-0014 (2026-05-31): fair-PIC head-to-head collapses CDC competitive margin
     | +EXP-0006/VERDICT-0014 (2026-05-31): fair-PIC head-to-head collapses CDC competitive margin | +VERDICT-0017
     (2026-05-31, real 6/6 committee): single-leg framing, 2 legs retired, novelty+eval gates open, Pope/Kwon
-    accounting-identity merge'
+    accounting-identity merge | +novelty-boundary-0006 (2026-05-31): 2601.06007 body-verified distinct,
+    Irminsul 2-indexed twin, gate-A substantially closed'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
@@ -84,6 +95,7 @@ nodes:
   - Temporal/Inngest (workflow retries)
   known_baselines:
   - class-agnostic recovery rate (NULL)
+  - modality-agnostic redirect rate (NULL)
   open_gaps:
   - 'error-class -> recovery competence (CLAIM-0008, YELLOW): EXP-0007 real-trace census (70 Claude Code
     sessions/356 failures) CONFIRMS predictive (Cramer V=0.644; out-of-sample LOO-Brier +0.087; permanent
@@ -94,15 +106,21 @@ nodes:
     gate, not terminal). Truth bracketed: EXP-0007 lower / EXP-0008 upper. Defensible reframe = error-class
     predicts recovery MODALITY not OCCURRENCE.'
   - real-trace failure census
+  - 'CLAIM-0009 recovery-MODALITY SUPPORTED on real traces where occurrence-prediction (CLAIM-0008) was
+    REFUTED: error-class->modality V=0.717, out-of-sample LOO-Brier -40.6%, LOSO V 0.70-0.78, perm-p=0.0002,
+    robust to all knobs that washed out occurrence. REDIRECTABLE-vs-TERMINAL is a property of the GATE
+    not the policy label (web_disabled 100% redirect vs perm_denied 0% redirect, same policy family).
+    GREEN needs: committee 6/6, cross-harness, a sampled TERMINAL class (under-sampled here), interventional.'
   red_zones: []
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T14:56:12Z'
+  last_updated: '2026-05-31T16:00:11Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
-    outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction'
+    outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
+    +EXP-0009/VERDICT-0018 (2026-05-31): recovery-modality supported; gate-property taxonomy'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
