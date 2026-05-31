@@ -72,14 +72,19 @@ supporting_evidence:
     \ + finite-size caveat. Stayed PURELY descriptive."
   data_path: experiments/2026-05-31/EXP-0038/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0045
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: committee_pending
-next_action: 'committee review (run_16): 3-harness over-dispersion claim. GREEN as
-  D&B measurement or YELLOW pending larger-n/CI-clean-B?'
+lifecycle_state: experiment_designing
+next_action: 6/6 YELLOW (VERDICT-0045). GREEN gated on 2 CPU discriminating ablations
+  (tool-stratified permutation null + retry-cascade collapse) + prior-art sweep. L3
+  dispatched. If both ablations survive -> burstiness earned -> GREEN; if either kills
+  -> reframe to non-stationary-rate.
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T22:39:57Z'
+last_updated: '2026-05-31T22:52:32Z'

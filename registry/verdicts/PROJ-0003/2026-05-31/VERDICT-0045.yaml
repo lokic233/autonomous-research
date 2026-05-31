@@ -1,0 +1,66 @@
+verdict_id: VERDICT-0045
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0037
+- EXP-0038
+experiment_paths:
+- experiments/2026-05-31/EXP-0037
+- experiments/2026-05-31/EXP-0038
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "6/6 YELLOW \u2014 core over-dispersion is REAL + 3-harness-replicated + permutation-null-survived\
+  \ + M4-survived, BUT the test battery cannot yet DISCRIMINATE true temporal-memory\
+  \ burstiness (Goh-Barabasi) from (a) within-session RATE-HETEROGENEITY (tool-type\
+  \ mixing / task-phase = trivial Cox mixture-Poisson) or (b) deterministic RETRY-CASCADE\
+  \ mechanics. The whole-session permutation null breaks BOTH genuine burstiness AND\
+  \ the mixture alternatives -> necessary but NOT sufficient"
+- novelty THIN (off-the-shelf statistic on a new substrate
+- "burstiness near-universal per Barabasi 2005) \u2014 substrate-specificity carries\
+  \ it ONLY if it survives the discriminating tests"
+- prior-art sweep INCOMPLETE (web unavailable in-review
+- 4 mandatory threads need cite+distinguish)
+required_evidence:
+- '1. [KILLER, load-bearing] TOOL-STRATIFIED permutation null: permute failure labels
+  ONLY among same-tool_name calls (or homogeneous task phases) within session. If
+  Z collapses -> rate-heterogeneity not temporal memory (unpublishable as ''burstiness'').
+  2. RETRY-CASCADE ablation: collapse immediate fail->retry-same-intent->fail to a
+  single root-event, recompute dispersion+runs'
+- 'if significance dies -> deterministic control-flow not stochastic arrival (CC needs
+  a call_id-analog dedup like Codex EXP-0033). 3. PRIOR-ART LIVE SWEEP: cite+distinguish
+  Goh-Barabasi 2008/Kim-Jo 2016 (B provenance), Barabasi 2005 (universal burstiness),
+  software/SRE failure-clustering (Oppenheimer-Patterson 2002, Schroeder-Gibson 2006),
+  LLM compounding/reasoning-error 2604.14528'
+- "verify in-repo arxiv neighbors exist. 4. FRAMING CONTINGENCY: if (1)/(2) kill it,\
+  \ retitle 'bursty'->'non-stationary failure rate' (reject practitioner IID assumption)\
+  \ \u2014 weaker but still D&B-publishable. If both survive, burstiness EARNED ->\
+  \ GREEN follows"
+map_delta_proposals:
+- 'MAP-0002: CLAIM-0012 L2-REPLICATED, YELLOW pending 2 discriminating ablations (tool-stratified
+  permutation + retry-collapse, both CPU/existing-data) + prior-art sweep. If both
+  survive -> GREEN'
+- if either kills the signal -> reframe as non-stationary-rate (lower-altitude D&B
+  claim). Core IID-rejection (runs+Stouffer+permutation+M4, 3-harness) is real + honestly
+  reported.
+baseline_requirements:
+- tool-stratified within-session permutation null (the killer)
+- retry-collapsed dispersion+runs
+- mixture-of-Poissons vs single-Poisson likelihood (optional strengthening)
+created_at: '2026-05-31T22:51:56Z'
