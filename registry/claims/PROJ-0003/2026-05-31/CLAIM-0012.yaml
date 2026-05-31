@@ -79,12 +79,11 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_designing
-next_action: 6/6 YELLOW (VERDICT-0045). GREEN gated on 2 CPU discriminating ablations
-  (tool-stratified permutation null + retry-cascade collapse) + prior-art sweep. L3
-  dispatched. If both ablations survive -> burstiness earned -> GREEN; if either kills
-  -> reframe to non-stationary-rate.
+lifecycle_state: experiment_running
+next_action: await EXP-0041 result, then ros exp complete --exp EXP-0041 --effect
+  ...
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0041
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T22:52:32Z'
+last_updated: '2026-05-31T22:54:20Z'
