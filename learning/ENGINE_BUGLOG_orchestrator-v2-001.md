@@ -167,3 +167,23 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
   defensive (duplicate-key-tolerant / fall back to {} on parse error instead of crashing the whole CLI).
 - Severity: HIGH — self-inflicted by the prescribed heartbeat+report cadence; corrupts agent liveness
   state and disables `ros report` until manually repaired.
+
+## BUG-11 (ENGINE GAP) — no `ros claim update`; Rule-1 claim edits require raw YAML writes
+- Rule 1 + orchestrator prompt: "ANY claim that advances is written by YOU via `ros seed new` or by
+  UPDATING the claim." But the CLI exposes only: seed{new}, verdict{write}, exp{register,complete,dispatch}.
+  There is NO `ros claim update` / `ros claim set-status` / claim-edit path.
+- So updating claim status/text/evidence/novelty_hypothesis (which the orchestrator MUST do constantly)
+  means hand-editing registry YAML — exactly the unguarded read-modify-write that caused BUG-10 corruption.
+- Consequence: the "engine owns the ledger" invariant is half-true: creation+verdict-append are engine ops,
+  but the bulk of claim mutation is manual + unvalidated + non-atomic. Need a `ros claim update` with atomic
+  write + schema validation. Severity: medium-high (forces unsafe manual edits of the core ledger).
+
+## BUG-11 (ENGINE GAP) — no `ros claim update`; Rule-1 claim edits require raw YAML writes
+- Rule 1 + orchestrator prompt: "ANY claim that advances is written by YOU via `ros seed new` or by
+  UPDATING the claim." But the CLI exposes only: seed{new}, verdict{write}, exp{register,complete,dispatch}.
+  There is NO `ros claim update` / `ros claim set-status` / claim-edit path.
+- So updating claim status/text/evidence/novelty_hypothesis (which the orchestrator MUST do constantly)
+  means hand-editing registry YAML — exactly the unguarded read-modify-write that caused BUG-10 corruption.
+- Consequence: the "engine owns the ledger" invariant is half-true: creation+verdict-append are engine ops,
+  but the bulk of claim mutation is manual + unvalidated + non-atomic. Need a `ros claim update` with atomic
+  write + schema validation. Severity: medium-high (forces unsafe manual edits of the core ledger).
