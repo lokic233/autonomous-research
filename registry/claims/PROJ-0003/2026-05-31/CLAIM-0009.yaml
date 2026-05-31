@@ -2,16 +2,13 @@ claim_id: CLAIM-0009
 project_id: PROJ-0003
 stage: exploration
 status: weakened
-claim: "Agent recovery MODALITY (same-tool-retry vs cross-tool-redirect) is characterized\
-  \ by GATE-TYPE + harness routing (REDIRECTABLE hard-block -> cross-tool redirect;\
-  \ GRANT-REQUIRED permission -> same-tool; TRANSIENT -> same-tool-dominant), a CONFIG/ROUTING\
-  \ fact of the harness \u2014 NOT a prediction from error-class. EXP-0012: error-class\
-  \ adds <=0.2% over a single REDIRECTABLE bit (lift over gate-type-only = -0.0043\
-  \ out-of-sample); error-class & gate-type are observationally INSEPARABLE on this\
-  \ single-harness corpus."
-why_it_matters: 'EXP-0008 refuted CLAIM-0008 (occurrence) but surfaced a sharper,
-  defensible signal: error-class predicts the MODALITY of recovery. This re-seeds
-  the surviving kernel as its own falsifiable claim.'
+claim: 'Agent recovery MODALITY (same-tool-retry vs cross-tool-redirect) is characterized by GATE-TYPE
+  + harness routing (REDIRECTABLE hard-block -> cross-tool redirect; GRANT-REQUIRED permission -> same-tool;
+  TRANSIENT -> same-tool-dominant), a CONFIG/ROUTING fact of the harness — NOT a prediction from error-class.
+  EXP-0012: error-class adds <=0.2% over a single REDIRECTABLE bit (lift over gate-type-only = -0.0043
+  out-of-sample); error-class & gate-type are observationally INSEPARABLE on this single-harness corpus.'
+why_it_matters: 'EXP-0008 refuted CLAIM-0008 (occurrence) but surfaced a sharper, defensible signal: error-class
+  predicts the MODALITY of recovery. This re-seeds the surviving kernel as its own falsifiable claim.'
 novelty_hypothesis: ''
 mandatory_baselines:
 - static deterministic error-class->Mode(modality) mapping
@@ -22,64 +19,70 @@ academic_map_nodes:
 - MAP-0002
 supporting_evidence:
 - exp_id: EXP-0009
-  summary: 'Recovery-MODALITY census (same corpus, CPU/stdlib, copied parse/classify
-    from EXP-0007/0008). Among 232 broad-recovered failures (of 364; rate 0.637 matches
-    EXP-0008), modality split SAME_TOOL_RETRY 115 / CROSS_TOOL_REDIRECT 117 (NULL
-    p0=0.504). T1: error-class STRONGLY predicts modality where it FAILED to predict
-    occurrence: Cramers V=0.717 (perm-p=0.0002), out-of-sample LOO-Brier null 0.250->0.149
-    = +0.102 (40.6% reduction). Robust to every knob that killed the occurrence claim:
-    B-priority tie-break V=0.616/+0.065; STRICT cross-tool-NAME-only V=0.869/+0.163
-    (69.7%); K=3/6/12 V=0.64-0.72; LOSO V min0.698/med0.716/max0.776. REDIRECTABLE-vs-TERMINAL
-    taxonomy HOLDS within policy family: policy.web_disabled redirect-share=1.000
-    (66/66, CI[0.945,1]) = clean REDIRECTABLE gate (WebFetch/WebSearch->external_web_search);
-    policy.perm_denied redirect-share=0.000 (CI[0,0.215]) = recovers ONLY same-tool
-    (gate must be opened). Transient (fs.notfound/cancelled/other) SAME-TOOL dominant
-    (redir 0.15-0.33). HONEST LIMITS: decisive contrast rests on 2 cells (web_disabled
-    n=109 + perm_denied n=30); web_disabled redirect=1.0 is partly definitional (hard
-    block=redirect-only) so the non-circular evidence is the CONTRAST with perm_denied
-    + within-transient spread; no cleanly-TERMINAL (0-recov,0-redir) class is sampled
-    at n>=10; single-harness (Claude Code). SUPPORTS CLAIM-0009 as a predictive characterization;
-    promotion to general law needs cross-harness + sampled terminal class + interventional.'
+  summary: 'Recovery-MODALITY census (same corpus, CPU/stdlib, copied parse/classify from EXP-0007/0008).
+    Among 232 broad-recovered failures (of 364; rate 0.637 matches EXP-0008), modality split SAME_TOOL_RETRY
+    115 / CROSS_TOOL_REDIRECT 117 (NULL p0=0.504). T1: error-class STRONGLY predicts modality where it
+    FAILED to predict occurrence: Cramers V=0.717 (perm-p=0.0002), out-of-sample LOO-Brier null 0.250->0.149
+    = +0.102 (40.6% reduction). Robust to every knob that killed the occurrence claim: B-priority tie-break
+    V=0.616/+0.065; STRICT cross-tool-NAME-only V=0.869/+0.163 (69.7%); K=3/6/12 V=0.64-0.72; LOSO V min0.698/med0.716/max0.776.
+    REDIRECTABLE-vs-TERMINAL taxonomy HOLDS within policy family: policy.web_disabled redirect-share=1.000
+    (66/66, CI[0.945,1]) = clean REDIRECTABLE gate (WebFetch/WebSearch->external_web_search); policy.perm_denied
+    redirect-share=0.000 (CI[0,0.215]) = recovers ONLY same-tool (gate must be opened). Transient (fs.notfound/cancelled/other)
+    SAME-TOOL dominant (redir 0.15-0.33). HONEST LIMITS: decisive contrast rests on 2 cells (web_disabled
+    n=109 + perm_denied n=30); web_disabled redirect=1.0 is partly definitional (hard block=redirect-only)
+    so the non-circular evidence is the CONTRAST with perm_denied + within-transient spread; no cleanly-TERMINAL
+    (0-recov,0-redir) class is sampled at n>=10; single-harness (Claude Code). SUPPORTS CLAIM-0009 as
+    a predictive characterization; promotion to general law needs cross-harness + sampled terminal class
+    + interventional.'
   data_path: experiments/2026-05-31/EXP-0009/
 negative_evidence:
 - exp_id: EXP-0012
-  summary: 'ABLATION+BASELINES (VERDICT-0020): web_disabled-ablated V 0.714->0.449
-    but out-of-sample LOO-Brier collapses +40.1%->+2.2% (negative once perm_denied
-    also removed). Leave-one-CLASS-out CV = -33% (predictor WORSE than null on unseen
-    classes; per-class rates memorized, not generalizable). Lift of error-class over
-    gate-type-only LOO-Brier = -0.0043 (NEGATIVE); single REDIRECTABLE bit recovers
-    39.4% vs full 17-class 40.1%. error-class->gate-type is a perfect function; within-REDIRECTABLE
-    finer-class V=0.000, within-TRANSIENT out-of-sample-null. CONFIRMS definitional-inflation
-    + predictor-misattribution. error-class & gate-type OBSERVATIONALLY INSEPARABLE
-    single-harness. Surviving claim = gate-type+routing characterization (config fact),
-    NOT error-class prediction.'
+  summary: 'ABLATION+BASELINES (VERDICT-0020): web_disabled-ablated V 0.714->0.449 but out-of-sample LOO-Brier
+    collapses +40.1%->+2.2% (negative once perm_denied also removed). Leave-one-CLASS-out CV = -33% (predictor
+    WORSE than null on unseen classes; per-class rates memorized, not generalizable). Lift of error-class
+    over gate-type-only LOO-Brier = -0.0043 (NEGATIVE); single REDIRECTABLE bit recovers 39.4% vs full
+    17-class 40.1%. error-class->gate-type is a perfect function; within-REDIRECTABLE finer-class V=0.000,
+    within-TRANSIENT out-of-sample-null. CONFIRMS definitional-inflation + predictor-misattribution. error-class
+    & gate-type OBSERVATIONALLY INSEPARABLE single-harness. Surviving claim = gate-type+routing characterization
+    (config fact), NOT error-class prediction.'
   data_path: experiments/2026-05-31/EXP-0012/
 - exp_id: EXP-0020
-  summary: 'TERMINAL-POLE census (copied EXP-0009 parse/classify). 78 sessions/3544
-    calls/373 failures; global broad-recovery 0.625 (matches EXP-0008/0009). RESULT:
-    terminal pole NOT demonstrable on this corpus. NO class at n>=10 is cleanly-/near-TERMINAL
-    (rec_rate<=0.10 & redir=0). Most terminal-leaning n>=10 class = policy.perm_denied
-    (term_rate 0.533) but recovers 47%/0 redirect = the already-demonstrated SAME-TOOL
-    pole, not a new terminal pole. Session-ending failure is rare: 6/373 last-call
-    (1.6%), 12/373 no-success-after (3.2%). DECISIVE supplementary: terminality is
-    window-dependent (term_rate 0.53->0.16 as K 3->24) and class-INDEPENDENT (K=6
-    class->terminal CramersV=0.238, perm_p=0.133 n.s.; no n>=10 class >=0.90 terminal
-    at any K) -> diffuse goal-abandonment, not a terminal error class. Converts VERDICT-0020/0021
-    ''under-sampled'' caveat into a demonstrated fact: trichotomy stays at TWO poles
-    (REDIRECTABLE+SAME-TOOL); terminal pole provably needs a different (crash/refusal-heavy)
-    corpus, not more CPU analysis of Claude Code traces.'
+  summary: 'TERMINAL-POLE census (copied EXP-0009 parse/classify). 78 sessions/3544 calls/373 failures;
+    global broad-recovery 0.625 (matches EXP-0008/0009). RESULT: terminal pole NOT demonstrable on this
+    corpus. NO class at n>=10 is cleanly-/near-TERMINAL (rec_rate<=0.10 & redir=0). Most terminal-leaning
+    n>=10 class = policy.perm_denied (term_rate 0.533) but recovers 47%/0 redirect = the already-demonstrated
+    SAME-TOOL pole, not a new terminal pole. Session-ending failure is rare: 6/373 last-call (1.6%), 12/373
+    no-success-after (3.2%). DECISIVE supplementary: terminality is window-dependent (term_rate 0.53->0.16
+    as K 3->24) and class-INDEPENDENT (K=6 class->terminal CramersV=0.238, perm_p=0.133 n.s.; no n>=10
+    class >=0.90 terminal at any K) -> diffuse goal-abandonment, not a terminal error class. Converts
+    VERDICT-0020/0021 ''under-sampled'' caveat into a demonstrated fact: trichotomy stays at TWO poles
+    (REDIRECTABLE+SAME-TOOL); terminal pole provably needs a different (crash/refusal-heavy) corpus, not
+    more CPU analysis of Claude Code traces.'
   data_path: experiments/2026-05-31/EXP-0020/
 - exp_id: EXP-0019
-  summary: 'REFUTE the routing-table thesis (weakens routing-table characterization;
-    rehabilitates adaptive-recovery at tool granularity). Per-class next-tool norm-entropy=0.738
-    ~ global 0.714 (entropy-collapse=-0.024, bootstrap95%CI[-0.052,+0.009], P(collapse>0)=0.073);
-    modal-route share 0.423; routing-only recovery predictor WORSE than null (LOO-Brier
-    -8.5%); only 44% of recovered failures used class modal route. Even web_disabled:
-    norm-entropy 0.738, modal WebSearch 40%, recovers 45% -> redirect target chosen
-    ADAPTIVELY not routed. Harness has NO low-entropy per-class fallback table. gate-TYPE
-    config fact (EXP-0012) is coarse-layer only; intra-gate tool selection is adaptive.
-    78 sess/3544 calls/373 failures. CPU-only.'
+  summary: 'REFUTE the routing-table thesis (weakens routing-table characterization; rehabilitates adaptive-recovery
+    at tool granularity). Per-class next-tool norm-entropy=0.738 ~ global 0.714 (entropy-collapse=-0.024,
+    bootstrap95%CI[-0.052,+0.009], P(collapse>0)=0.073); modal-route share 0.423; routing-only recovery
+    predictor WORSE than null (LOO-Brier -8.5%); only 44% of recovered failures used class modal route.
+    Even web_disabled: norm-entropy 0.738, modal WebSearch 40%, recovers 45% -> redirect target chosen
+    ADAPTIVELY not routed. Harness has NO low-entropy per-class fallback table. gate-TYPE config fact
+    (EXP-0012) is coarse-layer only; intra-gate tool selection is adaptive. 78 sess/3544 calls/373 failures.
+    CPU-only.'
   data_path: experiments/2026-05-31/EXP-0019/
+- exp_id: EXP-XHARNESS-CODEX
+  effect: support-confound
+  summary: 'CROSS-HARNESS check (researcher-0003-laneD): found a 2nd on-node corpus — OpenAI Codex CLI
+    ~/.codex/sessions (89 sess/1737 calls/93 failures). Codex has the STRUCTURAL TWIN of Claude Code REDIRECTABLE
+    web gate (knowledge_load URL-fetch input-filter blocked 142/142; web_search available 429/429) BUT
+    the MODALITY RULE does NOT replicate: Codex does 0/142 IN-THREAD redirects (vs Claude Code 66/66=100%)
+    — it uses web_search pre-emptively in parallel + abandons the blocked call. => IDENTICAL error ("external
+    webpage access not permitted") yields DIFFERENT modality across harnesses = CROSS-HARNESS CONFIRMATION
+    that recovery modality is the HARNESS ROUTING LAYER, not error-class (EXP-0012 conclusion now shown
+    ACROSS harnesses). Promotes harness-routing-as-confound from single-harness-inseparable -> cross-harness-CONFIRMED
+    routing-is-harness-specific. (Gemini corpus 62 sess available for a 3rd-harness check.) NOTE: the
+    GREEN-positive "gate->modality REPLICATES" was NOT obtained — the rule is harness-specific; interventional
+    arm still needs off-node harness control.'
+  data_path: prior_art/PROJ-0003/crossharness_scripts/
 verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-05-31'
@@ -100,12 +103,11 @@ revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
 lifecycle_state: verdict_recorded
-next_action: 'Two CPU lanes done: terminal pole un-demonstrable on this corpus (EXP-0020,
-  discharged-negative); routing-table thesis REFUTED but surfaced a cleaner TWO-LAYER
-  thesis (coarse gate-type deterministic / fine tool-selection adaptive, EXP-0019).
-  Consider seeding two-layer as new claim. Remaining gates: cross-harness + interventional
-  (need new corpus/harness control).'
+next_action: 'Two CPU lanes done: terminal pole un-demonstrable on this corpus (EXP-0020, discharged-negative);
+  routing-table thesis REFUTED but surfaced a cleaner TWO-LAYER thesis (coarse gate-type deterministic
+  / fine tool-selection adaptive, EXP-0019). Consider seeding two-layer as new claim. Remaining gates:
+  cross-harness + interventional (need new corpus/harness control).'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T18:53:01Z'
+last_updated: '2026-05-31T19:59:28Z'

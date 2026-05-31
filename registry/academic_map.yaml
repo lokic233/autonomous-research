@@ -213,6 +213,9 @@ nodes:
     (config fact) but fine intra-gate recovery-tool SELECTION is high-entropy/adaptive (a decision, not
     a table lookup). Cleaner than the retired error-class or flat routing-table framings. GREEN path =
     cross-harness + interventional (force a route, check recovery degrades).'
+  - 'cross-harness replication PARTIALLY DISCHARGED on-node (Codex 89sess/93fail done: modality rule harness-specific;
+    Gemini 62sess available next). Clean ''gate->modality REPLICATES'' NOT met (it''s harness-specific).
+    Interventional arm still needs off-node harness control.'
   red_zones:
   - 'harness-routing-as-confound (CLAIM-0009 CONFIRMED (observationally inseparable, EXP-0012: error-class
     lift over gate-type-only = -0.0043; LOCO -33%)): recovery modality may be determined by the harness
@@ -221,12 +224,15 @@ nodes:
     (EXP-0019): the confound is at the COARSE gate-type layer ONLY; the FINE intra-gate tool-selection
     layer is ADAPTIVE/high-entropy (per-class next-tool norm-entropy 0.738 ~= global 0.714; collapse CI
     [-0.052,+0.009] P=0.073; routing-only recovery predictor -8.5% vs null; modal route <44%). An adaptive-recovery
-    claim is NOT dead at tool granularity.'
+    claim is NOT dead at tool granularity. | CROSS-HARNESS CONFIRMED (Codex, researcher-0003-laneD): the
+    redirectable-gate TAXONOMY replicates on Codex (URL input-filter block + web_search alt) but the MODALITY
+    RULE does NOT (Codex 0/142 in-thread redirects vs Claude Code 66/66) -> recovery modality is HARNESS-SPECIFIC
+    routing, NOT error-class. Promotes confound from single-harness-inseparable to CROSS-HARNESS-CONFIRMED.'
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T19:54:46Z'
+  last_updated: '2026-05-31T19:59:28Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
@@ -238,7 +244,8 @@ nodes:
     thesis refuted; two-layer (coarse-deterministic/fine-adaptive) candidate surfaced | +EXP-0022/VERDICT-0030
     (2026-05-31): two-layer holds-in-shape but both layers softer (coarse web_disabled-carried, fine context-predictable
     not free-adaptive) | +EXP-0029 (2026-05-31): CLAIM-0010 reframe defensible-deflated; PROJ-0003 lineage
-    = 1 narrow surviving thesis + methodology; wind down to methods/negative-note if cross-harness fails'
+    = 1 narrow surviving thesis + methodology; wind down to methods/negative-note if cross-harness fails
+    | +cross-harness Codex (2026-05-31): modality is harness-specific routing (confirmed across 2 harnesses)'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
