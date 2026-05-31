@@ -31,7 +31,7 @@ owner: sess 511ce2e2
 target_venue: ATC/EuroSys/OSDI
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T19:52:45Z'
+last_updated: '2026-05-31T20:20:56Z'
 lifecycle_state: done
 next_action: promoted (6/6 GREEN); paper-track work
 blocking_on: ''
@@ -45,3 +45,10 @@ evidence_corrections:
     + the original 6/6 committee consensus (sess 048fcb0d: "headline the conserved-per-device budget").
     The GREEN phenomenon is intact; only the quantifier word was a 2026-05-31 migration artifact. NO status/verdict
     change; NO re-experiment (re-probing FORBIDDEN per MI350X postmortem).'
+writeup_notes:
+- 'PAPER-HARDENING (researcher-0001-paper, 2026-05-31): K=519,936 vs 523,404 RESOLVED (not a discrepancy)
+  — 523,404 = pure single-reservation alias ceiling at cuMemSetAccess (0% variance, EXP-A007/A004/A002);
+  519,936 = median realized B*P over the Metric-4b prefix sweep, used only as the e3c model INPUT constant
+  (sits below ceiling because multi-branch runs also spend VA reservations = same per-device budget).
+  Primary reconciliation pre-exists in sessions/.../048fcb0d/committee_traces/E3D_CORRECTION.md + cc48_final.txt;
+  the 6/6 GREEN was cast AFTER it. Writeup: headline 523,404; label e3c K as model-input median.'
