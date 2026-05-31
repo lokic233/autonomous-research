@@ -1,0 +1,20 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 20:15:00.495046 3986609 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT1-DEEP:
+  Does E3a discharge the root-cause concern (what K is)? (YES/NO + 1 line):
+  YES — the three-regime design (R1=1 reserve/523,404 maps, R2=299,949 reserves+maps, control=523,404) cleanly isolates K as the per-page access-descriptor table size charged at `cuMemSetAccess`, with 0.000% variance proving a deterministic hard constant.
+
+  Does E3b (per-device, super-linear multi-context degradation) add a real systems contribution? (YES/NO):
+  YES — 2 contexts yielding 223,215 total (42.6% of single-context 523,404, not 50%) reveals super-linear overhead that directly impacts MIG/multi-tenant capacity planning in ways not documented elsewhere.
+
+  Does E3c discharge the 'does it bite / relevance' concern? (YES/NO + 1 line):
+  YES — at 128k context the mapping ceiling caps branches at 64 vs. 6 under full-clone HBM, meaning the wall is the BINDING constraint precisely in CoW's intended operating regime where HBM is no longer the bottleneck.
+
+  Remaining blocker to GREEN (be specific, or NONE):
+  NONE — E3a's 0.000%-variance three-regime isolation satisfies the NVIDIA constancy rigor concern (Agent-D), and E3c's concrete branch counts at realistic context lengths satisfy the relevance bar concern (CC4.8).
+
+  VERDICT: GREEN
+
+NT1=GREEN

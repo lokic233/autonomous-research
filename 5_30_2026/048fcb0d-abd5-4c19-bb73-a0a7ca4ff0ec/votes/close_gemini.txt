@@ -1,0 +1,7 @@
+NT1-REVOTE:
+  Does E2 strengthen or weaken NT1? (1-2 lines): Strengthens. Replacing a false "universal" assumption with a measured >17x vendor divergence (>9,000,000 vs ~520K mappings) elevates the finding from a driver quirk to a critical architectural critique of the dominant hardware.
+  Does the corrected vendor-divergence framing clear the 'just a bug report' objection? (YES/NO): YES
+  Remaining gap before submission-grade (if any): Root-cause kernel telemetry (slab/vmalloc footprint) isolating exactly why NVIDIA's proprietary driver chokes at ~520K, plus an official NVIDIA response (WAI policy vs bug).
+  Anti-FlashInfer test (YES/NO): YES
+  VERDICT: GREEN
+NT1=GREEN

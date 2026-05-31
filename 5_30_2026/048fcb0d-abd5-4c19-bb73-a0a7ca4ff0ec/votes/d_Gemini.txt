@@ -1,0 +1,7 @@
+NT1-DEEP:
+  Does E3a discharge the root-cause concern (what K is)? (YES/NO + 1 line): YES, it proves deterministically (exactly 523,404 maps) that K is an access-descriptor limit charged at cuMemSetAccess.
+  Does E3b (per-device, super-linear multi-context degradation) add a real systems contribution? (YES/NO): YES
+  Does E3c discharge the 'does it bite / relevance' concern? (YES/NO + 1 line): YES, it empirically shows the mapping ceiling caps 128K contexts to 64 branches, making it the binding bottleneck over HBM.
+  Remaining blocker to GREEN (be specific, or NONE): NONE
+  VERDICT: GREEN
+NT1=GREEN

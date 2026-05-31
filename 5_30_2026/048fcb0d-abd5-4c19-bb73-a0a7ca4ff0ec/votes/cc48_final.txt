@@ -1,0 +1,25 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 20:22:56.054026 465212 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+meta-ml-expert v2.4.1
+
+Working through the traces against my four holds, with the math checked.
+
+**(1) reconciles.** Two methodologies, not two truths: 523,404 is the clean single-reservation ceiling (R1/control/E3d-n1 all land exactly there); 519,936 was a median of B×P across prefix sizes (522,752@1GiB → 516,096@12GiB) that folds in VA-reservation spend. The spread brackets the ceiling from below as expected. Coherent.
+
+**(2) reconciles and is actually a stronger result.** Checked the sums: n=2 → 260281+263003=523284; n=3 → 171633+174206+177325=523164. Totals 523404/523284/523164 hold to ±0.05% with even ~K/n splits. The old "super-linear (223,215)" claim is now retracted as a per-worker VA-reservation artifact — that's a correction, not a refinement, and the headline must be the conserved-per-device finding with all super-linear language purged. MIG implication (~K/N per tenant) survives.
+
+**(4) reconciles and cross-validates the ceiling.** 299,949 maps + 299,950 reserves: reserves consume 523,404−299,949 = 223,455 over 299,950 = 0.745/reserve, so pair = 1.745 vs 1.0 bare. It ties back to the same 523,404 pool via a *different* access pattern — independent corroboration, not just an accounting footnote.
+
+So three independent paths (clean alias ceiling, n=1–3 conservation, R2 weight) converge on one per-device budget. That convergence is the characterization result, and it's fully empirical.
+
+**(3)** stays a model (E3c, 64 branches @128k under CoW). The core paper claim — the measured ceiling + conserved per-device structure — does not depend on it. The 64-branch agent-relevance is downstream application/motivation; presented as a model with the stated caveat, it strengthens rather than gates. It WOULD be gating for a systems paper claiming "binding constraint for real agent workloads" — that's the scope line the paper must not cross.
+
+NT1-CC48:
+  Blockers 1,2,4 resolved by the new traces? (per-item YES/NO): 1=YES, 2=YES, 4=YES
+  Is remaining item (3 empirical workload) GREEN-gating for a CHARACTERIZATION paper? (YES/NO + 1 line): NO — core claim is the measured 523,404 ceiling + conserved per-device structure (3 converging measurement paths); the 64-branch relevance is a stated model, strengthening-not-gating, provided the paper scopes claims to the measurement and labels E3c as model.
+  VERDICT: GREEN
+End: GREEN is contingent on the paper (a) headlining the conserved-budget finding and fully retracting "super-linear," and (b) presenting 64-branch agent relevance as model, not measurement.
+
+NT1=GREEN

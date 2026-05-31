@@ -1,0 +1,24 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 21:53:12.722252 1151864 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+THESIS NT2:
+
+**Is the fixed-boundary (not hash-chaining) root-cause convincing given the v1 null + v2 result? (YES/NO + 1 line):**
+YES — v1 null at 1.0x across all 5 injection points is a clean falsification of hash-chaining; v2 CDC fixing it by changing only boundary selection confirms the root cause is block alignment, not hash topology.
+
+**Does CDC's position-independent ~2% recompute (5-45x) constitute a real contribution? (YES/NO):**
+YES — 2.0-2.4% recompute independent of injection position vs. linear degradation (10.7%-90.1%) with fixed blocks; the 45.4x at early injection is not a cherry-pick, it's the geometric consequence of the position-independence property.
+
+**Distinct from Continuum / vLLM APC? (YES/NO + 1 line):**
+YES — Continuum (2511.02230) reschedules prefill to avoid mid-sequence disruption (scheduling layer); NT2 restructures the cache block boundaries themselves so injection doesn't propagate misalignment (data-structure layer). Orthogonal fixes, composable.
+
+**Is the recompute-COUNT model (not yet wall-clock TTFT) sufficient for a characterization+repair paper, or is E2E TTFT GREEN-gating? (state which):**
+Sufficient for characterization+repair. Recompute count is the direct causal variable — each missed block is a fixed-cost recompute unit, so the mapping to TTFT is linear and mechanistic, not correlational. The EDMM live-vLLM TTFT measurements (1.38x→5.41x superlinear) already establish the wall-clock problem; the recompute model explains WHY and shows CDC eliminates it. E2E TTFT integration is the engineering validation step, not a thesis-level gap. A paper structured as "characterize root cause + demonstrate repair mechanism + scope remaining E2E work" is complete.
+
+**Remaining blocker to GREEN (be specific, or NONE):**
+NONE. The evidence chain is closed: EDMM TTFT demonstrates the problem in production, v1 null isolates the mechanism, v2 CDC demonstrates the repair with vLLM's real hash function. The 30-day E2E integration is engineering work, not a thesis gap.
+
+**VERDICT: GREEN**
+
+NT2=GREEN

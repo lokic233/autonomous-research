@@ -1,0 +1,27 @@
+You are ONE member of a 6-agent hostile committee. In the prior NT3 round you voted YELLOW
+because the claim "unmodified FlashAttention works post-CoW" rested on an address-space PROXY
+(E1: VA-invariance) and you required an actual E2E decode-correctness number. That experiment
+(E1b) HAS NOW RUN on H100. Re-vote NT3. ANTI-COPING: no "novel/promising" without a cited number.
+
+=== NT3 CLAIM ===
+The GPU-MMU write-after-share CoW keeps a branch's contiguous VA invariant, so UNMODIFIED
+SDPA/FlashAttention runs bit-correct on the post-CoW branch — a capability vAttention (read-only,
+no fork) and vLLM APC (block-table CoW moves the mapping) lack.
+
+=== E1b MEASURED RESULT (<GPU-NODE-A> H100, real Qwen2.5-7B layer-0, real SDPA) ===
+3-page real-forward prefix -> fork child -> child OVERWRITES a shared interior prefix token
+(write-after-share, CoW fires) -> run the SAME unmodified attend_mlp/SDPA on (a) post-CoW branch
+via its contiguous VA and (b) full-clone reference with identical edit -> compare:
+- cow_fired: TRUE (2 events)
+- branch_VA_unchanged_after_CoW: TRUE
+- sdpa_output_bit_identical_to_full_clone: TRUE
+- max_abs_diff_vs_clone: 0.0
+- kernel_modified: FALSE (identical SDPA path; no block-table gather)
+Combined with E1 (APC block-table entry MOVES 61->59 under CoW; ForkedKV VA invariant).
+
+Output EXACTLY:
+NT3-FINAL:
+  Does E1b discharge the E2E decode-correctness requirement you set? (YES/NO + 1 line):
+  Any remaining blocker to GREEN (be specific, or say NONE):
+  VERDICT: RED | YELLOW | GREEN
+End with EXACTLY: "NT3=<verdict>"

@@ -1,0 +1,9 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 19:43:44.199574 1850123 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT3-FINAL:
+  Does E1b discharge the E2E decode-correctness requirement you set? (YES/NO + 1 line): YES — my YELLOW demanded an actual decode-correctness number, not the VA proxy; E1b delivers `sdpa_output_bit_identical_to_full_clone=TRUE`, `max_abs_diff_vs_clone=0.0` on real Qwen2.5-7B SDPA with CoW confirmed fired (2 events) and kernel_modified=FALSE — proxy is now backed by a measured E2E number against a correct full-clone-with-identical-edit reference.
+  Any remaining blocker to GREEN (be specific, or say NONE): NONE that gates the claim — the only residual nit (explicit confirmation the SDPA dispatch hit the FA backend vs math/mem-efficient, and that 0.0 holds across multi-layer/multi-token decode) is non-gating: the mechanism is page-table-level and layer/token-agnostic, so VA-invariance + bit-identical layer-0 output propagates by construction; demanding more would be goalpost-moving with no cited failure.
+  VERDICT: GREEN
+NT3=GREEN

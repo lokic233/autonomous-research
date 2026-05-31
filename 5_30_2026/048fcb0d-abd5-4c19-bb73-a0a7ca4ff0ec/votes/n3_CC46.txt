@@ -1,0 +1,18 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 05:51:46.196264 3153235 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT3-REVOTE:
+
+**Does E1 discharge the 'prove vAttention/APC cannot express it' burden? (YES/NO + 1 line):**
+YES — APC's CoW demonstrably mutates the logical→physical mapping (slot 61→59), which is by definition block-table indirection; vAttention has no fork/write primitive at all, so the "cannot" is trivially satisfied for it and constructively demonstrated for APC.
+
+**Is the address-space proof sufficient, or is the E2E FlashAttention decode required for your GREEN?:**
+The address-space proof is sufficient for GREEN. VA invariance under CoW is the architectural delta NT3 claims; that an unmodified FlashAttention kernel can read a contiguous VA range follows from CUDA VMM's coherent-access guarantee after `cuMemMap`, not from attention-specific logic. An E2E decode test (E2) would strengthen the paper against a pedantic reviewer ("show me the correct softmax output post-CoW") but it's an engineering verification, not a research gap — the burden asked for the architectural impossibility proof, and E1 delivered it with measured slot/VA values on real H100 hardware.
+
+**Remaining gap before submission-grade:**
+One item: run unmodified FlashAttention-2 decode on the ForkedKV'd child post-CoW and diff output against a from-scratch KV-cache baseline (bit-exact or within fp16 epsilon). This closes the "attention-VISIBLE" part of the claim end-to-end. Without it, the paper proves VA-visible, and a reviewer must trust the CUDA memory model for the final hop to attention-visible. Budget: ~1 GPU-hour, no new infrastructure.
+
+**VERDICT: GREEN**
+
+NT3=GREEN

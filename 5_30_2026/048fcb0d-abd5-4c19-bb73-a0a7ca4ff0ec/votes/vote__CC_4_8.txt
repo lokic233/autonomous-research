@@ -1,0 +1,29 @@
+THESIS NT1:
+  Strongest reject (cite prior art / missing baseline): All cited points (1021/339/169/84) are single-vendor NVIDIA. The "surviving delta" is explicitly cross-vendor, yet MI350X/ROCm is unmeasured — so the *novel* part is currently unfit. Secondary risk: K≈520K may be a recoverable driver constant (descriptor table size), making "no paper names K" thin novelty rather than a discovered law. No baseline yet rules out "K is just published-but-ignored."
+  Strongest accept (cite a measured number above): B×P holds to ~1% across a 12× range — 1021×512p, 339×1536p, 169×3072p, 84×6144p all land at ~516K–523K. That is a genuinely clean conservation law, and Lab 1 (VMA=392 at OOM vs sysctl ceiling 67M) is a sharp forensic proof the limit is GPU-side, not the Linux mmap ceiling. Real, reproducible, predictive.
+  Is it genuinely distinct from the 6 dead theses? YES — it's a *limit* law, the inverse of the killed "14x capacity" gain claim, and it's not the killed EDMM-as-VMM (that was a mechanism claim; this is a measured ceiling with call-site attribution).
+  Anti-FlashInfer test (matters if FlashInfer infinitely fast?): YES — mapping-table exhaustion is an allocator/memory resource, fully orthogonal to kernel speed. Infinitely fast attention does not buy you one more descriptor.
+  30-day buildable to submission-grade?: YES — sweep on 2 drivers + MI350X and fit B×P=K. Either outcome (law generalizes / law is NVIDIA-specific) is publishable. Buildable and low-risk.
+  VERDICT: GREEN
+
+THESIS NT2:
+  Strongest reject (cite prior art / missing baseline): The "law" is close to a tautology — a prefix-cache miss forces recompute, and attention is O(n²), so a superlinear TTFT curve (1.38x@4K→5.41x@32K) is the *expected* consequence, not a discovered structure. Continuum (2511.02230) already operates in the tool-pause space. Worse, the repair (segmented/position-independent hashing) is unbuilt and must beat existing block-hash APC (vLLM) and RadixAttention (SGLang), which already approximate sub-prefix reuse — no baseline yet shows segmented-hash > those.
+  Strongest accept (cite a measured number above): The superlinear penalty is measured cross-framework (vLLM *and* SGLang, P1.3) *and* cross-vendor (2.06x MI350X), with layout sensitivity 1.01x/4.57x/7.93x (P1.1). That triple replication is more than a one-off artifact.
+  Is it genuinely distinct from the 6 dead theses? YES — not the killed kernel-speedup claim; it's cache-invalidation characterization + a hash-structure repair.
+  Anti-FlashInfer test (matters if FlashInfer infinitely fast?): NO — the entire penalty is recompute cost. If attention compute is free, the TTFT penalty → 0 and the repair's benefit → 0. The thesis lives or dies on compute being expensive, which is exactly what fast kernels attack. This is its central weakness.
+  30-day buildable to submission-grade?: YES (mechanically) — implement segmented hash, measure penalty collapse. But "submission-grade" is at risk if the collapse doesn't clearly beat APC/Radix.
+  VERDICT: YELLOW (weakest of the three; not DOA only because the repair — cache *hits* instead of recompute — is a real systems contribution Continuum doesn't make)
+
+THESIS NT3:
+  Strongest reject (cite prior art / missing baseline): vLLM APC already does block-table CoW that also copies exactly one block on write — so Metric 5c ("1 page copied, refcount 4→3") is not self-evidently superior to existing block-granularity CoW. The delta ("at the MMU, not block-table indirection") is asserted, not proven; their own E1 burden (show vAttention *cannot* express this) is unmet. It also sits adjacent to two killed theses (OS-CoW, EDMM-as-VMM) and must not re-skin them.
+  Strongest accept (cite a measured number above): P0.2 is the real wedge — attention output moves 3,381→50.8M on a cuMemMap swap *with the tensor pointer fixed*. Pointer-stable, attention-visible state mutation at ~0% attention overhead (Metric 3), with byte-identical siblings verified (Metric 5c). That is a precise, verifiable primitive, not an aspiration.
+  Is it genuinely distinct from the 6 dead theses? YES, *if* framed as the attention-visible substitution primitive + downstream uses (compression-by-remap, forgetting-by-swap) — the pointer-stable mutation result (P0.2) was not in the dead theses. NO if framed as "we have VMM CoW" (that's killed territory). Framing is load-bearing.
+  Anti-FlashInfer test (matters if FlashInfer infinitely fast?): YES — this is about *what* attention reads (memory/MMU state), not how fast it reads. Fork, write-after-share, and forgetting are capabilities faster kernels do not provide.
+  30-day buildable to submission-grade?: YES — primitive already demonstrated; ForkedKV-vs-vAttention on branch-and-edit plus 2 bit-exact downstream demos is feasible. Risk concentrated entirely in the E1 distinctness argument, not in the engineering.
+  VERDICT: YELLOW (strongest mechanism and anti-FlashInfer-robust, but GREEN is blocked until E1 proves it beats block-table CoW)
+
+VOTES: NT1=GREEN NT2=YELLOW NT3=YELLOW
+
+apiKeyHelper failed: exited 1: W0530 03:21:31.997733 1938344 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created

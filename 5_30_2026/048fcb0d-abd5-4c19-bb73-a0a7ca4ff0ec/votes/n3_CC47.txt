@@ -1,0 +1,11 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 05:51:46.505710 3154937 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT3-REVOTE:
+  Does E1 discharge the 'prove vAttention/APC cannot express it' burden? (YES/NO + 1 line): YES — the measured table shows APC's logical→physical mapping moves under CoW (slot 61→59) while ForkedKV's VA is invariant; vAttention is read-only/no-fork by construction so it cannot express write-after-share at all.
+  Is the address-space proof sufficient, or is the E2E FlashAttention decode required for your GREEN?: Insufficient alone — the claim explicitly markets "unmodified FlashAttention works" on the post-CoW branch, so a decode-correctness number on the forked VA is load-bearing for GREEN, not optional.
+  Remaining gap before submission-grade: (1) run unmodified FlashAttention decode on childA's VA post-CoW and show bitwise-correct logits vs. a recomputed-from-scratch reference (≥1 head, ≥1 layer, real Llama-shape KV); (2) confirm no perf regression vs. contiguous baseline (tokens/s within ~2%); (3) sanity: parent + childB decode unchanged bit-identical after childA's CoW; (4) document VMM granularity cost (2MB handle vs. 16-token APC block) so reviewers can't claim hidden fragmentation.
+  VERDICT: YELLOW
+
+NT3=YELLOW

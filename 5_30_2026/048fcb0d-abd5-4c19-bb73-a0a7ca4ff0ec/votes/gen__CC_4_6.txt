@@ -1,0 +1,66 @@
+I'll work through this carefully against the surviving assets.
+
+---
+
+**NEW THESIS 1:**
+
+**One-sentence thesis:** The CUDA VMM driver imposes a hard mapping ceiling at K≈520K total (branch × page) mappings via cuMemSetAccess, invariant to OS VMA limits, creating a previously undocumented scaling wall for all VMM-based GPU memory management including vAttention.
+
+**Built on which surviving asset:** ForkedKV Metric 4b + Lab 1 — B*P invariant within 1%, ceiling pinned to cuMemSetAccess, confirmed independent of vm.max_map_count.
+
+**Contribution type:** Characterization.
+
+**Closest prior work + surviving delta:** vAttention (Prabhu et al., SOSP '24) uses identical cuMemMap/cuMemSetAccess primitives but never characterizes the mapping ceiling or its scaling law. Their evaluation stops at batch sizes where the ceiling is not hit. Our measured B*P invariant means the wall cannot be escaped by changing page granularity — larger pages reduce P but proportionally reduce branching capacity B. This is a fundamental constraint on every VMM-based KV-cache scheme proposed or future.
+
+**Highest-EV 30-day experiment:** (1) Sweep B×P across page sizes {64KB, 2MB, 512MB} on H100 and MI350X to confirm invariant cross-vendor and cross-granularity. (2) Measure cuMemSetAccess latency vs mapping count to determine whether the ceiling is hard-fail or soft-degradation. (3) Profile driver-internal state (mapping table size, lock contention from Lab 2's ncu data) to build an analytical model of the ceiling. (4) Quantify the practical consequence: at what real serving batch size does vAttention hit this wall, and what is the failure mode (OOM? latency cliff?).
+
+**Why it is NOT one of the 6 dead theses:** The dead thesis was "14x capacity win" — a performance *claim*. This thesis is a driver *characterization* that constrains all VMM approaches equally, including ForkedKV itself. It does not claim ForkedKV is better; it documents a limit that the community doesn't know exists.
+
+**Self-verdict: YELLOW** — The B*P invariant and driver-internal attribution are clean measured results, but a characterization-only paper needs to demonstrate the ceiling matters at production scale (concrete batch size where vAttention OOMs) to clear the bar. Achievable in 30 days but requires careful framing to avoid "just a microbenchmark" rejection.
+
+---
+
+**NEW THESIS 2:**
+
+**One-sentence thesis:** Mid-sequence tool-result injection in agentic LLM serving breaks the sequential hash chain of prefix caching, causing a measured 8.21× TTFT penalty on vLLM that scales superlinearly with context length (1.38× at 4K tokens → 5.41× at 32K tokens), confirmed cross-vendor on MI350X (2.06×).
+
+**Built on which surviving asset:** EDMM measured 8.21× TTFT penalty in live vLLM; superlinear scaling curve 1.38×→5.41×; cross-vendor replication on MI350X at 2.06×.
+
+**Contribution type:** Characterization + mechanism.
+
+**Closest prior work + surviving delta:** vLLM's prefix caching (Kwon et al., SOSP '23) and SGLang's RadixAttention (Zheng et al., 2024) both assume token streams grow monotonically — every new request extends a shared prefix. Neither evaluates non-monotonic streams where tool-call results are injected mid-sequence. Our measurements show the hash chain is not merely broken at the injection point; the penalty grows *superlinearly* with prefix length because recomputation cost is O(prefix) while the cache miss cascades through all downstream blocks. The cross-vendor result (MI350X) confirms this is algorithmic, not hardware-specific.
+
+**Highest-EV 30-day experiment:** (1) Full factorial: vary injection position (10%, 25%, 50%, 75% of prefix), prefix length (1K–64K), number of sequential tool calls (1–8), across vLLM and SGLang on H100 + MI350X. (2) Instrument hash-chain miss cascade to confirm superlinear mechanism (count recomputed blocks vs injection depth). (3) Implement and measure a subsequence-granular hashing fix: hash blocks independently with positional salt so injection only invalidates the injected span + suffix, not the prefix. (4) Measure fix overhead (hashing cost, memory for finer-grained cache index) to show it doesn't regress the non-agentic baseline.
+
+**Why it is NOT one of the 6 dead theses:** The dead thesis "EDMM as a novel VMM mechanism" was about claiming cuMemMap itself was new — it isn't. This thesis makes no VMM claim. It characterizes a *serving-system algorithmic weakness* (hash-chain prefix caching) exposed by a *workload property* (non-monotonic token streams from tool use). The VMM experiments were merely the means of measurement.
+
+**Self-verdict: GREEN** — Three independent measured numbers (8.21×, superlinear curve, cross-vendor), clear mechanism (hash-chain cascade), obvious practical relevance (every agentic serving deployment hits this), and the fix experiment is scoped to 30 days. The main risk is that vLLM/SGLang fix it before submission, which would actually validate the characterization.
+
+---
+
+**NEW THESIS 3:**
+
+**One-sentence thesis:** GPU-MMU-backed write-after-share copy-on-write provides a zero-overhead branching primitive for KV caches — exactly one physical page is copied per shared-page overwrite with bit-identical sibling isolation and 0% attention compute overhead — enabling a hardware-enforced fork/join model that software page tables (vAttention, PagedAttention) cannot replicate without per-token indirection or full-block copies.
+
+**Built on which surviving asset:** ForkedKV Metric 5c (exactly 1 page copied on shared-page overwrite, siblings bit-identical, all assertions pass under stress) + Metric 3 (0% attention overhead from contiguous-VA layout) + EDMM GPU MMU attention visibility proof (cuMemMap page swap changes attention output, pointer stable).
+
+**Contribution type:** Primitive.
+
+**Closest prior work + surviving delta:** vAttention (SOSP '24) uses VMM for demand-paged KV but has no write-after-share mechanism — forking a sequence requires copying all KV blocks. Sequoia (Chen et al., 2024) and SpecInfer (Miao et al., 2024) implement tree-based speculative decoding with software-managed KV copies. Our primitive forks via VA aliasing (zero bytes copied at fork time, 0% attention overhead from contiguous VA), then copies exactly the one 64KB page that diverges on first write. The isolation guarantee is hardware-enforced (MMU-level, not software invariant), proven by the attention visibility experiment: swapping a physical page via cuMemMap changes attention output while the virtual pointer is stable, confirming the GPU compute pipeline reads through the MMU translation.
+
+**Highest-EV 30-day experiment:** (1) Implement CoW-backed speculative decoding on Qwen2.5-7B: fork N=8 draft branches from verified prefix, decode speculatively, measure pages-actually-copied vs pages-that-would-be-copied under full-copy. Target: >90% copy avoidance since most speculative branches are discarded. (2) Measure wall-clock latency of accept/reject cycle vs software-copy baseline. (3) Stress test isolation: concurrent writes to 2+ branches sharing a page, assert bit-identical unmodified siblings under nondeterministic scheduling. (4) Characterize the copy-avoidance ratio as a function of speculation depth and acceptance rate using published spec-decode acceptance curves (Leviathan et al., 2023).
+
+**Why it is NOT one of the 6 dead theses:** "OS-style page-fault CoW" was dead because GPUs lack hardware page faults — correct, and this thesis does not claim they exist. This is *explicit* CoW: the runtime calls cuMemMap to remap on detected write, not a fault handler. "14× capacity win" was dead because software APC achieves higher capacity — correct, and this thesis makes no capacity claim. The claim is about the *copy-avoidance primitive* for branching workloads where software APC must either copy full blocks or maintain per-token indirection.
+
+**Self-verdict: YELLOW** — The primitive is cleanly measured (Metric 5c, Metric 3, attention visibility) and the mechanism is distinct from all prior work. The risk is demonstrating a compelling end-to-end application in 30 days; speculative decoding is the best candidate because high branch fan-out + high discard rate maximizes copy avoidance. If the acceptance rate is too high (most branches kept), the advantage shrinks. Need measured spec-decode traces in week 1 to confirm the opportunity.
+
+---
+
+**MY 3 TITLES:**
+1) **The 520K Mapping Wall: Characterizing the cuMemSetAccess Scaling Ceiling in VMM-Based GPU Memory Management**
+2) **Hash-Chain Fragility: How Tool-Call Injection Breaks LLM Prefix Caching with Superlinear TTFT Penalty**
+3) **Write-After-Share at the GPU MMU: A Hardware-Enforced Copy-on-Write Primitive for Branching KV Caches**
+
+apiKeyHelper failed: exited 1: W0530 03:17:03.147114 1547745 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created

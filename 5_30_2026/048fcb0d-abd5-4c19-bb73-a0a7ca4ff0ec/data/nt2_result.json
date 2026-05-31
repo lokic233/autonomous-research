@@ -1,0 +1,63 @@
+{
+  "experiment": "NT2_invalidation_cascade_chained_vs_segmented",
+  "BLOCK": 16,
+  "rows": [
+    {
+      "inject_frac": 0.1,
+      "inject_pos_tok": 400,
+      "chained_recompute_blocks": 227,
+      "chained_total": 252,
+      "chained_recompute_pct": 90.1,
+      "segmented_recompute_blocks": 227,
+      "segmented_total": 252,
+      "segmented_recompute_pct": 90.1,
+      "reduction_x": 1.0
+    },
+    {
+      "inject_frac": 0.25,
+      "inject_pos_tok": 992,
+      "chained_recompute_blocks": 190,
+      "chained_total": 252,
+      "chained_recompute_pct": 75.4,
+      "segmented_recompute_blocks": 190,
+      "segmented_total": 252,
+      "segmented_recompute_pct": 75.4,
+      "reduction_x": 1.0
+    },
+    {
+      "inject_frac": 0.5,
+      "inject_pos_tok": 2000,
+      "chained_recompute_blocks": 127,
+      "chained_total": 252,
+      "chained_recompute_pct": 50.4,
+      "segmented_recompute_blocks": 127,
+      "segmented_total": 252,
+      "segmented_recompute_pct": 50.4,
+      "reduction_x": 1.0
+    },
+    {
+      "inject_frac": 0.75,
+      "inject_pos_tok": 2992,
+      "chained_recompute_blocks": 65,
+      "chained_total": 252,
+      "chained_recompute_pct": 25.8,
+      "segmented_recompute_blocks": 65,
+      "segmented_total": 252,
+      "segmented_recompute_pct": 25.8,
+      "reduction_x": 1.0
+    },
+    {
+      "inject_frac": 0.9,
+      "inject_pos_tok": 3600,
+      "chained_recompute_blocks": 27,
+      "chained_total": 252,
+      "chained_recompute_pct": 10.7,
+      "segmented_recompute_blocks": 27,
+      "segmented_total": 252,
+      "segmented_recompute_pct": 10.7,
+      "reduction_x": 1.0
+    }
+  ],
+  "claim_supported": false,
+  "headline": "chained hashing recomputes everything AFTER injection (cascade); segmented recomputes only the changed blocks"
+}

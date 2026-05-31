@@ -1,0 +1,13 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 21:53:13.679191 1164664 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+THESIS NT2:
+  Is the fixed-boundary (not hash-chaining) root-cause convincing given the v1 null + v2 result? (YES/NO + 1 line): YES — v1 de-chaining gave 1.0x at every injection point, proving chaining isn't the cause; v2 CDC collapses recompute to ~2% by fixing boundary alignment, which is the mechanistic complement.
+  Does CDC's position-independent ~2% recompute (5-45x) constitute a real contribution? (YES/NO): YES — measured 45.4x@10%, 21.2x@50%, 5.4x@90%, all converging to ~2% recompute regardless of injection site.
+  Distinct from Continuum / vLLM APC? (YES/NO + 1 line): YES — Continuum (2511.02230) reschedules around tool pauses at the scheduler layer; NT2 changes the KV cache block boundary function (CDC vs fixed-16), which vLLM APC explicitly assumes contiguous.
+  Is the recompute-COUNT model (not yet wall-clock TTFT) sufficient for a characterization+repair paper, or is E2E TTFT GREEN-gating? (state which): Sufficient for a characterization+repair paper — the upstream EDMM live-vLLM TTFT traces (1.38x→5.41x@32K, 8.21x peak, 2.06x MI350X) already establish the wall-clock phenomenon; the recompute-count model is the correct abstraction for a mechanistic repair claim. E2E TTFT is the 30-day follow-on, not GREEN-gating for this thesis.
+  Remaining blocker to GREEN (be specific, or NONE): NONE for this thesis as scoped; the CDC-in-vLLM wall-clock measurement is explicitly out-of-scope and belongs to the E2E milestone.
+  VERDICT: GREEN
+
+NT2=GREEN

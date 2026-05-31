@@ -1,0 +1,63 @@
+Working from the surviving measured assets only. Here are 3 theses that dodge all 6 corpses.
+
+---
+
+**NEW THESIS 1:**
+
+**One-sentence thesis:** There is a hard, previously-undocumented driver-internal ceiling on the number of distinct VA→PA mappings a GPU process can hold (K≈520K), it is invariant in the *product* branches×pages (not either alone), it is pinned to `cuMemSetAccess` rather than any OS/kernel limit — and this "mapping wall" sets the true scaling bound for *every* VMM-based KV system, not just ours.
+
+**Built on which surviving asset (cite number):** Asset 2 — mapping ceiling K~520K, B*P invariant within 1%, pinned to `cuMemSetAccess`, independent of `vm.max_map_count` (Metric 4b + Lab 1, forensic OOM = `cuMemSetAccess`).
+
+**Contribution type:** Characterization (measurement paper).
+
+**Closest prior work + surviving delta:** vAttention (Prabhu et al., ASPLOS '24) and every cuMemMap-based serving stack *assume* the VMM address space scales freely and treat fragmentation as the only concern. None publish a mapping-count ceiling. Surviving delta: we show the ceiling is real, ~520K, a B*P product invariant to 1%, located *inside the driver's access-control path* (`cuMemSetAccess`), and explicitly NOT the Linux `vm.max_map_count` everyone blames. That relocates the bottleneck from a tunable OS knob to an unfixable driver structure.
+
+**Highest-EV 30-day experiment:** Sweep mapping count to OOM across (a) H100, (b) a second NVIDIA generation, and (c) MI350X via the HIP `hipMemMap`/`hipMemSetAccess` equivalent, while varying page granularity (2MB vs 64KB) to separate a *mapping-count* ceiling from a *VA-span* ceiling. Output: a closed-form predictor `max_branches = f(K, pages_per_branch)` and a cross-vendor statement of whether 520K is architecture-specific, driver-version-specific, or universal. If `hipMemSetAccess` shows a *different* constant, that itself is the headline (vendor-divergent mapping walls).
+
+**Why it is NOT one of the 6 dead theses:** The dead "14x capacity win" was a *comparison to clone*; this makes no capacity-vs-baseline claim — it characterizes an absolute hardware/driver limit that bounds clone, vAttention, ForkedKV, and EDMM equally. It is not "EDMM as a novel VMM mechanism" because it proposes no mechanism; it measures a limit.
+
+**Self-verdict:** GREEN — the number, the invariant, and the `cuMemSetAccess` localization are already measured on H100; the 30-day work is cross-vendor confirmation, which is additive not load-bearing.
+
+---
+
+**NEW THESIS 2:**
+
+**One-sentence thesis:** Mid-sequence cache invalidation in agentic (tool-call) serving is a *superlinear* TTFT pathology — not the linear recompute everyone models — and the superlinearity is intrinsic and cross-vendor, so admission/scheduling for agent workloads must be position-aware, not length-aware.
+
+**Built on which surviving asset (cite number):** Asset 4 — mid-prompt tool injection breaks the prefix-cache hash chain: 8.21x TTFT penalty (live vLLM), superlinear 1.38x(4K)→5.41x(32K), cross-vendor MI350X 2.06x.
+
+**Contribution type:** Characterization, with a small scheduling-policy mechanism as the actionable tail.
+
+**Closest prior work + surviving delta:** vLLM Automatic Prefix Caching and SGLang RadixAttention both model the cache as *append-only* prefix growth, where invalidation cost is linear in the recomputed suffix. Surviving delta: tool injection is *mutation in the middle*, not append; we measure the resulting cost grows 1.38x→5.41x across 4K→32K — superlinear in context, which append-only models cannot predict. The 5.41x is the gap between what schedulers assume and what actually happens.
+
+**Highest-EV 30-day experiment:** Decompose the superlinearity. Sweep injection *position* (early/mid/late) × context length × event type (tool-result splice, system-prompt edit, retrieval insertion) on vLLM and SGLang, H100 + MI350X, and attribute the excess cost to its components: raw suffix recompute vs chunked-prefill interaction vs scheduler head-of-line/preemption effects. Fit a predictive cost model, then ship a position-aware admission policy that bounds worst-case TTFT and show it clamps the 5.41x tail. The model + the bound is the paper.
+
+**Why it is NOT one of the 6 dead theses:** It is explicitly NOT the dead "structured checkpoint protocol" (no protocol proposed) and NOT "EDMM as a novel VMM mechanism" (the fix is a CPU-side scheduling policy, no cuMemMap). The contribution is a measured law about agent workloads plus a scheduler knob — a different object than a memory mechanism.
+
+**Self-verdict:** GREEN — already cross-vendor and live-vLLM measured; the superlinear curve is the strongest single number we own and no prior model predicts it.
+
+---
+
+**NEW THESIS 3:**
+
+**One-sentence thesis:** A KV cache can deliver prefix *sharing without paged-attention indirection* — branches share physical pages over a single contiguous virtual address (0% attention overhead) and a divergent write copies exactly one page regardless of branch count or context length — a (share-without-paging) + (O(1-page) divergence) pair that neither paged nor contiguous prior systems achieve together.
+
+**Built on which surviving asset (cite number):** Asset 1 (Metric 5c: exactly 1 page copied on shared-page overwrite, siblings bit-identical) + Asset 3 (Metric 3: ~0% attention overhead from contiguous-VA VMM pages), corroborated by Asset 5 (page swap changes attn output with pointer stable).
+
+**Contribution type:** Primitive (a KV op: write-after-share at page granularity over contiguous VA).
+
+**Closest prior work + surviving delta:** SGLang RadixAttention shares prefixes but *requires* a paged/block-table attention kernel (indexing indirection) and, on divergence, copies/recomputes at block granularity. vAttention has contiguous VA but no sharing/CoW at all. Surviving delta: ForkedKV is the only point that gets *both* — physical sharing across branches with a stable contiguous VA (so the attention kernel needs no block-table indirection, measured 5–22% kernel advantage vs FlashInfer after the honest Lab-3b retraction) AND in-place divergence at exactly 1 page. The claim is the *conjunction*, which is what's new.
+
+**Highest-EV 30-day experiment:** Wire the write-after-share primitive into a real tree-shaped decode workload (beam search / self-consistency / tree-of-thought) on the existing N=4 multi-layer decode loop, and benchmark divergence cost and attention latency against (a) SGLang RadixAttention fork and (b) naive clone, across branch count and divergence depth. Prove the two-part claim: bytes-copied stays at 1 page per divergent write independent of N and context (already at N=84 elsewhere), AND end-to-end attention stays at the contiguous-VA latency (no paging indirection). Honest framing required: software APC forks faster (~700x, per dead-thesis notes), so the win is NOT fork speed — it is per-write divergence cost × zero-indirection attention.
+
+**Why it is NOT one of the 6 dead theses:** Not "OS-style page-fault CoW" — divergence is *explicitly* triggered on write, no hardware GPU fault is claimed or needed. Not the "14x capacity win" — no capacity-vs-clone claim; the metric is bytes-per-divergent-write and attention indirection. Not "EDMM as a VMM mechanism" — the contribution is the share-without-paging *attention/memory pairing*, characterized against RadixAttention, not the cuMemMap call itself.
+
+**Self-verdict:** YELLOW — the primitive is measured (1 page, bit-identical, 0% overhead), but the delta over RadixAttention is the conjunction + a modest 5–22% kernel edge; it needs a tree-decode workload where O(1-page) divergence visibly beats block-granular fork to clear the bar. Buildable in 30 days because the decode loop and CoW path already exist.
+
+---
+
+MY 3 TITLES: 1) "The Mapping Wall: A Driver-Internal 520K Ceiling Bounds All VMM KV-Caches" 2) "Tool Injection Is Superlinear: Characterizing Mid-Sequence Cache Invalidation in Agentic Serving" 3) "Share Without Paging: Contiguous-VA Copy-on-Write as a One-Page KV Divergence Primitive"
+
+apiKeyHelper failed: exited 1: W0530 03:17:02.740305 1544668 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created

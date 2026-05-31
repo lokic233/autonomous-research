@@ -1,0 +1,6 @@
+NT3-REVOTE:
+  Does E1 discharge the 'prove vAttention/APC cannot express it' burden? (YES/NO + 1 line): YES, E1 explicitly shows APC forces kernel block-table indirection (entry moved 61->59) for CoW, whereas ForkedKV retains a contiguous VA.
+  Is the address-space proof sufficient, or is the E2E FlashAttention decode required for your GREEN?: The E2E unmodified-FlashAttention decode is strictly required for GREEN because the core claim asserts functional utility for unmodified kernels.
+  Remaining gap before submission-grade: An E2E execution proving unmodified FlashAttention runs post-CoW without MMU fault/remap overhead negating the performance gained by omitting the block-table gather.
+  VERDICT: YELLOW
+NT3=YELLOW

@@ -1,0 +1,29 @@
+THESIS NT1:
+  Strongest reject (cite prior art / missing baseline): vAttention (Prabhu et al. 2024) already discusses cuMemMap handle/overhead limits; K≈520K is a *single-driver* constant, and "max_branches ≈ K / prefix_pages" is arithmetic, not a law. Without the MI350X/ROCm sweep already in hand, the cross-vendor "law" is aspirational. Risk: K varies per driver version → reduces to "the driver said so."
+  Strongest accept (cite a measured number above): B×P constant to 1% across 4 working-set sizes (1021/339/169/84 at 1/3/6/12 GiB) is a remarkably clean invariant, and VMA=392 vs sysctl ceiling 67M at OOM (Lab 1) forensically rules out the obvious OS culprit — that's a real, non-obvious finding.
+  Is it genuinely distinct from the 6 dead theses? YES — orthogonal to the killed "14x capacity" (which claimed a system win); this only claims a *characterization law*, which is a much smaller and more defensible target.
+  Anti-FlashInfer test (matters if FlashInfer infinitely fast?): YES — mapping-table capacity is independent of attention kernel throughput.
+  30-day buildable to submission-grade?: YES — sweeping K on 2 NVIDIA drivers + MI350X and fitting B×P=K is straightforward; the only risk is that the "law" degenerates into a driver-version table.
+  VERDICT: YELLOW
+
+THESIS NT2:
+  Strongest reject (cite prior art / missing baseline): Continuum (2511.02230) is precisely a mid-sequence tool-pause cache-aware scheduler; PromptCache (2023) and CacheBlend (2024) already propose position-independent / modular prefix hashing. "Segmented hash" risks being a re-skin of RadixAttention-style partial-match trees. Four data points (1.38/2.x/3.x/5.41) is thin for a "superlinear law" claim — fit a power-law and report the exponent + CI, or drop the word "law."
+  Strongest accept (cite a measured number above): The cross-framework + cross-vendor triangulation is genuinely hard to dismiss: vLLM 5.41x@32K, SGLang superlinear, MI350X 2.06x, plus layout sensitivity 1.01x/4.57x/7.93x. That's not noise; that's a real structural effect.
+  Is it genuinely distinct from the 6 dead theses? YES — independent of the killed kernel-speedup and agent-CI-cache claims.
+  Anti-FlashInfer test: YES — invalidation is a cache-structure problem, not a kernel problem.
+  30-day buildable to submission-grade?: YES, but tight — segmented-hash in vLLM + penalty-collapse curves vs context length is achievable; the harder lift is proving delta over CacheBlend/PromptCache, not building the system.
+  VERDICT: YELLOW
+
+THESIS NT3:
+  Strongest reject (cite prior art / missing baseline): vAttention *uses* cuMemMap and could, in principle, express page substitution — the authors simply didn't pursue it. Until E1 is run, "vAttention cannot express it" is conjecture, not fact. vLLM APC's block-table CoW already achieves the application-visible semantics (branch + copy-one-block) at a different layer; reviewers will demand a clear functional separation, not just "ours is at the MMU."
+  Strongest accept (cite a measured number above): P0.2 (attention output 3,381 → 50.8M with the *tensor pointer unchanged*) is a striking, hard-to-handwave-away demonstration of attention-visible state mutation. Metric 5c (exactly 1 page copied on shared-page overwrite, refcount 4→3, siblings byte-identical) is bit-exact CoW verification at the MMU. Metric 3 (~0% attention overhead) means the primitive is free at hot-path time.
+  Is it genuinely distinct from the 6 dead theses? YES — different from the killed "EDMM-as-novel-VMM" (which oversold mechanism as system); this scopes down to one *primitive* + two downstream uses with bit-exact verification.
+  Anti-FlashInfer test: YES — orthogonal to attention kernel speed.
+  30-day buildable to submission-grade?: YES — ForkedKV vs vAttention head-to-head on branch-and-edit + two demos (remap-compression, page-swap-forgetting) with bit-exact checks is tight but achievable. The vAttention expressibility argument is the real risk, not the engineering.
+  VERDICT: YELLOW (leaning GREEN if E1 cleanly shows vAttention cannot express write-after-share without a parallel block-table)
+
+VOTES: NT1=YELLOW NT2=YELLOW NT3=YELLOW
+
+apiKeyHelper failed: exited 1: W0530 03:21:31.995031 1938123 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created

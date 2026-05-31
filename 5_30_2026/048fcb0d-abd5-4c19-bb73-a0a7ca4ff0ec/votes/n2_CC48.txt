@@ -1,0 +1,12 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 21:53:12.722262 1151861 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+THESIS NT2:
+  Is the fixed-boundary (not hash-chaining) root-cause convincing given the v1 null + v2 result? (YES/NO + 1 line): YES — the v1 null (de-chaining → 1.0x reduction at all 5 injection points) cleanly falsifies hash-chaining, and v2's position-independent CDC re-sync confirms boundary-alignment as the mechanism.
+  Does CDC's position-independent ~2% recompute (5-45x) constitute a real contribution? (YES/NO): YES — 2.0–2.4% recompute regardless of injection position vs 10.7–90.1% fixed-block is a concrete, mechanism-grounded result.
+  Distinct from Continuum / vLLM APC? (YES/NO + 1 line): YES — Continuum schedules around tool pauses (scheduler layer); NT2 changes the KV cache data structure (rolling-hash boundaries), directly relaxing vLLM APC's fixed-contiguous-block assumption.
+  Is the recompute-COUNT model (not yet wall-clock TTFT) sufficient for a characterization+repair paper, or is E2E TTFT GREEN-gating?: E2E TTFT is GREEN-gating for the REPAIR claim. Two specific gaps the count model cannot close: (1) the count model is LINEAR-in-position (90→75→50→25→10% as injection moves 10→90%) — it does NOT itself show superlinearity; the headline superlinear penalty (1.38x→5.41x) is a length-scaling/attention-O(n²) property resting on EDMM live traces not shown raw here; (2) CDC's own variable-block overhead (kernel efficiency, fragmentation, block-mgmt) is invisible to a count proxy and could erode the savings. Count model GREENs the mechanism/characterization; it does not GREEN "Repair = CDC."
+  Remaining blocker to GREEN (be specific, or NONE): A minimal CDC wall-clock prototype (microbenchmark, NOT the full 30-day integration) at ≥2 sequence lengths showing (a) the recompute-count reduction translates to actual TTFT and (b) CDC's variable-block overhead doesn't eat the gain; plus surfacing the raw EDMM/8.21x/2.06x-MI350X traces and explicitly attributing "superlinear" to length-scaling rather than the position-linear count curve.
+  VERDICT: RED | YELLOW | GREEN → YELLOW
+NT2=YELLOW

@@ -1,0 +1,17 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 03:57:53.721841 4178405 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT1-REVOTE:
+
+**Does E2 strengthen or weaken NT1?** Strengthens decisively. The original "universal" claim was falsifiable and E2 falsified it — but the replacement is stronger: a 17x+ divergence (520K NVIDIA vs >9M AMD, still climbing) with zero ambiguity pins the ceiling to NVIDIA driver policy, not GPU MMU architecture. The B×P constant (1% variance, 4 prefix sizes) now has a clean negative control.
+
+**Does the corrected vendor-divergence framing clear the 'just a bug report' objection?** YES. A single-vendor ceiling is a bug report. A cross-vendor comparative study with a predictive model (K/P on NVIDIA; metadata-unbounded on AMD) plus the 512x granularity divergence (4 KiB vs 2 MiB) is a systems characterization paper. The actionable deployer guidance — "VMM branching concurrency is driver-bound on NVIDIA, not on AMD" — is the kind of result that changes architecture decisions.
+
+**Remaining gap before submission-grade:** Two items: (1) Test K stability across ≥2 NVIDIA driver versions (e.g., 535.x vs 555.x) to confirm it's a durable policy constant, not a version-specific default. (2) One additional NVIDIA arch (A100 or L40) to bound whether K varies by GPU generation or is driver-wide. Both are weekend-scale work, not structural gaps.
+
+**Anti-FlashInfer test:** YES. FlashInfer/PagedAttention manage KV pages in userspace page tables, not via VMM mappings — so they sidestep this ceiling entirely. But the finding remains load-bearing: vLLM's VMM-backed prefix caching path and any future VMM-branching scheme hits this wall on NVIDIA. The paper should explicitly state which KV architectures are affected (VMM-aliased) vs unaffected (userspace-paged).
+
+**VERDICT:** GREEN
+
+NT1=GREEN

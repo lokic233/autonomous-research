@@ -1,0 +1,7 @@
+### B FINAL
+- **Vote: YELLOW**
+- **GREEN-worthy as workload model?** No. The measurements are clean (3 engines, R²≥0.97, tight exponent agreement 0.67–0.79), and the 17× operational penalty is real. But the kill test at k≈1.3 collapses the intellectual contribution: the "workload model" reduces to "penalty = prefill_recompute(N) / cache_hit_latency," which is predictable from first principles once you know FlashAttention prefill scales as ~N^1.3 on H100. The fitted exponents are useful engineering data but not a modeling *insight* — you're curve-fitting a known mechanism, not discovering one. That's characterization, not a workload model that changes how people design schedulers. Solid YELLOW: publishable, not promotable.
+- **Strongest remaining attack:** "Your penalty ratio ∝ L^0.7 is just the ratio of O(N^1.3) recompute to O(1) cache-hit decode. The 'scaling law' is an artifact of dividing a known sub-quadratic function by a constant. Where is the prediction this model makes that `estimated_prefill_time(N_recomputed)` does not already make?" — i.e., the workload model adds no predictive power beyond existing prefill cost models.
+- **Venue:** Workshop (MLSys workshop on LLM serving, or SysML). Not MLSys main — no surprising mechanism, no system artifact, no fix. Not kill — the cross-engine position-resolved dataset has standalone reference value.
+- **One-line:** Rigorous confirmation that agentic cache invalidation costs exactly what prefill theory predicts — operationally important, scientifically unsurprising, workshop ceiling.
+===EXIT_0===

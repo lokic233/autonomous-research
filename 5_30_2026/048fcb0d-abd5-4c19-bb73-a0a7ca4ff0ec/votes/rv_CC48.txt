@@ -1,0 +1,15 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 03:57:53.828135 4178625 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT1-REVOTE:
+  Does E2 strengthen or weaken NT1? E2 *falsifies* the original "UNIVERSAL ceiling bounds EVERY VMM scheme" claim (AMD: >9M mappings, 0 failures, >17x the NVIDIA 520K wall), but *strengthens* the corrected vendor-divergence framing by supplying the cross-vendor contrast (520K vs >9M; 4KiB vs 2MiB granularity = 512x finer).
+  Does the corrected vendor-divergence framing clear the 'just a bug report' objection? YES — barely. "NVIDIA driver fails at 520K" alone is a bug report; the predictive deployer model (max_branches ≈ K/P, validated B×P constant to 1% across 1021/339/169/84 branches) + pinned call site (cuMemSetAccess, VMA=392 vs sysctl 67M) + cross-vendor falsification of an assumed invariant is characterization, not a ticket. It clears the objection but does not clear the relevance bar (next two lines).
+  Remaining gap before submission-grade:
+    1. APPLES-TO-ORANGES: AMD's 9M mappings alias ONE shared 2MiB handle (808 MiB total). That is not 9M distinct usable KV pages — it may be re-mapping identical data. Must repro AMD with distinct per-branch handles to confirm the ceiling is truly absent for the real workload, not just for shared-handle aliasing.
+    2. NO WORKLOAD BINDING: everything is a cuMemSetAccess microbench. Need an end-to-end serving result showing a real KV-branching workload (beam/ToT/spec) actually degrades at 520K on H100 and survives on MI350X.
+    3. Driver-version + generation sweep: only H100 + one ROCm build. Is 520K stable across CUDA/driver versions? Is it a tunable knob (which would *prove* "policy artifact")? Test A100/B200/GB200.
+  Anti-FlashInfer test: NO — not passed. FlashInfer/vLLM PagedAttention shares KV via block tables in a single VA space and never issues per-branch cuMemSetAccess, so it never touches the 520K descriptor ceiling. Until E2 shows VMM-per-branch beats (or is forced over) software paging, a reviewer says "just don't use VMM branching" and the wall becomes irrelevant. This is the load-bearing missing experiment.
+  VERDICT: YELLOW
+
+NT1=YELLOW

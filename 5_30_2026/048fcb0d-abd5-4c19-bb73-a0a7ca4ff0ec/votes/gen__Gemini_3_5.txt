@@ -1,0 +1,35 @@
+NEW THESIS 1:
+  One-sentence thesis: The primary concurrency bottleneck for VMM-backed KV caches is not physical VRAM or OS virtual memory limits, but an undocumented, strict mapping ceiling within the proprietary GPU driver.
+  Built on which surviving asset (cite number): CUDA VMM mapping ceiling K~520K, B*P invariant within 1%, pinned to cuMemSetAccess, independent of vm.max_map_count (Metric 4b + Lab 1).
+  Contribution type (mechanism/characterization/abstraction/primitive): characterization.
+  Closest prior work + surviving delta: vAttention characterizes continuous VMM allocation for KV caches; our delta isolates the exact driver-internal failure threshold (K~520K) that deterministically crashes VMM scaling regardless of available hardware memory.
+  Highest-EV 30-day experiment: Cross-vendor sweep isolating the mapping ceiling on H100 (`cuMemSetAccess`) versus MI350X to map driver limits and build a predictive B*P bound model for multi-tenant serving.
+  Why it is NOT one of the 6 dead theses: It discards the failed capacity/speedup claims and directly investigates the empirical failure mode preventing VMM-based systems from scaling to thousands of branches.
+  Self-verdict (RED/YELLOW/GREEN) + one-line why: GREEN; top-tier systems venues (ASPLOS/OSDI) consistently reward rigorous reverse-engineering and characterization of undocumented hardware ceilings that bound software scalability.
+
+NEW THESIS 2:
+  One-sentence thesis: Standard exact-match prefix caching architectures degrade pathologically under agentic execution because mid-prompt tool injections break the structural hash chain, causing severe latency regressions.
+  Built on which surviving asset (cite number): EDMM: mid-prompt tool injection breaks prefix-cache hash chain = measured 8.21x TTFT penalty live vLLM; superlinear scaling 1.38x(4K)->5.41x(32K); cross-vendor on MI350X (2.06x).
+  Contribution type (mechanism/characterization/abstraction/primitive): characterization.
+  Closest prior work + surviving delta: SGLang and vLLM RadixAttention provide tree-based prefix abstractions; our delta proves these systems catastrophically fail on agentic workloads, quantified by the 5.41x degradation at 32K context.
+  Highest-EV 30-day experiment: Profile a full SWE-bench multi-step agent trajectory on H100 and MI350X to measure cumulative compute cycles wasted specifically on re-prefilling invalidated downstream context following tool insertions.
+  Why it is NOT one of the 6 dead theses: It does not propose EDMM as a VMM mechanism or a structured checkpoint system; it exposes a fundamental flaw in state-of-the-art serving algorithms under an emerging workload.
+  Self-verdict (RED/YELLOW/GREEN) + one-line why: GREEN; exposing and quantifying a massive, superlinear algorithmic regression in production serving engines is an ideal MLSys/ASPLOS characterization track paper.
+
+NEW THESIS 3:
+  One-sentence thesis: Explicit write-after-share token mutation can be executed natively at the GPU MMU layer, enabling zero-attention-overhead copy-on-write without relying on non-existent hardware page faults.
+  Built on which surviving asset (cite number): ForkedKV: explicit branch fork + write-after-share CoW at GPU MMU (Metric 5c: exactly 1 page copied on shared-page overwrite) AND ~0% attention overhead from contiguous-VA VMM pages (Metric 3).
+  Contribution type (mechanism/characterization/abstraction/primitive): primitive.
+  Closest prior work + surviving delta: PagedAttention incurs kernel logic overhead, and vAttention lacks CoW mutations; our delta is the explicit `cuMemMap` write-after-share primitive that resolves shared overwrites at the MMU layer.
+  Highest-EV 30-day experiment: Implement an adversarial speculative decoding rollback workload on H100 to compare the latency of our explicit MMU CoW mutation (Metric 5c) against standard software pointer-swapping.
+  Why it is NOT one of the 6 dead theses: It abandons the falsified "OS-style page-fault" and "14x capacity" claims, focusing strictly on the proven explicit MMU manipulation mechanism and its contiguous memory properties.
+  Self-verdict (RED/YELLOW/GREEN) + one-line why: YELLOW; the primitive is cleanly proven, but the 30-day system integration must carefully avoid regressing into the already-killed software APC capacity comparisons.
+
+MY 3 TITLES: 
+1) The Driver is the Limit: Characterizing GPU VMM Scalability Ceilings for LLM Serving
+2) Hash-Chain Fragility: The Cost of Mid-Prompt Tool Injection in Prefix-Cached LLMs
+3) Hardware-Mapped Copy-on-Write for KV Caches via Explicit GPU MMU Mutation
+
+Timeout of 30000 exceeds the interval of 10000. Clamping timeout to interval duration.
+The 'metricReader' option is deprecated. Please use 'metricReaders' instead.
+Loading extension: Meta

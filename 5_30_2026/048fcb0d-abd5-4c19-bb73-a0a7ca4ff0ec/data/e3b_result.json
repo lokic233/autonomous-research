@@ -1,0 +1,17 @@
+{
+  "experiment": "E3b_per_context_vs_per_device",
+  "workers": [
+    {
+      "pid": 3704102,
+      "mappings": 111586,
+      "oom_call": "cuMemSetAccess"
+    },
+    {
+      "pid": 3704101,
+      "mappings": 111629,
+      "oom_call": "cuMemSetAccess"
+    }
+  ],
+  "sum_mappings": 223215,
+  "interpretation": "per-context if each ~520K (sum ~1040K); per-device if sum ~520K"
+}

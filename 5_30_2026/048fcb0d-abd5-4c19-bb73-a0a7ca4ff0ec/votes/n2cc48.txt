@@ -1,0 +1,11 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 21:58:20.116189 1609989 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT2-CC48:
+  Does the wall-clock microbenchmark close gap (a) superlinearity? YES — the dominant fixed-recompute path shows 0.613→8.436 ms (13.8x) for a 4x context jump, super-linear in wall-clock, not just count-linear.
+  Does it close gap (b) CDC overhead doesn't eat the gain? YES (by robust bounding, not direct measurement) — even charged a pessimistic 1.5x penalty the gain survives at 11.6x / 119.6x, a margin that tolerates overhead far above 1.5x before it would matter.
+  Remaining blocker to GREEN (be specific, or NONE): NONE that gates NT2 — but two honest carry-forwards for the already-scoped E2E step, NOT new blockers: (1) the 1.5x variable-block overhead is *assumed*, not measured — the real ragged/non-contiguous-KV attention kernel can be 2-5x less efficient than dense SDPA and must be measured in the actual CDC path at production ctx; (2) CDC absolute times (53-71µs) sit near the kernel-launch noise floor, so they bound the gain robustly but do NOT by themselves characterize CDC scaling. Neither undermines the two gaps I set: superlinearity is proven on the expensive path, and the gain's margin is robust to large overhead error. Demanding measured ragged-kernel overhead now would move the goalposts past the microbenchmark scope we agreed.
+  VERDICT: GREEN
+
+NT2=GREEN

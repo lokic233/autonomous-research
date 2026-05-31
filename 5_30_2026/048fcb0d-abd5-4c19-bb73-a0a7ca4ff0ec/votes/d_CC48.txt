@@ -1,0 +1,12 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 20:15:00.807505 3991430 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT1-DEEP:
+  Does E3a discharge the root-cause concern (what K is)? YES — R1 (1 reserve, still 523,404 maps) kills "K = reservation count"; oom_call is cuMemSetAccess in every regime, locating the charge at the access-descriptor budget, with R1=control to the unit.
+  Does E3b (per-device, super-linear multi-context degradation) add a real systems contribution? YES — 111,586+111,629=223,215 (43% of 523,404) is a measured, non-obvious per-device sharing penalty directly relevant to MIG/multi-tenant.
+  Does E3c discharge the 'does it bite / relevance' concern? NO — it proves the wall is the *binding* constraint under CoW, but the ceilings (1039 @8k, 259 @32k, 64 @128k) are high and no named workload is shown to exceed them; "binding" ≠ "practically limiting," and the headline is CoW still improves 6→64 vs full-clone.
+  Remaining blocker to GREEN (be specific, or NONE): (1) No workload demonstrated to actually hit 64/259/1039 branches — relevance bar (CC4.8) is argued structurally, not shown empirically. (2) Number inconsistency: E3c uses K=519,936 while E3a/E3b assert a deterministic 523,404 at 0.000% variance — reconcile or the "hard constant" claim is dented. (3) "Super-linear" rests on n=2 (1 vs 2 contexts); need ≥3 context counts to claim a scaling law vs a one-off split. (4) Minor: R2 accounting (299,949 maps + 299,950 reserves = 599,899 > 523,404) implies reserves and maps draw at *different* weights (~0.745×), so "single fungible budget" needs that caveat stated.
+  VERDICT: YELLOW
+
+NT1=YELLOW

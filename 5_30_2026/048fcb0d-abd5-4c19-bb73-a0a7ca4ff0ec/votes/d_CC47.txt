@@ -1,0 +1,11 @@
+Using AI Gateway (Vertex upstream)
+apiKeyHelper failed: exited 1: W0530 20:15:00.837539 3991738 IdentityUtil.cpp:522] The preferred certificate file is missing or corrupt: 
+No valid tokens to serialize
+No CATs were created
+NT1-DEEP:
+  Does E3a discharge the root-cause concern (what K is)? YES — K is a per-page access-descriptor budget charged at cuMemSetAccess (R1: 1 reserve still hits 523,404; R2 fails at 299,949 with reserves also charging), deterministic to 0.000% variance vs control.
+  Does E3b (per-device, super-linear multi-context degradation) add a real systems contribution? YES — 2 contexts yield 223,215 total (43% of single-context 523,404), a measured super-linear collapse with direct MIG/multi-tenant implications.
+  Does E3c discharge the 'does it bite / relevance' concern? YES — at 128k ctx, K=519,936 caps branches at 64 vs HBM-only 6, and binds precisely in CoW's intended share-HBM regime where the mapping ceiling becomes the sole cap.
+  Remaining blocker to GREEN (be specific, or NONE): NONE — single-vendor (NVIDIA H100) scope is now explicit; MI350X unavailability is acknowledged as a stated limitation, not a hidden gap.
+  VERDICT: GREEN
+NT1=GREEN

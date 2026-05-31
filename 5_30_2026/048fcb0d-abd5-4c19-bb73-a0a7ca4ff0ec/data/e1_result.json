@@ -1,0 +1,39 @@
+{
+  "experiment": "E1_contiguity_under_write_after_share",
+  "forkedkv": {
+    "prefix_pages": 4,
+    "contiguous_VA_before_write": true,
+    "contiguous_VA_after_write": true,
+    "branch_VA_unchanged_after_CoW": true,
+    "shared_before_write": true,
+    "diverged_pages_after_write": [
+      2
+    ],
+    "sibling_B_and_parent_still_aliased": true,
+    "untouched_pages_still_aliased": true,
+    "page_size_bytes": 2097152
+  },
+  "software_apc": {
+    "block_table_before": [
+      63,
+      62,
+      61,
+      60
+    ],
+    "block_table_after_CoW": [
+      63,
+      62,
+      59,
+      60
+    ],
+    "phys_contiguous_before": false,
+    "phys_contiguous_after_CoW": false,
+    "block_table_entry_moved_on_CoW": true,
+    "requires_block_table_indirection": true
+  },
+  "verdict": {
+    "forkedkv_keeps_contiguous_VA_after_write_after_share": true,
+    "software_apc_loses_contiguity_after_CoW": true,
+    "NT3_delta_demonstrated": true
+  }
+}
