@@ -363,3 +363,15 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   TOLD the full invocation (I did include it in the task, but the agent still tried bare `ros`). Cheap fix:
   add a `ros` wrapper script to /usr/local/bin, OR always pass researchers the full python invocation +
   emphasize bare `ros` won't work. Not an engine bug.
+
+### BUG-19 (NEW, low) — no `ros agent retire/complete`; a finished orchestrator lingers as ☠️ DEAD-nagging
+- `ros agent` only has `register` (no retire/complete/done). When an orchestrator session ENDS without a
+  terminal state (e.g. round-1 orchestrator-v2-001 handed off to me and stopped), liveness shows it ☠️ DEAD
+  past the 45m grace with "orchestrator should revive" — but it should NOT be revived (it legitimately
+  finished + handed off). BUG-7 retires agents whose ROLE/last-report marks completed/failed, but there is
+  no way for an agent to self-mark terminal, and `ros report` has --done/--blocked/--need but no
+  --status=completed/retired. So a cleanly-finished agent is indistinguishable from a crashed one.
+- Expected: a `ros agent retire --id X` (or `ros report --agent X --status completed`) that flips the agent
+  to 🏁 retired so liveness stops nagging a handoff. Actual: it nags indefinitely as DEAD.
+- Impact: false "revive me" signal; a fresh orchestrator reading liveness could wrongly try to revive a
+  superseded predecessor. Severity: low (cosmetic/operational), but pollutes the liveness dashboard.
