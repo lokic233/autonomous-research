@@ -1,0 +1,29 @@
+exp_id: EXP-0025
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 2
+hardware: H100
+resource_budget:
+  max_wall_clock_minutes: 60
+  max_gpu_hours: 1.0
+  max_memory_gb: 80
+  host_mem_floor_gb: 300
+needs_gpu: true
+dispatched_by: gpu-scheduler
+node_lease: devgpu014:EXP-0025
+status: completed
+result_summary: 'Measured GPU kernel-THROUGHPUT (H100, inj/seq>=5% x batch{1,8,32}):
+  PIC wins only 2/24 cells, both MARGINAL (0.993-0.994x) at 8k/5% corner; CDC wins
+  22/24 by 1.08-1.74x. CDC''s contiguous advantage extends to THROUGHPUT not just
+  TTFT; the predicted PIC-favorable high-inj/seq regime actually favors CDC MORE (1.5-1.74x
+  at 50%). CLOSES VERDICT-0029 option-b (measured throughput-negative table, not a
+  concession). Still kernel-level not full vLLM serving.'
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0025/
+reproducibility: ''
+linked_verdicts: []
+started_at: '2026-05-31T19:04:31Z'
+completed_at: '2026-05-31T19:07:19Z'
+prompt_version: ''
+committee_approved: VERDICT-0031

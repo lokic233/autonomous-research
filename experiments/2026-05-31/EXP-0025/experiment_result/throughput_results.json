@@ -1,0 +1,4 @@
+{"device":"NVIDIA H100 (devgpu014)","reps":10,"pic_wins_cells":2,"total_cells":24,
+ "summary":"Measured kernel-throughput (recompute-tok/s) CDC contiguous vs PIC scattered-selective, inj/seq>=5% x batch{1,8,32}. PIC wins ONLY 2/24 cells, both MARGINAL (0.993-0.994x) at the 8k/5% corner (B=1 and B=32). CDC wins the other 22 (up to 1.74x at 8k/50%/B=8). CDC's contiguous advantage extends to THROUGHPUT, not just TTFT. Honest measured negative table for the PIC-favorable regime (VERDICT-0029 option b). NOT full vLLM serving.",
+ "pic_wins":[{"seq":8192,"inj_frac":0.05,"batch":1,"cdc_over_pic":0.994},{"seq":8192,"inj_frac":0.05,"batch":32,"cdc_over_pic":0.993}],
+ "cdc_wins_range":"1.08x (8k/10%/B1) to 1.74x (8k/50%/B8); 32k cells 1.10-1.50x"}

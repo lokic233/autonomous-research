@@ -94,6 +94,14 @@ supporting_evidence:
     (outside win-region) where CDC''s larger contiguous recompute could favor PIC
     aggregate throughput. CPU-only, stdlib, no GPU/model/mem-probe.'
   data_path: experiments/2026-05-31/EXP-0023/
+- exp_id: EXP-0025
+  summary: 'Measured GPU kernel-THROUGHPUT (H100, inj/seq>=5% x batch{1,8,32}): PIC
+    wins only 2/24 cells, both MARGINAL (0.993-0.994x) at 8k/5% corner; CDC wins 22/24
+    by 1.08-1.74x. CDC''s contiguous advantage extends to THROUGHPUT not just TTFT;
+    the predicted PIC-favorable high-inj/seq regime actually favors CDC MORE (1.5-1.74x
+    at 50%). CLOSES VERDICT-0029 option-b (measured throughput-negative table, not
+    a concession). Still kernel-level not full vLLM serving.'
+  data_path: experiments/2026-05-31/EXP-0025/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
@@ -209,12 +217,15 @@ verdict_history:
 - verdict_id: VERDICT-0029
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0031
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T18:51:37Z'
+last_updated: '2026-05-31T19:07:55Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -237,15 +248,12 @@ required_evidence_for_green:
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
 lifecycle_state: blocked
-next_action: 'PARKED on vLLM-capable env. gate-A GREEN; gate-B kernel CI-solid + analytic-bridge
-  (TTFT-sign robust) but cannot settle the SIGN under PagedAttention non-contiguous
-  layout. PATH: (a) vLLM+CacheBlend serving cell on any accessible node (cloud H100/Colab
-  A100), measure TTFT+throughput incl inj/seq>=5%; OR (b) rescope to kernel-characterization
-  + MEASURED throughput-negative table. Do NOT force GREEN (committee decided). Resume
-  when a vLLM env is available.'
+next_action: PARKED on vLLM-capable env. gate-A GREEN; gate-B kernel-complete (TTFT+throughput+analytic,
+  CDC wins) + option-b throughput-table closed. The ONE load-bearing piece for unanimous
+  GREEN = vLLM+CacheBlend serving w/ PagedAttention. Resume when a vLLM env is available;
+  otherwise the kernel-characterization story is publishable as-scoped.
 active_experiments: []
-blocking_on: "gate-B needs a real vLLM+CacheBlend serving cell (E2E TTFT + batched\
-  \ throughput incl inj/seq>=5%) on a vLLM-CAPABLE GPU node \u2014 devgpu014/devgpu499\
-  \ lack vLLM install (prod paths block pip). Committee (VERDICT-0029, 6/6) HOLDS\
-  \ YELLOW until this OR a kernel-characterization rescope w/ measured throughput-negative\
-  \ table."
+blocking_on: 'Only the full vLLM+CacheBlend serving cell w/ PagedAttention non-contiguous
+  layout remains (needs vLLM-capable env). All kernel-level gate-B evidence done:
+  TTFT CIs (EXP-0021, all exclude 1.0), analytic serving bridge (EXP-0023, sign-robust),
+  throughput table (EXP-0025, CDC wins 22/24, option-b CLOSED).'
