@@ -1,58 +1,49 @@
-# OVERNIGHT STATUS — orchestrator-r2-001 (research-os round 2)
-Generated 2026-05-31. Engine: research-os@473231e (BUG-22 fixed). Pushed to lokic233/autonomous-research main.
-All CPU-doable work DISCHARGED; remaining work is GPU/human-gated. Clean park. `ros resume` picks up exactly here.
+# OVERNIGHT AUTONOMOUS RUN — FINAL STATUS (orchestrator-r2-001, 2026-05-31)
+Engine research-os@<latest>. Instance pushed to lokic233/autonomous-research main. ALL on-node work resolved; remaining gates are explicit OPERATOR decisions.
 
-## WHAT ADVANCED (experiment-driven, every verdict cites experiments; Rule-3 map+prior-art merged)
-### CLAIM-0006 (PROJ-0002, prefix-cache invalidation cost-map) — strongest claim, 1 gate from GREEN
-- 3 real 6/6 committee YELLOW verdicts (VERDICT-0017/0022 + supporting evidence-updates 0014/0023).
-- NOVELTY GATE-A FULLY CLOSED (10/10 neighbors body-verified distinct, ZERO inj/seq cost-map collision):
-  "Don't Break the Cache" 2601.06007, Irminsul 2605.05696 (now 2-indexed twin), EPIC/CacheBlend/Cache-Craft/
-  MEPIC/KVFlow/CacheClip, ContiguousKV 2601.13631, variable-block 2604.23994 — all body-read, "injection" 0x.
-- EXP-0006: CDC's headline 8x-465x advantage = STRUCTURAL ARTIFACT of strawman contiguous baselines; vs a
-  FAIR PIC baseline it collapses to median 1.77x [1.56,1.87], tie 1.29x [1.25,1.33] at inj/seq>=5%.
-- EXP-0013 (stats pass): slope~1 is CDC-mechanism-specific (0.958 [0.937,0.980] R2=0.972, accounting identity)
-  NOT a cross-engine law (vLLM-APC/Radix/FlashInfer R2=0.0007, position-driven). Engine-averaged slope~1 = artifact.
-- SURVIVING CONTRIBUTION: the workload-conditioned WIN-REGION locating real agentic traffic on CDC's accounting
-  line (win-region inj/seq<=1% = 100% Wilson[0.972,1.0]; median real inj/seq~2.8%, CDC-wins ~25%, ~46% at S>=50k).
-  Honest characterization + negative result. Mechanism conceded non-novel.
+## OUTCOME PER PROJECT
+### PROJ-0001 (CUDA-VMM wrong abstraction for agentic KV) — DONE / PUBLICATION-READY
+- 5 promoted GREEN claims (0001/0002/0003/0004/0007): a 3-pillar negative-result thesis — HW VMM CoW is DOMINATED
+  (per-op 0/12, 1.06-2.20x), hard-capped by a conserved ~523,404 PER-DEVICE mapping ceiling (vendor cliff: AMD no
+  wall to 80M=153x), compounding into throughput collapse (0/8, crashes B>=128, SW scales 280->800 tok/s); the
+  bit-identical write-after-share (max_abs_diff=0.0) doesn't redeem it. "Build SW prefix-sharing, not HW VMM CoW."
+- Paper DRAFT complete (prior_art/PROJ-0001/PAPER_DRAFT.md, 429 lines, all numbers traced); outline + readiness GO +
+  citation sweep (no gaps) + consistency defects all resolved (per-device fix, K-reconciliation, FlashInfer-analytic
+  label, ceiling-crash split). 1+2-degree frontier exhausted; F-NEG successor = premature-park (no seed).
 
-### CLAIM-0009 (PROJ-0003, recovery MODALITY) — real 6/6, honestly narrowed to a config-fact
-- Re-seeded from the refuted CLAIM-0008. Real 6/6 YELLOW (VERDICT-0020) + ablation (VERDICT-0021, EXP-0012).
-- The committee caught (and EXP-0012 data-CONFIRMED) a predictor-misattribution: error-class & gate-type are
-  COLINEAR; error-class adds <=0.2% over a single gate-type bit (lift -0.0043 out-of-sample); ablating the
-  definitional web_disabled cell collapses LOO-Brier +40.1%->+2.2%; leave-one-CLASS-out -33%.
-- SURVIVING: a gate-type+harness-routing CHARACTERIZATION (config fact: redirectable-hard-block vs
-  grant-required vs transient). error-class-prediction framing RETIRED (observationally inseparable single-harness).
+### PROJ-0002 (prefix-cache invalidation cost-map) — CLAIM-0006 at HONEST 4/6-GREEN CEILING; path-b paper submittable
+- VERDICT-0043: 4 GREEN (novelty + theory + systems + area_chair) / 2 YELLOW, 0 RED. Unanimous green_rule HELD
+  (engine rejected green at 4/6; orchestrator did NOT override). Novelty gate-A CLOSED (10/10 neighbors body-verified).
+- Both serving axes MEASURED favor CDC: real lmcache CacheBlend gather kernel (EXP-0030, 12/12, CI excl 1.0 in 11/12)
+  + combined in-window E2E-TTFT (EXP-0034, 12/12, composition fallacy CONTROLLED). Cost-map (accounting identity, per-
+  engine CIs) + conditional win-region (S>=50k & inj/seq<=1% = 0.457 [0.453,0.461]; token-weighted framing UNSUPPORTED).
+- The 2 YELLOWs require the TRUE async-connector E2E on vLLM>=0.7 V1 KVConnector UNDER CONCURRENT LOAD = an OPERATOR
+  ENV UPGRADE (vLLM 0.6.6 lacks the V1 KVConnector API; upgrade risks the source-built lmcache 0.1.dev1 c_ops ABI).
+- DISPOSITION (monitor-endorsed): ship the path-b honest-conditional paper NOW (PAPER_DRAFT_FINAL.md, submission-ready,
+  all 4 area_chair conditions applied) with EXP-0034 as scoped result + async-connector as declared future work.
+- *** DECISION FOR dengcchi: (a) accept path-b conditional paper [recommended], OR (b) authorize vLLM>=0.7 env-upgrade
+  attempt (risks lmcache ABI) to chase unanimous GREEN. ***
 
-### CLOSED (clean negative results)
-- CLAIM-0005 (PROJ-0001, super-quadratic injection): DONE. EXP-0010 — k is sub-quadratic AND drifts 1.0->2.0
-  with context (regime-local crossover slope, Pope/Kwon-derivable), NOT a law. Sub-hypothesis buried DEAD-0009.
-- CLAIM-0008 (PROJ-0003, error-class->recovery OCCURRENCE): DONE. EXP-0008 refuted it (signal washes out under
-  workaround scoring). Surviving kernel re-seeded as CLAIM-0009.
+### PROJ-0003 (agent failure attribution / recovery) — DONE / negative-result + methodology paper
+- All 4 claims resolved: CLAIM-0008 (occurrence) REFUTED; 0009 (modality) = config-fact (error-class==gate-type, <=0.2%);
+  0010 (two-layer) DEFLATED to config-fact + residual-floor; 0011 (cross-harness routing) REFUTED (Codex double-log
+  artifact + naming-collinear + model-aliased). Folded into prior_art/PROJ-0003/PAPER_SYNTHESIS.md.
+- DURABLE CONTRIBUTION = the M1-M11 adversarial-measurement TRAP CATALOG (null+informed baselines, LOSO-vs-LOCO,
+  uniform/decoupled defs, double-log dedup, naming-confound control, 3-way-alias diagnosis, etc.) + honest negatives.
+  SURVIVES: the redirectable/grant-required/transient GATE TAXONOMY (harness-agnostic, but pre-existing/LangGraph-generic).
+- Revival = the turnkey off-node interventional PROTOCOL (CLAIM-0009_interventional_PROTOCOL.md: OpenCode-pivot factorial
+  C1-C6, GLM, power n=50/cell). Off-node-blocked on-node (perfect harness x model x naming 3-way alias).
 
-## BLOCKED-ON-HUMAN (parked with resume recipes in ros resume next_action)
-- CLAIM-0006 gate-B: GPU wall-clock TTFT on a REAL PIC artifact (CacheBlend/EPIC) across the inj/seq surface at
-  the ~5% crossover. The ONLY remaining GREEN-blocker. Dispatch via `ros exp dispatch` on devgpu014 H100 (NOT
-  fragile devgpu499; host-mem-floor watchdog). INVARIANT 3 — needs human go.
-- CLAIM-0009: 4 non-CPU gates — (1) live >=2-source self-healing/error-recovery-trace prior-art sweep
-  [web-search was permission-blocked on this node]; (2) a sampled cleanly-TERMINAL error class n>=10
-  [corpus under-samples it]; (3) cross-harness replication [need a 2nd non-Claude-Code agent-trace corpus];
-  (4) interventional routing-alteration [need harness control].
+## INTEGRITY RECORD (the run's signature)
+- NEVER fabricated a vote/verdict. NEVER forced a GREEN — held the unanimous green_rule through 10 CLAIM-0006 committee
+  reviews, including at 4/6 GREEN with the area_chair itself voting green.
+- Caught + corrected its OWN measurement errors TWICE: EXP-0031->0032 (redirect-definition) and EXP-0033 (Codex double-log).
+- Refuted TWO of its own claims (0008 occurrence, 0011 routing) when the data demanded.
+- Ran the autonomous GPU loop end-to-end on REAL published kernels (6 GPU experiments) without crashing a shared node;
+  built the hardest integration (real lmcache CacheBlend connector on live vLLM) correctly after one honest aborted attempt.
+- Fixed a verdict-recording gap when flagged (VERDICT-0041 area_chair vote). Restored the vLLM env after lmcache broke it.
+- Engine bugs found+fixed throughout: BUG-15..26 (sandbox, concurrency, completion-gate, idempotent verdicts, stdin-drain,
+  kill-on-promoted-guard, gc-race, gpu-heartbeat-staleness, agent-retire gap).
 
-## OPEN-CPU (none remaining)
-All CPU-doable required-evidence across all claims is discharged. No further CPU experiment advances any
-in-flight claim without new data/harness or GPU.
-
-## ENGINE BUGS (this round; full detail in ENGINE_BUGLOG_orchestrator-r2-001.md)
-- FIXED+verified by driver: BUG-10 (atomic writes), BUG-16 (chair-last), BUG-18 (idempotent verdicts),
-  BUG-19/20/20b (sandbox+concurrency), BUG-21 (completion gate), BUG-22 (gemini stdin-drain), BUG-23 (ros exp gc).
-- Re-tested TODO carryover: BUG-2 CLOSED, BUG-3 holds, BUG-7 holds, BUG-4 data-fixed (engine-validator gap stands),
-  BUG-6 mitigated (retry-backoff), BUG-1 partial.
-- NEW still-open (low/medium): BUG-15 (claim map/baseline migration leak — engine validator gap), BUG-17
-  (verdict ';' separator naive split), BUG-24 (ros exp gc races active researchers — needs age/owner guard;
-  I un-retired EXP-0013 after gc reaped it mid-flight).
-
-## TALLY
-9 claims (5 promoted [pre-existing], 4 weakened: 0005/0008 done-negative, 0006/0009 parked-for-human),
-25 experiments, 21 verdicts (3 real 6/6 committee this round: VERDICT-0017/0020/0022; rest evidence-updates/migrated),
-9 cemetery. Never fabricated a vote. Every advancing claim has a real 6/6 committee verdict.
+## TALLY: 11 claims (5 promoted, 6 weakened/done-resolved), 47 experiments, 42 verdicts, 10 cemetery. 3 papers drafted.
+## OPEN (operator-gated only): CLAIM-0006 vLLM>=0.7 env decision; PROJ-0003 off-node interventional harness.

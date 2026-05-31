@@ -2,62 +2,70 @@ claim_id: CLAIM-0011
 project_id: PROJ-0003
 stage: seed
 status: weakened
-claim: '[WEAKENED toward refutation, EXP-0033] The cross-harness recovery-MODALITY difference originally
-  claimed (CC redirects vs Codex abandons) DOES NOT survive clean data: Codex double-logs tool calls;
-  deduped, Codex PREEMPTS 152/152 (same modality bucket as CC), so CC-vs-Codex is NOT a routing-regime
-  contrast. The only nonzero in-thread reactive redirect (Gemini 2/9) is perfectly confounded with whether
-  the error message NAMES an in-inventory alternative (only Gemini''s does) -> the residual signal is
-  consistent with PROMPT/error-naming-driven, NOT harness-routing-driven. SURVIVING (weak): preemptive
-  parallel twin-firing is common across harnesses (CC 79%, Codex 100%) but that is NOT error-class- or
-  harness-routing-determined modality. The original thesis is largely REFUTED on-node; any residual routing-vs-prompt-vs-model
+claim: '[WEAKENED toward refutation, EXP-0033] The cross-harness recovery-MODALITY
+  difference originally claimed (CC redirects vs Codex abandons) DOES NOT survive
+  clean data: Codex double-logs tool calls; deduped, Codex PREEMPTS 152/152 (same
+  modality bucket as CC), so CC-vs-Codex is NOT a routing-regime contrast. The only
+  nonzero in-thread reactive redirect (Gemini 2/9) is perfectly confounded with whether
+  the error message NAMES an in-inventory alternative (only Gemini''s does) -> the
+  residual signal is consistent with PROMPT/error-naming-driven, NOT harness-routing-driven.
+  SURVIVING (weak): preemptive parallel twin-firing is common across harnesses (CC
+  79%, Codex 100%) but that is NOT error-class- or harness-routing-determined modality.
+  The original thesis is largely REFUTED on-node; any residual routing-vs-prompt-vs-model
   separation needs the off-node GATE-1 interventional.'
-why_it_matters: 'The durable, cross-harness-CONFIRMED finding from the PROJ-0003 lineage (CLAIM-0008 occurrence
-  refuted, 0009 config-fact, 0010 deflated): the recovery-modality signal that looked like error-class
-  prediction is actually the harness routing layer, now demonstrated ACROSS 2 independent harnesses (Claude
-  Code + Codex) on identical errors. A clean, defensible characterization + a transferable measurement
-  methodology.'
+why_it_matters: 'The durable, cross-harness-CONFIRMED finding from the PROJ-0003 lineage
+  (CLAIM-0008 occurrence refuted, 0009 config-fact, 0010 deflated): the recovery-modality
+  signal that looked like error-class prediction is actually the harness routing layer,
+  now demonstrated ACROSS 2 independent harnesses (Claude Code + Codex) on identical
+  errors. A clean, defensible characterization + a transferable measurement methodology.'
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes:
 - MAP-0002
 supporting_evidence:
 - exp_id: EXP-0031
-  summary: 'Gemini CLI 3rd-harness replication of CLAIM-0011. Corpus: 62 sessions (18 w/ tool calls),
-    198 calls, 60 failures. Gate taxonomy CONSISTENT across 3 harnesses (each has a REDIRECTABLE block
-    w/ named sanctioned alt: CC web_disabled, Codex input_filter, Gemini run_shell_command-not-found).
-    Gemini''s REDIRECTABLE gate recovers 6/6 (1.000, Wilson[0.610,1.000]) by IN-THREAD cross-tool redirect
-    vs 0 same-tool (blocked tool not in inventory) -> matches Claude Code (66/66), NOT Codex (0/142 abandon+preempt).
-    Per-gate: REDIRECTABLE redir-share 1.000 [0.610,1.000] vs GRANT_REQUIRED 0.267 [0.109,0.520] vs TRANSIENT
-    0.250 [0.120,0.449] (non-overlapping). Promotes confound from 2-harness to robust 3-harness characterization:
-    taxonomy harness-agnostic, modality per-harness w/ 2 regimes (in-thread-redirect CC+Gemini; abandon+preempt
-    Codex). SUPPORT. Caveat: small n=9 blocks; Gemini anchor is tool-not-in-inventory (structural twin),
-    no web tool in corpus.'
+  summary: 'Gemini CLI 3rd-harness replication of CLAIM-0011. Corpus: 62 sessions
+    (18 w/ tool calls), 198 calls, 60 failures. Gate taxonomy CONSISTENT across 3
+    harnesses (each has a REDIRECTABLE block w/ named sanctioned alt: CC web_disabled,
+    Codex input_filter, Gemini run_shell_command-not-found). Gemini''s REDIRECTABLE
+    gate recovers 6/6 (1.000, Wilson[0.610,1.000]) by IN-THREAD cross-tool redirect
+    vs 0 same-tool (blocked tool not in inventory) -> matches Claude Code (66/66),
+    NOT Codex (0/142 abandon+preempt). Per-gate: REDIRECTABLE redir-share 1.000 [0.610,1.000]
+    vs GRANT_REQUIRED 0.267 [0.109,0.520] vs TRANSIENT 0.250 [0.120,0.449] (non-overlapping).
+    Promotes confound from 2-harness to robust 3-harness characterization: taxonomy
+    harness-agnostic, modality per-harness w/ 2 regimes (in-thread-redirect CC+Gemini;
+    abandon+preempt Codex). SUPPORT. Caveat: small n=9 blocks; Gemini anchor is tool-not-in-inventory
+    (structural twin), no web tool in corpus.'
   data_path: experiments/2026-05-31/EXP-0031/
 negative_evidence:
 - exp_id: EXP-0032
-  summary: 'GATE-2 confound ablation (CC+Codex+Gemini corpora). INVENTORY-OVERLAP confound REFUTED: Codex
-    has fully-available in-inventory web twin (three_pai_external_web_search, 442 calls, present 41/41
-    block-sessions) yet 0 reactive in-thread redirects -> twin-availability is 100% constant across all
-    3 harnesses, cannot drive modality. ERROR-MESSAGE-NAMING confound PARTIALLY LIVE: strict reactive-redirect
-    rate co-varies with whether the block error names an in-inventory alt (Gemini names->0.667; CC ''Internet
-    mode not enabled'' + Codex ''try Claude Code'' name no in-inv tool->0.047,0.000). Uniform strict redefinition
-    collapses CC''s headline 66/66 to 2/43; CC and Codex are more similar than EXP-0031 claimed. CC-vs-Codex
-    gap survives at lenient any-after-window (0.93 vs 0.09) but reflects preempt-vs-isolate routing, not
-    clean reactive redirect. NET: WEAKEN - one confound discharged, one not; claim must be restated around
+  summary: 'GATE-2 confound ablation (CC+Codex+Gemini corpora). INVENTORY-OVERLAP
+    confound REFUTED: Codex has fully-available in-inventory web twin (three_pai_external_web_search,
+    442 calls, present 41/41 block-sessions) yet 0 reactive in-thread redirects ->
+    twin-availability is 100% constant across all 3 harnesses, cannot drive modality.
+    ERROR-MESSAGE-NAMING confound PARTIALLY LIVE: strict reactive-redirect rate co-varies
+    with whether the block error names an in-inventory alt (Gemini names->0.667; CC
+    ''Internet mode not enabled'' + Codex ''try Claude Code'' name no in-inv tool->0.047,0.000).
+    Uniform strict redefinition collapses CC''s headline 66/66 to 2/43; CC and Codex
+    are more similar than EXP-0031 claimed. CC-vs-Codex gap survives at lenient any-after-window
+    (0.93 vs 0.09) but reflects preempt-vs-isolate routing, not clean reactive redirect.
+    NET: WEAKEN - one confound discharged, one not; claim must be restated around
     preempt-vs-isolate + strict numbers; GATE-2 only PARTIALLY passed.'
   data_path: experiments/2026-05-31/EXP-0032/
 - exp_id: EXP-0033
-  summary: 'ERROR-NAMING confound NOT discharged + preempt-vs-isolate REFUTED under deduped uniform def.
-    Naming has ZERO within-harness variance in CC(0/43)/Codex(0/152) so within-harness naming test unestimable
-    there; Gemini (only harness w/ both buckets) named 0.222 vs unnamed 0.157 overlapping CIs (naming
-    non-significant, n=9 tiny). CRITICAL: Codex logs every call twice (function_call+mcp_tool_call_end);
-    EXP-0032 double-counted (304). Deduped to 152 canonical blocks: web twin fires BEFORE block 152/152
-    -> Codex PREEMPTS 100%, does NOT isolate. CC 79% preempt/0.116 reactive, Codex 100% preempt/0.000
-    reactive -> both preempt, reactive rates overlap near zero. The CC-preempt-vs-Codex-isolate harness
-    regime (CLAIM-0011''s surviving form) does NOT reproduce once Codex double-log fixed. Only Gemini
-    shows nonzero in-thread reactive redirect (2/9) and is the ONLY harness whose error names in-inventory
-    tools -> modality perfectly confounded w/ naming, consistent w/ naming/prompt-driven NOT routing.
-    Net WEAKEN; clean separation needs off-node GATE-1.'
+  summary: 'ERROR-NAMING confound NOT discharged + preempt-vs-isolate REFUTED under
+    deduped uniform def. Naming has ZERO within-harness variance in CC(0/43)/Codex(0/152)
+    so within-harness naming test unestimable there; Gemini (only harness w/ both
+    buckets) named 0.222 vs unnamed 0.157 overlapping CIs (naming non-significant,
+    n=9 tiny). CRITICAL: Codex logs every call twice (function_call+mcp_tool_call_end);
+    EXP-0032 double-counted (304). Deduped to 152 canonical blocks: web twin fires
+    BEFORE block 152/152 -> Codex PREEMPTS 100%, does NOT isolate. CC 79% preempt/0.116
+    reactive, Codex 100% preempt/0.000 reactive -> both preempt, reactive rates overlap
+    near zero. The CC-preempt-vs-Codex-isolate harness regime (CLAIM-0011''s surviving
+    form) does NOT reproduce once Codex double-log fixed. Only Gemini shows nonzero
+    in-thread reactive redirect (2/9) and is the ONLY harness whose error names in-inventory
+    tools -> modality perfectly confounded w/ naming, consistent w/ naming/prompt-driven
+    NOT routing. Net WEAKEN; clean separation needs off-node GATE-1.'
   data_path: experiments/2026-05-31/EXP-0033/
 verdict_history:
 - verdict_id: VERDICT-0036
@@ -75,71 +83,86 @@ verdict_history:
 - verdict_id: VERDICT-0042
   date: '2026-05-31'
   result: yellow
-revival_conditions: 'Off-node interventional ONLY (genuinely on-node-blocked): the v2 factorial (prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md)
-  — OpenCode-pivot, same model in 2 harnesses on an identical redirectable error +/- named alternative,
-  GLM on harness+model+error-naming. Revive iff harness-routing coefficient survives conditioning on model
-  + error-naming. On-node the 3 factors are a perfect alias (model-diagonal); OpenCode logs no model/tool/outcome
-  so C1-vs-C2 is unrunnable here.'
+revival_conditions: "Off-node interventional ONLY (genuinely on-node-blocked): the\
+  \ v2 factorial (prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md) \u2014\
+  \ OpenCode-pivot, same model in 2 harnesses on an identical redirectable error +/-\
+  \ named alternative, GLM on harness+model+error-naming. Revive iff harness-routing\
+  \ coefficient survives conditioning on model + error-naming. On-node the 3 factors\
+  \ are a perfect alias (model-diagonal); OpenCode logs no model/tool/outcome so C1-vs-C2\
+  \ is unrunnable here."
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0042=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: DONE-as-refuted (folded into PROJ-0003 synthesis). Cross-harness routing-modality
+  dissolved (Codex double-log artifact + naming-collinear + model-aliased). Revival
+  = off-node v2 interventional.
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T20:08:55Z'
-last_updated: '2026-05-31T21:49:58Z'
+last_updated: '2026-05-31T22:12:02Z'
 closest_prior_work:
 - work: MAST/Cemri 2025
   id: arXiv:2503.13657
-  relation: 'WHAT-fails taxonomy axis (14 modes); NOT recovery-modality/routing. EXP-0012: finer taxonomy
-    adds <=0.2% over 1 routing bit. No collision.'
+  relation: 'WHAT-fails taxonomy axis (14 modes); NOT recovery-modality/routing. EXP-0012:
+    finer taxonomy adds <=0.2% over 1 routing bit. No collision.'
 - work: Reflexion
   id: arXiv:2303.11366
-  relation: model-driven recovery (verbal RL) = the NULL CLAIM-0011 refutes (modality tracks routing bit,
-    error-class-invariant). No collision (refuted null); refutation observational not yet interventional.
+  relation: model-driven recovery (verbal RL) = the NULL CLAIM-0011 refutes (modality
+    tracks routing bit, error-class-invariant). No collision (refuted null); refutation
+    observational not yet interventional.
 - work: tau-bench/ToolEmu
   id: arXiv:2406.12045/2309.15817
-  relation: measurement genre (outcomes/rule-following/risk); do NOT attribute recovery MODALITY to routing.
-    No collision.
+  relation: measurement genre (outcomes/rule-following/risk); do NOT attribute recovery
+    MODALITY to routing. No collision.
 - work: LangGraph ToolNode
   id: docs
-  relation: 'CLOSEST: configurable error-handling hooks within ONE framework. PRE-EMPTS the GENERIC "framework
-    mediates recovery" phrasing -> CLAIM-0011 must be stated NARROWLY (cross-harness determination + EXP-0012
-    error-class screen-off) or it dies. Does NOT show cross-harness modality flip.'
+  relation: 'CLOSEST: configurable error-handling hooks within ONE framework. PRE-EMPTS
+    the GENERIC "framework mediates recovery" phrasing -> CLAIM-0011 must be stated
+    NARROWLY (cross-harness determination + EXP-0012 error-class screen-off) or it
+    dies. Does NOT show cross-harness modality flip.'
 - work: Container Sandbox Escape (per-MODEL disengagement)
   id: arXiv:2603.02277
-  relation: 'NEAR-COLLISION/PRESSURE: reports per-MODEL disengagement (GPT-5.2 92% vs Claude 0%) = SAME
-    abandon-vs-persist observable but attributed to the MODEL not harness. Maps onto CLAIM-0011 lineup
-    (Codex=OpenAI abandons, CC/Gemini=Claude/Google persist) -> modality could be MODEL disposition not
-    routing. Makes GATE-1 (same-model-cross-harness interventional) the BINDING load-bearing evidence.'
+  relation: 'NEAR-COLLISION/PRESSURE: reports per-MODEL disengagement (GPT-5.2 92%
+    vs Claude 0%) = SAME abandon-vs-persist observable but attributed to the MODEL
+    not harness. Maps onto CLAIM-0011 lineup (Codex=OpenAI abandons, CC/Gemini=Claude/Google
+    persist) -> modality could be MODEL disposition not routing. Makes GATE-1 (same-model-cross-harness
+    interventional) the BINDING load-bearing evidence.'
 design_notes:
-- 'v2 INTERVENTIONAL DESIGN + on-node disentanglement check (researcher-0009-design, 2026-05-31): the
-  routing-vs-model-vs-error-naming separation is GENUINELY OFF-NODE-BLOCKED. On-node, modality is a PERFECT
-  3-WAY ALIAS: harness (x) model (Codex=gpt-5.5, CC=Claude, Gemini=Gemini, a perfect diagonal) (x) error-naming
-  (only Gemini names an in-inv twin). OpenCode (the only model-agnostic harness, 80 sess on-node) logs
-  NEITHER model NOR tool/error/outcome -> the same-model-cross-harness cell (C1 vs C2) cannot be run on-node.
-  The v2 factorial (OpenCode-pivot, 6 cells C1-C6, identical block, error-text held fixed, Wilson CI N>=30/cell,
-  logistic GLM on harness+model+errortext) is the off-node experiment that breaks the alias; pre-registered
-  PASS (harness-routing wins) = |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3); KILL = model-disposition or error-text
-  dominates. On-node proxy (within-Claude-Code cross-VARIANT, family-blind): opus variants that hit the
-  gate redirect >=0.93 (modality stable across same-family variants) -> weakly toward harness-routing
-  but cannot touch the OpenAI-vs-Claude disposition axis (2603.02277). Design at prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md.'
-disposition: 'DONE-as-refuted (researcher-0011-final, 2026-05-31). The cross-harness routing-determines-modality
-  thesis DISSOLVES under clean data: Codex double-log artifact corrected (deduped Codex PREEMPTS 152/152,
-  same dominant mode as CC + Gemini -> headline contrast gone); the only significant cross-harness difference
-  (CC reactive 5/43 vs Codex 0/152, Fisher p=0.0004) is DIRECTION-WRONG vs the restated preempt-vs-isolate
-  claim, a 5-event tail over a shared preempt mode, and perfectly ALIASED with model disposition (Claude
-  vs GPT, cf arXiv:2603.02277); naming confound collinear w/ harness (within-Gemini test non-sig p=0.64).
-  SURVIVING (narrow, NOT modality-routing): the REDIRECTABLE gate TAXONOMY (each harness has a structurally-identical
-  hard-block-with-named-alternative; gate-type carries recovery info WITHIN a harness) — but that is the
-  pre-existing EXP-0008/MAP-0002 insight, generic form pre-empted by LangGraph, not a standalone novel
-  claim. DURABLE CONTRIBUTION = the METHODOLOGY (double-log dedup, naming-confound control, uniform strict
-  def collapsing CC 66/66->5/43, discharged tool-inventory confound). Fold into PROJ-0003 negative-result
-  synthesis. NOT cemetery (methodology + taxonomy + fully-specified revival experiment salvageable).'
+- 'v2 INTERVENTIONAL DESIGN + on-node disentanglement check (researcher-0009-design,
+  2026-05-31): the routing-vs-model-vs-error-naming separation is GENUINELY OFF-NODE-BLOCKED.
+  On-node, modality is a PERFECT 3-WAY ALIAS: harness (x) model (Codex=gpt-5.5, CC=Claude,
+  Gemini=Gemini, a perfect diagonal) (x) error-naming (only Gemini names an in-inv
+  twin). OpenCode (the only model-agnostic harness, 80 sess on-node) logs NEITHER
+  model NOR tool/error/outcome -> the same-model-cross-harness cell (C1 vs C2) cannot
+  be run on-node. The v2 factorial (OpenCode-pivot, 6 cells C1-C6, identical block,
+  error-text held fixed, Wilson CI N>=30/cell, logistic GLM on harness+model+errortext)
+  is the off-node experiment that breaks the alias; pre-registered PASS (harness-routing
+  wins) = |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3); KILL = model-disposition or error-text
+  dominates. On-node proxy (within-Claude-Code cross-VARIANT, family-blind): opus
+  variants that hit the gate redirect >=0.93 (modality stable across same-family variants)
+  -> weakly toward harness-routing but cannot touch the OpenAI-vs-Claude disposition
+  axis (2603.02277). Design at prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md.'
+disposition: "DONE-as-refuted (researcher-0011-final, 2026-05-31). The cross-harness\
+  \ routing-determines-modality thesis DISSOLVES under clean data: Codex double-log\
+  \ artifact corrected (deduped Codex PREEMPTS 152/152, same dominant mode as CC +\
+  \ Gemini -> headline contrast gone); the only significant cross-harness difference\
+  \ (CC reactive 5/43 vs Codex 0/152, Fisher p=0.0004) is DIRECTION-WRONG vs the restated\
+  \ preempt-vs-isolate claim, a 5-event tail over a shared preempt mode, and perfectly\
+  \ ALIASED with model disposition (Claude vs GPT, cf arXiv:2603.02277); naming confound\
+  \ collinear w/ harness (within-Gemini test non-sig p=0.64). SURVIVING (narrow, NOT\
+  \ modality-routing): the REDIRECTABLE gate TAXONOMY (each harness has a structurally-identical\
+  \ hard-block-with-named-alternative; gate-type carries recovery info WITHIN a harness)\
+  \ \u2014 but that is the pre-existing EXP-0008/MAP-0002 insight, generic form pre-empted\
+  \ by LangGraph, not a standalone novel claim. DURABLE CONTRIBUTION = the METHODOLOGY\
+  \ (double-log dedup, naming-confound control, uniform strict def collapsing CC 66/66->5/43,\
+  \ discharged tool-inventory confound). Fold into PROJ-0003 negative-result synthesis.\
+  \ NOT cemetery (methodology + taxonomy + fully-specified revival experiment salvageable)."
 revival_protocol: 'prior_art/PROJ-0003/CLAIM-0009_interventional_PROTOCOL.md (researcher-0009-xharness,
-  turnkey pre-registered): OpenCode-pivot factorial C1-C6 (de-aliases model/harness/naming), byte-identical
-  injection text, strict reactive-redirect + Wilson CI + double-log dedup, GLM logit(redirect)~harness+model+naming
-  w/ drop-one LRT. Pre-registered PASS (harness-routing/revive): |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3) AND
-  F_harness sig; KILL: model-disposition or naming dominates. Off-node harness spec (6 mandatory log fields;
-  on-node OpenCode logs 0/6). Power: equivalence C2~C3 is binding -> TARGET n=50/cell (300 total), ROBUST
-  80/cell. Runnable verbatim when a controllable model-agnostic fully-logged off-node harness exists.'
+  turnkey pre-registered): OpenCode-pivot factorial C1-C6 (de-aliases model/harness/naming),
+  byte-identical injection text, strict reactive-redirect + Wilson CI + double-log
+  dedup, GLM logit(redirect)~harness+model+naming w/ drop-one LRT. Pre-registered
+  PASS (harness-routing/revive): |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3) AND F_harness sig;
+  KILL: model-disposition or naming dominates. Off-node harness spec (6 mandatory
+  log fields; on-node OpenCode logs 0/6). Power: equivalence C2~C3 is binding -> TARGET
+  n=50/cell (300 total), ROBUST 80/cell. Runnable verbatim when a controllable model-agnostic
+  fully-logged off-node harness exists.'
