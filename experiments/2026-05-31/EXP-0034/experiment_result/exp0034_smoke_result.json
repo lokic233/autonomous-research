@@ -1,0 +1,16 @@
+{
+  "harness": "exp0034",
+  "smoke_cell": {"seq": 8192, "inj_frac": 0.05, "batch": 1},
+  "pic_arm_mode": "inline-real-cacheblend-kernels (gather + HKVD-select + scatter-blend, all layers) + real first-token decode",
+  "full_connector_in_loop": false,
+  "discovered_format": "NL_X_TWO_NB_BS_NH_HS",
+  "num_layers": 28, "num_heads": 4, "head_size": 128, "hidden_dim": 512, "nslots": 359408,
+  "layer0_shape": [2, 22463, 16, 4, 128],
+  "recomp_ratio": 0.15,
+  "full_connector_blocker": "vLLM 0.6.6.post1 lacks vllm.distributed.kv_transfer.kv_connector.v1 (and ec_transfer); lmcache LMCacheConnectorV1 + LMCBlender V1-adapter wiring unimportable -> async connector-in-serving-loop infeasible without vLLM>=0.7/0.8 upgrade.",
+  "cdc_rows": 666, "pic_rows": 747,
+  "cdc_e2e_ttft_ms": 263.2184, "pic_e2e_ttft_ms": 271.3125, "pic_over_cdc_ttft": 1.0308,
+  "hkvd_topk_per_layer": 112, "smoke_pass": true, "device": "NVIDIA H100", "reps": 6, "warm": 2,
+  "gpu_min_elapsed": 0.38,
+  "versions": {"vllm": "0.6.6.post1", "lmcache": "0.1.dev1", "torch": "2.5.1+cu124"}
+}
