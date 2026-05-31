@@ -59,3 +59,61 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
   look like a hung/locked repo. Need: serialize engine git ops, or have engine retry-with-backoff, or
   document "engine owns git; do not run manual git concurrently". Severity: medium (operational footgun
   for the exact commit discipline the orchestrator prompt mandates).
+
+## BUG-3 CONFIRMED (HIGH) — `ros verdict write` does NOT validate votes against green_rule
+- Source: /Users/dengcchi/research-os/engine/ros.py cmd_verdict_write (lines ~573 & ~610).
+- The function builds reviewer_votes purely from the --votes string and writes final_verdict=args.final
+  with NO check against config committee.green_rule (unanimous) or member count (6). It will happily
+  record final_verdict:green with one vote, mismatched votes, or NO --votes at all.
+- CONSEQUENCE: the "GREEN requires unanimous 6/6 committee" rule is convention only, unenforced by the
+  engine. Explains VERDICT-0006/0007 having 1 reviewer_vote each. A buggy/lazy orchestrator can mint a
+  GREEN with zero committee parity. Rule-1 (claim+verdict parity) is NOT machine-enforced.
+- FIX SUGGESTION: in cmd_verdict_write, if final in {green,promote}: require len(votes)==len(config
+  committee.members) and (green_rule==unanimous => all votes green); else exit nonzero. Also validate
+  vote roles match configured member roles.
+
+## BUG-8 (CODE) — cmd_verdict_write defined TWICE (verbatim duplicate)
+- ros.py defines `def cmd_verdict_write(args)` at ~line 573 AND again identically at ~line 610.
+- Python uses the SECOND; the first is dead code. Smells like a bad merge/paste. Severity: low-fn
+  (harmless today) but a maintenance hazard — a fix applied to one copy won't take effect.
+
+## BUG-9 (CODE) — `verdict` subparser registered TWICE in main()
+- main() calls `sub.add_parser("verdict")` and wires the `write` subcommand TWICE (lines ~660 & ~667).
+- Re-adding a subparser with the same name is fragile (argparse behavior); the second registration's
+  args/defaults win. Same bad-merge signature as BUG-8. Severity: low but confirms duplicated block.
+
+## BUG-7 (LIVENESS UX) — completed agents flagged "should revive" forever
+- `ros liveness` lists prior-session agents (orchestrator-main-001, researcher-cdc-baselines-A,
+  researcher-cdc-robustness-B) as "☠️ DEAD (past 45m grace — orchestrator should revive)" even though
+  their WORK IS COMPLETE (they pinged done + their EXPs are completed). There is no `--status completed`
+  retirement that removes them from the revive nudge. An orchestrator that obeys the nudge would
+  RESPAWN finished work / duplicate completed lanes. Need a terminal/retired state honored by liveness.
+
+## BUG-3 CONFIRMED (HIGH) — `ros verdict write` does NOT validate votes against green_rule
+- Source: /Users/dengcchi/research-os/engine/ros.py cmd_verdict_write (lines ~573 & ~610).
+- The function builds reviewer_votes purely from the --votes string and writes final_verdict=args.final
+  with NO check against config committee.green_rule (unanimous) or member count (6). It will happily
+  record final_verdict:green with one vote, mismatched votes, or NO --votes at all.
+- CONSEQUENCE: the "GREEN requires unanimous 6/6 committee" rule is convention only, unenforced by the
+  engine. Explains VERDICT-0006/0007 having 1 reviewer_vote each. A buggy/lazy orchestrator can mint a
+  GREEN with zero committee parity. Rule-1 (claim+verdict parity) is NOT machine-enforced.
+- FIX SUGGESTION: in cmd_verdict_write, if final in {green,promote}: require len(votes)==len(config
+  committee.members) and (green_rule==unanimous => all votes green); else exit nonzero. Also validate
+  vote roles match configured member roles.
+
+## BUG-8 (CODE) — cmd_verdict_write defined TWICE (verbatim duplicate)
+- ros.py defines `def cmd_verdict_write(args)` at ~line 573 AND again identically at ~line 610.
+- Python uses the SECOND; the first is dead code. Smells like a bad merge/paste. Severity: low-fn
+  (harmless today) but a maintenance hazard — a fix applied to one copy won't take effect.
+
+## BUG-9 (CODE) — `verdict` subparser registered TWICE in main()
+- main() calls `sub.add_parser("verdict")` and wires the `write` subcommand TWICE (lines ~660 & ~667).
+- Re-adding a subparser with the same name is fragile (argparse behavior); the second registration's
+  args/defaults win. Same bad-merge signature as BUG-8. Severity: low but confirms duplicated block.
+
+## BUG-7 (LIVENESS UX) — completed agents flagged "should revive" forever
+- `ros liveness` lists prior-session agents (orchestrator-main-001, researcher-cdc-baselines-A,
+  researcher-cdc-robustness-B) as "☠️ DEAD (past 45m grace — orchestrator should revive)" even though
+  their WORK IS COMPLETE (they pinged done + their EXPs are completed). There is no `--status completed`
+  retirement that removes them from the revive nudge. An orchestrator that obeys the nudge would
+  RESPAWN finished work / duplicate completed lanes. Need a terminal/retired state honored by liveness.
