@@ -110,7 +110,7 @@ next_action: 'Two CPU lanes done: terminal pole un-demonstrable on this corpus (
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T21:12:01Z'
+last_updated: '2026-05-31T21:49:58Z'
 design_notes:
 - 'v2 INTERVENTIONAL DESIGN + on-node disentanglement check (researcher-0009-design, 2026-05-31): the
   routing-vs-model-vs-error-naming separation is GENUINELY OFF-NODE-BLOCKED. On-node, modality is a PERFECT
@@ -123,3 +123,10 @@ design_notes:
   dominates. On-node proxy (within-Claude-Code cross-VARIANT, family-blind): opus variants that hit the
   gate redirect >=0.93 (modality stable across same-family variants) -> weakly toward harness-routing
   but cannot touch the OpenAI-vs-Claude disposition axis (2603.02277). Design at prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md.'
+revival_protocol: 'prior_art/PROJ-0003/CLAIM-0009_interventional_PROTOCOL.md (researcher-0009-xharness,
+  turnkey pre-registered): OpenCode-pivot factorial C1-C6 (de-aliases model/harness/naming), byte-identical
+  injection text, strict reactive-redirect + Wilson CI + double-log dedup, GLM logit(redirect)~harness+model+naming
+  w/ drop-one LRT. Pre-registered PASS (harness-routing/revive): |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3) AND
+  F_harness sig; KILL: model-disposition or naming dominates. Off-node harness spec (6 mandatory log fields;
+  on-node OpenCode logs 0/6). Power: equivalence C2~C3 is binding -> TARGET n=50/cell (300 total), ROBUST
+  80/cell. Runnable verbatim when a controllable model-agnostic fully-logged off-node harness exists.'
