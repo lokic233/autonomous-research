@@ -1,0 +1,40 @@
+verdict_id: VERDICT-0039
+claim_id: CLAIM-0011
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0032
+experiment_paths:
+- experiments/2026-05-31/EXP-0032
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'GATE-2 only PARTIALLY passed. EXP-0031 MEASUREMENT ERROR: uniform strict reactive-redirect
+  collapses CC 66/66->2/43 (66/66 counted preemptive/parallel twin usage)'
+- CC+Codex look SIMILAR under strict def (0.047 vs 0.000)
+- 'ERROR-MESSAGE-NAMING confound LIVE: redirect co-varies w/ whether error names an
+  in-inv alternative (only Gemini''s does) -> modality may be partly PROMPT-driven
+  not routing'
+- surviving thesis = PREEMPT-vs-ISOLATE harness regime (CC parallel-fires twin lenient
+  0.93 vs Codex isolates 0.09), NOT clean in-thread reactive redirect
+required_evidence:
+- RESTATE CLAIM-0011 to the surviving preempt-vs-isolate form (DONE)
+- "GATE-1 interventional (same-model cross-harness) \u2014 now doubly binding: separates\
+  \ model-vs-harness AND controls the error-naming confound"
+- 'tool-inventory confound is REFUTED (supports routing: Codex has+uses a twin, 442
+  calls, yet 0/152 redirects)'
+map_delta_proposals:
+- "MAP-0002: CLAIM-0011 WEAKENED by GATE-2 (EXP-0032) \u2014 restated to PREEMPT-vs-ISOLATE\
+  \ harness regime (tool-inventory confound REFUTED"
+- error-naming confound LIVE
+- EXP-0031 66/66->2/43 under uniform strict def). Clean reactive-redirect framing
+  dead
+- preempt-vs-isolate survives as a harness fact. GATE-1 interventional doubly-binding
+  (model-vs-harness + error-naming control).
+baseline_requirements: []
+created_at: '2026-05-31T20:34:23Z'

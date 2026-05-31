@@ -249,7 +249,12 @@ nodes:
     routing, NOT error-class. Promotes confound from single-harness-inseparable to 3-HARNESS-CONFIRMED.
     | +Gemini (EXP-0031): REDIRECTABLE gate=run_shell_command block, recovers 6/6 in-thread redirect [Wilson
     0.610,1.000], MATCHES Claude Code (66/66) NOT Codex (0/142). Taxonomy consistent across 3 harnesses;
-    modality per-harness, 2 regimes (in-thread-redirect CC+Gemini / abandon+preempt Codex). 3-HARNESS-CONFIRMED.'
+    modality per-harness, 2 regimes (in-thread-redirect CC+Gemini / abandon+preempt Codex). 3-HARNESS-CONFIRMED.
+    | GATE-2 (EXP-0032) NUANCE: tool-inventory confound REFUTED (Codex has+uses a web twin, 442 calls,
+    yet 0/152 reactive redirects -> not abandoning for lack of twin). BUT error-message-naming confound
+    LIVE (redirect co-varies w/ whether error names an alt) + EXP-0031 measurement error (uniform strict
+    def collapses CC 66/66->2/43). Surviving = PREEMPT-vs-ISOLATE harness regime (CC parallel-fires twin
+    0.93 lenient vs Codex isolates 0.09), NOT clean reactive redirect.'
   - 'CLAIM-0011 model-vs-harness confound (arXiv:2603.02277): per-MODEL disengagement (GPT-5.2 92% / Claude
     0%) maps onto the harness lineup (Codex=OpenAI / CC+Gemini=Claude+Google) -> modality difference could
     be MODEL disposition, NOT routing. GATE-1 interventional (same-model cross-harness) is now the BINDING
@@ -259,7 +264,7 @@ nodes:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T20:30:34Z'
+  last_updated: '2026-05-31T20:34:49Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
@@ -275,7 +280,9 @@ nodes:
     | +cross-harness Codex (2026-05-31): modality is harness-specific routing (confirmed across 2 harnesses)
     | +EXP-0031 (2026-05-31): Gemini 3rd-harness — taxonomy-consistent, modality matches Claude Code,
     confound 3-HARNESS-CONFIRMED; CLAIM-0011 supported | +GATE-3 (2026-05-31): prior-art positioned (MAST/Reflexion/tau-bench/LangGraph);
-    model-vs-harness near-collision 2603.02277 makes GATE-1 binding'
+    model-vs-harness near-collision 2603.02277 makes GATE-1 binding | +GATE-2/EXP-0032 (2026-05-31): CLAIM-0011
+    weakened+restated (preempt-vs-isolate); tool-inventory confound refuted, error-naming confound live;
+    GATE-1 doubly-binding'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

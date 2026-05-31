@@ -12,12 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'GATE-2 confound ablation (CC+Codex+Gemini corpora). INVENTORY-OVERLAP
+  confound REFUTED: Codex has fully-available in-inventory web twin (three_pai_external_web_search,
+  442 calls, present 41/41 block-sessions) yet 0 reactive in-thread redirects -> twin-availability
+  is 100% constant across all 3 harnesses, cannot drive modality. ERROR-MESSAGE-NAMING
+  confound PARTIALLY LIVE: strict reactive-redirect rate co-varies with whether the
+  block error names an in-inventory alt (Gemini names->0.667; CC ''Internet mode not
+  enabled'' + Codex ''try Claude Code'' name no in-inv tool->0.047,0.000). Uniform
+  strict redefinition collapses CC''s headline 66/66 to 2/43; CC and Codex are more
+  similar than EXP-0031 claimed. CC-vs-Codex gap survives at lenient any-after-window
+  (0.93 vs 0.09) but reflects preempt-vs-isolate routing, not clean reactive redirect.
+  NET: WEAKEN - one confound discharged, one not; claim must be restated around preempt-vs-isolate
+  + strict numbers; GATE-2 only PARTIALLY passed.'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0032/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0039
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T20:32:56Z'
 prompt_version: ''
