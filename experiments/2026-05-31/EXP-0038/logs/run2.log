@@ -1,0 +1,110 @@
+Parsing corpora ...
+  CC sessions>= 8: 39
+  Codex sessions>= 8: 61
+  Gemini sessions>= 8: 11
+
+=== claude_code (base) ===
+   n_sessions          : 17
+   total_trials        : 1661
+   total_fails         : 115
+   fail_rate           : 0.06923540036122817
+   n_web_disabled      : 5
+   stouffer_analytic   : -4.066
+   stouffer_perm       : -4.066
+   median_analytic_z   : -0.406
+   median_perm_z       : -0.379
+   frac_z_neg          : 0.706
+   frac_perm_z_neg     : 0.706
+   frac_perm_sig       : 0.176
+   fisher_chi2         : 52.07
+   fisher_z            : 1.969
+   B                   : 0.3559
+   B_ci                : [-0.012, 0.384]
+   B_corrected         : 0.4174
+   Bc_ci               : [0.0014, 0.4525]
+   n_interfailure_gaps : 98
+   dispersion_index    : 1.626
+
+=== codex (base) ===
+   n_sessions          : 43
+   total_trials        : 1871
+   total_fails         : 99
+   fail_rate           : 0.05291288081239979
+   n_web_disabled      : 1
+   stouffer_analytic   : -15.067
+   stouffer_perm       : -15.142
+   median_analytic_z   : -2.235
+   median_perm_z       : -2.253
+   frac_z_neg          : 0.767
+   frac_perm_z_neg     : 0.791
+   frac_perm_sig       : 0.349
+   fisher_chi2         : 230.44
+   fisher_z            : 7.702
+   B                   : 0.2178
+   B_ci                : [0.0526, 0.3142]
+   B_corrected         : 0.2701
+   Bc_ci               : [0.0723, 0.3946]
+   n_interfailure_gaps : 56
+   dispersion_index    : 1.413
+
+=== gemini (base) ===
+   n_sessions          : 10
+   total_trials        : 172
+   total_fails         : 52
+   fail_rate           : 0.3023255813953488
+   n_web_disabled      : 0
+   stouffer_analytic   : -3.844
+   stouffer_perm       : -3.9
+   median_analytic_z   : -0.897
+   median_perm_z       : -0.883
+   frac_z_neg          : 0.8
+   frac_perm_z_neg     : 0.9
+   frac_perm_sig       : 0.2
+   fisher_chi2         : 44.34
+   fisher_z            : 2.989
+   B                   : 0.1636
+   B_ci                : [-0.3883, 0.2444]
+   B_corrected         : 0.2135
+   Bc_ci               : [-0.4187, 0.3188]
+   n_interfailure_gaps : 42
+   dispersion_index    : 1.938
+
+======================================================================
+M4 ABLATION: reclassify web_disabled failures as NON-failures
+=== claude_code (M4 web_disabled->ok) ===
+   n_sessions          : 16
+   n_web_disabled      : 5
+   stouffer_analytic   : -4.9
+   stouffer_perm       : -4.929
+   frac_perm_sig       : 0.25
+   B                   : 0.3471
+   B_ci                : [-0.0204, 0.365]
+   B_corrected         : 0.4084
+   Bc_ci               : [-0.0087, 0.432]
+   dispersion_index    : 1.577
+
+=== codex (M4 web_disabled->ok) ===
+   n_sessions          : 43
+   n_web_disabled      : 1
+   stouffer_analytic   : -14.97
+   stouffer_perm       : -14.844
+   frac_perm_sig       : 0.349
+   B                   : 0.2142
+   B_ci                : [0.0582, 0.3106]
+   B_corrected         : 0.2663
+   Bc_ci               : [0.0791, 0.3887]
+   dispersion_index    : 1.424
+
+=== gemini (M4 web_disabled->ok) ===
+   n_sessions          : 10
+   n_web_disabled      : 0
+   stouffer_analytic   : -3.844
+   stouffer_perm       : -3.866
+   frac_perm_sig       : 0.2
+   B                   : 0.1636
+   B_ci                : [-0.3873, 0.2434]
+   B_corrected         : 0.2135
+   Bc_ci               : [-0.4156, 0.3197]
+   dispersion_index    : 1.938
+
+CSVs -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0038/results/harness_summary.csv , per_session.csv

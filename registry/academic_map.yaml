@@ -48,6 +48,12 @@ nodes:
   - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Prefill-as-a-Service arXiv:2604.15039'
   - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Strata arXiv:2508.18572'
   - '[FORWARD-FRONTIER SW-side, no collision w/ promoted HW claims] Sparse Prefix Caching arXiv:2605.05219'
+  - '[benchmarking-methodology, occupies the PROJ-0001 methodology-angle] Raasveldt et al. ''Fair benchmarking
+    considered difficult'' DBTest 2018'
+  - '[benchmarking-methodology, occupies the PROJ-0001 methodology-angle] Hoefler-Belli ''Scientific Benchmarking
+    of Parallel Computing Systems'' SC15'
+  - '[benchmarking-methodology, occupies the PROJ-0001 methodology-angle] ''Measurement Imbalance Undermines
+    Industry Productivity Claims'' arXiv:2506.02064'
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
@@ -201,7 +207,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T22:36:55Z'
+  last_updated: '2026-05-31T22:37:32Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -240,7 +246,8 @@ nodes:
     (2026-05-31): F-NEG premature-park (occupied tier published, unoccupied tier=identity); +5 fresh forward
     works; no successor seed | +EXP-0036 (2026-05-31): cross-project harness-routing angle KILLED (CONTROL-A:
     escape was trajectory-truncation not routing, reduces to EXP-0005/0015); PROJ-0002 saturation triply-confirmed
-    | +PAPER RED-TEAM GO (2026-05-31): PROJ-0001 paper submission-ready, no blocking defect'
+    | +PAPER RED-TEAM GO (2026-05-31): PROJ-0001 paper submission-ready, no blocking defect | +seed2 (2026-05-31):
+    methodology-angle KILLED (7th consecutive lane); PROJ-0001 SEEDING CLOSED/COMPLETE'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
@@ -281,6 +288,16 @@ nodes:
     §3.2 (the paper''s strongest part); venue-fit PASS (MLSys keystone + ATC/EuroSys/OSDI body); ZERO
     over-claims (no always/universal/slope-law/re-probe). Punch-list empty (2 optional non-gating: real-FlashInfer-cell
     GPU-optional; needs_attention reword ALREADY DONE). Red-team: prior_art/PROJ-0001/PAPER_REVIEW_REDTEAM.md.'
+  closure_status: 'PROJ-0001 SEEDING CLOSED / COMPLETE (2026-05-31, after 7 disjoint early-kill lanes:
+    laneB, laneD, laneE, thesis, frontier, successor, seed2). Substance space (1-degree), forward frontier
+    (2-degree), successor-project, AND the orthogonal methodology-angle ALL exhausted. seed2 killed the
+    methodology angle on 4 gates: (1) restates 3 of the 5 promoted claims (T1=accounting-identity test,
+    T2=CLAIM-0002, T3=CLAIM-0003); (2) occupied by canonical benchmarking-methodology lit (Raasveldt DBTest''18,
+    Hoefler-Belli SC15, arXiv:2506.02064); (3) the PROJ-0003 M-catalog publishability analogy FAILS —
+    PROJ-0003''s substance was REFUTED (methodology=forced survivor, surprising traps) but PROJ-0001''s
+    substance SUCCEEDED (methodology=generic caveats, the implicit Methods section); (4) accounting-identity
+    wall. The triad is the paper''s implicit Methods section, NOT a separable contribution. NO further
+    PROJ-0001 seeding warranted — paper RED-TEAM-GO / submission-ready is the terminal deliverable.'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
