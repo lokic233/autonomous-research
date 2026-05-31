@@ -117,3 +117,15 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
   their WORK IS COMPLETE (they pinged done + their EXPs are completed). There is no `--status completed`
   retirement that removes them from the revive nudge. An orchestrator that obeys the nudge would
   RESPAWN finished work / duplicate completed lanes. Need a terminal/retired state honored by liveness.
+
+## BUG-5 CONFIRMED (independently, by researcher-cdc-workload-B)
+- `ros exp register --level 0` (CPU-only) defaulted needs_gpu:true + max_gpu_hours:0.25 in EXP-0005.
+- Researcher had to hand-edit the experiment.yaml to needs_gpu:false. Level-0 (and any --hardware cpu)
+  should default needs_gpu:false / max_gpu_hours:0. Confirmed twice (EXP-0002/3/4 by prior session, now
+  EXP-0005). Severity: medium (mis-tag pollutes GPU accounting + could wrongly gate dispatch).
+
+## BUG-5 CONFIRMED (independently, by researcher-cdc-workload-B)
+- `ros exp register --level 0` (CPU-only) defaulted needs_gpu:true + max_gpu_hours:0.25 in EXP-0005.
+- Researcher had to hand-edit the experiment.yaml to needs_gpu:false. Level-0 (and any --hardware cpu)
+  should default needs_gpu:false / max_gpu_hours:0. Confirmed twice (EXP-0002/3/4 by prior session, now
+  EXP-0005). Severity: medium (mis-tag pollutes GPU accounting + could wrongly gate dispatch).
