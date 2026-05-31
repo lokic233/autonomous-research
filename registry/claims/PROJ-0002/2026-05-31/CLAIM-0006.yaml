@@ -276,12 +276,15 @@ verdict_history:
 - verdict_id: VERDICT-0041
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0043
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T21:45:34Z'
+last_updated: '2026-05-31T21:52:29Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -303,11 +306,20 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: committee_pending
-next_action: 're-review #10 (run_15): composition-fallacy gate MEASURED (EXP-0034
-  CDC wins E2E 12/12). GREEN now or YELLOW pending true-async-connector (env-upgrade-gated)?'
+lifecycle_state: blocked
+next_action: CLOSEST-YET YELLOW (VERDICT-0043 4 GREEN/2 yellow; did NOT override unanimous
+  rule). Novelty+theory+systems+area_chair GREEN; both serving axes measured favor
+  CDC. SINGLE GREEN gate = true async-connector E2E on vLLM>=0.7 under concurrent
+  load (operator env upgrade + V1 KVConnector). Path-b honest-conditional paper (PAPER_DRAFT.md)
+  is SUBMITTABLE NOW with EXP-0034 as the scoped result + the async-connector as declared
+  future work. Apply the area_chair conditions (scope-statement placement, 8k/5% CI,
+  named baselines incl Irminsul) to the draft regardless.
 active_experiments: []
-blocking_on: ''
+blocking_on: "GREEN needs unanimity (engine green_rule). 4 GREEN/2 yellow (VERDICT-0043).\
+  \ The 2 YELLOWs (eval_prosecutor + product_realist) require the TRUE async-connector\
+  \ E2E on vLLM>=0.7 V1 KVConnector under CONCURRENT load \u2014 an OPERATOR ENV UPGRADE\
+  \ (vLLM 0.6.6 lacks the V1 KVConnector API). env-upgrade-gated, like PROJ-0003's\
+  \ off-node battery."
 writeup_notes:
 - "PATH-B WRITEUP READY (2026-05-31, researcher-0002-writeup): prior_art/PROJ-0002/CLAIM-0006/WRITEUP_SYNTHESIS.md\
   \ \u2014 CLAIM-0006 is SUBMITTABLE TODAY as an honest-conditional-characterization\

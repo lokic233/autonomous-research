@@ -138,7 +138,13 @@ nodes:
     — per-component CDC wins COMPOSE to an E2E win (margins compress but net favors CDC). SCOPE: scoped
     approx (real-blend-in-window, NOT true async connector — vLLM 0.6.6 lacks V1 KVConnector, env-upgrade-gated;
     async overlap would shrink not flip the margin). Both serving axes (gather EXP-0030 + E2E EXP-0034)
-    now favor CDC, measured.'
+    now favor CDC, measured. | VERDICT-0043 (6/6, CLOSEST: 4 GREEN [novelty/systems/theory/area_chair]
+    / 2 yellow; area_chair green-override but unanimous green_rule binds -> YELLOW, NOT promoted, no override).
+    Both serving axes measured favor CDC (gather EXP-0030 + in-window E2E EXP-0034 12/12). SINGLE un-measured
+    axis = TRUE async connector (vLLM>=0.7 V1 KVConnector under CONCURRENT load) — env-upgrade-gated;
+    eval_prosecutor: async could close the 0.32% min-margin (8k/5%) to a tie. product_realist: win marginal
+    (0.3-2.9%) + regime-confined, lead w/ negative adoption guidance. Path-b honest-conditional paper
+    SUBMITTABLE now. GREEN gate = the vLLM>=0.7 async-E2E experiment (operator env upgrade).'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -185,7 +191,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T21:44:14Z'
+  last_updated: '2026-05-31T21:52:29Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -219,7 +225,8 @@ nodes:
     (2026-05-31): 2 GREEN, gather resolved, composition-axis = EXP-0034 combined-E2E single gate | +PROJ-0001
     FINALIZED (2026-05-31): paper outline + citation sweep clean + needs_attention reworded; DONE/writing-only
     | +EXP-0034 (2026-05-31): combined E2E composition control — CDC wins 12/12 E2E, fallacy controlled;
-    both serving axes favor CDC'
+    both serving axes favor CDC | +VERDICT-0043 (2026-05-31): 4 GREEN/2 yellow closest-yet, unanimous-rule
+    held (no force); single gate = vLLM>=0.7 async-connector E2E (env-upgrade-gated)'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff

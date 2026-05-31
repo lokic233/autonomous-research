@@ -1,0 +1,72 @@
+verdict_id: VERDICT-0043
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0030
+- EXP-0034
+experiment_paths:
+- experiments/2026-05-31/EXP-0030
+- experiments/2026-05-31/EXP-0034
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: area_chair
+  vote: green
+- role: evaluation_prosecutor
+  vote: yellow
+- role: product_realist
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'CLOSEST YET: 4 GREEN (novelty_killer, systems_reviewer, theory_skeptic, area_chair)
+  / 2 YELLOW (evaluation_prosecutor, product_realist), 0 RED. area_chair voted+argued
+  GREEN (YELLOWs are scope-constraints not validity flaws, composition direction bounded).
+  BUT green_rule=unanimous (engine-enforced): 2 genuine reviewer YELLOWs -> stays
+  YELLOW, NOT promoted (orchestrator did NOT override)'
+- 'eval_prosecutor YELLOW: EXP-0034 inline approx structurally handicaps PIC by omitting
+  lmcache''s async layerwise transfer scheduler (PIC''s primary latency-hiding)'
+- at the 0.32% min margin (8k/5%) any async shrinkage is effectively a tie -> 'evaluation
+  strawman' until measured on vLLM>=0.7 V1 KVConnector under CONCURRENT load
+- 'product_realist YELLOW: win is real but operationally MARGINAL (0.3-2.9%, likely
+  below production variance) + confined to a minority regime (S>=50k'
+- ~81% of tokens in degrade)
+- primary value = negative adoption guidance
+required_evidence:
+- "GREEN needs unanimity. The 2 YELLOW asks: (1) [eval_prosecutor KILLER EXP] E2E-TTFT\
+  \ on vLLM>=0.7 (or lmcache's vLLM fork) with the V1 KVConnector fully enabled for\
+  \ TRUE async layerwise transfers, UNDER CONCURRENT REQUEST LOAD (+ latency jitter\
+  \ + concurrent throughput metrics) \u2014 env-upgrade-gated, the one un-measured\
+  \ axis"
+- (2) [product_realist] frame the win honestly as marginal + regime-confined, lead
+  with the negative adoption guidance
+- '[area_chair conditions, do regardless] paper states EXP-0034 scoped-approx in the
+  setup section (not buried)'
+- report the 8k/5% CI explicitly + frame 12/12 directional consistency as the evidence
+- cite CacheBlend 2405.16444 + LMCache + vLLM/PagedAttention 2309.06180 + SGLang 2312.07104
+  + Irminsul 2605.05696 BY NAME
+map_delta_proposals:
+- 'CLAIM-0006: 4 GREEN/2 YELLOW (CLOSEST yet'
+- area_chair green-override but unanimous rule binds -> YELLOW, not promoted). Both
+  serving axes measured favor CDC (gather EXP-0030 + in-window E2E EXP-0034). Single
+  remaining axis = TRUE async connector (vLLM>=0.7 V1 KVConnector under concurrent
+  load), env-upgrade-gated
+- 'eval_prosecutor argues async could close the 0.32% min-margin to a tie. product_realist:
+  win marginal+regime-confined, lead w/ negative guidance. Path-b honest-conditional
+  paper SUBMITTABLE now.'
+baseline_requirements:
+- CacheBlend arXiv:2405.16444 (by name)
+- LMCache (kernel source + async-scope caveat)
+- vLLM/PagedAttention 2309.06180
+- SGLang RadixAttention 2312.07104
+- Irminsul 2605.05696 (CDC-over-radix twin, must cite)
+- + vLLM>=0.7 V1 KVConnector async E2E under concurrent load = the un-measured GREEN
+  axis
+created_at: '2026-05-31T21:51:52Z'
