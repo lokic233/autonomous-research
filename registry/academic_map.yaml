@@ -1,24 +1,35 @@
 nodes:
 - node_id: MAP-0001
   area: GPU memory systems for agentic LLM KV-cache (VMM/CoW/branching)
-  occupied_territory: vAttention (VMM KV), ChunkAttention, vLLM PagedAttention/APC,
-    SGLang RadixAttention, FlashInfer, Continuum (KV-TTL)
+  occupied_territory: vAttention (VMM KV), ChunkAttention, vLLM PagedAttention/APC, SGLang RadixAttention,
+    FlashInfer, Continuum (KV-TTL), Irminsul, EPIC/MEPIC, CacheBlend/Cache-Craft
   key_prior_work:
   - vAttention arXiv 2405.04437
   - PagedAttention SOSP'23
   - RadixAttention NeurIPS'24
   - Continuum arXiv 2511.02230
+  - Irminsul arXiv 2605.05696 (CDC-over-radix, single-source flag)
+  - EPIC arXiv 2410.15332 (PIC)
+  - MEPIC arXiv 2512.16822
+  - CacheBlend arXiv 2405.16444 (EuroSys'25)
+  - Cache-Craft arXiv 2502.15734
+  - Don't Break the Cache arXiv 2601.06007 (agentic prompt-cache cost eval)
+  - FastCDC/Rabin (CDC insertion-resilience, foundational)
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
   - FlashInfer
   open_gaps:
   - idle-window speculative prefill (CLAIM-0002 poc, YELLOW)
-  - prefix-cache invalidation repair (CLAIM-0006)
+  - prefix-cache invalidation COST-MAP / inj-seq invalidation law (CLAIM-0006, committee 6/6 YELLOW VERDICT-0011;
+    mechanism NOT novel vs Irminsul/PIC, surviving novelty=characterization; GREEN needs wall-clock-across-surface
+    + real-trace workload)
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
   - handle attestation (DEAD-0002)
+  - 'CDC-over-radix repair MECHANISM as a novelty claim (occupied: Irminsul/PIC family; novelty must be
+    characterization, not mechanism)'
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -36,12 +47,12 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   status: yellow
-  last_updated: '2026-05-31T12:48:48Z'
-  source: sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/
+  last_updated: '2026-05-31T14:07:45Z'
+  source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
+    VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
-  occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel
-    (deterministic only)
+  occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only)
   key_prior_work:
   - rr/ReVirt (process replay)
   - ReproZip (fs provenance)
@@ -60,9 +71,9 @@ nodes:
   last_updated: '2026-05-31T12:48:48Z'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
-  occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs),
-    LMCache/Mooncake (KV reuse, no replay), CRIU (full snapshot, no partial), LangGraph
-    (needs deterministic LLM), Temporal/Inngest (workflow retries)'
+  occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV
+    reuse, no replay), CRIU (full snapshot, no partial), LangGraph (needs deterministic LLM), Temporal/Inngest
+    (workflow retries)'
   key_prior_work:
   - rr
   - ReVirt
@@ -78,17 +89,16 @@ nodes:
   - CRIU
   - LangGraph time-travel
   open_gaps:
-  - "LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG\
-    \ / kernel-batch / tool-RPC / retrieval-drift / world-state \u2014 the INTERSECTION\
-    \ is empty (per 3-CLI framing debate)"
+  - LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG / kernel-batch /
+    tool-RPC / retrieval-drift / world-state — the INTERSECTION is empty (per 3-CLI framing debate)
   red_zones:
-  - "'Failure Attribution' as the contribution (dies at every systems venue \u2014\
-    \ must be the EVAL, not the pitch)"
+  - '''Failure Attribution'' as the contribution (dies at every systems venue — must be the EVAL, not
+    the pitch)'
   - '''Agent Trace OS'' framing (''OS for X'' = marketing death at OSDI)'
   - Checkpointing-only framing (CRIU comparison kills it)
   associated_claims: []
   associated_dead_ideas: []
   status: yellow
-  source: 'github.com/lokic233/agent-failure-attribution-research (framing_debate
-    CHAIR_SYNTHESIS: ''Branchable Replay'' GREEN framing B)'
+  source: 'github.com/lokic233/agent-failure-attribution-research (framing_debate CHAIR_SYNTHESIS: ''Branchable
+    Replay'' GREEN framing B)'
   last_updated: '2026-05-31T12:48:48Z'

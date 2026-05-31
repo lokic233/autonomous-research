@@ -105,7 +105,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T13:55:50Z'
+last_updated: '2026-05-31T14:07:22Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -128,6 +128,9 @@ required_evidence_for_green:
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
 lifecycle_state: verdict_recorded
-next_action: 'YELLOW: address required_evidence to re-attempt'
+next_action: 'VERDICT-0011 6/6 YELLOW. GREEN upgrade path: (1) GPU wall-clock-across-cost-surface
+  on H100 [needs human go, INVARIANT 3]; (2) real-trace inj/seq validation N>=100
+  sessions; (3) Irminsul arXiv:2605.05696 citation+distinction + 2-source recheck.
+  Mechanism not novel (Irminsul/PIC); contribution=cost-map/law.'
 blocking_on: ''
 active_experiments: []
