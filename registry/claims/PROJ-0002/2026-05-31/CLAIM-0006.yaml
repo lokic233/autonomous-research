@@ -122,12 +122,15 @@ verdict_history:
 - verdict_id: VERDICT-0017
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0022
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T16:07:38Z'
+last_updated: '2026-05-31T16:35:34Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -150,11 +153,10 @@ required_evidence_for_green:
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
 lifecycle_state: evidence_ready
-next_action: "NOVELTY GATE-A FULLY CLOSED at body level (2601.06007+Irminsul+all 6\
-  \ PIC bodies verified distinct; 'injection' 0x in PIC bodies; no cost-map collision).\
-  \ ONLY remaining GREEN-blocker = eval gate-B: GPU wall-clock vs REAL PIC artifact\
-  \ at ~5% crossover [INVARIANT 3 human-go]. Can re-run committee now (BUG-22 fixed)\
-  \ to refresh verdict reflecting closed novelty; cite CacheBlend \xA74 for slope~1\
-  \ accounting identity; add attn-sink position-dep caveat."
+next_action: 'VERDICT-0022 real 6/6 YELLOW. Gate-A NEAR-closed (8/10 neighbors body-verified;
+  2 MEDIUM pending: ContiguousKV 2601.13631 + variable-block 2604.23994 ~1hr CPU).
+  CPU GREEN-steps: (1) body-check those 2; (2) stats pass (CIs/n, per-engine slope
+  CI/R2, sink-chunk frac). Long pole gate-B = GPU wall-clock on real PIC artifact
+  [human-go INVARIANT 3].'
 active_experiments: []
 blocking_on: ''

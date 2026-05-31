@@ -1,0 +1,68 @@
+verdict_id: VERDICT-0022
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0002
+- EXP-0003
+- EXP-0005
+- EXP-0006
+experiment_paths:
+- experiments/2026-05-31/EXP-0002
+- experiments/2026-05-31/EXP-0003
+- experiments/2026-05-31/EXP-0005
+- experiments/2026-05-31/EXP-0006
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(no fatal/RED \u2014 committee CREDITS the novelty progress: gate-A substantively\
+  \ closed, 8 neighbor bodies grep-verified no inj/seq cost-map, slope~1->accounting-identity\
+  \ demotion accepted+cited CacheBlend \xA74). Three binding YELLOW blockers:"
+- 'EVAL GATE-B (heaviest, 4/5): token-count proxy conflates contiguous-CDC vs scattered-HKVD-PIC
+  at the ~5% crossover where margin collapses to 1.1-1.7x/tie'
+- MLSys needs GPU wall-clock on a real PIC artifact
+- "PRIOR-ART TAIL: 'FULLY CLOSED' is OVERSTATED \u2014 2 MEDIUM candidates (ContiguousKV\
+  \ 2601.13631, variable-block 2604.23994) flagged in the registry's OWN prior_art_note.md\
+  \ were dropped from the packet, NOT body-checked (LOW risk, ~1hr CPU)"
+- 'STATS RIGOR: headline numbers (median inj/seq 2.8%, win-region 25%/46%, margin
+  1.1-1.7x, slope~1) are point estimates w/o CIs/n/variance'
+- per-engine slope CI/R2 needed (slope~1 could be an engine-averaging artifact)
+required_evidence:
+- "GPU wall-clock TTFT on a real PIC artifact (CacheBlend/EPIC) across inj/seq surface\
+  \ at ~5% crossover [GATE-B, GPU+human-go INVARIANT 3 \u2014 the long pole]"
+- Body-check ContiguousKV 2601.13631 + variable-block 2604.23994 for an inj/seq recompute-fraction
+  cost-map [~1hr CPU
+- if clean gate-A fully closed, if collision escalate to RED]
+- Add CIs/n/variance to all headline numbers + per-engine slope CI/R2 + attention-sink
+  chunk fraction per engine (vLLM-APC/SGLang-Radix/FlashInfer)
+map_delta_proposals:
+- 'CLAIM-0006: REPLACE ''novelty gate-A FULLY CLOSED'' with ''gate-A closed for 8
+  body-read neighbors'
+- "2 MEDIUM candidates (ContiguousKV 2601.13631, variable-block 2604.23994) body-check\
+  \ PENDING \u2014 LOW risk, NOT verified'"
+- ADD ContiguousKV 2601.13631 + variable-block 2604.23994 to key_prior_work status=FLAGGED-MEDIUM-pending
+- 'ADD open_gap: statistical-rigor pass (CIs/n/variance, per-engine slope CI/R2, sink-chunk
+  fraction)'
+- 'gate_status: gate-A=near-closed(8/10), gate-B=open(GPU+human-go)'
+baseline_requirements:
+- CacheBlend or EPIC GPU artifact (wall-clock TTFT)
+- per-engine (not averaged) slope/R2
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+created_at: '2026-05-31T16:34:43Z'
