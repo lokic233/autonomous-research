@@ -263,12 +263,15 @@ verdict_history:
 - verdict_id: VERDICT-0037
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0041
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T21:04:32Z'
+last_updated: '2026-05-31T21:11:21Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -290,11 +293,15 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: committee_pending
-next_action: 're-review #9 (run_14): the binding EXP-0030 real-lmcache gate MEASURED
-  (CDC wins 12/12 gather, bracket resolved toward CDC). GREEN now or YELLOW pending
-  combined-E2E-real-kernel cell?'
-active_experiments: []
+lifecycle_state: experiment_designing
+next_action: "VERDICT-0041 6/6 (2 GREEN novelty+systems / 3 yellow). gather-axis RESOLVED\
+  \ in CDC's favor (EXP-0030 real kernel). SINGLE GREEN gate = EXP-0034 combined real-lmcache\
+  \ E2E-TTFT (real CacheBlend kernel wired into vLLM serving loop, CDC vs PIC, 12-cell)\
+  \ \u2014 controls the composition fallacy (per-component wins may not compose under\
+  \ pipelining overlap). Connector path proven by EXP-0030; E2E needs the kernel in\
+  \ the serving loop. Build harness -> smoke -> GPU-queue. Honest E2E loss still publishable."
+active_experiments:
+- EXP-0034
 blocking_on: ''
 writeup_notes:
 - "PATH-B WRITEUP READY (2026-05-31, researcher-0002-writeup): prior_art/PROJ-0002/CLAIM-0006/WRITEUP_SYNTHESIS.md\

@@ -1,0 +1,52 @@
+verdict_id: VERDICT-0041
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0026
+- EXP-0030
+experiment_paths:
+- experiments/2026-05-31/EXP-0026
+- experiments/2026-05-31/EXP-0030
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(no fatal/RED \u2014 evidence moved further toward GREEN: 2 GREEN [novelty + systems],\
+  \ gather bracket RESOLVED in CDC's favor via real lmcache kernel EXP-0030). 3 YELLOW\
+  \ converge on ONE remaining gap"
+- "COMPOSITION FALLACY (theory_skeptic, substantive+unrebutted): 'both components\
+  \ (gather EXP-0030 + attention EXP-0026) favor CDC => sum favors CDC' is fallacious\
+  \ under GPU pipelining \u2014 prefill compute can OVERLAP/HIDE the gather-latency\
+  \ difference in E2E TTFT, making the 1.01-1.27x gather win operationally irrelevant"
+- so the combined real-lmcache E2E-TTFT (not isolated gather, not re-impl E2E) is
+  the single un-run convergent gap
+required_evidence:
+- "EXP-0034 (APPROVED, GPU): COMBINED real-lmcache E2E-TTFT \u2014 the real CacheBlend\
+  \ kernel INTEGRATED into vLLM serving (not the isolated gather kernel, not the re-impl\
+  \ PIC), CDC vs PIC, same 12-cell grid, measured E2E TTFT. This is the SINGLE convergent\
+  \ gap across all 3 YELLOW reviewers"
+- it controls the composition fallacy (does the per-component CDC win survive prefill/gather
+  pipelining overlap?). If CDC wins E2E with the real kernel -> GREEN
+- an honest E2E loss is still publishable.
+map_delta_proposals:
+- 'CLAIM-0006: YELLOW->GREEN gated on EXP-0034 (combined real-lmcache E2E-TTFT). gather-axis
+  RESOLVED in CDC''s favor (EXP-0030 real kernel 12/12)'
+- composition-axis OPEN (per-component wins may not compose under pipelining overlap).
+  2 GREEN (novelty+systems), 3 measurement-bar YELLOW on the single combined-E2E cell.
+baseline_requirements:
+- "real lmcache CacheBlend kernel INTEGRATED in E2E vLLM serving (not isolated gather,\
+  \ not re-impl PIC) \u2014 the final gate"
+created_at: '2026-05-31T21:10:51Z'
