@@ -560,3 +560,18 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   probe should fall back to the live ssh nvidia-smi check (_old_probe) when the heartbeat file is stale, before
   declaring unreachable. Low severity (orchestrator can refresh after verifying liveness) but it silently stalls
   the pull scheduler.
+
+### LESSON (operational, not an engine bug) — `pip install lmcache` BROKE the shared vLLM env
+- Pursuing committee path (1) (measure published lmcache CacheBlend), I pip-installed lmcache 0.4.6 into
+  py312conda. It pulled numpy 2.2.6 (vLLM needs <2.0), transformers 5.9.0, outlines 0.0.44, tokenizers 0.22 —
+  BREAKING vLLM 0.6.6 (ProcessorMixin import failure). I had verified vLLM worked moments before.
+- REMEDIATION: pinned back numpy<2.0 + outlines==0.1.11 + transformers 4.46.3 + tokenizers 0.20.3 -> vLLM
+  imports cleanly again (verified). lmcache 0.4.6 is now itself broken by the downgrade, but vLLM (the shared
+  resource + the thing EXP-0026 used) is the priority and is intact.
+- LESSON: NEVER pip-install a heavy package into a shared, working env without a throwaway/cloned env first.
+  lmcache 0.4.6 has hard deps (numpy2/transformers5) incompatible with vLLM 0.6.6. To actually run the
+  published lmcache kernel (committee path 1), it needs an ISOLATED env (conda clone) — do that next time, or
+  pursue path (2)/(3) which don't touch the env.
+- SILVER LINING: path (2) (oracle-PIC roofline, EXP-0027) needed only torch (unaffected), and it gave the
+  MORE INFORMATIVE answer anyway — CDC's serving advantage is CONDITIONAL vs a fused PIC (vindicating the
+  committee's re-impl skepticism). So the broken-env detour still produced the decisive honest result.

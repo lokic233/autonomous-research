@@ -99,7 +99,12 @@ nodes:
     on PagedAttention) but confounded by RE-IMPL vs published-lmcache-CacheBlend-FUSED-kernel gap (throughput
     floor touches 1.00x; inj/seq>=5% is where CacheBlend''s fused kernel excels). 3 PATHS TO GREEN: (1)
     measure published lmcache kernel [now pip-installable], (2) oracle-PIC roofline bound, (3) narrow
-    ''sign survives'' to ''vs faithful re-impl'' + document gap. gate-A GREEN/confirmed.'
+    ''sign survives'' to ''vs faithful re-impl'' + document gap. gate-A GREEN/confirmed. | EXP-0027 (oracle-PIC
+    roofline, path 2): vs a FUSED/oracle PIC (zero overhead), CDC serving advantage is CONDITIONAL — wins
+    only at high inj/seq (25%), LOSES at low inj/seq (1-5%, incl win-region). EXP-0026''s ''CDC wins all
+    12'' was PARTLY re-impl gather overhead (committee VERDICT-0033 vindicated). The honest serving claim:
+    vs a fused PIC, CDC''s advantage is itself inj/seq-conditional. Caveat: CDC pays a boundary window
+    oracle PIC skips (PIC-favorable bound).'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -143,7 +148,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T19:37:52Z'
+  last_updated: '2026-05-31T19:42:47Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -165,7 +170,9 @@ nodes:
     to moderate | +VERDICT-0029 (2026-05-31): GREEN-decision HOLD-YELLOW; serving cell load-bearing for
     sign under PagedAttention; bounded path to GREEN | +EXP-0025 (2026-05-31): throughput axis measured
     (CDC wins 22/24), option-b closed; vLLM serving still owed | +VERDICT-0033 (2026-05-31): GREEN-decision#2
-    hold-yellow on re-impl-vs-published-lmcache confound; 3 paths to green'
+    hold-yellow on re-impl-vs-published-lmcache confound; 3 paths to green | +EXP-0027 (2026-05-31): oracle-PIC
+    bound WEAKENS serving claim — CDC advantage conditional vs fused PIC (loses at low inj/seq); committee
+    re-impl skepticism vindicated'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

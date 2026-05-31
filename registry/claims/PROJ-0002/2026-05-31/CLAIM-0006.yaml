@@ -191,6 +191,16 @@ negative_evidence:
     \ sensitivity small (1.39 vs 1.44 @32k/5%, robust). End-to-end serving cell still\
     \ OWED (vLLM not installable on node) \u2014 NOT fabricated."
   data_path: experiments/2026-05-31/EXP-0021/
+- exp_id: EXP-0027
+  summary: "ORACLE-PIC roofline (VERDICT-0033 path 2): vs the theoretically-best fused\
+    \ PIC (zero gather overhead), CDC's serving advantage is CONDITIONAL \u2014 CDC\
+    \ wins ONLY 2/6 cells (high inj/seq 25%: 1.05-1.18x), LOSES at low inj/seq (1-5%:\
+    \ oraclePIC/CDC 0.61-0.99x incl the win-region corner). EXP-0026's 'CDC wins all\
+    \ 12' was PARTLY the re-impl PIC's gather overhead, as committee suspected. WEAKENS\
+    \ the unconditional serving framing: vs a fused PIC, CDC's advantage is itself\
+    \ conditional on inj/seq. Caveat: CDC pays a boundary window the oracle PIC skips\
+    \ (conservative PIC-favorable bound)."
+  data_path: experiments/2026-05-31/EXP-0027/
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
@@ -241,7 +251,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T19:37:52Z'
+last_updated: '2026-05-31T19:43:10Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -263,10 +273,13 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: experiment_designing
-next_action: 'VERDICT-0033 HOLD YELLOW on re-impl-vs-published-lmcache confound. Pursuing
-  PATH (2) oracle-PIC roofline bound (H100-doable, no install: show CDC wins vs theoretically-BEST
-  scattered recompute) + attempting PATH (1) lmcache install. Either closes gate-B
-  for unanimous GREEN.'
+lifecycle_state: evidence_ready
+next_action: "EXP-0027 oracle bound WEAKENS serving framing: vs a FUSED PIC, CDC advantage\
+  \ is CONDITIONAL (wins high inj/seq, loses low inj/seq incl win-region) \u2014 committee\
+  \ re-impl skepticism (VERDICT-0033) VINDICATED. Honest claim now: novelty closed;\
+  \ vs real PIC impls CDC wins serving (EXP-0026); vs idealized fused PIC conditional\
+  \ (EXP-0027). Next: committee re-review on the QUALIFIED claim (path 3) \u2014 likely\
+  \ GREEN-able as an honest characterization w/ the conditional-vs-fused-PIC nuance\
+  \ stated."
 active_experiments: []
 blocking_on: ''

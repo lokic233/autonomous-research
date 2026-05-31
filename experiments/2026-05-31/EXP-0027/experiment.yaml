@@ -1,0 +1,30 @@
+exp_id: EXP-0027
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 1
+hardware: ''
+resource_budget:
+  max_wall_clock_minutes: 15
+  max_gpu_hours: 0.2
+  max_memory_gb: 0
+  host_mem_floor_gb: 300
+needs_gpu: true
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: "ORACLE-PIC roofline (VERDICT-0033 path 2): vs the theoretically-best\
+  \ fused PIC (zero gather overhead), CDC's serving advantage is CONDITIONAL \u2014\
+  \ CDC wins ONLY 2/6 cells (high inj/seq 25%: 1.05-1.18x), LOSES at low inj/seq (1-5%:\
+  \ oraclePIC/CDC 0.61-0.99x incl the win-region corner). EXP-0026's 'CDC wins all\
+  \ 12' was PARTLY the re-impl PIC's gather overhead, as committee suspected. WEAKENS\
+  \ the unconditional serving framing: vs a fused PIC, CDC's advantage is itself conditional\
+  \ on inj/seq. Caveat: CDC pays a boundary window the oracle PIC skips (conservative\
+  \ PIC-favorable bound)."
+result_effect: weaken
+artifacts_path: experiments/2026-05-31/EXP-0027/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T19:41:59Z'
+prompt_version: ''
