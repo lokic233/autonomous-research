@@ -110,4 +110,16 @@ next_action: 'Two CPU lanes done: terminal pole un-demonstrable on this corpus (
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T19:59:28Z'
+last_updated: '2026-05-31T21:12:01Z'
+design_notes:
+- 'v2 INTERVENTIONAL DESIGN + on-node disentanglement check (researcher-0009-design, 2026-05-31): the
+  routing-vs-model-vs-error-naming separation is GENUINELY OFF-NODE-BLOCKED. On-node, modality is a PERFECT
+  3-WAY ALIAS: harness (x) model (Codex=gpt-5.5, CC=Claude, Gemini=Gemini, a perfect diagonal) (x) error-naming
+  (only Gemini names an in-inv twin). OpenCode (the only model-agnostic harness, 80 sess on-node) logs
+  NEITHER model NOR tool/error/outcome -> the same-model-cross-harness cell (C1 vs C2) cannot be run on-node.
+  The v2 factorial (OpenCode-pivot, 6 cells C1-C6, identical block, error-text held fixed, Wilson CI N>=30/cell,
+  logistic GLM on harness+model+errortext) is the off-node experiment that breaks the alias; pre-registered
+  PASS (harness-routing wins) = |R(C1)-R(C2)|>0.5 AND R(C2)~R(C3); KILL = model-disposition or error-text
+  dominates. On-node proxy (within-Claude-Code cross-VARIANT, family-blind): opus variants that hit the
+  gate redirect >=0.93 (modality stable across same-family variants) -> weakly toward harness-routing
+  but cannot touch the OpenAI-vs-Claude disposition axis (2603.02277). Design at prior_art/PROJ-0003/CLAIM-0009_interventional_design_v2.md.'
