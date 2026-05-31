@@ -187,3 +187,61 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
 - Consequence: the "engine owns the ledger" invariant is half-true: creation+verdict-append are engine ops,
   but the bulk of claim mutation is manual + unvalidated + non-atomic. Need a `ros claim update` with atomic
   write + schema validation. Severity: medium-high (forces unsafe manual edits of the core ledger).
+
+## BUG-12 (RUNNER GAP) — run_committee.sh cannot invoke the configured `metacode` backend
+- research-os.config.yaml committee member product_realist uses backend `metacode` (a real distinct model).
+- run_committee.sh run_one() case-matches only claude-*/opus*/sonnet*, codex*, gemini*. `metacode` falls to
+  the default `*)` branch which runs `${COMMITTEE_GENERIC_CLI:-cat}` — i.e. by default it just `cat`s the
+  prompt to the .out file (NO model invoked). So 1 of 6 committee votes would be a NO-OP echo, silently.
+- Worse: it's SILENT — _status.txt still says ALL_COMMITTEE_DONE; product_realist.out would contain the
+  packet text, not a vote, and a naive parser could miscount it.
+- Also: `metacode` takes the message as an ARG (`metacode run "<msg>"`), not stdin, and is slow to start
+  (>5s, needs a longer timeout) — the generic stdin `cat` shape wouldn't fit it even if wired.
+- WORKAROUND THIS RUN: provide COMMITTEE_GENERIC_CLI=a wrapper that reads stdin and calls `metacode run --yolo`.
+- FIX: add a `metacode*)` case to run_one() (metacode run --yolo "$full") + bump per-member timeout.
+- Severity: HIGH (silent loss of a committee member => unanimous-GREEN rule can be met with only 5 real votes).
+
+## BUG-12 (RUNNER GAP) — run_committee.sh cannot invoke the configured `metacode` backend
+- research-os.config.yaml committee member product_realist uses backend `metacode` (a real distinct model).
+- run_committee.sh run_one() case-matches only claude-*/opus*/sonnet*, codex*, gemini*. `metacode` falls to
+  the default `*)` branch which runs `${COMMITTEE_GENERIC_CLI:-cat}` — i.e. by default it just `cat`s the
+  prompt to the .out file (NO model invoked). So 1 of 6 committee votes would be a NO-OP echo, silently.
+- Worse: it's SILENT — _status.txt still says ALL_COMMITTEE_DONE; product_realist.out would contain the
+  packet text, not a vote, and a naive parser could miscount it.
+- Also: `metacode` takes the message as an ARG (`metacode run "<msg>"`), not stdin, and is slow to start
+  (>5s, needs a longer timeout) — the generic stdin `cat` shape wouldn't fit it even if wired.
+- WORKAROUND THIS RUN: provide COMMITTEE_GENERIC_CLI=a wrapper that reads stdin and calls `metacode run --yolo`.
+- FIX: add a `metacode*)` case to run_one() (metacode run --yolo "$full") + bump per-member timeout.
+- Severity: HIGH (silent loss of a committee member => unanimous-GREEN rule can be met with only 5 real votes).
+
+## BUG-13 (HIGH, BLOCKER) — run_committee.sh DOES NOT RUN on this control node (macOS)
+- launch.log: `run_committee.sh: line 19: mapfile: command not found` then `line 47: MEMBERS[@]: unbound
+  variable` then a `ModuleNotFoundError: No module named 'yaml'`.
+- ROOT CAUSE A: macOS default /bin/bash is 3.2 (GPL2 era); `mapfile` (readarray) is Bash 4+. The member
+  list is never populated -> `set -u` makes MEMBERS[@] an unbound-variable fatal -> ZERO committee members
+  run. NO .out files, NO _status.txt. SILENT-ish (only in launch.log).
+- ROOT CAUSE B: the heredoc reads members via bare `python3` (line ~20). On this node only
+  /usr/bin/python3 has pyyaml; bare `python3` -> first PATH python WITHOUT pyyaml -> import error.
+- IMPACT: the committee literally cannot convene via the provided runner on the configured control_node
+  (cli:dengcchi-mac). This blocks every GREEN/verdict that requires committee parity. Severity: HIGH blocker.
+- FIX: (1) shebang `#!/usr/bin/env bash` AND require bash>=4 (brew bash) OR replace `mapfile` with a
+  while-read loop (Bash 3.2 safe). (2) use `${PYTHON:-/usr/bin/python3}` not bare `python3`, document the
+  pyyaml requirement. (3) since members run with `&` + `wait` but MEMBERS empty, also guard empty-member case.
+- WORKAROUND THIS RUN: orchestrator ran a Bash-3.2-safe corrected launcher using /usr/bin/python3 to read
+  members + invoking the 4 backend CLIs directly (claude/codex/gemini/metacode-wrapper), same prompts dir.
+
+## BUG-13 (HIGH, BLOCKER) — run_committee.sh DOES NOT RUN on this control node (macOS)
+- launch.log: `run_committee.sh: line 19: mapfile: command not found` then `line 47: MEMBERS[@]: unbound
+  variable` then a `ModuleNotFoundError: No module named 'yaml'`.
+- ROOT CAUSE A: macOS default /bin/bash is 3.2 (GPL2 era); `mapfile` (readarray) is Bash 4+. The member
+  list is never populated -> `set -u` makes MEMBERS[@] an unbound-variable fatal -> ZERO committee members
+  run. NO .out files, NO _status.txt. SILENT-ish (only in launch.log).
+- ROOT CAUSE B: the heredoc reads members via bare `python3` (line ~20). On this node only
+  /usr/bin/python3 has pyyaml; bare `python3` -> first PATH python WITHOUT pyyaml -> import error.
+- IMPACT: the committee literally cannot convene via the provided runner on the configured control_node
+  (cli:dengcchi-mac). This blocks every GREEN/verdict that requires committee parity. Severity: HIGH blocker.
+- FIX: (1) shebang `#!/usr/bin/env bash` AND require bash>=4 (brew bash) OR replace `mapfile` with a
+  while-read loop (Bash 3.2 safe). (2) use `${PYTHON:-/usr/bin/python3}` not bare `python3`, document the
+  pyyaml requirement. (3) since members run with `&` + `wait` but MEMBERS empty, also guard empty-member case.
+- WORKAROUND THIS RUN: orchestrator ran a Bash-3.2-safe corrected launcher using /usr/bin/python3 to read
+  members + invoking the 4 backend CLIs directly (claude/codex/gemini/metacode-wrapper), same prompts dir.
