@@ -7,6 +7,9 @@ and real money. Add to it whenever you learn something the hard way.
 ## Index
 - **`MI350X_CRASH_POSTMORTEM.md`** — how a single agent crashed the AMD MI350X devgpu **three times**
   in one session (one triggered a 4–5 hour hardware repair). Read before touching ANY GPU VMM probe.
+- **`COMMITTEE_SETUP.md`** — how to bring up the 6-judge heterogeneous committee live: the
+  PATTERN (why 6 different families, liveness-probe-before-voting, parallel dispatch, failure modes).
+  Real infra glue is in the private repo's `BOOTSTRAP_JUDGES.md`.
 
 ## The one rule that would have prevented most of this
 > **If a result will not change a decision/vote, do not run the experiment.**
