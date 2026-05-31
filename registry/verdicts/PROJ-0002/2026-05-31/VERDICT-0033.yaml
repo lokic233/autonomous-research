@@ -1,0 +1,64 @@
+verdict_id: VERDICT-0033
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0021
+- EXP-0023
+- EXP-0025
+- EXP-0026
+experiment_paths:
+- experiments/2026-05-31/EXP-0021
+- experiments/2026-05-31/EXP-0023
+- experiments/2026-05-31/EXP-0025
+- experiments/2026-05-31/EXP-0026
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'HOLD YELLOW (1 green/5 yellow). gate-A CLOSED/GREEN confirmed. gate-B serving cell
+  MEASURED on real vLLM PagedAttention (CDC wins all 12) BUT confounded by RE-IMPL
+  vs PUBLISHED-KERNEL gap: EXP-0026 PIC arm is a faithful re-impl (scattered paged-gather),
+  NOT the published lmcache CacheBlend FUSED kernel that defines PIC in the literature'
+- 'LOAD-BEARING because: (a) throughput floor 1.00-1.01x in some cells is within the
+  margin a fused kernel could erase'
+- (b) inj/seq>=5% is exactly where CacheBlend's fused kernel was designed to excel
+- (c) 'SIGN SURVIVES' overreaches when the comparator is suboptimal (optimized-contiguous
+  vs unoptimized-scattered measures memory-hierarchy basics, not CDC-vs-PIC mechanism
+  cost)
+required_evidence:
+- 'ANY of 3 paths to GREEN: (1) measure PUBLISHED lmcache CacheBlend fused kernel
+  (arXiv:2405.16444) on the same 12 cells [lmcache now pip-installable into py312conda]'
+- OR (2) roofline/oracle-PIC upper bound showing CDC wins even vs theoretically-best
+  scattered recompute
+- OR (3) NARROW claim text to scope 'sign survives against faithful RE-IMPL' with
+  the published-kernel gap as a documented external-validity limitation + rewrite
+  the 'SIGN SURVIVES' language
+map_delta_proposals:
+- 'CLAIM-0006: HOLD YELLOW'
+- gate-A CLOSED/GREEN
+- 'gate-B serving cell MEASURED (real vLLM PagedAttention, CDC wins all 12 TTFT+throughput)
+  but confounded by re-impl-vs-published-lmcache-kernel gap (throughput floor touches
+  1.00x). PATH: (1) measure published lmcache CacheBlend kernel [now installable],
+  or (2) oracle-PIC roofline bound, or (3) narrow ''sign survives'' to ''vs faithful
+  re-impl'' + document gap. Promote to GREEN on any one.'
+baseline_requirements:
+- "lmcache CacheBlend FUSED kernel (arXiv:2405.16444) \u2014 measured OR roofline-bounded\
+  \ (re-impl insufficient given 1.00x throughput floor)"
+- vLLM PagedAttention
+- real-vLLM serving EXP-0026 (re-impl PIC)
+created_at: '2026-05-31T19:37:24Z'
