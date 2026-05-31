@@ -1,0 +1,42 @@
+verdict_id: VERDICT-0032
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0021
+- EXP-0025
+experiment_paths:
+- experiments/2026-05-31/EXP-0021
+- experiments/2026-05-31/EXP-0025
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- "EXP-0026 (APPROVED, GPU H100): the LOAD-BEARING serving cell \u2014 real vLLM PagedAttention\
+  \ E2E TTFT + batched throughput, CDC-contiguous vs PIC-scattered (CacheBlend gather\
+  \ impl since lmcache absent), inj/seq{1,5,25%} x seq{8k,32k} x batch{1,8,32}, incl\
+  \ inj/seq>=5%"
+- settles whether CDC advantage SIGN survives non-contiguous paged KV
+- measured not analytic
+- honest negative if PIC wins
+map_delta_proposals:
+- CLAIM-0006 gate-B FINAL serving cell EXP-0026 committee-approved for H100 (devgpu499
+  unreachable/fragile)
+- vLLM env confirmed on devgpu014
+baseline_requirements: []
+created_at: '2026-05-31T19:24:07Z'

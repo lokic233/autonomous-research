@@ -1,0 +1,5 @@
+{"device":"H100 devgpu014","engine":"vLLM 0.6.6.post1 PagedAttention (non-contiguous paged KV)","model":"Qwen/Qwen2.5-7B-Instruct","reps":5,
+ "pic_wins_ttft_cells":0,"pic_wins_thru_cells":0,"total_cells":12,
+ "headline":"CDC contiguous-recompute wins ALL 12 cells on BOTH metrics under real vLLM PagedAttention. TTFT PIC/CDC = 1.05-1.79x (CDC faster); throughput CDC/PIC = 1.00-1.13x (CDC higher). NO cell where PIC wins. Advantage is STRONGER at 28k ctx (TTFT up to 1.79x, throughput up to 1.13x at B=8).",
+ "ttft_pic_over_cdc_range":"1.051-1.793 (all >1 = CDC faster)","thru_cdc_over_pic_range":"1.002-1.131 (all >1 = CDC higher)",
+ "limitation":"lmcache NOT installed -> PIC arm is a faithful re-impl against vLLM PagedAttention (scatter realized as extra paged-gather traversal), NOT the published lmcache CacheBlend kernel. The non-contiguous paged KV layout (the committee's load-bearing concern) IS exercised (real vLLM PagedAttention)."}

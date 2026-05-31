@@ -1,0 +1,31 @@
+exp_id: EXP-0026
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 2
+hardware: H100
+resource_budget:
+  max_wall_clock_minutes: 120
+  max_gpu_hours: 2.0
+  max_memory_gb: 95
+  host_mem_floor_gb: 300
+needs_gpu: true
+dispatched_by: gpu-scheduler
+node_lease: devgpu014:EXP-0026
+status: completed
+result_summary: 'REAL vLLM PagedAttention E2E serving cell (H100, Qwen2.5-7B): CDC
+  contiguous-recompute wins ALL 12 cells on BOTH metrics. TTFT PIC/CDC=1.05-1.79x
+  (CDC faster), throughput CDC/PIC=1.00-1.13x (CDC higher); PIC wins 0/12. Advantage
+  STRONGER at 28k/B8 (TTFT 1.79x, thru 1.13x). inj/seq>=5% regime still CDC. The advantage
+  SIGN SURVIVES the non-contiguous paged KV layout (VERDICT-0029 load-bearing question
+  ANSWERED, analytic-bridge prediction CONFIRMED on real vLLM). LIMITATION: lmcache
+  absent -> PIC arm is a faithful re-impl vs vLLM PagedAttention, NOT the published
+  lmcache kernel.'
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0026/
+reproducibility: ''
+linked_verdicts: []
+started_at: '2026-05-31T19:25:07Z'
+completed_at: '2026-05-31T19:31:25Z'
+prompt_version: ''
+committee_approved: VERDICT-0032

@@ -546,3 +546,17 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - Severity: HIGH — silent destruction of a promoted 6/6-GREEN claim. Engine fix: guard kill-on-promoted.
 - LESSON: when dispatching a researcher on a MAP open_gap that is not a registered claim, do NOT pass an
   existing --claim id (esp. a promoted one). Seed the claim first, or scope the experiment to --claim none.
+
+### BUG-26 (NEW, low/operational) — GPU scheduler probe flaps when the node heartbeat file goes stale (>15m)
+- `ros gpu poll --node devgpu014` returned "unreachable (probe failed)" even though the node was verified-alive
+  (ran a vLLM env probe on it seconds earlier). Cause: the node's probe_cmd checks runtime/gpu_heartbeat/<node>
+  is mtime < 15min; nothing was refreshing that heartbeat file, so it went stale and the probe failed.
+- The _old_probe (ssh nvidia-smi) was replaced by a heartbeat-file check, but there's no running agent on the
+  node refreshing runtime/gpu_heartbeat/<node>. So after 15m idle the scheduler treats a healthy free node as
+  unreachable and won't pull queued exps.
+- Remediation this run: orchestrator `touch runtime/gpu_heartbeat/devgpu014` after directly verifying the node
+  is alive (env probe succeeded) -> poll then pulled EXP-0026 correctly.
+- Fix: either (a) run a per-node heartbeat refresher (cron/agent on the node touches the file), or (b) the poll
+  probe should fall back to the live ssh nvidia-smi check (_old_probe) when the heartbeat file is stale, before
+  declaring unreachable. Low severity (orchestrator can refresh after verifying liveness) but it silently stalls
+  the pull scheduler.
