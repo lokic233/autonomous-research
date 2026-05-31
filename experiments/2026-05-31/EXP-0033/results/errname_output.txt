@@ -1,0 +1,38 @@
+======================================================================
+EXP-0033 ERROR-NAMING CONFOUND — discharge/confirm
+======================================================================
+corpora: CC 84 sess, Codex 67 sess, Gemini 18 sess
+
+[T1 within-harness GENERIC cross-tool redirect] CC
+  errors-named  : n=   0 reactive=   0 (nan W95[nan,nan]) preempt=0 abandon=0
+  errors-unnamed: n= 388 reactive=   8 (0.021 W95[0.010,0.040]) preempt=359 abandon=21
+
+[T1 within-harness GENERIC cross-tool redirect] CODEX
+  errors-named  : n=   0 reactive=   0 (nan W95[nan,nan]) preempt=0 abandon=0
+  errors-unnamed: n= 248 reactive=  20 (0.081 W95[0.053,0.121]) preempt=198 abandon=30
+
+[T1 within-harness GENERIC cross-tool redirect] GEMINI
+  errors-named  : n=   9 reactive=   2 (0.222 W95[0.063,0.547]) preempt=7 abandon=0
+  errors-unnamed: n=  51 reactive=   8 (0.157 W95[0.082,0.280]) preempt=25 abandon=18
+
+======================================================================
+[T2 canonical blocks split by NAMES-IN-INVENTORY-TOOL]
+  CC: blocks=43 named=0 unnamed=43
+      ALL    : reactive=5 preempt=34 abandon=4
+      UNNAMED: n=43 reactive=5 preempt=34 abandon=4 | preempt-share=0.791 reactive-share=0.116
+  CODEX: blocks=152 named=0 unnamed=152
+      ALL    : reactive=0 preempt=152 abandon=0
+      UNNAMED: n=152 reactive=0 preempt=152 abandon=0 | preempt-share=1.000 reactive-share=0.000
+  GEMINI: blocks=9 named=9 unnamed=0
+      ALL    : reactive=2 preempt=7 abandon=0
+      NAMED  : n=9 reactive=2 preempt=7 abandon=0 | reactive-share=0.222
+
+======================================================================
+[T3 LARGER-N canonical-block reactive + preempt shares]
+  CC: blocks=43 reactive=5(0.116 W95[0.051,0.245]) preempt=34(0.791 W95[0.648,0.886]) abandon=4
+  CODEX: blocks=152 reactive=0(0.000 W95[0.000,0.025]) preempt=152(1.000 W95[0.975,1.000]) abandon=0
+  GEMINI: blocks=9 reactive=2(0.222 W95[0.063,0.547]) preempt=7(0.778 W95[0.453,0.937]) abandon=0
+
+CSV -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0033/results/errname_metrics.csv
+CC blocks=43 with-preceding-twin=41 median-dist=2 dists(sample)=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2]
+CODEX blocks=152 with-preceding-twin=152 median-dist=3.0 dists(sample)=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]

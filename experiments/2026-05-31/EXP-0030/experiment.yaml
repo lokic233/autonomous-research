@@ -10,17 +10,26 @@ resource_budget:
   max_memory_gb: 95
   host_mem_floor_gb: 300
 needs_gpu: true
-dispatched_by: ''
-node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+dispatched_by: gpu-scheduler
+node_lease: devgpu014:EXP-0030
+status: completed
+result_summary: "REAL published lmcache CacheBlend gather kernel (source-built, live\
+  \ vLLM PagedAttention, discovered format NL_X_TWO_NB_BS_NH_HS, NOT re-impl): CDC\
+  \ contiguous gather cheaper than PIC scattered in ALL 12 cells, CI excludes 1.0\
+  \ in 11/12 (only 8k/0.5% is a tie), PIC/CDC 1.01-1.27x. RESOLVES the bracket (VERDICT-0037):\
+  \ the EXP-0027 oracle's zero-overhead assumption was too generous \u2014 the REAL\
+  \ fused kernel still pays scatter cost so CDC's contiguous gather WINS (closer to\
+  \ re-impl EXP-0026 than to oracle). SCOPE: gather-kernel cost (not full E2E TTFT\
+  \ incl attention FLOPs); EXP-0026 already showed E2E CDC-wins vs re-impl. Both axes\
+  \ favor CDC w/ the real kernel."
+result_effect: support
 artifacts_path: experiments/2026-05-31/EXP-0030/
 reproducibility: ''
 linked_verdicts: []
-started_at: ''
-completed_at: ''
+started_at: '2026-05-31T20:59:03Z'
+completed_at: '2026-05-31T21:02:32Z'
 prompt_version: ''
 committee_approved: VERDICT-0034
-note: INTEGRATION-BLOCKED on direct c_ops call (illegal-mem-access from hand-built shapes). Reset to pending;
-  awaiting validated vLLM-connector harness (CPU smoke test) before GPU-queue. NOT dangling-running.
+note: INTEGRATION-BLOCKED on direct c_ops call (illegal-mem-access from hand-built
+  shapes). Reset to pending; awaiting validated vLLM-connector harness (CPU smoke
+  test) before GPU-queue. NOT dangling-running.

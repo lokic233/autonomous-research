@@ -97,6 +97,15 @@ supporting_evidence:
     question ANSWERED, analytic-bridge prediction CONFIRMED on real vLLM). LIMITATION: lmcache absent
     -> PIC arm is a faithful re-impl vs vLLM PagedAttention, NOT the published lmcache kernel.'
   data_path: experiments/2026-05-31/EXP-0026/
+- exp_id: EXP-0030
+  summary: 'REAL published lmcache CacheBlend gather kernel (source-built, live vLLM PagedAttention, discovered
+    format NL_X_TWO_NB_BS_NH_HS, NOT re-impl): CDC contiguous gather cheaper than PIC scattered in ALL
+    12 cells, CI excludes 1.0 in 11/12 (only 8k/0.5% is a tie), PIC/CDC 1.01-1.27x. RESOLVES the bracket
+    (VERDICT-0037): the EXP-0027 oracle''s zero-overhead assumption was too generous — the REAL fused
+    kernel still pays scatter cost so CDC''s contiguous gather WINS (closer to re-impl EXP-0026 than to
+    oracle). SCOPE: gather-kernel cost (not full E2E TTFT incl attention FLOPs); EXP-0026 already showed
+    E2E CDC-wins vs re-impl. Both axes favor CDC w/ the real kernel.'
+  data_path: experiments/2026-05-31/EXP-0030/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor (CTX=4000,inj=40:
@@ -228,7 +237,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T20:47:51Z'
+last_updated: '2026-05-31T21:03:08Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -247,14 +256,9 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: blocked
-next_action: 'HONEST CEILING for the run (VERDICT-0037 6/6, 2 green/4 yellow). Novelty CLOSED/GREEN +
-  theory GREEN. To GREEN: complete EXP-0030 (12-cell real-CacheBlend, dense low-inj/seq, paired-bootstrap
-  CIs, quality guard) — a measured crossover EVEN IF CDC loses is publishable (cost-map + honest competitive
-  positioning). Needs the full vLLM-v1+LMCacheConnectorV1 harness (dedicated cycle). Do NOT force GREEN.
-  The recompute-fraction cost-map + win-region + novelty are all solid + GREEN/uncontested.'
-active_experiments:
-- EXP-0030
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0030; convene committee if candidate-grade
+active_experiments: []
 blocking_on: Single GREEN gate = EXP-0030 real lmcache CacheBlend measured crossover (real vLLM-v1 + LMCacheConnectorV1
   integration = the science's 30-day step; filed design at EXP-0030/impl/FOLLOWUP_DESIGN.md). 2/5 reviewers
   GREEN (novelty+theory), 3/5 measurement-bar YELLOW on this one gap.

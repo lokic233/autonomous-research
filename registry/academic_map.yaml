@@ -122,7 +122,13 @@ nodes:
     convergent gap = EXP-0030 real lmcache CacheBlend MEASURED crossover (the bracket EXP-0026/0027 is
     not a substitute for measuring the production SOTA). EXP-0030 = 30-day vLLM-v1+LMCacheConnectorV1
     integration, filed design, deferred future-work. A measured negative would still be GREEN-worthy (cost-map
-    + honest negative positioning). This is CLAIM-0006''s honest ceiling for the run.'
+    + honest negative positioning). This is CLAIM-0006''s honest ceiling for the run. | EXP-0030 (REAL
+    lmcache CacheBlend gather kernel, live vLLM PagedAttention): CDC contiguous gather WINS 12/12 (CI
+    excludes 1.0 in 11/12; PIC/CDC 1.01-1.27x). RESOLVES the bracket — the EXP-0027 oracle''s zero-overhead
+    assumption was too generous; the REAL fused kernel pays scatter cost so CDC wins (closer to re-impl
+    EXP-0026 than to oracle EXP-0027). SCOPE: gather-kernel cost (not full E2E TTFT incl attention FLOPs);
+    both gather (real kernel) + E2E (re-impl EXP-0026) now favor CDC. Single combined real-lmcache-E2E-TTFT
+    cell = only remaining tie-down.'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -169,7 +175,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T20:57:31Z'
+  last_updated: '2026-05-31T21:03:08Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -198,7 +204,8 @@ nodes:
     SATURATED by disjoint researchers | +VERDICT-0037 (2026-05-31): managed-yellow, novelty+theory GREEN,
     single gate=EXP-0030 measured crossover (deferred) | +PROJ-0001 PUBLICATION-READY/MATURE (2026-05-31,
     GO assessment) | +frontier scan (2026-05-31): 2-degree frontier covered, 9 forward SW-neighbors merged
-    (no must-cite gap), PROJ-0001 COMPLETE'
+    (no must-cite gap), PROJ-0001 COMPLETE | +EXP-0030 (2026-05-31): REAL lmcache gather kernel CDC wins
+    12/12, bracket resolved toward CDC (oracle too-generous), only combined-E2E tie-down remains'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
