@@ -37,16 +37,28 @@ supporting_evidence:
     failure labels; Gemini 3rd harness NOT yet run; mechanism unclaimed (keep PURELY
     descriptive).'
   data_path: experiments/2026-05-31/EXP-0037/
+- exp_id: EXP-0038
+  summary: 'L2 SUPPORT. 3-harness replication met (D&B bar): CC Stouffer perm Z=-4.07,
+    Codex=-15.14, Gemini=-3.90 (NEW 3rd harness; 80-90% sessions Z<0). Per-session
+    PERMUTATION null (N=2000 shuffles) near-identical to analytic WW Z in all 3 ->
+    small-n/heuristic-label robust; thin CC leg survives intact. Burstiness B[boot
+    95% CI] (corrected, Kim&Jo): CC 0.417[0.001,0.453], Codex 0.270[0.072,0.395],
+    Gemini 0.213[-0.419,0.319]; dispersion idx 1.41-1.94 all>1 bursty. HONEST: B-CI
+    strictly>0 only Codex; CC barely; Gemini crosses 0 (42 gaps); per-session raw
+    B negative = Goh-Barabasi finite-size bias, not anti-burst -> lead with runs/permutation+dispersion,
+    report B w/ finite-size caveat. M4 web_disabled ablation HOLDS under permutation+all
+    3 harnesses (CC STRENGTHENS -4.07->-4.93; Gemini no web tool=no-op). Core descriptive
+    over-dispersion claim solid; single-scalar B only CI-clean on strong Codex leg.
+    Stayed purely descriptive.'
+  data_path: experiments/2026-05-31/EXP-0038/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0038 result, then ros exp complete --exp EXP-0038 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0038; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0038
+active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T22:33:51Z'
+last_updated: '2026-05-31T22:38:07Z'
