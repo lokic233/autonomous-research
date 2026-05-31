@@ -23,3 +23,31 @@ See CLAIM-0006/fresh_priorart_note_LaneA-priorart.md + search_log_priorart-A.md 
 | CDC storage-dedup ancestry | FastCDC / Rabin / US11928092B2 / ETH "Breaking & Fixing CDC" | content-defined chunking localizes an edit: edited region re-chunks, surrounding boundaries preserved | FOUNDATIONAL — CDC insertion-resilience is textbook prior art; novelty cannot rest on it |
 
 **NOVELTY VERDICT (researcher-cdc-priorart-A):** MECHANISM (CDC repair over radix/prefix cache) = NOT novel (Irminsul + PIC family). FRAMING (Prefix-Cache Invalidation LAW + conditional inj/seq recompute cost-map + head-to-head recompute-fraction vs vLLM-APC/SGLang-Radix/FlashInfer) = NOVEL, no collision found. Reframe CLAIM-0006 as a CHARACTERIZATION/LAW paper; CDC repair = a KNOWN realization whose win-region this work maps/bounds. Committee decides; this note makes that hallucination-proof.
+
+## Update 2026-05-31 (VERDICT-0012, real 6/6 committee re-review — orchestrator-r2-001)
+- **KVFlow** (arXiv:2507.07400) — NEW neighbor surfaced by novelty_killer. Agentic/multi-agent
+  prefix-cache work; optimizes scheduling/reuse, does NOT publish an inj/seq invalidation law or
+  recompute-fraction cost-map. Must be cited + distinguished in any CLAIM-0006 writeup.
+- **Distinction still UNVERIFIED at body level** (GREEN-blocker): novelty_killer could confirm
+  Irminsul (2605.05696) and "Don't Break the Cache" (2601.06007) exist (titles), but could NOT read
+  their bodies to verify they lack the inj/seq cost-map. Since the cost-map IS the surviving
+  contribution, this distinction must be verified, not asserted.
+- **Framing downgrade**: committee consensus reword "Prefix-Cache Invalidation LAW" -> "CDC Recompute
+  Characterization" — slope~1 is mechanism-derived (CDC insertion-resilience ~ R/S), not emergent.
+- **New baseline requirement**: PIC-family head-to-head (Irminsul or EPIC implementation) is now
+  MANDATORY — the current 3 baselines are structurally incapable of position-independent recovery,
+  making the 8x-465x advantage a structural gap, not a competitive benchmark.
+
+## Update 2026-05-31 (VERDICT-0012, real 6/6 committee re-review — orchestrator-r2-001)
+- **KVFlow** (arXiv:2507.07400) — NEW neighbor surfaced by novelty_killer. Agentic/multi-agent
+  prefix-cache work; optimizes scheduling/reuse, does NOT publish an inj/seq invalidation law or
+  recompute-fraction cost-map. Must be cited + distinguished in any CLAIM-0006 writeup.
+- **Distinction still UNVERIFIED at body level** (GREEN-blocker): novelty_killer could confirm
+  Irminsul (2605.05696) and "Don't Break the Cache" (2601.06007) exist (titles), but could NOT read
+  their bodies to verify they lack the inj/seq cost-map. Since the cost-map IS the surviving
+  contribution, this distinction must be verified, not asserted.
+- **Framing downgrade**: committee consensus reword "Prefix-Cache Invalidation LAW" -> "CDC Recompute
+  Characterization" — slope~1 is mechanism-derived (CDC insertion-resilience ~ R/S), not emergent.
+- **New baseline requirement**: PIC-family head-to-head (Irminsul or EPIC implementation) is now
+  MANDATORY — the current 3 baselines are structurally incapable of position-independent recovery,
+  making the 8x-465x advantage a structural gap, not a competitive benchmark.

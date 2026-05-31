@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0012
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0002
+- EXP-0003
+- EXP-0005
+experiment_paths:
+- experiments/2026-05-31/EXP-0002
+- experiments/2026-05-31/EXP-0003
+- experiments/2026-05-31/EXP-0005
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'Strawman baselines: vLLM-APC/SGLang-Radix/FlashInfer are structurally incapable
+  of position-independent recovery, so 8x-465x is a trivially structural gap, not
+  a competitive benchmark'
+- PIC-family (Irminsul/EPIC) head-to-head is MANDATORY
+- 'Law-is-mechanism-corollary: slope~1 is the arithmetic identity of bounded-window
+  CDC insertion-resilience (R/S), not an emergent regularity'
+- no regression fit (slope/R2/CI) provided
+- 'Distribution fragility: win-rate swings 6.3%-46% across sensitivities'
+- headline 24.6% is one point in that range
+required_evidence:
+- GPU wall-clock TTFT across 5-10 inj/seq cost-surface cells (0.1/1/5/25/100%) on
+  real vLLM-APC + SGLang-Radix engines
+- Real-trace inj/seq distribution N>=100 sessions (SWE-bench/SWE-ContextBench), not
+  Monte-Carlo
+- PIC-family baseline head-to-head recompute-fraction vs Irminsul or EPIC
+- Slope regression fit (slope,intercept,R2,CI,residuals) + changepoint test for saturation
+- CDC chunk-size ablation sweep (is slope~1 universal or parametric?)
+- Win-rate reported as 6-46% sensitivity bracket not single point
+- Verify body-level distinction of Irminsul 2605.05696 + Don't Break the Cache 2601.06007
+  (cost-map absence)
+- add+distinguish KVFlow 2507.07400
+map_delta_proposals:
+- 'MAP-0001: add KVFlow arXiv:2507.07400 (agentic-prefix-caching neighbor'
+- scheduling/reuse, NO inj/seq invalidation law)
+- reword CLAIM-0006 'Invalidation Law'->'CDC Recompute Characterization' (mechanism-derived,
+  not emergent)
+- CLAIM-0006 stays weakened/yellow
+- novelty kernel = workload-conditioned win-region map + recompute-fraction head-to-head
+  (narrow but real)
+baseline_requirements:
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+- Irminsul/EPIC PIC-family (REQUIRED, not yet positioned)
+created_at: '2026-05-31T14:18:36Z'

@@ -15,6 +15,8 @@ nodes:
   - Cache-Craft arXiv 2502.15734
   - Don't Break the Cache arXiv 2601.06007 (agentic prompt-cache cost eval)
   - FastCDC/Rabin (CDC insertion-resilience, foundational)
+  - KVFlow arXiv:2507.07400 (agentic/multi-agent prefix-cache; scheduling/reuse, NO inj/seq invalidation
+    law)
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
@@ -47,9 +49,11 @@ nodes:
   - DEAD-0007
   - DEAD-0008
   status: yellow
-  last_updated: '2026-05-31T14:07:45Z'
+  last_updated: '2026-05-31T14:19:10Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
-    VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta'
+    VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
+    6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
+    for green'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only)
@@ -89,11 +93,11 @@ nodes:
   - CRIU
   - LangGraph time-travel
   open_gaps:
-  - LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG / kernel-batch /
-    tool-RPC / retrieval-drift / world-state — the INTERSECTION is empty (per 3-CLI framing debate)
+  - "LAYER-STRATIFIED partial replay with counterfactual branching across sampler-RNG / kernel-batch /\
+    \ tool-RPC / retrieval-drift / world-state \u2014 the INTERSECTION is empty (per 3-CLI framing debate)"
   red_zones:
-  - '''Failure Attribution'' as the contribution (dies at every systems venue — must be the EVAL, not
-    the pitch)'
+  - "'Failure Attribution' as the contribution (dies at every systems venue \u2014 must be the EVAL, not\
+    \ the pitch)"
   - '''Agent Trace OS'' framing (''OS for X'' = marketing death at OSDI)'
   - Checkpointing-only framing (CRIU comparison kills it)
   associated_claims: []
