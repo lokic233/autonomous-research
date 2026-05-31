@@ -104,7 +104,12 @@ nodes:
     only at high inj/seq (25%), LOSES at low inj/seq (1-5%, incl win-region). EXP-0026''s ''CDC wins all
     12'' was PARTLY re-impl gather overhead (committee VERDICT-0033 vindicated). The honest serving claim:
     vs a fused PIC, CDC''s advantage is itself inj/seq-conditional. Caveat: CDC pays a boundary window
-    oracle PIC skips (PIC-favorable bound).'
+    oracle PIC skips (PIC-favorable bound). | VERDICT-0037 (6/6, 2 GREEN[novelty+theory]/4 yellow): MANAGED
+    YELLOW. Novelty CLOSED/GREEN (uncontested 3 rounds), theory GREEN; measurement-bar YELLOW on a SINGLE
+    convergent gap = EXP-0030 real lmcache CacheBlend MEASURED crossover (the bracket EXP-0026/0027 is
+    not a substitute for measuring the production SOTA). EXP-0030 = 30-day vLLM-v1+LMCacheConnectorV1
+    integration, filed design, deferred future-work. A measured negative would still be GREEN-worthy (cost-map
+    + honest negative positioning). This is CLAIM-0006''s honest ceiling for the run.'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -151,7 +156,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T19:53:17Z'
+  last_updated: '2026-05-31T20:19:43Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -177,7 +182,8 @@ nodes:
     bound WEAKENS serving claim — CDC advantage conditional vs fused PIC (loses at low inj/seq); committee
     re-impl skepticism vindicated | +laneD/laneE saturation (2026-05-31): PROJ-0001 (9 adjacent killed,
     per-device fix) + PROJ-0002 (spec-decode/multi-agent/compaction all occupied, EXP-0028) CONFIRMED
-    SATURATED by disjoint researchers'
+    SATURATED by disjoint researchers | +VERDICT-0037 (2026-05-31): managed-yellow, novelty+theory GREEN,
+    single gate=EXP-0030 measured crossover (deferred)'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

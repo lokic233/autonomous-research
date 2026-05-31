@@ -1,0 +1,63 @@
+verdict_id: VERDICT-0037
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0013
+- EXP-0015
+- EXP-0026
+- EXP-0027
+experiment_paths:
+- experiments/2026-05-31/EXP-0013
+- experiments/2026-05-31/EXP-0015
+- experiments/2026-05-31/EXP-0026
+- experiments/2026-05-31/EXP-0027
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(no fatal/RED \u2014 MANAGED yellow, not a structural defect). Vote split is DIAGNOSTIC:\
+  \ novelty GREEN + theory GREEN (both uncontested) vs 3 measurement-bar reviewers\
+  \ YELLOW on a SINGLE convergent gap"
+- "THE ONE BLOCKING ITEM = EXP-0030 real lmcache CacheBlend measured crossover. The\
+  \ EXP-0026(re-impl)/EXP-0027(oracle) BRACKET tells us the answer is between 'CDC\
+  \ wins' and 'CDC loses' \u2014 but for a characterization paper 'somewhere' is not\
+  \ a result"
+- must measure the production SOTA
+- 'product_realist sharpest: token-weighted win-region only 3.7% (max 8.1%) AND the
+  oracle bound shows CDC LOSES in the win-region corner vs fused kernels -> the real
+  CacheBlend likely beats CDC in exactly the corner the cost-map calls CDC''s best
+  case'
+required_evidence:
+- "EXP-0030: real lmcache CacheBlend across the 12-cell design (dense low-inj/seq,\
+  \ paired-bootstrap CIs, quality guard) via real vLLM-v1 + LMCacheConnectorV1 \u2014\
+  \ the SINGLE blocking item for GREEN. A measured crossover (even CDC-loses-everywhere)\
+  \ is GREEN-worthy as an honest characterization (cost-map + the measured competitive\
+  \ positioning, positive OR negative). Design filed at EXP-0030/impl/FOLLOWUP_DESIGN.md"
+map_delta_proposals:
+- 'CLAIM-0006: HOLD YELLOW (managed). Novelty CLOSED/GREEN (uncontested 3 rounds)
+  + theory GREEN'
+- measurement-bar YELLOW (3/5, single convergent gap). GREEN requires EXP-0030 MEASURED
+  crossover, not the oracle bracket. EXP-0030 = the 30-day vLLM-v1+LMCacheConnectorV1
+  integration (filed design)
+- deferred future-work. A measured negative would still be publishable (cost-map +
+  honest negative positioning).
+baseline_requirements:
+- "lmcache CacheBlend production fused kernel (real vLLM-v1 + LMCacheConnectorV1)\
+  \ = the shipping SOTA, MEASURED \u2014 the single GREEN gate"
+- oracle-PIC (EXP-0027) + re-impl PIC (EXP-0026) = the bracket (supplements, not substitutes)
+created_at: '2026-05-31T20:19:13Z'
