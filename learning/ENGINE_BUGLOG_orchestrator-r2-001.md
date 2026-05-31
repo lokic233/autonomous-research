@@ -506,3 +506,22 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   fact). harness-routing-as-confound promoted OPEN_RISK -> CONFIRMED in MAP-0002. This is the committee->
   experiment->verdict loop working as designed: a 6/6 objection drove a targeted experiment that honestly
   weakened the claim. No fabrication; truth tracked.
+
+### BUG-24 (NEW, medium) — `ros exp gc --apply` races ACTIVE researchers; retires a pending exp that's mid-flight
+- `ros exp gc --apply` retired 3 "orphan pending" experiments: EXP-0001 + EXP-0004 (legit old stubs) BUT ALSO
+  EXP-0013, which an ACTIVE researcher (researcher-0006-priorart-stats, Task B stats-pass) had JUST registered
+  and was mid-run on — its impl/stats_pass.py (9KB) was already written; it simply hadn't reached
+  `ros exp complete` yet. gc flipped status=pending->retired + cleared the CLAIM-0006 backlink. When the
+  researcher finishes and runs `exp complete --exp EXP-0013`, it would hit a retired experiment (lost work /
+  conflict).
+- ROOT CAUSE: gc's definition of "orphan" = status==pending with no result, but a freshly-registered
+  experiment that an active researcher is still working on is ALSO status==pending-with-no-result. gc cannot
+  distinguish "abandoned stub" from "in-progress." No age/heartbeat guard.
+- Impact: medium — silently retires live work; the researcher's completion then races a retired record.
+- Remediation this run: orchestrator un-retired EXP-0013 (restored status=pending + active_experiments backlink)
+  since its impl/ was present and the researcher was live.
+- Fix (engine): gc should only retire pending experiments older than some grace (e.g. registered >30-60m ago)
+  OR whose owning researcher is not in liveness as running OR that have an empty impl/ dir. Add an age/owner
+  guard so gc never reaps an in-flight experiment.
+- LESSON for orchestrator: run `ros exp gc` only when NO researchers are active (check liveness first), or
+  pass a dry-run + eyeball the list before --apply. I ran --apply while a researcher was mid-flight.

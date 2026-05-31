@@ -290,3 +290,100 @@ is uncited/over-claimed.
    pre-empt, the engine-internal inj/seq recompute COST-MAP characterization (gate-A body-closed)."
 4. Update MAP-0001 last_updated + source line to record "+pic-bodies-0006 (2026-05-31): all 6 PIC
    bodies body-verified distinct, novelty gate-A fully closed, only eval gate-B residual."
+
+================================================================================
+## TASK-A TAIL CLOSURE — the 2 MEDIUM candidates (researcher-0006-priorart-stats, 2026-05-31)
+## — closes the gate-A overstatement caught by VERDICT-0022 (6/6)
+================================================================================
+reporting to: orchestrator 22bd6bef | scope: VERDICT-0022 required_evidence #2.
+VERDICT-0022 CORRECTED the prior "gate-A FULLY CLOSED" to "closed for 8 body-read neighbors";
+2 MEDIUM candidates flagged in the registry's OWN prior_art_note.md (collision-risk section) were
+DROPPED from the packet, never body-checked. This section body-checks BOTH. Outcome: NO COLLISION
+— gate-A is now genuinely fully closed (10/10) on the cost-map leg.
+
+### PROVENANCE (anti-hallucination — exactly what I read)
+- **FULL LaTeXML HTML BODY retrieved & parsed** for BOTH via https://arxiv.org/html/<id> (real bodies,
+  TITLE-verified against arXiv abs, not no-HTML stubs). Text files on cli:dengcchi-mac:
+  /tmp/body_2601.13631.txt (ContiguousKV, 72,029 chars, full §1-7 + abstract) and
+  /tmp/body_2604.23994.txt (variable-size-block, 88,452 chars, full §1-7 + App A-H + abstract).
+  These are BODY-LEVEL reads (section text, headings, abstract, related-work), not abstract-only.
+- **DECISIVE GLOBAL GREP (both bodies):** ZERO occurrences in EITHER body of any of:
+  {injection, inj/seq, injection ratio, injection size, mid-prefix, mid-prompt, cost map, cost contour,
+   recompute fraction, recompute-fraction, position-independent, position independence,
+   independent of position, slope, scales linearly}. The word "injection" appears 0 times in BOTH.
+
+### CANDIDATE 1 — ContiguousKV (arXiv:2601.13631) — "Granularity-Aligned KV Cache Management"
+TITLE-VERIFIED: "ContiguousKV: Accelerating LLM Prefill with Granularity-Aligned KV Cache Management"
+(Zou et al., UESTC/MBZUAI). Read depth: **FULL BODY** (abstract + §1-7, related work).
+- **WHAT IT ACTUALLY IS:** a prefix-KV-cache **OFFLOADING / I/O** system. Problem = the "Re-Prefill
+  Phase": load a pre-computed shared-prefix KV cache from a slower tier (CPU mem / SSD), then compute
+  the KV of the new NON-SHARED SUFFIX and attend. Its "ContiguousChunk" is a **unified I/O data-
+  management granularity** introduced to bridge a mismatch between token-level semantic KV-pruning
+  algorithms (e.g. IMPRESS) and coarse fixed-size I/O blocks (64-tok/1.8MB) — i.e. to eliminate
+  **read amplification** (36 "re-prefill" / 23 "read amplification" / 48 "prefetch" hits). Headline =
+  3.85x Re-Prefill **speedup** over IMPRESS via attention-guided cache mgmt + async prefetching.
+- (a) recompute-fraction-vs-inj/seq cost-map? **NO.** No injection axis at all; "injection" 0x. It is
+  append-a-suffix re-prefill (shared prefix + new suffix), NOT mid-prefix insertion. Metric = I/O
+  speedup, not recompute fraction vs injection size.
+- (b) position-independence-OF-COST finding? **NO.** No cost-vs-position analysis; "ContiguousChunk"
+  is an I/O granularity, not a cost-position finding.
+- (c) engine-internal recompute-fraction granularity? **NO** in CLAIM-0006's sense. Its granularity
+  work is I/O-block↔pruning alignment for OFFLOADING, not an engine-internal recompute-fraction
+  characterization under injection. The "agent" mention (5 hits) is a one-line workload citation
+  ("multi-agent systems [..]") in the intro, not an agentic-injection study.
+- **VERDICT: VERIFIED DISTINCT, NO COLLISION.** Adjacent vocabulary ("contiguous", "granularity",
+  "chunk") but a different problem (offload I/O read-amplification), different metric (3.85x I/O
+  speedup), different operation (append-suffix re-prefill, not mid-prefix injection). Does NOT publish
+  (a)/(b)/(c).
+
+### CANDIDATE 2 — variable-size-block (arXiv:2604.23994) — "When to Commit? ... Discrete Diffusion"
+TITLE-VERIFIED: "When to Commit? Towards Variable-Size Self-Contained Blocks for Discrete Diffusion
+Language Models" (Wang/Qiu/Huang, Univ. of Queensland, cs.LG, 27 Apr 2026). Read depth: **FULL BODY**
+(abstract + §1-7 + App A-H + theorems).
+- **WHAT IT ACTUALLY IS:** a **discrete-diffusion LM generation-quality** paper. dLLMs do blockwise
+  semi-autoregressive decoding, creating a training(full-sequence)-vs-inference(bounded-block)
+  mismatch. They propose "self-containedness" (a block is self-contained if its predictions are
+  consistent with/without future context, NF vs FA) as a criterion for WHERE to place block
+  boundaries when COMMITTING tokens during diffusion denoising. Vocab: 76 "diffusion", 321 "block",
+  121 "self-contained", 110 "commit", 79 "decoding", 19 "denois"; "prefix cache" 0x, "throughput" 0x.
+- (a) recompute-fraction-vs-inj/seq cost-map? **NO.** No KV-prefix invalidation, no injection, no
+  inj/seq. "Variable-size blocks" = diffusion DECODING-COMMIT boundaries chosen for generation
+  consistency, NOT KV-cache invalidation cost. The single "recompute" hit = a future-aware activation-
+  caching trick that "reuses intermediate hidden states from a full-context forward and recomputes
+  only a small number of upper layers under masked attention" — a quality/consistency device across
+  diffusion forward passes, not a prefix-cache recompute-fraction vs injection.
+- (b) position-independence-OF-COST finding? **NO.** "Self-containedness" is about future-context
+  consistency, not cost-vs-position.
+- (c) engine-internal recompute-fraction granularity? **NO.** Block boundaries are for diffusion
+  commit decisions; "1 KV cache" hit is a passing mention; the cache work (§5.4) is FA-activation
+  caching for diffusion, not an autoregressive prefix-cache recompute granularity.
+- **VERDICT: VERIFIED DISTINCT, NO COLLISION.** Different model class (discrete diffusion, not
+  autoregressive), different goal (generation quality / where to commit tokens), no KV-prefix
+  invalidation, no injection axis. "Content-aware / variable-size block" overlaps only in NAME; the
+  mechanism (NF/FA self-containedness for diffusion commit) is unrelated to CDC mid-prefix re-sync.
+  Does NOT publish (a)/(b)/(c).
+
+### TASK-A OUTCOME — GATE-A FULLY CLOSED (now 10/10, honestly)
+- Neither MEDIUM candidate publishes a recompute-fraction-vs-inj/seq cost-map, a position-independence-
+  OF-COST finding, or an engine-internal recompute-fraction granularity. **NO COLLISION.** Neither
+  escalates CLAIM-0006 to RED.
+- Combined with the prior 8 body-read neighbors (2601.06007, Irminsul, EPIC, CacheBlend, Cache-Craft,
+  MEPIC, KVFlow, CacheClip — all body-verified distinct), gate-A is now FULLY CLOSED at body level on
+  the cost-map leg: **10/10 neighbors body-read, ZERO cost-map collision.** The VERDICT-0022 "8/10
+  pending" caveat is resolved → restate to "10/10 body-verified".
+- HONEST READ-DEPTH NOTE: full LaTeXML HTML bodies (section text + headings + abstract + related work).
+  Same caveat as pic-bodies-0006: a cost-map encoded ONLY as an unlabeled plotted curve with no
+  caption/axis text would be invisible to HTML-grep. Risk VERY LOW — both papers' entire metric framing
+  is offload-I/O-speedup (ContiguousKV) / diffusion-decoding-quality (variable-block); neither mentions
+  injection, recompute-fraction, or an inj/seq axis ANYWHERE in body or section headings.
+
+### PROPOSED MAP-0001 DELTAS (PROPOSE-ONLY — orchestrator applies)
+1. key_prior_work: change ContiguousKV 2601.13631 from "FLAGGED MEDIUM, body-check PENDING" to
+   "BODY-VERIFIED distinct (offloading I/O re-prefill / read-amplification system, 3.85x I/O speedup
+   vs IMPRESS; ContiguousChunk = I/O granularity; append-suffix not mid-prefix injection; NO inj/seq
+   cost-map — researcher-0006-priorart-stats 2026-05-31)".
+2. key_prior_work: change variable-size-block 2604.23994 from "FLAGGED MEDIUM, body-check PENDING" to
+   "BODY-VERIFIED distinct (discrete-diffusion LM block-COMMIT generation-quality; self-containedness
+   NF/FA criterion; not autoregressive KV-prefix invalidation; NO inj/seq cost-map — same agent)".
+3. open_gaps CLAIM-0006: restate gate-A from "near-closed(8/10), 2 MEDIUM pending" to
+   "gate-A FULLY CLOSED (10/10 neighbors body-verified distinct, ZERO cost-map collision)".
