@@ -132,22 +132,29 @@ nodes:
     GATE-TYPE are COLINEAR -> signal may be gate-type+harness-routing, NOT error-class per se (PREDICTOR
     MISATTRIBUTION). GREEN needs: web_disabled-ablated V + leave-one-CLASS-out CV; lift over static-mapping
     + gate-type-only baselines; >=2-src self-healing prior-art sweep; sampled TERMINAL class n>=10; cross-harness;
-    interventional (alter routing, check modality follows RULE not class).'
+    interventional (alter routing, check modality follows RULE not class). | EXP-0012/VERDICT-0021: BOTH
+    objections DATA-CONFIRMED. Ablating web_disabled collapses LOO-Brier +40.1%->+2.2%; leave-one-CLASS-out
+    -33%; error-class lift over gate-type-only = -0.0043 (1 REDIRECTABLE bit ~= full 17-class taxonomy).
+    error-class->gate-type is a perfect function -> OBSERVATIONALLY INSEPARABLE. error-class framing RETIRED;
+    surviving = gate-type+routing CHARACTERIZATION (config fact). Remaining GREEN (non-CPU): >=2-src prior-art
+    sweep, sampled TERMINAL pole n>=10, cross-harness, interventional.'
   red_zones:
-  - 'harness-routing-as-confound (CLAIM-0009 OPEN_RISK): recovery modality may be determined by the harness
+  - 'harness-routing-as-confound (CLAIM-0009 CONFIRMED (observationally inseparable, EXP-0012: error-class
+    lift over gate-type-only = -0.0043; LOCO -33%)): recovery modality may be determined by the harness
     routing table (gate-type), not the error-class — these are colinear in the Claude Code corpus; needs
     interventional/ablation to separate before any ''error-class predicts modality'' claim.'
   associated_claims:
   - CLAIM-0008
   associated_dead_ideas: []
   status: yellow
-  last_updated: '2026-05-31T16:13:11Z'
+  last_updated: '2026-05-31T16:26:43Z'
   source: ' | +EXP-0007/VERDICT-0015 (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0007/VERDICT-0015
     (2026-05-31): real-trace failure census; NULL baseline added | +EXP-0008/VERDICT-0016 (2026-05-31):
     outcome-def decoupling WEAKENS error-class->recovery; redirectable-vs-terminal gate distinction |
     +EXP-0009/VERDICT-0018 (2026-05-31): recovery-modality supported; gate-property taxonomy | +VERDICT-0020
     (2026-05-31, real 6/6): predictor-misattribution + definitional-inflation; scope narrowed; new baselines
-    + confound node'
+    + confound node | +EXP-0012/VERDICT-0021 (2026-05-31): both committee objections data-confirmed; confound
+    CONFIRMED; error-class framing retired -> gate-type characterization'
 - node_id: MAP-0003
   area: Branchable replay / counterfactual execution for long-horizon agents
   occupied_territory: 'single-layer tools only: rr/ReVirt (process), ReproZip (fs), LMCache/Mooncake (KV

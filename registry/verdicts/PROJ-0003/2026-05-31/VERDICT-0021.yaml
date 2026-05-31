@@ -1,0 +1,50 @@
+verdict_id: VERDICT-0021
+claim_id: CLAIM-0009
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0012
+experiment_paths:
+- experiments/2026-05-31/EXP-0012
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'BOTH VERDICT-0020 committee objections now DATA-CONFIRMED. DEFINITIONAL INFLATION:
+  ablating web_disabled collapses out-of-sample LOO-Brier +40.1%->+2.2%'
+- leave-one-CLASS-out = -33% (predictor worse than constant null on held-out class)
+  -> NO generalizable error-class->modality law
+- 'PREDICTOR MISATTRIBUTION: error-class lift over gate-type-only = -0.0043 (NEGATIVE)'
+- 1 REDIRECTABLE bit ~= full 17-class taxonomy (error-class adds <=0.2%)
+- error-class->gate-type is a PERFECT function
+- observationally INSEPARABLE on this single-harness corpus
+- the 'error-class predicts modality' framing is RETIRED
+required_evidence:
+- RETIRE the error-class framing
+- 'restate CLAIM-0009 as a gate-type+harness-routing CHARACTERIZATION (config fact:
+  redirectable-hard-block vs grant-required vs transient), explicitly NOT error-class
+  prediction'
+- 'Remaining GREEN blockers are NON-CPU: >=2-source self-healing/error-recovery-trace
+  prior-art live sweep'
+- sampled TERMINAL pole n>=10
+- cross-harness replication
+- interventional routing-alteration to break the colinearity
+map_delta_proposals:
+- 'MAP-0002: EXP-0012 CONFIRMS definitional-inflation (ablated LOO-Brier +40.1%->+2.2%,
+  LOCO -33%) + predictor-misattribution (error-class lift over gate-type-only = -0.0043'
+- 1 bit ~= full taxonomy)
+- PROMOTE harness-routing-as-confound from OPEN_RISK to CONFIRMED (observationally
+  inseparable, EXP-0012)
+- NARROW CLAIM-0009 to gate-type+routing characterization (config fact), NOT error-class
+  prediction
+- 3 CPU required-evidence items DISCHARGED
+baseline_requirements:
+- "gate-type-only predictor (single REDIRECTABLE bit) \u2014 now the REFERENCE (error-class\
+  \ adds <=0.2%)"
+- static error-class->Mode mapping (in-sample only)
+- NULL p0=0.506
+created_at: '2026-05-31T16:26:17Z'

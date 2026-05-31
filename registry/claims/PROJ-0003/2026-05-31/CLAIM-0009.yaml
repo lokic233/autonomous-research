@@ -1,13 +1,14 @@
 claim_id: CLAIM-0009
 project_id: PROJ-0003
-stage: seed
+stage: exploration
 status: weakened
-claim: 'Gate-type + harness-routing characterizes agent recovery MODALITY (same-tool-retry
-  vs cross-tool-redirect) on a single-harness (Claude Code) corpus: V=0.717, but ~60%
-  of recovered-failure mass sits on 2 definitionally-determined cells (web_disabled
-  redirect=1.0, perm_denied=0.0). WHETHER the predictor is error-class PROPER vs gate-type
-  (colinear here) is UNRESOLVED pending ablation/intervention. REDIRECTABLE-vs-TERMINAL
-  is a property of the GATE, not the policy label.'
+claim: "Agent recovery MODALITY (same-tool-retry vs cross-tool-redirect) is characterized\
+  \ by GATE-TYPE + harness routing (REDIRECTABLE hard-block -> cross-tool redirect;\
+  \ GRANT-REQUIRED permission -> same-tool; TRANSIENT -> same-tool-dominant), a CONFIG/ROUTING\
+  \ fact of the harness \u2014 NOT a prediction from error-class. EXP-0012: error-class\
+  \ adds <=0.2% over a single REDIRECTABLE bit (lift over gate-type-only = -0.0043\
+  \ out-of-sample); error-class & gate-type are observationally INSEPARABLE on this\
+  \ single-harness corpus."
 why_it_matters: 'EXP-0008 refuted CLAIM-0008 (occurrence) but surfaced a sharper,
   defensible signal: error-class predicts the MODALITY of recovery. This re-seeds
   the surviving kernel as its own falsifiable claim.'
@@ -60,13 +61,19 @@ verdict_history:
 - verdict_id: VERDICT-0020
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0021
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0012; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'WEAKENED to gate-type characterization (EXP-0012/VERDICT-0021): error-class
+  framing RETIRED (lift over gate-type-only -0.0043; ablated LOO-Brier +40.1%->+2.2%;
+  LOCO -33%). Surviving = gate-type+routing config-fact. GREEN blockers all NON-CPU:
+  >=2-src prior-art sweep, sampled TERMINAL pole n>=10, cross-harness, interventional.
+  Committee refresh optional (objections already data-confirmed).'
 blocking_on: ''
-active_experiments:
-- EXP-0011
+active_experiments: []
 created_at: '2026-05-31T15:51:47Z'
-last_updated: '2026-05-31T16:24:23Z'
+last_updated: '2026-05-31T16:28:17Z'

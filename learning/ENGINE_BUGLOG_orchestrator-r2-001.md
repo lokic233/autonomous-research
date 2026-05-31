@@ -487,3 +487,22 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   corpus; the signal may be the harness routing table, not error-class) — an objection my single-vote review
   MISSED. This is the concrete payoff of the full-committee bar over a 1-vote evidence-update: it caught an
   overclaim. Scope of CLAIM-0009 narrowed accordingly; harness-routing-as-confound added to MAP-0002 red_zones.
+
+### BUG-23 (NEW, low) — `ros exp register` then re-register leaves an orphan PENDING experiment + dangling active_experiments
+- researcher-modality-ablation-0009 registered EXP-0011, then ran/completed the work as EXP-0012 (likely a
+  re-register after a false start). EXP-0011 was left status=pending with no result, AND CLAIM-0009.active_
+  experiments still listed EXP-0011 (a dangling pointer to a never-completed experiment).
+- Impact: low — a pending orphan inflates the experiment count + leaves a stale active_experiments entry that
+  `ros resume` would surface as in-flight forever. No data corruption.
+- Remediation this run: removed the EXP-0011 stub dir + cleared it from CLAIM-0009.active_experiments.
+- Fix (engine, optional): `ros exp register` could warn if the claim already has a pending experiment; or a
+  `ros exp abandon/gc` to retire never-completed pending experiments + clear their active_experiments back-link.
+
+### EXP-0012 — CLAIM-0009 WEAKENED to a config-fact (VERDICT-0021); committee objections DATA-CONFIRMED.
+- The full 6/6 committee (VERDICT-0020) flagged definitional-inflation + predictor-misattribution; EXP-0012
+  (the CPU follow-up I dispatched to test them) CONFIRMED both with data: ablated LOO-Brier +40.1%->+2.2%,
+  leave-one-CLASS-out -33%, error-class lift over gate-type-only = -0.0043 (1 bit ~= full taxonomy).
+- Outcome: error-class framing RETIRED; CLAIM-0009 restated as a gate-type+routing CHARACTERIZATION (config
+  fact). harness-routing-as-confound promoted OPEN_RISK -> CONFIRMED in MAP-0002. This is the committee->
+  experiment->verdict loop working as designed: a 6/6 objection drove a targeted experiment that honestly
+  weakened the claim. No fabrication; truth tracked.
