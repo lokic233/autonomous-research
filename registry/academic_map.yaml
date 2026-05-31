@@ -128,6 +128,9 @@ nodes:
     (agent idle-gap speculation+overhead model) + arXiv:2605.06472 (prediction-based KV prefill). Revive
     only if a speculative-prefill operating point is body-distinct from those AND beats the break-even
     identity.'
+  - 'compaction-as-prefix-invalidation (long-horizon) = DEAD (EXP-0028): CDC compaction recompute == CLAIM-0006
+    R/S identity with R:=summary size (max_abs_err 0.0); ''when to compact'' break-even = generic accounting
+    identity; footprint-savings angle = eviction/Continuum-KV-TTL (occupied). No new law.'
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -148,7 +151,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T19:42:47Z'
+  last_updated: '2026-05-31T19:53:17Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -172,7 +175,9 @@ nodes:
     (CDC wins 22/24), option-b closed; vLLM serving still owed | +VERDICT-0033 (2026-05-31): GREEN-decision#2
     hold-yellow on re-impl-vs-published-lmcache confound; 3 paths to green | +EXP-0027 (2026-05-31): oracle-PIC
     bound WEAKENS serving claim — CDC advantage conditional vs fused PIC (loses at low inj/seq); committee
-    re-impl skepticism vindicated'
+    re-impl skepticism vindicated | +laneD/laneE saturation (2026-05-31): PROJ-0001 (9 adjacent killed,
+    per-device fix) + PROJ-0002 (spec-decode/multi-agent/compaction all occupied, EXP-0028) CONFIRMED
+    SATURATED by disjoint researchers'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

@@ -1,0 +1,32 @@
+exp_id: EXP-0029
+project_id: PROJ-0003
+claim_id: CLAIM-0010
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'Reframed CLAIM-0010 re-tested w/ OOS CIs (81 sess/384 fail). DEFENSIBLE
+  but DEFLATED: coarse U(mod|gate)=0.381[0.310,0.472] collapses to 0.034[0.003,0.091]
+  dropping web_disabled (CONFIRMED web_disabled-carried, partial gate-table). Fine:
+  leak-free LOSO context lift REDIRECTABLE +0.126 paired[+0.063,+0.189] sig, TRANSIENT
+  +0.030[+0.008,+0.055] tiny-sig, GRANT borderline; irreducible residual-entropy FLOOR
+  normH 0.61/0.68/0.74 [CI low>=0.49] = ~48%+ situation-dependent. NOT a collapse
+  to web_disabled+noise (fine signal is OOS+leak-free) but NOT original adaptive claim
+  either. Reframe = GREEN-path ONLY if headline adopts deflation (partial web_disabled-carried
+  coarse + context-conditioned fine w/ quantified residual floor); single-harness
+  blocker remains.'
+result_effect: weaken
+artifacts_path: experiments/2026-05-31/EXP-0029/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T19:53:17Z'
+prompt_version: ''

@@ -28,6 +28,18 @@ negative_evidence:
     weakens the ''adaptive decision not table-lookup'' framing. Single-harness. (Result.md
     assembled by orchestrator from researcher''s own stalled-but-complete data.)'
   data_path: experiments/2026-05-31/EXP-0022/
+- exp_id: EXP-0029
+  summary: 'Reframed CLAIM-0010 re-tested w/ OOS CIs (81 sess/384 fail). DEFENSIBLE
+    but DEFLATED: coarse U(mod|gate)=0.381[0.310,0.472] collapses to 0.034[0.003,0.091]
+    dropping web_disabled (CONFIRMED web_disabled-carried, partial gate-table). Fine:
+    leak-free LOSO context lift REDIRECTABLE +0.126 paired[+0.063,+0.189] sig, TRANSIENT
+    +0.030[+0.008,+0.055] tiny-sig, GRANT borderline; irreducible residual-entropy
+    FLOOR normH 0.61/0.68/0.74 [CI low>=0.49] = ~48%+ situation-dependent. NOT a collapse
+    to web_disabled+noise (fine signal is OOS+leak-free) but NOT original adaptive
+    claim either. Reframe = GREEN-path ONLY if headline adopts deflation (partial
+    web_disabled-carried coarse + context-conditioned fine w/ quantified residual
+    floor); single-harness blocker remains.'
+  data_path: experiments/2026-05-31/EXP-0029/
 verdict_history:
 - verdict_id: VERDICT-0030
   date: '2026-05-31'
@@ -35,12 +47,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: verdict_recorded
-next_action: "EXP-0022/VERDICT-0030: two-layer structure HOLDS in shape but WEAKENED\
-  \ \u2014 coarse determinism web_disabled-carried (LOCO U->0.034), fine is context-conditioned\
-  \ (LOO +0.09..0.19, not free-adaptive). Reframe to coarse-partial-table/fine-context-conditioned-high-residual.\
-  \ GREEN needs: cross-harness + the reframed claim re-tested + committee 6/6."
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0029; convene committee if candidate-grade
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T18:26:07Z'
-last_updated: '2026-05-31T19:02:25Z'
+last_updated: '2026-05-31T19:53:17Z'

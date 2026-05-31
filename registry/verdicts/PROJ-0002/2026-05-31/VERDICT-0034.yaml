@@ -1,0 +1,59 @@
+verdict_id: VERDICT-0034
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0026
+- EXP-0027
+experiment_paths:
+- experiments/2026-05-31/EXP-0026
+- experiments/2026-05-31/EXP-0027
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "HOLD YELLOW (1 green/5 yellow), novelty GREEN/uncontested. UNANIMOUS empirical\
+  \ gap: the competitive bound is MODELED not MEASURED \u2014 EXP-0027 oracle-PIC\
+  \ is a theoretical best-case, not the shipping fused competitor. A characterization\
+  \ paper's competitive positioning must run the ACTUAL competitor (source-built LMCache\
+  \ CacheBlend), not only a theoretical upper bound on it"
+- "WIN-REGION internally inconsistent as stated: contribution-3 win-region (S>=50k,\
+  \ inj/seq<=1%) OVERLAPS contribution-2 loss-region (CDC 0.61-0.99x vs fused PIC\
+  \ at inj/seq 1-5%) \u2014 both include inj/seq~1%"
+- must qualify as competitor-conditional
+required_evidence:
+- "EXP-0030 (APPROVED, GPU): source-built LMCache CacheBlend measurement on the 12-cell\
+  \ serving grid (inj/seq{1,5,25%} x seq{8k,28k} x batch{1,8}) \u2014 the published\
+  \ fused-PIC SOTA via env ros-vllm"
+- settles whether CDC's advantage holds vs the ACTUAL shipping competitor, converting
+  modeled crossover to MEASURED
+- EXP-0027 oracle bound needs CIs + n>=3 (load-bearing competitive evidence, currently
+  point ratios)
+- 'RECONCILE win-region(vs non-fused PIC) vs loss-region(vs fused PIC): qualify win-region
+  as ''vs current production non-fused PIC at inj/seq<=1%'
+- vs fused PIC crossover shifts to inj/seq>=~10-25%'
+map_delta_proposals:
+- 'CLAIM-0006: HOLD YELLOW'
+- 'novelty GREEN. Competitive bound MODELED (EXP-0027 oracle) not MEASURED -> need
+  source-built LMCache CacheBlend on 12-cell grid (now buildable: env ros-vllm). Win-region
+  is COMPETITOR-CONDITIONAL: vs non-fused PIC inj/seq<=1%'
+- vs fused PIC crossover ~10-25%. EXP-0027 vindicated VERDICT-0033 re-impl skepticism.
+baseline_requirements:
+- "LMCache CacheBlend SOURCE-BUILT (shipping fused-PIC SOTA \u2014 MEASURED, env ros-vllm)\
+  \ \u2014 oracle-PIC is a valid SUPPLEMENT not a substitute"
+- vLLM PagedAttention
+created_at: '2026-05-31T19:48:41Z'

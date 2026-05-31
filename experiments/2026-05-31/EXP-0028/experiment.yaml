@@ -1,0 +1,28 @@
+exp_id: EXP-0028
+project_id: PROJ-0002
+claim_id: null
+session_id: ''
+level: 1
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 1
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: Compaction-as-prefix-invalidation collapses onto CLAIM-0006's R/S
+  accounting identity (R:=summary size G), machine-zero err on 80-cell grid; FULL=CLAIM-0006
+  FULL at p~=0 (attn-sink corner already carved out); when-to-compact break-even =
+  generic DEAD-0010-style identity. Only distinct quantity (footprint savings) = occupied
+  eviction/KV-TTL neighborhood (laneB Cand-A KILL). NOT bound to a promoted claim
+  (--claim none, BUG-25-safe). KILL.
+result_effect: kill
+artifacts_path: experiments/2026-05-31/EXP-0028/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T19:51:52Z'
+prompt_version: researcher_laneE_v001

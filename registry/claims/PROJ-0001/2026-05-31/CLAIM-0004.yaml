@@ -2,8 +2,8 @@ claim_id: CLAIM-0004
 project_id: PROJ-0001
 stage: candidate
 status: promoted
-claim: "The Mapping-Budget Wall: a conserved per-context VMM mapping budget governs\
-  \ branch fanout (root-caused, cross-vendor) \u2014 sharper version of CLAIM-0002."
+claim: 'The Mapping-Budget Wall: a conserved per-device VMM mapping budget governs branch fanout (root-caused,
+  cross-vendor) — sharper version of CLAIM-0002.'
 why_it_matters: Predictive resource model for VMM branch capacity.
 novelty_hypothesis: ''
 mandatory_baselines:
@@ -28,8 +28,17 @@ owner: sess 048fcb0d
 target_venue: ATC/EuroSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T13:55:50Z'
+last_updated: '2026-05-31T19:52:45Z'
 lifecycle_state: done
 next_action: promoted (6/6 GREEN); paper-track work
 blocking_on: ''
 active_experiments: []
+evidence_corrections:
+- date: '2026-05-31'
+  by: orchestrator-r2-001 (researcher-0001-laneE finding)
+  correction: 'QUANTIFIER fix per-context -> per-device. EXP-A004 e3d_results.jsonl proves the ~523,300
+    mapping budget is conserved PER-DEVICE and splits ~K/n across contexts (n=1:523404; n=2:total 523284
+    ~260K each; n=3:total 523164 ~174K each) — NOT per-context. Aligns wording with the claims OWN evidence
+    + the original 6/6 committee consensus (sess 048fcb0d: "headline the conserved-per-device budget").
+    The GREEN phenomenon is intact; only the quantifier word was a 2026-05-31 migration artifact. NO status/verdict
+    change; NO re-experiment (re-probing FORBIDDEN per MI350X postmortem).'

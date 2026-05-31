@@ -1,0 +1,115 @@
+{
+  "base": 1500,
+  "w": 64,
+  "n_grid": 80,
+  "identity_test_1_cdc_equals_R_over_S": {
+    "max_abs_err": 0.0,
+    "PASS": true,
+    "note": "CDC compaction recompute fraction == (G+W)/S' i.e. CLAIM-0006's R/S identity with R:=summary-size G (+ boundary w). Compaction is NOT a new cost surface for CDC."
+  },
+  "identity_test_2_full_equals_front_edit": {
+    "max_abs_err": 0.0,
+    "PASS": true,
+    "note": "FULL compaction == diverged-suffix recompute from first-changed pos = CLAIM-0006 FULL at p=p_c (the front). Same identity, p~=0 corner."
+  },
+  "break_even_is_generic_identity": {
+    "closed_form": "T* = C_recompute / (S - S')  (one-time recompute amortized over per-step length savings)",
+    "structurally_same_as": "DEAD-0010 speculate-or-skip h*f>=alpha/(1+alpha): generic cost/benefit ratio, NO KV-specific anomaly",
+    "example_Tstar": [
+      0.053,
+      0.054,
+      0.055,
+      0.056,
+      0.057,
+      0.059,
+      0.063,
+      0.064
+    ]
+  },
+  "sample_grid": [
+    {
+      "S": 8000,
+      "H": 1950,
+      "G": 97,
+      "rho": 0.05,
+      "Sp": 6147,
+      "p_c": 0.2440214738897023,
+      "full": 0.7559785261102977,
+      "cdc": 0.02619163819749471,
+      "pic": 0.023339951990716888,
+      "r_over_s": 0.01578005531153408,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    },
+    {
+      "S": 8000,
+      "H": 1950,
+      "G": 195,
+      "rho": 0.1,
+      "Sp": 6245,
+      "p_c": 0.2401921537229784,
+      "full": 0.7598078462770216,
+      "cdc": 0.04147317854283427,
+      "pic": 0.03943247472277261,
+      "r_over_s": 0.03122497998398719,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    },
+    {
+      "S": 8000,
+      "H": 1950,
+      "G": 390,
+      "rho": 0.2,
+      "Sp": 6440,
+      "p_c": 0.2329192546583851,
+      "full": 0.7670807453416149,
+      "cdc": 0.0704968944099379,
+      "pic": 0.06055900621118013,
+      "r_over_s": 0.06055900621118013,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    },
+    {
+      "S": 8000,
+      "H": 1950,
+      "G": 780,
+      "rho": 0.4,
+      "Sp": 6830,
+      "p_c": 0.21961932650073207,
+      "full": 0.780380673499268,
+      "cdc": 0.12357247437774524,
+      "pic": 0.11420204978038068,
+      "r_over_s": 0.11420204978038068,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    },
+    {
+      "S": 8000,
+      "H": 3250,
+      "G": 162,
+      "rho": 0.05,
+      "Sp": 4912,
+      "p_c": 0.30537459283387625,
+      "full": 0.6946254071661238,
+      "cdc": 0.046009771986970684,
+      "pic": 0.04083882852868465,
+      "r_over_s": 0.03298045602605863,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    },
+    {
+      "S": 8000,
+      "H": 3250,
+      "G": 325,
+      "rho": 0.1,
+      "Sp": 5075,
+      "p_c": 0.2955665024630542,
+      "full": 0.7044334975369458,
+      "cdc": 0.07665024630541872,
+      "pic": 0.06403940886699508,
+      "r_over_s": 0.06403940886699508,
+      "cdc_id_err": 0.0,
+      "full_id_err": 0.0
+    }
+  ]
+}

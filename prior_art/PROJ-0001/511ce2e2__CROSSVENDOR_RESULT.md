@@ -9,12 +9,12 @@
 - Mapped 4,000,000 shared-physical→distinct-VA pages (one phys handle, hipMemMap+
   hipMemSetAccess each) with ZERO driver failure. Hit our 15.26 GiB VA-reserve cap, NOT a
   driver ceiling. No cuMemSetAccess-equivalent refusal observed.
-- => AMD does NOT enforce the ~520K per-context mapping-metadata ceiling NVIDIA does.
+- => AMD does NOT enforce the ~520K per-device mapping-metadata ceiling NVIDIA does.
 
 ## HONEST IMPLICATION (corrects Thesis A framing)
 The K≈520K ceiling is NVIDIA-DRIVER-SPECIFIC, not a universal property of GPU VMM.
 The defensible characterization is therefore VENDOR DRIVER-ARCHITECTURE DIVERGENCE:
-NVIDIA enforces a low per-context mapping-metadata ceiling (520K @ 2MB granule) that AMD
+NVIDIA enforces a low per-device mapping-metadata ceiling (520K @ 2MB granule) that AMD
 (4KB granule, ≥4M mappings) does not. This has direct portability consequences for any
 VMM-based KV/branch/CoW system: a design that scales on AMD can hit a hard wall on NVIDIA.
 This is a STRONGER, more falsifiable claim than "structural GPU limit" and survives the
@@ -29,7 +29,7 @@ Repro: raise VA reserve + LIMIT to find AMD's true ceiling (cheap follow-up).
 - Reserved 244.1 GiB VA (64,000,000 × 4KB pages). Mapped ALL 64,000,000
   shared-physical→distinct-VA pages via hipMemMap+hipMemSetAccess. ZERO driver failure.
 - 64M mappings = 123× NVIDIA H100's 520K ceiling. This is STILL our VA-reserve cap, NOT an
-  AMD driver ceiling — AMD shows no per-context mapping-metadata wall in the regime where
+  AMD driver ceiling — AMD shows no per-device mapping-metadata wall in the regime where
   NVIDIA hard-fails at cuMemSetAccess.
 - Probe: /tmp/hip_vmm_ceiling_max.cpp on cli:<GPU-NODE-B>. Repro: raise VA reserve further.
 
@@ -39,7 +39,7 @@ Repro: raise VA reserve + LIMIT to find AMD's true ceiling (cheap follow-up).
 | NVIDIA H100 | CUDA 12.8 / 580.82.07 | 2 MiB | ~520,000 (K=branches×prefix_pages, ±1%) | YES — hard fail at cuMemSetAccess |
 | AMD MI350X | ROCm 7.0.2.1 / gfx950 | 4 KB | 64,000,000 (cap, not ceiling) | NO ceiling found at 123× NVIDIA |
 
-The ~520K per-context VMM mapping ceiling is NVIDIA-DRIVER-SPECIFIC. AMD's HIP VMM does not
+The ~520K per-device VMM mapping ceiling is NVIDIA-DRIVER-SPECIFIC. AMD's HIP VMM does not
 enforce it in this regime. Honest framing for any thesis: this is a VENDOR DRIVER-ARCHITECTURE
 DIVERGENCE with portability consequences for VMM-based KV/branch systems — NOT a universal GPU law.
 
@@ -65,7 +65,7 @@ with ZERO driver failure. Host RAM 2687→2574 GiB during run (only ~113 GiB con
 headroom untouched). MemAvailable recovered to 2625 GiB after probe exited.
 - 80,000,000 mappings = 153× NVIDIA's 520K ceiling, STILL no AMD wall (this is our hard cap,
   not an AMD driver ceiling). Confirms across THREE independent runs (4M, 50M, 80M) AMD shows
-  no per-context VMM mapping ceiling in any safely-reachable regime.
+  no per-device VMM mapping ceiling in any safely-reachable regime.
 NOTE: node became sluggish AFTER the probe finished (OS reclaiming 80M mappings on teardown is
 CPU-heavy) — the RUN itself was safe; teardown is the cost. Data fully captured before slowdown.
 FINAL A* CROSS-VENDOR: NVIDIA hard wall 520K (reproduced 523,404 ±0.6%); AMD no wall at 80M
