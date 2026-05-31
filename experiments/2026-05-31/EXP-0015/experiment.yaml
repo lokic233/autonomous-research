@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'Win-region map w/ bootstrap CIs + 4x4 workload-prior sweep. Reproduces
+  EXP-0005 points (count-frac inj/seq<=1% = 0.246 [0.243,0.250]; token-frac = 0.037
+  [0.036,0.038]). KEY: token-weighted win-region is NEGLIGIBLE under EVERY prior (2.7-8.1%,
+  median 3.7%) -- >=92% of injected tokens fall outside CDC''s win-region in all 16
+  cells. Conditioned on large reused ctx S>=50k, CDC wins ~48% of injections, prior-ROBUST
+  (41-52% across grid). Verdict WEAKEN: unconditional/token-weighted framing unsupported;
+  only the CONDITIONAL count-level win-region (S>=50k AND inj/seq<=1%) survives --
+  real, prior-robust, meaningful minority of injections but small minority of tokens.
+  Quantifies VERDICT-0023''s surviving leg with CIs; does not weaken further. CPU
+  proxy; gate-B GPU untouched.'
+result_effect: weaken
 artifacts_path: experiments/2026-05-31/EXP-0015/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-05-31T18:27:06Z'
 prompt_version: ''

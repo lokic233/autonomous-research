@@ -71,6 +71,14 @@ supporting_evidence:
     \ win-region. CAVEAT: kernel proxy, not full vLLM/CacheBlend serving (vllm not\
     \ installed on node)."
   data_path: experiments/2026-05-31/EXP-0014/
+- exp_id: EXP-0021
+  summary: "GPU CI run (H100, 30 reps/cell, bootstrap CIs): ALL 8 cells PIC/CDC CI95\
+    \ EXCLUDES 1.0 incl the prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> 'CDC faster\
+    \ in all 8 cells' now statistically supported (resolves area_chair objection).\
+    \ PIC-faithfulness sensitivity small (1.39 vs 1.44 @32k/5%, robust). Req#2 end-to-end\
+    \ serving cell HONESTLY NOT MET (vLLM not installable on node, prod paths block\
+    \ pip) \u2014 still owed for full GREEN, NOT fabricated."
+  data_path: experiments/2026-05-31/EXP-0021/
 negative_evidence:
 - exp_id: EXP-0002
   summary: 'CPU token-proxy cost-surface (100 cells x3 reps). Reproduced ~2% anchor
@@ -130,6 +138,26 @@ negative_evidence:
     line, not a slope discovery. Token-count proxy; GPU wall-clock (gate-B) still
     the long pole.'
   data_path: experiments/2026-05-31/EXP-0013/
+- exp_id: EXP-0015
+  summary: 'Win-region map w/ bootstrap CIs + 4x4 workload-prior sweep. Reproduces
+    EXP-0005 points (count-frac inj/seq<=1% = 0.246 [0.243,0.250]; token-frac = 0.037
+    [0.036,0.038]). KEY: token-weighted win-region is NEGLIGIBLE under EVERY prior
+    (2.7-8.1%, median 3.7%) -- >=92% of injected tokens fall outside CDC''s win-region
+    in all 16 cells. Conditioned on large reused ctx S>=50k, CDC wins ~48% of injections,
+    prior-ROBUST (41-52% across grid). Verdict WEAKEN: unconditional/token-weighted
+    framing unsupported; only the CONDITIONAL count-level win-region (S>=50k AND inj/seq<=1%)
+    survives -- real, prior-robust, meaningful minority of injections but small minority
+    of tokens. Quantifies VERDICT-0023''s surviving leg with CIs; does not weaken
+    further. CPU proxy; gate-B GPU untouched.'
+  data_path: experiments/2026-05-31/EXP-0015/
+- exp_id: EXP-0021
+  effect: support
+  summary: "GPU wall-clock CIs (H100, 30 reps/cell, bootstrap): ALL 8 cells PIC/CDC\
+    \ CI95 EXCLUDES 1.0 incl prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> CDC contiguous\
+    \ faster than PIC scattered in all 8 cells now STATISTICALLY SUPPORTED. PIC-faithfulness\
+    \ sensitivity small (1.39 vs 1.44 @32k/5%, robust). End-to-end serving cell still\
+    \ OWED (vLLM not installable on node) \u2014 NOT fabricated."
+  data_path: experiments/2026-05-31/EXP-0021/
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
@@ -160,12 +188,15 @@ verdict_history:
 - verdict_id: VERDICT-0025
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0028
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T18:25:28Z'
+last_updated: '2026-05-31T18:29:19Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -188,10 +219,11 @@ required_evidence_for_green:
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
 lifecycle_state: evidence_ready
-next_action: 'VERDICT-0025 6/6 (novelty_killer GREEN, gate-A CLOSED). To unanimous
-  GREEN: gate-B needs (1) EXP-0014 CIs (32k/1% 1.02x cell), (2) >=1 end-to-end serving
-  cell (vLLM+CacheBlend) [GPU, autonomously runnable], (3) PIC-impl provenance. Design
-  + queue the serving-cell GPU exp next.'
-active_experiments:
-- EXP-0015
+next_action: "gate-A GREEN; gate-B: GPU wall-clock CIs all exclude 1.0 (EXP-0021),\
+  \ win-region conditional-only quantified (EXP-0015 token-frac negligible, count-frac|S>=50k=0.457\
+  \ stable). SINGLE remaining piece for unanimous GREEN = ONE end-to-end vLLM+CacheBlend\
+  \ serving cell (node env blocks vLLM install \u2014 needs an env with vLLM, or accept\
+  \ kernel-proxy+CIs as the characterization-paper bar). Re-run committee to test\
+  \ if it flips GREEN."
+active_experiments: []
 blocking_on: ''

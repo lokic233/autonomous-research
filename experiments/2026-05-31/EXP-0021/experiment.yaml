@@ -1,0 +1,29 @@
+exp_id: EXP-0021
+project_id: PROJ-0002
+claim_id: CLAIM-0006
+session_id: ''
+level: 2
+hardware: H100
+resource_budget:
+  max_wall_clock_minutes: 120
+  max_gpu_hours: 2.0
+  max_memory_gb: 90
+  host_mem_floor_gb: 300
+needs_gpu: true
+dispatched_by: gpu-scheduler
+node_lease: devgpu014:EXP-0021
+status: completed
+result_summary: "GPU CI run (H100, 30 reps/cell, bootstrap CIs): ALL 8 cells PIC/CDC\
+  \ CI95 EXCLUDES 1.0 incl the prev-ambiguous 32k/1% (1.129 [1.128,1.151]) -> 'CDC\
+  \ faster in all 8 cells' now statistically supported (resolves area_chair objection).\
+  \ PIC-faithfulness sensitivity small (1.39 vs 1.44 @32k/5%, robust). Req#2 end-to-end\
+  \ serving cell HONESTLY NOT MET (vLLM not installable on node, prod paths block\
+  \ pip) \u2014 still owed for full GREEN, NOT fabricated."
+result_effect: support
+artifacts_path: experiments/2026-05-31/EXP-0021/
+reproducibility: ''
+linked_verdicts: []
+started_at: '2026-05-31T18:27:18Z'
+completed_at: '2026-05-31T18:28:48Z'
+prompt_version: ''
+committee_approved: VERDICT-0028

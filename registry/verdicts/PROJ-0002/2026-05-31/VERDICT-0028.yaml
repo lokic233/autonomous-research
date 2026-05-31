@@ -1,0 +1,36 @@
+verdict_id: VERDICT-0028
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0014
+experiment_paths:
+- experiments/2026-05-31/EXP-0014
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- 'EXP-0021 (APPROVED for GPU queue): (1) EXP-0014 replicate w/ bootstrap CIs all
+  8 cells esp 32k/1% 1.02x'
+- (2) attempt >=1 end-to-end vLLM serving cell at 32k/0.1%, honest fallback if env
+  blocks install
+- (3) PIC-impl provenance + faithfulness sensitivity
+map_delta_proposals:
+- CLAIM-0006 gate-B GREEN-path EXP-0021 committee-approved for autonomous GPU queue
+baseline_requirements: []
+created_at: '2026-05-31T18:27:03Z'
