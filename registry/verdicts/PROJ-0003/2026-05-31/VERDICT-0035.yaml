@@ -1,0 +1,37 @@
+verdict_id: VERDICT-0035
+claim_id: CLAIM-0010
+project_id: PROJ-0003
+date: '2026-05-31'
+experiment_ids:
+- EXP-0029
+experiment_paths:
+- experiments/2026-05-31/EXP-0029
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'Reframe DEFENSIBLE-but-DEFLATED (EXP-0029, OOS CIs): coarse web_disabled-CARRIED
+  confirmed (U 0.381->0.034 dropping web_disabled'
+- only REDIRECTABLE 68/68 deterministic, GRANT/TRANSIENT ~chance)
+- fine leak-free LOSO lift significant ONLY in REDIRECTABLE (+0.126), ~48% irreducible
+  residual
+- single-harness + the carrying cell is a Claude-Code-specific policy hook -> cross-harness
+  is the critical GREEN risk
+required_evidence:
+- "Adopt the DEFLATED headline (partial web_disabled-carried coarse gate-table + context-conditioned\
+  \ fine selection w/ ~0.6-0.74 norm-entropy irreducible floor) \u2014 NOT 'coarse-deterministic/fine-adaptive'"
+- cross-harness replication (the live risk
+- CC-specific carrying cell)
+- "else wind PROJ-0003 down to a methods/negative-result note (CLAIM-0008 refuted,\
+  \ 0009 config-fact, 0010 deflated \u2014 durable contribution = deflationary characterization\
+  \ + the gate-confound/LOO/LOSO/paired-bootstrap methodology)"
+map_delta_proposals:
+- 'MAP-0002: CLAIM-0010 reframe DEFENSIBLE-DEFLATED w/ OOS CIs'
+- PROJ-0003 lineage deflated to 1 narrow thesis + methodology
+- wind-down-to-methods-note if cross-harness fails
+baseline_requirements: []
+created_at: '2026-05-31T19:54:47Z'
