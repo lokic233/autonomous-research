@@ -245,3 +245,51 @@ dual-mission directive. Reported to human via `ros report --blocked/--need`.
   pyyaml requirement. (3) since members run with `&` + `wait` but MEMBERS empty, also guard empty-member case.
 - WORKAROUND THIS RUN: orchestrator ran a Bash-3.2-safe corrected launcher using /usr/bin/python3 to read
   members + invoking the 4 backend CLIs directly (claude/codex/gemini/metacode-wrapper), same prompts dir.
+
+## ============ RESOLUTIONS (engine commit research-os@1be8366) ============
+- BUG-3 (HIGH) FIXED: ros verdict write now enforces green_rule (green/promote need all 6 votes, unanimous=>all green). Validated.
+- BUG-5 FIXED: exp register defaults CPU (no needs_gpu unless --gpu or gpu-hours>0); inherits project_id from claim; hardware=cpu. Validated.
+- BUG-7 FIXED: liveness retires completed/failed agents (🏁), no longer nags revival. Validated.
+- BUG-8/9 FIXED: removed all duplicate function defs + duplicate main() subparser block (AST dedup).
+- BUG-2 (data integrity, stale flat exp paths in CLAIM-0006): TODO — needs a one-time registry repair pass on existing claim back-links (flat experiments/EXP-x -> nested experiments/<date>/EXP-x).
+- BUG-4 (PROJ-0002 progress mis-lists PROJ-0001 CLAIM-0007): TODO — project_overview/progress generation must filter by project_id strictly.
+- BUG-6 (git index.lock race): MITIGATED conceptually (engine should own git / retry-with-backoff); not yet coded. Operational: don't run manual git concurrent with engine.
+- BUG-1 (prompts path doc): doc-only; engine run_committee fallback works.
+
+## ============ RESOLUTIONS (engine commit research-os@1be8366) ============
+- BUG-3 (HIGH) FIXED: ros verdict write now enforces green_rule (green/promote need all 6 votes, unanimous=>all green). Validated.
+- BUG-5 FIXED: exp register defaults CPU (no needs_gpu unless --gpu or gpu-hours>0); inherits project_id from claim; hardware=cpu. Validated.
+- BUG-7 FIXED: liveness retires completed/failed agents (🏁), no longer nags revival. Validated.
+- BUG-8/9 FIXED: removed all duplicate function defs + duplicate main() subparser block (AST dedup).
+- BUG-2 (data integrity, stale flat exp paths in CLAIM-0006): TODO — needs a one-time registry repair pass on existing claim back-links (flat experiments/EXP-x -> nested experiments/<date>/EXP-x).
+- BUG-4 (PROJ-0002 progress mis-lists PROJ-0001 CLAIM-0007): TODO — project_overview/progress generation must filter by project_id strictly.
+- BUG-6 (git index.lock race): MITIGATED conceptually (engine should own git / retry-with-backoff); not yet coded. Operational: don't run manual git concurrent with engine.
+- BUG-1 (prompts path doc): doc-only; engine run_committee fallback works.
+
+## BUG-14 (ENGINE GAP) — `ros verdict write` cannot capture committee detail (fatal_objections/required_evidence/map_delta/baselines)
+- `ros verdict write` flags = --claim --final --experiments --votes --committee-version --date only.
+- It hardcodes fatal_objections=[], required_evidence=[], map_delta_proposals=[], baseline_requirements=[]
+  (empty). So the substantive committee output (the WHOLE point of the review) cannot be recorded via the
+  engine — it requires a manual YAML edit afterward (which then hits the BUG-6/tmp-race fragility).
+- FIX: add --fatal/--required/--map-delta/--baselines flags OR accept a --from-out <committee_out_dir> that
+  parses the role .out files. Severity: medium (verdicts are recorded but hollow without manual enrichment).
+
+## NOTE re BUG-6 family — atomic-write .tmp disappears mid os.replace
+- My own atomic writes (tmp + os.replace) intermittently FileNotFoundError on the .tmp during replace, even
+  though the replace SUCCEEDS (target ends up correct). Implies a concurrent watcher/process (engine git add,
+  or an editor/indexer) removes *.tmp under the registry. Reinforces BUG-6: something races file ops in this
+  repo. Workaround: write tmp OUTSIDE the repo (e.g. /tmp) then os.replace in, or tolerate the post-replace error.
+
+## BUG-14 (ENGINE GAP) — `ros verdict write` cannot capture committee detail (fatal_objections/required_evidence/map_delta/baselines)
+- `ros verdict write` flags = --claim --final --experiments --votes --committee-version --date only.
+- It hardcodes fatal_objections=[], required_evidence=[], map_delta_proposals=[], baseline_requirements=[]
+  (empty). So the substantive committee output (the WHOLE point of the review) cannot be recorded via the
+  engine — it requires a manual YAML edit afterward (which then hits the BUG-6/tmp-race fragility).
+- FIX: add --fatal/--required/--map-delta/--baselines flags OR accept a --from-out <committee_out_dir> that
+  parses the role .out files. Severity: medium (verdicts are recorded but hollow without manual enrichment).
+
+## NOTE re BUG-6 family — atomic-write .tmp disappears mid os.replace
+- My own atomic writes (tmp + os.replace) intermittently FileNotFoundError on the .tmp during replace, even
+  though the replace SUCCEEDS (target ends up correct). Implies a concurrent watcher/process (engine git add,
+  or an editor/indexer) removes *.tmp under the registry. Reinforces BUG-6: something races file ops in this
+  repo. Workaround: write tmp OUTSIDE the repo (e.g. /tmp) then os.replace in, or tolerate the post-replace error.

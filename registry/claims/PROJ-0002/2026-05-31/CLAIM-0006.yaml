@@ -75,18 +75,26 @@ negative_evidence:
     conditional claim survives only gated on (large reused ctx AND bounded injection). Proxy, not wall-clock;
     modeled distribution not live-trace; robust across 3 sensitivities.'
   data_path: experiments/2026-05-31/EXP-0005/
+- source: VERDICT-0011 (committee 6/6 yellow)
+  summary: 'Wall-clock gap: count->TTFT validated only at inj/seq~1% anchor, not across the cost surface.
+    Workload distribution is modeled (Monte-Carlo over cited sizes), not sampled from real agentic traces.
+    Mechanism (CDC-over-radix) not novel (Irminsul single-source flag + PIC family); contribution is the
+    cost-map/law characterization only.'
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
 - verdict_id: VERDICT-0007
   date: '2026-05-30'
   result: green
+- verdict_id: VERDICT-0011
+  date: '2026-05-31'
+  result: yellow
 revival_conditions: ''
 owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T13:41:56Z'
+last_updated: '2026-05-31T13:54:03Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -100,3 +108,8 @@ closest_prior_work:
 - work: Don't Break the Cache
   id: arXiv:2601.06007
   relation: closest empirical cost-axis neighbor (black-box, no recompute-fraction law)
+committee_status: 'yellow-6/6 (VERDICT-0011); upgrade-path: wall-clock-across-surface + real-trace workload'
+required_evidence_for_green:
+- wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
+- real-trace inj/seq distribution validation (N>=100 sessions)
+- Irminsul citation+distinction; re-run 2-source check

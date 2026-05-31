@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0011
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0002
+- EXP-0003
+- EXP-0005
+experiment_paths:
+- experiments/2026-05-31/EXP-0002
+- experiments/2026-05-31/EXP-0003
+- experiments/2026-05-31/EXP-0005
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'Wall-clock gap: count->TTFT validated only at the inj/seq~1% anchor (EXP-A006/A006b H100), NOT across
+  the 100-cell cost surface; high-inj/seq curve shape unverified.'
+- Workload distribution (EXP-0005) is Monte-Carlo over cited size ranges, NOT sampled from real agentic
+  traces; quantitative fractions could shift +/-10pp.
+- 'Mechanism novelty formally alive but spiritually dead: Irminsul arXiv:2605.05696 is single-source today;
+  when 2nd-indexed the CDC-over-radix mechanism novelty dies under the >=2-source rule.'
+required_evidence:
+- Wall-clock validation across the cost surface (>=5-10 cells spanning inj/seq 0.1%/1%/5%/25%/100%) on
+  GPU (H100), measuring TTFT/prefill latency; confirms or refutes slope~1 at extremes. UPGRADE PATH to
+  GREEN.
+- At least one real-trace validation of the inj/seq distribution (N>=100 real agent sessions / SWE-bench
+  / SWE-ContextBench), e.g. spot-check median inj/seq in [2%,5%].
+- 'Irminsul disambiguation in writeup: explicitly cite + distinguish (Irminsul=recovery%/energy; ours=recompute-fraction
+  cost-map f(inj/seq) + empirical win-region). Re-run 2-source check before camera-ready.'
+map_delta_proposals:
+- node: CLAIM-0006
+  change: status weakened -> conditionally-supported; add wall-clock + modeled-workload gaps to negative_evidence;
+    retain weakened until required-evidence 1-2 addressed
+baseline_requirements: []
+created_at: '2026-05-31T13:53:25Z'
+mandatory_baselines:
+- vLLM APC (EXP-0003 done, token-level)
+- SGLang RadixAttention (EXP-0003 done, token-level)
+- FlashInfer (EXP-0003 done, token-level)
+- PIC baseline EPIC/Irminsul (REQUIRED for fair comparison per evaluation_prosecutor)
+- wall-clock head-to-head vs real vLLM/SGLang engines (NOT done)
+prior_art_adequate: 'yes'
+committee_rationale_summary: 'Unanimous 6/6 YELLOW. Reframed claim is honest+well-scoped (credits mechanism
+  to prior art, gates win on inj/seq, discloses unconditional ~2% is false). Contribution real but NARROW
+  (cost-map/law characterization, not mechanism). Not RED (nothing refutes; honest weakening is correct).
+  Not GREEN (wall-clock-across-surface + real-trace workload gaps + thin novel kernel). Clear upgrade
+  path: one GPU wall-clock surface experiment could move to GREEN. Prior greens VERDICT-0006/0007 are
+  STALE (predate EXP-0002/0005 + Irminsul).'
+out_dir: runtime/committee/CLAIM-0006-2026-05-31/out
+last_updated: '2026-05-31T13:54:03Z'
