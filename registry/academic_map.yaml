@@ -23,10 +23,12 @@ nodes:
   - 'KVFlow arXiv:2507.07400 (agentic/multi-agent prefix-cache; scheduling/reuse, NO inj/seq invalidation
     law) [BODY-VERIFIED distinct from CLAIM-0006 inj/seq cost-map: pic-bodies-0006]'
   - Pope et al. arXiv:2211.05102 (KV accounting — slope~1 is derivable accounting identity, NOT emergent)
-  - ContiguousKV arXiv:2601.13631 (granularity-aligned KV) — FLAGGED MEDIUM, body-check PENDING vs CLAIM-0006
-    cost-map
-  - variable-size-block arXiv:2604.23994 (diffusion, content-aware blocks) — FLAGGED MEDIUM, body-check
-    PENDING
+  - 'ContiguousKV arXiv:2601.13631 [BODY-VERIFIED distinct: offload I/O re-prefill / read-amplification
+    system (3.85x I/O speedup vs IMPRESS); append-suffix re-prefill NOT mid-prefix injection; NO inj/seq
+    cost-map. ''injection'' 0x]'
+  - 'variable-size-block arXiv:2604.23994 [BODY-VERIFIED distinct: discrete-diffusion LM block-COMMIT
+    generation-quality (NF/FA self-containedness); NOT autoregressive KV-prefix invalidation; NO inj/seq
+    cost-map. ''injection''/''prefix cache'' 0x]'
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
@@ -60,7 +62,15 @@ nodes:
     was OVERSTATED — gate-A closed for 8 body-read neighbors, but 2 MEDIUM candidates (ContiguousKV 2601.13631,
     variable-block 2604.23994) flagged in the registry''s OWN prior_art_note.md were NOT body-checked
     (LOW risk, ~1hr CPU). Restate gate-A=near-closed(8/10). +STATS pass needed: CIs/n/variance on headline
-    numbers, per-engine slope CI/R2, sink-chunk fraction. gate-B (GPU wall-clock) = the long pole [human-go].'
+    numbers, per-engine slope CI/R2, sink-chunk fraction. gate-B (GPU wall-clock) = the long pole [human-go].
+    | EXP-0013/VERDICT-0023 (2026-05-31): GATE-A NOW FULLY CLOSED (10/10 neighbors body-verified distinct,
+    ZERO cost-map collision — the 2 MEDIUM candidates 2601.13631 + 2604.23994 body-read, no collision).
+    STATS: slope~1 is CDC-mechanism-specific (0.958 [0.937,0.980] R2=0.972, accounting identity) NOT a
+    cross-engine law (vLLM-APC/Radix/FlashInfer R2=0.0007 vs inj/seq, position-driven ~69pp; engine-averaged
+    slope~1 = ARTIFACT, theory_skeptic upheld). Margin median 1.77x [1.56,1.87]; tie 1.29x [1.25,1.33]
+    at inj/seq>=5%; win-region inj/seq<=1% = 100% Wilson[0.972,1.0]; sink frac CDC 0.12%/PIC 3.47%. Surviving
+    contribution = the workload-conditioned WIN-REGION on CDC accounting line, NOT a slope discovery.
+    ONLY remaining GREEN-blocker = gate-B GPU wall-clock on real PIC artifact [human-go INVARIANT 3].'
   red_zones:
   - HW VMM CoW for capacity/speed (DEAD via CLAIM-0001/0003)
   - HW isolation primitive (DEAD-0001)
@@ -72,6 +82,9 @@ nodes:
   - mid-prompt injection recompute exponent k(~1.3) = regime-local attention/MLP-crossover slope, NOT
     a law; drifts 1.0->2.0 with ctx (EXP-0010, analytic proxy R2>=0.998); derivable from Pope/Kwon FLOP
     accounting (same accounting-identity retirement as CLAIM-0006 slope~1). DEAD-0009.
+  - slope~1 is CDC-mechanism-specific (per-engine 0.958 [0.937,0.980] R2=0.972, EXP-0013), an ACCOUNTING
+    IDENTITY — NOT a characterizable cross-engine cost law (contiguous engines R2=0.0007, position-driven).
+    Do not pitch slope~1 as a cross-engine/engine-internal law.
   associated_claims:
   - CLAIM-0001
   - CLAIM-0002
@@ -90,7 +103,7 @@ nodes:
   - DEAD-0008
   - DEAD-0009
   status: yellow
-  last_updated: '2026-05-31T16:35:34Z'
+  last_updated: '2026-05-31T16:48:26Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -102,7 +115,8 @@ nodes:
     is regime-local crossover slope (DEAD-0009), not a characterizable law | +pic-bodies-0006 (2026-05-31):
     all 6 PIC bodies body-verified distinct, novelty gate-A FULLY CLOSED | +VERDICT-0022 (2026-05-31,
     6/6): gate-A overstatement corrected (8/10, 2 MEDIUM pending); stats-rigor pass required; gate-B GPU
-    is the long pole'
+    is the long pole | +EXP-0013/VERDICT-0023 (2026-05-31): gate-A FULLY CLOSED (10/10); slope~1 = CDC-specific
+    accounting identity not cross-engine law; only gate-B GPU remains'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);

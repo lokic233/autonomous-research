@@ -1,0 +1,53 @@
+verdict_id: VERDICT-0023
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-05-31'
+experiment_ids:
+- EXP-0013
+experiment_paths:
+- experiments/2026-05-31/EXP-0013
+committee_version: evidence-update
+prompt_versions: {}
+reviewer_votes:
+- role: orchestrator-r2-001
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "GATE-A NOW FULLY CLOSED (10/10 neighbors body-verified distinct incl ContiguousKV\
+  \ 2601.13631 + variable-block 2604.23994, ZERO cost-map collision) \u2014 the VERDICT-0022\
+  \ 'fully closed' overstatement is RESOLVED"
+- "BUT stats pass (EXP-0013) WEAKENS cross-engine slope~1: it is CDC-mechanism-specific\
+  \ (0.958 [0.937,0.980] R2=0.972, an accounting identity), NOT a cross-engine law\
+  \ \u2014 vLLM-APC/Radix/FlashInfer R2=0.0007 vs inj/seq (position-driven ~69pp)"
+- engine-averaged slope~1 CONFIRMED an artifact (theory_skeptic upheld)
+- surviving defensible contribution NARROWS to the workload-conditioned WIN-REGION
+  on CDC accounting line, NOT a slope discovery
+required_evidence:
+- "GPU wall-clock TTFT on real PIC artifact (CacheBlend/EPIC) across inj/seq surface\
+  \ at ~5% crossover [GATE-B, the ONLY remaining blocker \u2014 GPU + human-go INVARIANT\
+  \ 3]"
+- Writeup MUST present slope~1 as CDC's CI-quantified accounting identity (0.958 [0.937,0.980])
+  NOT a cross-engine law
+- lead with the workload-conditioned win-region as the contribution
+- "Cite CacheBlend \xA74 for the accounting identity"
+map_delta_proposals:
+- 'CLAIM-0006 open_gaps: gate-A FULLY CLOSED (10/10 body-verified distinct, ZERO collision)'
+- ContiguousKV 2601.13631 -> BODY-VERIFIED distinct (offload I/O re-prefill/read-amplification,
+  append-suffix not mid-prefix injection, NO inj/seq cost-map)
+- variable-block 2604.23994 -> BODY-VERIFIED distinct (discrete-diffusion block-commit
+  quality, NO inj/seq cost-map)
+- slope~1 is CDC-mechanism-specific (0.958 [0.937,0.980] R2=0.972) NOT a cross-engine
+  law (contiguous engines R2=0.0007, position-driven)
+- engine-averaged slope~1 = artifact (CONFIRMED)
+- margin median 1.77x [1.56,1.87], tie 1.29x [1.25,1.33] at inj/seq>=5%, win-region
+  inj/seq<=1% = 100% Wilson[0.972,1.0]
+- sink frac CDC 0.12%/PIC 3.47%
+- gate-B GPU = ONLY remaining blocker
+baseline_requirements:
+- CacheBlend/EPIC GPU artifact (gate-B wall-clock)
+- per-engine slope CI/R2 reported (EXP-0013)
+- vLLM APC
+- SGLang RadixAttention
+- FlashInfer
+created_at: '2026-05-31T16:47:49Z'
