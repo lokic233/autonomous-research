@@ -1,0 +1,53 @@
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+stage: seed
+status: seed
+claim: "In real multi-harness agent traces, tool-call failures are temporally OVER-DISPERSED\
+  \ within a session relative to a within-session Bernoulli null (failures cluster\
+  \ / are bursty); replicates across Claude Code (Stouffer Z=-4.07) and Codex (deduped\
+  \ Z=-15.07), and is NOT a web_disabled artifact (reclassifying web_disabled as non-failure\
+  \ STRENGTHENS the signal). Purely DESCRIPTIVE arrival-process statistic \u2014 no\
+  \ prediction, no error-class conditioning."
+why_it_matters: "Orthogonal to the refuted PROJ-0003 error-class->recovery lineage\
+  \ (different estimand: arrival structure vs conditional recovery). A cross-harness\
+  \ descriptive benchmark statistic (agent failure burstiness coefficient) that no\
+  \ prior work reports \u2014 MAST/AgentBench/tau-bench measure static failure taxonomies;\
+  \ Mirage/Canonical-Path-Deviation study failure POSITION in curated benchmarks.\
+  \ NeurIPS D&B genre, alongside the negative-result+methodology synthesis."
+novelty_hypothesis: ''
+mandatory_baselines:
+- within-session Bernoulli null (per-session permutation)
+academic_map_nodes:
+- MAP-0002
+supporting_evidence:
+- exp_id: EXP-0037
+  effect: support
+  summary: 'L1 PROBE (CPU, --claim none, deduped): per-session Wald-Wolfowitz runs
+    test on the failure-indicator sequence, sessions combined via Stouffer (Z<0=clustered).
+    CC: 17 sess/1661 results/6.9% fail/Stouffer Z=-4.07 (p~2e-5), 71% sess Z<0. Codex
+    (deduped by call_id, neutralizes EXP-0033 double-log): 43 sess/1871/5.3%/Z=-15.07,
+    77% sess Z<0. M4 DECISIVE: reclassifying web_disabled as non-failure on CC STRENGTHENS
+    (-4.07->-4.63) -> burstiness driven by ordinary perm/fs/exec failures, NOT the
+    refuted redirectable cell. Replicates 2/2 harnesses. Collision-CLEAR (zero burst/temporal/overdispersion
+    hits in registry; closest neighbors Mirage 2604.11978 / Canonical-Path 2602.19008
+    study failure POSITION in curated benchmarks, distinct from real-trace arrival
+    over-dispersion). CAVEATS: thin CC n=17 (per-session median Z only -0.41, CC leg
+    carried by Stouffer aggregation; Codex is the strong leg); window-5 dispersion
+    index ~1.0 (runs test sees order-clustering the coarse window misses); heuristic
+    failure labels; Gemini 3rd harness NOT yet run; mechanism unclaimed (keep PURELY
+    descriptive).'
+  data_path: experiments/2026-05-31/EXP-0037/
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r2-001
+prompt_version: v001
+lifecycle_state: experiment_designing
+next_action: 'L1 SEED supported (EXP-0037, CC Z=-4.07 + Codex Z=-15.07, M4-survives,
+  collision-clear). L2 strengthening dispatched: Gemini 3rd harness + per-session
+  PERMUTATION null + burstiness coefficient B w/ bootstrap CIs. Keep PURELY descriptive
+  (no prediction -> avoid re-entering refuted territory). Then committee.'
+blocking_on: ''
+active_experiments: []
+created_at: '2026-05-31T22:29:58Z'
+last_updated: '2026-05-31T22:30:32Z'
