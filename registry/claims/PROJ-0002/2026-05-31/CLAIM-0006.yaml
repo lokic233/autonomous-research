@@ -251,7 +251,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-05-31T19:43:10Z'
+last_updated: '2026-05-31T19:43:46Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -273,13 +273,9 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: evidence_ready
-next_action: "EXP-0027 oracle bound WEAKENS serving framing: vs a FUSED PIC, CDC advantage\
-  \ is CONDITIONAL (wins high inj/seq, loses low inj/seq incl win-region) \u2014 committee\
-  \ re-impl skepticism (VERDICT-0033) VINDICATED. Honest claim now: novelty closed;\
-  \ vs real PIC impls CDC wins serving (EXP-0026); vs idealized fused PIC conditional\
-  \ (EXP-0027). Next: committee re-review on the QUALIFIED claim (path 3) \u2014 likely\
-  \ GREEN-able as an honest characterization w/ the conditional-vs-fused-PIC nuance\
-  \ stated."
+lifecycle_state: committee_pending
+next_action: 're-review #7 (run_11): QUALIFIED claim w/ oracle-PIC bound (EXP-0027,
+  committee skepticism vindicated, CDC serving advantage conditional). GREEN as honest
+  characterization, or YELLOW pending true lmcache?'
 active_experiments: []
 blocking_on: ''
