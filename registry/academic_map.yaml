@@ -31,6 +31,19 @@ nodes:
     cost-map. ''injection''/''prefix cache'' 0x]'
   - arXiv:2511.20048 (agent idle-gap speculation + overhead model; speculation-during-tool-latency)
   - arXiv:2605.06472 (prediction-based KV-cache prefill for agent workflows)
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] ForkKV arXiv:2604.06370 (SW CoW disaggregated
+    KV — forward neighbor)'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] TokenDance arXiv:2604.03143 (cross-agent
+    KV share)'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] Tokencake arXiv:2510.18586 (KV share)'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] ''10X KV-Stores'' arXiv:2511.16138
+    (KV-store scalability)'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] SemShareKV arXiv:2509.24832'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] KVShare arXiv:2503.16525'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] QKVShare arXiv:2605.03884'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] CacheSolidarity arXiv:2603.10726 (prefix-share
+    side-channel)'
+  - '[FORWARD-FRONTIER, SW-side, no collision w/ HW-VMM-CoW claims] Joint-Encoding arXiv:2601.03067'
   known_baselines:
   - vLLM APC
   - SGLang RadixAttention
@@ -156,7 +169,7 @@ nodes:
   - DEAD-0009
   - DEAD-0010
   status: yellow
-  last_updated: '2026-05-31T20:47:51Z'
+  last_updated: '2026-05-31T20:57:31Z'
   source: 'sessions/5_30_2026/{511ce2e2,048fcb0d,c48efa79} + experiments/2026-05-30/ | +CLAIM-0006 committee
     VERDICT-0011 (2026-05-31): Irminsul/PIC prior-art merge + map-delta | +VERDICT-0012 (2026-05-31, real
     6/6 committee): KVFlow neighbor merge; reword Law->Characterization; PIC-family baseline now REQUIRED
@@ -184,7 +197,8 @@ nodes:
     per-device fix) + PROJ-0002 (spec-decode/multi-agent/compaction all occupied, EXP-0028) CONFIRMED
     SATURATED by disjoint researchers | +VERDICT-0037 (2026-05-31): managed-yellow, novelty+theory GREEN,
     single gate=EXP-0030 measured crossover (deferred) | +PROJ-0001 PUBLICATION-READY/MATURE (2026-05-31,
-    GO assessment)'
+    GO assessment) | +frontier scan (2026-05-31): 2-degree frontier covered, 9 forward SW-neighbors merged
+    (no must-cite gap), PROJ-0001 COMPLETE'
   publication_status: 'PROJ-0001 5-claim CoW/ceiling thesis: PUBLICATION-READY / MATURE (researcher-0001-thesis
     GO assessment 2026-05-31). Top-level thesis: HW CUDA-VMM CoW is DOMINATED for agentic KV branching
     — per-op cost dominated (0/12, 1.06-2.20x), conserved ~520K PER-DEVICE mapping budget = vendor cliff
@@ -194,6 +208,13 @@ nodes:
     / ATC-EuroSys-OSDI (mechanism/capacity). No must-cite gap (distinct from vAttention). Residual = WRITING
     + 2 optional non-blocking polish (real FlashInfer cell GPU-safe; reword stale needs_attention re-probe
     lines — re-probing FORBIDDEN). Synthesis: prior_art/PROJ-0001/PUBLICATION_READINESS.md + PAPER_SYNTHESIS_laneE.md.'
+  frontier_status: '2-DEGREE FRONTIER COVERED (researcher-0001-frontier, 2026-05-31): 6 forward candidates
+    (SW-prefix-scaling-limit / branch-metadata-tax / contention / cross-request-dedup / positive-SW-cost-model
+    / side-channel) ALL KILLED — occupied by 2026 SW-side/multi-agent literature (ForkKV/TokenDance/Tokencake/10X-KV-Stores/SemShareKV/KVShare/QKVShare/CacheSolidarity/Joint-Encoding)
+    or accounting-identity (the 5x kill pattern). One closest-to-open (F-NEG: cross-engine SW-prefix-sharing
+    scaling cliff) is PREMATURE (GPU-blocked + likely accounting-identity + partly eaten by ForkKV) ->
+    possible SEPARATE successor project, NOT a PROJ-0001 extension. PROJ-0001 5-claim CoW/ceiling thesis
+    = COMPLETE (1-degree + 2-degree both closed).'
 - node_id: MAP-0002
   area: Agent failure attribution & recovery (workload models)
   occupied_territory: failure taxonomies; post-hoc summaries; LangGraph time-travel (deterministic only);
