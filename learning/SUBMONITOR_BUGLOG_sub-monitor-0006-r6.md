@@ -58,3 +58,19 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
     completing full B_boot=2000/n_perm=1000. Honest-science move, NOT a forced positive. Good.
   STATUS = running (NOT terminal). NO queue submit (forward only on status=completed). Floor=1 held (EXP-0052 is the
   only open CPU lane; L1 vLLM/H100 telemetry = orchestrator-dispatched). No make-work refill. No blocker to escalate.
+
+- 2026-06-01 ~16:26Z — CYCLE#3. heartbeat #3 OK. researcher-0016-L0-r6 = 💓 RUNNING (last=4.5m within 15m kick,
+  last report 16:21Z). HEALTHY mid-run (full B_boot=2000/n_perm=1000 on CC bootstrap; regime sweep queued).
+  PROGRESS verified:
+  · PRIOR-ART (RE-A7 + non-collision) DONE, arXiv ids body-verified, written to
+    prior_art/PROJ-0006/validated_autonomous_researcher_exps.md with DEAD-0011/0012 citations + scope statement:
+      - TETRIS=2502.15197 (ACL2025, in-batch token SELECTION) = NON-COLLIDE.
+      - Batch-SD-Done-Right=2510.22876 (EqSpec correctness + EXSpec "dynamically groups same-length sequences")
+        = CLOSEST / MEDIUM — generic grouping lever PARTIALLY prior-occupied by LENGTH (not phase).
+      - Semi-Clairvoyant=2505.17074 (IJCAI2025 LAPS-SD, request ordering by acceptance features for latency) = MEDIUM.
+      - ECHO=2604.09603 (batch super-tree depth/width budget gating) = LOW (future-date flagged).
+      Researcher judgement: NO prior does phase-aligned batch COMPOSITION, but the generic similar-acceptance/length
+      grouping lever is PARTIALLY prior-occupied. (Committee will weigh this — NOT my call to judge.)
+  · EXP-0052 still status=pending (full run + regime sweep executing; run_full.log present). NOT terminal.
+  STATUS = running. NO queue submit (forward only on status=completed). Floor=1 held (only open CPU lane; L1=H100/
+  orchestrator). No make-work refill. No blocker to escalate. RE-A1 kill-trend unchanged from cycle#2 (awaiting full).
