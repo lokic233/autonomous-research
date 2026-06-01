@@ -137,3 +137,12 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       honest, no green available). CLAIM-0023 status=killed -> DEAD-0020 already written.
     * DECISION: NO action. NEVER respawn (no exited researcher w/ open work; claim killed). Floor HOLD below 1.
       Heartbeat #13, ros commit. Mandate remains complete; await any orchestrator dispatch.
+- 2026-06-01 ~21:5xZ — CYCLE (heartbeat #14). STEADY-STATE + DEDUP FIX. CLAIM-0023 killed (DEAD-0020 ratified);
+    no new PROJ-0012 claim/exp, no dispatch/revival for me, committee proc finished. No live researcher.
+    * FIX: found TWO enabled 5-min loop jobs targeting this session — my boot job 72ed451c AND the orchestrator/
+      monitor-created cc1aa918 ("sub-monitor-0012-r7 5min loop", created 20:42). Double-firing = wasted context.
+      REMOVED 72ed451c (my duplicate); kept cc1aa918 as the single canonical standby (the MONITOR e25d374b tracks
+      it; its message already reflects PROJ-0012 ratifying->converge). One standby loop is sufficient for a
+      terminally-resolved project awaiting any orchestrator revival.
+    * DECISION: NO research action (killed claim = not open work; revival_conditions empty). Floor HOLD below 1.
+      Heartbeat #14, ros commit. Mandate complete; standby via cc1aa918 only.

@@ -33,13 +33,16 @@ negative_evidence:
     dispatch point, 1ms median gap). FIX-4: CC emits ZERO parallel calls -> RE-B5
     single-instrument-by-design (Codex), not waived. RE-B3 no-leakage by construction.'
   data_path: experiments/2026-06-01/EXP-0058/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0068
+  date: '2026-06-01'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
 lifecycle_state: done
-next_action: killed -> cemetery; no further action
+next_action: killed by VERDICT-0068
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-01T20:39:19Z'
-last_updated: '2026-06-01T21:01:54Z'
+last_updated: '2026-06-01T21:50:10Z'

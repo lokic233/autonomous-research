@@ -1,0 +1,54 @@
+verdict_id: VERDICT-0068
+claim_id: CLAIM-0023
+project_id: PROJ-0012
+date: '2026-06-01'
+experiment_ids:
+- EXP-0058
+experiment_paths:
+- experiments/2026-06-01/EXP-0058
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'FIX-2 early-kill trigger FIRED: matched-max-per-call alone AUC 0.795 explains ~88%
+  of B1 above-chance signal (0.295/0.334)'
+- joint-arg increment dAUC -0.0045 LB95 -0.017 folds [+.006,+.007,-.016,-.018,-.013]
+  not all positive -> batch axis is an order-statistic shadow of the already-killed
+  per-call axis DEAD-0018
+- 'RE-B5 cross-instrument hard gate NOT-SATISFIABLE: CC emits zero co-issued parallel
+  calls (1:2554), no green was ever reachable, single-instrument Codex scope honest
+  not a waiver escape'
+- 'RE-B0 rules out heavy-tail batch regime: top-decile co-issued batches carry only
+  48.1% mass (<50% floor)'
+- Robustness re-run (stricter <1s co-issued, 698 batches) reproduces dAUC -0.0039
+  LB95 -0.017, not small-n (HHI 0.032 eff-n ~31)
+required_evidence:
+- Revival requires multi-instrument corpus with genuine co-issued batches where joint-arg
+  structure beats {count,mix,matched-max-per-call} (dAUC_LB95>0 point>=0.03 all-folds-positive)
+  AND a satisfiable cross-instrument sign-agreement gate
+- neither currently exists
+map_delta_proposals:
+- CLAIM-0023 KILL -> cemetery (DEAD-0018 re-skin)
+- 'practical guidance: budget/admit co-issued parallel-tool batches by call count
+  (+ per-call max estimate if available)'
+- do NOT build pre-execution batch-cost oracles from joint argument structure
+baseline_requirements:
+- '{count, mean-gap, mean-freq, tool-mix, pair/triple, matched-max/sum-per-call} =
+  the committee FIX-2 baseline that already subsumes the claim'
+- Sarathi-Serve 2403.02310 / vLLM chunk-after-payloads (the strawman FIX-1 distinguishes
+  from)
+created_at: '2026-06-01T21:50:10Z'
