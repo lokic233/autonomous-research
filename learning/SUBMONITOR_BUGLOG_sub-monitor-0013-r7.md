@@ -123,3 +123,4 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
   * CLAIM-0024 still no recorded verdict, no .converged, proc gone, inbox empty. EXP-0059 terminal. Floor=1 drained.
   DECISION: NO action beyond heartbeat+commit. Await orchestrator-r8 ratification of the (yellow) CLAIM-0024 committee.
     Heartbeat #16, ros commit.
+- 2026-06-01 ~23:53Z — CYCLE (hb #17). HOLDING: orchestrator-r8-001 ALIVE (9.2m), still no CLAIM-0024 verdict recorded, no .converged. Inbox grep = same STALE r4-era items (not mine). proc gone, EXP-0059 terminal, floor=1 drained. Await r8 ratification of yellow CLAIM-0024 committee. NO action beyond heartbeat+commit.
