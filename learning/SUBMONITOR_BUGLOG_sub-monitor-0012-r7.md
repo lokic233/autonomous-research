@@ -101,3 +101,20 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     * DECISION: NO action. Floor HOLD below 1 (early-killed L0 claim = not open work; refilling = make-work).
       NEVER respawn the completed proc. NO HUMAN GATE — awaiting committee is legitimate work-wait, not a gate.
       Heartbeat #8, ros commit. Continue 5-min poll for committee verdict / any orchestrator dispatch.
+- 2026-06-01 ~21:1xZ — CYCLE (heartbeat #9). COMMITTEE RATIFIED -> PROJECT TERMINALLY RESOLVED.
+    * BUG-26/29: no live researcher proc (correct — EXP-0058 terminal). EXP-0058 status=completed/kill.
+    * ORCHESTRATOR convened Q-0010 committee (runtime/committee_run_CLAIM-0023-kill) and RATIFIED:
+      CLAIM-0023 status=killed -> registry/cemetery/PROJ-0012/2026-06-01/DEAD-0020.yaml. The orchestrator's
+      own report independently confirmed the FIX-2 early-kill fired exactly as designed (matched-max-per-call
+      alone AUC 0.795 = ~88% of signal; joint-arg increment ~0; dAUC -0.0045 LB95<0; multiply-confirmed
+      RE-B0 0.481<0.50 + RE-B1 size-AUC 0.626 + robustness; FIX-1 strawman RESOLVED via Codex genuine
+      co-issued dispatch point @1ms median gap; FIX-4 CC zero parallel calls -> single-instrument-by-design,
+      NOT waived). Sibling PROJ-0011/CLAIM-0022 also killed this round (VERDICT-0067/DEAD-0019).
+    * NOTE: Q-0010 still shows ⏳PENDING in `ros queue list` but DEAD-0020 + CLAIM-0023 status=killed are the
+      authoritative resolution; queue-marker cleanup is the orchestrator's, not the sub-monitor's, responsibility.
+    * DECISION: PROJ-0012 has ONE claim (CLAIM-0023), ONE L0 lane (EXP-0058); both terminally killed/ratified.
+      NO open work, NO concrete --next, floor HOLD below 1 (refilling a killed claim = make-work; L1+ only on
+      orchestrator revival, and revival_conditions is empty = no revival path). The orchestrator already flagged
+      it will design 2 new projects next (PROJ-0011+0012 both killing -> effective 2/4). This sub-monitor's
+      mandate is COMPLETE. Will continue light heartbeat/poll for any orchestrator dispatch, but project is done.
+      NO HUMAN GATE. Heartbeat #9, ros commit.
