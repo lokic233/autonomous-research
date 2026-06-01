@@ -138,3 +138,27 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   Floor held at 1. Heartbeat #9, commit. WATCH: if proc dies before analysis.md/terminal report, respawn a SHORT
   finalize-only lane (write analysis.md from summary.json+run_main2, gather RE-B7/B8 prior art, file terminal
   report; do NOT re-run experiment — results already correct + committed).
+
+- 2026-06-01 ~16:49Z — CYCLE (heartbeat #10). researcher-0017-L0-r6 'stale' (last report 37.4m) but PROC ALIVE
+  (74750, 0.5% cpu, network-bound — agentic turn ongoing). 46m runtime. THIRD run (run_main3.log @09:44) + harness
+  grew to 27127B. summary.json NOT updated since 09:38; analysis.md + prior_art/PROJ-0007 + terminal report STILL
+  absent. NOT over-iterating idly — the researcher added a DEEPER DIAGNOSTIC that REFINES the disposition:
+
+  *** CRITICAL NUANCE (run_main3 RE-B1[intent] decomposition — classifies WHAT survives canonicalization): the
+  crude RE-B1/B2 numeric gates PASS for all cells, BUT the intent-level metric SPLITS BY FAMILY and they DISAGREE:
+    - CODEX (n=109, both tokenizers): drift_residual_frac=0.908, recoverable_frac 0.16-0.23,
+      architectural_ceiling_supported=TRUE — 91% of post-canon first-divergences are STILL DRIFT (volatile fields
+      the canonicalizer can't fully strip). Supports the architectural-ceiling thesis.
+    - CLAUDE_CODE (n=38/39, both tokenizers): drift_residual_frac=0.000-0.079, recoverable_frac ~0.50,
+      architectural_ceiling_supported=FALSE — surviving divergences are CONTENT, not drift; ~half recoverable by
+      canonicalization. Does NOT support architectural ceiling (more a prompt-eng/content effect).
+  => The TWO FAMILIES DISAGREE on the headline (RE-B6 direction-consistency FAILS at intent level), which the crude
+     numeric RE-B1/B2 gates MASKED. True disposition is MIXED/PARTIAL (codex supports ceiling, CC doesn't), NOT a
+     clean candidate POSITIVE. The researcher BUILT this intent-decomposition specifically to catch the masking =
+     exactly the right self-skepticism. This VINDICATES the hold on forwarding.
+  STATUS: still finalizing; disposition still converging (numeric PASS vs intent-level family-split). NOT
+     committee-ready until the researcher RECONCILES this in analysis.md + files a terminal report with the honest
+     mixed disposition. NO queue submit. NO intervention (proc healthy + doing correct work). Floor held at 1.
+  NOTE: if it dies before reconciling, respawn finalize-only lane MUST carry forward the intent-level family-split
+     (codex ceiling=TRUE / CC ceiling=FALSE) — do NOT let a respawn revert to the crude-gate clean-PASS story.
+  Heartbeat #10, commit.
