@@ -1,0 +1,22 @@
+[EXP-0057] locked 2026-06-01T20:46:46Z  seed 20260601
+Loading corpora...
+
+===== cc: 69 sessions (>= 8 calls) =====
+   reuse units (path-touch w/ later reuse): 3213
+   RE-A0 share_FAR(>8192)=0.189 share_NEAR(<512)=0.468 PASS=True median=666 p99=85994
+   RE-A1 status=ok n=3213 far_pos=607 dAUC=0.017105058533026685 LB95=-0.002721438369586604 folds+=False PASS=False HHI=0.422
+   RE-A2 (a)matched-recency 0/10 PASS_a=False | (b) dAUC_vs_forecast=0.014970205621041788 LB95=-0.02095175679109773 PASS_b=False -> GREEN=False
+   RE-A3 capacity curve computed (7 settings)
+
+===== codex: 86 sessions (>= 8 calls) =====
+   reuse units (path-touch w/ later reuse): 2042
+   RE-A0 share_FAR(>8192)=0.036 share_NEAR(<512)=0.799 PASS=False median=0 p99=23620
+   RE-A1 status=ok n=2042 far_pos=73 dAUC=0.038090401218892844 LB95=0.017069327731092487 folds+=True PASS=True HHI=0.015
+   RE-A2 (a)matched-recency 2/10 PASS_a=False | (b) dAUC_vs_forecast=0.037151185846372115 LB95=0.018652788688138244 PASS_b=True -> GREEN=False
+   RE-A3 capacity curve computed (7 settings)
+
+RE-A4 cross-instrument: cc_dAUC=0.017105058533026685 codex_dAUC=0.038090401218892844 sign_agree=True both_positive=True
+
+DISPOSITION: CLEAN-NEGATIVE-KILL (RE-A1)
+  far-reuse NOT predictable beyond recency+freq+file-class: dAUC_point=0.017105058533026685 LB95=-0.002721438369586604 all_folds_positive=False (need point>=0.03 & LB95>0 & all-folds+). -> LRU+LFU(+forecast) sufficient; do NOT build a new cheap causal reuse-aware feature. HHI=0.42150629314906785 flag=True.
+wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0057/results/summary.json

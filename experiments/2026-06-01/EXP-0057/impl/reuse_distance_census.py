@@ -197,43 +197,38 @@ def build_units(sessions):
     recs=[]
     all_reuse_gaps=[]   # for RE-A0: gap_to_next over ALL units
     for sname, calls in sessions.items():
+        # precompute paths per call ONCE (avoid O(n^2) regex re-extraction)
+        call_paths=[extract_paths(c) for c in calls]
         # ordered touch events: (call_idx, path, start_pos, end_pos, call)
         touches=[]
         for ci,c in enumerate(calls):
-            for p in extract_paths(c):
+            for p in call_paths[ci]:
                 touches.append((ci, p, c["start_pos"], c["end_pos"], c))
-        # group touches by path preserving order
         by_path=defaultdict(list)
         for t in touches: by_path[t[1]].append(t)
-        # running session state for causal features
-        # we re-walk touches in stream order to compute exploration breadth / intervening calls / freq-so-far
-        # precompute, per path, the ordered list; then for unit i emit features from state up to touch i
         for p, tl in by_path.items():
             if len(tl)<2: continue   # need a later touch
-            prior_gaps=[]   # observed inter-touch gaps for forecast (running)
+            prior_gaps=[]   # genuine observed inter-touch gaps of THIS path (causal forecast history)
             for i in range(len(tl)-1):     # units = all but last
                 ci, path, sp, ep, c = tl[i]
                 nci, npath, nsp, nep, nc = tl[i+1]
                 gap_to_next = max(0.0,(nsp - ep)/CHARS_PER_TOK)
                 # gap_since_last: from prev same-path touch end -> this start; first touch -> from session start
                 if i==0:
-                    gap_since_last = sp/CHARS_PER_TOK
-                    prev_ci = 0
+                    gap_since_last = sp/CHARS_PER_TOK; prev_ci = 0
                 else:
                     pci,ppath,psp,pep,pc = tl[i-1]
-                    gap_since_last = max(0.0,(sp - pep)/CHARS_PER_TOK)
-                    prev_ci = pci
+                    gap_since_last = max(0.0,(sp - pep)/CHARS_PER_TOK); prev_ci = pci
+                    prior_gaps.append(gap_since_last)   # genuine interval ending at THIS touch (past obs)
                 freq_so_far = i+1
-                # exploration breadth: distinct OTHER paths touched between prev touch of this path and now
-                # intervening calls: # calls in (prev_ci, ci)
                 lo = prev_ci if i>0 else 0
                 interv_calls = max(0, ci - lo)
                 distinct=set()
                 for cj in range(lo, ci):
-                    for q in extract_paths(calls[cj]):
+                    for q in call_paths[cj]:
                         if q!=path: distinct.add(q)
                 expl_breadth = len(distinct)
-                # forecast features from prior observed inter-touch gaps of THIS path
+                # Marconi-style forecast: running estimate from this path's PRIOR genuine inter-touch gaps
                 if prior_gaps:
                     fc_mean = sum(prior_gaps)/len(prior_gaps); fc_cnt = len(prior_gaps)
                 else:
@@ -249,7 +244,6 @@ def build_units(sessions):
                     y=1 if gap_to_next>FAR_TOK else 0,
                 ))
                 all_reuse_gaps.append(gap_to_next)
-                prior_gaps.append(gap_since_last if i>0 else gap_since_last)  # running history of inter-touch gaps
     return recs, all_reuse_gaps
 
 # ---------------- AUC + logistic (EXP-0054/0055 verbatim) ----------------
