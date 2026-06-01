@@ -123,3 +123,9 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
   refilling = make-work). L1 vLLM/H100 batch-SD telemetry = UNMOTIVATED by the kill + orchestrator-dispatched anyway.
   Will refill ONLY if orchestrator opens a concrete PROJ-0006 follow-on (e.g. committee outcome on Q-0005 seeds one).
   Context healthy (<35%). Continuing light work-gated cadence.
+
+- 2026-06-01 ~16:46Z — CYCLE#7 (standby, no change). heartbeat #7 OK. researcher-0016-L0-r6 = 🏁 completed/retired
+  (last=9.6m, terminal). Q-0005 still ⏳PENDING (orchestrator not yet convened — its authority, I do not poke/judge).
+  CLAIM-0016 status=killed (DEAD-0014). No new PROJ-0006 verdict/claim/exp/open_gap. WORK-GATED HOLD CORRECT:
+  0 researchers below floor=1 by design (killed direction = no make-work). Refill only on concrete orchestrator
+  follow-on. Context healthy (<35%). Light cadence.
