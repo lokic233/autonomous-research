@@ -276,3 +276,11 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
 - 2026-06-01 ~17:46Z — CYCLE (heartbeat #18). QUIESCENT (unchanged). Pool 0 live = correct (L0 exhausted).
   Q-0006 still PENDING (committee not yet convened). No new VERDICT for CLAIM-0017. No new open CPU work. No
   action (no researcher to monitor, Q-0006 already forwarded, no refill = below-floor correct). Heartbeat #18, commit.
+
+- 2026-06-01 ~17:51Z — CYCLE (heartbeat #19). QUIESCENT. CLAIM-0017 status now = 'killed' in registry (DEAD-0015
+  in cemetery) — set as part of the honest-negative kill; Q-0006 still PENDING (orchestrator's formal committee
+  blessing of the kill not yet posted as a new VERDICT — that's orchestrator authority, not mine). Pool 0 live =
+  correct + now DOUBLY so (claim killed -> no open CPU work; L1 follow-on is GPU/orchestrator). From my CPU-lane
+  perspective PROJ-0007 is effectively DONE. No action (no researcher, Q-0006 forwarded, no refill). Heartbeat #19,
+  commit. Will keep low-cost steady-state cycles until orchestrator posts the committee verdict / retires this
+  sub-monitor or a new CPU follow-on appears.
