@@ -62,3 +62,6 @@ Floor N = 2 (work-gated)
 
 - 2026-06-01 ~13:29Z — CYCLE (no change). Q-0004 still PENDING (no re-convene). CLAIM-0014 evidence_ready/
   weakened. No new verdict, no open CPU work. Pool quiescent-correct (below floor by design). Heartbeat #4.
+
+- 2026-06-01 ~13:34Z — CYCLE (no change). Q-0004 still PENDING (orchestrator not re-convened). CLAIM-0014
+  evidence_ready/weakened. No new verdict/CPU work. Pool quiescent-correct. Heartbeat #5.
