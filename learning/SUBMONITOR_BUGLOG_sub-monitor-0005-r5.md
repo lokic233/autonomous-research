@@ -101,3 +101,8 @@ Floor N = 2 (work-gated)
 - 2026-06-01 ~14:14Z — STANDBY (no change). CLAIM-0014 closed/verdict_recorded; no queue/verdict/gap. Pool 0 = correct. Heartbeat #14.
 
 - 2026-06-01 ~14:19Z — STANDBY (no change). CLAIM-0014 closed; no queue/verdict/gap. Pool 0 = correct. Heartbeat #15.
+
+- 2026-06-01 ~14:21Z — STANDBY (no change; terminal-confirmed). PROJ-0005 has exactly 1 claim (CLAIM-0014),
+  closed. No new claims/queue/verdict/gaps. Project decisively DONE; revival/new-claim = orchestrator authority.
+  WIDENED loop cadence 5m -> 30m (closed-project standby — safety heartbeat preserved, no make-work churn;
+  will re-tighten + spawn if a revival/new-gap appears). Heartbeat #16. Context healthy.
