@@ -1,0 +1,43 @@
+Codex mixed sessions: 49  total calls: 1716  total fails: 111
+
+=== forward split f=0.5 ===
+  fit: alpha=4.2 beta=1.7 recentW=5 glob_rate=0.0926
+  test: 874 calls / 33 fails / 49 sessions  base_rate=0.0378
+  per-call LL: {'poisson': -0.18337, 'cox': -0.29825, 'hawkes': -0.29187, 'recent': -0.19909}
+  dLL(hawkes-poisson)=-94.8321  (hawkes-cox)=5.5699  (hawkes-recent)=-81.095 nats
+  AUC: {'poisson': 0.5, 'cox': 0.507, 'hawkes': 0.5995, 'recent': 0.6464}
+  early-warning lift (P(fail|after fail)/base): 9.631 (after-fail rate 0.3636)
+  boot95 dLL(hawkes-cox): {'lo': 0.491, 'hi': 11.905, 'mean': 5.482}
+  boot95 dLL(hawkes-recent): {'lo': -174.635, 'hi': -6.426, 'mean': -80.76}
+  timing-perm p (hawkes-cox clustering): 0.0005 (obs 5.5699 vs null mean -0.2252)
+
+=== forward split f=0.6 ===
+  fit: alpha=4.35 beta=1.55 recentW=4 glob_rate=0.086
+  test: 704 calls / 24 fails / 49 sessions  base_rate=0.0341
+  per-call LL: {'poisson': -0.17048, 'cox': -0.16859, 'hawkes': -0.16097, 'recent': -0.20151}
+  dLL(hawkes-poisson)=6.6964  (hawkes-cox)=5.3705  (hawkes-recent)=28.5407 nats
+  AUC: {'poisson': 0.5, 'cox': 0.6174, 'hawkes': 0.7538, 'recent': 0.681}
+  early-warning lift (P(fail|after fail)/base): 10.864 (after-fail rate 0.3704)
+  boot95 dLL(hawkes-cox): {'lo': -0.138, 'hi': 12.803, 'mean': 5.467}
+  boot95 dLL(hawkes-recent): {'lo': 15.863, 'hi': 42.05, 'mean': 28.674}
+  timing-perm p (hawkes-cox clustering): 0.0005 (obs 5.3705 vs null mean -0.7383)
+
+=== forward split f=0.7 ===
+  fit: alpha=4.2 beta=1.35 recentW=5 glob_rate=0.0833
+  test: 539 calls / 13 fails / 49 sessions  base_rate=0.0241
+  per-call LL: {'poisson': -0.14479, 'cox': -0.14687, 'hawkes': -0.14609, 'recent': -0.17823}
+  dLL(hawkes-poisson)=-0.6978  (hawkes-cox)=0.4204  (hawkes-recent)=17.3265 nats
+  AUC: {'poisson': 0.5, 'cox': 0.5984, 'hawkes': 0.6427, 'recent': 0.5926}
+  early-warning lift (P(fail|after fail)/base): 7.774 (after-fail rate 0.1875)
+  boot95 dLL(hawkes-cox): {'lo': -2.037, 'hi': 3.721, 'mean': 0.457}
+  boot95 dLL(hawkes-recent): {'lo': 4.506, 'hi': 32.524, 'mean': 17.405}
+  timing-perm p (hawkes-cox clustering): 0.11894 (obs 0.4204 vs null mean -1.2611)
+
+=== HONEST VERDICT ===
+  splits_passing_full_bar: []
+  n_splits: 3
+  PREDICTIVE_LIFT_SUPPORTED: False
+  PREDICTIVE_LIFT_ROBUST_ALL_SPLITS: False
+  bar: dLL_oos(hawkes-cox)>0 & boot95 lo>0 AND dLL_oos(hawkes-recent)>0 & boot95 lo>0 AND timing_perm_p<0.05 AND AUC_hawkes>AUC_cox
+
+-> /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0047/results/predictive_oos.json , predictive_oos.csv

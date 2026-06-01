@@ -1,0 +1,178 @@
+{
+  "corpus": "codex",
+  "n_mixed_sessions": 49,
+  "n_calls": 1716,
+  "n_fails": 111,
+  "splits": [
+    {
+      "split_fraction": 0.5,
+      "alpha": 4.2,
+      "beta": 1.7,
+      "recent_W": 5,
+      "global_rate_train": 0.0926,
+      "n_train_calls": 842,
+      "n_test_calls": 874,
+      "n_test_fail": 33,
+      "n_test_sessions": 49,
+      "test_base_rate": 0.0378,
+      "per_call_LL": {
+        "poisson": -0.18337,
+        "cox": -0.29825,
+        "hawkes": -0.29187,
+        "recent": -0.19909
+      },
+      "dLL": {
+        "hawkes_minus_poisson_nats": -94.8321,
+        "hawkes_minus_cox_nats": 5.5699,
+        "hawkes_minus_recent_nats": -81.095,
+        "hawkes_minus_poisson_bits_per_call": -0.1565,
+        "hawkes_minus_cox_bits_per_call": 0.0092,
+        "hawkes_minus_recent_bits_per_call": -0.1339
+      },
+      "auc": {
+        "poisson": 0.5,
+        "cox": 0.507,
+        "hawkes": 0.5995,
+        "recent": 0.6464
+      },
+      "early_warning_after_fail_rate": 0.3636,
+      "early_warning_lift_vs_base": 9.631,
+      "bootstrap95_dLL": {
+        "hawkes_minus_cox": {
+          "lo": 0.491,
+          "hi": 11.905,
+          "mean": 5.482
+        },
+        "hawkes_minus_recent": {
+          "lo": -174.635,
+          "hi": -6.426,
+          "mean": -80.76
+        },
+        "hawkes_minus_poisson": {
+          "lo": -189.275,
+          "hi": -17.901,
+          "mean": -94.418
+        }
+      },
+      "timing_perm_obs_hawkes_minus_cox_nats": 5.5699,
+      "timing_perm_p": 0.0005,
+      "timing_perm_null_mean": -0.2252
+    },
+    {
+      "split_fraction": 0.6,
+      "alpha": 4.35,
+      "beta": 1.55,
+      "recent_W": 4,
+      "global_rate_train": 0.086,
+      "n_train_calls": 1012,
+      "n_test_calls": 704,
+      "n_test_fail": 24,
+      "n_test_sessions": 49,
+      "test_base_rate": 0.0341,
+      "per_call_LL": {
+        "poisson": -0.17048,
+        "cox": -0.16859,
+        "hawkes": -0.16097,
+        "recent": -0.20151
+      },
+      "dLL": {
+        "hawkes_minus_poisson_nats": 6.6964,
+        "hawkes_minus_cox_nats": 5.3705,
+        "hawkes_minus_recent_nats": 28.5407,
+        "hawkes_minus_poisson_bits_per_call": 0.0137,
+        "hawkes_minus_cox_bits_per_call": 0.011,
+        "hawkes_minus_recent_bits_per_call": 0.0585
+      },
+      "auc": {
+        "poisson": 0.5,
+        "cox": 0.6174,
+        "hawkes": 0.7538,
+        "recent": 0.681
+      },
+      "early_warning_after_fail_rate": 0.3704,
+      "early_warning_lift_vs_base": 10.864,
+      "bootstrap95_dLL": {
+        "hawkes_minus_cox": {
+          "lo": -0.138,
+          "hi": 12.803,
+          "mean": 5.467
+        },
+        "hawkes_minus_recent": {
+          "lo": 15.863,
+          "hi": 42.05,
+          "mean": 28.674
+        },
+        "hawkes_minus_poisson": {
+          "lo": -4.946,
+          "hi": 20.778,
+          "mean": 6.896
+        }
+      },
+      "timing_perm_obs_hawkes_minus_cox_nats": 5.3705,
+      "timing_perm_p": 0.0005,
+      "timing_perm_null_mean": -0.7383
+    },
+    {
+      "split_fraction": 0.7,
+      "alpha": 4.2,
+      "beta": 1.35,
+      "recent_W": 5,
+      "global_rate_train": 0.0833,
+      "n_train_calls": 1177,
+      "n_test_calls": 539,
+      "n_test_fail": 13,
+      "n_test_sessions": 49,
+      "test_base_rate": 0.0241,
+      "per_call_LL": {
+        "poisson": -0.14479,
+        "cox": -0.14687,
+        "hawkes": -0.14609,
+        "recent": -0.17823
+      },
+      "dLL": {
+        "hawkes_minus_poisson_nats": -0.6978,
+        "hawkes_minus_cox_nats": 0.4204,
+        "hawkes_minus_recent_nats": 17.3265,
+        "hawkes_minus_poisson_bits_per_call": -0.0019,
+        "hawkes_minus_cox_bits_per_call": 0.0011,
+        "hawkes_minus_recent_bits_per_call": 0.0464
+      },
+      "auc": {
+        "poisson": 0.5,
+        "cox": 0.5984,
+        "hawkes": 0.6427,
+        "recent": 0.5926
+      },
+      "early_warning_after_fail_rate": 0.1875,
+      "early_warning_lift_vs_base": 7.774,
+      "bootstrap95_dLL": {
+        "hawkes_minus_cox": {
+          "lo": -2.037,
+          "hi": 3.721,
+          "mean": 0.457
+        },
+        "hawkes_minus_recent": {
+          "lo": 4.506,
+          "hi": 32.524,
+          "mean": 17.405
+        },
+        "hawkes_minus_poisson": {
+          "lo": -7.353,
+          "hi": 7.304,
+          "mean": -0.611
+        }
+      },
+      "timing_perm_obs_hawkes_minus_cox_nats": 0.4204,
+      "timing_perm_p": 0.11894,
+      "timing_perm_null_mean": -1.2611
+    }
+  ],
+  "verdict": {
+    "splits_passing_full_bar": [],
+    "n_splits": 3,
+    "PREDICTIVE_LIFT_SUPPORTED": false,
+    "PREDICTIVE_LIFT_ROBUST_ALL_SPLITS": false,
+    "bar": "dLL_oos(hawkes-cox)>0 & boot95 lo>0 AND dLL_oos(hawkes-recent)>0 & boot95 lo>0 AND timing_perm_p<0.05 AND AUC_hawkes>AUC_cox"
+  },
+  "protocol": "forward time-split within-session, one-step-ahead prequential, params fit on train prefixes only"
+}

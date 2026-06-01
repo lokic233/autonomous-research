@@ -1,0 +1,60 @@
+verdict_id: VERDICT-0050
+claim_id: CLAIM-0013
+project_id: PROJ-0004
+date: '2026-06-01'
+experiment_ids:
+- EXP-0046
+experiment_paths:
+- experiments/2026-06-01/EXP-0046
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: product_realist
+  vote: green
+- role: evaluation_prosecutor
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- content-type-matched null (splice identical tool-result text at NON-boundary positions
+- equivalent drop => content-type not position => FALSIFIED) [HIGHEST PRIORITY]
+- "non-tool context-shift baseline (user-turn/system-prompt/document boundary) \u2014\
+  \ boundary penalty must EXCEED generic shift, CI>0 on difference"
+- "target-model entropy/perplexity at K=8 boundary tokens \u2014 effect must survive\
+  \ conditioning on local entropy"
+- pre-register K=8 + min boundary-vs-domain superiority margin + multiple-comparison
+  correction over positions 1..K (no post-hoc window)
+map_delta_proposals:
+- CREATE node PROJ-0004 charter=Tool-Boundary Acceptance Cliff in SD for Agent Trajectories
+- stage=L0-DESIGN
+- first_claim=CLAIM-0013 (amended per 7 fixes)
+- occupied_territory=within-trajectory position-indexed draft-acceptance at tool-result
+  resumption boundaries (decode-time
+- NOT per-op fork-cost[PROJ-0001]
+- NOT invalidation cost-map[PROJ-0002]
+- NOT failure attribution[PROJ-0003])
+- status=yellow/seed-with-fixes
+- Candidate B RED (EpiCache/Continuum/TensorRT-LLM-priority-eviction occupied + length-identity
+  DEAD-0009/0010 risk)
+- Candidate C RED-as-first-seed (AMD ROCm public guidance already states prefill/decode
+  HBM-BW asymmetry
+- possible PROJ-0004 companion claim after A L0 resolves)
+- UNVERIFIED future-dated citations 2601.11580/2604.14682/2604.13519/2602.10238/2604.25975/2605.04178
+  must be fetched+verified before L0 interpretation
+baseline_requirements:
+- SGLang EMA-adaptive SD (cliff must NOT already be absorbed by workload-adaptive
+  step count else kill)
+- "EAGLE/EAGLE-2/Medusa acceptance baselines + task-domain partialling (2510.02128\
+  \ named null) \u2014 effect survives partialling out draft-family AND task domain"
+- L1 real vLLM SD accepted-length telemetry (not only top-1 proxy), stratified by
+  tool-result length/format/pair
+created_at: '2026-06-01T11:21:17Z'
