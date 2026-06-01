@@ -72,3 +72,19 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
     corpus fragility). Single robust family = a committee robustness question, not a sub-monitor judgment.
   STATUS: still RUNNING — summary.json / analysis.md / prior_art / TERMINAL report NOT yet written. NO queue submit
     until status=completed WITH summary+analysis. NO action; floor held at 1. Heartbeat #5, commit.
+
+- 2026-06-01 ~16:2xZ — CYCLE (heartbeat #6). researcher-0017-L0-r6 ALIVE (PID 74750, etime 23:23, running,
+  last=14.4m). summary.json WRITTEN (10818B). AGGREGATED DISPOSITION (researcher's, not my judgment):
+    overall_per_family: codex KILL/NEGATIVE (RE-B1 PASS, RE-B2 FAIL=drift-attributable<1 block/quantization,
+      RE-B3 PASS, RE-B4 no-fold); claude_code KILL/NEGATIVE (RE-B1 PASS, RE-B2 FAIL, RE-B3 fail[n=5], RE-B4 no-fold).
+    RE-B6: B1 direction CONSISTENT across 2 counted families (codex,CC both PASS-direction). family_sizes
+      codex=109 / CC=5 / gemini=2.
+    RE-B5: divergences 100% tokenizer-INVARIANT both families (gpt2 & qwen2 struct_frac=1.0) => structural,
+      NOT BPE-seam => reinforces RE-B4 STAY-DISTINCT (genuinely PROJ-0007 territory, not a PROJ-0005 fold).
+    HEADLINE: clean HONEST NEGATIVE via RE-B2 — realized cross-session reuse IS bounded below naive shared-text
+      AND survives canonicalization (RE-B1 pass) BUT the shortfall is NOT attributable to volatile-field
+      micro-drift over a drift-free control (drift_cost<=0). The NAMED CAUSE (micro-drift) is FALSIFIED;
+      shortfall is structural template content. First-class negative.
+  STATUS: still RUNNING — analysis.md + prior_art/PROJ-0007 (RE-B7/B8) + TERMINAL report NOT yet written.
+    NO queue submit until status=completed WITH analysis+terminal report (substance is ready; formal deliverables
+    pending). NO action; floor held at 1. Heartbeat #6, commit.
