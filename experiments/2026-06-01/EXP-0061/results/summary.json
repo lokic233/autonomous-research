@@ -1,0 +1,201 @@
+{
+  "experiment": "EXP-0061",
+  "claim": "CLAIM-0026",
+  "project": "PROJ-0015",
+  "level": 0,
+  "locked_ts": "2026-06-01T23:44:20Z",
+  "prereg_commit": "8e60c29",
+  "seed": 20260601,
+  "nboot": 2000,
+  "chars_per_tok": 4.0,
+  "frozen": {
+    "A0": 0.5,
+    "A1": 0.5,
+    "cross_margin": 0.4,
+    "gini_neg": 0.5,
+    "hhi_flag": 0.2,
+    "min_trials": 8,
+    "topdecile": 0.1
+  },
+  "corpora": {
+    "cc": {
+      "corpus": "cc",
+      "n_sessions": 74,
+      "n_result_calls": 2581,
+      "mass_tok": {
+        "R": 1763558.0,
+        "A": 408732.25,
+        "TX": 209059.0,
+        "TH": 57310.5,
+        "U": 246276.0,
+        "O": 0.0,
+        "S": 125896.75
+      },
+      "mass_char": {
+        "R": 7054232.0,
+        "A": 1634929.0,
+        "TX": 836236.0,
+        "TH": 229242.0,
+        "U": 985104.0,
+        "O": 0.0,
+        "S": 503587.0
+      },
+      "denominators_tok": {
+        "D1_raw_span": 2684935.75,
+        "D2_non_overhead": 2684935.75,
+        "D3_decode_only": 2438659.75,
+        "D3p_asst_text_only": 1972617.0
+      },
+      "result_share_point": {
+        "D1_raw_span": 0.6568343395181803,
+        "D2_non_overhead": 0.6568343395181803,
+        "D3_decode_only": 0.7231668952587584,
+        "D3p_asst_text_only": 0.8940194675398214
+      },
+      "HEADLINE_denominator": "D1_raw_span",
+      "RE_A0": {
+        "f_point": 0.6568343395181803,
+        "LB95": 0.5688344439578988,
+        "UB95": 0.7082786375224903,
+        "boot_mean": 0.6485421024798752,
+        "threshold": 0.5,
+        "PASS": true,
+        "downgrade_to_largest_component": false
+      },
+      "RE_A1": {
+        "topdecile_share_point": 0.7876755400162626,
+        "topdecile_LB95": 0.6178763421228246,
+        "topdecile_UB95": 0.8702385539650856,
+        "topdecile_PASS": true,
+        "gini_point": 0.8632109693109273,
+        "gini_LB95": 0.7789455752552636,
+        "gini_UB95": 0.9032309346021534,
+        "gini_negative_flag": false
+      },
+      "RE_A2_denominator_robustness": {
+        "D1_raw_span": 0.6568343395181803,
+        "D2_non_overhead": 0.6568343395181803,
+        "D3_decode_only": 0.7231668952587584,
+        "D3p_asst_text_only": 0.8940194675398214
+      },
+      "static_dynamic": {
+        "S_tok": 125896.75,
+        "dynamic_tok": 2684935.75,
+        "static_share": 0.04478984428990344,
+        "note_cc_lower_bound": true
+      },
+      "STAT": {
+        "HHI_by_session_resulttok": 0.16588689905786977,
+        "HHI_flag": false,
+        "session_median_result_share_D1": 0.5732074222424204
+      },
+      "SECONDARY_cost_weighted": {
+        "prefill_tok": 2135730.75,
+        "decode_tok": 675101.75,
+        "cost_result_share": {
+          "decode_x10": 0.1984480656352564,
+          "decode_x100": 0.02532177564508162
+        }
+      },
+      "baseline_b_result_decode_ratio": 2.6122847407816674
+    },
+    "codex": {
+      "corpus": "codex",
+      "n_sessions": 93,
+      "n_result_calls": 3084,
+      "mass_tok": {
+        "R": 2879411.75,
+        "A": 146437.5,
+        "TX": 119411.0,
+        "TH": 416758.0,
+        "U": 156704.25,
+        "O": 19219.5,
+        "S": 685279.5
+      },
+      "mass_char": {
+        "R": 11517647.0,
+        "A": 585750.0,
+        "TX": 477644.0,
+        "TH": 1667032.0,
+        "U": 626817.0,
+        "O": 76878.0,
+        "S": 2741118.0
+      },
+      "denominators_tok": {
+        "D1_raw_span": 3737942.0,
+        "D2_non_overhead": 3718722.5,
+        "D3_decode_only": 3562018.25,
+        "D3p_asst_text_only": 2998822.75
+      },
+      "result_share_point": {
+        "D1_raw_span": 0.7703200718470217,
+        "D2_non_overhead": 0.7743013225644022,
+        "D3_decode_only": 0.8083652434964363,
+        "D3p_asst_text_only": 0.9601807075793326
+      },
+      "HEADLINE_denominator": "D1_raw_span",
+      "RE_A0": {
+        "f_point": 0.7703200718470217,
+        "LB95": 0.7478323542415576,
+        "UB95": 0.7891254653996911,
+        "boot_mean": 0.7694589415958354,
+        "threshold": 0.5,
+        "PASS": true,
+        "downgrade_to_largest_component": false
+      },
+      "RE_A1": {
+        "topdecile_share_point": 0.5788801306377943,
+        "topdecile_LB95": 0.5453948283702228,
+        "topdecile_UB95": 0.6095378790246396,
+        "topdecile_PASS": true,
+        "gini_point": 0.749404291221625,
+        "gini_LB95": 0.7320576998788362,
+        "gini_UB95": 0.7642812915815469,
+        "gini_negative_flag": false
+      },
+      "RE_A2_denominator_robustness": {
+        "D1_raw_span": 0.7703200718470217,
+        "D2_non_overhead": 0.7743013225644022,
+        "D3_decode_only": 0.8083652434964363,
+        "D3p_asst_text_only": 0.9601807075793326
+      },
+      "static_dynamic": {
+        "S_tok": 685279.5,
+        "dynamic_tok": 3737942.0,
+        "static_share": 0.15492769240699342,
+        "note_cc_lower_bound": false
+      },
+      "STAT": {
+        "HHI_by_session_resulttok": 0.015631849697680385,
+        "HHI_flag": false,
+        "session_median_result_share_D1": 0.7567706327814144
+      },
+      "SECONDARY_cost_weighted": {
+        "prefill_tok": 3721395.5,
+        "decode_tok": 682606.5,
+        "cost_result_share": {
+          "decode_x10": 0.27299573674630023,
+          "decode_x100": 0.040001805033451014
+        }
+      },
+      "baseline_b_result_decode_ratio": 4.218260081027649
+    }
+  },
+  "RE_A3_cross_instrument": {
+    "f_cc_D1": 0.6568343395181803,
+    "f_codex_D1": 0.7703200718470217,
+    "abs_diff": 0.1134857323288414,
+    "both_LB95_gt_0.50": true,
+    "margin_ok_lt_0.40": true,
+    "HARD_GATE_PASS": true,
+    "gini_delta_cc_minus_codex": {
+      "point": 0.11380667808930234,
+      "LB95": 0.027176341515189106,
+      "UB95": 0.1603411409975426
+    }
+  },
+  "DISPOSITION": {
+    "verdict": "GREEN-PASS",
+    "rationale": "RE-A0 both LB95>0.50 (CC 0.569, Codex 0.748); RE-A1 top-decile both>0.50 & Gini>0.50 both; RE-A3 hard-gate PASS (|cc-codex|=0.113<0.40). Tool-result is the MAJORITY of dynamic served token mass, heavy-tailed, replicated cross-instrument."
+  }
+}
