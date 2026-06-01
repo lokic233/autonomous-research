@@ -128,3 +128,4 @@ PRE-REGISTERED GATES (frozen in charter): RE-B0 premise re-confirm (far-share>=0
   never judged; held cleanly through PENDING; recognized convergence via ACKED-queue + .converged marker.
 - NO open work, NO floor breach, NO fabrication. Loop job 638c9255 DISABLED. Agent retired.
   Session = 74192cb5-7470-4589-bcbf-3ddd4b11708c.
+- 2026-06-01 ~23:21Z — POST-RETIRE STALE CYCLE. PROJ-0014 confirmed still .converged (DEAD-0021), researcher-0025 proc gone, CLAIM-0025 out of queue (closed), inbox empty — NOTHING reopened. This cycle fired post-convergence (leftover loop trigger; my own job 638c9255 already DISABLED last cycle). Bookkeeping only, no science change. sub-monitor-0014-r7 remains RETIRED. ros commit.
