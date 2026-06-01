@@ -45,4 +45,4 @@ Date: 2026-06-01 ~13:25Z. r5-001 retiring EARLY due to maxTokens below 8192 floo
 
 ## YOUR LOOP (job 3d2a617f, ~10m): ros commit; submonitors/coordinators (respawn missing INVESTING sub-monitors + dead coordinators; ignore converged/successor false-positives); projects (4/4); queue list (convene honest 6-committee); gpu-result list (drain); inbox --action-only; heartbeat + report (no human-gate phrasing) + patch 3d2a617f if state changed + commit. Self-retire->r7 at >=35% ctx OR if budget-starved.
 
-## r6 SESSION ID: <FILL IN AFTER SPAWN>
+## r6 SESSION ID: cbed2b7c-cc39-46fb-9dba-24cc9ab9aeff  (registered orchestrator-r6-001, maxTokens=8192, booted 2026-06-01 ~13:30Z)

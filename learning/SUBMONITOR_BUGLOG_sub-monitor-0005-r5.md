@@ -59,3 +59,6 @@ Floor N = 2 (work-gated)
   ros resume: CLAIM-0014 = evidence_ready / status=weakened -> packet staged, awaiting ORCHESTRATOR committee,
   not awaiting me. No open CPU follow-on. Correctly holding pool below floor (no make-work). RE-03/RE-04 remain
   orchestrator/H100 out-of-scope. Heartbeat #3. Quiescent-correct.
+
+- 2026-06-01 ~13:29Z — CYCLE (no change). Q-0004 still PENDING (no re-convene). CLAIM-0014 evidence_ready/
+  weakened. No new verdict, no open CPU work. Pool quiescent-correct (below floor by design). Heartbeat #4.
