@@ -1,0 +1,9 @@
+harness,config,n_sessions,n_calls,n_fails_remaining,cox_BIC,hawkes_BIC,hawkes_alpha,hawkes_beta,dBIC,hawkes_earns
+claude_code,baseline,20,1331,127,753.89,744.98,1.5,0.55,8.91,True
+claude_code,strip_permission_gate_to_ok,15,1266,93,697.99,688.45,1.65,0.55,9.54,True
+claude_code,strip_all_gates_to_ok,10,1211,73,595.44,587.33,1.2,0.35,8.11,True
+claude_code,strip_permission_gate_drop,13,1237,88,673.19,664.95,1.5,0.5,8.24,True
+gemini,baseline,10,159,52,199.02,185.26,3.55,1.15,13.76,True
+gemini,strip_pathschema_to_ok,7,108,10,41.17,50.54,0.0,0.1,-9.36,False
+gemini,strip_all_gates_to_ok,1,8,1,13.32,17.48,0.0,0.1,-4.16,False
+gemini,strip_pathschema_drop,6,85,8,26.66,35.54,0.0,0.1,-8.89,False

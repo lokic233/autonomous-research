@@ -1,0 +1,175 @@
+{
+  "blocking1_codex_loso": {
+    "n_mixed_sessions": 46,
+    "full_dBIC": 28.32,
+    "full_alpha": 4.45,
+    "full_beta": 1.25,
+    "full_n_calls": 1581,
+    "full_stouffer_strat": -14.042,
+    "full_stouffer_strat_p": 0.0,
+    "full_stouffer_whole": -16.934,
+    "dBIC_min": 17.6,
+    "dBIC_max": 30.67,
+    "dBIC_median": 27.79,
+    "strat_p_max": 0.0,
+    "strat_p_min": 0.0,
+    "worst_dBIC_drop": {
+      "dropped": "rollout-2026-05-30T05-22-43-019e78d6-3097-7752-9143-98b3815605e0.jsonl",
+      "dropped_n": 19,
+      "dropped_fails": 6,
+      "dropped_zs": -3.92,
+      "n_sessions_left": 45,
+      "n_calls_left": 1562,
+      "dBIC": 17.6,
+      "hawkes_alpha": 3.9,
+      "hawkes_beta": 1.2,
+      "stouffer_strat": -13.613,
+      "stouffer_strat_p": 0.0,
+      "stouffer_whole": -16.517,
+      "stouffer_whole_p": 0.0
+    },
+    "worst_strat_drop": {
+      "dropped": "rollout-2026-05-31T13-20-27-019e7fb1-ee34-7f80-9e43-f97f654c552f.jsonl",
+      "dropped_n": 41,
+      "dropped_fails": 1,
+      "dropped_zs": -5.363,
+      "n_sessions_left": 45,
+      "n_calls_left": 1540,
+      "dBIC": 27.76,
+      "hawkes_alpha": 4.2,
+      "hawkes_beta": 1.2,
+      "stouffer_strat": -13.398,
+      "stouffer_strat_p": 0.0,
+      "stouffer_whole": -16.448,
+      "stouffer_whole_p": 0.0
+    },
+    "PASS_dBIC_all_gt6": true,
+    "PASS_strat_all_sig": true,
+    "BLOCKING1_PASS": true
+  },
+  "blocking2_latent_cox": [
+    {
+      "harness": "codex",
+      "n_sessions": 46,
+      "n_calls": 1581,
+      "n_tools": 5,
+      "cox_logL": -358.19,
+      "cox_BIC": 753.2,
+      "phase_cox_logL": -340.48,
+      "phase_cox_k": 8,
+      "phase_cox_BIC": 739.88,
+      "phase_offsets": [
+        0.6,
+        -0.1,
+        -1.0
+      ],
+      "hmm_cox_logL": -534.3,
+      "hmm_cox_k": 10,
+      "hmm_cox_BIC": 1142.26,
+      "hmm_gamma": [
+        -13.816,
+        -2.628
+      ],
+      "hmm_A": [
+        [
+          0.236,
+          0.764
+        ],
+        [
+          0.004,
+          0.996
+        ]
+      ],
+      "hawkes_logL": -336.66,
+      "hawkes_BIC": 724.88,
+      "hawkes_alpha": 4.45,
+      "hawkes_beta": 1.25,
+      "best_static_model": "phase_cox",
+      "best_static_BIC": 739.88,
+      "dBIC_bestStatic_minus_hawkes": 15.0,
+      "hawkes_survives_steelman": true
+    },
+    {
+      "harness": "claude_code",
+      "n_sessions": 20,
+      "n_calls": 1331,
+      "n_tools": 15,
+      "cox_logL": -322.99,
+      "cox_BIC": 753.89,
+      "phase_cox_logL": -319.9,
+      "phase_cox_k": 18,
+      "phase_cox_BIC": 769.29,
+      "phase_offsets": [
+        0.3,
+        -0.4,
+        0.0
+      ],
+      "hmm_cox_logL": -455.61,
+      "hmm_cox_k": 20,
+      "hmm_cox_BIC": 1055.1,
+      "hmm_gamma": [
+        -2.448,
+        -2.247
+      ],
+      "hmm_A": [
+        [
+          0.243,
+          0.757
+        ],
+        [
+          0.01,
+          0.99
+        ]
+      ],
+      "hawkes_logL": -311.34,
+      "hawkes_BIC": 744.98,
+      "hawkes_alpha": 1.5,
+      "hawkes_beta": 0.55,
+      "best_static_model": "plain_cox",
+      "best_static_BIC": 753.89,
+      "dBIC_bestStatic_minus_hawkes": 8.91,
+      "hawkes_survives_steelman": true
+    },
+    {
+      "harness": "gemini",
+      "n_sessions": 10,
+      "n_calls": 159,
+      "n_tools": 7,
+      "cox_logL": -81.77,
+      "cox_BIC": 199.02,
+      "phase_cox_logL": -73.39,
+      "phase_cox_k": 10,
+      "phase_cox_BIC": 197.46,
+      "phase_offsets": [
+        1.0,
+        -0.6,
+        -0.8
+      ],
+      "hmm_cox_logL": -61.99,
+      "hmm_cox_k": 12,
+      "hmm_cox_BIC": 184.81,
+      "hmm_gamma": [
+        -2.361,
+        0.584
+      ],
+      "hmm_A": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.101,
+          0.899
+        ]
+      ],
+      "hawkes_logL": -69.82,
+      "hawkes_BIC": 185.26,
+      "hawkes_alpha": 3.55,
+      "hawkes_beta": 1.15,
+      "best_static_model": "hmm_cox",
+      "best_static_BIC": 184.81,
+      "dBIC_bestStatic_minus_hawkes": -0.45,
+      "hawkes_survives_steelman": false
+    }
+  ]
+}

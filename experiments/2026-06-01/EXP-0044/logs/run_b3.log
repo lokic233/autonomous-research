@@ -1,0 +1,14 @@
+Parsing CC + Gemini with failure snippets...
+  CC sessions 42 / Gemini 11
+  CC failure categories: {'genuine_exec': 73, 'file_notfound': 15, 'permission_gate': 34, 'web_gate': 5}
+  Gemini failure categories: {'schema_argerror': 26, 'path_gate': 16, 'file_notfound': 9, 'genuine_exec': 1}
+  claude_code  baseline                       n_calls=1331 fails=127 alpha=1.5 dBIC=8.91
+  claude_code  strip_permission_gate_to_ok    n_calls=1266 fails=93 alpha=1.65 dBIC=9.54
+  claude_code  strip_all_gates_to_ok          n_calls=1211 fails=73 alpha=1.2 dBIC=8.11
+  claude_code  strip_permission_gate_drop     n_calls=1237 fails=88 alpha=1.5 dBIC=8.24
+  gemini       baseline                       n_calls=159 fails=52 alpha=3.55 dBIC=13.76
+  gemini       strip_pathschema_to_ok         n_calls=108 fails=10 alpha=0.0 dBIC=-9.36
+  gemini       strip_all_gates_to_ok          n_calls=8 fails=1 alpha=0.0 dBIC=-4.16
+  gemini       strip_pathschema_drop          n_calls=85 fails=8 alpha=0.0 dBIC=-8.89
+
+-> /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0044/results/gate_stripped_hawkes.csv , gate_stripped.json

@@ -1,0 +1,120 @@
+{
+  "cc_failure_categories": {
+    "genuine_exec": 73,
+    "file_notfound": 15,
+    "permission_gate": 34,
+    "web_gate": 5
+  },
+  "gemini_failure_categories": {
+    "schema_argerror": 26,
+    "path_gate": 16,
+    "file_notfound": 9,
+    "genuine_exec": 1
+  },
+  "refits": [
+    {
+      "harness": "claude_code",
+      "config": "baseline",
+      "n_sessions": 20,
+      "n_calls": 1331,
+      "n_fails_remaining": 127,
+      "cox_BIC": 753.89,
+      "hawkes_BIC": 744.98,
+      "hawkes_alpha": 1.5,
+      "hawkes_beta": 0.55,
+      "dBIC": 8.91,
+      "hawkes_earns": true
+    },
+    {
+      "harness": "claude_code",
+      "config": "strip_permission_gate_to_ok",
+      "n_sessions": 15,
+      "n_calls": 1266,
+      "n_fails_remaining": 93,
+      "cox_BIC": 697.99,
+      "hawkes_BIC": 688.45,
+      "hawkes_alpha": 1.65,
+      "hawkes_beta": 0.55,
+      "dBIC": 9.54,
+      "hawkes_earns": true
+    },
+    {
+      "harness": "claude_code",
+      "config": "strip_all_gates_to_ok",
+      "n_sessions": 10,
+      "n_calls": 1211,
+      "n_fails_remaining": 73,
+      "cox_BIC": 595.44,
+      "hawkes_BIC": 587.33,
+      "hawkes_alpha": 1.2,
+      "hawkes_beta": 0.35,
+      "dBIC": 8.11,
+      "hawkes_earns": true
+    },
+    {
+      "harness": "claude_code",
+      "config": "strip_permission_gate_drop",
+      "n_sessions": 13,
+      "n_calls": 1237,
+      "n_fails_remaining": 88,
+      "cox_BIC": 673.19,
+      "hawkes_BIC": 664.95,
+      "hawkes_alpha": 1.5,
+      "hawkes_beta": 0.5,
+      "dBIC": 8.24,
+      "hawkes_earns": true
+    },
+    {
+      "harness": "gemini",
+      "config": "baseline",
+      "n_sessions": 10,
+      "n_calls": 159,
+      "n_fails_remaining": 52,
+      "cox_BIC": 199.02,
+      "hawkes_BIC": 185.26,
+      "hawkes_alpha": 3.55,
+      "hawkes_beta": 1.15,
+      "dBIC": 13.76,
+      "hawkes_earns": true
+    },
+    {
+      "harness": "gemini",
+      "config": "strip_pathschema_to_ok",
+      "n_sessions": 7,
+      "n_calls": 108,
+      "n_fails_remaining": 10,
+      "cox_BIC": 41.17,
+      "hawkes_BIC": 50.54,
+      "hawkes_alpha": 0.0,
+      "hawkes_beta": 0.1,
+      "dBIC": -9.36,
+      "hawkes_earns": false
+    },
+    {
+      "harness": "gemini",
+      "config": "strip_all_gates_to_ok",
+      "n_sessions": 1,
+      "n_calls": 8,
+      "n_fails_remaining": 1,
+      "cox_BIC": 13.32,
+      "hawkes_BIC": 17.48,
+      "hawkes_alpha": 0.0,
+      "hawkes_beta": 0.1,
+      "dBIC": -4.16,
+      "hawkes_earns": false
+    },
+    {
+      "harness": "gemini",
+      "config": "strip_pathschema_drop",
+      "n_sessions": 6,
+      "n_calls": 85,
+      "n_fails_remaining": 8,
+      "cox_BIC": 26.66,
+      "hawkes_BIC": 35.54,
+      "hawkes_alpha": 0.0,
+      "hawkes_beta": 0.1,
+      "dBIC": -8.89,
+      "hawkes_earns": false
+    }
+  ]
+}
