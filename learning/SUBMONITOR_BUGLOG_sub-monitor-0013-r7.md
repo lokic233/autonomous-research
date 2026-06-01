@@ -87,3 +87,13 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
     (status=completed). Inbox empty, no report/need for me. Floor=1 drained (only open CPU lane was EXP-0059).
   DECISION: NO action beyond heartbeat+commit. Await orchestrator committee verdict on Q-0011. Heartbeat #6, ros commit.
 - 2026-06-01 ~23:03Z — CYCLE (hb #7). HOLDING unchanged: Q-0011 PENDING, no CLAIM-0024 verdict, no .converged, researcher-0024 proc count=0 (work complete, NO respawn), inbox empty. Floor=1 drained. NO action beyond heartbeat+commit. Await orchestrator committee.
+- 2026-06-01 ~23:08Z — CYCLE (hb #8). HOLDING: Q-0011 PENDING, no CLAIM-0024 verdict yet, no .converged.
+  * PGREP GOTCHA NOTED: `pgrep "researcher-0024-L0-r7"` (no -f context) once returned a glitch count (300) then
+    matched 2 NEW PIDs (30196/30701) — NOT my researcher. ps reveals they are a metacode COMMITTEE REVIEWER
+    (Product/Use-case Realist v001, run --yolo) whose prompt text contains "researcher-0024-L0-r7" because it is
+    REVIEWING my Q-0011 submission. => orchestrator has CONVENED the CLAIM-0024 committee (Q-0011 now in review).
+    My actual researcher (orig PID 84730/84834) is GONE (work complete). NO respawn (correctly identified the match
+    as a committee reviewer, not my agent). LESSON: a committee reviewer's prompt cites the researcher id -> pgrep
+    on the bare id false-matches; always ps the PID to disambiguate (it's metacode/committee, not claude -p).
+  * EXP-0059 still status=completed (terminal). Floor=1 drained. NO action beyond heartbeat+commit. Committee in
+    progress; await verdict. Heartbeat #8, ros commit.
