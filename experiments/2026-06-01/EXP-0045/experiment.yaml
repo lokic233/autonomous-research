@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: true
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L2 H100/vLLM0.22, real lmcache async-layerwise V1 connector (LMCacheConnectorV1)
+  E2E confirmed working through generate(): reuse TTFT 26.5ms median vs cold 98ms
+  (genuine async CPU<->GPU layerwise overlap = the axis EXP-0034 lacked). PARTIAL
+  9/12 grid cells faults-free. lmcache CacheBlend blend-in-loop UNFINISHED upstream
+  (get_kv unloaded-buffer bug in 0.4.6 AND 0.3.5, version-independent; vLLM0.22 V1
+  multiprocess so EXP-0034 inline-blend impossible). Result = HONEST BRACKET: EXP-0045
+  PIC-favorable bound (selective 15% recompute + full async overlap, no blend penalty)
+  PIC/CDC 0.35-0.77x (PIC faster, more under concurrency); EXP-0034 CDC-favorable
+  bound 1.003-1.029x; true async-with-real-blend lies between. CONFIRMS CLAIM-0006
+  CDC-favors is connector-regime-dependent (NOT a green).'
+result_effect: weaken
 artifacts_path: experiments/2026-06-01/EXP-0045/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0058
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T14:09:28Z'
 prompt_version: v001

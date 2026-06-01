@@ -222,6 +222,18 @@ negative_evidence:
     \ conditional on inj/seq. Caveat: CDC pays a boundary window the oracle PIC skips\
     \ (conservative PIC-favorable bound)."
   data_path: experiments/2026-05-31/EXP-0027/
+- exp_id: EXP-0045
+  summary: 'L2 H100/vLLM0.22, real lmcache async-layerwise V1 connector (LMCacheConnectorV1)
+    E2E confirmed working through generate(): reuse TTFT 26.5ms median vs cold 98ms
+    (genuine async CPU<->GPU layerwise overlap = the axis EXP-0034 lacked). PARTIAL
+    9/12 grid cells faults-free. lmcache CacheBlend blend-in-loop UNFINISHED upstream
+    (get_kv unloaded-buffer bug in 0.4.6 AND 0.3.5, version-independent; vLLM0.22
+    V1 multiprocess so EXP-0034 inline-blend impossible). Result = HONEST BRACKET:
+    EXP-0045 PIC-favorable bound (selective 15% recompute + full async overlap, no
+    blend penalty) PIC/CDC 0.35-0.77x (PIC faster, more under concurrency); EXP-0034
+    CDC-favorable bound 1.003-1.029x; true async-with-real-blend lies between. CONFIRMS
+    CLAIM-0006 CDC-favors is connector-regime-dependent (NOT a green).'
+  data_path: experiments/2026-06-01/EXP-0045/
 verdict_history:
 - verdict: VERDICT-0006
   result: green-6/6
@@ -279,6 +291,9 @@ verdict_history:
 - verdict_id: VERDICT-0043
   date: '2026-05-31'
   result: yellow
+- verdict_id: VERDICT-0058
+  date: '2026-06-01'
+  result: yellow
 revival_conditions: 'Unanimous GREEN gate (env-upgrade-gated): E2E-TTFT on vLLM>=0.7
   (or lmcache''s vLLM fork) with the V1 KVConnector fully enabled for TRUE async layerwise
   transfers, under CONCURRENT request load + latency-jitter + concurrent-throughput
@@ -290,7 +305,7 @@ owner: sess 048fcb0d (=c48efa79 T2)
 target_venue: MLSys
 prompt_version: migrated-v001
 created_at: '2026-05-31T11:39:13Z'
-last_updated: '2026-06-01T11:03:34Z'
+last_updated: '2026-06-01T14:09:49Z'
 closest_prior_work:
 - work: Irminsul
   id: arXiv:2605.05696
@@ -312,11 +327,9 @@ required_evidence_for_green:
 - wall-clock validation across cost surface on GPU (5-10 inj/seq cells)
 - real-trace inj/seq distribution validation (N>=100 sessions)
 - Irminsul citation+distinction; re-run 2-source check
-lifecycle_state: experiment_running
-next_action: await EXP-0045 result, then ros exp complete --exp EXP-0045 --effect
-  ...
-active_experiments:
-- EXP-0045
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0058=yellow: address required_evidence to advance'
+active_experiments: []
 blocking_on: "GREEN needs unanimity (engine green_rule). 4 GREEN/2 yellow (VERDICT-0043).\
   \ The 2 YELLOWs (eval_prosecutor + product_realist) require the TRUE async-connector\
   \ E2E on vLLM>=0.7 V1 KVConnector under CONCURRENT load \u2014 an OPERATOR ENV UPGRADE\

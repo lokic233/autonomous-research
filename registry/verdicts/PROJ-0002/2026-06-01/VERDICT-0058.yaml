@@ -1,0 +1,60 @@
+verdict_id: VERDICT-0058
+claim_id: CLAIM-0006
+project_id: PROJ-0002
+date: '2026-06-01'
+experiment_ids:
+- EXP-0045
+- EXP-0034
+- EXP-0003
+- EXP-0002
+- EXP-0005
+experiment_paths:
+- experiments/2026-06-01/EXP-0045
+- experiments/2026-05-31/EXP-0034
+- experiments/2026-05-31/EXP-0003
+- experiments/2026-05-31/EXP-0002
+- experiments/2026-05-31/EXP-0005
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- True async-WITH-working-CacheBlend-blend-in-loop E2E TTFT (not a modeled bracket)
+  under concurrent load - needs upstream lmcache CacheBlend fix (version-independent
+  get_kv unloaded-buffer bug)
+- CI/error-bars on BOTH bracket endpoints (EXP-0034 1.003-1.029x within plausible
+  run-to-run noise no n-reps/stddev
+- EXP-0045 0.35-0.77x driven by asserted 15% selective-recompute constant w/o sensitivity
+  analysis)
+- identify which 3/12 EXP-0045 cells missing + whether absence introduces selection
+  bias
+map_delta_proposals:
+- CLAIM-0006 status weakened -> CHARACTERIZED/do-not-promote
+- 'add qualifier ''connector-regime-dependent: CDC-favorable WITHOUT async overlap
+  (EXP-0034 1.003-1.029x), PIC-favorable WITH full overlap (EXP-0045 0.35-0.77x),
+  true point bracketed and unmeasured'''
+- disposition = YELLOW/regime-bounded-characterization (publishable honest finding,
+  NOT a green)
+baseline_requirements:
+- vLLM-APC, SGLang-RadixAttention, FlashInfer (positioned EXP-0003, adequate)
+- CacheBlend 2405.16444 MUST be cited as the DRIVER of the PIC-favorable bracket regime
+  (not a new finding)
+- Irminsul 2605.05696 = body-verified mechanism twin (single-primary-source -> WEAKEN
+  not KILL)
+- Don't-Break-the-Cache 2601.06007 (black-box $/TTFT, not engine-internal inj/seq
+  fraction)
+created_at: '2026-06-01T14:09:49Z'
