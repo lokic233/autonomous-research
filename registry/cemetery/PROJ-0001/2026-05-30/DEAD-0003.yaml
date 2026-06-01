@@ -9,7 +9,12 @@ killing_experiments:
 duplicate_patterns:
 - Unified VMM decision-procedure paper (when-to-use VMM CoW)
 - cow decision paper procedure to unified use vmm when
-revival_conditions: only if a real VMM-CoW win-region is found (contradicts CLAIM-0001/0003)
+revival_conditions: 'only if a real VMM-CoW win-region is found (contradicts CLAIM-0001/0003). UPDATE
+  2026-06-01 (gapmine-r3 + verify-r3, orchestrator-r3-001 applied): the AMD-side revival door is now
+  PREDICTED-NO-ANOMALY — CLAIM-0001''s 0/12 SW-win region analytically transfers to AMD MI350X (per-op
+  fork-cost axis) WITHOUT a probe, because AMD relaxes the (never-binding-in-grid) capacity ceiling AND
+  raises per-op map-count ~512x (4KB granule), both widening SW''s win. An AMD VMM-CoW win-region is
+  analytically excluded on the per-op axis; do NOT re-probe AMD to revive this (MI350X_CRASH_POSTMORTEM).'
 related_prior_work: []
 date_killed: '2026-05-31T11:39:58Z'
 source: sess 511ce2e2 (I)
