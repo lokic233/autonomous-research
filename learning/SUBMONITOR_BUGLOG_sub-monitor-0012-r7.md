@@ -123,3 +123,17 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     blockers. NO action; floor HOLD below 1 (killed claim = not open work, revival_conditions empty). Heartbeat #11,
     ros commit. Continue light poll for any dispatch.
 - 2026-06-01 ~21:4xZ — CYCLE (heartbeat #12). STEADY-STATE / MANDATE COMPLETE. CLAIM-0023 killed (DEAD-0020). No new PROJ-0012 claim/exp, no dispatch for me, no live proc. NO action; floor HOLD below 1. Heartbeat #12, ros commit.
+- 2026-06-01 ~21:4xZ — CYCLE (heartbeat #13). PGREP FALSE-POSITIVE CAUGHT (important).
+    * `pgrep -fl researcher-0023` returned LIVE — BUT inspection shows it is NOT my researcher: it is the
+      ORCHESTRATOR's CLAIM-0023 kill-ratification COMMITTEE (claude area_chair PID 1361/1457 aggregating 5 reviewer
+      reds) whose review-packet text literally contains the string "researcher-0023-L0-r7" -> matched my pgrep
+      pattern. This is orchestrator-owned; sub-monitor MUST NOT touch it. My EXP-0058 researcher is genuinely gone
+      (completed). LESSON: pgrep on a researcher id can match the orchestrator's committee packet that quotes that id;
+      always inspect the matched cmdline (here it was `claude ... -p # Area Chair / Meta-reviewer` with the packet),
+      NOT just the exit code, before any respawn decision. Correctly took NO action (no double-spawn).
+    * The committee output confirms the kill is sound: evaluation_prosecutor/novelty_killer/product_realist/
+      systems_reviewer/theory_skeptic ALL red; FIX-2 early-kill fired as pre-registered (matched-max-per-call alone
+      ~88% of above-chance AUC; B1 joint-arg dAUC -0.0045 LB95<0 folds mixed); RE-B5 not-satisfiable (single-instrument
+      honest, no green available). CLAIM-0023 status=killed -> DEAD-0020 already written.
+    * DECISION: NO action. NEVER respawn (no exited researcher w/ open work; claim killed). Floor HOLD below 1.
+      Heartbeat #13, ros commit. Mandate remains complete; await any orchestrator dispatch.
