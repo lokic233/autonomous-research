@@ -40,3 +40,16 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
   via pgrep (researcher-0024 matched) + ps (PID 84730, all flags present incl both --dangerously-* + both --add-dir +
   --model claude-opus-4-8). NOTE: sibling researcher-0025-L0-r7 (PROJ-0014, PID 79950) also running — NOT mine.
   Floor held at 1. NO queue submit yet (no committee-ready evidence). Created 5-min loop job 3b361378 (targets this session). Heartbeat #1, ros commit (boot sealed).
+- 2026-06-01 ~22:48Z — CYCLE (hb #3). researcher-0024-L0-r7 ALIVE + COMPUTING (NOT done — do NOT submit).
+  * BUG-26/29 proc check: pgrep researcher-0024 -> PID 84730 (parent claude -p) + 84834 (native child) both ALIVE;
+    ps PID 84730 %CPU 0.6 ELAPSED 05:24 STAT SN (running). NO respawn (proc alive + working).
+  * DISCIPLINE VERIFIED GOOD: impl/PRE_REGISTRATION.md (10.6KB) COMMITTED BEFORE main run (HEAD 0d14531, LOCKED-TS
+    2026-06-01T22:43:20Z). Frozen: 12-class volatile taxonomy + regexes (EXP-0053-derived), RE-A0 (realized<=0.6 of
+    canon-max), RE-A1 (top-3 unlock>=50%, Lorenz/Gini, MEASUREMENT not dAUC), RE-A2 (capacity sim), RE-A3 (session-
+    clust bootstrap incl class-selection variance + HHI; CC+Codex separate), FIX-2 UPPER-BOUND framing explicit,
+    FIX-3 collision cost, FIX-4 per-class Lorenz + marginals. All charter thresholds verbatim.
+  * EXP-0059 experiment.yaml: status=running, started_at 22:43:01Z. results/ empty (census still computing). NOT
+    completed -> NO queue submit (no committee-ready evidence yet; FORWARD-only when status=completed + analysis.md
+    + gates resolved). Floor=1 satisfied (researcher active on only open CPU lane). Inbox empty.
+  DECISION: NO action beyond heartbeat+commit. Researcher computing healthily, pre-reg discipline honored. Await
+    completion. Heartbeat #3, ros commit.
