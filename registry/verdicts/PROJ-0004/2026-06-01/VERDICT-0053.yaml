@@ -1,0 +1,54 @@
+verdict_id: VERDICT-0053
+claim_id: CLAIM-0013
+project_id: PROJ-0004
+date: '2026-06-01'
+experiment_ids:
+- EXP-0046
+experiment_paths:
+- experiments/2026-06-01/EXP-0046
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: product_realist
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- NONE
+required_evidence:
+- DEAD-0011 cemetery note MUST scope the negative to 'trigram-proxy-level falsification
+  with content-confounding proven at d=1
+- "NO positive signal motivating neural-draft L1 confirmation' \u2014 NOT a general\
+  \ falsification of boundary cliffs in neural SD drafts (the d>=2 null is instrument-predetermined:\
+  \ the 2-token proxy window mechanically erases boundary signal at d>=3"
+- theory_skeptic+eval_prosecutor unrebutted scope constraint)
+- "DEAD-0011 MUST state the C1 content-type-matched splice null is the LOAD-BEARING\
+  \ falsification (not the d>=2 vanishing which is proxy-structural) \u2014 it killed\
+  \ the distinct-from-content-type sub-claim in both corpora"
+- DEAD-0011 MUST footnote 2604.13519 as UNVERIFIED (single-source, summary-model future-date-guard
+  refusal)
+- publishability must not assume prior-art completeness
+map_delta_proposals:
+- 'CLAIM-0013 status active -> DEAD-0011 (cemetery). Scoped publishable negative:
+  tool-boundary acceptance penalty is CONTENT-CONFOUNDED at proxy level (C1 splice
+  null reproduces/exceeds the d=1 drop at non-boundary positions'
+- CC diff_content -0.015 CI[-0.055,+0.007] incl 0, Codex -0.075 CI[-0.110,-0.040]
+  neg)
+- PASS-A fails both (1/8 Holm-sig < 4/8)
+- does not survive entropy. Sharpens 2510.02128 (content/task axis drives SD acceptance
+  variance, not position) + answers-NEGATIVE a specialization of 2601.11580 (generic
+  position-dependence). NO positive signal motivating neural-draft L1 GPU spend (cheap-kill
+  gate worked as designed). PROJ-0004 has NO surviving on-node lane from this claim
+  -> evaluate for fresh claim seed or .converged+refill to hold 4/4 investing.
+baseline_requirements: []
+created_at: '2026-06-01T12:07:23Z'
