@@ -87,3 +87,11 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
     convenes the committee. FLOOR: EXP-0056 was the ONLY open CPU lane and it is now COMPLETE; researcher --next=none.
     L1+ = orchestrator-dispatched. NO new spawn (would be make-work + no open work). Sub-monitor now in MONITOR mode:
     keep researcher pool from false-respawn, await orchestrator committee verdict / any L1 dispatch.
+
+- 2026-06-01 ~19:2xZ — CYCLE (heartbeat #4). STEADY STATE / monitor mode. researcher-0021-L0-r7 liveness=running
+  (last=12.8m, within grace) but EXP-0056 already status=completed/kill — its turn finished; stale-but-in-grace
+  heartbeat from the completed run, NOT open work (--next=none). NO respawn (correct: respawning a completed
+  researcher would corrupt nothing but is pure make-work; no open CPU lane). Q-0007 still PENDING (orchestrator
+  has not yet convened the committee on CLAIM-0021 kill) — forward-only, I do NOT judge or chase. No new spawn:
+  EXP-0056 was the only open CPU lane and it's done; L1+ = orchestrator-dispatched. No blockers to escalate.
+  Heartbeat #4, ros commit.
