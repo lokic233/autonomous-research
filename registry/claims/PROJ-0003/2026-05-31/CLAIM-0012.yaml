@@ -99,6 +99,23 @@ supporting_evidence:
     self-excitation = 1 strong (Codex) + 1 fragile (CC) + 1 trivial (Gemini). Reframe
     to Codex-led caveated claim, NOT forced 3-harness GREEN.'
   data_path: experiments/2026-06-01/EXP-0043/
+- exp_id: EXP-0044
+  summary: 'VERDICT-0047''s 3 BLOCKING ablations, all resolve in H2''s favor ON CODEX
+    (CPU, stdlib, 46 mixed-label Codex sessions / 2001 calls / 106 fails). B1 Codex
+    LOSO PASS: Hawkes dBIC range [17.60,30.67] across ALL 46 single-session removals
+    (worst still ~3x the BIC>6 threshold), tool-strat permutation p=0.000 for all
+    -> NOT a single-session artifact (the test that killed CC, never run on Codex
+    before, Codex survives). B2 latent-state Cox PASS on Codex: phase-Cox steelman
+    improves over plain Cox (753.2->739.9) but Hawkes still beats best static by dBIC=+15.0
+    -> genuine per-event memory survives the time-varying-heterogeneity null (arXiv
+    2604.15084); Gemini FAIL (HMM-Cox absorbs, dBIC=-0.45); CC marginal (+8.91). B3
+    gate-stripped Hawkes: Gemini FALSIFIED (strip path/schema gates -> alpha 3.55->0.0,
+    dBIC +13.76->-9.36, mechanical not stochastic); CC SURVIVES (alpha stable 1.5->1.2-1.65,
+    gates not the driver; CC fragility is the EXP-0042 LOSO/Bonferroni aggregation
+    problem). NET: H2 GREEN-grade on Codex (1 clean harness), Gemini killed, CC caveated.
+    Narrowed claim committee-GREEN-ready. Self-caught+fixed a classifier mis-match
+    (documented). No GPU/numpy; heredoc-direct writes.'
+  data_path: experiments/2026-06-01/EXP-0044/
 negative_evidence:
 - exp_id: EXP-0042
   summary: 'L4 ROBUSTNESS (CPU/stdlib, reuses EXP-0041 burst_L3 machinery). Knocks
@@ -130,11 +147,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0044 result, then ros exp complete --exp EXP-0044 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0044; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0044
+active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-06-01T04:49:19Z'
+last_updated: '2026-06-01T05:26:19Z'

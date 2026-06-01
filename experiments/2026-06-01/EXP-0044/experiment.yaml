@@ -12,12 +12,26 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'VERDICT-0047''s 3 BLOCKING ablations, all resolve in H2''s favor
+  ON CODEX (CPU, stdlib, 46 mixed-label Codex sessions / 2001 calls / 106 fails).
+  B1 Codex LOSO PASS: Hawkes dBIC range [17.60,30.67] across ALL 46 single-session
+  removals (worst still ~3x the BIC>6 threshold), tool-strat permutation p=0.000 for
+  all -> NOT a single-session artifact (the test that killed CC, never run on Codex
+  before, Codex survives). B2 latent-state Cox PASS on Codex: phase-Cox steelman improves
+  over plain Cox (753.2->739.9) but Hawkes still beats best static by dBIC=+15.0 ->
+  genuine per-event memory survives the time-varying-heterogeneity null (arXiv 2604.15084);
+  Gemini FAIL (HMM-Cox absorbs, dBIC=-0.45); CC marginal (+8.91). B3 gate-stripped
+  Hawkes: Gemini FALSIFIED (strip path/schema gates -> alpha 3.55->0.0, dBIC +13.76->-9.36,
+  mechanical not stochastic); CC SURVIVES (alpha stable 1.5->1.2-1.65, gates not the
+  driver; CC fragility is the EXP-0042 LOSO/Bonferroni aggregation problem). NET:
+  H2 GREEN-grade on Codex (1 clean harness), Gemini killed, CC caveated. Narrowed
+  claim committee-GREEN-ready. Self-caught+fixed a classifier mis-match (documented).
+  No GPU/numpy; heredoc-direct writes.'
+result_effect: support
 artifacts_path: experiments/2026-06-01/EXP-0044/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T05:26:19Z'
 prompt_version: ''
