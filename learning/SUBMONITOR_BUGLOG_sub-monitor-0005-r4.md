@@ -30,3 +30,11 @@ Approved gating exp: EXP-0048 (L0, CPU)
 - 2026-06-01 ~11:53Z — researcher-0014-L0-r4 CONFIRMED registered + alive (liveness: running, last=1.2m).
   Pool: 1/2 lanes live (researcher-0014-L0-r4 = EXP-0048). 2nd floor slot HELD pending L0 direction clarity
   (will fill with L1 real-APC counters lane OR 2nd corpus once L0 endpoint signal is known). Sub-monitor reported boot to orchestrator.
+
+- 2026-06-01 ~11:55Z — STEADY STATE confirmed. researcher-0014-L0-r4 running (last=3.0m), actively
+  executing Step 0: already created prior_art/PROJ-0005/validated_autonomous_researcher_exps.md (web prior-art search).
+  Both agents healthy. Monitoring loop established on ~5min cadence: liveness-filter PROJ-0005 -> heartbeat self -> commit.
+  NEXT cycles: watch for researcher --next work-signal; on committee-ready (3-control PASS) OR honest clean-kill ->
+  ros queue submit --claim CLAIM-0014 --exp EXP-0048 --project PROJ-0005 --by sub-monitor-0005-r4 --researcher researcher-0014-L0-r4 --kind committee.
+  Investigate-before-respawn on death (remember: BOTH --dangerously-disable-osx-sandbox AND --dangerously-skip-permissions).
+  Self-retire+handoff at >=35% context.
