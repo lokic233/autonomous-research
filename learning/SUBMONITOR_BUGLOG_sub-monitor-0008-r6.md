@@ -88,3 +88,7 @@ before treating a "DEAD" liveness flag as real. NEVER respawn a live computing r
 - 2026-06-01 ~18:2xZ — CYCLE (heartbeat #7). No change: researcher-0018-L0-r6 🏁 completed/retired (DEAD-0016
   stands), CLAIM-0019 retired (dup), ros resume = no PROJ-0008 open work. Quiescent terminal state holds.
   Floor 0 (correct). No refill / no queue submit / no escalation. Heartbeat #7, commit.
+
+- 2026-06-01 ~18:2xZ — CYCLE (heartbeat #8). No change: researcher-0018-L0-r6 still 🏁 completed/retired
+  (DEAD-0016 stands). ros resume = no PROJ-0008 advanceable work. CLAIM-0019 retired (dup). Floor 0 (correct,
+  no make-work). No refill/queue/escalation. Quiescent. Heartbeat #8, commit.
