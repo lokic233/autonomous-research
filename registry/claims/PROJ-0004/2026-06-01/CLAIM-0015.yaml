@@ -1,0 +1,43 @@
+claim_id: CLAIM-0015
+project_id: PROJ-0004
+stage: seed
+status: seed
+claim: 'Format-transition speculation cost: the single-token (d=1) acceptance collapse
+  at the first assistant token after a tool-result injection is a CONTENT-FORMAT-TRANSITION
+  cost (prose-after-non-prose), whose size is PREDICTABLE model-free from the injected
+  payload''s FORMAT CLASS (JSON/code/stdout/table/scalar) and which ADDS predictive
+  value over a length+entropy joint baseline (paired-bootstrap dAUC CI>0); the cost
+  is >=80% concentrated at d=1 (lower 95% bound >0.80), so a 1-token speculation-suppression
+  recovers a measured fraction of per-turn wasted draft-verify FLOPs at zero accuracy
+  cost (SD exact). NOT a position-from-boundary claim (built ON the EXP-0046 content-spliced
+  null that killed DEAD-0011).'
+why_it_matters: "PROJ-0004 fresh first claim after CLAIM-0013 kill, selected by honest\
+  \ 6-member reseed committee (runtime/committee_run_proj4_reseed, ALL_COMMITTEE_DONE,\
+  \ 6/6 real votes clean of EMPTY_OUTPUT; novelty_killer GREEN confirmed empty literature\
+  \ cell \u2014 no prior work suppresses speculation model-free/pre-draft by payload-format-class\
+  \ at format transitions; 4 YELLOW on the length+entropy-proxy discriminator; 0 RED).\
+  \ Builds on the LOAD-BEARING surviving finding from EXP-0046 (replicated d=1 collapse)\
+  \ framed correctly as content-transition not position (cites 2510.02128). Cheapest-to-first-signal\
+  \ CPU L0 reusing EXP-0046 harness. Non-collision: NOT DEAD-0011 position cliff;\
+  \ NOT PROJ-0002 semantic / PROJ-0005 lexical-seam / PROJ-0003 attribution. 8 pre-registration\
+  \ fixes RE-1..RE-8 (RE-1 format-class dAUC over length+entropy JOINT baseline locked-before-L0\
+  \ = load-bearing) baked into the L0 protocol."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history:
+- verdict_id: VERDICT-0054
+  date: '2026-06-01'
+  result: yellow
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: v001
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0054=yellow: address required_evidence to advance'
+blocking_on: ''
+active_experiments:
+- EXP-0050
+created_at: '2026-06-01T12:20:25Z'
+last_updated: '2026-06-01T12:23:03Z'

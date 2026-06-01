@@ -1,0 +1,73 @@
+verdict_id: VERDICT-0054
+claim_id: CLAIM-0015
+project_id: PROJ-0004
+date: '2026-06-01'
+experiment_ids:
+- EXP-0050
+experiment_paths:
+- experiments/2026-06-01/EXP-0050
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- RE-1 [LOAD-BEARING] pre-register format-class AUC vs LENGTH+ENTROPY JOINT baseline
+  (not entropy alone) w/ paired-bootstrap dAUC 95% lower bound >0, LOCKED before L0
+  (if format adds nothing over length+entropy the novelty dies into the confidence-gated
+  family)
+- RE-2 bootstrap unit = per-tool-call-cluster or per-conversation (NOT per-token
+- report actual n per format-class per corpus)
+- "RE-3 add a matched-format prose-into-prose splice control (isolate 'format transition'\
+  \ from 'any content discontinuity' \u2014 EXP-0046 C1 didn't test same-format transitions)"
+- "RE-4 pre-register cross-corpus train/test split (train CC test Codex AND reverse\
+  \ \u2014 guard corpus-confound)"
+- RE-5 define 'X% FLOPs recovered' w/ explicit denominator (per-turn total draft-verify
+  FLOPs) + variance + formal exactness-preservation argument (SD exact iff suppression
+  only changes draft length not verifier input
+- confirm at draft_length=0 for 1 step)
+- RE-6 pre-register quantitative >=80% d=1 concentration rule (lower 95% bootstrap
+  bound >0.80, not point estimate
+- share=sum|cost_d1|/sum|cost_d1..K|)
+- RE-7 entropy-conditioning control = full head-to-head ROC/AUC at d=1 (format-class
+  vs draft entropy/confidence), report dAUC w/ CI+FDR+FNR (not partial-dependence)
+- RE-8 account for CPU regex/parsing overhead of format classification (if it costs
+  more wall-clock than 1 draft forward the model-free advantage is illusory
+- report classification latency vs single-token draft latency)
+map_delta_proposals:
+- 'PROJ-0004: seed CLAIM-0015 (Format-Transition Speculation Cost) as fresh first
+  claim status INVESTING, with RE-1..RE-8 as pre-registration gates locked into the
+  L0 protocol BEFORE execution (harden protocol not hypothesis'
+- "zero extra compute). Candidate B (Resumption Super-Predictability) COMPANION-ONLY\
+  \ \u2014 seedable as a later claim only after A clears L0 AND B replicates cross-corpus\
+  \ (Codex-only is corpus-artifact-consistent"
+- CC d=3 near-zero). Add SVIP 2411.18462 + Nightjar 2512.22420 to mandatory related-work
+- re-verify arXiv 2601.07353/2604.12247/2602.01274/2605.02888 before writeup. Non-collision
+  DEAD-0011/PROJ-0002/0005/0003 unanimously clean (decode-time draft-acceptance at
+  content-format transitions, built ON the content-spliced null).
+baseline_requirements:
+- "Draft-Entropy Thresholding (adaptive-SD family SpecDec++ 2405.19715 / SVIP 2411.18462\
+  \ / TALON 2601.07353 / SpecBound 2604.12247 gate on runtime draft confidence \u2014\
+  \ format-class must BEAT this to justify model-free pre-draft gating"
+- = RE-1/RE-7)
+- Uniform 1-token suppression format-BLIND (always skip d=1 after every tool return
+- "if format-class adds no AUC/throughput over this, contribution reduces to 'always\
+  \ suppress d=1' \u2014 simpler thinner but still publishable)"
+- Length+Entropy Joint Null (format-class may proxy payload length + token-distribution
+  complexity
+- must show dAUC(format|length+entropy)>0 CI excludes 0 else 'JSON is hard' reduces
+  to 'long rare-token-heavy payloads are hard')
+created_at: '2026-06-01T12:23:03Z'
