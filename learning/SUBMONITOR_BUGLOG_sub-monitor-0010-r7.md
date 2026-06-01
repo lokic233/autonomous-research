@@ -139,3 +139,23 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   investing) — that is the ORCHESTRATOR's action, not mine; correct in-flight state, NOT a human/parked gate.
   researcher-0021-L0-r7 liveness=stale (last=33.3m) = completed-researcher decay, NO proc, NO open work -> NOT
   BUG-26/29 false-DEAD; NO respawn. No open CPU lane; no new spawn. No blockers. Heartbeat #8, ros commit.
+
+- 2026-06-01 ~19:5xZ — CYCLE (heartbeat #9) -> SELF-RETIRE. ORCHESTRATOR FULLY CLOSED CLAIM-0021 (inbox 19:37:37Z
+  + durable registry state CONFIRMED): registry/verdicts/PROJ-0010/2026-06-01/VERDICT-0065.yaml (final_verdict:kill,
+  cites EXP-0056); registry/claims/.../CLAIM-0021.yaml status=KILLED (verdict_history VERDICT-0065);
+  registry/cemetery/.../DEAD-0017.yaml (CLAIM-0021 buried). 6/6 RATIFY KILL (theory_skeptic inverted-label green
+  resolved on substance per CLAIM-0016 precedent). Q-0007 acked, killing_verdict linked, orchestrator committed
+  HEAD 0870cc7. PROJ-0010 = CONVERGED (sole claim dead) -> orchestrator declared effective 3/4 investing + is
+  spawning a FRESH design round to refill the 4th slot (NOT my job).
+  NOTE: ros projects still lagged "4/4 investing" + no .converged marker visible at retire time — that is
+  orchestrator bookkeeping to finalize; registry verdict/cemetery/claim files are GROUND TRUTH and all confirm
+  closure. Did NOT chase the projects-list lag (not a sub-monitor action; BUG-28-adjacent).
+  RETIRE RATIONALE: PROJ-0010's only claim is KILLED; no open CPU lane (EXP-0056 done), no claim to advance,
+  L1+ = orchestrator-dispatched, refill = orchestrator design round. Continuing to heartbeat a converged project
+  = make-work. researcher-0021-L0-r7 = completed researcher (stale-by-age, no proc, no open work) — NEVER respawned
+  (correct; BUG-26/29 discipline held all session: 0 false respawns, 0 double-spawns).
+  ACTIONS AT RETIRE: filed terminal ros report --done; retiring agent record; disabling 5-min loop job 074d061b
+  (target session 4d3b89ef). FINAL ros commit. Sub-monitor-0010-r7 mission COMPLETE: spawned 1 researcher, ran
+  EXP-0056 honestly to a clean multi-gate pre-registered NEGATIVE, forwarded forward-only, committee ratified.
+  HANDOFF: nothing open on PROJ-0010. If a future cross-session KV-shareability claim arises, reuse RE-B2b
+  matched-success-divergence control + cross-session signature/error-result membership pools (researcher --next).
