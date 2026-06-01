@@ -1,0 +1,57 @@
+verdict_id: VERDICT-0057
+claim_id: CLAIM-0014
+project_id: PROJ-0005
+date: '2026-06-01'
+experiment_ids:
+- EXP-0049
+- EXP-0051
+experiment_paths:
+- experiments/2026-06-01/EXP-0049
+- experiments/2026-06-01/EXP-0051
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'EXCESS-over-baseline novelty FALSIFIED (RE-01: observed seam churn 0.0116 < generic-BPE
+  null 0.0517, delta -0.040 95%CI[-0.0414,-0.0386], negative in 6/6 cells) - unanimous'
+- 'tokenizer-general law COLLAPSED (RE-02: corpus x tokenizer confound'
+- Codex cells ~0/reversed
+- gate-b 3/6 claude_code-only post Holm+BH) - unanimous
+- L1/H100 dispatch BLOCKED (below-baseline + corpus-collapse + 95.8% template mitigation
+  = no economic case for RE-03) - unanimous, zero reviewers recommend promotion
+required_evidence:
+- 'RETAIN bounded-characterization yellow, DO-NOT-PROMOTE. RE-03 (H100 APC counters+TTFT)
+  NOT DISPATCHED (committee unanimous: would measure a known-mundane, sub-baseline,
+  template-mitigated effect). RE-04 NOT DISPATCHED. Revival would need a regime where
+  the effect exceeds the BPE null AND survives cross-corpus.'
+map_delta_proposals:
+- CLAIM-0014 RETAIN as bounded-characterization YELLOW
+- reframed title 'Delimiter-conditioned BPE boundary churn under non-templated retokenization
+  (regime-(a) only)'
+- status CHARACTERIZED/DO-NOT-PROMOTE
+- record BPE-null partial-kill (RE-01 falsifies excess-over-baseline)
+- block L1 dispatch (RE-03/RE-04)
+- tag honest-negative-result/regime-bounded/corpus-bound-claude_code/template-mitigated-95.8%
+baseline_requirements:
+- Sennrich BPE 1508.07909 (seam churn is sub-case of BPE non-composability, not anomaly
+  above it)
+- Gim PromptCache 2311.04934 (segment-boundary tokenizer-stability requirement)
+- Don't-Break-the-Cache 2601.06007 (tokenization-induced prefix-cache breakage
+- not sole kill basis)
+- SGLang RadixAttention 2312.07104 (token-ID-equality precondition)
+- production chat-template mitigation 95.8%
+created_at: '2026-06-01T13:58:49Z'
