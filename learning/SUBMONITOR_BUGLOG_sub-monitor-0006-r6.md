@@ -40,3 +40,21 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
   AI Gateway/Vertex up). Floor=work-gated: 1 spawned on the ONLY genuine open CPU lane (EXP-0052). No 2nd CPU lane
   of open work exists (L1 vLLM telemetry = H100/orchestrator-dispatched) -> correctly NOT refilling a 2nd slot.
   No committee-ready evidence yet -> no queue submit.
+
+- 2026-06-01 ~16:20Z — CYCLE#2. heartbeat #2 OK. researcher-0016-L0-r6 = 💓 RUNNING (last=0.0m, last report 16:16Z).
+  HEALTHY + ON-TASK (claude -p mid-run, NOT a stall). Verified progress (not narrative):
+  · preregistration.md LOCKED 2026-06-01T16:07:18Z BEFORE run (RE-A1..A7 exact rules, reconciled = VERDICT-0059
+    required_evidence union). Pre-reg gate satisfied. Scope-guard section 0 explicitly cites DEAD-0011 + DEAD-0012
+    (RE-A7) and forbids resurrecting the single-seq dAUC discriminator; success measured ONLY as cross-seq min-bound
+    goodput recovery. Gemini EXCLUDED (no tool_result injection structure) — CC+Codex satisfy >=2 corpora.
+  · batch_round_model.py built+smoke-tested (reuses EXP-0046 cc_streams/codex_streams + trigram predictor).
+  · results/batch_round_model.json = PRELIMINARY: RE-A1 delta1(phase MINUS static-task-grouping) ~0, p~0.45-0.53,
+    95% CI STRADDLES 0 in visible cells (B4_g4 CI[-0.0011,+0.0009]; B8_g4 CI[-0.0003,+0.0005]) -> KILL TRENDING on
+    the load-bearing gate. Structural cause (researcher-reported): ~97.5% tokens FREE_FORM (transition+resumption
+    <3% combined); between-session difficulty std 0.088-0.104 DWARFS phase deviations -> phase grouping adds nothing
+    over static difficulty grouping. Min-bound goodput ~0 at B>=4 (proxy acc ~0.28).
+  · Researcher correctly adding a CLEARLY-LABELED EXPLORATORY regime-sweep (lift alpha_base to resolvable regime,
+    preserve real difficulty spread + phase deviations + phase mix) to test KILL ROBUST vs INSTRUMENT-LIMITED before
+    completing full B_boot=2000/n_perm=1000. Honest-science move, NOT a forced positive. Good.
+  STATUS = running (NOT terminal). NO queue submit (forward only on status=completed). Floor=1 held (EXP-0052 is the
+  only open CPU lane; L1 vLLM/H100 telemetry = orchestrator-dispatched). No make-work refill. No blocker to escalate.
