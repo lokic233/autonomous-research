@@ -59,3 +59,21 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       NOT committee-ready until status=completed + analysis.md + Codex sign-agreement resolved + DISPOSITION written.
   DECISION: NO action — researcher healthy @100% CPU mid-2nd-run; NEVER double-spawn (corrupts EXP-0055). NO queue
     submit yet (RE-A3 unresolved, no DISPOSITION/analysis.md). Floor held at 1. Heartbeat #3, ros commit.
+- 2026-06-01 ~19:2xZ — CYCLE (heartbeat #4). researcher-0020-L0-r7 = TERMINAL COMPLETED.
+    * proc check: no live whale_prefill python child; claude -p (6575) @0.1% short etime = work session ENDED.
+      experiment.yaml status=completed, completed_at=2026-06-01T19:25:47Z, result_effect=kill. ros liveness still
+      shows "running" (BUG-26/29 heartbeat lag) but the EXP terminal markers + analysis.md + DISPOSITION = the
+      authoritative completion signal. Researcher self-committed fd5c1a2 (commit-and-kill, tagged DEAD-0018).
+    * ALL RE GATES RESOLVED pass-or-kill (PRE_REG locked 19:11:52Z before run). DISPOSITION=KILL-NEGATIVE (clean):
+      RE-A0 PASS both (CC 78.9%/Codex 57.1%). RE-A1 FAIL CC (Bash B0 AUC 0.751, dAUC -0.013 LB95<0; Read LB95<0;
+      pooled -0.026). RE-A3 HARD GATE FAIL = SHELL sign-flip CC(-0.013) vs Codex(+0.209). Researcher self-caught a
+      B0-weakness artifact (Codex 'cmd' serialized as LIST -> frozen template degenerate 4 buckets) + corrected
+      post-hoc (posthoc_fair_template.json: B0 0.501->0.685, Codex exec dAUC 0.209->0.083, ~60% was sub-tool
+      identity; CC unchanged; sign-flip persists) -> correction STRENGTHENS the negative. RE-A5b (permute all 6
+      struct feats within-session) -> Codex residual 0.002 = within-call but instrument-specific/non-replicating,
+      NOT a session confound. RE-A4 mass-cap lift small (CC Bash +0.020). Stat: CC Read HHI=0.46 flagged.
+    * ACTION: ros queue submit -> Q-0008 (CLAIM-0020/EXP-0055, kind=committee, by sub-monitor-0009-r7,
+      researcher-0020-L0-r7). FORWARD ONLY — sub-monitor does NOT judge; orchestrator convenes committee.
+  DECISION: Q-0008 forwarded. Researcher completed; L0 lane resolved (clean negative, no concrete L0 --next).
+    Floor: HOLD below 1 — a KILLED L0 claim is NOT open work; refilling now = make-work. L1+ = orchestrator-
+    dispatched only IF committee revives. NO HUMAN GATE. Heartbeat #4, ros commit. Await committee verdict.
