@@ -38,3 +38,27 @@ sign-agreement HARD GATE / STAT: fold-std + all-5-folds-positive + per-session H
   honest pass-or-kill, clean negative ("LRU sufficient, do not build reuse-aware eviction") first-class, NEVER fabricate,
   do NOT self-submit to committee. PROC verified ALIVE via pgrep (all flags present). Created 5-min loop job 08f3d7d4
   (targets this session). Floor held at 1. NO queue submit yet (no committee-ready evidence). Heartbeat #1, ros commit.
+- 2026-06-01 ~20:55Z — CYCLE (heartbeat #3). researcher-0022-L0-r7 COMPLETED EXP-0057 — committee-ready, FORWARDED.
+    * BUG-26/29 proc check: claude -p (76719) for researcher-0022 EXITED cleanly (pgrep count=0 for researcher-0022);
+      the remaining claude -p (86798) is researcher-0023-L0-r7 = PROJ-0012 sibling (sub-monitor-0012-r7), NOT mine.
+    * DISCIPLINE VERIFIED: PRE_REGISTRATION.md committed BEFORE main run (HEAD 05a37db, LOCKED-TS 2026-06-01T20:46:46Z,
+      arXiv 2312.07104/2309.06180/2411.19379/2507.07400/2601.21473 live-verified). reuse_distance_census.py (32KB),
+      results/summary.json (CC 69 sess/3213 units; Codex 86 sess/2042), impl/analysis.md (per-gate disposition).
+      experiment.yaml status=completed, result_effect=kill, completed_at 20:55:04Z.
+    * GATE RESULTS (researcher's numbers, NOT my judgment — I FORWARD only):
+      RE-A0 PASS (bimodal: share_FAR=0.189>=0.15, share_NEAR=0.468>=0.10; median 666tok, p99 ~86k, max ~892k).
+      RE-A1 FAIL/CLEAN-NEGATIVE (auc B0=0.664 B1=0.681 dAUC=+0.0171 LB95=-0.0027 <0.03 floor; folds
+      [-0.005,+0.020,+0.022,+0.003,+0.020] NOT all positive; std=0.011). STAT: HHI_session=0.422>0.20 FLAGGED.
+      RE-A2 FAIL: 0/10 matched-recency deciles separate (recency-in-disguise) AND does not beat Marconi forecast
+      (dAUC_fc=+0.015 LB95=-0.021). RE-A3: B1-predictor eviction UNDERPERFORMS LRU at all 7 capacities (-0.8%..-34.9%);
+      Belady oracle +0.6%..+13.3% (real-but-modest gap, not cheaply capturable); Gini recompute ~0.66. RE-A4:
+      cc_dAUC=+0.017 codex_dAUC=+0.038 sign_agree=True both_positive=True BUT moot (Codex not bimodal, RE-A0 FAIL
+      share_far=0.036; CC kills on primary regardless).
+      DISPOSITION (researcher): CLEAN-NEGATIVE-KILL (RE-A1). Characterization (bimodality + Belady oracle gap) STANDS
+      + publishable; cheap-causal-predictability FALSIFIED -> existing LRU+LFU+Marconi-forecast SUFFICIENT, do NOT
+      build a new cheap causal reuse-aware eviction feature.
+    * ACTION: ros queue submit -> Q-0009 (claim CLAIM-0022, exp EXP-0057, kind=committee, by sub-monitor-0011-r7,
+      researcher researcher-0022-L0-r7). FORWARD ONLY — did NOT judge; orchestrator convenes the committee.
+  DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0057 done). Floor=1 satisfied + now drained
+    (EXP-0057 was the only open CPU lane; L1+ = orchestrator-dispatched, not mine). Now in MONITOR-FORWARD-DONE
+    holding pattern: await orchestrator committee verdict on Q-0009; no open researcher work. Heartbeat #3, ros commit.

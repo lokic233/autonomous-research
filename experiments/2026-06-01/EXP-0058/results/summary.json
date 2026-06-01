@@ -1,0 +1,137 @@
+{
+  "exp": "EXP-0058",
+  "project": "PROJ-0012",
+  "claim": "CLAIM-0023",
+  "locked_ts": "2026-06-01T20:52:44Z",
+  "seed": 20260601,
+  "FIX1_strawman": "Codex co-issued parallel calls = genuine pre-execution batch-dispatch decision point",
+  "FIX4_cc_probe": {
+    "n_files": 253,
+    "tool_use_per_assistant_msg_dist": {
+      "1": 2585
+    },
+    "tool_result_per_user_msg_dist": {
+      "1": 2584
+    },
+    "n_msgs_multi_tool_use": 0,
+    "n_msgs_multi_tool_result": 0,
+    "emits_coissued_parallel_calls": false
+  },
+  "RE_B5_cross_instrument": {
+    "status": "NOT-SATISFIABLE-single-instrument-by-design",
+    "reason": "CC emits zero co-issued parallel tool calls in this corpus",
+    "cc_multi_tool_use_msgs": 0,
+    "cc_multi_tool_result_msgs": 0
+  },
+  "codex": {
+    "corpus": "codex",
+    "n_sessions": 86,
+    "n_runs": 1167,
+    "n_multi_batches": 704,
+    "multi_frac": 0.6032562125107113,
+    "size_dist": {
+      "1": 463,
+      "2": 167,
+      "3": 180,
+      "4": 281,
+      "5": 58,
+      "6": 14,
+      "7": 2,
+      "8": 2
+    },
+    "RE_B0": {
+      "multi_frac": 0.6032562125107113,
+      "topdecile_mass_share": 0.4807808058960323,
+      "PASS": false
+    },
+    "whale_thr_tok": 9815.75,
+    "pos_rate": 0.09943181818181818,
+    "RE_B1": {
+      "spearman_size_total": 0.2669778264695884,
+      "size_only_whale_AUC": 0.6264646237043714,
+      "PASS": false,
+      "premise_kill": true
+    },
+    "per_call_whale_pos_rate": 0.09982547993019197,
+    "RE_B2": {
+      "auc_B0": 0.8383731410545291,
+      "auc_B1": 0.8338891392519153,
+      "dAUC_point": -0.0044840018026137685,
+      "dAUC_LB95": -0.016963751644933578,
+      "dAUC_UB95": 0.006378299120234576,
+      "fold_dAUC": [
+        0.006,
+        0.0073,
+        -0.016,
+        -0.018,
+        -0.0125
+      ],
+      "fold_dAUC_std": 0.011011367150520998,
+      "all_folds_positive": false,
+      "PASS": false
+    },
+    "RE_B2b": {
+      "per_size_stratum": {
+        "2": {
+          "n": 167,
+          "auc_B1": 0.7545454545454545,
+          "auc_B0": 0.8363636363636363
+        },
+        "3": {
+          "n": 180,
+          "auc_B1": 0.6974085365853658,
+          "auc_B0": 0.6977896341463414
+        },
+        "4": {
+          "n": 281,
+          "auc_B1": 0.7943996931338704,
+          "auc_B0": 0.7967970847717684
+        },
+        ">=5": {
+          "n": 76,
+          "auc_B1": 0.9393382352941176,
+          "auc_B0": 0.9558823529411765
+        }
+      },
+      "auc_maxnull_matched_max": 0.7950878774222623,
+      "dAUC_decomp_B1_vs_maxnull": 0.038801261829653044,
+      "strata_separate_gt_0.5": true,
+      "decomposition_beats_maxnull": true
+    },
+    "RE_B4": {
+      "masscap_B0": 0.29640669891665367,
+      "masscap_B1": 0.28024388125798905,
+      "masscap_lift": -0.01616281765866462,
+      "gini_batch_total": 0.6766738118363063
+    },
+    "STAT": {
+      "hhi_whale_mass_by_session": 0.032068223604020375,
+      "effective_n_sessions": 31.183517127360638,
+      "n_whale_batches": 70,
+      "n_whale_sessions": 44,
+      "hhi_flag": false,
+      "fold_dAUC_std": 0.011011367150520998,
+      "all_folds_positive": false
+    },
+    "robustness_tight_ts": {
+      "n_tight_batches": 698,
+      "auc_B0": 0.8326766664362573,
+      "auc_B1": 0.8288057878850718,
+      "dAUC_point": -0.003870878551185508,
+      "dAUC_LB95": -0.016603614964270652,
+      "all_folds_positive": false
+    },
+    "status": "ok"
+  },
+  "DISPOSITION": {
+    "verdict": "EARLY-KILL-DEAD-0018-RESKIN",
+    "early_kill_fired": true,
+    "gate_fired": "RE-B2 (load-bearing killer) FAILS: joint-arg features add NOTHING over the count+mix+pair/triple+matched-max/sum-per-call B0 (dAUC_point=-0.0044840018026137685, dAUC_LB95=-0.016963751644933578, all_folds_positive=False, folds=[0.006, 0.0073, -0.016, -0.018, -0.0125]). FIX-2 collapse confirmed: matched-max-per-call ALONE AUC=0.7950878774222623 captures ~88% of the above-chance batch-whale signal (B0 AUC=0.8383731410545291, B1 AUC=0.8338891392519153); the joint-arg increment B1-B0=-0.0044840018026137685. The batch whale reduces to max(independent per-call whales) -> the batch axis collapses to the per-call axis already killed in DEAD-0018. (Note RE-B2b 'beats_maxnull' dAUC_decomp=0.038801261829653044 is achieved by B0's count/mix features, NOT by the claim's joint-arg features.)",
+    "reinforcing_kills": [
+      "RE-B0 magnitude floor fail (multi_frac=0.603 >=0.25; topdecile_mass=0.481<0.5) -> batched mass NOT concentrated enough for a count-vs-total gap to exploit",
+      "RE-B1 premise partial-fail: size carries signal (spearman=0.267, size_only_whale_AUC=0.626>0.6) -> budget-by-count is not useless"
+    ],
+    "result_effect": "kill"
+  },
+  "wall_s": 16.89
+}

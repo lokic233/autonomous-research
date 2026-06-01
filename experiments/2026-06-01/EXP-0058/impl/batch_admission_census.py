@@ -83,6 +83,7 @@ def parse_codex_batches(path):
                 cid = p.get("call_id")
                 if cid not in out_by_id:    # dedup by call_id (EXP-0033/0037 double-log neutralizer)
                     out_by_id[cid] = str(p.get("output", ""))
+                emit.append(("out", cid))   # mark output boundary in emission order (ends a co-issued run)
     # group into maximal consecutive function_call runs (no output between)
     batches = []; cur = []; total_calls = 0
     def flush():
@@ -434,43 +435,56 @@ def robustness_tight(all_batches, vocabs, pcall):
 # DISPOSITION (frozen decision tree)
 # ============================================================================
 def decide(R, cc_probe):
-    b0 = R.get("RE_B0", {}).get("PASS")
-    b1 = R.get("RE_B1", {})
+    """Frozen decision tree (PRE_REGISTRATION 'OVERALL DISPOSITION'): item 1 = FIX-2 EARLY-KILL (RE-B2 fail =
+    joint-arg adds nothing over matched-max/sum-per-call B0 -> batch whale = max(per-call whale) -> DEAD-0018);
+    item 2 = CLEAN-NEGATIVE-KILL (RE-B0 fail OR RE-B1 premise-kill OR RE-B2 LB95<=0); item 3 = PASS."""
     if R.get("status") == "underpowered":
-        return {"verdict": "CLEAN-NEGATIVE-KILL", "gate_fired": "underpowered: " + R.get("reason", ""),
-                "result_effect": "kill"}
-    if not b0:
-        return {"verdict": "CLEAN-NEGATIVE-KILL",
-                "gate_fired": f"RE-B0 magnitude floor fail (multi_frac={R['RE_B0']['multi_frac']:.3f}, "
-                              f"topdecile_mass={R['RE_B0']['topdecile_mass_share']:.3f})",
-                "result_effect": "kill"}
+        return {"verdict": "CLEAN-NEGATIVE-KILL", "early_kill_fired": False,
+                "gate_fired": "underpowered: " + R.get("reason", ""), "result_effect": "kill"}
+    b0 = R.get("RE_B0", {}); b1 = R.get("RE_B1", {}); b2 = R.get("RE_B2", {}); b2b = R.get("RE_B2b", {})
+    # reinforcing-kill ledger (reported regardless of which gate is the headline)
+    reinforcing = []
+    if not b0.get("PASS"):
+        reinforcing.append(f"RE-B0 magnitude floor fail (multi_frac={b0.get('multi_frac'):.3f} "
+                           f"{'>=' if b0.get('multi_frac',0)>=B0_MULTI_FRAC else '<'}{B0_MULTI_FRAC}; "
+                           f"topdecile_mass={b0.get('topdecile_mass_share'):.3f}<{B0_MASS_FLOOR}) -> batched mass NOT "
+                           f"concentrated enough for a count-vs-total gap to exploit")
     if b1.get("premise_kill"):
-        return {"verdict": "CLEAN-NEGATIVE-KILL",
-                "gate_fired": f"RE-B1 premise-kill: size predicts total (spearman={b1.get('spearman_size_total')}, "
-                              f"size_AUC={b1.get('size_only_whale_AUC')}) -> budget-by-count works",
-                "result_effect": "kill"}
-    b2 = R.get("RE_B2", {})
+        reinforcing.append(f"RE-B1 premise partial-fail: size carries signal (spearman={b1.get('spearman_size_total'):.3f}, "
+                           f"size_only_whale_AUC={b1.get('size_only_whale_AUC'):.3f}>{B1_SIZE_AUC_MAX}) -> budget-by-count "
+                           f"is not useless")
+    # ---- item 1: FIX-2 EARLY-KILL (RE-B2 the load-bearing killer fails => collapse to max-per-call) ----
+    mm_alone = b2b.get("auc_maxnull_matched_max"); aB0 = b2.get("auc_B0"); aB1 = b2.get("auc_B1")
     if not b2.get("PASS"):
-        # FIX-2 EARLY-KILL: joint-arg adds nothing beyond matched-max/sum-per-call -> DEAD-0018 re-skin
-        dd = R.get("RE_B2b", {}).get("dAUC_decomp_B1_vs_maxnull")
+        dd = b2b.get("dAUC_decomp_B1_vs_maxnull")
         return {"verdict": "EARLY-KILL-DEAD-0018-RESKIN", "early_kill_fired": True,
-                "gate_fired": f"RE-B2 fail (dAUC_point={b2.get('dAUC_point')}, LB95={b2.get('dAUC_LB95')}, "
-                              f"all_folds_pos={b2.get('all_folds_positive')}); joint-arg features add nothing over "
-                              f"matched-max/sum-per-call B0 -> batch whale = max(per-call whale) -> collapses to "
-                              f"DEAD-0018 (per-call axis already killed). dAUC_decomp_vs_maxnull={dd}.",
-                "result_effect": "kill"}
-    # RE-B2 passed -> check RE-B2b upgrade (not collapse)
-    b2b = R.get("RE_B2b", {})
+                "gate_fired": f"RE-B2 (load-bearing killer) FAILS: joint-arg features add NOTHING over the "
+                              f"count+mix+pair/triple+matched-max/sum-per-call B0 (dAUC_point={b2.get('dAUC_point')}, "
+                              f"dAUC_LB95={b2.get('dAUC_LB95')}, all_folds_positive={b2.get('all_folds_positive')}, "
+                              f"folds={b2.get('fold_dAUC')}). FIX-2 collapse confirmed: matched-max-per-call ALONE "
+                              f"AUC={mm_alone} captures ~{round(((mm_alone or .5)-.5)/((aB1 or .5)-.5)*100) if aB1 and aB1>0.5 else 'NA'}% "
+                              f"of the above-chance batch-whale signal (B0 AUC={aB0}, B1 AUC={aB1}); the joint-arg "
+                              f"increment B1-B0={b2.get('dAUC_point')}. The batch whale reduces to max(independent "
+                              f"per-call whales) -> the batch axis collapses to the per-call axis already killed in "
+                              f"DEAD-0018. (Note RE-B2b 'beats_maxnull' dAUC_decomp={dd} is achieved by B0's count/mix "
+                              f"features, NOT by the claim's joint-arg features.)",
+                "reinforcing_kills": reinforcing, "result_effect": "kill"}
+    # ---- RE-B2 passed: RE-B2b decomposition upgrade gate (also an early-kill if collapsed) ----
     collapsed = not (b2b.get("strata_separate_gt_0.5") and b2b.get("decomposition_beats_maxnull"))
     if collapsed:
         return {"verdict": "EARLY-KILL-DEAD-0018-RESKIN", "early_kill_fired": True,
-                "gate_fired": f"RE-B2 passed but RE-B2b decomposition collapses: strata_separate="
-                              f"{b2b.get('strata_separate_gt_0.5')}, beats_maxnull={b2b.get('decomposition_beats_maxnull')} "
-                              f"(dAUC_decomp={b2b.get('dAUC_decomp_B1_vs_maxnull')}) -> reduces to max(per-call whale).",
-                "result_effect": "kill"}
-    flags = []
+                "gate_fired": f"RE-B2 passed but RE-B2b decomposition collapses (strata_separate="
+                              f"{b2b.get('strata_separate_gt_0.5')}, beats_maxnull={b2b.get('decomposition_beats_maxnull')}, "
+                              f"dAUC_decomp={b2b.get('dAUC_decomp_B1_vs_maxnull')}).",
+                "reinforcing_kills": reinforcing, "result_effect": "kill"}
+    # ---- item 2: clean negative on B0/B1 even if B2 somehow passed ----
+    if not b0.get("PASS") or b1.get("premise_kill"):
+        return {"verdict": "CLEAN-NEGATIVE-KILL", "early_kill_fired": False,
+                "gate_fired": "RE-B2 passed but precondition gates fail: " + "; ".join(reinforcing),
+                "reinforcing_kills": reinforcing, "result_effect": "kill"}
+    # ---- item 3: PASS ----
+    flags = ["RE-B5 single-instrument-by-design (CC emits zero co-issued parallel calls)"]
     if R.get("STAT", {}).get("hhi_flag"): flags.append("HHI>0.20 (few sessions drive AUC)")
-    flags.append("RE-B5 single-instrument-by-design (CC emits zero co-issued parallel calls)")
     return {"verdict": "PASS-to-committee", "early_kill_fired": False,
             "gate_fired": "RE-B0 + RE-B1 + RE-B2 (dAUC_LB95>0, point>=0.03, all-folds+) + RE-B2b not-collapsed",
             "ceiling": "YELLOW/PASS-WITH-FLAG (single-instrument; never clean GREEN)",
