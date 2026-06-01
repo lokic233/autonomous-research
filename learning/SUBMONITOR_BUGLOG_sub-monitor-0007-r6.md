@@ -52,3 +52,23 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
     * results/ still empty (main not yet run) — expected.
   DECISION: NO action — on-task, gates already locked (b83fb0c), harness built. NO queue submit (RE-B1/B2/B3
   not yet resolved; no committee-ready evidence). Floor held at 1. Heartbeat #4, commit.
+
+- 2026-06-01 ~16:2xZ — CYCLE (heartbeat #5). researcher-0017-L0-r6 ALIVE (PID 74750, etime 19:01, running,
+  last=9.3m). MAIN RUN EXECUTED (logs/run_main.log) — analysis printed for all powered cells:
+    HEADLINE (powered cells, codex n=109, both tokenizers gpt2+qwen2):
+      RE-B1 PASS (shortfall SURVIVES canonicalization: 175.3 / 158.5 tok, CI_lo 90/82) — NOT a prompt-eng anti-pattern.
+      RE-B2 KILL (drift_cost NEGATIVE: -208 CI[-217,-197] / -163 CI[-170,-154]) — shortfall NOT drift-attributable
+        over the drift-free control; realized<naive is structural-template, not micro-drift. => OVERALL KILL RULE #2 fires.
+      RE-B3 codex PASS (real_auc 0.924/0.932 > sham 0.731/0.744 AND >=0.70).
+      RE-B4 STAY-DISTINCT (seam_frac=0.000, 0/108) — NOT a fold into PROJ-0005.
+    CC cells: only n=5 reconstructed into shared-skeleton group (CORPUS COLLAPSE on CC, 5/248) -> RE-B2 KILL,
+      RE-B3 fail (auc 0.4-0.5, n=5 underpowered). Gemini n=2 skipped (<3).
+  PRELIM DISPOSITION (researcher's, not mine to judge): HONEST NEGATIVE via RE-B2 — the cross-session shortfall
+    is REAL and survives canonicalization (RE-B1 pass) but is NOT attributable to volatile-field micro-drift over a
+    drift-free template control (drift_cost<=0). I.e. realized reuse IS bounded below naive shared-text, but the
+    NAMED cause (micro-drift) is FALSIFIED as the driver — it's structural template content, not drift. First-class
+    negative; do NOT force positive.
+  CAVEAT I FLAG: well-powered evidence rests on CODEX (n=109); CC corpus-collapsed to n=5 (echoes PROJ-0005 CC
+    corpus fragility). Single robust family = a committee robustness question, not a sub-monitor judgment.
+  STATUS: still RUNNING — summary.json / analysis.md / prior_art / TERMINAL report NOT yet written. NO queue submit
+    until status=completed WITH summary+analysis. NO action; floor held at 1. Heartbeat #5, commit.
