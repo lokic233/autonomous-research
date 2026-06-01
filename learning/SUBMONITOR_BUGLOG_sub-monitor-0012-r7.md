@@ -86,3 +86,10 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     Floor: HOLD below 1 — a KILLED/early-killed L0 claim is NOT open work; refilling now = make-work. L1+ =
     orchestrator-dispatched only IF committee revives. NEVER respawn the completed proc. NO HUMAN GATE. Heartbeat #4,
     ros commit. Await committee verdict.
+- 2026-06-01 ~21:0xZ — CYCLE (heartbeat #5). STEADY-STATE / AWAITING COMMITTEE (NOT a human gate).
+    * BUG-26/29 proc check: no live researcher-0023-L0-r7 / batch_admission proc (expected — EXP-0058 terminal-completed).
+    * EXP-0058 status=completed/kill (unchanged). Q-0010 still ⏳PENDING in orchestrator committee-queue (submitted
+      21:05:46Z); no VERDICT for CLAIM-0023 yet in registry/verdicts/PROJ-0012/. Awaiting committee = correct steady-state,
+      NOT a human gate. NO respawn (completed L0, no open work). NO new queue submit (already forwarded).
+  DECISION: NO action beyond heartbeat. Floor HOLD below 1 (early-killed L0 = not open work). Await committee verdict on
+    Q-0010. Heartbeat #5, ros commit.
