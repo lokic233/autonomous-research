@@ -630,3 +630,17 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - GLOBAL retire-and-respawn rule codified: at 35% / ~350k tokens, long-running/standby agents (orchestrator, monitor, sub-monitors) must retire with a graceful handoff (the r2 orchestrator DIED at ~51% with 400s — do not exceed; hand off earlier).
 - ORCHESTRATOR remains SOLE authority for claims/verdicts/committee/GPU. All safety preserved (real 6/6 green, COMMITTEE_INCOMPLETE never counts, devgpu499 host_mem_floor, never force-demote, CLAIM-0006 parked on vLLM>=0.7).
 - ADOPTION PLAN (next reboot): (1) read prompts/orchestrator/subagent/sub-monitor.md; (2) spawn 3 sub-monitors (PROJ-0001/0002/0003), each owning its researcher floor+health; (3) switch my loop from direct-researcher-management to: ros queue list -> committee -> verdict -> queue ack, + handle sub-monitor hard-blockers from ros inbox; (4) honor the 35% retire-and-handoff.
+
+### BUG-27 (monitor 6433b2c0, 2026-06-01) — unvalidated --date minted a phantom verdicts/<PROJ>/9999-01-01/ dir
+- SYMPTOM (dengcchi flagged): no new claims/cemetery under date 2026-06-01 → suspected researcher claim-path
+  misconfig. INVESTIGATION: seed path is FINE (test seed landed correctly in claims/<PROJ>/2026-06-01/). The
+  real find was a stray verdicts/PROJ-0002/9999-01-01/VERDICT-0010.yaml — a 6/6-GREEN for CLAIM-0006 written
+  by an early/test run that passed `--date 9999-01-01`. It was an ORPHAN (not in CLAIM-0006 verdict_history;
+  the claim is really weakened/4-6 parked per VERDICT-0043). The sentinel date hid it at the bottom of sorts.
+- WHY registry looked frozen on 06-01: NOT a bug — researchers since 06-01 are on hold/verify/gapmine lanes
+  that (correctly) found frontiers exhausted/human-gated, so they write prior_art notes but never `ros seed
+  new` or advance a claim. registry/ is correctly quiescent (symptom of human-gated state, not broken plumbing).
+- FIX: engine ros.py _valid_date() — rejects malformed / sentinel / out-of-window (-30d..+1d UTC) --date values,
+  warns on stderr, falls back to UTC today. Used by obj_dir() (all new objects) + cmd_verdict_write. No phantom
+  date folders can ever be minted again. Orphan VERDICT-0010 moved to registry/_quarantine/ (documented, not
+  deleted); status verdict count 47→46 (phantom no longer counted).
