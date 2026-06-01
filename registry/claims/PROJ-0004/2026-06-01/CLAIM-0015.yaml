@@ -1,7 +1,7 @@
 claim_id: CLAIM-0015
 project_id: PROJ-0004
 stage: seed
-status: seed
+status: killed
 claim: 'Format-transition speculation cost: the single-token (d=1) acceptance collapse
   at the first assistant token after a tool-result injection is a CONTENT-FORMAT-TRANSITION
   cost (prose-after-non-prose), whose size is PREDICTABLE model-free from the injected
@@ -26,7 +26,23 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0050
+  summary: 'CLAIM-0015 FALSIFIED at L0 (clean kill, both corpora). LOAD-BEARING RE-1
+    FAILS: dAUC(format-class - length+entropy JOINT) = -0.090 CC (95% CI [-0.400,+0.155])
+    and -0.322 Codex (CI [-0.450,-0.164]); 95% lower bound <=0 in both (sig. negative
+    Codex). length+entropy joint AUC 0.571/0.897 BEATS format-class AUC 0.480/0.575
+    -> ''JSON is hard'' reduces to ''long rare-token-heavy payloads are hard'' (Sennrich/BPE).
+    RE-7 FAIL (draft-entropy AUC 0.928 beats format, Codex dAUC -0.353). RE-6 FAIL
+    (d=1 cost share 0.559/0.180, LB 0.349/0.122 << 0.80). RE-4 FAIL (no cross-corpus
+    transfer; Codex->CC dAUC -0.471). RE-3 PASS CC only (gap +0.045 CI[+0.009,+0.111])
+    not Codex (real but redundant w/ length+entropy). RE-5 surviving format-BLIND
+    deliverable: unconditional d=1 suppression recovers 15.6%/18.6% wasted draft FLOPs
+    at PROVABLY zero accuracy cost (SD exact). RE-8 regex classifier 89.9us/payload
+    (~draft-fwd cost, advantage moot). Prior-art: 2601.11580 CONFIRMED but DIFFERENTIATED
+    (generic position, no format gate); SVIP/TALON/SpecBound/Nightjar/PromptCache/Don''t-Break-Cache/Sennrich
+    CONFIRMED non-colliding. No L1 GPU spend motivated. Artifact: projects/PROJ-0004/artifacts/NEGRESULT_CLAIM-0015_format_transition_L0.md'
+  data_path: experiments/2026-06-01/EXP-0050/
 verdict_history:
 - verdict_id: VERDICT-0054
   date: '2026-06-01'
@@ -34,10 +50,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: v001
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0054=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0050
+active_experiments: []
 created_at: '2026-06-01T12:20:25Z'
-last_updated: '2026-06-01T12:23:03Z'
+last_updated: '2026-06-01T13:08:14Z'
