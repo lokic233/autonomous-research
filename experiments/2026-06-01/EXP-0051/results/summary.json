@@ -1,0 +1,573 @@
+{
+  "experiment": "EXP-0051",
+  "claim": "CLAIM-0014",
+  "project": "PROJ-0005",
+  "level": 0,
+  "extends": "EXP-0049",
+  "prompt_version": "v001",
+  "n_seams": 6409,
+  "n_records": 19227,
+  "corpora": {
+    "claude_code": 4010,
+    "codex": 2399
+  },
+  "tokenizers": [
+    "gpt2",
+    "qwen2-0.5b",
+    "llama-3-128k"
+  ],
+  "block_sizes": [
+    8,
+    16,
+    32
+  ],
+  "primary_block": 16,
+  "K_null": 5,
+  "sanity": {
+    "subset_gpt2_qwen2_mean_churn16": 0.010847437507578335,
+    "exp0049_was": 0.010953484511091663
+  },
+  "RE01_null_model": {
+    "aggregate": {
+      "obs_mean": 0.011596712624859756,
+      "null_mean": 0.051661388792713044,
+      "delta_mean": -0.04006467616785351,
+      "delta_ci": [
+        -0.041444067546674394,
+        -0.038626202943863396
+      ],
+      "pass": false
+    },
+    "per_cell": {
+      "gpt2|claude_code": {
+        "n": 4010,
+        "delta": -0.03924739706551762,
+        "ci": [
+          -0.04233903978213118,
+          -0.03623968932611499
+        ],
+        "pass": false
+      },
+      "gpt2|codex": {
+        "n": 2399,
+        "delta": -0.04397375224209262,
+        "ci": [
+          -0.04803015529130235,
+          -0.039876280431511105
+        ],
+        "pass": false
+      },
+      "qwen2-0.5b|claude_code": {
+        "n": 4010,
+        "delta": -0.024774186024178323,
+        "ci": [
+          -0.027825244690621503,
+          -0.021794067561626235
+        ],
+        "pass": false
+      },
+      "qwen2-0.5b|codex": {
+        "n": 2399,
+        "delta": -0.060027780098721784,
+        "ci": [
+          -0.06395337477240923,
+          -0.05618504607079391
+        ],
+        "pass": false
+      },
+      "llama-3-128k|claude_code": {
+        "n": 4010,
+        "delta": -0.030066631194761623,
+        "ci": [
+          -0.03312183635925511,
+          -0.02700047384827976
+        ],
+        "pass": false
+      },
+      "llama-3-128k|codex": {
+        "n": 2399,
+        "delta": -0.05982914268988441,
+        "ci": [
+          -0.06381376034664693,
+          -0.05589623351458271
+        ],
+        "pass": false
+      }
+    }
+  },
+  "RE05_per_cell_gates": {
+    "gpt2|claude_code": {
+      "n": 4010,
+      "gate_a": {
+        "mean": 0.010407513344733287,
+        "ci": [
+          0.009152719677183629,
+          0.011720668187215507
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": 0.010234144010197477,
+        "ci": [
+          0.008964913599521914,
+          0.01158818017006043
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_c": {
+        "auc": 0.9806943603851445,
+        "ci": [
+          0.969141891907357,
+          0.990226018225169
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      }
+    },
+    "gpt2|codex": {
+      "n": 2399,
+      "gate_a": {
+        "mean": 0.00563363586269183,
+        "ci": [
+          0.0034494338581144246,
+          0.008092578203132054
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": 0.0015308982202942867,
+        "ci": [
+          -0.0006553614432416227,
+          0.0039290213608255764
+        ],
+        "p": 0.1884,
+        "raw_pass": false
+      },
+      "gate_c": {
+        "auc": 0.9991990296816715,
+        "ci": [
+          0.9979480164158687,
+          1.0
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      }
+    },
+    "qwen2-0.5b|claude_code": {
+      "n": 4010,
+      "gate_a": {
+        "mean": 0.020370379117351088,
+        "ci": [
+          0.01835204885441757,
+          0.022475601399416026
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": 0.006484420134193035,
+        "ci": [
+          0.004472811273107129,
+          0.008588919754282302
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_c": {
+        "auc": 0.6343270774152678,
+        "ci": [
+          0.6030517967338022,
+          0.6646416588230512
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      }
+    },
+    "qwen2-0.5b|codex": {
+      "n": 2399,
+      "gate_a": {
+        "mean": 0.0008787047789008166,
+        "ci": [
+          0.00010165865335404367,
+          0.0019542789987001745
+        ],
+        "p": 0.0008,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": -0.013098854331368929,
+        "ci": [
+          -0.013882408059096425,
+          -0.01204878949800231
+        ],
+        "p": 0.0,
+        "raw_pass": false
+      },
+      "gate_c": {
+        "auc": 0.9997611084567606,
+        "ci": [
+          0.9990605427974948,
+          1.0
+        ],
+        "p": 0.001,
+        "raw_pass": true
+      }
+    },
+    "llama-3-128k|claude_code": {
+      "n": 4010,
+      "gate_a": {
+        "mean": 0.020408351476620738,
+        "ci": [
+          0.018350598940869513,
+          0.02249314579482391
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": 0.0056164345711688934,
+        "ci": [
+          0.0035953841435880877,
+          0.007735413451250184
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      },
+      "gate_c": {
+        "auc": 0.6343313975294446,
+        "ci": [
+          0.6027161457082485,
+          0.6639863647160148
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      }
+    },
+    "llama-3-128k|codex": {
+      "n": 2399,
+      "gate_a": {
+        "mean": 0.0008712172758610732,
+        "ci": [
+          9.17719542985067e-05,
+          0.0019107393740048879
+        ],
+        "p": 0.001,
+        "raw_pass": true
+      },
+      "gate_b": {
+        "mean": -0.014202754033852377,
+        "ci": [
+          -0.014990073227072354,
+          -0.0131243746349437
+        ],
+        "p": 0.0,
+        "raw_pass": false
+      },
+      "gate_c": {
+        "auc": 0.9997611084567606,
+        "ci": [
+          0.9991041567128524,
+          1.0
+        ],
+        "p": 0.0,
+        "raw_pass": true
+      }
+    }
+  },
+  "RE05_mc_correction": {
+    "tests": {
+      "gpt2|claude_code|gate_a": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "gpt2|claude_code|gate_b": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "gpt2|claude_code|gate_c": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "gpt2|codex|gate_a": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "gpt2|codex|gate_b": {
+        "p": 0.1884,
+        "holm_reject": false,
+        "bh_reject": false,
+        "raw_pass": false,
+        "holm_pass": false,
+        "bh_pass": false
+      },
+      "gpt2|codex|gate_c": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "qwen2-0.5b|claude_code|gate_a": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "qwen2-0.5b|claude_code|gate_b": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "qwen2-0.5b|claude_code|gate_c": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "qwen2-0.5b|codex|gate_a": {
+        "p": 0.0008,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "qwen2-0.5b|codex|gate_b": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": false,
+        "holm_pass": false,
+        "bh_pass": false
+      },
+      "qwen2-0.5b|codex|gate_c": {
+        "p": 0.001,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "llama-3-128k|claude_code|gate_a": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "llama-3-128k|claude_code|gate_b": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "llama-3-128k|claude_code|gate_c": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "llama-3-128k|codex|gate_a": {
+        "p": 0.001,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      },
+      "llama-3-128k|codex|gate_b": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": false,
+        "holm_pass": false,
+        "bh_pass": false
+      },
+      "llama-3-128k|codex|gate_c": {
+        "p": 0.0,
+        "holm_reject": true,
+        "bh_reject": true,
+        "raw_pass": true,
+        "holm_pass": true,
+        "bh_pass": true
+      }
+    },
+    "gate_b_survivors": {
+      "holm": 3,
+      "bh": 3,
+      "total": 6
+    },
+    "gate_a_survivors": {
+      "holm": 6,
+      "bh": 6,
+      "total": 6
+    },
+    "gate_c_survivors": {
+      "holm": 6,
+      "bh": 6,
+      "total": 6
+    }
+  },
+  "RE06_block_sweep": {
+    "8": {
+      "aggregate": {
+        "mean": 0.010958248794837854,
+        "ci": [
+          0.010222243715921507,
+          0.011690621545598495
+        ]
+      },
+      "cells": {
+        "gpt2|claude_code": {
+          "mean": 0.009890956903964089,
+          "diff": 0.0097994843588647,
+          "n": 4010
+        },
+        "gpt2|codex": {
+          "mean": 0.0055783625684269166,
+          "diff": 0.0034297081566473904,
+          "n": 2399
+        },
+        "qwen2-0.5b|claude_code": {
+          "mean": 0.019142495511617806,
+          "diff": 0.011720001912236456,
+          "n": 4010
+        },
+        "qwen2-0.5b|codex": {
+          "mean": 0.0008603218992609359,
+          "diff": -0.006744107787901732,
+          "n": 2399
+        },
+        "llama-3-128k|claude_code": {
+          "mean": 0.019139941431260916,
+          "diff": 0.01127810889247586,
+          "n": 4010
+        },
+        "llama-3-128k|codex": {
+          "mean": 0.0008639167213522691,
+          "diff": -0.0073167919925094535,
+          "n": 2399
+        }
+      }
+    },
+    "16": {
+      "aggregate": {
+        "mean": 0.011596712624859756,
+        "ci": [
+          0.010849206504629203,
+          0.012378303386085381
+        ]
+      },
+      "cells": {
+        "gpt2|claude_code": {
+          "mean": 0.010407513344733287,
+          "diff": 0.010234144010197477,
+          "n": 4010
+        },
+        "gpt2|codex": {
+          "mean": 0.00563363586269183,
+          "diff": 0.0015308982202942867,
+          "n": 2399
+        },
+        "qwen2-0.5b|claude_code": {
+          "mean": 0.020370379117351088,
+          "diff": 0.006484420134193035,
+          "n": 4010
+        },
+        "qwen2-0.5b|codex": {
+          "mean": 0.0008787047789008166,
+          "diff": -0.013098854331368929,
+          "n": 2399
+        },
+        "llama-3-128k|claude_code": {
+          "mean": 0.020408351476620738,
+          "diff": 0.0056164345711688934,
+          "n": 4010
+        },
+        "llama-3-128k|codex": {
+          "mean": 0.0008712172758610732,
+          "diff": -0.014202754033852377,
+          "n": 2399
+        }
+      }
+    },
+    "32": {
+      "aggregate": {
+        "mean": 0.012855717333500907,
+        "ci": [
+          0.012094799763753742,
+          0.013689290587168392
+        ]
+      },
+      "cells": {
+        "gpt2|claude_code": {
+          "mean": 0.011433307436412134,
+          "diff": 0.011096079653115477,
+          "n": 4010
+        },
+        "gpt2|codex": {
+          "mean": 0.005733284940136567,
+          "diff": -0.0020856825207843607,
+          "n": 2399
+        },
+        "qwen2-0.5b|claude_code": {
+          "mean": 0.02274450416990628,
+          "diff": -0.004118352925068121,
+          "n": 4010
+        },
+        "qwen2-0.5b|codex": {
+          "mean": 0.0009074996024602546,
+          "diff": -0.025765484626524754,
+          "n": 2399
+        },
+        "llama-3-128k|claude_code": {
+          "mean": 0.02295522177374533,
+          "diff": -0.005543497809148542,
+          "n": 4010
+        },
+        "llama-3-128k|codex": {
+          "mean": 0.0008929433928621874,
+          "diff": -0.027873427811315896,
+          "n": 2399
+        }
+      }
+    }
+  },
+  "chat_template_control": {
+    "mean_raw": 0.011596712624859756,
+    "mean_with_template": 0.00048784944606348503,
+    "reduction_frac": 0.9579320914603259
+  }
+}

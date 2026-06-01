@@ -44,3 +44,42 @@ RE-01: BPE NULL MODEL (observed seam churn - random-offset null)
 ======================================================================
 RE-05: PER-CELL GATES (block=16) + MULTIPLE-COMPARISON CORRECTION
 ======================================================================
+
+  cell|gate                                        p  rawdir   holm     bh
+  gpt2|claude_code|gate_a                     0.0000    True   True   True
+  gpt2|claude_code|gate_b                     0.0000    True   True   True
+  gpt2|claude_code|gate_c                     0.0000    True   True   True
+  gpt2|codex|gate_a                           0.0000    True   True   True
+  gpt2|codex|gate_b                           0.1884   False  False  False
+  gpt2|codex|gate_c                           0.0000    True   True   True
+  qwen2-0.5b|claude_code|gate_a               0.0000    True   True   True
+  qwen2-0.5b|claude_code|gate_b               0.0000    True   True   True
+  qwen2-0.5b|claude_code|gate_c               0.0000    True   True   True
+  qwen2-0.5b|codex|gate_a                     0.0008    True   True   True
+  qwen2-0.5b|codex|gate_b                     0.0000   False  False  False
+  qwen2-0.5b|codex|gate_c                     0.0010    True   True   True
+  llama-3-128k|claude_code|gate_a             0.0000    True   True   True
+  llama-3-128k|claude_code|gate_b             0.0000    True   True   True
+  llama-3-128k|claude_code|gate_c             0.0000    True   True   True
+  llama-3-128k|codex|gate_a                   0.0010    True   True   True
+  llama-3-128k|codex|gate_b                   0.0000   False  False  False
+  llama-3-128k|codex|gate_c                   0.0000    True   True   True
+
+  gate-b cells surviving Holm: 3/6 ; BH-FDR: 3/6
+  gate-a cells surviving Holm: 6/6 ; BH: 6/6
+  gate-c cells surviving Holm: 6/6 ; BH: 6/6
+
+======================================================================
+RE-06: BLOCK-SIZE SENSITIVITY {8,16,32}
+======================================================================
+  block= 8: aggregate mean churn=0.010958 CI[0.010222,0.011691]
+  block=16: aggregate mean churn=0.011597 CI[0.010849,0.012378]
+  block=32: aggregate mean churn=0.012856 CI[0.012095,0.013689]
+
+======================================================================
+CHAT-TEMPLATE CONTROL (HEADLINE mitigation)
+======================================================================
+  mean churn raw=0.011597  with <|tool_result|> template=0.000488  reduction=95.8%
+
+  wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0051/results/summary.json
+  wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0051/results/per_cell_results.csv
