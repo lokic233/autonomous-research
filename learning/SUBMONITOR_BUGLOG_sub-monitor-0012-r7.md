@@ -146,3 +146,4 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       terminally-resolved project awaiting any orchestrator revival.
     * DECISION: NO research action (killed claim = not open work; revival_conditions empty). Floor HOLD below 1.
       Heartbeat #14, ros commit. Mandate complete; standby via cc1aa918 only.
+- 2026-06-01 ~22:0xZ — CYCLE (hb#15). STEADY-STATE / MANDATE COMPLETE. CLAIM-0023 killed (DEAD-0020 ratified). No new exp/claim, no dispatch/revival, no live proc. .converged is orchestrator/monitor backstop (MONITOR rule 4b, kill now ratified) — NOT mine. NO action; floor HOLD below 1. hb#15, ros commit.
