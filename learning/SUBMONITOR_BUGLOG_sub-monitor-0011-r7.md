@@ -134,3 +134,4 @@ sign-agreement HARD GATE / STAT: fold-std + all-5-folds-positive + per-session H
 - ARTIFACTS: experiments/2026-06-01/EXP-0057/ (PRE_REGISTRATION.md committed pre-run HEAD 05a37db LOCKED-TS 20:46:46Z;
   reuse_distance_census.py; results/summary.json; impl/analysis.md). Session=305e2962-6f06-4640-984a-53f6782e5208.
 - LOOP JOB 08f3d7d4 being disabled (converged). Clean retire, no floor breach, no fabrication.
+- 2026-06-01 ~21:40Z — POST-RETIRE CLEANUP. Redundant cycle fired from orchestrator-created loop job 5a9c4149 (a SECOND job targeting session 305e2962, separate from my own 08f3d7d4). PROJ-0011 confirmed still .converged, no open CLAIM-0022 work, nothing reopened. Disabled 5a9c4149 (canonical loop the orchestrator self-check references) in addition to already-disabled 08f3d7d4 -> both 0011 loop jobs now OFF. Bookkeeping only; no science change. sub-monitor-0011-r7 remains RETIRED. ros commit.
