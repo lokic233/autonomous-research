@@ -77,3 +77,13 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
   DECISION: Q-0008 forwarded. Researcher completed; L0 lane resolved (clean negative, no concrete L0 --next).
     Floor: HOLD below 1 — a KILLED L0 claim is NOT open work; refilling now = make-work. L1+ = orchestrator-
     dispatched only IF committee revives. NO HUMAN GATE. Heartbeat #4, ros commit. Await committee verdict.
+- 2026-06-01 ~19:3xZ — CYCLE (heartbeat #6). STEADY-STATE / AWAITING COMMITTEE (NOT a human gate).
+    * Q-0008 (CLAIM-0020/EXP-0055) = PENDING in orchestrator committee-queue (submitted 19:27:02Z). No verdict on
+      CLAIM-0020 yet (no registry/verdicts/PROJ-0009). Sibling Q-0007 (PROJ-0010) also PENDING -> orchestrator
+      processes ONE committee at a time; this is normal queue latency, NOT a blocker, NOT a human gate.
+    * researcher-0020-L0-r7: liveness shows "running last=4.6m" (BUG-26/29 heartbeat lag — agent records no
+      terminal state in liveness) but EXP-0055 status=completed + analysis.md + DISPOSITION + self-commit fd5c1a2
+      = AUTHORITATIVE completed. No live whale_prefill python child. L0 lane RESOLVED (clean kill).
+  DECISION: NO action — forward delivered, committee is orchestrator's job (sub-monitor does NOT judge/convene).
+    Floor HELD below 1 (killed L0 claim = not open work; refill = make-work; L1+ only IF committee revives, and
+    that's orchestrator-dispatched). NO HUMAN GATE. Heartbeat #6, ros commit. Continue polling for the verdict.
