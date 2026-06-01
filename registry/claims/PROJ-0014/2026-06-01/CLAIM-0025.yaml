@@ -20,13 +20,16 @@ negative_evidence:
     ARC & LRU-K capture 0/5; SGLang-LFU worse than LRU at tight caps; HHI 0.08, 0/15
     pin cells survive BH/Bonferroni; ship classical LRU.'
   data_path: experiments/2026-06-01/EXP-0060/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0070
+  date: '2026-06-01'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
 lifecycle_state: done
-next_action: killed -> cemetery; no further action
+next_action: killed by VERDICT-0070
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-01T22:36:34Z'
-last_updated: '2026-06-01T22:50:01Z'
+last_updated: '2026-06-01T23:16:10Z'

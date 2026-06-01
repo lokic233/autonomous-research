@@ -1,0 +1,60 @@
+verdict_id: VERDICT-0070
+claim_id: CLAIM-0025
+project_id: PROJ-0014
+date: '2026-06-01'
+experiment_ids:
+- EXP-0060
+experiment_paths:
+- experiments/2026-06-01/EXP-0060
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- none
+required_evidence:
+- 'LRU-K K-sweep {2,3,4} OR explicit ceiling-acknowledgement that kill is K=2-conditional
+  (non-blocking: at frac 0.1-0.3 LRU-K(2) captures 0.189/-0.044/-0.065, K-variant
+  reaching 3/5 implausible since ARC subsumes the recency-freq tradeoff and also fails
+  0/5)'
+- MUST state kill is conditional on slot-count (not mass) capacity unit (harness-verbatim
+  ceiling inherited from EXP-0057)
+- "per-cap HHI + CIs on the 0/5 killer counts (refinement, not blocker \u2014 0/15\
+  \ cells surviving BH/Bonferroni is the binding constraint)"
+map_delta_proposals:
+- 'CLAIM-0025/PROJ-0014: KILL (clean negative) -> DEAD-0025. Ship classical LRU for
+  agent file-prefix KV eviction'
+- 'do NOT deploy frequency-aware variants (SGLang-LFU WORSE than LRU at tight caps,
+  -0.747 at frac 0.1). The agent-KV Belady gap (<=11%) is ORACLE-ONLY: closed from
+  BOTH the predictor side (DEAD-0019/EXP-0057) AND the policy side (this kill). ANTI-CORRELATION
+  is the key structural finding: where the gap matters (frac 0.1-0.3, 6.4-11% of LRU)
+  every cheap policy captures <=0.31'
+- 'where cheap policies approach 0.50 (frac 0.7) the gap is 0.6% of LRU. SURVIVOR:
+  PROJ-0011 bimodality + LRU-suboptimality characterization STANDS (gap is real, just
+  oracle-only). Forward: KVFlow 2507.07400 / ScaleSim explicit step-graph future-knowledge
+  is the only live route. Revival: a corpus+policy where a cheap deployed-realistic
+  history-only policy captures >=50% of LRU-Belady gap at >=3/5 caps at matched residency,
+  HHI<0.2, survives multiplicity correction.'
+baseline_requirements:
+- "Sleator-Tarjan CACM'85 (k-competitiveness foundation \u2014 kill is a workload-specific\
+  \ instance, not a rediscovery)"
+- LRB/NSDI'20 learned-Belady (positive CDN contrast showing the gap IS closable on
+  some workloads -> agent-KV negative is workload-specific)
+- H2O 2306.14048/SnapKV (token-level intra-sequence KV eviction, cite-and-distinguish
+  to forestall 'already solved')
+- 'LIRS Jiang-Zhang SIGMETRICS''02 NOT RUN (non-blocking: ARC subsumes LIRS recency/freq
+  separation + already fails 0/5)'
+created_at: '2026-06-01T23:16:10Z'
