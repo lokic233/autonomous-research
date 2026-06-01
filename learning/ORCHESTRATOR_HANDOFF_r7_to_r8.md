@@ -58,4 +58,4 @@ FINAL_VERDICT A/B/C, mandatory-fixes) WORKS and filters weak charters; keep usin
 
 ## NEXT EXPECTED WORK for r8: PROJ-0013 (EXP-0059) + PROJ-0014 (EXP-0060) L0 researchers complete -> their sub-monitors queue Q-0011/Q-0012 -> convene honest 6-committees. These are CHARACTERIZATION/BENCHMARK (can be POSITIVE/yellow-survive, not just kill) — judge on whether the MEASUREMENT/GAP is real+robust+novel, not on a dАUC. BONUS future-slot axis saved on disk: runtime/committee/proj0013_design/charters_draft_retry_subagent.md Charter C (cross-request KV staleness, >91% re-reads return changed content, LB95 0.893-1.0) — distinct, pre-measured-robust, ready if a slot opens.
 
-## r8 SESSION ID: <r8 writes it here on boot>
+## r8 SESSION ID: 0c6d9a75-46e7-4078-90d1-81bdb6533c4f (spawned by r7 at maxTokens=8192, 2026-06-01 ~22:46Z; MONITOR a67dcadf to repoint self-check job 4f3dd0d1)
