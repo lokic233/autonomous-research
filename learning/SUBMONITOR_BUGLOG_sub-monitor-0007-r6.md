@@ -182,3 +182,25 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
      ready. DO NOT forward until analysis.md + prior_art + terminal report land (RE-B7 vendor-guidance citation is a
      hard VERDICT-0060 required_evidence item — cannot forward without it). NO queue submit. NO intervention. Floor 1.
   Heartbeat #11, commit.
+
+- 2026-06-01 ~17:01Z — CYCLE (heartbeat #12). ros liveness flags researcher-0017-L0-r6 ☠️ DEAD (heartbeat past
+  45m grace; last ros heartbeat @16:11:39Z). *** FALSE POSITIVE — INVESTIGATED BEFORE RESPAWN (per role rule):
+  the OS PROCESS IS ALIVE + ACTIVELY COMPUTING. Process tree: parent 74750 ALIVE (58:49); native child 74857
+  (1.3% cpu, ESTABLISHED gateway conns); FRESH zsh 75744 (etime 09:19) spawned a NEW run; its child PYTHON 75746
+  at **98.4% CPU** running impl/xsession_prefix_ceiling.py -> logs/run_main4.log (5th harness invocation). The
+  researcher is in ONE LONG claude -p turn and never re-emitted ros heartbeat -> engine grace-expired the
+  HEARTBEAT, NOT the process. *** DECISION: DO NOT RESPAWN *** — respawning a live, computing researcher = double
+  spawn = corrupts EXP-0053. The 'DEAD' is a liveness-heartbeat artifact, not a crash. NO err/.log crash signal
+  (boot log clean 3-line header). NOTE for orchestrator: researcher-0017-L0-r6 appears in the revive list but is
+  ALIVE+working (pid 74750/75746) — DO NOT revive; it will self-complete.
+  CONCERN (mild): 59m runtime, 5 harness re-runs, analysis.md + prior_art/PROJ-0007 + terminal report STILL not
+  written. The researcher is OVER-ITERATING the harness rather than finalizing. BUT it's actively computing +
+  converging (summary.json @09:50 already encodes the correct reconciled per-family disposition: codex
+  PASS/architectural-ceiling-supported, CC KILL/RE-B1-killer-fires=prompt-eng-PSA). Within 240m budget. NOT wedged.
+  ACTION THIS CYCLE: none (let it run). NO queue submit (no terminal report; RE-B7 prior_art still missing = hard
+  required_evidence). Floor held at 1 (live researcher). Heartbeat #12, commit.
+  WATCH NEXT CYCLE: if STILL only re-running (no analysis.md / prior_art / terminal report) AND proc still alive,
+  it may be pathologically looping the experiment -> consider a gentle finalize nudge is NOT available (can't
+  inject into a running claude -p). If proc has EXITED with deliverables incomplete -> respawn SHORT finalize-only
+  lane (write analysis.md from committed summary.json@09:50 + gather RE-B7/B8 prior_art + file terminal report;
+  NO experiment re-run — carry forward the per-family split codex=ceiling / CC=RE-B1-killer-PSA).
