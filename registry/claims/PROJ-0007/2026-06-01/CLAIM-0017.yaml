@@ -1,7 +1,7 @@
 claim_id: CLAIM-0017
 project_id: PROJ-0007
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0017
 why_it_matters: Realized Cross-Session Prefix-Reuse Ceiling from tool-schema/system-prompt
   drift. DISTINCT from DEAD-0010 idle-window speculative prefill (that = speculate-or-skip
@@ -16,7 +16,18 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0053
+  summary: 'HONEST NEGATIVE (RE-B1 KILLER fired). Realized cross-session prefix-reuse
+    IS bounded below naive shared-text by named/predictable tool-schema+system-prompt
+    drift (drift-class AUC 0.92-0.98>>sham) and DISTINCT from PROJ-0005 (RE-B4 0%
+    BPE-seam, RE-B5 struct-frac 1.0 both tokenizers -> no fold) -- but it is a RECOVERABLE
+    prompt-engineering anti-pattern (Claude Code: realized 51->576 tok ~10x via best-practice
+    canonicalizer; post-canon residual 100% genuine content), NOT a novel architectural
+    ceiling. Codex effect only 2.5% (tail, genuine config prose). standalone_architectural_ceiling_supported=False.
+    Salvage: prompt-eng PSA + drift-class predictor + L1 H100 APC TTFT (out-of-scope).
+    Pre-reg LOCKED b83fb0c before run.'
+  data_path: experiments/2026-06-01/EXP-0053/
 verdict_history:
 - verdict_id: VERDICT-0060
   date: '2026-06-01'
@@ -24,10 +35,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0060=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0053
+active_experiments: []
 created_at: '2026-06-01T15:53:22Z'
-last_updated: '2026-06-01T15:54:55Z'
+last_updated: '2026-06-01T17:16:31Z'
