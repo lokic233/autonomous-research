@@ -1,0 +1,52 @@
+verdict_id: VERDICT-0065
+claim_id: CLAIM-0021
+project_id: PROJ-0010
+date: '2026-06-01'
+experiment_ids:
+- EXP-0056
+experiment_paths:
+- experiments/2026-06-01/EXP-0056
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'RE-B2b matched-success control: error-group non-shareability statistically indistinguishable
+  from length/entropy-matched successes (Delta -0.071 CC CI[-0.178,+0.013]'
+- +0.010 Codex CI[-0.030,+0.061], both include 0) -> thesis falsified as ordinary
+  trajectory divergence
+- 'RE-B2 predictive gate: error features add no signal over joint cadence baseline
+  (dAUC +0.007 CC LB95 -0.080 folds-not-all-positive Herfindahl 0.313'
+- -0.082 Codex LB95 -0.182) fails on both corpora
+- RE-B3 cross-instrument sign disagreement on BOTH load-bearing effects (dAUC +CC/-Codex
+- Delta_b2b -CC/+Codex) -> hard-gate fail no replicable directional effect
+- RE-B1 near-zero re-convergence (2.5%/0%) is the universal base rate of agent tool
+  streams (~3-5% sig recurrence) not error-induced
+- matched-success mean 0.967 CC/0.925 Codex proves it
+required_evidence: []
+map_delta_proposals:
+- 'CLAIM-0021 YELLOW->DEAD: clean pre-registered L0 negative'
+- errors are NOT a distinct cross-session non-shareable KV-fork class
+- existing error-agnostic RadixAttention/APC designs corroborated
+- 'methodological yield: RE-B1 alone uninformative without matched-success control
+  (FIX-1). Revival gate: corpus where error subtrees are differentially LESS shareable
+  than length/entropy-matched successes AND error features beat joint cadence baseline
+  (LB95>0 all folds cross-instrument sign agreement)'
+baseline_requirements:
+- Error-agnostic prefix sharing SGLang RadixAttention 2312.07104 / vLLM APC 2309.06180
+  (null model corroborated)
+- Matched-success divergence control RE-B2b (decisive test)
+created_at: '2026-06-01T19:33:54Z'
