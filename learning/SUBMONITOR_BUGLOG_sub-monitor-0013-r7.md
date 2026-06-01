@@ -86,3 +86,4 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
   * researcher-0024 proc count=0 (exited, work complete) -> NO respawn (work COMPLETE, not open). EXP-0059 terminal
     (status=completed). Inbox empty, no report/need for me. Floor=1 drained (only open CPU lane was EXP-0059).
   DECISION: NO action beyond heartbeat+commit. Await orchestrator committee verdict on Q-0011. Heartbeat #6, ros commit.
+- 2026-06-01 ~23:03Z — CYCLE (hb #7). HOLDING unchanged: Q-0011 PENDING, no CLAIM-0024 verdict, no .converged, researcher-0024 proc count=0 (work complete, NO respawn), inbox empty. Floor=1 drained. NO action beyond heartbeat+commit. Await orchestrator committee.
