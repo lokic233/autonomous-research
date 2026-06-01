@@ -1,0 +1,62 @@
+verdict_id: VERDICT-0061
+claim_id: CLAIM-0016
+project_id: PROJ-0006
+date: '2026-06-01'
+experiment_ids:
+- EXP-0052
+experiment_paths:
+- experiments/2026-06-01/EXP-0052
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'RE-A1 (load-bearing killer, pre-registered 16:07:18Z) FAILS both corpora: delta1
+  goodput(phase-composition - static-task-difficulty grouping) = +0.00032 CC CI[-0.00062,+0.00060]
+  / +0.00081 Codex CI[-0.00173,+0.00158], 95% LB<=0 both, p=0.547/0.544 (textbook
+  null, not underpowered)'
+- RE-A2 vs sham CI incl 0
+- RE-A5 0/16 cells Holm/BH-sig
+- ~97.5% decode tokens FREE-FORM collapses phase to near-single-bucket
+- between-session difficulty std 0.104/0.088 DOMINATES within-trajectory phase deviation
+  -> static per-task difficulty is the sufficient statistic, phase is a redundant
+  covariate
+- mechanism (co-batch-by-predicted-similarity) OCCUPIED by EXSpec 2510.22876 (length
+  key) + Semi-Clairvoyant 2505.17074 (acceptance key), phase = naming delta not mechanism
+  delta
+- DEAD-0011/0012 = same phase discriminator killed twice on same proxy (RE-A7, third
+  corroboration)
+required_evidence:
+- 'REVIVAL ONLY: real neural SD draft/target pair (L1, H100 accepted-length telemetry)
+  showing phase-composition goodput over a static-task-difficulty grouping baseline
+  with 95% LB>0 AND a non-degenerate ragged tax (cross-sequence phase signal the trigram
+  proxy structurally cannot detect AND not already captured by difficulty/length grouping)'
+map_delta_proposals:
+- 'CLAIM-0016 -> cemetery DEAD-0014 (publishable negative: agent-event phase adds
+  NO goodput over static per-task difficulty grouping for batch-SD composition'
+- ~97.5% free-form tokens + between-session difficulty dominance leave no phase leverage
+- use difficulty/length grouping per EXSpec, NOT phase
+- 'dynamic phase tracking not worth its complexity). NOTE: theory_skeptic cast VOTE:green
+  but its full rationale is unambiguously PRO-KILL (''theoretically overdetermined'',''clean
+  null'',''redundant covariate'') = LABEL ERROR per decision-mapping (green=claim-supported)'
+- substantive committee position is UNANIMOUS kill (recorded verbatim, area_chair
+  weighted substance)
+baseline_requirements:
+- EXSpec/Batch-SD-Done-Right 2510.22876 (length grouping - any revival must beat this
+  not just static difficulty)
+- Semi-Clairvoyant 2505.17074 (acceptance-aware ordering)
+- TETRIS 2502.15197 (token selection, non-collide)
+created_at: '2026-06-01T16:49:16Z'

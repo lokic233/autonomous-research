@@ -15,228 +15,246 @@
     "claude_code"
   ],
   "family_sizes": {
-    "codex": 109,
-    "claude_code": 38,
+    "codex": 110,
+    "claude_code": 39,
     "gemini": 2
   },
   "cells": {
     "codex|gpt2": {
       "family": "codex",
       "tokenizer": "gpt2",
-      "n_sessions": 109,
-      "n_compared": 108,
+      "n_sessions": 110,
+      "n_compared": 109,
       "ref_file": "rollout-2026-05-29T21-15-48-019e7718-6814-72a1-8413-5e89c9c20df7.jsonl",
       "block": 16,
       "naive": {
-        "mean": 6776.212962962963,
+        "mean": 6776.357798165138,
         "ci": [
-          6758.287037037037,
-          6789.277777777777
+          6758.779816513761,
+          6789.293577981652
         ]
       },
       "realized_raw": {
-        "mean": 6606.962962962963,
+        "mean": 6608.440366972477,
         "ci": [
-          6505.62962962963,
-          6694.814814814815
+          6506.275229357798,
+          6695.926605504587
         ]
       },
       "realized_canon": {
-        "mean": 6645.777777777777,
+        "mean": 6647.339449541284,
         "ci": [
-          6536.592592592592,
-          6740.888888888889
+          6540.770642201835,
+          6739.522935779816
         ]
       },
       "realized_df": {
-        "mean": 6398.962962962963,
+        "mean": 6400.293577981652,
         "ci": [
-          6306.814814814815,
-          6480.740740740741
+          6308.844036697248,
+          6479.706422018348
         ]
       },
       "shortfall_raw": {
-        "mean": 169.25,
+        "mean": 167.91743119266056,
         "ci": [
-          87.5925925925926,
-          265.3240740740741
+          86.43119266055047,
+          262.72477064220186
         ]
       },
       "shortfall_canon": {
-        "mean": 172.41666666666666,
+        "mean": 171.0,
         "ci": [
-          87.08333333333333,
-          273.212962962963
+          86.29357798165138,
+          270.73394495412845
         ]
       },
       "drift_cost": {
-        "mean": 38.81481481481482,
+        "mean": 38.89908256880734,
         "ci": [
-          32.592592592592595,
-          44.148148148148145
+          32.58715596330275,
+          44.330275229357795
         ]
       },
       "RE_B1": {
-        "shortfall_after_mean": 172.41666666666666,
+        "shortfall_after_mean": 171.0,
         "ci": [
-          87.08333333333333,
-          273.212962962963
+          86.29357798165138,
+          270.73394495412845
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B2": {
-        "drift_cost_mean": 38.81481481481482,
+        "drift_cost_mean": 38.89908256880734,
         "ci": [
-          32.592592592592595,
-          44.148148148148145
+          32.58715596330275,
+          44.330275229357795
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B3": {
-        "real_auc": 0.9243262633093141,
+        "real_auc": 0.9248259454546139,
         "real_ci": [
-          0.8928624423821191,
-          0.9529378795042313
+          0.8934518093324685,
+          0.953053287175011
         ],
-        "sham_auc": 0.7314215951221601,
+        "sham_auc": 0.7314204171519003,
         "sham_ci": [
-          0.715057170929743,
-          0.7477469496618433
+          0.7152807009959293,
+          0.7476330161379184
         ],
-        "n_pos": 108,
-        "n_blocks": 45951,
+        "n_pos": 109,
+        "n_blocks": 46376,
         "PASS": true
       },
       "RE_B4": {
-        "n_firstdiv": 108,
+        "n_firstdiv": 109,
         "bpe_seam": 0,
-        "structural": 108,
+        "structural": 109,
         "seam_fraction": 0.0,
         "X_threshold": 0.5,
         "FOLD": false,
         "STAY_DISTINCT": true
+      },
+      "RE_B1_intent": {
+        "postcanon_first_div_at_drift": 99,
+        "postcanon_first_div_at_toollist_membership": 0,
+        "postcanon_first_div_at_genuine_content": 10,
+        "n": 109,
+        "drift_residual_fraction": 0.908256880733945,
+        "recoverable_drift_fraction_of_shortfall": 0.23165601267551766,
+        "architectural_ceiling_supported": true
       }
     },
     "codex|qwen2-0.5b": {
       "family": "codex",
       "tokenizer": "qwen2-0.5b",
-      "n_sessions": 109,
-      "n_compared": 108,
+      "n_sessions": 110,
+      "n_compared": 109,
       "ref_file": "rollout-2026-05-29T02-16-36-019e7305-6e1c-7243-8f7d-ac60fb7460f0.jsonl",
       "block": 16,
       "naive": {
-        "mean": 6270.777777777777,
+        "mean": 6270.908256880734,
         "ci": [
-          6255.75,
-          6281.814814814815
+          6255.798165137615,
+          6281.788990825688
         ]
       },
       "realized_raw": {
-        "mean": 6113.777777777777,
+        "mean": 6115.082568807339,
         "ci": [
-          6022.518518518518,
-          6191.7037037037035
+          6023.339449541284,
+          6193.614678899083
         ]
       },
       "realized_canon": {
-        "mean": 6139.259259259259,
+        "mean": 6140.623853211009,
         "ci": [
-          6043.555555555556,
-          6222.518518518518
+          6047.412844036698,
+          6222.678899082569
         ]
       },
       "realized_df": {
-        "mean": 5936.0,
+        "mean": 5937.174311926606,
         "ci": [
-          5853.481481481482,
-          6005.62962962963
+          5856.293577981652,
+          6007.779816513761
         ]
       },
       "shortfall_raw": {
-        "mean": 157.0,
+        "mean": 155.8256880733945,
         "ci": [
-          84.32407407407408,
-          238.6851851851852
+          83.61467889908256,
+          237.1834862385321
         ]
       },
       "shortfall_canon": {
-        "mean": 155.5462962962963,
+        "mean": 154.3119266055046,
         "ci": [
-          79.24074074074075,
-          242.66666666666666
+          78.55045871559633,
+          241.57798165137615
         ]
       },
       "drift_cost": {
-        "mean": 25.48148148148148,
+        "mean": 25.541284403669724,
         "ci": [
-          20.444444444444443,
-          29.62962962962963
+          20.55045871559633,
+          29.65137614678899
         ]
       },
       "RE_B1": {
-        "shortfall_after_mean": 155.5462962962963,
+        "shortfall_after_mean": 154.3119266055046,
         "ci": [
-          79.24074074074075,
-          242.66666666666666
+          78.55045871559633,
+          241.57798165137615
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B2": {
-        "drift_cost_mean": 25.48148148148148,
+        "drift_cost_mean": 25.541284403669724,
         "ci": [
-          20.444444444444443,
-          29.62962962962963
+          20.55045871559633,
+          29.65137614678899
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B3": {
-        "real_auc": 0.9317962823187372,
+        "real_auc": 0.9322115520685299,
         "real_ci": [
-          0.9035403499669843,
-          0.9562904445062141
+          0.9045040274963262,
+          0.9564418066686917
         ],
-        "sham_auc": 0.7440760265643509,
+        "sham_auc": 0.7440848758933526,
         "sham_ci": [
-          0.7263137586606637,
-          0.7613637582353598
+          0.7262713201763678,
+          0.7611165099699545
         ],
-        "n_pos": 108,
-        "n_blocks": 42504,
+        "n_pos": 109,
+        "n_blocks": 42897,
         "PASS": true
       },
       "RE_B4": {
-        "n_firstdiv": 108,
+        "n_firstdiv": 109,
         "bpe_seam": 0,
-        "structural": 108,
+        "structural": 109,
         "seam_fraction": 0.0,
         "X_threshold": 0.5,
         "FOLD": false,
         "STAY_DISTINCT": true
+      },
+      "RE_B1_intent": {
+        "postcanon_first_div_at_drift": 99,
+        "postcanon_first_div_at_toollist_membership": 0,
+        "postcanon_first_div_at_genuine_content": 10,
+        "n": 109,
+        "drift_residual_fraction": 0.908256880733945,
+        "recoverable_drift_fraction_of_shortfall": 0.16390933176332056,
+        "architectural_ceiling_supported": true
       }
     },
     "claude_code|gpt2": {
       "family": "claude_code",
       "tokenizer": "gpt2",
-      "n_sessions": 38,
-      "n_compared": 37,
+      "n_sessions": 39,
+      "n_compared": 38,
       "ref_file": "49745efd-1350-4af5-8384-3d64743768eb.jsonl",
       "block": 16,
       "naive": {
-        "mean": 1092.7297297297298,
+        "mean": 1094.6315789473683,
         "ci": [
-          1039.5135135135135,
-          1143.0
+          1042.8947368421052,
+          1143.8947368421052
         ]
       },
       "realized_raw": {
-        "mean": 51.891891891891895,
+        "mean": 51.36842105263158,
         "ci": [
-          46.7027027027027,
-          57.08108108108108
+          46.31578947368421,
+          56.421052631578945
         ]
       },
       "realized_canon": {
@@ -254,210 +272,228 @@
         ]
       },
       "shortfall_raw": {
-        "mean": 1040.837837837838,
+        "mean": 1043.2631578947369,
         "ci": [
-          983.8378378378378,
-          1094.0
+          987.3947368421053,
+          1095.421052631579
         ]
       },
       "shortfall_canon": {
-        "mean": 543.1621621621622,
+        "mean": 545.1842105263158,
         "ci": [
-          489.35135135135135,
-          593.5135135135135
+          492.9736842105263,
+          592.921052631579
         ]
       },
       "drift_cost": {
-        "mean": 524.1081081081081,
+        "mean": 524.6315789473684,
         "ci": [
-          518.918918918919,
-          529.2972972972973
+          519.578947368421,
+          529.6842105263158
         ]
       },
       "RE_B1": {
-        "shortfall_after_mean": 543.1621621621622,
+        "shortfall_after_mean": 545.1842105263158,
         "ci": [
-          489.35135135135135,
-          593.5135135135135
+          492.9736842105263,
+          592.921052631579
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B2": {
-        "drift_cost_mean": 524.1081081081081,
+        "drift_cost_mean": 524.6315789473684,
         "ci": [
-          518.918918918919,
-          529.2972972972973
+          519.578947368421,
+          529.6842105263158
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B3": {
-        "real_auc": 0.9832695021165088,
+        "real_auc": 0.9835680751173709,
         "real_ci": [
-          0.9796209832463609,
-          0.986921703415656
+          0.9798827594531793,
+          0.9870772238514174
         ],
-        "sham_auc": 0.9758113283612175,
+        "sham_auc": 0.9761345852895149,
         "sham_ci": [
-          0.9711660966941594,
-          0.9800361206202175
+          0.9716250720698459,
+          0.9803420526942637
         ],
-        "n_pos": 37,
-        "n_blocks": 4998,
+        "n_pos": 38,
+        "n_blocks": 5150,
         "PASS": true
       },
       "RE_B4": {
-        "n_firstdiv": 37,
+        "n_firstdiv": 38,
         "bpe_seam": 0,
-        "structural": 37,
+        "structural": 38,
         "seam_fraction": 0.0,
         "X_threshold": 0.5,
         "FOLD": false,
         "STAY_DISTINCT": true
+      },
+      "RE_B1_intent": {
+        "postcanon_first_div_at_drift": 0,
+        "postcanon_first_div_at_toollist_membership": 0,
+        "postcanon_first_div_at_genuine_content": 38,
+        "n": 38,
+        "drift_residual_fraction": 0.0,
+        "recoverable_drift_fraction_of_shortfall": 0.5028755927757038,
+        "architectural_ceiling_supported": false
       }
     },
     "claude_code|qwen2-0.5b": {
       "family": "claude_code",
       "tokenizer": "qwen2-0.5b",
-      "n_sessions": 38,
-      "n_compared": 37,
+      "n_sessions": 39,
+      "n_compared": 38,
       "ref_file": "319ce978-0bea-424a-a028-b638f3a5c9c3.jsonl",
       "block": 16,
       "naive": {
-        "mean": 1112.3243243243244,
+        "mean": 1112.2894736842106,
         "ci": [
-          1044.3783783783783,
-          1179.8108108108108
+          1046.7631578947369,
+          1178.2368421052631
         ]
       },
       "realized_raw": {
-        "mean": 51.891891891891895,
+        "mean": 51.36842105263158,
         "ci": [
-          46.7027027027027,
-          57.08108108108108
+          46.31578947368421,
+          56.421052631578945
         ]
       },
       "realized_canon": {
-        "mean": 603.2432432432432,
+        "mean": 600.8421052631579,
         "ci": [
-          516.7567567567568,
-          717.4054054054054
+          516.6315789473684,
+          712.0
         ]
       },
       "realized_df": {
-        "mean": 600.6486486486486,
+        "mean": 598.3157894736842,
         "ci": [
-          516.7567567567568,
-          687.1351351351351
+          516.6315789473684,
+          706.5263157894736
         ]
       },
       "shortfall_raw": {
-        "mean": 1060.4324324324325,
+        "mean": 1060.921052631579,
         "ci": [
-          991.6216216216217,
-          1131.0
+          991.6842105263158,
+          1127.2631578947369
         ]
       },
       "shortfall_canon": {
-        "mean": 523.081081081081,
+        "mean": 525.4473684210526,
         "ci": [
-          450.18918918918916,
-          589.972972972973
+          454.6842105263158,
+          589.3947368421053
         ]
       },
       "drift_cost": {
-        "mean": 551.3513513513514,
+        "mean": 549.4736842105264,
         "ci": [
-          466.5945945945946,
-          662.4864864864865
+          466.5263157894737,
+          658.5263157894736
         ]
       },
       "RE_B1": {
-        "shortfall_after_mean": 523.081081081081,
+        "shortfall_after_mean": 525.4473684210526,
         "ci": [
-          450.18918918918916,
-          589.972972972973
+          454.6842105263158,
+          589.3947368421053
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B2": {
-        "drift_cost_mean": 551.3513513513514,
+        "drift_cost_mean": 549.4736842105264,
         "ci": [
-          466.5945945945946,
-          662.4864864864865
+          466.5263157894737,
+          658.5263157894736
         ],
         "PASS": true,
         "KILL": false
       },
       "RE_B3": {
-        "real_auc": 0.9824115278660733,
+        "real_auc": 0.9827338129496402,
         "real_ci": [
-          0.9784434203789043,
-          0.9859543563295712
+          0.9788132251393319,
+          0.986176745884985
         ],
-        "sham_auc": 0.9745708836617928,
+        "sham_auc": 0.9749229188078109,
         "sham_ci": [
-          0.9699534490055015,
-          0.9790101079593565
+          0.9703314777327935,
+          0.9793926412056027
         ],
-        "n_pos": 37,
-        "n_blocks": 4756,
+        "n_pos": 38,
+        "n_blocks": 4903,
         "PASS": true
       },
       "RE_B4": {
-        "n_firstdiv": 37,
+        "n_firstdiv": 38,
         "bpe_seam": 0,
-        "structural": 37,
+        "structural": 38,
         "seam_fraction": 0.0,
         "X_threshold": 0.5,
         "FOLD": false,
         "STAY_DISTINCT": true
+      },
+      "RE_B1_intent": {
+        "postcanon_first_div_at_drift": 3,
+        "postcanon_first_div_at_toollist_membership": 0,
+        "postcanon_first_div_at_genuine_content": 35,
+        "n": 38,
+        "drift_residual_fraction": 0.07894736842105263,
+        "recoverable_drift_fraction_of_shortfall": 0.5179213692174129,
+        "architectural_ceiling_supported": false
       }
     }
   },
   "block_sweep": {
     "8": {
       "codex": {
-        "realized_raw": 6614.37037037037,
-        "shortfall_raw": 161.84259259259258,
-        "shortfall_canon": 164.63888888888889,
-        "drift_cost": 39.18518518518518
+        "realized_raw": 6615.853211009175,
+        "shortfall_raw": 160.5045871559633,
+        "shortfall_canon": 163.22018348623854,
+        "drift_cost": 39.26605504587156
       },
       "claude_code": {
-        "realized_raw": 54.91891891891892,
-        "shortfall_raw": 1037.8108108108108,
-        "shortfall_canon": 536.027027027027,
-        "drift_cost": 528.2162162162163
+        "realized_raw": 54.526315789473685,
+        "shortfall_raw": 1040.1052631578948,
+        "shortfall_canon": 538.0263157894736,
+        "drift_cost": 528.6315789473684
       }
     },
     "16": {
       "codex": {
-        "realized_raw": 6606.962962962963,
-        "shortfall_raw": 169.25,
-        "shortfall_canon": 172.41666666666666,
-        "drift_cost": 38.81481481481482
+        "realized_raw": 6608.440366972477,
+        "shortfall_raw": 167.91743119266056,
+        "shortfall_canon": 171.0,
+        "drift_cost": 38.89908256880734
       },
       "claude_code": {
-        "realized_raw": 51.891891891891895,
-        "shortfall_raw": 1040.837837837838,
-        "shortfall_canon": 543.1621621621622,
-        "drift_cost": 524.1081081081081
+        "realized_raw": 51.36842105263158,
+        "shortfall_raw": 1043.2631578947369,
+        "shortfall_canon": 545.1842105263158,
+        "drift_cost": 524.6315789473684
       }
     },
     "32": {
       "codex": {
-        "realized_raw": 6592.2962962962965,
-        "shortfall_raw": 183.91666666666666,
-        "shortfall_canon": 173.75,
-        "drift_cost": 52.148148148148145
+        "realized_raw": 6593.761467889908,
+        "shortfall_raw": 182.59633027522935,
+        "shortfall_canon": 172.32110091743118,
+        "drift_cost": 52.25688073394495
       },
       "claude_code": {
-        "realized_raw": 51.891891891891895,
-        "shortfall_raw": 1040.837837837838,
-        "shortfall_canon": 543.1621621621622,
-        "drift_cost": 524.1081081081081
+        "realized_raw": 51.36842105263158,
+        "shortfall_raw": 1043.2631578947369,
+        "shortfall_canon": 545.1842105263158,
+        "drift_cost": 524.6315789473684
       }
     }
   },
@@ -491,16 +527,20 @@
     "codex": {
       "kill_reasons": [],
       "verdict": "PASS",
-      "RE_B1_PASS": true,
-      "RE_B2_PASS": true,
+      "RE_B1_literal_frozen_metric_PASS": true,
+      "RE_B1_honest_architectural_supported": true,
+      "RE_B2_effect_real": true,
       "RE_B3_PASS": true,
       "RE_B4_FOLD": false
     },
     "claude_code": {
-      "kill_reasons": [],
-      "verdict": "PASS",
-      "RE_B1_PASS": true,
-      "RE_B2_PASS": true,
+      "kill_reasons": [
+        "RE-B1 KILLER: drift-attributable shortfall is recoverable by best-practice canonicalization (recovered_frac=0.50); post-canon residual is genuine content/tool-set membership (drift_residual_frac=0.00) -> prompt-engineering anti-pattern, NOT an architectural ceiling"
+      ],
+      "verdict": "KILL/NEGATIVE",
+      "RE_B1_literal_frozen_metric_PASS": true,
+      "RE_B1_honest_architectural_supported": false,
+      "RE_B2_effect_real": true,
       "RE_B3_PASS": true,
       "RE_B4_FOLD": false
     }

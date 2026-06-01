@@ -48,3 +48,9 @@ Token indices sequence length is longer than the specified maximum sequence leng
     RE-B4 seam_frac=0.000 (0/38) STAY-DISTINCT
     RE-B1[intent] post-canon first-div: drift=3 toollist=0 content=35 | drift_residual_frac=0.079 recoverable_frac=0.518 | architectural_ceiling_supported=False
   [skip gemini: <3 sessions]
+
+WROTE summary.json
+
+OVERALL per-family (gpt2):
+  codex: PASS  all kill-gates clear
+  claude_code: KILL/NEGATIVE  RE-B1 KILLER: drift-attributable shortfall is recoverable by best-practice canonicalization (recovered_frac=0.50); post-canon residual is genuine content/tool-set membership (drift_residual_frac=0.00) -> prompt-engineering anti-pattern, NOT an architectural ceiling
