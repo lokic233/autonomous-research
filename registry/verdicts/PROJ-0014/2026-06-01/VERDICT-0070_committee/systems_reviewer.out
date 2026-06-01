@@ -1,0 +1,11 @@
+```text
+ROLE: systems_reviewer  VOTE: red
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM APC", url: "https://docs.vllm.ai/en/stable/design/prefix_caching/", overlap: "shipping prefix-cache LRU eviction baseline"},
+  {system: "SGLang RadixCache", url: "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/evict_policy.py", overlap: "shipping LRU/LFU/SLRU-style eviction strategies"},
+  {system: "TensorRT-LLM", url: "https://developer.nvidia.com/blog/introducing-new-kv-cache-reuse-optimizations-in-nvidia-tensorrt-llm/", overlap: "default LRU plus priority/token-range retention, closest to static pinning"}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds for the supplied trace-scale policy question: CC primary has 72 sessions / 3290 reuse units, far_share=0.188, HHI≈0.08, and Codex cross-instrument is reported rather than hidden. Gaps: L0 CPU slot-count simulation, not production GPU serving with concurrency/routing; local _shared/TOOLING_v001.md was not present in checkout.
+RATIONALE: v001. Premise is reproduced: CC far_share=0.188 and Belady saves max 11.0% over LRU. Killer baselines were run and fail: ARC 0/5 and LRU-K(2) 0/5 capacities reach >=0.50 captured, while SGLang LFU/SLRU also fail and LFU is worse than LRU at tight caps. FIX-5 is honored because pinned blocks are charged against C; the only >=0.50 pin cells occur at frac 0.7 where the whole Belady gap is only 0.6% of LRU, and 0/15 static-pin cells survive BH or Bonferroni. Since vLLM/SGLang/TensorRT-LLM already ship the relevant eviction mechanisms, the contribution is not a new mechanism; it is an actionable negative systems insight supporting ship-LRU guidance for this workload.
+```

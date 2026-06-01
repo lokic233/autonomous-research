@@ -1,0 +1,7 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [{"name": "ARC", "why": "Parameter-free adaptive classical bounds", "repo_or_cite": "Megiddo-Modha FAST'03"}, {"name": "LRU-K", "why": "Frequency-aware recency", "repo_or_cite": "O'Neil SIGMOD'93"}, {"name": "LIRS", "why": "Specialized for bimodal/loop access patterns", "repo_or_cite": "Jiang-Zhang SIGMETRICS'02"}]
+STRAWMAN_RISKS: ["Comparing solely to static-pinning or naive LFU without adaptive bounds like ARC", "Allowing capacity inflation via uncharged pinned blocks"]   MISSING_METRICS: ["Eviction computation overhead (moot given hit-rate failure)"]
+KILLER_EXPERIMENT: Implement an explicit step-graph lookahead policy (e.g., KVFlow 2507.07400) to conclusively prove the 11% Belady gap is strictly accessible only via future-knowledge.
+RATIONALE: The evaluation avoids strawman comparisons by genuinely integrating and testing the strongest classical killer baselines (ARC, LRU-K) against production variants (SGLang). ARC and LRU-K cleanly fail (0/5 capacities >= 0.50 captured). FIX-5 matched residency correctly isolates policy advantage from capacity inflation. The negative result is statistically robust (HHI=0.08, BH/Bonferroni cleared), confirming history-only policies cannot capture the Belady gap. I ratify RED (kill) for this clean, actionable negative: ship plain LRU.
+```

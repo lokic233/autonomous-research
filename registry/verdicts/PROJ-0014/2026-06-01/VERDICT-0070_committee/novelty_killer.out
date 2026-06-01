@@ -1,0 +1,32 @@
+I was unable to run live web search this session (both `three_pai_external_web_search` and `WebSearch` permissions were denied). Per anti-coping I will not fabricate a verified collision — I am grounding this in named, retrievable prior work from my own knowledge and assessing the novelty structure of the packet honestly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Sleator & Tarjan, 'Amortized Efficiency of List Update and Paging Rules,' CACM 1985",
+   url: "https://dl.acm.org/doi/10.1145/2786.2793",
+   why_close: "Establishes LRU is k-competitive vs OPT/Belady — the FOUNDATIONAL reason no cheap online history-only policy can match Belady. The packet's negative is, at the worst-case level, an instance of a textbook result; the contribution is the WORKLOAD-SPECIFIC magnitude + anti-correlation, not the bare 'online<OPT' fact. This must be cited or the finding reads as rediscovery."},
+  {cite: "Song et al., 'Learning Relaxed Belady for CDN Caching' (LRB), NSDI 2020",
+   url: "https://www.usenix.org/conference/nsdi20/presentation/song",
+   why_close: "Directly relevant CONTRAST: a learned policy DOES capture most of the LRU->Belady gap on CDN traces. The packet cites CDN-Belady (2212.13671) but must frame LRB explicitly — it shows the gap is closable on SOME workloads, sharpening that the agent-KV negative is workload-specific, not universal."},
+  {cite: "SGLang RadixAttention 2312.07104 / vLLM APC 2309.06180",
+   url: "https://arxiv.org/abs/2312.07104",
+   why_close: "The deployed LRU incumbents being benchmarked — correctly identified."},
+  {cite: "Zhang et al., H2O (2306.14048); Li et al., SnapKV",
+   url: "https://arxiv.org/abs/2306.14048",
+   why_close: "Token-level intra-sequence KV eviction. Different LAYER from cross-request prefix-block eviction, but a reviewer will reflexively say 'KV eviction is solved' — must be cited and explicitly distinguished, not only buried in the cemetery note."}
+]
+
+NAMING_VS_MECHANISM: No mechanism novelty is claimed and none is needed — every policy (ARC/Megiddo-Modha FAST'03, LRU-K/O'Neil SIGMOD'93, SGLang-LFU/SLRU, static-pin) is explicitly prior art and run verbatim. This is the HONEST case: the deliverable is an empirical benchmark + negative, not a renamed algorithm. There is no naming-novelty fraud to kill. The only "new" object is the agent file-prefix KV trace + the captured-fraction characterization, which is a legitimate benchmark contribution.
+
+FATAL_COLLISIONS: none verified. I could not complete the mandated >=2-source live search this session (web permissions denied), so per the KILL-collision rule I CANNOT assert RED. From knowledge I am not aware of a published benchmark running classical policies vs Belady on agent file-prefix KV traces specifically; closest neighbors (LRB=CDN+learned+positive; H2O=token-level) are distinct in workload or layer.
+
+MANDATORY_RELATED_WORK: [
+  "Sleator & Tarjan 1985 + Belady 1966 + Fiat et al. MARKER 1991 — competitive-analysis foundations that explain WHY the gap is oracle-only and prevent the negative from reading as rediscovery of textbook online-vs-OPT.",
+  "LRB / NSDI'20 — the learned-Belady positive contrast that makes the agent-KV negative non-trivial.",
+  "H2O 2306.14048 / SnapKV — token-level KV eviction, cited-and-distinguished to forestall 'already solved'."
+]
+
+RATIONALE: The mechanisms are honestly prior art (no novelty to kill), and I found no verifiable >=2-source collision, so this is not RED. It is not GREEN because (a) the bare result — no cheap online history-only policy captures the Belady gap — is, at worst-case level, a corollary of Sleator-Tarjan 1985's k-competitiveness, so the paper MUST foreground the workload-specific magnitude (<=11% gap, anti-correlated capture: <=0.31 captured at frac 0.1-0.3 where the gap is largest) as the actual novel content and cite the competitive-analysis foundations to avoid rediscovery framing; and (b) the LRB/NSDI'20 learned-Belady positive (gap IS closable on CDN traces) and the H2O/SnapKV token-level line are mandatory citations/distinctions currently absent or under-cited. As a benchmark the agent-KV trace + captured-fraction matrix is a legitimately distinct artifact and the honest negative is publishable; novelty-side concerns are fixable-by-citation, hence yellow not red.
+```

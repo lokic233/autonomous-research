@@ -1,0 +1,24 @@
+```
+ROLE: theory_skeptic  VOTE: red
+MUNDANE_EXPLANATIONS: [
+  "The <=11% LRU->Belady gap is itself a small headroom; that no cheap policy captures >=50% of an already-small gap is the EXPECTED null under Megiddo-Modha's own observation that ARC closes most of LRU-OPT only when recency/frequency are separably informative — not a surprising emergent finding.",
+  "High-cap convergence (frac>=0.5) is the trivial compulsory-miss floor: once Belady's recompute saturates, every reasonable policy collinearly hits the same floor (researcher concedes this). The 'capture' metric is therefore ill-conditioned at exactly the caps where pin+LRU shows its only >=0.50 cell.",
+  "Slot-count capacity (not byte/token mass) systematically favors LRU-family on file-prefix KV where unit sizes vary; the negative may be a unit-of-capacity artifact, not a property of classical policies. Researcher flags this as a 'documented ceiling' but it is load-bearing on the kill."
+]
+CONFOUNDS: [
+  "pin+LRU N=2's 0.539 at frac 0.7 with boot-p=0.49 is a single noisy point; declaring 'capture and gap-size anti-correlated' from one cell over-reads the matrix.",
+  "ARC and LRU-K(K=2) tested at default/single hyperparameters; LRU-K is known to be K-sensitive (O'Neil SIGMOD'93 reports K=2..4 sweeps). A single K is not a fair 'killer baseline' refutation.",
+  "Codex corpus FAILS RE-B0 (far_share=0.035) so its 'corroboration' is vacuous — it cannot corroborate a policy-gap kill when the premise gap doesn't exist there. Counting it as supporting evidence is a category error."
+]
+ASSUMPTIONS_UNTESTED: [
+  "That a >=50%-capture / >=3-of-5-caps bar is the right operationalization of 'cheap policy realizes the gap' — no sensitivity to 40% or 2/5; the threshold is pre-registered but unjustified theoretically.",
+  "That history-only ~ deployed-realistic; SGLang/vLLM in practice expose hints (request boundaries, prefix trees) the harness does not feed to the policies, so the benchmark may under-estimate deployed variants.",
+  "Path-identity ceiling is asserted 'conservative (only reduces measured reuse)' — true for reuse counts, but its effect on RELATIVE capture across policies is not shown."
+]
+STATISTICAL_GAPS: [
+  "Only 72 CC sessions / 3290 units; no power analysis for detecting capture in [0.40,0.60] band. 0/15 surviving BH is consistent with under-power, not with a demonstrated null.",
+  "HHI=0.08 reported once at corpus level; no per-cap HHI, so session-domination at the tight caps (where the claim lives) is not actually shown.",
+  "Bootstrap p=0.49 at the single >=0.50 cell is reported, but no CI on the 0/5,0/5 killer-baseline counts — 'genuinely fail' needs an interval, not a point."
+]
+RATIONALE: The mechanism story ('gap is oracle-only') is plausible but the evidence shown is consistent with a mundane explanation — a small headroom (<=11%) plus an ill-conditioned capture metric near the compulsory-miss floor (ARC/LRU-K all collapse to identical 0.312/0.175 at frac 0.5/0.7, which is the floor, not a policy signal). The killer-baseline refutation rests on single-hyperparameter runs (LRU-K only K=2 vs O'Neil's K=2..4 sweep, SIGMOD'93) and a slot-count capacity unit acknowledged as a harness ceiling; both are load-bearing on the kill and neither is sensitivity-checked. Codex corpus failing RE-B0 (far_share=0.035) cannot corroborate a policy-side null and should not be cited as cross-instrument support. RED until: (a) LRU-K K-sweep {2,3,4}, (b) per-cap HHI + CIs on the 0/5 killer counts, (c) sensitivity at 40%-capture / 2-of-5 thresholds, (d) explicit acknowledgement that the kill is conditional on slot-count capacity.
+```

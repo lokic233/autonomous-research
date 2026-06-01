@@ -1,0 +1,47 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: red, product_realist: red}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "LRU-K K-sweep {2,3,4} or explicit acknowledgement that kill is conditional on K=2-only (theory_skeptic). Non-blocking for ratification: at tight caps (frac 0.1-0.3) LRU-K(2) captures 0.189/-0.044/-0.065, so far below 0.50 that K=3/4 reaching 3/5 caps is implausible — but the gap should be documented as a ceiling.",
+  "Mandatory citations: Sleator-Tarjan 1985 (competitive-analysis foundation — the kill is a workload-specific instance of k-competitiveness, not a rediscovery), LRB/NSDI'20 (learned-Belady positive contrast showing the gap IS closable on CDN traces, sharpening that the agent-KV negative is workload-specific), H2O 2306.14048/SnapKV (token-level KV eviction, cited-and-distinguished to forestall 'already solved').",
+  "Explicit conditioning: kill is conditional on slot-count capacity unit; a mass-based capacity model could shift relative policy rankings (theory_skeptic). Harness-verbatim constraint justifies this for L0, but the ceiling must be stated, not buried."
+]
+MANDATORY_BASELINES: [
+  {name: "ARC", status: "RUN, FAILS 0/5", cite: "Megiddo-Modha FAST'03"},
+  {name: "LRU-K(K=2)", status: "RUN, FAILS 0/5", cite: "O'Neil SIGMOD'93 — K=2 only, K-sweep not performed"},
+  {name: "SGLang-LFU", status: "RUN, FAILS 0/5, WORSE than LRU at tight caps (-0.747 at frac 0.1)", cite: "SGLang 2312.07104"},
+  {name: "SGLang-SLRU", status: "RUN, FAILS 0/5", cite: "SGLang 2312.07104"},
+  {name: "static-pin+LRU N={2,3,5}", status: "RUN, best 1/5 caps at frac 0.7 on 0.6%-of-LRU gap, boot-p=0.49 (null)", cite: "custom"},
+  {name: "LIRS", status: "NOT RUN — evaluation_prosecutor flags as missing (Jiang-Zhang SIGMETRICS'02, specialized for bimodal/loop patterns). Non-blocking: the bimodality here is inter-session far-reuse vs near-reuse, not the intra-sequence loop pattern LIRS targets, and ARC (which subsumes LIRS's recency/frequency separation) already fails 0/5."}
+]
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0025 / PROJ-0014",
+  change: "KILL (clean negative). Status -> DEAD-0025. Ship-LRU guidance confirmed. Links: reinforces DEAD-0019 (cheap causal predictor killed by EXP-0057) from the complementary policy side — both cheap-predictor and cheap-policy routes to the agent-KV Belady gap are now closed. Survivor: PROJ-0011 bimodality + LRU-suboptimality characterization STANDS (the gap is real; it is just oracle-only). Forward pointer: KVFlow 2507.07400 / ScaleSim direction (explicit step-graph future-knowledge) remains the only live route. Revival gate: a corpus + policy where a cheap, deployed-realistic, history-only eviction policy captures >=50% of LRU-Belady gap at >=3/5 capacities at matched residency, session-robust (HHI<0.2) + survives multiplicity correction."
+}
+PRIOR_ART_ADEQUATE: no — novelty_killer could not complete mandated >=2-source live web search (tool permissions denied). From knowledge, no collision was identified: the closest neighbors (LRB=CDN+learned+positive; H2O=token-level intra-sequence) are distinct in workload or layer. This is NON-BLOCKING for a kill verdict (the "no GREEN without adequate prior-art" rule guards against premature promotion, not against ratifying a well-evidenced negative). The missing live search is a PROCESS gap, not an evidence gap — the kill stands on the captured-fraction matrix, not on novelty.
+RATIONALE: Four of five reviewers vote red (ratify kill); the lone yellow (novelty_killer) is on citation/framing grounds explicitly described as "fixable-by-citation, hence yellow not red" — not on evidence that any cheap policy actually captures the gap.
+
+The kill is supported by converging evidence across all five gates:
+
+(1) PREMISE REPRODUCED (RE-B0): far_share=0.188 (EXP-0057's 0.189), Belady saves max 11.0% over LRU at frac 0.1. The bimodality + LRU-suboptimality characterization from PROJ-0011 is stable.
+
+(2) KILLER BASELINES GENUINELY FAIL (FIX-2): ARC (Megiddo-Modha FAST'03) 0/5 caps >=0.50 captured. LRU-K(2) (O'Neil SIGMOD'93) 0/5 caps. SGLang-LFU 0/5 and WORSE than LRU at tight caps (captured -0.747 at frac 0.1). SGLang-SLRU 0/5. These are not strawmen — ARC is the strongest parameter-free adaptive classical policy; its failure at 0/5 refutes "ARC already captures it." Theory_skeptic's LRU-K K-sweep concern (K=2 only, O'Neil tested K=2..4) is noted but non-fatal: at frac 0.1-0.3 LRU-K(2) captures 0.189/-0.044/-0.065, so far below 0.50 that a K-variant reaching 3/5 caps is implausible given that ARC (which adaptively balances recency and frequency) also fails identically.
+
+(3) MATCHED RESIDENCY HONORED (FIX-5): Pinned blocks charged against C. The lone pin "win" (0.539 at frac 0.7) sits on a 0.6%-of-LRU gap. No capacity illusion — the negative is not a pinning artifact.
+
+(4) STATISTICALLY ROBUST (RE-B3): HHI=0.08 (<0.20, no session domination). 0/15 static-pin cells survive BH or Bonferroni (pin2@0.7 boot-p=0.49). The single >=0.50 point estimate is indistinguishable from 0.50. Theory_skeptic requests per-cap HHI — a fair refinement but the corpus-level HHI=0.08 with 72 sessions makes per-cap domination unlikely.
+
+(5) ANTI-CORRELATION IS THE KEY STRUCTURAL FINDING: Where the gap matters (frac 0.1-0.3, gap 6.4-11.0% of LRU), every cheap policy captures <=0.31 and SGLang-LFU is actively harmful. Where cheap policies approach 0.50 (frac 0.7), the gap is 0.6% of LRU — operationally negligible. This is not an artifact; it reflects that tight-cache eviction decisions require future-step knowledge (which file will the agent touch next), not frequency/recency statistics. Product_realist confirms: production deployments run at higher residency where absolute win is <3%.
+
+DISAGREEMENT RESOLUTION: Theory_skeptic voted red but listed four conditions. I resolve each:
+- (a) LRU-K K-sweep: valid methodological gap, but non-blocking because ARC (which adaptively subsumes LRU-K's recency-frequency tradeoff) also fails 0/5 at the same captured fractions. Documented as a ceiling, not a blocker.
+- (b) Per-cap HHI + CIs: refinement, not blocker. 72 sessions with HHI=0.08 corpus-wide; 0/15 cells surviving multiplicity correction is the binding constraint, not per-cap HHI.
+- (c) Sensitivity at 40%/2-of-5: pre-registered thresholds are unjustified theoretically (fair) but the best cheap policy reaches 1/5 at 0.539 with p=0.49 — even at 40%/2-of-5 the result doesn't flip (only 1 cell crosses 0.40 reliably).
+- (d) Slot-count capacity conditioning: legitimate and MUST be stated in the write-up. This is the strongest theory_skeptic point — a mass-based capacity model could change relative rankings. But it is a harness ceiling inherited from EXP-0057 (which the committee already accepted), not a new flaw introduced by EXP-0060.
+
+Novelty_killer's yellow is resolved by mandatory citation additions (Sleator-Tarjan 1985, LRB/NSDI'20, H2O/SnapKV) that frame the negative correctly: it is a workload-specific empirical benchmark contribution, not a rediscovery of online-vs-OPT competitive analysis, and is non-trivially sharpened by the contrast with LRB (where a learned policy DOES close the CDN gap).
+
+VERDICT: KILL RATIFIED. CLAIM-0025 is a clean negative. Ship classical LRU for agent file-prefix KV eviction. Do NOT deploy frequency-aware variants (SGLang-LFU is worse than LRU at the capacities that matter). The agent-KV Belady gap is oracle-only — closed from both the predictor side (DEAD-0019/EXP-0057) and the policy side (this kill). Forward investment should target explicit step-graph future-knowledge approaches (KVFlow 2507.07400 direction), not cheap statistical policies. Prompt version: v001.
+```

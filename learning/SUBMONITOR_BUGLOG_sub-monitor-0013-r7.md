@@ -97,3 +97,13 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
     on the bare id false-matches; always ps the PID to disambiguate (it's metacode/committee, not claude -p).
   * EXP-0059 still status=completed (terminal). Floor=1 drained. NO action beyond heartbeat+commit. Committee in
     progress; await verdict. Heartbeat #8, ros commit.
+- 2026-06-01 ~23:13Z — CYCLE (hb #9). COMMITTEE RAN; awaiting ORCHESTRATOR ratification (not my call).
+  * Q-0011 CONSUMED from pending queue (orchestrator convened committee). runtime/committee_run_CLAIM-0024-2026-06-01/
+    _status.txt = ALL_COMMITTEE_DONE; all 6 reviewer .out non-empty. OBSERVATION ONLY (I do NOT judge/write verdict —
+    that is the orchestrator's lane): area_chair FINAL_VERDICT: yellow; evaluation_prosecutor VOTE: yellow. No
+    CLAIM-0024 verdict RECORDED yet + no .converged -> orchestrator has not yet DRAINED/ratified the committee into a
+    verdict. I FORWARD only; ratification is orchestrator's job.
+  * researcher-0024 proc GONE (work complete); EXP-0059 status=completed (terminal). The earlier pgrep false-match
+    (metacode reviewer) is also gone. Floor=1 drained. Inbox empty.
+  DECISION: NO action beyond heartbeat+commit. Committee done (yellow per area_chair, observation only); await
+    orchestrator to record the CLAIM-0024 verdict + decide convergence. Heartbeat #9, ros commit.
