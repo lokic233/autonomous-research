@@ -1,0 +1,13 @@
+CODEX cross-harness (apples-to-apples with EXP-0009 Claude-Code V=0.717)
+sessions=69 recovered-failures(N)=78 classes=6
+global redirect rate p0=0.756 (NULL)
+Cramers_V=0.5864  chi2=26.82 df=5  perm_p=0.0002
+
+per-class among-recovered:
+class                  n_rec redir  same redir_share
+cmd.notfound              36    34     2       0.944
+proc.exit_nodetail        19    16     3       0.842
+fs.notfound               10     5     5       0.500
+fs.exists                  7     3     4       0.429
+code.build                 5     1     4       0.200
+proc.timeout               1     0     1       0.000

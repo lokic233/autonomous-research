@@ -1,0 +1,29 @@
+Parsing corpora via EXP-0041 parsers...
+  CC 41 / Codex 63 / Gemini 11 sessions (>=8 calls)
+
+======================================================================
+(A) (B,M)-PLANE — agent failure inter-event sequences
+======================================================================
+  claude_code  n_gaps= 104  B_raw=0.3678  B_corr=0.4294 [0.216,0.5332]  M=0.1788 [-0.1284,0.2066]
+  codex        n_gaps=  59  B_raw=0.2242  B_corr=0.2762 [0.1263,0.3817]  M=0.2279 [-0.2108,0.2754]
+  gemini       n_gaps=  42  B_raw=0.1636  B_corr=0.2135 [-0.3668,0.3362]  M=0.0709 [-0.1924,0.3113]
+  -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-GREENPATH-r3/results/bm_plane.csv
+
+======================================================================
+(B) LABEL AUDIT
+======================================================================
+  CC     : 146 fails / 1789 results (0.082); label=harness is_error flag (native)
+           top failing tools: [('Bash', 75), ('mcp__plugin_meta_mux__three_pai_external_web_search', 30), ('WebSearch', 22), ('mcp__plugin_meta_mux__knowledge_load', 5), ('Read', 5), ('Write', 3)]
+  Codex  : 105 fails / 2002 (0.052); label basis dist: {'exit_code_nonzero': 104, 'error_substr_in_first120': 1}
+           top failing tools: [('exec_command', 95), ('write_stdin', 9), ('three_pai_external_web_search', 1)]
+  Gemini : 60 fails / 198 (0.303); label=harness status==error (native)
+           top failing tools: [('read_file', 29), ('list_directory', 9), ('run_shell_command', 9), ('grep_search', 6), ('write_file', 5), ('activate_skill', 2)]
+
+  HEURISTIC-LABEL EXPOSURE (the committee's MED concern):
+    CC  : 0% heuristic (is_error is harness-emitted, not regex)
+    Gemini: 0% heuristic (status field is harness-emitted)
+    Codex: 1/105 = 1.0% of failure labels rest on the 'error' substring heuristic
+           (the remaining 99.0% are non-zero exit codes = hard signal)
+  -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-GREENPATH-r3/results/label_audit_samples.csv (285 samples for human review)
+
+  -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-GREENPATH-r3/results/greenpath_r3.json

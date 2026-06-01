@@ -1,0 +1,206 @@
+{
+  "bm_plane": [
+    {
+      "system": "claude_code",
+      "kind": "AGENT (this work)",
+      "n_gaps": 104,
+      "B_raw": 0.3678,
+      "B_finite_corr": 0.4294,
+      "B_corr_CI": "[0.216,0.5332]",
+      "M_lag1": 0.1788,
+      "M_CI": "[-0.1284,0.2066]",
+      "source": "measured on-node"
+    },
+    {
+      "system": "codex",
+      "kind": "AGENT (this work)",
+      "n_gaps": 59,
+      "B_raw": 0.2242,
+      "B_finite_corr": 0.2762,
+      "B_corr_CI": "[0.1263,0.3817]",
+      "M_lag1": 0.2279,
+      "M_CI": "[-0.2108,0.2754]",
+      "source": "measured on-node"
+    },
+    {
+      "system": "gemini",
+      "kind": "AGENT (this work)",
+      "n_gaps": 42,
+      "B_raw": 0.1636,
+      "B_finite_corr": 0.2135,
+      "B_corr_CI": "[-0.3668,0.3362]",
+      "M_lag1": 0.0709,
+      "M_CI": "[-0.1924,0.3113]",
+      "source": "measured on-node"
+    },
+    {
+      "system": "POISSON null",
+      "kind": "reference",
+      "n_gaps": "-",
+      "B_raw": 0.0,
+      "B_finite_corr": 0.0,
+      "B_corr_CI": "-",
+      "M_lag1": 0.0,
+      "M_CI": "-",
+      "source": "theory: random/IID -> B=0,M=0"
+    },
+    {
+      "system": "human email (Barabasi 2005)",
+      "kind": "human baseline",
+      "n_gaps": "-",
+      "B_raw": 0.62,
+      "B_finite_corr": "~0.6",
+      "B_corr_CI": "-",
+      "M_lag1": 0.0,
+      "M_CI": "-",
+      "source": "Goh-Barabasi 2008 (B~0.6,M~0): heavy-tail, NO memory"
+    },
+    {
+      "system": "human library loans",
+      "kind": "human baseline",
+      "n_gaps": "-",
+      "B_raw": 0.3,
+      "B_finite_corr": "~0.3",
+      "B_corr_CI": "-",
+      "M_lag1": 0.07,
+      "M_CI": "-",
+      "source": "Goh-Barabasi 2008"
+    },
+    {
+      "system": "earthquakes",
+      "kind": "natural/SRE-like cascade",
+      "n_gaps": "-",
+      "B_raw": 0.18,
+      "B_finite_corr": "~0.18",
+      "B_corr_CI": "-",
+      "M_lag1": 0.1,
+      "M_CI": "-",
+      "source": "Goh-Barabasi 2008 (aftershock clustering: B>0 AND M>0)"
+    },
+    {
+      "system": "SRE/datacenter outages",
+      "kind": "SRE incident-cluster",
+      "n_gaps": "-",
+      "B_raw": ">0 (Pareto/heavy-tail)",
+      "B_finite_corr": "-",
+      "B_corr_CI": "-",
+      "M_lag1": ">0 (Hawkes-fit)",
+      "M_CI": "-",
+      "source": "power-system outage Pareto inter-arrival (2303.12714, Maynooth 2018); cyber Hawkes self-excite (2311.15701)"
+    },
+    {
+      "system": "heartbeats (anti-bursty)",
+      "kind": "reference",
+      "n_gaps": "-",
+      "B_raw": -0.7,
+      "B_finite_corr": "~-0.7",
+      "B_corr_CI": "-",
+      "M_lag1": 0.0,
+      "M_CI": "-",
+      "source": "Goh-Barabasi 2008 (regular -> B<0)"
+    }
+  ],
+  "label_audit": {
+    "cc": {
+      "fails": 146,
+      "total": 1789,
+      "basis": "is_error native",
+      "top_tools": [
+        [
+          "Bash",
+          75
+        ],
+        [
+          "mcp__plugin_meta_mux__three_pai_external_web_search",
+          30
+        ],
+        [
+          "WebSearch",
+          22
+        ],
+        [
+          "mcp__plugin_meta_mux__knowledge_load",
+          5
+        ],
+        [
+          "Read",
+          5
+        ],
+        [
+          "Write",
+          3
+        ],
+        [
+          "Edit",
+          2
+        ],
+        [
+          "AskUserQuestion",
+          2
+        ],
+        [
+          "Grep",
+          1
+        ],
+        [
+          "WebFetch",
+          1
+        ]
+      ]
+    },
+    "codex": {
+      "fails": 105,
+      "total": 2002,
+      "basis_dist": {
+        "exit_code_nonzero": 104,
+        "error_substr_in_first120": 1
+      },
+      "top_tools": [
+        [
+          "exec_command",
+          95
+        ],
+        [
+          "write_stdin",
+          9
+        ],
+        [
+          "three_pai_external_web_search",
+          1
+        ]
+      ]
+    },
+    "gemini": {
+      "fails": 60,
+      "total": 198,
+      "basis": "status native",
+      "top_tools": [
+        [
+          "read_file",
+          29
+        ],
+        [
+          "list_directory",
+          9
+        ],
+        [
+          "run_shell_command",
+          9
+        ],
+        [
+          "grep_search",
+          6
+        ],
+        [
+          "write_file",
+          5
+        ],
+        [
+          "activate_skill",
+          2
+        ]
+      ]
+    },
+    "codex_heuristic_share": 0.009523809523809525
+  }
+}

@@ -1,0 +1,10 @@
+system,kind,n_gaps,B_raw,B_finite_corr,B_corr_CI,M_lag1,M_CI,source
+claude_code,AGENT (this work),104,0.3678,0.4294,"[0.216,0.5332]",0.1788,"[-0.1284,0.2066]",measured on-node
+codex,AGENT (this work),59,0.2242,0.2762,"[0.1263,0.3817]",0.2279,"[-0.2108,0.2754]",measured on-node
+gemini,AGENT (this work),42,0.1636,0.2135,"[-0.3668,0.3362]",0.0709,"[-0.1924,0.3113]",measured on-node
+POISSON null,reference,-,0.0,0.0,-,0.0,-,"theory: random/IID -> B=0,M=0"
+human email (Barabasi 2005),human baseline,-,0.62,~0.6,-,0.0,-,"Goh-Barabasi 2008 (B~0.6,M~0): heavy-tail, NO memory"
+human library loans,human baseline,-,0.3,~0.3,-,0.07,-,Goh-Barabasi 2008
+earthquakes,natural/SRE-like cascade,-,0.18,~0.18,-,0.1,-,Goh-Barabasi 2008 (aftershock clustering: B>0 AND M>0)
+SRE/datacenter outages,SRE incident-cluster,-,>0 (Pareto/heavy-tail),-,-,>0 (Hawkes-fit),-,"power-system outage Pareto inter-arrival (2303.12714, Maynooth 2018); cyber Hawkes self-excite (2311.15701)"
+heartbeats (anti-bursty),reference,-,-0.7,~-0.7,-,0.0,-,Goh-Barabasi 2008 (regular -> B<0)
