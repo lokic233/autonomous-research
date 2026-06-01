@@ -90,3 +90,27 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
   STATUS = running. NO queue submit (forward only on status=completed; awaiting sweep + analysis.md + exp complete).
   Floor=1 held (only open CPU lane; L1=H100/orchestrator). No make-work refill. No blocker. RE-A1 trend now FULLY
   RESOLVED in real-proxy (null); terminal pending the exploratory robustness check + self-complete.
+
+- 2026-06-01 ~16:35Z — CYCLE#5. heartbeat #5 OK. researcher-0016-L0-r6 = 🏁 COMPLETED/RETIRED (status=completed,
+  last=3.3m, terminal — NOT revival-eligible). EXP-0052 status=completed, result_effect=kill, completed_at
+  16:31:09Z. DEAD-0014 buried by researcher. Artifacts: projects/PROJ-0006/artifacts/
+  NEGRESULT_CLAIM-0016_phase_composition_L0.md + EXP-0052/impl/analysis.md (9189B) + exp_regime_sweep.json +
+  prior_art/PROJ-0006/.
+  TERMINAL RESULT = CLEAN HONEST L0 KILL (option b), both corpora, COMMITTEE-READY:
+    RE-A1 KILLER delta1(phase-composition MINUS static-task-difficulty grouping) = +0.00032 CC (95%LB=-0.00062) /
+      +0.00081 Codex (95%LB=-0.00173) -> LB<=0 BOTH (p=0.547/0.544) = FAIL=KILL.
+    RE-A2 sham-cluster CI incl 0 both. RE-A3 tax ~100% DEGENERATE (min-bound collapse @ proxy acc~0.28,
+      prereg-flagged foregone). RE-A4 perm-null NOT survived (p=0.146CC/1.0Codex). RE-A5 0/16 Holm-sig.
+      RE-A6 overhead net>0 moot. RE-A7 DEAD-0011/0012 cited. Kill ROBUST in resolvable-regime sweep (phase~0 over
+      static all CC levels; 1 fragile Codex alpha0.7 exploratory cell only, NOT the prereg basis).
+    ROOT CAUSE: ~97.5% decode tokens FREE-FORM (no phase-grouping leverage) + between-session difficulty std
+      0.104CC/0.088Codex DWARFS per-phase deviations. Prior-art: composition lever PARTIALLY occupied by EXSpec
+      same-LENGTH grouping (Batch-SD-Done-Right 2510.22876, MEDIUM/closest).
+  DUTY(b) DONE: ros queue submit -> Q-0005 (CLAIM-0016, EXP-0052, kind=committee, by sub-monitor-0006-r6,
+    researcher researcher-0016-L0-r6). FORWARDED WITHOUT JUDGING. Orchestrator to convene committee (its authority).
+  NO-REFILL DECISION (work-gated floor=1): researcher --next = "NONE — claim killed at L0; lane exhausted; no L1
+    GPU spend motivated by phase-composition." A killed direction is NOT a gap to paper over -> DO NOT refill with
+    make-work. Pool correctly sits BELOW floor (0 researchers). L1 vLLM/H100 telemetry = orchestrator-dispatched,
+    not mine. Will re-check open_gaps/resume each cycle; refill ONLY if orchestrator opens a concrete PROJ-0006
+    follow-on. MISSION OBJECTIVE COMPLETE for the L0 gating lane (spawn -> monitor -> clean honest kill -> queue Q-0005).
+  Context healthy (<35%). No handoff needed. Standby on work-gated cadence.
