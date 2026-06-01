@@ -1,0 +1,512 @@
+{
+  "experiment": "EXP-0053",
+  "claim": "CLAIM-0017",
+  "project": "PROJ-0007",
+  "level": 0,
+  "prompt_version": "v001",
+  "lock_ts": "2026-06-01T16:09:03Z",
+  "block_primary": 16,
+  "tokenizers": [
+    "gpt2",
+    "qwen2-0.5b"
+  ],
+  "counted_families": [
+    "codex",
+    "claude_code"
+  ],
+  "family_sizes": {
+    "codex": 109,
+    "claude_code": 5,
+    "gemini": 2
+  },
+  "cells": {
+    "codex|gpt2": {
+      "family": "codex",
+      "tokenizer": "gpt2",
+      "n_sessions": 109,
+      "n_compared": 108,
+      "ref_file": "rollout-2026-05-29T21-15-48-019e7718-6814-72a1-8413-5e89c9c20df7.jsonl",
+      "block": 16,
+      "naive": {
+        "mean": 6776.212962962963,
+        "ci": [
+          6758.287037037037,
+          6789.277777777777
+        ]
+      },
+      "realized_raw": {
+        "mean": 6606.962962962963,
+        "ci": [
+          6505.62962962963,
+          6694.814814814815
+        ]
+      },
+      "realized_canon": {
+        "mean": 6645.777777777777,
+        "ci": [
+          6536.592592592592,
+          6740.888888888889
+        ]
+      },
+      "realized_df": {
+        "mean": 6398.962962962963,
+        "ci": [
+          6306.814814814815,
+          6480.740740740741
+        ]
+      },
+      "shortfall_raw": {
+        "mean": 169.25,
+        "ci": [
+          87.5925925925926,
+          265.3240740740741
+        ]
+      },
+      "shortfall_canon": {
+        "mean": 175.3148148148148,
+        "ci": [
+          90.04629629629629,
+          276.06481481481484
+        ]
+      },
+      "drift_cost": {
+        "mean": -208.0,
+        "ci": [
+          -217.4814814814815,
+          -197.4814814814815
+        ]
+      },
+      "RE_B1": {
+        "shortfall_after_mean": 175.3148148148148,
+        "ci": [
+          90.04629629629629,
+          276.06481481481484
+        ],
+        "PASS": true,
+        "KILL": false
+      },
+      "RE_B2": {
+        "drift_cost_mean": -208.0,
+        "ci": [
+          -217.4814814814815,
+          -197.4814814814815
+        ],
+        "PASS": false,
+        "KILL": true
+      },
+      "RE_B3": {
+        "real_auc": 0.9243262633093141,
+        "real_ci": [
+          0.8928624423821191,
+          0.9529378795042313
+        ],
+        "sham_auc": 0.7314215951221601,
+        "sham_ci": [
+          0.715057170929743,
+          0.7477469496618433
+        ],
+        "n_pos": 108,
+        "n_blocks": 45951,
+        "PASS": true
+      },
+      "RE_B4": {
+        "n_firstdiv": 108,
+        "bpe_seam": 0,
+        "structural": 108,
+        "seam_fraction": 0.0,
+        "X_threshold": 0.5,
+        "FOLD": false,
+        "STAY_DISTINCT": true
+      }
+    },
+    "codex|qwen2-0.5b": {
+      "family": "codex",
+      "tokenizer": "qwen2-0.5b",
+      "n_sessions": 109,
+      "n_compared": 108,
+      "ref_file": "rollout-2026-05-29T02-16-36-019e7305-6e1c-7243-8f7d-ac60fb7460f0.jsonl",
+      "block": 16,
+      "naive": {
+        "mean": 6270.777777777777,
+        "ci": [
+          6255.75,
+          6281.814814814815
+        ]
+      },
+      "realized_raw": {
+        "mean": 6113.777777777777,
+        "ci": [
+          6022.518518518518,
+          6191.7037037037035
+        ]
+      },
+      "realized_canon": {
+        "mean": 6139.259259259259,
+        "ci": [
+          6043.555555555556,
+          6222.518518518518
+        ]
+      },
+      "realized_df": {
+        "mean": 5950.518518518518,
+        "ci": [
+          5866.962962962963,
+          6020.888888888889
+        ]
+      },
+      "shortfall_raw": {
+        "mean": 157.0,
+        "ci": [
+          84.32407407407408,
+          238.6851851851852
+        ]
+      },
+      "shortfall_canon": {
+        "mean": 158.4537037037037,
+        "ci": [
+          82.20370370370371,
+          245.57407407407408
+        ]
+      },
+      "drift_cost": {
+        "mean": -163.25925925925927,
+        "ci": [
+          -170.5185185185185,
+          -154.8148148148148
+        ]
+      },
+      "RE_B1": {
+        "shortfall_after_mean": 158.4537037037037,
+        "ci": [
+          82.20370370370371,
+          245.57407407407408
+        ],
+        "PASS": true,
+        "KILL": false
+      },
+      "RE_B2": {
+        "drift_cost_mean": -163.25925925925927,
+        "ci": [
+          -170.5185185185185,
+          -154.8148148148148
+        ],
+        "PASS": false,
+        "KILL": true
+      },
+      "RE_B3": {
+        "real_auc": 0.9317962823187372,
+        "real_ci": [
+          0.9035403499669843,
+          0.9562904445062141
+        ],
+        "sham_auc": 0.7440760265643509,
+        "sham_ci": [
+          0.7263137586606637,
+          0.7613637582353598
+        ],
+        "n_pos": 108,
+        "n_blocks": 42504,
+        "PASS": true
+      },
+      "RE_B4": {
+        "n_firstdiv": 108,
+        "bpe_seam": 0,
+        "structural": 108,
+        "seam_fraction": 0.0,
+        "X_threshold": 0.5,
+        "FOLD": false,
+        "STAY_DISTINCT": true
+      }
+    },
+    "claude_code|gpt2": {
+      "family": "claude_code",
+      "tokenizer": "gpt2",
+      "n_sessions": 5,
+      "n_compared": 4,
+      "ref_file": "fe8d78fa-8892-47e8-bb15-6e2c80341f1e.jsonl",
+      "block": 16,
+      "naive": {
+        "mean": 74.5,
+        "ci": [
+          72.5,
+          76.5
+        ]
+      },
+      "realized_raw": {
+        "mean": 48.0,
+        "ci": [
+          48.0,
+          48.0
+        ]
+      },
+      "realized_canon": {
+        "mean": 80.0,
+        "ci": [
+          80.0,
+          80.0
+        ]
+      },
+      "realized_df": {
+        "mean": 48.0,
+        "ci": [
+          48.0,
+          48.0
+        ]
+      },
+      "shortfall_raw": {
+        "mean": 26.5,
+        "ci": [
+          24.5,
+          28.5
+        ]
+      },
+      "shortfall_canon": {
+        "mean": 21.0,
+        "ci": [
+          19.5,
+          22.5
+        ]
+      },
+      "drift_cost": {
+        "mean": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "RE_B1": {
+        "shortfall_after_mean": 21.0,
+        "ci": [
+          19.5,
+          22.5
+        ],
+        "PASS": true,
+        "KILL": false
+      },
+      "RE_B2": {
+        "drift_cost_mean": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ],
+        "PASS": false,
+        "KILL": true
+      },
+      "RE_B3": {
+        "real_auc": 0.5,
+        "real_ci": [
+          0.26666666666666666,
+          0.7368421052631579
+        ],
+        "sham_auc": 0.25,
+        "sham_ci": [
+          0.058823529411764705,
+          0.5
+        ],
+        "n_pos": 4,
+        "n_blocks": 20,
+        "PASS": false
+      },
+      "RE_B4": {
+        "n_firstdiv": 4,
+        "bpe_seam": 0,
+        "structural": 4,
+        "seam_fraction": 0.0,
+        "X_threshold": 0.5,
+        "FOLD": false,
+        "STAY_DISTINCT": true
+      }
+    },
+    "claude_code|qwen2-0.5b": {
+      "family": "claude_code",
+      "tokenizer": "qwen2-0.5b",
+      "n_sessions": 5,
+      "n_compared": 4,
+      "ref_file": "fe8d78fa-8892-47e8-bb15-6e2c80341f1e.jsonl",
+      "block": 16,
+      "naive": {
+        "mean": 88.0,
+        "ci": [
+          86.0,
+          89.5
+        ]
+      },
+      "realized_raw": {
+        "mean": 64.0,
+        "ci": [
+          64.0,
+          64.0
+        ]
+      },
+      "realized_canon": {
+        "mean": 80.0,
+        "ci": [
+          80.0,
+          80.0
+        ]
+      },
+      "realized_df": {
+        "mean": 48.0,
+        "ci": [
+          48.0,
+          48.0
+        ]
+      },
+      "shortfall_raw": {
+        "mean": 24.0,
+        "ci": [
+          22.0,
+          25.5
+        ]
+      },
+      "shortfall_canon": {
+        "mean": 24.5,
+        "ci": [
+          22.75,
+          25.75
+        ]
+      },
+      "drift_cost": {
+        "mean": -16.0,
+        "ci": [
+          -16.0,
+          -16.0
+        ]
+      },
+      "RE_B1": {
+        "shortfall_after_mean": 24.5,
+        "ci": [
+          22.75,
+          25.75
+        ],
+        "PASS": true,
+        "KILL": false
+      },
+      "RE_B2": {
+        "drift_cost_mean": -16.0,
+        "ci": [
+          -16.0,
+          -16.0
+        ],
+        "PASS": false,
+        "KILL": true
+      },
+      "RE_B3": {
+        "real_auc": 0.4,
+        "real_ci": [
+          0.19047619047619047,
+          0.625
+        ],
+        "sham_auc": 0.2,
+        "sham_ci": [
+          0.047619047619047616,
+          0.4375
+        ],
+        "n_pos": 4,
+        "n_blocks": 24,
+        "PASS": false
+      },
+      "RE_B4": {
+        "n_firstdiv": 4,
+        "bpe_seam": 0,
+        "structural": 4,
+        "seam_fraction": 0.0,
+        "X_threshold": 0.5,
+        "FOLD": false,
+        "STAY_DISTINCT": true
+      }
+    }
+  },
+  "block_sweep": {
+    "8": {
+      "codex": {
+        "realized_raw": 6614.37037037037,
+        "shortfall_raw": 161.84259259259258,
+        "shortfall_canon": 167.53703703703704,
+        "drift_cost": -214.88888888888889
+      },
+      "claude_code": {
+        "realized_raw": 56.0,
+        "shortfall_raw": 18.5,
+        "shortfall_canon": 13.0,
+        "drift_cost": 0.0
+      }
+    },
+    "16": {
+      "codex": {
+        "realized_raw": 6606.962962962963,
+        "shortfall_raw": 169.25,
+        "shortfall_canon": 175.3148148148148,
+        "drift_cost": -208.0
+      },
+      "claude_code": {
+        "realized_raw": 48.0,
+        "shortfall_raw": 26.5,
+        "shortfall_canon": 21.0,
+        "drift_cost": 0.0
+      }
+    },
+    "32": {
+      "codex": {
+        "realized_raw": 6592.2962962962965,
+        "shortfall_raw": 183.91666666666666,
+        "shortfall_canon": 176.64814814814815,
+        "drift_cost": -209.1851851851852
+      },
+      "claude_code": {
+        "realized_raw": 32.0,
+        "shortfall_raw": 42.5,
+        "shortfall_canon": 37.0,
+        "drift_cost": 0.0
+      }
+    }
+  },
+  "RE_B6": {
+    "counted_families": [
+      "codex",
+      "claude_code"
+    ],
+    "B1_consistent": true,
+    "B1_directions": {
+      "codex": "PASS",
+      "claude_code": "PASS"
+    },
+    "n_counted": 2
+  },
+  "RE_B5": {
+    "tokenizer_invariance": {
+      "codex": {
+        "gpt2_struct_frac": 1.0,
+        "qwen2_struct_frac": 1.0,
+        "both_majority_structural": true
+      },
+      "claude_code": {
+        "gpt2_struct_frac": 1.0,
+        "qwen2_struct_frac": 1.0,
+        "both_majority_structural": true
+      }
+    }
+  },
+  "overall_per_family": {
+    "codex": {
+      "kill_reasons": [
+        "RE-B2 drift-attributable effect < 1 block (quantization)"
+      ],
+      "verdict": "KILL/NEGATIVE",
+      "RE_B1_PASS": true,
+      "RE_B2_PASS": false,
+      "RE_B3_PASS": true,
+      "RE_B4_FOLD": false
+    },
+    "claude_code": {
+      "kill_reasons": [
+        "RE-B2 drift-attributable effect < 1 block (quantization)"
+      ],
+      "verdict": "KILL/NEGATIVE",
+      "RE_B1_PASS": true,
+      "RE_B2_PASS": false,
+      "RE_B3_PASS": false,
+      "RE_B4_FOLD": false
+    }
+  }
+}
