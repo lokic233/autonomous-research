@@ -92,3 +92,8 @@ Floor N = 2 (work-gated)
   OUTCOME: CLAIM-0014 terminal (bounded-characterization yellow, do-not-promote). PROJ-0005 CPU work EXHAUSTED;
   L1 blocked. NO refill (no open work — correct quiescent end-state). DUTY(b) packet did its job: honest
   re-convene reached, GPU spend correctly blocked. Heartbeat #11.
+
+- 2026-06-01 ~14:09Z — STANDBY CYCLE (terminal-confirmed). No PROJ-0005 queue items, no new verdict, no open
+  gaps; CLAIM-0014 = verdict_recorded/weakened (closed). Refreshed recurring loop message to closed-end-state
+  (schedule_message_freshness required) — now standby-only: act only on NEW gap/revival/follow-on CPU lane.
+  Pool 0 = correct. Heartbeat #12. Context healthy.
