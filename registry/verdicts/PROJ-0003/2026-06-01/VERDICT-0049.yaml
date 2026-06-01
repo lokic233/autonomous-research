@@ -1,0 +1,74 @@
+verdict_id: VERDICT-0049
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-06-01'
+experiment_ids:
+- EXP-0037
+- EXP-0038
+- EXP-0041
+- EXP-0042
+- EXP-0043
+- EXP-0044
+experiment_paths:
+- experiments/2026-05-31/EXP-0037
+- experiments/2026-05-31/EXP-0038
+- experiments/2026-05-31/EXP-0041
+- experiments/2026-05-31/EXP-0042
+- experiments/2026-06-01/EXP-0043
+- experiments/2026-06-01/EXP-0044
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: green
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- NONE. committee_run_20 = 5 GREEN (novelty_killer+systems_reviewer FLIPPED to green
+  vs run_19
+- eval_prosecutor+theory_skeptic green) + 1 YELLOW (product_realist) + area_chair
+  recommends FINAL_VERDICT=green via evidence-weighted override. ENGINE green_rule=unanimous
+  NOT met (product_realist yellow) -> recorded YELLOW, NOT promoted
+- "orchestrator did NOT --override-rule (safety: never force a green). product_realist\
+  \ YELLOW cites NO missing evidence/methodological-gap/required_evidence \u2014 pure\
+  \ contribution-ALTITUDE judgment (N=60 gaps, 1 clean harness Codex, descriptive-only,\
+  \ 2001-call corpus, not uniform 3-harness law), all intrinsic+conceded"
+- 'its own OPERATIONAL_SIGNIFICANCE says ''Real win, not microbench-only, robust within
+  the small N''. ESCALATED to dengcchi: human altitude/venue call.'
+required_evidence:
+- '[HUMAN DECISION] dengcchi: (A) accept area_chair evidence-weighted override ->
+  orchestrator re-issues promote with --override-rule + this justification (5/6 green,
+  lone yellow is altitude-only, all blocking items resolved), OR (B) hold YELLOW until
+  a 6th genuine green earned by lifting altitude. [optional altitude-lifters, NOT
+  demanded by any reviewer] 2nd clean genuine-exec harness / larger Codex corpus'
+- wall-clock-vs-call-index clock
+- tighter latent-state Cox for HMM-degeneracy. All V0047(3 ablations)+V0048(citation)
+  blocking items RESOLVED.
+map_delta_proposals:
+- "MAP-0002 CLAIM-0012: committee_run_20 STRONGEST outcome \u2014 5 GREEN + 1 YELLOW(product_realist,\
+  \ altitude-only) + area_chair recommends GREEN. NOT auto-promoted (green_rule=unanimous"
+- orchestrator refused --override-rule). novelty_killer+systems_reviewer FLIPPED yellow->green
+  vs run_19. All blocking items resolved (V47 ablations + V48 citation). Lone YELLOW
+  = pure altitude (1 clean harness/N=60/descriptive), no evidential gap. Status weakened
+  pending dengcchi GREEN/promote decision (escalated). Narrowed claim = 3-harness
+  descriptive H1 + Codex-clean defended H2, Gemini killed + CC fragile.
+baseline_requirements:
+- within-session permutation (H1 PASS)
+- tool-strat permutation (Codex p=0.000 all 46 LOSO)
+- Cox-vs-Hawkes BIC (Codex +28.3)
+- phase/HMM steelman Cox (Codex +15.0)
+- Codex LOSO (all 46 dBIC>=17.6)
+- gate-stripped Hawkes (Gemini falsified/CC survives)
+- small-N IC citation (Vrieze2012/Hurvich-Tsai1989/Filimonov-Sornette2015/Hardiman-Bouchaud2014
+  added+disclosed+LOSO-mitigated).
+created_at: '2026-06-01T05:45:11Z'
