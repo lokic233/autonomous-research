@@ -159,3 +159,22 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   EXP-0056 honestly to a clean multi-gate pre-registered NEGATIVE, forwarded forward-only, committee ratified.
   HANDOFF: nothing open on PROJ-0010. If a future cross-session KV-shareability claim arises, reuse RE-B2b
   matched-success-divergence control + cross-session signature/error-result membership pools (researcher --next).
+
+- 2026-06-01 ~20:1xZ — FINAL CYCLE / RETIREMENT (heartbeat #12). PROJ-0010 FULLY CLOSED + sub-monitor-0010-r7
+  RETIRING. Orchestrator (HEAD 0870cc7) authoritatively closed CLAIM-0021: committee 6/6 RATIFY KILL ->
+  VERDICT-0065, DEAD-0017, Q-0007 acked + killing_verdict linked; PROJ-0010 CONVERGED (orchestrator now refilling
+  4th slot via PROJ-0011 design round — NOT my work). researcher-0021-L0-r7 = DEAD-by-heartbeat (last=54.9m past
+  grace) but VERIFIED correct-terminal NOT BUG-26/29 false-DEAD: no claude -p / error_fork / EXP-0056 proc anywhere,
+  EXP-0056 status=completed/kill, --next=none -> NO respawn (would be make-work on a dead+converged lane).
+  RETIREMENT ACTIONS: removed BOTH stray loop jobs targeting this session (074d061b = my original; b38825f9 =
+  duplicate created by orchestrator/monitor) so I stop waking on a converged project. Retirement report already
+  filed to inbox (19:58:27Z).
+  FINAL STATS: 1 researcher spawned (researcher-0021-L0-r7), 0 false respawns, 0 double-spawns (BUG-26/29
+  pgrep-before-respawn discipline held every cycle), 12 heartbeats, forward-only to committee (Q-0007, never judged),
+  no human gates, no fabrication. OUTCOME: clean first-class multi-gate pre-registered NEGATIVE — errors are NOT a
+  distinct cross-session KV-fork class; RE-B2b matched-success control (committee FIX-1) was decisive in converting
+  the apparent RE-B1 positive into falsification; corroborates SGLang RadixAttention(2312.07104)/vLLM APC(2309.06180)
+  error-agnostic divergence. REUSABLE ASSET for any future cross-session KV-shareability claim:
+  experiments/2026-06-01/EXP-0056/impl/error_fork_census.py (RE-B2b matched-success-divergence control + cross-session
+  tool-signature/error-result membership pools). sub-monitor-0010-r7 session 4d3b89ef-6bf2-4548-90d3-f9add4dcf25b
+  retiring; agent record will age to retired (no `ros agent retire` subcommand; stop-heartbeating = retirement).
