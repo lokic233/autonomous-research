@@ -76,3 +76,14 @@ sign-agreement HARD GATE / STAT: fold-std + all-5-folds-positive + per-session H
   Floor=1 drained. NO action beyond heartbeat+commit. Await orchestrator committee. Heartbeat #6, ros commit.
 - 2026-06-01 ~21:10Z — CYCLE (hb #7). HOLDING unchanged: Q-0009 PENDING, no CLAIM-0022 verdict, proc gone (work complete, NO respawn), inbox empty. NO action. ros commit.
 - 2026-06-01 ~21:15Z — CYCLE (hb #8). HOLDING unchanged: Q-0009 PENDING, no CLAIM-0022 verdict, proc gone, inbox empty. NO action. ros commit.
+- 2026-06-01 ~21:20Z — CYCLE (hb #9). COMMITTEE RULED: Q-0009 ACKED -> VERDICT-0067 RATIFIED KILL 6/6
+  (FINAL_VERDICT: kill; area_chair resolved 3 red + 2 inverted-label green on substance + product_realist dup
+  counted once). CLAIM-0022 predictability claim BURIED. 3 kill pillars (match EXP-0057 exactly): RE-A1 signal
+  absent (dAUC +0.017 LB95<0 HHI 0.42, working-set feats collinear w/ LRU) + RE-A2 recency-in-disguise (0/10
+  matched-recency deciles; doesn't beat Marconi forecast) + RE-A3 B1-predictor underperforms LRU at every capacity.
+  SURVIVING characterization (bimodality + Belady <=13% gap) re-scoped as MEASUREMENT contribution. Codex RE-A1
+  'pass' correctly discounted (not bimodal there). This is the first-class honest negative the charter anticipated.
+  STATE: CLAIM-0022 (first/only claim) KILLED; EXP-0057 (only open CPU lane) drained; no open PROJ-0011 work.
+  ros projects shows PROJ-0011 present, no .converged marker yet -> convergence + my retirement = ORCHESTRATOR's
+  call (BUG-28: ros projects ground truth, not .converged; I do NOT self-converge). Reporting status up via
+  ros report --done so orchestrator can decide. Heartbeat #9, ros commit.
