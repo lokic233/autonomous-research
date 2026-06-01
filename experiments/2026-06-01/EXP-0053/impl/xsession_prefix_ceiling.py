@@ -38,6 +38,13 @@ DRIFT_PATTERNS = [
     ('abspath',   re.compile(r'/(?:Users|home)/[^\s"\',:;]+')),
     ('version',   re.compile(r'(?<!\d)\d+\.\d+\.\d+(?:\.\d+)?')),
     ('epoch',     re.compile(r'(?<!\d)1[0-9]{9}(?![0-9])')),
+    # tenant/config fields (pre-reg canonicalizer explicitly strips "tenant fields"): per-session
+    # sandbox mode / approval policy values embedded in the system-prompt prose.
+    ('sandbox',   re.compile(r'`sandbox_mode` is `[\w-]+`')),
+    ('sandbox2',  re.compile(r'`(read-only|danger-full-access|workspace-write)`')),
+    ('approval',  re.compile(r'`approval_policy` is `[\w-]+`')),
+    ('approval2', re.compile(r'Approval policy is currently [\w-]+')),
+    ('approval3', re.compile(r'Approvals are your mechanism[^.]*\.')),
 ]
 SENTINEL = ' VOL '
 
