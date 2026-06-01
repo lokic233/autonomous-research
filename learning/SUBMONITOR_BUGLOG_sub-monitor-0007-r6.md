@@ -40,3 +40,15 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   DECISION: NO action needed — researcher on-task, gates correct. NO queue submit yet (no committee-ready
   evidence: main run not run, RE-B1/B2/B3 not yet resolved). Floor held at 1 (EXP-0053 only open CPU lane;
   L1 real-APC = H100/orchestrator). Refill only on concrete --next follow-on. Heartbeat #3, commit.
+
+- 2026-06-01 ~16:1xZ — CYCLE (heartbeat #4). researcher-0017-L0-r6 ALIVE (PID 74750, etime 13:23, running,
+  last=4.4m). HEALTHY + ON-TRACK. Progress since last cycle (report #2 @16:11:39Z):
+    * Harness BUILT: impl/xsession_prefix_ceiling.py (22180B) — head reconstruction (Codex/CC/Gemini) ->
+      block-LCP -> canonicalizer -> drift-free control -> drift-class predictor+sham -> bootstrap. stdlib.
+    * Ground-truth crux NAMED correctly: "is skill-list drift REORDER (canonicalizer fixes -> KILL) or
+      MEMBERSHIP (survives canon -> PASS)" = exactly the RE-B1 KILLER decision. CC envelope drift catalogued
+      (19 cwd / 7 ver / 2 branch).
+    * --next: "Run EXP-0053 main; gather RE-B7/B8 prior art." Main run imminent.
+    * results/ still empty (main not yet run) — expected.
+  DECISION: NO action — on-task, gates already locked (b83fb0c), harness built. NO queue submit (RE-B1/B2/B3
+  not yet resolved; no committee-ready evidence). Floor held at 1. Heartbeat #4, commit.
