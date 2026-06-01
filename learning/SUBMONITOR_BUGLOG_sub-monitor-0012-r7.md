@@ -122,3 +122,4 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     ratified). No live researcher proc. No new PROJ-0012 claim/exp, no orchestrator dispatch addressed to me, no
     blockers. NO action; floor HOLD below 1 (killed claim = not open work, revival_conditions empty). Heartbeat #11,
     ros commit. Continue light poll for any dispatch.
+- 2026-06-01 ~21:4xZ — CYCLE (heartbeat #12). STEADY-STATE / MANDATE COMPLETE. CLAIM-0023 killed (DEAD-0020). No new PROJ-0012 claim/exp, no dispatch for me, no live proc. NO action; floor HOLD below 1. Heartbeat #12, ros commit.
