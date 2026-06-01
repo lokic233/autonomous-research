@@ -1,7 +1,7 @@
 claim_id: CLAIM-0014
 project_id: PROJ-0005
 stage: seed
-status: seed
+status: weakened
 claim: "Tool-result re-tokenization boundary churn defeats exact-prefix KV-cache reuse:\
   \ injecting a tool result perturbs BPE token boundaries straddling the injection\
   \ seam, so the re-tokenized token-ID prefix diverges from the cached prefix at a\
@@ -36,18 +36,30 @@ supporting_evidence:
     phenomenon real+measurable but template-preventable and tokenizer-dependent. Characterization
     contribution.'
   data_path: experiments/2026-06-01/EXP-0049/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0049
+  summary: 'L0 CPU all-3-gates-pass-aggregate but 6/6 committee YELLOW (VERDICT-0055):
+    per-slice gate-b fails (Qwen2~0/Codex<0), chat-template 95pct mitigation moots
+    production relevance, novelty=characterization-only (Lundberg/Sennrich folklore),
+    prior-art inadequate (Prompt Cache 2311.04934 missing). RE-01..RE-06 = L1 gates.'
+  data_path: experiments/2026-06-01/EXP-0049/
 verdict_history:
 - verdict_id: VERDICT-0052
+  date: '2026-06-01'
+  result: yellow
+- verdict_id: VERDICT-0055
   date: '2026-06-01'
   result: yellow
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0049; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: Address RE-01..RE-06 (esp RE-03 real vLLM APC counters = L1 H100, RE-02
+  Llama-3 tokenizer, RE-05 per-slice multiple-comparison) + re-frame title to regime-a-only
+  characterization + add Prompt Cache/Sennrich/DontBreakCache citations, then re-convene
+  for candidate-grade. Yellow held honestly; NOT promoted, NO override.
 blocking_on: ''
 active_experiments:
 - EXP-0048
 created_at: '2026-06-01T11:46:15Z'
-last_updated: '2026-06-01T12:17:35Z'
+last_updated: '2026-06-01T12:40:54Z'

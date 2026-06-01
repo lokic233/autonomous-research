@@ -13,18 +13,15 @@ needs_gpu: false
 dispatched_by: ''
 node_lease: ''
 status: completed
-result_summary: 'PASS all 3 gates aggregate: block-churn mean=0.011 CI[0.010,0.012]
-  excl 0; diff-vs-control mean=0.003 CI[0.002,0.004]>0; delimiter-class AUC=0.724
-  CI[0.703,0.745]>0.5. n=12430 records (6215 seams x 2 tokenizers), 2 corpora (CC
-  3909 + Codex 2306), 2 production tokenizers (gpt2 + Qwen2-0.5B). CAVEATS: gate-b
-  fails per-slice (Qwen2 diff~0, Codex diff<0, only aggregate passes); chat-template
-  delimiter reduces churn 95pct (1.1pct to 0.05pct); regime-b (token-ID-cache) structurally
-  0. HONEST: phenomenon real+measurable but template-preventable and tokenizer-dependent.
-  Characterization contribution.'
-result_effect: support
+result_summary: 'L0 CPU all-3-gates-pass-aggregate but 6/6 committee YELLOW (VERDICT-0055):
+  per-slice gate-b fails (Qwen2~0/Codex<0), chat-template 95pct mitigation moots production
+  relevance, novelty=characterization-only (Lundberg/Sennrich folklore), prior-art
+  inadequate (Prompt Cache 2311.04934 missing). RE-01..RE-06 = L1 gates.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-01/EXP-0049/
 reproducibility: ''
-linked_verdicts: []
+linked_verdicts:
+- VERDICT-0055
 started_at: ''
-completed_at: '2026-06-01T12:17:35Z'
+completed_at: '2026-06-01T12:40:54Z'
 prompt_version: ''

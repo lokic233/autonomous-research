@@ -1,0 +1,54 @@
+verdict_id: VERDICT-0055
+claim_id: CLAIM-0014
+project_id: PROJ-0005
+date: '2026-06-01'
+experiment_ids:
+- EXP-0049
+experiment_paths:
+- experiments/2026-06-01/EXP-0049
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: systems_reviewer
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: novelty_killer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- 'RE-01: quantitative BPE null model (expected churn from merge-table depth + delimiter
+  byte dist'
+- observed 1.1% must statistically EXCEED textbook BPE-stability baseline)
+- 'RE-02: >=1 additional production tokenizer (Llama-3 cl100k) + corpus to break GPT-2
+  x ClaudeCode single-cell confound driving aggregate gate-b'
+- 'RE-03 (L1 gate): real vLLM/SGLang APC/RadixAttention hit-miss counters + TTFT under
+  BOTH un-templated AND templated regimes (not offline sim)'
+- 'RE-04: measured-or-cited regime-(a) full-retokenize prevalence in deployed stacks
+  (denominator currently undefined)'
+- 'RE-05: per-slice tokenizer x corpus gate evals w/ multiple-comparison correction
+  (aggregate-only pass while 3/4 cells fail is not candidate-grade)'
+- 'RE-06: block-size sensitivity vLLM block=8/16/32 (only block=16 tested)'
+map_delta_proposals:
+- CLAIM-0014 retain at yellow/L0-passed-with-caveats (do NOT promote to candidate)
+- RE-FRAME title from 'defeats exact-prefix KV-cache reuse' to 'delimiter-conditioned
+  BPE boundary churn under non-templated retokenization (regime-a only)'
+- gate-b per-slice failure + chat-template 95pct mitigation become HEADLINE framing
+  not appendix
+- RE-01..RE-06 are L1 promotion gates
+- PRIOR_ART_ADEQUATE=no (Prompt Cache missing)
+baseline_requirements:
+- default-chat-template+special-token production serving (95pct mitigation must be
+  the headline baseline)
+- Don't-Break-the-Cache 2601.06007 white-vs-black-box delta
+- Gim Prompt Cache 2311.04934 MLSys2024 (MISSING, must cite)
+- Sennrich BPE ACL2016
+created_at: '2026-06-01T12:40:41Z'
