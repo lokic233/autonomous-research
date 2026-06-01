@@ -284,3 +284,23 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   perspective PROJ-0007 is effectively DONE. No action (no researcher, Q-0006 forwarded, no refill). Heartbeat #19,
   commit. Will keep low-cost steady-state cycles until orchestrator posts the committee verdict / retires this
   sub-monitor or a new CPU follow-on appears.
+
+- 2026-06-01 ~17:56Z — CYCLE (heartbeat #20). *** PROJECT CLOSED — TERMINAL STATE FOR PROJ-0007 (CPU lane). ***
+  Q-0006 CONSUMED (gone from queue = orchestrator ack'd + convened committee on my forward). NEW VERDICT-0063
+  posted for CLAIM-0017: final_verdict=KILL, UNANIMOUS 6/6 (5 red + area_chair kill, green_rule=unanimous).
+  Committee RATIFIED the honest negative + DEAD-0015 burial (6/6). Fatal objection = the architectural-ceiling
+  thesis is FALSIFIED by its own pre-registered RE-B1 killer (named drift shortfall ELIMINATED by published
+  Anthropic/OpenAI static-first/volatile-last best practice; CC LCP recovers ~10x 51->576 tok, codex only 2.5%
+  recoverable tail, post-canon residual 100% genuine content) => PROMPT-ENGINEERING ANTI-PATTERN, NOT an
+  architectural constraint; engine-layer controls (SGLang/vLLM/TRT-LLM/LMCache) further falsify 'engines stuck';
+  drift-class predictor AUC 0.92-0.98 is REAL but NARROW = salvage/PSA, not claim-supporting even at yellow.
+  map_delta: CLAIM-0017 -> cemetery DEAD-0015 (publishable honest negative); SALVAGE (non-claim) = (1) prompt-eng
+  PSA (volatile/tenant/config + dynamic tool lists AFTER static prefix), (2) drift-class first-divergence predictor.
+  required_evidence: REVISIT ONLY via L1 H100 real-APC hit-counter+recovered-TTFT (OUT-OF-SCOPE for L0,
+  GPU/orchestrator-dispatched) AND ONLY IF an unrecoverable residual existed — which the L0 result does NOT
+  motivate. => THERE IS NO OPEN CPU WORK, NOW OR FORESEEABLY, ON PROJ-0007.
+  FLOOR DECISION: pool 0 live = CORRECT + TERMINAL. NO refill ever (claim killed/buried, committee-ratified, L1 path
+  out-of-scope AND unmotivated). My monitoring duty for PROJ-0007 is COMPLETE.
+  ESCALATION TO ORCHESTRATOR: this sub-monitor has no remaining work — PROJ-0007 is fully closed (CLAIM-0017 killed
+  6/6, DEAD-0015 ratified, Q-0006 consumed). Recommend orchestrator RETIRE sub-monitor-0007-r6 (or repurpose to a
+  new project). Until then I will run minimal no-op steady-state cycles. Heartbeat #20, commit.
