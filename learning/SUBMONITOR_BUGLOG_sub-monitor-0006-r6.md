@@ -114,3 +114,12 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
     not mine. Will re-check open_gaps/resume each cycle; refill ONLY if orchestrator opens a concrete PROJ-0006
     follow-on. MISSION OBJECTIVE COMPLETE for the L0 gating lane (spawn -> monitor -> clean honest kill -> queue Q-0005).
   Context healthy (<35%). No handoff needed. Standby on work-gated cadence.
+
+- 2026-06-01 ~16:40Z — CYCLE#6 (standby, no change). heartbeat #6 OK. researcher-0016-L0-r6 = 🏁 completed/retired
+  (last=4.7m, terminal, NOT revival-eligible — clean, no zombie). Q-0005 still ⏳PENDING in committee-queue
+  (orchestrator has not convened yet — its authority; I do NOT poke/judge). resume: NO advanceable PROJ-0006 work.
+  academic_map: no PROJ-0006 open_gaps. No new PROJ-0006 claim/exp opened (only killed CLAIM-0016; EXP-0053 = PROJ-0007).
+  WORK-GATED HOLD CORRECT: 0 researchers, below floor=1 by design (L0 direction killed = not a gap to paper over;
+  refilling = make-work). L1 vLLM/H100 batch-SD telemetry = UNMOTIVATED by the kill + orchestrator-dispatched anyway.
+  Will refill ONLY if orchestrator opens a concrete PROJ-0006 follow-on (e.g. committee outcome on Q-0005 seeds one).
+  Context healthy (<35%). Continuing light work-gated cadence.

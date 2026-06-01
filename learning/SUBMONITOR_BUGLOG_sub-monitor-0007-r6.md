@@ -97,3 +97,30 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   still being written). NO action; NO queue submit (no terminal status=completed yet — substance ready, deliverables
   pending). Floor held at 1. Heartbeat #7, commit. WATCH: if no terminal report + no new file writes by next cycle,
   investigate for a quiet hang (check run_main.log tail for late-stage errors).
+
+- 2026-06-01 ~16:36Z — CYCLE (heartbeat #8). researcher-0017-L0-r6 flagged 'stale' (last report 24m ago) BUT
+  PROC TREE HEALTHY + ALIVE: parent 74750 + native child 74857 (0.4% cpu) with TWO ESTABLISHED TCP conns to AI
+  Gateway. Low CPU = agentic turn waiting on model API / web (RE-B7/B8 prior art), NOT a hang. claude -p buffers
+  to run-end (boot log still only the 3-line header) so no intermediate report is expected. NO INTERVENTION —
+  process is working, just network-bound. NOT respawning.
+
+  *** MAJOR FINDING — DISPOSITION FLIPPED on the corrected re-run (run_main2.log, mtime 09:32 > summary.json 09:23):
+  The FIRST run (run_main.log, KILL via RE-B2) was a CORPUS-UNDER-RECONSTRUCTION ARTIFACT — only CC n=5
+  reconstructed + a control-construction issue gave drift_cost<=0. The researcher caught it, FIXED CC
+  reconstruction (n=5 -> 38) + drift-free control, and RE-RAN. run_main2 ALL GATES PASS, all 4 cells:
+    codex n=109: RE-B1 PASS (shortfall_after 172.4/155.5 tok), RE-B2 PASS (drift_cost +38.8 CI[32.6,44.1] /
+      +25.5 CI[20.4,29.6] — drift-attributable >=1 block, CI excludes 16 floor), RE-B3 PASS (auc .924/.932 > sham),
+      RE-B4 STAY-DISTINCT (seam_frac 0).
+    claude_code n=38: RE-B1 PASS (543/523 tok), RE-B2 PASS (drift_cost +524 CI[519,529] / +551 CI[467,662] — HUGE),
+      RE-B3 PASS (auc .983/.982 > sham .976/.975), RE-B4 STAY-DISTINCT (0/37).
+  => candidate-grade POSITIVE: realized cross-session reuse IS bounded ABOVE naive shared-text by volatile-field
+     micro-drift, SURVIVES canonicalization (architectural ceiling, not prompt-eng PSA), drift-class predictor
+     beats sham at AUC>=0.92, and it is DISTINCT from PROJ-0005 (0% BPE-seam => no fold).
+  *** BUT: summary.json (09:23) is STALE (reflects the buggy KILL run); analysis.md + prior_art/PROJ-0007 +
+     TERMINAL report NOT yet written. Deliverables are in a CONTRADICTORY state. MUST NOT forward conflicting
+     evidence. WAIT for the researcher to regenerate summary.json + write analysis.md + file terminal report
+     reconciling run1->run2. NO queue submit this cycle. Floor held at 1. Heartbeat #8, commit.
+  NEXT-CYCLE GATE: forward to committee ONLY when (a) status=completed terminal report exists AND (b) summary.json
+     mtime > run_main2 (i.e. regenerated to PASS) AND (c) analysis.md present. If researcher dies before
+     reconciling, respawn-with-fix: a SHORT finalize-only lane (regenerate summary.json from run_main2 + write
+     analysis.md + prior_art + terminal report; do NOT re-run the experiment).
