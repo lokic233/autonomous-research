@@ -21,3 +21,26 @@ Token indices sequence length is longer than the specified maximum sequence leng
     RE-B4 seam_frac=0.000 (0/108) STAY-DISTINCT
 
 --- analyze codex x qwen2-0.5b (n=109) ---
+    naive=6270.8  realized_raw=6113.8  realized_canon=6139.3  realized_df=5950.5
+    shortfall_raw=157.0  shortfall_canon=158.5  drift_cost=-163.3
+    RE-B1 PASS (shortfall_after=158.5 CI[82.20370370370371, 245.57407407407408])
+    RE-B2 KILL (drift_cost=-163.3 CI[-170.5185185185185, -154.8148148148148])
+    RE-B3 real_auc=0.932 sham_auc=0.744 PASS
+    RE-B4 seam_frac=0.000 (0/108) STAY-DISTINCT
+
+--- analyze claude_code x gpt2 (n=5) ---
+    naive=74.5  realized_raw=48.0  realized_canon=80.0  realized_df=48.0
+    shortfall_raw=26.5  shortfall_canon=21.0  drift_cost=0.0
+    RE-B1 PASS (shortfall_after=21.0 CI[19.5, 22.5])
+    RE-B2 KILL (drift_cost=0.0 CI[0.0, 0.0])
+    RE-B3 real_auc=0.500 sham_auc=0.250 fail
+    RE-B4 seam_frac=0.000 (0/4) STAY-DISTINCT
+
+--- analyze claude_code x qwen2-0.5b (n=5) ---
+    naive=88.0  realized_raw=64.0  realized_canon=80.0  realized_df=48.0
+    shortfall_raw=24.0  shortfall_canon=24.5  drift_cost=-16.0
+    RE-B1 PASS (shortfall_after=24.5 CI[22.75, 25.75])
+    RE-B2 KILL (drift_cost=-16.0 CI[-16.0, -16.0])
+    RE-B3 real_auc=0.400 sham_auc=0.200 fail
+    RE-B4 seam_frac=0.000 (0/4) STAY-DISTINCT
+  [skip gemini: <3 sessions]

@@ -214,6 +214,83 @@ def analyze_corpus(name, sessions):
                        'net_tokens_at_Ttok': {'%dms' % t: d1_obs - overhead_per_round/(t/1000.0) for t in (1,5,10)}}
     return out
 
+
+# ====================== EXPLORATORY (NON-PREREGISTERED) REGIME SWEEP ======================
+# Diagnostic ONLY: the pre-registered analysis uses the raw proxy bits (sec 5). At proxy
+# acceptance ~0.28 the batch min-bound collapses to ~0 for B>=4 under EVERY policy, so the
+# metric loses resolving power. This sweep lifts acceptance to alpha_base in a resolvable
+# regime while PRESERVING the REAL between-session difficulty spread, the REAL per-phase
+# deviations, and the REAL phase MIX (~97.5% FREE_FORM). It tests whether phase composition
+# could EVER beat static-task-difficulty grouping. NOT used for the pre-registered verdict;
+# clearly labeled exploratory per the locked prereg (no post-hoc edit to the prereg or to RE-A1..A7).
+def regime_sweep(name, sessions, alpha_bases=(0.5, 0.6, 0.7, 0.8, 0.9), B=PRIMARY_B, gamma=PRIMARY_GAMMA):
+    keys = sorted(sessions.keys()); train = []; test = []
+    for kp in keys:
+        h = sum(ord(c) for c in os.path.basename(kp)); (train if h % 2 == 0 else test).append(kp)
+    if len(test) < 5 or len(train) < 5: train = keys[::2]; test = keys[1::2]
+    uni, bi, tri = ap.build_ngram([sessions[k] for k in train]); predict = ap.make_predictor(uni, bi, tri)
+    sa = {}
+    for k in test:
+        acc, ph, db = session_acc_phase(sessions[k], predict)
+        if len(acc) >= 10: sa[k] = (acc, ph, db)
+    test = list(sa.keys())
+    alln = 0; alla = 0; phn = defaultdict(int); pha = defaultdict(int); sess_diff = {}
+    for k in test:
+        acc, ph, db = sa[k]; sd = sum(acc)/len(acc); sess_diff[k] = sd
+        alln += len(acc); alla += sum(acc)
+        for a, p in zip(acc, ph): phn[p] += 1; pha[p] += a
+    glob = alla/alln
+    phase_dev = {p: (pha[p]/phn[p] - glob) for p in phn}
+    phase_mix = {p: phn[p]/alln for p in phn}
+    # real round skeleton (session, phase) preserving phase mix + session structure
+    skel = {k: [(r['ph']) for r in build_rounds(*sa[k], gamma=gamma)] for k in test}
+    rng = random.Random(SEED + 7)
+    cells = []
+    for ab in alpha_bases:
+        # synthesize accepted_len per round from alpha_eff = base + (sess_diff-glob) + phase_dev (BOTH confounds, real magnitudes)
+        sess_rounds = {}
+        for k in test:
+            rr = []
+            recent = []
+            for ph in skel[k]:
+                aeff = ab + (sess_diff[k] - glob) + phase_dev.get(ph, 0.0)
+                aeff = 0.02 if aeff < 0.02 else (0.98 if aeff > 0.98 else aeff)
+                run = 0
+                while run < gamma:
+                    if rng.random() < aeff: run += 1
+                    else: break
+                recent.append(run); 
+                if len(recent) > W: recent.pop(0)
+                rmean = sum(recent[:-1])/(len(recent)-1) if len(recent) > 1 else sess_diff[k]
+                rr.append({'al': run, 'ph': ph, 'rmean': rmean, 'diff': sess_diff[k]})
+            sess_rounds[k] = rr
+        flat = [r for k in test for r in sess_rounds[k]]
+        prng = random.Random(SEED)
+        O = orderings(flat, prng)
+        gr = chunk_min_mean(O['random'], B); gs = chunk_min_mean(O['static'], B)
+        gh = chunk_min_mean(O['sham'], B); gp = chunk_min_mean(O['phase'], B)
+        d1 = gp - gs; d2 = gp - gh
+        # light cluster bootstrap by session (resample synthesized rounds; no re-synth)
+        bd1 = []; bd2 = []; nS = len(test); brng = random.Random(SEED + 8)
+        for _ in range(500):
+            samp = [test[brng.randrange(nS)] for _ in range(nS)]
+            bflat = [r for k in samp for r in sess_rounds[k]]
+            if len(bflat) < B: continue
+            BO = orderings(bflat, brng)
+            bgs = chunk_min_mean(BO['static'], B); bgh = chunk_min_mean(BO['sham'], B); bgp = chunk_min_mean(BO['phase'], B)
+            if None in (bgs, bgh, bgp): continue
+            bd1.append(bgp - bgs); bd2.append(bgp - bgh)
+        cells.append({'alpha_base': ab, 'mean_al': O['mean_al'],
+                      'g_random': gr, 'g_static': gs, 'g_sham': gh, 'g_phase': gp,
+                      'delta1_phase_minus_static': d1, 'delta1_ci': [pctl(bd1, 0.025), pctl(bd1, 0.975)],
+                      'delta2_phase_minus_sham': d2, 'delta2_ci': [pctl(bd2, 0.025), pctl(bd2, 0.975)],
+                      'tax': (O['mean_al']-gr)/O['mean_al'] if O['mean_al'] > 0 else None})
+    return {'corpus': name, 'B': B, 'gamma': gamma, 'global_acc': glob,
+            'phase_dev': phase_dev, 'phase_mix': phase_mix,
+            'between_session_diff_std': (sum((sess_diff[k]-sum(sess_diff.values())/len(sess_diff))**2 for k in test)/len(test))**0.5,
+            'cells': cells}
+
+
 def main():
     t_start = time.perf_counter()
     print("parsing corpora (reusing EXP-0046 parsers)...")
@@ -234,11 +311,21 @@ def main():
     hp = holm(pmap)
     holm_out = {k: {'p_raw': pmap[k], 'p_holm': hp[k][0], 'sig': hp[k][1]} for k in pmap}
 
+    # EXPLORATORY regime sweep (diagnostic; not part of pre-registered verdict)
+    print("\nEXPLORATORY regime sweep..."); sys.stdout.flush()
+    sweeps = []
+    for name, sess in [('claude_code', cc), ('codex', cx)]:
+        if len(sess) >= 10:
+            sweeps.append(regime_sweep(name, sess))
+    rdir0 = os.path.join(os.path.dirname(HERE), 'results'); os.makedirs(rdir0, exist_ok=True)
+    with open(os.path.join(rdir0, 'exp_regime_sweep.json'), 'w') as fh:
+        json.dump(sweeps, fh, indent=2, default=str)
+
     rdir = os.path.join(os.path.dirname(HERE), 'results'); os.makedirs(rdir, exist_ok=True)
     payload = {'results': results, 'holm_grid': holm_out, 'family_size': len(pmap),
                'primary_cell': 'B%d_g%d' % (PRIMARY_B, PRIMARY_GAMMA),
                'seed': SEED, 'B_boot': B_BOOT, 'n_perm': N_PERM,
-               'wall_s': time.perf_counter()-t_start}
+               'wall_s': time.perf_counter()-t_start, 'regime_sweep': sweeps}
     with open(os.path.join(rdir, 'batch_round_model.json'), 'w') as fh:
         json.dump(payload, fh, indent=2, default=str)
 
@@ -268,6 +355,15 @@ def main():
     print("\n  RE-A5 Holm grid (RE-A1 delta1):")
     for k in sorted(holm_out):
         h = holm_out[k]; print("    %-22s p_raw=%.4f p_holm=%.4f sig=%s" % (k, h['p_raw'], h['p_holm'], h['sig']))
+    print("\n  EXPLORATORY regime sweep (phase mix ~97.5%% FREE_FORM; preserves real difficulty spread + phase dev):")
+    for sw in sweeps:
+        print("   CORPUS %s  between-session diff std=%.4f  phase_dev=%s" % (sw['corpus'], sw['between_session_diff_std'],
+              {k: round(v,4) for k,v in sw['phase_dev'].items()}))
+        for c in sw['cells']:
+            print("     alpha_base=%.1f mean_al=%.3f static=%.3f sham=%.3f phase=%.3f | d1(phase-static)=%+.4f CI[%+.4f,%+.4f] d2(phase-sham)=%+.4f CI[%+.4f,%+.4f]" % (
+                c['alpha_base'], c['mean_al'], c['g_static'], c['g_sham'], c['g_phase'],
+                c['delta1_phase_minus_static'], c['delta1_ci'][0], c['delta1_ci'][1],
+                c['delta2_phase_minus_sham'], c['delta2_ci'][0], c['delta2_ci'][1]))
     print("\nwall=%.1fs  wrote %s" % (payload['wall_s'], os.path.join(rdir, 'batch_round_model.json')))
     return payload
 
