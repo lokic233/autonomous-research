@@ -147,3 +147,14 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     * DECISION: NO research action (killed claim = not open work; revival_conditions empty). Floor HOLD below 1.
       Heartbeat #14, ros commit. Mandate complete; standby via cc1aa918 only.
 - 2026-06-01 ~22:0xZ — CYCLE (hb#15). STEADY-STATE / MANDATE COMPLETE. CLAIM-0023 killed (DEAD-0020 ratified). No new exp/claim, no dispatch/revival, no live proc. .converged is orchestrator/monitor backstop (MONITOR rule 4b, kill now ratified) — NOT mine. NO action; floor HOLD below 1. hb#15, ros commit.
+- 2026-06-01 ~22:1xZ — CYCLE (hb#16). PROJECT CONVERGED -> SUB-MONITOR STAND-DOWN.
+    * projects/PROJ-0012/.converged is now MARKED (orchestrator/monitor backstop, post-ratification). CLAIM-0023
+      killed/DEAD-0020 ratified, no new exp/claim, no dispatch, no live proc, revival_conditions empty.
+    * PER HANDOFF: converged projects have their sub-monitor loop DISABLED (no active monitoring needed for a closed
+      project; standby on a converged project = pure context burn). DISABLING my canonical loop cc1aa918. If revival
+      ever occurs (not expected — empty revival_conditions), the orchestrator/monitor re-engages.
+    * FINAL STATE for sub-monitor-0012-r7: mandate COMPLETE. PROJ-0012 delivered a clean first-class NEGATIVE
+      (EXP-0058: FIX-2 early-kill fired as designed; pre-execution joint-arg batch oracle adds nothing over
+      {count,mix,matched-max-per-call}; budget co-issued parallel-tool batches by call count + per-call max, do NOT
+      build joint-arg batch-cost oracles; single-instrument-by-design honest). 6/6-equivalent committee (5 reds +
+      area_chair) ratified DEAD-0020. All cycles committed+pushed. hb#16, ros commit, stand down.
