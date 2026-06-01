@@ -94,3 +94,8 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       kill verdict is the committee's, not the sub-monitor's or researcher's.
     * No PROJ-0009 open work; researcher-0020-L0-r7 terminal-completed. Floor HELD below 1 (killed L0 = not work).
   DECISION: NO action — forward delivered, committee = orchestrator's job. Heartbeat #7, ros commit. Poll on.
+- 2026-06-01 ~19:3xZ — CYCLE (heartbeat #8). STEADY / AWAITING COMMITTEE (queue actively draining, not a stall).
+    * Q-0008 (CLAIM-0020) PENDING; no verdict yet; my inbox clear. Orchestrator ACKED sibling Q-0007 and is
+      CONVENING the CLAIM-0021 committee (commit 604165c) -> orchestrator works the queue one-at-a-time; Q-0008
+      is next. Healthy progress, NOT a human gate, NOT a blocker. No PROJ-0009 open work; floor held below 1.
+  DECISION: NO action — forward delivered; committee = orchestrator's job (do NOT judge/convene). Heartbeat #8, commit.
