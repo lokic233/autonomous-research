@@ -1,7 +1,7 @@
 claim_id: CLAIM-0025
 project_id: PROJ-0014
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0025
 why_it_matters: 'Agent KV eviction BENCHMARK vs Belady (committee-checked DISTINCT
   from DEAD-0018/DEAD-0019: B is a policy-comparison of deployed/classical eviction
@@ -13,16 +13,20 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0060
+  summary: 'CLEAN-NEGATIVE: agent-KV LRU->Belady gap (<=11%) is oracle-only; best
+    cheap policy static-pin N=2 captures >=50% at only 1/5 caps at matched residency;
+    ARC & LRU-K capture 0/5; SGLang-LFU worse than LRU at tight caps; HHI 0.08, 0/15
+    pin cells survive BH/Bonferroni; ship classical LRU.'
+  data_path: experiments/2026-06-01/EXP-0060/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0060 result, then ros exp complete --exp EXP-0060 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0060
+active_experiments: []
 created_at: '2026-06-01T22:36:34Z'
-last_updated: '2026-06-01T22:36:49Z'
+last_updated: '2026-06-01T22:50:01Z'

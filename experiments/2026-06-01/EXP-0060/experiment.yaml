@@ -12,12 +12,15 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'CLEAN-NEGATIVE: agent-KV LRU->Belady gap (<=11%) is oracle-only;
+  best cheap policy static-pin N=2 captures >=50% at only 1/5 caps at matched residency;
+  ARC & LRU-K capture 0/5; SGLang-LFU worse than LRU at tight caps; HHI 0.08, 0/15
+  pin cells survive BH/Bonferroni; ship classical LRU.'
+result_effect: kill
 artifacts_path: experiments/2026-06-01/EXP-0060/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T22:50:01Z'
 prompt_version: v001
