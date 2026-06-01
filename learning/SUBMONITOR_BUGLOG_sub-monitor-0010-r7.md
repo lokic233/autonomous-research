@@ -133,3 +133,9 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   Sub-monitor remains monitor-only; will not write verdict / converge project (orchestrator's call). Floor: no open
   CPU lane (EXP-0056 done+killed); no respawn. Awaiting orchestrator verdict-write + any L1 dispatch or PROJ-0010
   convergence instruction.
+
+- 2026-06-01 ~19:5xZ — CYCLE (heartbeat #8). STEADY / monitor mode. Committee already RATIFIED KILL (DEAD-0021)
+  last cycle. Orchestrator has NOT yet written verdict to verdicts/ nor marked PROJ-0010 converged (still 4/4
+  investing) — that is the ORCHESTRATOR's action, not mine; correct in-flight state, NOT a human/parked gate.
+  researcher-0021-L0-r7 liveness=stale (last=33.3m) = completed-researcher decay, NO proc, NO open work -> NOT
+  BUG-26/29 false-DEAD; NO respawn. No open CPU lane; no new spawn. No blockers. Heartbeat #8, ros commit.
