@@ -1,0 +1,202 @@
+{
+  "results": {
+    "cc": {
+      "corpus": "cc",
+      "n_sessions": 64,
+      "RE_B0": {
+        "status": "ok",
+        "n_error_sessions": 39,
+        "mean_downstream_frac": 0.6329058498044278,
+        "median_downstream_frac": 0.7868025530162652,
+        "PASS": true
+      },
+      "RE_B1": {
+        "n_post_error_calls": 1630,
+        "n_post_error_errcalls": 182,
+        "sig_reconv_rate_count": 0.025153374233128835,
+        "sig_reconv_CI95": [
+          0.008341056533827619,
+          0.08450704225352113
+        ],
+        "sig_reconv_rate_footprint": 0.015100882987440842,
+        "errresult_recur_rate": 0.038461538461538464,
+        "errresult_recur_CI95": [
+          0,
+          0.10382513661202186
+        ],
+        "flag_full_reconvergence_kill": false,
+        "flag_errresult_recurs_kill": false,
+        "novel_claim_supported": true
+      },
+      "RE_B2": {
+        "n_sessions": 64,
+        "status": "ok",
+        "label_median": 0.9814571686995773,
+        "pos_rate": 0.5,
+        "auc_B0": 0.45703125,
+        "auc_B1": 0.4638671875,
+        "dAUC_point": 0.0068359375,
+        "dAUC_LB95": -0.07995951417004049,
+        "dAUC_UB95": 0.09090909090909094,
+        "fold_dAUC": [
+          0.015873015873015817,
+          -0.125,
+          0.1555555555555555,
+          -0.2857142857142857,
+          0.03571428571428581
+        ],
+        "fold_dAUC_std": 0.15145585591603,
+        "all_folds_positive": false,
+        "herfindahl": 0.3132447128429249,
+        "hhi_flag": true,
+        "PASS": false
+      },
+      "RE_B2b": {
+        "n_error_calls_with_window": 211,
+        "n_matched": 211,
+        "status": "ok",
+        "error_nonshare_mean": 0.8951277902552759,
+        "success_nonshare_mean": 0.9666239850646444,
+        "delta_b2b": -0.07149619480936853,
+        "delta_CI95": [
+          -0.17770429934450682,
+          0.012551739679733553
+        ],
+        "PASS": false
+      }
+    },
+    "codex": {
+      "corpus": "codex",
+      "n_sessions": 83,
+      "RE_B0": {
+        "status": "ok",
+        "n_error_sessions": 65,
+        "mean_downstream_frac": 0.9205673024948617,
+        "median_downstream_frac": 0.9971195120114467,
+        "PASS": true
+      },
+      "RE_B1": {
+        "n_post_error_calls": 2081,
+        "n_post_error_errcalls": 74,
+        "sig_reconv_rate_count": 0,
+        "sig_reconv_CI95": [
+          0,
+          0
+        ],
+        "sig_reconv_rate_footprint": 0.0,
+        "errresult_recur_rate": 0,
+        "errresult_recur_CI95": [
+          0,
+          0
+        ],
+        "flag_full_reconvergence_kill": false,
+        "flag_errresult_recurs_kill": false,
+        "novel_claim_supported": true
+      },
+      "RE_B2": {
+        "n_sessions": 83,
+        "status": "ok",
+        "label_median": 0.9859067829709673,
+        "pos_rate": 0.4939759036144578,
+        "auc_B0": 0.6440185830429733,
+        "auc_B1": 0.562137049941928,
+        "dAUC_point": -0.08188153310104529,
+        "dAUC_LB95": -0.1823461091753774,
+        "dAUC_UB95": 0.008225616921269108,
+        "fold_dAUC": [
+          -0.05555555555555558,
+          -0.0888888888888889,
+          -0.08333333333333337,
+          -0.23611111111111105,
+          -0.2063492063492064
+        ],
+        "fold_dAUC_std": 0.07268662828172026,
+        "all_folds_positive": false,
+        "herfindahl": 0.03769332633247212,
+        "hhi_flag": false,
+        "PASS": false
+      },
+      "RE_B2b": {
+        "n_error_calls_with_window": 139,
+        "n_matched": 139,
+        "status": "ok",
+        "error_nonshare_mean": 0.9348481484618086,
+        "success_nonshare_mean": 0.9250705527873684,
+        "delta_b2b": 0.009777595674440254,
+        "delta_CI95": [
+          -0.03020282822244269,
+          0.06105729934387294
+        ],
+        "PASS": false
+      }
+    }
+  },
+  "RE_B3": {
+    "dAUC_cc": 0.0068359375,
+    "dAUC_codex": -0.08188153310104529,
+    "dAUC_sign_agree": false,
+    "delta_b2b_cc": -0.07149619480936853,
+    "delta_b2b_codex": 0.009777595674440254,
+    "delta_b2b_sign_agree": false,
+    "both_corpora_powered": true,
+    "PASS": false
+  },
+  "summary": {
+    "exp": "EXP-0056",
+    "project": "PROJ-0010",
+    "claim": "CLAIM-0021",
+    "primary_corpus": "cc",
+    "per_corpus_gates": {
+      "cc": {
+        "B0": true,
+        "B2": false,
+        "B2b": false
+      },
+      "codex": {
+        "B0": true,
+        "B2": false,
+        "B2b": false
+      }
+    },
+    "RE_B3": {
+      "dAUC_cc": 0.0068359375,
+      "dAUC_codex": -0.08188153310104529,
+      "dAUC_sign_agree": false,
+      "delta_b2b_cc": -0.07149619480936853,
+      "delta_b2b_codex": 0.009777595674440254,
+      "delta_b2b_sign_agree": false,
+      "both_corpora_powered": true,
+      "PASS": false
+    },
+    "RE_B1_primary": {
+      "n_post_error_calls": 1630,
+      "n_post_error_errcalls": 182,
+      "sig_reconv_rate_count": 0.025153374233128835,
+      "sig_reconv_CI95": [
+        0.008341056533827619,
+        0.08450704225352113
+      ],
+      "sig_reconv_rate_footprint": 0.015100882987440842,
+      "errresult_recur_rate": 0.038461538461538464,
+      "errresult_recur_CI95": [
+        0,
+        0.10382513661202186
+      ],
+      "flag_full_reconvergence_kill": false,
+      "flag_errresult_recurs_kill": false,
+      "novel_claim_supported": true
+    },
+    "disposition": "KILL",
+    "wall_s": 3.75
+  },
+  "frozen": {
+    "MIN_TRIALS": 8,
+    "NBOOT": 2000,
+    "NFOLD": 5,
+    "B2B_K": 8,
+    "B0_FLOOR": 0.2,
+    "B2_DAUC_FLOOR": 0.03,
+    "HHI_FLAG": 0.2,
+    "seed": 20260601
+  }
+}

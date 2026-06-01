@@ -1,0 +1,48 @@
+{
+  "exp": "EXP-0056",
+  "project": "PROJ-0010",
+  "claim": "CLAIM-0021",
+  "primary_corpus": "cc",
+  "per_corpus_gates": {
+    "cc": {
+      "B0": true,
+      "B2": false,
+      "B2b": false
+    },
+    "codex": {
+      "B0": true,
+      "B2": false,
+      "B2b": false
+    }
+  },
+  "RE_B3": {
+    "dAUC_cc": 0.0068359375,
+    "dAUC_codex": -0.08188153310104529,
+    "dAUC_sign_agree": false,
+    "delta_b2b_cc": -0.07149619480936853,
+    "delta_b2b_codex": 0.009777595674440254,
+    "delta_b2b_sign_agree": false,
+    "both_corpora_powered": true,
+    "PASS": false
+  },
+  "RE_B1_primary": {
+    "n_post_error_calls": 1630,
+    "n_post_error_errcalls": 182,
+    "sig_reconv_rate_count": 0.025153374233128835,
+    "sig_reconv_CI95": [
+      0.008341056533827619,
+      0.08450704225352113
+    ],
+    "sig_reconv_rate_footprint": 0.015100882987440842,
+    "errresult_recur_rate": 0.038461538461538464,
+    "errresult_recur_CI95": [
+      0,
+      0.10382513661202186
+    ],
+    "flag_full_reconvergence_kill": false,
+    "flag_errresult_recurs_kill": false,
+    "novel_claim_supported": true
+  },
+  "disposition": "KILL",
+  "wall_s": 3.75
+}
