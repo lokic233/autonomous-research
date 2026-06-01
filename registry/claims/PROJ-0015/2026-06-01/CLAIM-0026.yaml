@@ -1,0 +1,31 @@
+claim_id: CLAIM-0026
+project_id: PROJ-0015
+stage: seed
+status: seed
+claim: CLAIM-0026
+why_it_matters: 'Agent serving KV is TOOL-RESULT-PREFILL-dominated (token mass, NOT
+  cost): first granular token-mass decomposition of real agent traces (result vs arg
+  vs decode-interstitial) + heavy-tail Gini + cross-instrument replication. CHARACTERIZATION,
+  no predictor/dAUC. DISTINCT from DEAD-0018 (committee-checked): DEAD-0018 was a
+  within-tool arg-structure PREDICTABILITY dAUC claim; CLAIM-0026 is a pure mass-COMPOSITION
+  measurement (no predictor). Pre-measured CC result/span 0.626 (LB95 borderline 0.498-0.502)
+  / Codex 0.861; top-decile 0.788/0.576; Gini 0.864/0.748. proj0015_design committee
+  5/5 PICK Charter A, FINAL_VERDICT green-seed, 9 binding mandatory fixes. Charter
+  C KILLED at design (APC token-content-addressed). DistServe 2401.09670/SplitWise
+  2311.18677/Sarathi 2403.02310/RadixAttention 2312.07104/vLLM-APC 2309.06180 assume
+  the mix, never measure it.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: ''
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-01T23:30:33Z'
+last_updated: '2026-06-01T23:30:33Z'
