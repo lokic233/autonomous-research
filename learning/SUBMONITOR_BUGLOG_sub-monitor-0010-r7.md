@@ -111,3 +111,12 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   correctly handled: a completed researcher with no proc + no open work is left retired-in-place, not revived).
   Confirmed via orchestrator inbox note (19:20:07Z): 4/4 investing, sub-monitor-0010-r7 alive, queue advancing
   (Q-0008/PROJ-0009 now the only pending). No blockers, no human gate, no new spawn. Heartbeat #6, ros commit.
+
+- 2026-06-01 ~19:4xZ — CYCLE (heartbeat #7). PROGRESS: orchestrator CONSUMED Q-0007 (no longer in pending queue;
+  only Q-0008/CLAIM-0020/PROJ-0009 pending now) and CONVENED the CLAIM-0021 kill committee
+  (runtime/committee_run_CLAIM-0021-kill + packet runtime/committee/CLAIM-0021-2026-06-01-kill exist). My forward
+  is done + consumed exactly as intended — sub-monitor does NOT judge. No verdict written yet (verdicts/ + cemetery
+  clean for 0021). researcher-0021-L0-r7 liveness=STALE (last=29.8m) but this is a COMPLETED researcher decaying,
+  NOT BUG-26/29 false-DEAD-while-computing (EXP-0056 status=completed, no claude -p proc, no open work) -> NO
+  respawn. PROJ-0010 still 4/4 investing (correct — not converged until committee rules). No blockers, no human
+  gate. Heartbeat #7, ros commit.
