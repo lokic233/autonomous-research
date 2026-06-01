@@ -1,0 +1,80 @@
+verdict_id: VERDICT-0048
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-06-01'
+experiment_ids:
+- EXP-0037
+- EXP-0038
+- EXP-0041
+- EXP-0042
+- EXP-0043
+- EXP-0044
+experiment_paths:
+- experiments/2026-05-31/EXP-0037
+- experiments/2026-05-31/EXP-0038
+- experiments/2026-05-31/EXP-0041
+- experiments/2026-05-31/EXP-0042
+- experiments/2026-06-01/EXP-0043
+- experiments/2026-06-01/EXP-0044
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'NONE (area_chair: no fatal objection, no RED, no prior-art collision). All 3 VERDICT-0047
+  BLOCKING items RESOLVED by EXP-0044 on Codex'
+- 2 methodology reviewers (evaluation_prosecutor+theory_skeptic) flipped to GREEN
+- 'product_realist moved RED(V47)->YELLOW. Held at YELLOW (unanimous green_rule, 2G+3Y+area_chair-Y)
+  on: (a) novelty_killer REQUIRED-CITATION gap (Hawkes-BIC IC-model-selection literature
+  mandatory when the whole discriminating leg rests on IC-based Hawkes selection at
+  N=60 inter-failure gaps, the small-sample regime that literature flags as fragile)'
+- "(b) consistent contribution-altitude assessment across novelty/product/systems\
+  \ axes = sound-but-modest (1 clean harness Codex, modest N=106 fails/60 gaps, purely\
+  \ descriptive, call-index not wall-clock clock, HMM-Cox degeneracy leaves finer\
+  \ latent-state not fully closed) \u2014 capped below venue-grade, not a fatal flaw"
+required_evidence:
+- '[CITATION-ONLY, area_chair: ''path to GREEN is now citation gap only, no further
+  ablations''] Add mandatory citation of the Hawkes/IC model-selection small-N reliability
+  literature with an EXPLICIT small-N IC-selection-risk acknowledgment (the Codex
+  LOSO floor dBIC=17.6 provides resilience but the framing disclosure is required)'
+- '[RECOMMENDED, not blocking] larger genuine-exec Codex corpus or a 2nd clean genuine-exec
+  harness to lift the 1-harness ceiling'
+- wall-clock/concurrency clock vs call-index sensitivity
+- tighter latent-state Cox to fully close the HMM-degeneracy gap
+- alpha/beta CIs + posterior-predictive dispersion check + same-tool-vs-cross-tool
+  decomposition (the optional EXP-0044 RECOMMENDED items)
+map_delta_proposals:
+- 'MAP-0002 CLAIM-0012: stage YELLOW-CLEAN (one citation from GREEN). VERDICT-0048
+  committee_run_19: 2 GREEN (eval_prosecutor+theory_skeptic) + 3 YELLOW (novelty_killer+systems+product_realist)
+  + area_chair YELLOW -> YELLOW (unanimous green_rule). ALL 3 VERDICT-0047 BLOCKING
+  items RESOLVED (EXP-0044): B1 Codex LOSO PASS (dBIC[17.6,30.7] all 46 removals,
+  tool-strat p=0.000 all), B2 steelman phase-Cox PASS on Codex (Hawkes still +15.0
+  over best static, arXiv 2604.15084 null), B3 gate-strip FALSIFIES Gemini (alpha->0)
+  / CC survives (fragility is aggregation not gates). NARROWED claim = 3-harness descriptive
+  H1 (GREEN-grade) + Codex-clean defended H2 (1 strong harness), Gemini KILLED + CC
+  fragile honestly conceded. No RED, no fatal, no prior-art collision (novelty_killer
+  3 independent searches). path_to_green = add Hawkes-IC-selection small-N citation
+  + accept first-measurement D&B characterization altitude. NO further ablations required.'
+baseline_requirements:
+- within-session Bernoulli/permutation (H1 GREEN-grade, all reviewers)
+- tool-stratified permutation static-het null (Codex p=0.000 all 46 LOSO)
+- Cox per-tool-rate vs +Hawkes BIC (Codex +28.3)
+- phase/HMM latent-state steelman static-het null (Codex Hawkes +15.0 over best static)
+- Codex LOSO (all 46 dBIC>=17.6)
+- gate-stripped Hawkes (Gemini falsified alpha->0, CC survives)
+- 'universal-burstiness (B,M) literature anchors. area_chair: all 7 packet baselines
+  executed+passed or honestly falsified, no additional required'
+created_at: '2026-06-01T05:33:29Z'
