@@ -1,0 +1,116 @@
+{
+  "experiment": "EXP-0049",
+  "claim": "CLAIM-0014",
+  "project": "PROJ-0005",
+  "level": 0,
+  "n_seams": 6215,
+  "n_records": 12430,
+  "corpora": {
+    "claude_code": 3909,
+    "codex": 2306
+  },
+  "tokenizers": [
+    "gpt2",
+    "qwen2-0.5b"
+  ],
+  "block_size": 16,
+  "gate_a": {
+    "pass": true,
+    "mean": 0.010953484511091663,
+    "ci": [
+      0.010038589643034666,
+      0.011884677795970326
+    ]
+  },
+  "gate_b": {
+    "pass": true,
+    "mean_diff": 0.0031861021639462794,
+    "ci": [
+      0.0022740190901126577,
+      0.004124342209788669
+    ]
+  },
+  "gate_c": {
+    "pass": true,
+    "auc": 0.7242021800756543,
+    "ci": [
+      0.703290868581133,
+      0.7448860660682081
+    ],
+    "n_pos": 1196,
+    "n_neg": 11234
+  },
+  "verdict": "PASS",
+  "chat_template_control": {
+    "mean_churn_without": 0.010953484511091663,
+    "mean_churn_with_template": 0.0005029933657219731,
+    "diff": -0.0104504911453697
+  },
+  "per_delimiter_class": {
+    "json_close_brace": {
+      "n": 8158,
+      "mean_churn": 0.00363196127569027,
+      "churn_rate": 0.03689629811228242
+    },
+    "period": {
+      "n": 282,
+      "mean_churn": 0.0554951984613985,
+      "churn_rate": 0.5354609929078015
+    },
+    "alnum": {
+      "n": 336,
+      "mean_churn": 0.005233783696482758,
+      "churn_rate": 0.017857142857142856
+    },
+    "other_punct": {
+      "n": 166,
+      "mean_churn": 0.004394690254149464,
+      "churn_rate": 0.04216867469879518
+    },
+    "paren_close": {
+      "n": 44,
+      "mean_churn": 0.042160143960250765,
+      "churn_rate": 0.4318181818181818
+    },
+    "bracket_close": {
+      "n": 1556,
+      "mean_churn": 0.040890180278581635,
+      "churn_rate": 0.38046272493573263
+    },
+    "angle_bracket": {
+      "n": 122,
+      "mean_churn": 0.043173190361825264,
+      "churn_rate": 0.5737704918032787
+    },
+    "comma": {
+      "n": 6,
+      "mean_churn": 0.2478553831210836,
+      "churn_rate": 0.5
+    },
+    "colon": {
+      "n": 6,
+      "mean_churn": 0.24744470784812975,
+      "churn_rate": 1.0
+    },
+    "single_newline": {
+      "n": 1678,
+      "mean_churn": 0.0,
+      "churn_rate": 0.0
+    },
+    "quote": {
+      "n": 2,
+      "mean_churn": 0.01744186046511628,
+      "churn_rate": 0.5
+    },
+    "double_newline": {
+      "n": 66,
+      "mean_churn": 0.18281588629365256,
+      "churn_rate": 0.48484848484848486
+    },
+    "space": {
+      "n": 8,
+      "mean_churn": 0.32059096018416416,
+      "churn_rate": 1.0
+    }
+  }
+}
