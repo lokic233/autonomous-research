@@ -34,3 +34,31 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   CPU active, BOTH dangerous flags + --model claude-opus-4-8 confirmed in ps). Registered researcher agent record.
   FLOOR: 1 live lane on the only open CPU work (EXP-0056). L1+ = orchestrator-dispatched (GPU/real-APC), NOT mine.
   Hold at 1 until researcher reports --next with concrete follow-on. NO queue submit yet (no committee-ready evidence).
+
+- 2026-06-01 ~19:1xZ — CYCLE (heartbeat #2). researcher-0021-L0-r7 -> COMPLETED. liveness=running (last 3.8m) but
+  PROC (PID 97661 claude -p + native 97745) printed its TERMINAL deliverable + filed ros exp complete (effect=kill)
+  + ros report --done; HEAD f9beb91. NOT a false-DEAD — genuinely finished. Full artifact set present:
+  PRE_REGISTRATION.md (10189B, locked+committed HEAD 384bcaf BEFORE run), impl/error_fork_census.py (20660B stdlib,
+  reused EXP-0054 parse+JOIN verbatim), logs/run_main.log, results/{census.json, summary.json, analysis.md,
+  sessions_cc.csv, sessions_codex.csv}.
+  DISPOSITION = KILL (clean negative, FIRST-CLASS). Both corpora POWERED: CC n=64 (39 err-bearing, 1630 post-err
+  calls), Codex n=83 (65 err-bearing, 2081). Per-gate (frozen, no tuning):
+    RE-B0 PASS both (downstream footprint frac 0.633/0.921 >= 0.20).
+    RE-B1 re-convergence near-zero (CC 2.5% count/1.5% footprint; Codex 0%) — BUT the RE-B1 TRAP: matched-success
+      control shows SUCCESS calls equally non-shareable (CC 0.967 / Codex 0.925; session label median 0.98) =>
+      near-zero re-convergence is the UNIVERSAL base rate, NOT an error effect. novel_claim_supported=True in
+      isolation is a FALSE POSITIVE exactly as committee FIX-1 (RE-B2b) anticipated.
+    RE-B2 FAIL both (dAUC CC +0.007 LB95 -0.080 not-all-folds-pos HHI-flag 0.31; Codex -0.082 LB95 -0.182 all-folds-neg)
+      => no signal over JOINT cadence baseline.
+    RE-B2b FAIL both (delta CC -0.071 CI[-0.178,+0.013]; Codex +0.010 CI[-0.030,+0.061]; both include 0) =>
+      error-group non-shareability INDISTINGUISHABLE from length/entropy-matched success => thesis falsified as
+      ordinary trajectory divergence. (CC sign is even OPPOSITE thesis: errors slightly MORE shareable.)
+    RE-B3 HARD gate FAIL on sign disagreement (dAUC +0.007 vs -0.082; delta_b2b -0.071 vs +0.010).
+    Multiple independent kills, not a marginal miss. Load-bearing PROJ-0007/DEAD-0015 distinction => moot:
+    errors are NOT a distinct KV-fork class; divergence is task-content-driven as SGLang RadixAttention/vLLM APC assume.
+  ACTION: FORWARDED to committee (forward-only, did NOT judge) -> ros queue submit Q-0007 (claim CLAIM-0021, exp
+    EXP-0056, kind=committee). Orchestrator convenes the committee.
+  FLOOR: EXP-0056 was the only open CPU lane and it is now CLOSED (completed). Researcher set --next=none.
+    No refill (no concrete --next; L1+ = orchestrator-dispatched). Floor legitimately 0 open CPU lanes pending
+    committee verdict on Q-0007. Will hold and monitor for committee outcome / any orchestrator dispatch.
+  Heartbeat #2, ros commit.
