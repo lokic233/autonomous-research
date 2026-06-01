@@ -12,13 +12,13 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HONEST NEGATIVE: cross-session prefix-reuse shortfall from tool-schema/system-prompt drift is real/named/predictable (drift-class AUC 0.92-0.98>>sham) and DISTINCT from PROJ-0005 (0% BPE-seam, struct-frac 1.0, no fold) but RECOVERABLE prompt-eng anti-pattern (CC realized 51->576 tok ~10x; post-canon residual 100% genuine content), NOT architectural ceiling. RE-B1 KILLER fired. Codex effect only 2.5% tail. standalone_architectural_ceiling_supported=False.'
+result_effect: 'kill'
 artifacts_path: experiments/2026-06-01/EXP-0053/
-reproducibility: ''
+reproducibility: 'impl/xsession_prefix_ceiling.py (seed 42, EXP-0049 venv tokenizers gpt2+qwen2-0.5b); PRE_REGISTRATION.md LOCKED 2026-06-01T16:09:03Z committed b83fb0c pre-run; logs/run_main5.log; summary.json/analysis.md/per_row_*.csv; prior_art/PROJ-0007/RE-B7,RE-B8.'
 linked_verdicts:
 - VERDICT-0060
 started_at: '2026-06-01T16:09:03Z'
-completed_at: ''
+completed_at: '2026-06-01T16:20:00Z'
 prompt_version: 'v001'

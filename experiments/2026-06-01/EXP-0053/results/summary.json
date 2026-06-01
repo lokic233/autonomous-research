@@ -526,9 +526,13 @@
   "overall_per_family": {
     "codex": {
       "kill_reasons": [],
-      "verdict": "PASS",
+      "shortfall_frac_of_shared": 0.024614311394918303,
+      "material_effect(>=10%)": false,
+      "verdict": "KILL/NEGATIVE",
       "RE_B1_literal_frozen_metric_PASS": true,
-      "RE_B1_honest_architectural_supported": true,
+      "RE_B1_intent_architectural_supported": true,
+      "RE_B1_integrated_material_architectural": false,
+      "recoverable_drift_frac": 0.23021582733812948,
       "RE_B2_effect_real": true,
       "RE_B3_PASS": true,
       "RE_B4_FOLD": false
@@ -537,12 +541,26 @@
       "kill_reasons": [
         "RE-B1 KILLER: drift-attributable shortfall is recoverable by best-practice canonicalization (recovered_frac=0.50); post-canon residual is genuine content/tool-set membership (drift_residual_frac=0.00) -> prompt-engineering anti-pattern, NOT an architectural ceiling"
       ],
+      "shortfall_frac_of_shared": 0.9530724108087317,
+      "material_effect(>=10%)": true,
       "verdict": "KILL/NEGATIVE",
       "RE_B1_literal_frozen_metric_PASS": true,
-      "RE_B1_honest_architectural_supported": false,
+      "RE_B1_intent_architectural_supported": false,
+      "RE_B1_integrated_material_architectural": false,
+      "recoverable_drift_frac": 0.5028755927757038,
       "RE_B2_effect_real": true,
       "RE_B3_PASS": true,
       "RE_B4_FOLD": false
     }
+  },
+  "HONEST_VERDICT": {
+    "standalone_architectural_ceiling_supported": false,
+    "conclusion": "NEGATIVE: cross-session prefix-reuse shortfall from tool-schema/system-prompt drift is REAL, NAMED (volatile head fields + dynamic tool/config lists), PREDICTABLE (drift-class AUC 0.92-0.98 >> sham), and DISTINCT from PROJ-0005 (0% BPE-seam) -- but it is a RECOVERABLE prompt-engineering anti-pattern (place volatile/tenant/config fields and dynamic tool lists AFTER the static prefix), NOT a novel architectural ceiling. RE-B1 KILLER fires on the load-bearing early-drift family (Claude Code: realized 51 -> 576 tok, ~10x recovery, post-canon residual 100% genuine content). Codex shows only a ~2.5% tail effect whose residual is genuine per-session config prose (recoverable by relocating the variable permissions block). HONEST KILL PATHWAY = prompt-engineering PSA + drift-class predictor; standalone PROJ-0007 architectural claim NOT supported.",
+    "fold_into_proj0005": false,
+    "salvage": [
+      "prompt-engineering PSA (volatile/tenant/config last; sort tool lists)",
+      "drift-class first-divergence predictor (AUC 0.92-0.98 > sham)",
+      "L1 follow-on (out-of-scope L0): real H100 vLLM APC TTFT recovered by canonicalization"
+    ]
   }
 }
