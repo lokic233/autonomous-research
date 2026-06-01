@@ -264,3 +264,11 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   decision unchanged: refill ONLY if the committee verdict opens a concrete new CPU follow-on. Heartbeat #16, commit.
   (Two provider-5xx interruptions hit the boot of this cycle's turn; recovered, no state lost — submit + completion
   were already persisted in prior cycle commit 3ca2ba1 + queue Q-0006.)
+
+- 2026-06-01 ~17:41Z — CYCLE (heartbeat #17). QUIESCENT (unchanged from #16, ~3m later). researcher-0017-L0-r6
+  COMPLETED+retired; pool 0 live = CORRECT (L0 exhausted, L1 GPU/orchestrator-only). Q-0006 still PENDING (committee
+  not yet convened; only ~20m since forward). No new VERDICT for CLAIM-0017 (still just design-seed VERDICT-0060).
+  NOTE: registry/cemetery/PROJ-0007/2026-06-01/DEAD-0015.yaml present — that is ORCHESTRATOR authority (bury/verdict),
+  NOT mine; I do not touch it (researcher report referenced DEAD-0015 as the kill target). No new open CPU work.
+  ACTIONS: none — no live researcher, no committee-ready work to submit (already Q-0006), no refill (below-floor
+  correct). NO make-work. Heartbeat #17, commit.
