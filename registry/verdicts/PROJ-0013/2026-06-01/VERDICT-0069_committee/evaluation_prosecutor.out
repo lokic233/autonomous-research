@@ -1,0 +1,9 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: [{"name": "Block/Segment-level Caching (e.g., Anthropic Prompt Caching)", "why": "Exact-prefix radix (SGLang 2312.07104) is a weak baseline for Claude Code; if the real harness targets an API supporting modular block caching, the prefix-branch bottleneck is structurally bypassed.", "repo_or_cite": "PromptCache 2311.04934 / Anthropic API"}]
+STRAWMAN_RISKS: ["Reconstructed CC envelope ordering (UUID at token 47) artificially fabricating the early branch point", "Evaluating exact-prefix limitations on a harness that might be optimized for chunk-based caching"]
+MISSING_METRICS: ["Validation of volatile token positions in exact, raw over-the-wire HTTP payloads"]
+KILLER_EXPERIMENT: Re-run the RE-A0/RE-A2 simulation strictly on L1/L2 intercepted over-the-wire API payloads (zero reconstruction). If the real Claude Code client places the session_uuid late in the prompt or in a non-cached segment, the entire 93.8% CC gap collapses to the Codex clean negative.
+RATIONALE: The characterization is mathematically robust and the discordant finding is highly valuable, but it rests precariously on a reconstructed envelope. Because a single field (`session_uuid`) accounts for 93.8% of the unlocked mass, the entire 28% recompute-saved result is highly sensitive to the exact token index of this field. This is a solid YELLOW: the harness-design principle (early volatile tokens destroy radix caching) is clearly proven and the collision cost (0.000) is well-bounded, but the specific empirical magnitude for CC is an unverified upper bound until validated against real wire payloads.
+```

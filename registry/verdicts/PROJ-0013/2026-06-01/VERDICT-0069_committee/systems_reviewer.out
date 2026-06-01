@@ -1,0 +1,12 @@
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SGLang RadixAttention", url: "https://www.lmsys.org/blog/2024-01-17-sglang/", overlap: "Implements automatic KV reuse by radix-tree exact prefix matching over token sequences; does not appear to implement volatile-token canonicalization/relocation."},
+  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "Hashes prompt-token blocks plus parent prefix for reuse when requests share the same prefix; overlap is the cache substrate, not the normalization-budget measurement."},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "Shares KV pages for requests that start with the same prompt and documents pitfalls such as timing, LRU eviction, and block size; no evidence of masking session UUID/timestamp/path fields."},
+  {system: "FlashInfer cascade APIs", url: "https://docs.flashinfer.ai/api/cascade.html", overlap: "Provides lower-level KV/cache cascade primitives; no direct overlap with cross-session volatile-token normalization policy."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds only under the scoped workload shape: an early per-session volatile identifier before a long otherwise-shared head. CC evidence is strong enough for a scoped characterization (realized_frac=0.082 vs canonicalized-max, +28.1% recompute saved at cap=0.30, HHI=0.020, top-3 CI95 lower=0.736), but it is L0, CPU/token-count simulation, n=50, and uses a reconstructed CC envelope. Codex n=122 is a clean negative with realized_frac=0.993, so this is not a general serving-law result.
+RATIONALE: Prompt version v001. Existing systems already implement exact-prefix KV reuse: SGLang says RadixAttention maps token sequences to KV tensors in a radix tree for prefix search/reuse/eviction, vLLM hashes prompt-token blocks plus parent prefix, and TensorRT-LLM reuses KV pages only for requests that start with the same prompt. I found no shipping OSS evidence that these systems already canonicalize volatile prompt fields such as session UUIDs before cache lookup, so the contribution is not integration-only; it is a measured harness-design insight. Vote is yellow, not green, because the positive result is CC-only, dominated by one inert field (session_uuid=93.8% marginal mass), reported as an upper bound, and sensitive to reconstructed field ordering despite the robust reported bootstrap and capacity-sim numbers.
+```

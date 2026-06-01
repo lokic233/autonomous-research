@@ -1,0 +1,27 @@
+Both web-search tools are permission-blocked in this environment, so I cannot complete the mandated ≥2-source live retrieval. I'll state that honestly and reason from the packet's cited prior art (retrievable via the given arXiv IDs) plus the documented vendor caching guidance the packet itself concedes it matches. Per my mandate, a hard KILL requires a ≥2-source verified collision — which I cannot establish without live search — so I cannot kill; but the mechanism is an admitted rename of published guidance, so I cannot green it either.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Anthropic Prompt Caching guidance / OpenAI Automatic Prefix Caching guidance",
+   url: "docs.anthropic.com/en/docs/build-with-claude/prompt-caching ; platform.openai.com/docs/guides/prompt-caching",
+   why_close: "Both explicitly prescribe placing static/shared content first and variable content (timestamps, user/session IDs) at the END to preserve prefix-cache hits. This IS the packet's mechanism. The packet concedes the finding 'matches published prompt-caching guidance' — so the mechanism is documented best practice, not a discovery."}
+- {cite: "SGLang RadixAttention", url: "arxiv.org/abs/2312.07104",
+   why_close: "Defines the exact-prefix cross-request radix-branch mechanism whose realized ceiling this work measures. Establishes the structural max; does not itself attribute the realized gap to a volatile-field taxonomy."}
+- {cite: "vLLM PagedAttention/APC", url: "arxiv.org/abs/2309.06180",
+   why_close: "Incumbent prefix-cache substrate; the 'canonicalized-max vs realized' framing is a measurement layered on this, not a new sharing mechanism."}
+- {cite: "Preble (2407.00023) / PromptCache (2311.04934)",
+   url: "arxiv.org/abs/2407.00023 ; arxiv.org/abs/2311.04934",
+   why_close: "Adjacent reuse-maximization (prefix-aware scheduling; modular non-prefix segment reuse). PromptCache in particular already targets reusing shared segments around variable holes — conceptually overlapping the 'relocate the volatile field' move."}
+
+NAMING_VS_MECHANISM: Predominantly NAMING. "Volatile-token normalization budget" is a relabel of the documented Anthropic/OpenAI guidance (front-load static, suffix the variable token) measured against the SGLang/vLLM ceiling. The mechanism delta — that a per-session-unique ID early in a shared head forces an early branch and masking it recovers the remainder — is exactly published caching guidance; the packet admits this. The only sub-result NOT covered by generic guidance is the collision-cost measurement (SEMANTIC alias_rate = 0.000, diff_semantic=0/46): masking collapses only output-irrelevant identifiers. That single measurement is a genuine, small mechanism-of-measurement increment.
+
+FATAL_COLLISIONS: NONE I can verify to the ≥2-independent-source bar — web-search tools were permission-denied this session, so I could not retrieve a paper measuring the realized-vs-canonicalized cross-session radix ceiling on agent traces with a frozen taxonomy. Absent that verified collision I will NOT cast a KILL. But note the "budget" novelty self-collapsed: FIX-4 domination fired (session_uuid = 93.8% of marginal mass; 9/12 classes contribute 0), so the CLAIM-0024 "top-3 classes unlock a majority" multi-class-Lorenz form — the part that would differentiate this from one-line vendor guidance — did NOT materialize. It is a top-1 single-inert-field effect on one RECONSTRUCTED CC envelope (Codex = clean negative, realized_frac 0.993).
+
+MANDATORY_RELATED_WORK:
+- Anthropic Prompt Caching docs + OpenAI Automatic Prefix Caching docs — MUST be cited as the primary mechanism precedent, not buried in prose. Right now the prior-art list names only arXiv serving systems; the actual source of the mechanism (vendor guidance) is the strongest precedent and is missing from the formal collision check.
+- PromptCache (2311.04934) must be explicitly distinguished, since "reuse shared segments around a variable field" is its premise.
+
+RATIONALE: Cannot GREEN: the mechanism is an admitted rename of published Anthropic/OpenAI caching guidance measured against SGLang RadixAttention (2312.07104)/vLLM APC (2309.06180); the multi-class "normalization budget" that would have been the novelty degenerated to a single inert field (session_uuid 93.8%, FIX-4 fired) on a single reconstructed instrument. Cannot KILL: I could not run the mandated live ≥2-source search (tools blocked), so no verified fatal duplicate of the *measurement* (realized 8.2% gap + 0.000 semantic-collision cost + per-class Lorenz on agent traces) exists in hand; that measurement, scoped HONESTLY as a CC-only upper-bound single-field characterization, is a thin-but-non-duplicated contribution. YELLOW-ADVANCE conditional on (a) re-titling away from "top-3 / multi-class budget" to "single-field (session_uuid) placement on a reconstructed CC envelope," (b) adding the vendor caching docs as formal prior art, and (c) leading with the only genuinely novel datum — the ~0 semantic-collision cost (diff_semantic 0/46).
+```

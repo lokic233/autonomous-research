@@ -1,0 +1,62 @@
+verdict_id: VERDICT-0069
+claim_id: CLAIM-0024
+project_id: PROJ-0013
+date: '2026-06-01'
+experiment_ids:
+- EXP-0059
+experiment_paths:
+- experiments/2026-06-01/EXP-0059
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- none
+required_evidence:
+- L1/L2 validation on intercepted over-the-wire API payloads (zero reconstruction)
+  to confirm session_uuid position+magnitude (evaluation_prosecutor killer experiment)
+- a SECOND positive instrument (non-CC harness with early volatile field) to show
+  the result is not a single-reconstruction artifact (theory_skeptic upgrade-b)
+- prompt-output equivalence demonstration under masking (FIX-2 deferred)
+map_delta_proposals:
+- 'CLAIM-0024: RETITLE from ''volatile-token normalization BUDGET (top-3 classes unlock
+  majority)'' to ''cross-session radix-prefix ceiling on CC reconstructed envelope
+  = single-field (session_uuid) placement effect with ~0 semantic-collision cost'
+- Codex clean negative'. ADVANCE as YELLOW with scoping. Multi-class Lorenz/budget
+  framing COLLAPSED to top-1 lever (FIX-4 fired, session_uuid=93.8%
+- 9/12 classes contribute 0
+- 52% of gap is joint-masking interaction) -> retire the 'budget' metaphor for 'single-field
+  placement characterization'. The only genuinely-novel datum = collision-cost safety
+  (semantic alias_rate 0.000, diff_semantic 0/46). Codex realized_frac 0.993 = clean
+  negative (well-ordered byte-identical base_instructions head needs no normalization).
+baseline_requirements:
+- Anthropic Prompt Caching docs + OpenAI Automatic Prefix Caching docs MUST be added
+  as FORMAL prior art / primary mechanism precedent (currently buried in prose)
+- PromptCache 2311.04934 must be explicitly distinguished ('reuse shared segments
+  around a variable field' is its premise)
+created_at: '2026-06-01T23:09:57Z'
+
+# ---- VERBATIM COMMITTEE VOTES (6/6 YELLOW-ADVANCE; committee_run CLAIM-0024-2026-06-01; full .out copied to VERDICT-0069_committee/) ----
+verbatim_votes_summary: |
+  6/6 YELLOW (5 reviewers + area_chair FINAL_VERDICT: yellow). Aggregated on SUBSTANCE; first non-kill of the session, earned not inflated.
+  - novelty_killer (claude-opus-4-8) YELLOW: web-search permission-blocked so could not run mandated >=2-source live retrieval -> cannot KILL (no verified fatal duplicate of the MEASUREMENT in hand); cannot GREEN (mechanism is an admitted rename of published Anthropic/OpenAI prompt-caching guidance measured against SGLang 2312.07104 / vLLM APC 2309.06180; the multi-class "budget" novelty self-collapsed, FIX-4 fired session_uuid=93.8%). Only genuinely-new datum = ~0 semantic-collision cost. Conditions: re-title to single-field, add vendor caching docs as formal prior art, lead with the 0.000 semantic alias rate.
+  - systems_reviewer (codex) YELLOW: CONTRIBUTION_TYPE=insight. No shipping OSS (SGLang RadixAttention, vLLM APC, TensorRT-LLM KV reuse, FlashInfer) canonicalizes volatile fields before cache lookup -> not integration-only, a measured harness-design insight. Yellow not green: CC-only, dominated by one inert field (session_uuid 93.8%), upper bound, sensitive to reconstructed field ordering; Codex n=122 clean negative realized_frac 0.993 -> not a general serving law.
+  - evaluation_prosecutor (gemini) YELLOW: characterization mathematically robust + discordant finding valuable, but rests precariously on a RECONSTRUCTED envelope; 93.8% single-field means the 28% recompute-saved is highly sensitive to session_uuid's exact token index. KILLER EXPERIMENT: re-run RE-A0/RE-A2 on L1/L2 intercepted over-the-wire payloads (zero reconstruction); if the real CC client places session_uuid late, the entire 93.8% CC gap collapses to the Codex clean negative.
+  - theory_skeptic (claude-opus-4-7) YELLOW: gap is REAL token-accounting (realized_frac 0.082, +32,040 tok @cap=0.30, B=2000 session+class bootstrap, HHI=0.020 fleet-wide) and genuinely DISTINCT from 2312.07104/2309.06180/2311.04934/2407.00023 as a measurement of their realized cross-session ceiling on live agent traces. BUT the "12-class normalization BUDGET" framing is rhetorically inflated -> reduces to "one early per-session inert byte truncates the radix prefix; move it" (1 - 47/578 ~= 0.92 arithmetic), fully predicted by trie theory + matches published vendor guidance; 52% of gap is joint-masking interaction. YELLOW earned as harness-specific characterization+policy-sim; GREEN needs live-harness equivalence OR a 2nd positive instrument; RED would deny a real honestly-scoped novel measurement.
+  - product_realist (metacode) YELLOW: REAL_USE_CASE = agent-harness engineers ordering <env> heads; microbenchmark-sim only (no GPU/wall-clock), +28.1% recompute saved is an UPPER BOUND, prompt-output equivalence not demonstrated; collapses to a top-1 lever (session_uuid 93.8%) matching Anthropic/OpenAI guidance = a one-line harness fix, not a serving-system innovation. Codex realized_frac 0.993 honest negative, actionable as "don't normalize volatile tokens if your harness already shares a byte-identical prefix."
+  - area_chair (claude-opus-4-6) FINAL_VERDICT: yellow. PRIOR_ART_ADEQUATE=no (vendor caching docs not formally cited). Earns YELLOW over KILL solely on the genuinely-non-duplicated collision-cost datum (semantic alias rate 0.000, diff_semantic 0/46) + honest CC/Codex discordance + no verified fatal duplicate. Does NOT earn GREEN: inadequate prior-art search, unresolved reconstruction confound, collapsed multi-class framing, single positive instrument. GREEN-upgrade path = close vendor-docs prior-art gap + L1/L2 wire-payload validation + 2nd positive instrument + prompt-output equivalence.
+committee_run_dir: runtime/committee_run_CLAIM-0024-2026-06-01
+disposition: YELLOW-ADVANCE (scoped); NOT converged; lift-to-green lane = the required_evidence + baselines above.

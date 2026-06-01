@@ -1,0 +1,35 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "L1/L2 validation on intercepted over-the-wire API payloads (zero reconstruction) to confirm session_uuid position and magnitude — evaluation_prosecutor's killer experiment; without this the CC positive remains an unverified upper bound on a reconstructed envelope",
+  "A second positive instrument (non-CC harness with early volatile field) to establish the result is not a single-reconstruction artifact — theory_skeptic's upgrade condition (b)",
+  "Prompt-output equivalence demonstration under masking (FIX-2 deferred) — currently untested whether masked head produces equivalent model behavior"
+]
+MANDATORY_BASELINES: [
+  "Anthropic Prompt Caching documentation + OpenAI Automatic Prefix Caching documentation must be added as FORMAL prior art and cited as the primary mechanism precedent — novelty_killer correctly flags these are buried in prose but ARE the source of the mechanism; omitting them from the formal collision check is a gap",
+  "PromptCache 2311.04934 must be explicitly distinguished since 'reuse shared segments around a variable field' is its premise — novelty_killer condition"
+]
+PRIOR_ART_ADEQUATE: no
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0024",
+  change: "RETITLE from 'cross-session KV-sharing ceiling = quantified volatile-token normalization BUDGET (top-3 classes unlock majority)' to 'cross-session radix-prefix ceiling on CC reconstructed envelope = single-field (session_uuid) placement effect with ~0 semantic-collision cost; Codex clean negative.' ADVANCE as YELLOW with scoping constraints below. Add Anthropic/OpenAI prompt-caching docs as formal prior art. Flag: claim's multi-class Lorenz/budget framing COLLAPSED to top-1 lever (FIX-4 fired, session_uuid=93.8%); the 12-class taxonomy contributed zero mass on 9/12 classes and 52% of the gap is joint-masking interaction — retire the 'budget' metaphor in favor of 'single-field placement characterization.'"
+}
+RATIONALE: Unanimous YELLOW across all five reviewers. I aggregate by evidence, not vote-count, but in this case the evidence converges tightly:
+
+(1) THE GAP IS REAL within its instrument. realized_frac=0.082 on CC (47.3 raw vs 577.6 canonicalized tokens), B=2000 session+class bootstrap, HHI=0.020 confirming fleet-wide property — no reviewer disputes the internal validity of the token-accounting measurement. theory_skeptic correctly notes this is "arithmetic, not discovery" (1 - 47/578 ≈ 0.92), but it IS a real measurement on real agent traces, not a synthetic benchmark.
+
+(2) IT IS NOT A NOVEL MECHANISM. All five reviewers converge: the mechanism (early volatile token truncates radix-shared prefix; relocate to suffix) is published Anthropic/OpenAI prompt-caching guidance and is predicted by basic trie theory (theory_skeptic). novelty_killer classifies the contribution as "predominantly NAMING" — "volatile-token normalization budget" relabels vendor guidance. The prior-art section formally cites only arXiv serving papers but omits the vendor caching docs that ARE the primary mechanism precedent — this is a gap I require be closed before any advance. PRIOR_ART_ADEQUATE=no on this basis.
+
+(3) THE MULTI-CLASS "BUDGET" FRAMING COLLAPSED. FIX-4 domination flag fired honestly: session_uuid=93.8% of marginal unlocked mass, 9/12 classes contribute zero, top-1 alone accounts for the headline. theory_skeptic notes the "12-class normalization budget" is "rhetorically inflated" for what reduces to "one inert identifier sits early; move it." The 52% joint-masking interaction (sum of marginals captures only 48% of the gap) further undercuts per-class decomposability. The claim title and framing MUST be re-scoped to "single-field placement characterization" — novelty_killer's condition (a).
+
+(4) THE ONLY GENUINELY NOVEL SUB-RESULT is the collision-cost measurement: semantic alias rate = 0.000 (diff_semantic=0/46), demonstrating that masking session_uuid NEVER aliases semantically-distinct prefixes. novelty_killer correctly identifies this as "a thin-but-non-duplicated contribution." systems_reviewer confirms no shipping OSS system currently implements volatile-field canonicalization before cache lookup — so while the mechanism is known guidance, the quantified collision safety on real traces is new. This single datum earns the YELLOW-advance over a KILL.
+
+(5) RECONSTRUCTION CONFOUND IS LOAD-BEARING. evaluation_prosecutor and theory_skeptic both flag: the CC head is reconstructed from documented <env> format with real in-trace values, and the entire +28.1% recompute-saved and 93.8% session_uuid dominance depend on the ASSUMED field ordering. product_realist calls this "instrument-specific UPPER BOUND." A different ordering redistributes mass. Until L1/L2 wire-payload validation (evaluation_prosecutor's killer experiment), the specific magnitudes are reconstruction-conditional.
+
+(6) CODEX CLEAN NEGATIVE IS HONEST AND INFORMATIVE. realized_frac=0.993 (−2.7% at cap=0.30) proves volatile tokens are not a universal bottleneck — well-ordered harnesses (byte-identical base_instructions ~6.6k tok) already share near ceiling. product_realist correctly notes this is actionable as "do not waste effort on volatile-token normalization if your harness already shares a byte-identical prefix." The discordant disposition is the packet's strongest methodological feature.
+
+DISPOSITION: YELLOW-ADVANCE with mandatory scoping. The characterization is a real, robust (within-instrument), honestly-scoped measurement whose only genuinely novel datum is the collision-cost safety (semantic alias rate 0.000). It does NOT earn GREEN because: (a) prior-art search is INADEQUATE (vendor caching docs not formally cited as mechanism precedent); (b) reconstruction confound is unresolved (no L1/L2 validation); (c) the multi-class budget framing collapsed to a single-field effect; (d) it is a single positive instrument with no replication. It does NOT earn KILL because: (a) no reviewer found a verified fatal duplicate of the specific measurement; (b) the collision-cost datum is genuinely non-duplicated; (c) the honest CC/Codex discordance is methodologically sound; (d) novelty_killer could not complete the mandated ≥2-source live search to establish a collision. Conditions for future GREEN upgrade: close the vendor-docs prior-art gap, validate on wire payloads, obtain a second positive instrument, demonstrate prompt-output equivalence under masking.
+```
