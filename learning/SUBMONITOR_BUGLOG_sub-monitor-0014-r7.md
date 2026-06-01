@@ -56,3 +56,28 @@ PRE-REGISTERED GATES (frozen in charter): RE-B0 premise re-confirm (far-share>=0
   yet present -> still building/running the benchmark. EXP-0060 status=pending (terminal=NO). DECISION: NO respawn
   (proc alive, work in progress); NO queue submit (no completed committee-ready evidence). Floor=1 satisfied (lane
   active). Heartbeat #3, ros commit.
+- 2026-06-01 ~22:50Z — CYCLE (hb #4). researcher-0025-L0-r7 COMPLETED EXP-0060 — committee-ready, FORWARDED.
+    * BUG-26/29 proc check: pgrep researcher-0025 count=0 -> proc TRULY EXITED (clean, work complete).
+    * EXP-0060 status=completed, result_effect=kill, completed_at 22:50:01Z. Runtime 2.59s CPU stdlib.
+    * DISCIPLINE VERIFIED: PRE_REGISTRATION.md committed BEFORE run (HEAD 69ea904, LOCKED-TS 22:42:08Z). Harness
+      eviction_benchmark.py EXTENDS EXP-0057/reuse_distance_census.py VERBATIM (parsers/extract_paths/build_units/
+      recompute-mass/gini/det_hash) + adds SGLang-LFU/SLRU, ARC, LRU-K(2), static-pin+LRU(N 2/3/5). results/summary.json
+      + impl/analysis.md (full per-gate disposition + CC captured-fraction matrix). Corpora CC 72 sess/3290 units,
+      Codex 90 sess/2122.
+    * GATE RESULTS (researcher's numbers, NOT my judgment — I FORWARD only):
+      RE-B0 PASS (far_share=0.188>=0.15; Belady saves max 11.0% over LRU>=5% -> premise/EXP-0057 survivor reproduced).
+      RE-B1 FAIL/CLEAN-NEGATIVE (best cheap policy pin2 reaches >=0.50 captured at ONLY 1/5 caps; need >=3/5 at matched
+      residency). At tight caches frac 0.1-0.3 (gap 6-11%) best capture 15-31%, SGLang-LFU WORSE than LRU (-0.32..-0.75).
+      FIX-2 KILLER BASELINES: ARC 0/5, LRU-K 0/5 caps >=0.50 -> neither captures the gap; custom NOT obsoleted by ARC
+      because NEITHER works (all classical miss). FIX-5 matched-residency honored (pinned charged to C; the lone >=0.50
+      pin cell @frac0.7 is on a 0.6%-of-LRU gap = no capacity illusion). RE-B3: HHI=0.08 (<0.20 no flag); 0/15 static-pin
+      cells significant under BH OR Bonferroni (pin2@0.7 boot-p=0.49). FIX-4: Codex NOT bimodal (far_share=0.035, RE-B0
+      FAIL there, consistent w/ EXP-0057 0.036), reported in full, no policy >=3/5, pin family goes negative frac0.3-0.5.
+      DISPOSITION (researcher): CLEAN-NEGATIVE-KILL (RE-B1). The <=11% agent-KV Belady gap is REAL but ORACLE-ONLY ->
+      ship classical LRU; not cheaply capturable -> reinforces DEAD-0019 from the policy side. Capture & gap-size
+      anti-correlated (where it matters, classical policies don't help; where they help, it doesn't matter).
+    * ACTION: ros queue submit -> Q-0012 (claim CLAIM-0025, exp EXP-0060, kind=committee, by sub-monitor-0014-r7,
+      researcher researcher-0025-L0-r7). FORWARD ONLY — did NOT judge; orchestrator convenes the committee.
+  DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0060 done — the only open CPU lane). Floor=1
+    satisfied + now drained. Now MONITOR-FORWARD-DONE holding pattern: await orchestrator committee verdict on Q-0012;
+    no open researcher work. Heartbeat #4, ros commit.
