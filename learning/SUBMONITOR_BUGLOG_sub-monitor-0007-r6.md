@@ -228,3 +228,29 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
     + cache_salt) into prior_art/PROJ-0007/, (3) file terminal report status=completed. *** DO NOT re-run the
     experiment — results are correct + committed. *** macOS: BOTH --dangerously-skip-permissions +
     --dangerously-disable-osx-sandbox + --dangerously-enable-internet-mode + --add-dir both + --model claude-opus-4-8.
+
+- 2026-06-01 ~17:25Z — CYCLE (heartbeat #15). researcher-0017-L0-r6 🏁 COMPLETED (status=completed, terminal
+  report @17:16:53Z, proc 74750 EXITED cleanly). NOT a death — the prior 'DEAD' liveness flags were heartbeat-
+  grace false-positives during the long single claude -p turn; the researcher finished and self-completed. The
+  over-verification (6 harness runs) RESOLVED the codex 'PASS' into a clean unanimous KILL (the 2.5% codex tail
+  was genuine config prose, NOT a true architectural ceiling).
+  FINAL DISPOSITION (researcher's; committee will bless): HONEST NEGATIVE via pre-registered RE-B1 KILLER.
+    Both families codex n=111 / CC n=39 -> KILL/NEGATIVE. summary.json HONEST_VERDICT +
+    standalone_architectural_ceiling_supported=False; fold_into_proj0005=False. The named cause (tool-schema/
+    system-prompt micro-drift) is REAL + distinct from PROJ-0005 (RE-B4 0% BPE-seam, RE-B5 struct-frac 1.0) BUT
+    RECOVERABLE by best-practice canonicalization (move volatile/tenant/config + dynamic tool lists after static
+    prefix) => prompt-engineering anti-pattern, NOT a novel architectural ceiling. RE-B2 effect real (CC +524
+    CI[519,530]; codex +38 CI[32,44]); RE-B3 AUC 0.92-0.98 >> sham PASS; RE-B6 2 families; RE-B7/B8 prior_art
+    written+verified. Pre-reg LOCKED b83fb0c BEFORE run. Deliverables committed c4b85df+ee73ce2.
+  *** FORWARDED: ros queue submit -> Q-0006 (PENDING @17:21:59Z, claim CLAIM-0017, exp EXP-0053, kind committee,
+    by sub-monitor-0007-r6, via researcher-0017-L0-r6). NOTE: my submit landed DURING the provider-5xx turn (the
+    retry hit 'already queued as Q-0006 — not duplicating' = the engine's (claim,exp) dedup; NO double-submit).
+    FORWARD-ONLY — did NOT judge; committee/verdict/DEAD authority is the orchestrator's. (Orchestrator inbox
+    already shows it plans to convene the CLAIM-0017 committee on this.)
+  *** FLOOR DECISION: DO NOT REFILL. researcher --next: L0 lane EXHAUSTED (standalone architectural-ceiling claim
+    killed; does NOT fold into PROJ-0005). Only PASS-able follow-on = L1 real-H100 vLLM APC hit-counter +
+    recovered-TTFT from canonicalization = OUT-OF-SCOPE for L0 (orchestrator/GPU-dispatched, NOT my CPU lane). A
+    project whose only open work is out-of-scope legitimately sits BELOW floor — refilling a 2nd CPU lane now =
+    make-work (the exact failure mode the work-gated floor prevents). Pool now 0 live researchers on PROJ-0007,
+    which is CORRECT. Re-check each cycle: refill ONLY if the committee verdict opens a concrete new CPU follow-on.
+  Heartbeat #15, commit.
