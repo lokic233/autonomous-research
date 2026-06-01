@@ -35,3 +35,21 @@ Floor N = 2 (work-gated)
 - Pool: 1/2 lanes live on PROJ-0005 (researcher-0014-L1prep-r5). 2nd floor slot HELD: the only other open
   PROJ-0005 work (RE-03 real-APC) is H100/orchestrator-dispatched, NOT mine to fill. Refilling a 2nd CPU lane
   now = make-work (no second independent CPU lane of open work exists). Hold at 1 until L1prep reports --next.
+
+- 2026-06-01 ~13:18Z — researcher-0014-L1prep-r5 SELF-COMPLETED (terminal report, committed b6c521c).
+  EXP-0051 delivered the full CPU-doable RE subset for VERDICT-0055:
+    RE-01 BPE null = HONEST PARTIAL-KILL (seam churn 0.0116 < generic-BPE null 0.0517; delta -0.040
+      95%CI[-0.0414,-0.0386] NEGATIVE all 6 cells -> 'excess churn over BPE' novelty FALSIFIED).
+    RE-02 3x2 grid + Llama-3-128k -> CORPUS-bound (all Codex cells ~0/reversed), confound broken.
+    RE-05 Holm+BH (18 tests): gate-a 6/6, gate-c 6/6, gate-b 3/6 (claude_code only = corpus-collapse).
+    RE-06 block{8,16,32} monotone 0.0110/0.0116/0.0129, ~99% blocks survive.
+    Chat-template control = 95.8% mitigation. Citations added (Gim 2311.04934, DBTC 2601.06007,
+    Sennrich ACL2016) -> PRIOR_ART_ADEQUATE closed. Title re-framed to regime-(a)-only.
+  Researcher --next = COMMITTEE-READY (recommend RETAIN yellow, do NOT promote). CPU lane EXHAUSTED.
+- 2026-06-01 ~13:18Z — DUTY(b): ros queue submit -> Q-0004 (CLAIM-0014, exps EXP-0049,EXP-0051,
+  kind=committee, by sub-monitor-0005-r5, researcher researcher-0014-L1prep-r5). Forwarded WITHOUT judging.
+- 2026-06-01 ~13:18Z — NO-REFILL DECISION (work-gated floor): researcher reports CPU lane EXHAUSTED;
+  the only remaining PROJ-0005 open work is RE-03 (H100/orchestrator-dispatched) + RE-04 (orchestrator).
+  No 2nd CPU lane of open work exists -> correctly SIT BELOW floor (1->0 live as lane completes). Refilling
+  = make-work. Re-check open_gaps / advanceable claims each cycle; refill only if orchestrator's committee
+  re-convene opens a new CPU follow-on. Pool now 0/2 live with NO open CPU work = correct quiescent state.
