@@ -12,13 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'GREEN-PASS. First granular agent serving prefill TOKEN-MASS decomposition
+  (74 CC / 93 Codex sessions). Tool-result is the MAJORITY of dynamic served token
+  mass on the conservative raw-span denom: CC 0.657 (LB95 0.569) / Codex 0.770 (LB95
+  0.748), both RE-A0 LB95>0.50. Heavy-tailed: top-decile result mass CC 0.788 / Codex
+  0.579 (both LB95>0.50), Gini CC 0.863 [0.779,0.903] / Codex 0.749 [0.732,0.764].
+  Cross-instrument hard-gate PASS (|d|=0.113<0.40). Gini-delta 0.114 [0.027,0.160]
+  excludes 0 (CC heavier-tailed). HHI-by-session 0.166/0.016 below 0.20 flag; session-median
+  f 0.573/0.757. SECONDARY cost-weighting collapses result-$-share (decode x10/x100)
+  -> token-mass not dollar. Contribution=granular split + heavy-tail concentration
+  + cross-instrument replication; prefill-heavy direction conceded as prior. Artifacts:
+  impl/{PRE_REGISTRATION.md,decomposition_census.py,analysis.md}+results/summary.json+per_session
+  CSVs.'
+result_effect: support
 artifacts_path: experiments/2026-06-01/EXP-0061/
 reproducibility: ''
 linked_verdicts:
 - VERDICT-0071
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T23:50:46Z'
 prompt_version: ''

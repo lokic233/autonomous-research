@@ -17,7 +17,21 @@ why_it_matters: 'Agent serving KV is TOOL-RESULT-PREFILL-dominated (token mass, 
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0061
+  summary: 'GREEN-PASS. First granular agent serving prefill TOKEN-MASS decomposition
+    (74 CC / 93 Codex sessions). Tool-result is the MAJORITY of dynamic served token
+    mass on the conservative raw-span denom: CC 0.657 (LB95 0.569) / Codex 0.770 (LB95
+    0.748), both RE-A0 LB95>0.50. Heavy-tailed: top-decile result mass CC 0.788 /
+    Codex 0.579 (both LB95>0.50), Gini CC 0.863 [0.779,0.903] / Codex 0.749 [0.732,0.764].
+    Cross-instrument hard-gate PASS (|d|=0.113<0.40). Gini-delta 0.114 [0.027,0.160]
+    excludes 0 (CC heavier-tailed). HHI-by-session 0.166/0.016 below 0.20 flag; session-median
+    f 0.573/0.757. SECONDARY cost-weighting collapses result-$-share (decode x10/x100)
+    -> token-mass not dollar. Contribution=granular split + heavy-tail concentration
+    + cross-instrument replication; prefill-heavy direction conceded as prior. Artifacts:
+    impl/{PRE_REGISTRATION.md,decomposition_census.py,analysis.md}+results/summary.json+per_session
+    CSVs.'
+  data_path: experiments/2026-06-01/EXP-0061/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0071
@@ -26,10 +40,11 @@ verdict_history:
 revival_conditions: ''
 owner: ''
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0071=yellow: address required_evidence to advance'
+lifecycle_state: evidence_ready
+next_action: sub-monitor-0015-r8 to forward EXP-0061 GREEN-PASS (all RE gates A0/A1/A2/A3
+  PASS both instruments) to orchestrator queue for committee review; candidate-grade
+  L0 characterization
 blocking_on: ''
-active_experiments:
-- EXP-0061
+active_experiments: []
 created_at: '2026-06-01T23:30:33Z'
-last_updated: '2026-06-01T23:31:44Z'
+last_updated: '2026-06-01T23:51:09Z'

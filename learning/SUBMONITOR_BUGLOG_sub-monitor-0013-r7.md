@@ -113,3 +113,13 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
 - 2026-06-01 ~23:33Z — CYCLE (hb #13). HOLDING unchanged (4th cycle): committee DONE (yellow), no CLAIM-0024 verdict recorded, no .converged, proc gone. Inbox grep surfaced only STALE r4-era items (11:29-11:42Z, PROJ-0001/0004/0005) — NOT mine, no fresh CLAIM-0024 item. Awaiting orchestrator ratification (its lane). Floor=1 drained. NO action beyond heartbeat+commit.
 - 2026-06-01 ~23:38Z — CYCLE (hb #14). HOLDING unchanged (5th cycle): committee DONE (yellow), no CLAIM-0024 verdict recorded, no .converged, proc gone, inbox empty. Awaiting orchestrator ratification. Floor=1 drained. NO action beyond heartbeat+commit.
 - 2026-06-01 ~23:43Z — CYCLE (hb #15). HOLDING unchanged (6th cycle): committee DONE (yellow), no CLAIM-0024 verdict recorded, no .converged, proc gone, inbox empty. Awaiting orchestrator ratification. Floor=1 drained. NO action beyond heartbeat+commit.
+- 2026-06-01 ~23:48Z — CYCLE (hb #16). HOLDING + ORCHESTRATOR HANDOFF DETECTED (explains ratification lag).
+  * Checked orchestrator liveness (7th holding cycle, wanted to rule out a stalled ratifier): orchestrator-r7-001
+    (MY original orchestrator) = DEAD (last=69.5m). orchestrator-r8-001 = ALIVE (last=4.2m) -> r7->r8 HANDOFF occurred.
+    r7 convened the CLAIM-0024 committee (ALL_COMMITTEE_DONE, area_chair yellow) but DIED before recording the verdict;
+    r8 just took over. Queue now EMPTY (Q-0011 + Q-0012 both consumed). NO escalation needed: a live, healthy r8
+    orchestrator (4.2m) will ratify; the lag was the r7->r8 transition, not a true stall. My forward (Q-0011) was
+    consumed pre-handoff so it is NOT lost.
+  * CLAIM-0024 still no recorded verdict, no .converged, proc gone, inbox empty. EXP-0059 terminal. Floor=1 drained.
+  DECISION: NO action beyond heartbeat+commit. Await orchestrator-r8 ratification of the (yellow) CLAIM-0024 committee.
+    Heartbeat #16, ros commit.
