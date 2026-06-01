@@ -97,3 +97,5 @@ Floor N = 2 (work-gated)
   gaps; CLAIM-0014 = verdict_recorded/weakened (closed). Refreshed recurring loop message to closed-end-state
   (schedule_message_freshness required) — now standby-only: act only on NEW gap/revival/follow-on CPU lane.
   Pool 0 = correct. Heartbeat #12. Context healthy.
+
+- 2026-06-01 ~14:14Z — STANDBY (no change). CLAIM-0014 closed/verdict_recorded; no queue/verdict/gap. Pool 0 = correct. Heartbeat #14.
