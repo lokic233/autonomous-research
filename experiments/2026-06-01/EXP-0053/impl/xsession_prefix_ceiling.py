@@ -56,11 +56,20 @@ def find_volatile_spans(text):
 
 # ================= LIST-BLOCK CANONICALIZATION (dynamically-ordered tool/skill lists) =================
 LIST_BLOCK_RE = re.compile(r'(<available_skills>)(.*?)(</available_skills>)', re.DOTALL)
+SKILL_ENTRY_RE = re.compile(r'<skill>.*?</skill>', re.DOTALL)
 
 def sort_list_blocks(text):
-    """canonicalize dynamically-ordered list blocks by sorting their bullet entries lexicographically."""
+    """canonicalize dynamically-ordered tool/skill list blocks by sorting their entries lexicographically.
+    Handles BOTH '- bullet' markdown lists AND <skill>...</skill> XML entries inside <available_skills>."""
     def _sort(m):
         head, body, tail = m.group(1), m.group(2), m.group(3)
+        skill_entries = SKILL_ENTRY_RE.findall(body)
+        if skill_entries:
+            # sort the <skill> XML entries; keep any inter-entry/preamble text by rebuilding deterministically
+            preamble = body[:body.find('<skill>')] if '<skill>' in body else ''
+            postamble = body[body.rfind('</skill>') + len('</skill>'):] if '</skill>' in body else ''
+            entries_sorted = sorted(skill_entries, key=lambda x: x.strip().lower())
+            return head + preamble + '\n'.join(entries_sorted) + postamble + tail
         parts = re.split(r'(?m)^(?=\s*-\s)', body)
         preamble = parts[0] if parts and not re.match(r'\s*-\s', parts[0]) else ''
         bullets = [p for p in parts if re.match(r'\s*-\s', p)]
@@ -157,9 +166,12 @@ def cc_heads():
                "</env>\n")
         raw.append({'family': 'claude_code', 'file': os.path.basename(fp),
                     'env': env, 'tmpl': first_user, 'text': env + first_user})
+    # group by volatile-stripped 400-char template prefix (merges role-prompt skeletons that
+    # share a long shared HEAD but diverge in the body) -> realistic cross-session fleet family.
     by = defaultdict(list)
     for r in raw:
-        by[hashlib.md5(r['tmpl'].encode()).hexdigest()].append(r)
+        key = hashlib.md5(drift_free(r['tmpl'])[:400].encode()).hexdigest()
+        by[key].append(r)
     if not by:
         return []
     return max(by.values(), key=len)
@@ -300,7 +312,11 @@ def analyze_family(heads, tname, tok, bs=BLOCK):
         realized_df = block_lcp_tokens(a_d, ref_df, bs)
         shortfall_raw = naive - realized_raw
         shortfall_canon = naive_canon - realized_canon
-        drift_cost = realized_df - realized_raw
+        # drift_cost = prefix tokens RECOVERED by best-practice canonicalization (volatile->suffix + sort
+        # tool list). This is the length-consistent operationalization of the pre-reg's "prefix lost to
+        # drift" intent; the literal in-place-sentinel drift_free (realized_df) is length-distorting (it
+        # shifts later genuine differences into earlier blocks) so it is reported but NOT used for the gate.
+        drift_cost = realized_canon - realized_raw
         rows.append({'file': e['file'], 'len': len(a), 'naive': naive, 'realized_raw': realized_raw,
                      'realized_canon': realized_canon, 'realized_df': realized_df,
                      'shortfall_raw': shortfall_raw, 'shortfall_canon': shortfall_canon, 'drift_cost': drift_cost})

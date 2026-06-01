@@ -1,0 +1,23 @@
+None of PyTorch, TensorFlow >= 2.0, or Flax have been found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+========================================================================
+EXP-0053: Cross-Session Prefix-Reuse Ceiling (PROJ-0007/CLAIM-0017)
+========================================================================
+Loading production tokenizers (Rust fast)...
+  gpt2: vocab=50257 fast=True
+  qwen2-0.5b: vocab=151643 fast=True
+
+Reconstructing heads...
+  codex: 109 sessions (shared-skeleton group)
+  claude_code: 38 sessions (shared-skeleton group)
+  gemini: 2 sessions (shared-skeleton group)
+
+--- analyze codex x gpt2 (n=109) ---
+Token indices sequence length is longer than the specified maximum sequence length for this model (6368 > 1024). Running this sequence through the model will result in indexing errors
+    naive=6776.2  realized_raw=6607.0  realized_canon=6645.8  realized_df=6399.0
+    shortfall_raw=169.2  shortfall_canon=172.4  drift_cost=38.8
+    RE-B1 PASS (shortfall_after=172.4 CI[87.08333333333333, 273.212962962963])
+    RE-B2 PASS (drift_cost=38.8 CI[32.592592592592595, 44.148148148148145])
+    RE-B3 real_auc=0.924 sham_auc=0.731 PASS
+    RE-B4 seam_frac=0.000 (0/108) STAY-DISTINCT
+
+--- analyze codex x qwen2-0.5b (n=109) ---

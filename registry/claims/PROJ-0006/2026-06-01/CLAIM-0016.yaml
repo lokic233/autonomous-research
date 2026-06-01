@@ -1,7 +1,7 @@
 claim_id: CLAIM-0016
 project_id: PROJ-0006
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0016
 why_it_matters: 'Agent-Event-Phase Desynchronization Tax in Batch SD: ragged-min-bound
   batch verification goodput tax driven by agent-event phase; phase-aligned batch-COMPOSITION
@@ -16,7 +16,26 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0052
+  summary: 'CLAIM-0016 FALSIFIED at L0 (clean kill, BOTH corpora). RE-A1 LOAD-BEARING
+    FAILS: delta1 goodput(phase-composition MINUS static-task-difficulty grouping)
+    = +0.00032 CC (95% CI[-0.00062,+0.00060]) / +0.00081 Codex (CI[-0.00173,+0.00158]);
+    95% LB<=0 both (p=0.547/0.544). RE-A2 vs sham running-mean CI incl 0 both; RE-A4
+    perm-null NOT survived (p=0.146/1.0); RE-A5 0/16 grid cells Holm-sig; RE-A3 ragged
+    tax ~100% but DEGENERATE (min-bound floor collapse at proxy acc~0.28); RE-A6 overhead
+    7.4e-8 s/round moot; RE-A7 DEAD-0011/0012 cited. EXPLORATORY resolvable-regime
+    sweep (alpha 0.5-0.9, real magnitudes) confirms ROBUST: phase ~0 over static in
+    CC every level, 1 fragile Codex cell (alpha0.7) only. WHY: ~97.5% of agentic decode
+    tokens are FREE-FORM (phase has no grouping leverage) + between-session difficulty
+    std 0.104CC/0.088Codex DWARFS per-phase deviations -> static difficulty already
+    captures recoverable variance. Headline: agent-event phase adds nothing over per-task
+    difficulty clustering for batch-SD composition; use difficulty/length models not
+    phase. Prior-art web-verified: TETRIS 2502.15197 token-selection non-collide;
+    Batch-SD-Done-Right 2510.22876 EXSpec groups same-LENGTH (composition lever partially
+    occupied, MEDIUM); Semi-Clairvoyant 2505.17074 acceptance-aware ordering MEDIUM;
+    ECHO 2604.09603 LOW. Artifact: projects/PROJ-0006/artifacts/NEGRESULT_CLAIM-0016_phase_composition_L0.md'
+  data_path: experiments/2026-06-01/EXP-0052/
 verdict_history:
 - verdict_id: VERDICT-0059
   date: '2026-06-01'
@@ -24,10 +43,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0059=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0052
+active_experiments: []
 created_at: '2026-06-01T15:49:53Z'
-last_updated: '2026-06-01T15:54:12Z'
+last_updated: '2026-06-01T16:31:09Z'

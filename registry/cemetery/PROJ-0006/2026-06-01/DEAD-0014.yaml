@@ -1,20 +1,7 @@
-exp_id: EXP-0052
-project_id: PROJ-0006
-claim_id: CLAIM-0016
-session_id: ''
-level: 0
-hardware: Mac CPU (stdlib-only, EXP-0046 acceptance proxy + parsed CC/Codex/Gemini
-  traces)
-resource_budget:
-  max_wall_clock_minutes: 240
-  max_gpu_hours: 0.0
-  max_memory_gb: 0
-  host_mem_floor_gb: 0
-needs_gpu: false
-dispatched_by: ''
-node_lease: ''
-status: completed
-result_summary: 'CLAIM-0016 FALSIFIED at L0 (clean kill, BOTH corpora). RE-A1 LOAD-BEARING
+dead_id: DEAD-0014
+original_claim_id: CLAIM-0016
+original_claim: CLAIM-0016
+reason_killed: 'CLAIM-0016 FALSIFIED at L0 (clean kill, BOTH corpora). RE-A1 LOAD-BEARING
   FAILS: delta1 goodput(phase-composition MINUS static-task-difficulty grouping) =
   +0.00032 CC (95% CI[-0.00062,+0.00060]) / +0.00081 Codex (CI[-0.00173,+0.00158]);
   95% LB<=0 both (p=0.547/0.544). RE-A2 vs sham running-mean CI incl 0 both; RE-A4
@@ -31,11 +18,16 @@ result_summary: 'CLAIM-0016 FALSIFIED at L0 (clean kill, BOTH corpora). RE-A1 LO
   2510.22876 EXSpec groups same-LENGTH (composition lever partially occupied, MEDIUM);
   Semi-Clairvoyant 2505.17074 acceptance-aware ordering MEDIUM; ECHO 2604.09603 LOW.
   Artifact: projects/PROJ-0006/artifacts/NEGRESULT_CLAIM-0016_phase_composition_L0.md'
-result_effect: kill
-artifacts_path: experiments/2026-06-01/EXP-0052/
-reproducibility: ''
-linked_verdicts:
-- VERDICT-0059
-started_at: ''
-completed_at: '2026-06-01T16:31:09Z'
-prompt_version: ''
+killing_verdict: ''
+killing_experiments:
+- EXP-0052
+duplicate_patterns:
+- CLAIM-0016
+- 0016 claim
+revival_conditions: Real neural SD draft/target pair (L1 vLLM/TGI/SGLang accepted-length
+  telemetry on H100) showing phase-composition goodput over static per-task-difficulty
+  grouping with 95% LB>0 AND non-degenerate ragged tax (cross-sequence phase signal
+  the trigram proxy cannot detect AND not already captured by difficulty/length grouping).
+  Absent that, phase-composition lever stays dead.
+related_prior_work: []
+date_killed: '2026-06-01T16:31:09Z'

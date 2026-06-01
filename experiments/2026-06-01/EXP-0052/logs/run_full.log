@@ -7,3 +7,62 @@ analyzing codex ...
   done codex 465.4s
 
 EXPLORATORY regime sweep...
+
+==============================================================================
+FAMILY SIZE (RE-A5): 16  primary cell: B8_g8
+
+==============================================================================
+CORPUS: claude_code (train=45 test=38, rounds@g8=99434)
+  PRIMARY B=8 gamma=8:
+    mean_accepted_len = 0.2873
+    goodput  random=0.0000 static=0.0009 sham=0.0006 phase=0.0012
+    RE-A1 delta1(phase-static) = +0.0003  CI[-0.0006,+0.0006]  p=0.5467
+    RE-A2 delta2(phase-sham)   = +0.0006  CI[-0.0003,+0.0014]
+    RE-A3 tax = 1.0000 (100.0%)  CI[1.0000,1.0000]
+    RE-A4 perm: d1_obs=+0.0003 perm_mean=+0.0003 p975=+0.0003 p=0.1459 survives=False
+    RE-A6 overhead/round=7.373e-08 s  net @1ms=+0.0002 @5ms=+0.0003 @10ms=+0.0003
+
+==============================================================================
+CORPUS: codex (train=50 test=35, rounds@g8=29495)
+  PRIMARY B=8 gamma=8:
+    mean_accepted_len = 0.3593
+    goodput  random=0.0000 static=0.0008 sham=0.0005 phase=0.0016
+    RE-A1 delta1(phase-static) = +0.0008  CI[-0.0017,+0.0016]  p=0.5437
+    RE-A2 delta2(phase-sham)   = +0.0011  CI[-0.0006,+0.0026]
+    RE-A3 tax = 1.0000 (100.0%)  CI[1.0000,1.0000]
+    RE-A4 perm: d1_obs=+0.0008 perm_mean=+0.0008 p975=+0.0008 p=1.0000 survives=False
+    RE-A6 overhead/round=7.477e-08 s  net @1ms=+0.0007 @5ms=+0.0008 @10ms=+0.0008
+
+  RE-A5 Holm grid (RE-A1 delta1):
+    claude_code:B16_g4     p_raw=0.8536 p_holm=1.0000 sig=False
+    claude_code:B16_g8     p_raw=0.7931 p_holm=1.0000 sig=False
+    claude_code:B32_g4     p_raw=0.8936 p_holm=1.0000 sig=False
+    claude_code:B32_g8     p_raw=1.0000 p_holm=1.0000 sig=False
+    claude_code:B4_g4      p_raw=0.4798 p_holm=1.0000 sig=False
+    claude_code:B4_g8      p_raw=0.4778 p_holm=1.0000 sig=False
+    claude_code:B8_g4      p_raw=0.5442 p_holm=1.0000 sig=False
+    claude_code:B8_g8      p_raw=0.5467 p_holm=1.0000 sig=False
+    codex:B16_g4           p_raw=1.0000 p_holm=1.0000 sig=False
+    codex:B16_g8           p_raw=1.0000 p_holm=1.0000 sig=False
+    codex:B32_g4           p_raw=1.0000 p_holm=1.0000 sig=False
+    codex:B32_g8           p_raw=1.0000 p_holm=1.0000 sig=False
+    codex:B4_g4            p_raw=0.8316 p_holm=1.0000 sig=False
+    codex:B4_g8            p_raw=0.8026 p_holm=1.0000 sig=False
+    codex:B8_g4            p_raw=0.5877 p_holm=1.0000 sig=False
+    codex:B8_g8            p_raw=0.5437 p_holm=1.0000 sig=False
+
+  EXPLORATORY regime sweep (phase mix ~97.5%% FREE_FORM; preserves real difficulty spread + phase dev):
+   CORPUS claude_code  between-session diff std=0.1041  phase_dev={'RESUMPTION': 0.0205, 'FREE_FORM': -0.0001, 'TRANSITION': -0.0722}
+     alpha_base=0.5 mean_al=1.012 static=0.017 sham=0.018 phase=0.017 | d1(phase-static)=-0.0003 CI[-0.0042,+0.0019] d2(phase-sham)=-0.0016 CI[-0.0126,+0.0016]
+     alpha_base=0.6 mean_al=1.500 static=0.042 sham=0.036 phase=0.043 | d1(phase-static)=+0.0012 CI[-0.0046,+0.0022] d2(phase-sham)=+0.0074 CI[-0.0083,+0.0050]
+     alpha_base=0.7 mean_al=2.224 static=0.125 sham=0.125 phase=0.128 | d1(phase-static)=+0.0031 CI[-0.0066,+0.0052] d2(phase-sham)=+0.0026 CI[-0.0127,+0.0040]
+     alpha_base=0.8 mean_al=3.276 static=0.287 sham=0.295 phase=0.298 | d1(phase-static)=+0.0103 CI[-0.0088,+0.0090] d2(phase-sham)=+0.0031 CI[-0.0195,+0.0090]
+     alpha_base=0.9 mean_al=4.909 static=0.936 sham=0.911 phase=0.938 | d1(phase-static)=+0.0019 CI[-0.0132,+0.0168] d2(phase-sham)=+0.0276 CI[-0.0091,+0.0299]
+   CORPUS codex  between-session diff std=0.0881  phase_dev={'RESUMPTION': 0.1368, 'FREE_FORM': -0.0026, 'TRANSITION': -0.1023}
+     alpha_base=0.5 mean_al=1.027 static=0.008 sham=0.007 phase=0.010 | d1(phase-static)=+0.0022 CI[-0.0029,+0.0041] d2(phase-sham)=+0.0030 CI[-0.0036,+0.0047]
+     alpha_base=0.6 mean_al=1.513 static=0.031 sham=0.026 phase=0.034 | d1(phase-static)=+0.0033 CI[-0.0045,+0.0118] d2(phase-sham)=+0.0081 CI[-0.0052,+0.0119]
+     alpha_base=0.7 mean_al=2.256 static=0.107 sham=0.096 phase=0.125 | d1(phase-static)=+0.0182 CI[+0.0013,+0.0272] d2(phase-sham)=+0.0288 CI[-0.0034,+0.0311]
+     alpha_base=0.8 mean_al=3.432 static=0.377 sham=0.365 phase=0.400 | d1(phase-static)=+0.0231 CI[-0.0001,+0.0451] d2(phase-sham)=+0.0347 CI[-0.0176,+0.0411]
+     alpha_base=0.9 mean_al=4.982 static=1.359 sham=1.337 phase=1.385 | d1(phase-static)=+0.0263 CI[-0.0077,+0.0644] d2(phase-sham)=+0.0486 CI[-0.0289,+0.0770]
+
+wall=634.0s  wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0052/results/batch_round_model.json
