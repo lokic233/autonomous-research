@@ -74,3 +74,19 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
   · EXP-0052 still status=pending (full run + regime sweep executing; run_full.log present). NOT terminal.
   STATUS = running. NO queue submit (forward only on status=completed). Floor=1 held (only open CPU lane; L1=H100/
   orchestrator). No make-work refill. No blocker to escalate. RE-A1 kill-trend unchanged from cycle#2 (awaiting full).
+
+- 2026-06-01 ~16:31Z — CYCLE#4. heartbeat #4 OK. researcher-0016-L0-r6 = 💓 RUNNING (last=4.8m within 15m kick,
+  last report 16:21Z). HEALTHY: full run COMPLETED both corpora (run_full.log: claude_code 363.3s, codex 465.4s,
+  CC 83 usable / Codex 85 usable sessions) -> now in EXPLORATORY regime-sweep phase. ~14min report gap = heavy
+  compute (828s bootstrap + sweep), normal for claude -p buffering. EXP-0052 still status=pending (no ros exp
+  complete, no --status completed) = NOT terminal.
+  REAL-PROXY RESULTS now complete across ALL 16 cells (2 corpora x B{4,8,16,32} x gamma{4,8}). RE-A1 KILLER
+  delta1(phase MINUS static-task-grouping): 95% CI STRADDLES 0 in EVERY cell, NO cell LB>0, p=0.41-1.00. CC range
+  delta1 -0.00016..+0.00076; Codex -0.00041..+0.00148, all CI include 0. => clean consistent HONEST-NEGATIVE on the
+  load-bearing gate in the real-proxy regime (= project's pre-registered kill pathway: "phase adds nothing over
+  per-task difficulty clustering"). NOTE: tax~0.99-1.00 (>>5% floor) but that is the degenerate min-bound collapse
+  at proxy acc~0.28 -> hence the researcher's EXPLORATORY regime-sweep to test KILL ROBUST vs INSTRUMENT-LIMITED.
+  That robust-vs-instrument distinction is the RESEARCHER's to resolve + COMMITTEE's to judge — I do NOT adjudicate.
+  STATUS = running. NO queue submit (forward only on status=completed; awaiting sweep + analysis.md + exp complete).
+  Floor=1 held (only open CPU lane; L1=H100/orchestrator). No make-work refill. No blocker. RE-A1 trend now FULLY
+  RESOLVED in real-proxy (null); terminal pending the exploratory robustness check + self-complete.
