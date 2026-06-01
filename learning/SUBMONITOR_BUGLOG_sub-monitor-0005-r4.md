@@ -26,3 +26,7 @@ Approved gating exp: EXP-0048 (L0, CPU)
   RELAUNCH cmd: cat prompt | claude --dangerously-disable-osx-sandbox --dangerously-skip-permissions
     --add-dir=/Users/dengcchi/autonomous-research --add-dir=/Users/dengcchi/research-os -p > log 2>&1 &
   Launched OK (pid 55985), no sandbox error. CARRY FORWARD: ALWAYS use BOTH dangerous flags to launch researchers on the Mac.
+
+- 2026-06-01 ~11:53Z — researcher-0014-L0-r4 CONFIRMED registered + alive (liveness: running, last=1.2m).
+  Pool: 1/2 lanes live (researcher-0014-L0-r4 = EXP-0048). 2nd floor slot HELD pending L0 direction clarity
+  (will fill with L1 real-APC counters lane OR 2nd corpus once L0 endpoint signal is known). Sub-monitor reported boot to orchestrator.
