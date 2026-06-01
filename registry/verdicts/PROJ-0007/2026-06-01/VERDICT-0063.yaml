@@ -1,0 +1,62 @@
+verdict_id: VERDICT-0063
+claim_id: CLAIM-0017
+project_id: PROJ-0007
+date: '2026-06-01'
+experiment_ids:
+- EXP-0053
+experiment_paths:
+- experiments/2026-06-01/EXP-0053
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'ARCHITECTURAL-CEILING thesis FALSIFIED by its own pre-registered load-bearing RE-B1
+  killer: the named drift shortfall is ELIMINATED by the published Anthropic/OpenAI
+  prompt-caching best practice (static-first, volatile-last) -> CC cross-session LCP
+  recovers ~10x (51->576 tok), Codex drift only a 2.5% recoverable config tail, post-canon
+  residual 100% genuine content. So it is a PROMPT-ENGINEERING ANTI-PATTERN, NOT an
+  architectural constraint engines must accept. Collision verified >=2 independent
+  sources (Anthropic+OpenAI docs)'
+- engine-layer controls (SGLang/vLLM/TensorRT-LLM/LMCache) further falsify 'engines
+  are stuck'. Surviving drift-class predictor (AUC 0.92-0.98 vs sham 0.72-0.98) is
+  REAL but NARROW (overlapping upper bounds, unreported marginal-gain CI) = salvage/PSA,
+  NOT claim-supporting even at yellow
+required_evidence:
+- REVISIT ONLY via L1 H100 real vLLM APC cross-request hit-counter + recovered-TTFT
+  under canonicalized-vs-uncanonicalized prefixes (out-of-scope for L0, GPU/orchestrator-dispatched)
+  - and only if that showed an UNRECOVERABLE architectural residual, which the L0
+  canonicalizer result does NOT motivate
+map_delta_proposals:
+- 'CLAIM-0017 -> cemetery DEAD-0015 (publishable honest negative: realized cross-session
+  prefix-reuse shortfall from tool-schema/system-prompt micro-drift is REAL, NAMED,
+  model-free predictable (drift-class first-divergence AUC 0.92-0.98), and DISTINCT
+  from PROJ-0005 (RE-B4 0% BPE-seam, RE-B5 tokenizer-invariant struct-frac 1.0, NO
+  fold) - BUT RECOVERABLE by best-practice canonicalization => prompt-engineering
+  anti-pattern, NOT a novel architectural ceiling). SALVAGE (NOT research claims):
+  (1) prompt-eng PSA = move volatile/tenant/config + dynamic tool lists AFTER the
+  static prefix to recover cross-session APC hit-rate'
+- (2) drift-class first-divergence predictor. Researcher self-disposition + DEAD-0015
+  RATIFIED 6/6
+baseline_requirements:
+- caching-best-practice canonicalizer (RE-B1 killer = published Anthropic/OpenAI volatile-field
+  guidance)
+- drift-free template control
+- sham predictor
+- Prompt Cache 2311.04934
+- SGLang LPM/DFS/routing-key
+- TensorRT block/concurrency/cache_salt
+created_at: '2026-06-01T17:54:28Z'
