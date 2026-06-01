@@ -31,3 +31,34 @@ before treating a "DEAD" liveness flag as real. NEVER respawn a live computing r
   + honest-negative-is-first-class language present. Registered researcher in engine, seeded heartbeat #1.
   Proc verified ALIVE (ps PID 43652, claude -p, correct flags + --model claude-opus-4-8, AI Gateway connected).
   Floor at 1. Heartbeat self, commit.
+
+- 2026-06-01 ~17:5xZ — CYCLE (heartbeat #3). researcher-0018-L0-r6 status=COMPLETED (liveness 🏁 completed,
+  last=2.8m; NO proc running — CLEAN self-exit, NOT a stale-heartbeat false-DEAD; no investigate-respawn needed).
+  TERMINAL REPORT read: EXP-0054 COMPLETE -> CLAIM-0018 KILLED (buried DEAD-0016), clean first-class
+  TRIPLE-NEGATIVE on CC(60 sess/2278 calls)+Codex(80/2659).
+  VERIFIED ARTIFACTS:
+    * PRE_REGISTRATION.md LOCKED 2026-06-01T17:40:50Z, committed BEFORE main run (process integrity intact).
+    * experiment.yaml status=completed, result_effect=kill, completed_at 2026-06-01T17:47:39Z.
+    * registry/cemetery/PROJ-0008/2026-06-01/DEAD-0016.yaml buried.
+    * analysis.md per-gate verdicts present.
+  GATE OUTCOMES (committee fixes baked in):
+    * RE-A2 PASS-but-necessary-not-sufficient: 100% byte-identical repeats exact-prefix-UNRECOVERABLE (interior;
+      CC median gap 3593 tok). Mechanism REAL. Tier-2 scope boundary reported: 100% content-addressable by
+      non-prefix KV (CacheBlend/LMCache) — silence avoided per committee mandate.
+    * RE-A3 DECISIVE NEGATIVE (co-primary): byte-identical ARGS -> byte-identical RESULTS only 15.4% CC / 0% Codex;
+      class INVERTED (MUTATING 0.78 > DETERMINISTIC 0.11). Confirms committee RE-A3 concern: 9.8% live signal
+      conflated arg-repeat with output-repeat. Tax illusory at result-equivalence layer.
+    * RE-A4 KILL: f=0.19% CC / 0% Codex, CI(0,0.30%) incl 0 << 2% floor.
+    * RE-A1 DEMOTE: dAUC=+0.00025, 95% LB<0 over {token-gap+tool-frequency+TOOL-IDENTITY} joint baseline ->
+      determinism class = repackaged tool-identity ("agents repeat popular volatile tools").
+    * RE-A5 FAIL (both corpora agree claim dead). RE-A6 PASS (175/36 surviving, non-tautological). RE-A7
+      conditioned+inverted.
+    * 2 mid-run process-integrity fixes (f-CI session universe; deterministic md5 CV folds), thresholds UNCHANGED,
+      no PASS manufactured.
+  DECISION: NO ros queue submit — this is a CLEAN KILL, not committee-ready PASS evidence (queue submit is for
+  PASS evidence only; researcher's --next explicitly states "NO committee submission"). Kill already buried by
+  researcher (DEAD-0016). --next = NONE/lane exhausted: thesis refuted on available CPU corpora, no GPU/L1
+  follow-on warranted (kill is at result-equivalence layer, not FLOP-precision). Revival only if a
+  deterministic-output-tool-heavy corpus shows result_equiv>=50% AND f>=2% — no such corpus available.
+  FLOOR drops to 0 legitimately (no open work) — NO refill (correct per work-gated rule; never churn make-work).
+  An honest first-class negative is a valid terminal outcome. Heartbeat #3, commit.
