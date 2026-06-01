@@ -88,3 +88,12 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   STATUS: still RUNNING — analysis.md + prior_art/PROJ-0007 (RE-B7/B8) + TERMINAL report NOT yet written.
     NO queue submit until status=completed WITH analysis+terminal report (substance is ready; formal deliverables
     pending). NO action; floor held at 1. Heartbeat #6, commit.
+
+- 2026-06-01 ~16:3xZ — CYCLE (heartbeat #7). researcher-0017-L0-r6 ALIVE (PID 74750, etime 28:28, running,
+  last=19.4m). per_row_codex.csv refreshed 09:30 (11479B). STILL no analysis.md / prior_art/PROJ-0007 (RE-B7/B8)
+  / terminal report. Last researcher report @16:11:39Z (~20m ago). claude -p buffers to run-end so no intermediate
+  report is NORMAL; researcher is finalizing analysis.md + gathering RE-B7/B8 prior art (web-bound, slower). 28m
+  total runtime is within bounds for a thorough finalize (max_wall_clock=240m). NO stall signal (proc alive, files
+  still being written). NO action; NO queue submit (no terminal status=completed yet — substance ready, deliverables
+  pending). Floor held at 1. Heartbeat #7, commit. WATCH: if no terminal report + no new file writes by next cycle,
+  investigate for a quiet hang (check run_main.log tail for late-stage errors).
