@@ -1,0 +1,25 @@
+dead_id: DEAD-0013
+original_claim_id: none (design-stage rejection; never seeded as a claim)
+context: PROJ-0006/0007 design committee (run proj0607_design, 2026-06-01), Candidate C
+original_claim: 'Verification-Compute Crossover: an agent-phase-gated speculate/skip
+  policy for batch SD that decides per-round whether to speculate based on predicted
+  acceptance phase, claiming a goodput crossover over always-speculate.'
+reason_killed: 'REJECTED at design committee, UNANIMOUS 5/5 RED (novelty_killer/systems_reviewer/
+  evaluation_prosecutor/theory_skeptic/product_realist all red; area_chair FINAL_VERDICT
+  reject). Reduces to (a) ECHO arXiv:2604.09603 per-request acceptance-estimate gate
+  OR (b) the DEAD-0009/0010 speculate-or-skip break-even accounting identity
+  h*f >= alpha/(1+alpha) (W,R cancel) — multi-source body-documented. No unrebutted
+  mechanism delta vs ECHO + the break-even identity. Author (design researcher) self-
+  disclosed the thin-delta + identity risk and did NOT recommend seeding it; portfolio-
+  redundant with Candidate A (both batch-SD verification). Filed at design stage so the
+  axis is not re-proposed.'
+killing_verdict: 'design-committee proj0607_design (6 real votes: C consensus 5/5 red)'
+killing_experiments: []
+duplicate_patterns:
+- 'agent-phase-gated speculate/skip per-round verification-compute crossover for batch SD'
+- 'speculate-or-skip break-even decision policy (reduces to ECHO 2604.09603 gate + DEAD-0010 identity)'
+revival_conditions: 'Only if a per-round speculate/skip operating point is measured that is
+  body-distinct from ECHO 2604.09603 AND shows a goodput crossover NOT predicted by the
+  speculate-or-skip break-even identity (a genuine system anomaly). Absent that, the axis stays dead.'
+marked_by: orchestrator-r6-001
+marked_utc: 2026-06-01T15:15:00Z
