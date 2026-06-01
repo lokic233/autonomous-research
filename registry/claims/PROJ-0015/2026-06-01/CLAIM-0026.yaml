@@ -19,15 +19,17 @@ mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0071
+  date: '2026-06-01'
+  result: yellow
 revival_conditions: ''
 owner: ''
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0061 result, then ros exp complete --exp EXP-0061 --effect
-  ...
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0071=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments:
 - EXP-0061
 created_at: '2026-06-01T23:30:33Z'
-last_updated: '2026-06-01T23:31:17Z'
+last_updated: '2026-06-01T23:31:44Z'

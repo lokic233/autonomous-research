@@ -1,0 +1,38 @@
+I was unable to run a live external search (web-search permission was denied this session), so prior-art below is cited from known, retrievable arXiv records rather than a fresh pull — flagging that honestly per the mandate.
+
+```
+ROLE: novelty_killer  VOTE: green
+
+FINAL_VERDICT: A
+
+CLOSEST_PRIOR_WORK:
+- Charter A:
+  - {cite: "DistServe", url: arxiv.org/abs/2401.09670, why_close: "prefill/decode disaggregation, but ASSUMES a workload mix; never measures the prefill/decode token-mass split of real agent tool-loops"}
+  - {cite: "SplitWise", url: arxiv.org/abs/2311.18677, why_close: "splits prompt(prefill)/token(decode) phases across hardware on assumed chat mixes; no agent tool-result mass decomposition"}
+  - {cite: "Parrot (OSDI'24)", url: arxiv.org/abs/2405.19888, why_close: "characterizes LLM-app/agent request dataflow & inter-request structure, but does NOT decompose served token mass into prefill-tool-result vs arg vs decode"}
+  - {cite: "Autellix", url: arxiv.org/abs/2502.13965, why_close: "agent serving engine + program-aware scheduling; treats workload as given, does not measure where the prefill mass lives"}
+- Charter C:
+  - {cite: "RadixAttention/SGLang", url: arxiv.org/abs/2312.07104, why_close: "radix-tree prefix cache keyed on TOKEN IDs"}
+  - {cite: "vLLM PagedAttention/APC", url: arxiv.org/abs/2309.06180, why_close: "block-hash content-addressed prefix reuse"}
+  - {cite: "PromptCache", url: arxiv.org/abs/2311.04934, why_close: "modular precomputed KV reuse"}
+
+NAMING_VS_MECHANISM:
+- A = a real measurement delta, not a rename: the quantified decomposition (tool-result = 63.3% CC / 86.1% Codex of stream mass; per-session median 0.699/0.848; top-decile result mass 78.8%, Gini 0.864/0.746; cross-instrument replication) is a descriptive RESULT none of the disaggregation papers report on real agent traces. CAVEAT: "agent context is prefill-heavy" is already folklore/assumed by DistServe/SplitWise — the novel delta is the GRANULAR tool-result-vs-arg split + heavy-tail Gini + cross-instrument replication, NOT the bare prefill-heaviness. Must be pre-registered that way or A degrades to renaming a known assumption.
+- C = the novelty framing partly collapses to a renamed strawman (see FATAL_COLLISIONS).
+
+FATAL_COLLISIONS:
+- Charter C: MECHANISM MISCHARACTERIZATION. RadixAttention (2312.07104) and vLLM APC (2309.06180) are CONTENT-ADDRESSED — they match on actual token IDs / block hashes. Changed file content => different tokens => prefix MISS, not a "stale hit serving wrong KV." So C's load-bearing premise ("a hit would serve wrong KV / must be invalidated") does not describe how these caches fail; changed content cannot produce a false hit. With that premise removed, C reduces to "exact-prefix reuse availability across re-reads is low," which COLLIDES with PROJ-0002 (reuse under edits) and is adjacent to DEAD-0016 (byte-identical repeats). Compounding: Codex changed-content LB95 = 1.000 is a degenerate/tautological magnitude ("re-reads after edits of course differ"), and the only escape — RE-C4's write-between-reads predictor — drags C back toward the MINED-OUT DEAD-0017..0021 predictability axis.
+- Charter A: none fatal. ACCOUNTING-IDENTITY risk is low (direct mass measurement); only the decode-denominator definition, already defused by RE-A2.
+
+MANDATORY_RELATED_WORK (A must cite & differentiate):
+- DistServe 2401.09670, SplitWise 2311.18677, DuetServe, Sarathi-Serve 2403.02310 (disaggregation/chunking ASSUME workload mix), Parrot 2405.19888, Autellix 2502.13965 (agent serving, workload-as-given), RadixAttention 2312.07104 / vLLM-APC 2309.06180 (uniform caching). Each: "does not measure the prefill/decode token-mass split of real agent tool-loops."
+
+MANDATORY FIXES (A's L0 pre-registration MUST honor):
+1. Pre-register the contribution as the GRANULAR decomposition (tool-result vs arg vs decode-interstitial) + heavy-tail Gini + cross-instrument replication — explicitly concede "prefill-heavy" is already assumed by DistServe/SplitWise, so the bare direction is NOT the claim.
+2. Cite + one-line differentiate every MANDATORY_RELATED_WORK paper above; reject any reviewer reading of A as "rediscovers prefill-heaviness."
+3. Honor RE-A2: report the MOST CONSERVATIVE denominator (assistant-text-block-only) BEFORE any "majority"/"dominated" wording; downgrade to "largest single component" if it fails.
+4. Disclose the tokenizer (or explicit char-proxy) used for "token mass" and pre-register it — "mass" is tokenizer-dependent and must not be silently char-counted.
+5. RE-A3 cross-instrument is a HARD GATE (CC-only = yellow), as written — keep it binding.
+
+RATIONALE: A's novelty survives prior-art separation — no cited system (DistServe 2401.09670, SplitWise 2311.18677, Parrot 2405.19888, Autellix 2502.13965) measures the prefill/decode mass split on real agent traces; the pre-measured 63.3%/86.1% result-mass decomposition with Gini 0.864/0.746 is a defensible descriptive positive. C fails the novelty bar on a mechanism error: RadixAttention/vLLM-APC are token-content-addressed (2312.07104, 2309.06180), so changed content yields a cache MISS, not a stale wrong-KV hit — collapsing C's "correctness ceiling" framing into a strawman that overlaps PROJ-0002/DEAD-0016, with a tautological Codex=1.000 magnitude and a predictor escape hatch into the mined-out DEAD-0017..0021 axis. Pick A.
+```

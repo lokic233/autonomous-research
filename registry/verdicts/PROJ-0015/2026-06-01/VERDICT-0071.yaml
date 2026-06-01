@@ -1,0 +1,68 @@
+verdict_id: VERDICT-0071
+claim_id: CLAIM-0026
+project_id: PROJ-0015
+date: '2026-06-01'
+experiment_ids:
+- EXP-0061
+experiment_paths:
+- experiments/2026-06-01/EXP-0061
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: green
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- none
+required_evidence:
+- 'L0 EXP-0061 pre-registration MUST honor all 9 binding mandatory fixes + 2 mandatory
+  baselines from the design committee (see projects/PROJ-0015/project_overview.md):
+  reframe token-mass-not-dollar (+optional cost-weighted secondary)'
+- contribution=granular decomposition+heavy-tail+cross-instrument (concede prefill-heavy
+  is assumed)
+- conservative-denominator=headline committed pre-run
+- static-vs-dynamic prefill split
+- cross-instrument equivalence margin |CC-Codex|<0.40
+- Gini with bootstrap CIs
+- operational defs pinned to parser fields + tokenizer disclosed
+- clean-negative ALSO if Gini<0.5
+- cite+differentiate DistServe/SplitWise/DuetServe/Sarathi/Parrot/Autellix/RadixAttention/vLLM-APC
+- mandatory chat-trace (ShareGPT) baseline + DistServe assumed-mix contrast
+map_delta_proposals:
+- 'SEED PROJ-0015 ''Agent Serving KV Is Tool-Result-Dominated: Prefill Token-Mass
+  Decomposition'' (reframed title: token-mass not serving-dollar). GREEN-SEED, parent
+  CLAIM-0026. Charter A picked 5/5 unanimous over Charter C. Charter C KILLED at design
+  committee (APC is token-content-addressed -> changed file content = cache MISS not
+  stale hit'
+- C's 'serve wrong KV' failure mode CANNOT occur in production
+- '+ degenerate Codex LB95=1.000 + collision with PROJ-0002/DEAD-0016 + RE-C4 predictor
+  drags into mined-out DEAD-0017..0021 axis). Links: PROJ-0014 CONVERGED/DEAD-0021
+  freed the slot'
+- PROJ-0002 orthogonal (mechanism vs measurement)
+- DEAD-0016 orthogonal (interior dedup vs mass decomposition).
+baseline_requirements: []
+created_at: '2026-06-01T23:31:44Z'
+
+# ---- DESIGN COMMITTEE (proj0015_design): 5/5 PICK Charter A (2 green + 3 yellow), area_chair FINAL_VERDICT green-seed; Charter C KILLED at design. Full .out in VERDICT-0071_committee/ ----
+design_committee_summary: |
+  Charter A (KV-mass-composition CHARACTERIZATION) vs Charter C (cross-request KV staleness). 5/5 unanimous PICK A. NO fabrication.
+  - novelty_killer (opus-4-8) GREEN/A: C has FATAL collision (APC mechanism error + PROJ-0002/DEAD-0016 overlap); A survives prior-art separation (DistServe/SplitWise/Parrot/Autellix/RadixAttention/vLLM-APC/PromptCache/Sarathi assume the mix, never measure it). Web-search denied; cited retrievable arXiv. Fix: pre-reg must one-line differentiate each; contribution = granular decomposition not 'rediscovers prefill-heaviness'.
+  - systems_reviewer (codex) YELLOW/A: A is a systems insight (existing systems implement the knobs but don't answer where agent token mass comes from). C weak: shipping caches key on token prefix not path -> changed same-path bytes fail exact-prefix reuse (a miss), not a stale hit. Scope A as trace characterization not universal serving economics (~69 CC/~89 Codex sess, no production mix).
+  - evaluation_prosecutor (gemini) GREEN/A: C attacks a non-existent vulnerability (RadixAttention caches by exact token prefix -> changed content branches the cache, cannot serve wrong KV unless path-keyed). Mandatory baseline: contrast vs a chat trace (RAG/ShareGPT), not just DistServe. Distinguish static system-prompt prefix vs dynamic per-turn tool-result prefill.
+  - theory_skeptic (opus-4-7) YELLOW/A: A wins on killability + positive-producibility, BUT overclaims 'serving dollar' from token-mass (prefill ~10-100x cheaper $/token than decode) -> MUST reframe to 'token mass' + optional cost-weighted secondary. C degenerate (Codex changed LB95=1.000, undisclosed N; dominated by trivial read-after-write). Demand conservative-denominator headline, cross-instrument margin, Gini CIs, clean-negative also if Gini<0.5.
+  - product_realist (metacode) GREEN/A: 63.3%/86.1% result dominance (LB95 0.502/0.845) is actionable for prefill/decode disaggregation capacity planning; heavy tail = cacheable hot spots. C narrower scope (file-read subset). (green x2 in output.)
+  - area_chair (opus-4-6) FINAL_VERDICT: green, CHARTER_SELECTED: A. Charter C KILLED (3 independent fatal findings, unrebutted: APC mechanism mischaracterization = load-bearing premise false; degenerate Codex measurement; collision PROJ-0002/DEAD-0016 + RE-C4 predictor drags into mined-out DEAD-0017..0021). A survives with 2 fixable YELLOWs (serving-dollar overclaim; CC LB95=0.502 borderline, Codex 0.845 anchors). 9 binding mandatory fixes + 2 mandatory baselines (recorded in required_evidence + project_overview.md). GREEN-SEED conditioned on L0 pre-reg honoring all fixes.
+note: |
+  This is a design-SEED verdict — the committee picked the charter at green-seed quality; CLAIM-0026 SEEDS at yellow pending the L0 EXP-0061 evidence (no experiment has run yet). It is NOT a green promotion. premeasure_r8 cross-check (runtime/committee/proj0015_design/premeasure_crosscheck_r8.out) confirmed stats current: CC result/span 0.626 CI95[0.498,0.705], top-decile 0.788 CI95[0.619,0.872], Gini 0.864; Codex 0.861. CC LB95 borderline 0.498-0.502 -> conservative-denominator + cross-instrument margin fixes are load-bearing.
+committee_run_dir: runtime/committee_run_proj0015_design

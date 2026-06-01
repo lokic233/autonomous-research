@@ -1,0 +1,122 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: green
+CHARTER_SELECTED: A
+CHARTER_C_DISPOSITION: KILLED (unanimous — mechanism mischaracterization is fatal and unrebutted)
+
+REVIEWER_VOTES:
+  evaluation_prosecutor: green (A) — two responses, both pick A; identifies C's token-content-addressed strawman
+  novelty_killer:        green (A) — C has FATAL_COLLISION (mechanism error + PROJ-0002/DEAD-0016 overlap); A survives prior-art separation
+  product_realist:       green (A) — 63.3%/86.1% tool-result mass is actionable for serving operators; C narrower scope
+  systems_reviewer:      yellow (A) — A is insight contribution; C weak because shipping caches key on token prefix not path
+  theory_skeptic:        yellow (A) — A wins on killability + positive-producibility; overclaims "serving dollar" from token-mass
+
+PRIOR_ART_ADEQUATE: yes-with-caveat
+  Novelty killer disclosed web-search was denied; cited prior art from known retrievable arXiv records
+  (DistServe 2401.09670, SplitWise 2311.18677, Parrot 2405.19888, Autellix 2502.13965, RadixAttention
+  2312.07104, vLLM-APC 2309.06180, PromptCache 2311.04934, Sarathi-Serve 2403.02310). Coverage spans
+  disaggregation, prefix caching, and agent serving — the relevant landscape. Separation argument is
+  clean: NONE of these measure the prefill/decode token-mass split on real agent traces. Adequate for
+  GREEN, but L0 pre-registration MUST cite and one-line differentiate each (per novelty_killer fix #2).
+
+FATAL_OBJECTIONS: []
+  No reviewer RED on Charter A. Both YELLOWs (systems_reviewer, theory_skeptic) are methodological
+  precision issues resolvable at pre-registration time, not viability threats.
+
+CHARTER_C_KILL_RATIONALE:
+  Three independent fatal findings, each sufficient alone, all unrebutted:
+  1. MECHANISM MISCHARACTERIZATION (novelty_killer, evaluation_prosecutor, systems_reviewer): RadixAttention
+     (2312.07104) and vLLM-APC (2309.06180) are CONTENT-ADDRESSED — they key on token IDs / block hashes.
+     Changed file content produces different tokens, yielding a cache MISS, not a "stale hit serving wrong
+     KV." C's thesis sentence ("a hit would serve wrong KV / must be invalidated") describes a failure mode
+     that CANNOT OCCUR in production systems. This is not a framing quibble — it is the load-bearing premise.
+  2. DEGENERATE MEASUREMENT (theory_skeptic): Codex changed-content LB95 = 1.000 with undisclosed N for
+     repeated same-path reads. If N is small, RE-C0 fails and the claim has no denominator. The headline
+     is dominated by the trivial read-after-WRITE case: "agents edit files they read, ergo files change"
+     restates the input, not a serving finding.
+  3. COLLISION + MINED-OUT ESCAPE (novelty_killer, theory_skeptic): With the strawman premise removed, C
+     reduces to "APC miss-rate on file-read prefixes" — which COLLIDES with PROJ-0002 (reuse under edits)
+     and is adjacent to DEAD-0016 (byte-identical repeats). RE-C4's predictor (write-between-reads predicts
+     staleness) drags C into the DEAD-0017..0021 mined-out predictability axis.
+
+REQUIRED_EVIDENCE: []
+  All pre-measured numbers cited in Charter A's packet (63.3% CC / 86.1% Codex result mass; per-session
+  median 0.699/0.848; top-decile 78.8%/57.2%; Gini 0.864/0.746; LB95 0.502/0.845) were pre-measured on
+  live corpora. No additional evidence needed before seeding; L0 experiment will produce the definitive
+  numbers under the tightened gates below.
+
+MANDATORY_BASELINES:
+  - Standard chat traces (e.g., ShareGPT or equivalent multi-turn conversational dataset) — must show
+    the prefill/decode mass split is structurally different for agent tool-loops vs chat (evaluation_prosecutor)
+  - DistServe 2401.09670 assumed workload mix — cite the assumed prefill/decode ratio and show the measured
+    agent ratio diverges (novelty_killer, product_realist)
+
+MANDATORY_FIXES (binding — L0 pre-registration MUST honor all):
+  1. REFRAME THESIS (theory_skeptic, unanimous support): STRIKE "where the agent serving dollar is spent."
+     Replace with "where the agent serving prefill TOKEN MASS is spent." Token mass ≠ cost mass (prefill
+     is ~10-100x cheaper per token than decode per DistServe/Splitwise). Add OPTIONAL secondary RE-A4:
+     cost-weighted variant using a published prefill-vs-decode $/token ratio (cite Splitwise 2311.18677
+     or DistServe 2401.09670), reported as SECONDARY, not headline.
+  2. CONTRIBUTION FRAMING (novelty_killer): Pre-register the contribution as the GRANULAR decomposition
+     (tool-result vs arg vs decode-interstitial) + heavy-tail Gini + cross-instrument replication.
+     Explicitly concede "prefill-heavy" is already assumed by DistServe/SplitWise — the bare direction
+     is NOT the claim. Reject any reading of A as "rediscovers prefill-heaviness."
+  3. RE-A2 DENOMINATOR COMMITMENT (theory_skeptic, evaluation_prosecutor): The MOST-CONSERVATIVE
+     denominator (assistant-text-block-only) is the HEADLINE. The other two denominators (raw span,
+     non-result mass) are robustness checks. If the conservative denominator drops below 50%, downgrade
+     to "largest single component," not "majority." Commit BEFORE seeing the conservative number.
+  4. STATIC vs DYNAMIC SEPARATION (evaluation_prosecutor): Distinguish static system-prompt prefix
+     (consumes KV memory after turn 1 but zero marginal compute) from dynamic per-turn tool-result
+     prefill (consumes both). Report both shares; the "tool-result dominated" claim refers to the
+     DYNAMIC marginal prefill, not total KV memory.
+  5. CROSS-INSTRUMENT EQUIVALENCE MARGIN (theory_skeptic): RE-A3 must specify an a-priori margin.
+     Proposed: both LB95 > 0.50 AND |CC − Codex| < 0.40 on the chosen denominator. If only the
+     direction replicates but magnitudes diverge beyond margin, report as "instrument-dependent
+     magnitude," not "replicated dominance."
+  6. GINI WITH CIs (theory_skeptic): Report Gini with bootstrap CI (2000x session-clustered) and a
+     bootstrap CI on the CC-Codex Gini delta. Do not headline point estimates without CIs.
+  7. OPERATIONAL DEFINITIONS (theory_skeptic): Pin "tool-result" / "arg" / "decode-interstitial" to
+     parse_cc_session / parse_codex_session field names IN the L0 pre-registration. Disclose the
+     tokenizer (or explicit char-proxy) and pre-register it.
+  8. CLEAN-NEGATIVE CRITERION EXPANSION (theory_skeptic): Clean negative is NOT just "LB95 < 0.50."
+     Also: "Gini < 0.5 on either corpus" (= no heavy tail = boring uniform distribution, no cacheable
+     hot spots).
+  9. MANDATORY RELATED WORK (novelty_killer): Cite and one-line differentiate DistServe, SplitWise,
+     DuetServe, Sarathi-Serve, Parrot, Autellix, RadixAttention, vLLM-APC. Each: "does not measure
+     the prefill/decode token-mass split of real agent tool-loops."
+
+MAP_DELTA_PROPOSAL:
+  node: PROJ-0015
+  change: SEED as "Agent Serving KV Is Tool-Result-Dominated: Prefill Token Mass Decomposition"
+    (note reframed title per fix #1 — "token mass" not "serving dollar")
+  status: GREEN-SEED
+  parent_claim: new CLAIM (tool-result prefill-mass dominance + heavy-tail characterization)
+  links:
+    - PROJ-0014 (CONVERGED/DEAD-0021) — freed the slot
+    - PROJ-0002 (edit-invalidation) — orthogonal (mechanism vs measurement)
+    - DEAD-0016 (byte-identical repeats) — orthogonal (interior dedup vs mass decomposition)
+    - Charter C — KILLED at design committee (mechanism mischaracterization of APC)
+
+RATIONALE:
+  Unanimous 5/5 pick for Charter A over Charter C. Charter C is killed on a mechanism error that no
+  reviewer rebutted: production prefix caches (RadixAttention 2312.07104, vLLM-APC 2309.06180) are
+  token-content-addressed, so changed file content yields a miss, not a stale hit — collapsing C's
+  "correctness ceiling" thesis into a strawman, compounded by a degenerate Codex LB95=1.000 and
+  collision with PROJ-0002/DEAD-0016.
+
+  Charter A survives with two YELLOW concerns, both fixable at pre-registration: (1) "serving dollar"
+  overclaim from a token-mass measurement (theory_skeptic — fix: reframe to "token mass," add optional
+  cost-weighted secondary); (2) CC LB95=0.502 borderline near the 0.50 gate (product_realist,
+  theory_skeptic — fix: cross-instrument equivalence margin + the Codex LB95=0.845 provides the
+  strong-instrument anchor). Neither threatens viability.
+
+  The contribution — first granular token-mass decomposition (tool-result 63.3%/86.1%, Gini 0.864/0.746,
+  top-decile 78.8%/57.2%) of real agent serving traces, replicating cross-instrument — is cleanly
+  separated from all cited prior work (DistServe, SplitWise, Parrot, Autellix, RadixAttention, vLLM-APC,
+  Sarathi-Serve) which implement disaggregation/caching knobs but ASSUME the workload mix rather than
+  measuring it. The heavy-tail finding (Gini 0.864) is the genuinely novel delta beyond "prefill-heavy"
+  folklore, identifying cacheable hot spots. Pre-measured, killable (LB95<0.50 OR Gini<0.5 = clean
+  negative), and able to produce a publishable positive (the headline numbers ARE the contribution).
+
+  GREEN conditioned on L0 pre-registration honoring all 9 mandatory fixes above. (v001)
+```

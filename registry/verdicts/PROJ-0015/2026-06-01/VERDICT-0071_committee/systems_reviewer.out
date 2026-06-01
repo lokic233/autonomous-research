@@ -1,0 +1,11 @@
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM APC", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "token/block-hash automatic prefix KV reuse; no agent tool-result mass decomposition"},
+  {system: "SGLang RadixAttention", url: "https://www.lmsys.org/blog/2024-01-17-sglang/", overlap: "radix-tree KV reuse for multi-call/agent workloads; no measurement of real agent tool-result prefill share"},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "shipping prompt-prefix KV reuse, host offload, priority/event APIs; no tool-result-vs-decode accounting"},
+  {system: "LMCache", url: "https://arxiv.org/html/2510.09665v2", overlap: "cross-query/offloaded KV cache layer with real-world usage stats and vLLM/SGLang connectors; no cited breakdown of agent external tool-result token mass"},
+  {system: "DistServe", url: "https://haoailab.com/blogs/distserve/", overlap: "prefill/decode disaggregation and goodput evaluation; assumes workload classes rather than measuring agent tool-result prefill dominance"}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Pick Charter A. The measurement likely holds as an L0 characterization if RE-A2 uses the tight assistant-text decode denominator and RE-A3 keeps CC+Codex as a hard gate; packet cites result-token mass at 63.3% CC / 86.1% Codex and session-clustered LB95 0.502 / 0.845. Gaps: only ~69 CC and ~89 Codex sessions, local/private live corpora, no production serving mix, no tokenizer/model sensitivity, and no dollar/GPU validation; publish as trace characterization, not universal serving economics.
+RATIONALE: Charter A is systems insight/design because existing systems implement the knobs (APC/RadixAttention/KV reuse, prefill-decode disaggregation, offloaded KV layers) but do not answer where agent serving token mass comes from. Charter C is weaker for systems: shipping exact-prefix systems key reuse by prompt tokens/block hashes, so changed same-path file bytes should fail exact-prefix reuse rather than create a stale KV hit; its >91% changed rereads mostly measures low same-path byte reuse unless it defines a path-keyed cache mechanism. PROMPT_VERSION: v001

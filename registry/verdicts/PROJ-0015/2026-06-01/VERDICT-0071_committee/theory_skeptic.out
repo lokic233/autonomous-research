@@ -1,0 +1,30 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+FINAL_VERDICT: A
+MUNDANE_EXPLANATIONS:
+  - A: "tool-result dominates prefill mass" is partially TAUTOLOGICAL — tool outputs (file reads, web fetches, grep dumps) are by construction verbose, while assistant decode is bounded by sampling/structure; the 63%/86% number is what any back-of-envelope would predict, so the contribution rests on the CROSS-INSTRUMENT magnitude + tail (Gini 0.864/0.746), not the "majority" claim itself.
+  - C: ">91% of re-reads return changed content" is dominated by the trivial read-after-WRITE case (the agent literally just edited the file). Without RE-C4 promoted to PRIMARY, the headline is "agents edit files they read" — not a serving claim.
+CONFOUNDS:
+  - A: TOKEN MASS != COST MASS. Prefill is compute-bound and batchable at ~10-100x lower $/token than decode (memory-bandwidth-bound, sequential). A 63% prefill-token share does NOT imply 63% of "the agent serving dollar." Charter A's THESIS sentence ("where the agent serving dollar is spent") is NOT supported by the proposed measurement — only token-mass split is. Must reframe or add a cost-weighted variant.
+  - A: decode-denominator choice (RE-A2) is correctly flagged but the three denominators can shift the headline from >85% to <50% — the framing must commit BEFORE seeing the conservative number.
+  - C: Codex changed-content LB95 = 1.000 is a DEGENERATE point estimate. Either N(repeated same-path reads) in Codex is tiny (then RE-C0 fails and the whole claim has no denominator) or the "changed" definition is trivially satisfied (timestamps/line-numbers/cursor metadata in the read output). Sample size and exemplar diffs MUST be disclosed before this is a result.
+  - C: "naive APC serves wrong KV" is a STRAWMAN — production APC (vLLM/SGLang) keys on prefix-token-id equality, so a changed file produces a different prefix and naturally misses; there is no correctness bug to expose, only a miss-rate to characterize. The deployable claim collapses to "APC miss-rate on file-read prefixes is X%" — fine, but rewrite the thesis to not imply a correctness ceiling.
+ASSUMPTIONS_UNTESTED:
+  - A: that token-mass faithfully proxies serving cost (untested; literature on prefill/decode cost asymmetry — DistServe 2401.09670, Sarathi-Serve 2403.02310, Splitwise 2311.18677 — explicitly argues they differ by ~order of magnitude per token).
+  - A: that "tool-result" is well-defined across agents with streaming tool outputs / interleaved thinking — needs an operational definition pinned to parse_cc_session / parse_codex_session field names.
+  - C: that "same path" is the right reuse key (APC reuses on prefix-token equality, not path equality — the path-keyed measurement OVER-counts reuse opportunities the actual cache would see).
+  - C: that file-read tool outputs are the dominant reuse surface (most APC hits in practice come from system prompt + tool schema + chat history, NOT from file-read outputs — needs a denominator showing file-read prefixes are non-trivial share of total prefix mass).
+STATISTICAL_GAPS:
+  - A: cross-instrument LB95 spread is 0.502 (CC) vs 0.845 (Codex) on result-dominance — that's a 35-point gap calling itself "replication"; needs an explicit a-priori equivalence margin (e.g. both LB95 > 0.50 is the gate, not "they agree").
+  - A: Gini 0.864 vs 0.746 — same instability; report bootstrap CIs on the Gini delta, not just the point estimates.
+  - C: NO reported N for repeated-same-path reads per corpus. LB95 = 1.000 on Codex is uninterpretable without N and without showing the bootstrap is not on a single-sample-per-session set. RE-C0's floor must include a minimum ABSOLUTE count (e.g. >=200 repeated reads), not just a fraction.
+  - C: HHI-by-session promised but no pre-measured value disclosed — if a single session dominates the Codex 1.000, the result is a session-effect, not a corpus characterization.
+RATIONALE: Both charters are real characterizations and clear improvements over the DEAD-0017..21 predictability genre. C's headline measurement is partly degenerate (LB95=1.000, undisclosed N, read-after-WRITE confound is the obvious cause and only a secondary control); without RE-C4 promoted to primary and N disclosed, the "publishable positive" is "agents edit files, ergo files change" — which is restating the input. A's measurement is more decisively defined (direct mass decomposition with three pre-registered denominators) and reproduces cross-instrument at meaningful magnitude (Gini 0.864/0.746, top-decile 78.8%/57.2% — those numbers are the real contribution, not the "majority" claim), and the heavy-tail finding is genuinely orthogonal to DistServe (2401.09670) / Sarathi-Serve (2403.02310) / RadixAttention (2312.07104) which assume but never measure the workload mix. A wins on KILLABILITY + POSITIVE-PRODUCIBILITY, but only YELLOW because the thesis sentence overclaims "serving dollar" from a token-mass measurement.
+MANDATORY_FIXES (A):
+  1. STRIKE "where the agent serving dollar is spent" from thesis. Replace with "where the agent serving prefill TOKEN MASS is spent." Add a separate optional RE-A4 cost-weighted variant using a published prefill-vs-decode $/token ratio (cite Splitwise 2311.18677 or DistServe 2401.09670), reported as a SECONDARY finding, NOT the headline.
+  2. RE-A2 must commit to the MOST-CONSERVATIVE denominator (assistant-text-block-only) as the headline; the other two denominators are robustness checks, not headline-flexibility.
+  3. RE-A3 cross-instrument gate must specify an a-priori equivalence margin (e.g. both LB95>0.50 AND |CC-Codex|<0.40 on the chosen denominator; else report as "instrument-dependent magnitude" not "replicated dominance").
+  4. Report Gini WITH bootstrap CI and a bootstrap CI on the CC-Codex Gini delta; do not headline point estimates.
+  5. Operationally pin "tool-result" / "arg" / "decode-interstitial" to parse_cc_session / parse_codex_session field names IN THE L0 pre-registration, before any measurement.
+  6. Pre-register a clean-negative criterion that is NOT just "LB95<0.50" — also "Gini<0.5 on either corpus" (= no heavy tail = boring uniform distribution).
+```
