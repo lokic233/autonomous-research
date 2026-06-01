@@ -103,3 +103,7 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     inbox clear. Orchestrator just RATIFIED the sibling CLAIM-0021 kill (DEAD-0021, 5/5, commit 9d7aa19) -> queue
     draining one-at-a-time, Q-0008 next. No PROJ-0009 open work; floor held below 1. NO action (forward delivered,
     committee = orchestrator's job). Heartbeat #9, ros commit.
+- 2026-06-01 ~19:5xZ — CYCLE (heartbeat #10). STEADY / AWAITING COMMITTEE. Q-0008 (CLAIM-0020) PENDING; no
+    verdict; inbox clear. Orchestrator finalizing sibling CLAIM-0021 verdict-write/convergence (DEAD-0021) first;
+    Q-0008 next in queue. No PROJ-0009 open work; floor held below 1. NO action (forward delivered, committee =
+    orchestrator's job). Heartbeat #10, ros commit.
