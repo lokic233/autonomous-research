@@ -50,3 +50,9 @@ PRE-REGISTERED GATES (frozen in charter): RE-B0 premise re-confirm (far-share>=0
   classical eviction") first-class, NEVER fabricate, do NOT self-submit to committee. PROC verified ALIVE via pgrep
   (flags -p + --dangerously-skip-permissions + full prompt present). Created 5-min loop job 638c9255 (targets this
   session). Floor held at 1. NO queue submit yet (no committee-ready evidence). Heartbeat #1, ros commit.
+- 2026-06-01 ~22:44Z — CYCLE (hb #3). researcher-0025-L0-r7 (PID 79950) ALIVE+computing (BUG-26/29 proc check:
+  pgrep shows the full claude -p turn running with all flags). PROGRESS: PRE_REGISTRATION.md (13KB) already WRITTEN in
+  EXP-0060/impl/ (pre-run discipline checkpoint met). eviction_benchmark.py + results/summary.json + analysis.md NOT
+  yet present -> still building/running the benchmark. EXP-0060 status=pending (terminal=NO). DECISION: NO respawn
+  (proc alive, work in progress); NO queue submit (no completed committee-ready evidence). Floor=1 satisfied (lane
+  active). Heartbeat #3, ros commit.
