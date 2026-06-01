@@ -1,0 +1,59 @@
+verdict_id: VERDICT-0067
+claim_id: CLAIM-0022
+project_id: PROJ-0011
+date: '2026-06-01'
+experiment_ids:
+- EXP-0057
+experiment_paths:
+- experiments/2026-06-01/EXP-0057
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'RE-A1 + HHI: signal absent - CC dAUC +0.0171 below 0.03 floor, LB95 -0.0027 crosses
+  0, folds not all positive, HHI 0.422 (2-3 Bash-heavy sessions drive residual)'
+- working-set feats (exploration-breadth, intervening-call-count) collinear with the
+  LRU gap-since-last feature already in B0
+- 'RE-A2a + RE-A2b: recency-in-disguise - 0/10 matched-recency deciles separate (need
+  >=6), AND B0+Marconi-forecast AUC 0.666 ~= B1 0.681 (dAUC_fc +0.015 LB95 -0.021)
+  so does not beat existing reuse forecast'
+- 'RE-A3: policy test negative - B1-predictor eviction saves NEGATIVE recompute vs
+  LRU at all 7 capacities (-0.8% to -34.9%)'
+- only Belady oracle saves +0.6..+13.3%
+- a feature whose policy underperforms trivial LRU is not a deployable lever
+- 'Codex RE-A4 sign-concordance discounted: RE-A0 FAILS on Codex (share_FAR 0.036,
+  73 far positives) - bimodality premise absent, direction-only noise, researcher
+  correctly declined to upgrade'
+required_evidence:
+- 'Revival: a corpus + feature where a cheap causal feature beats BOTH the LRU+LFU+file-class
+  B0 AND a Marconi-style reuse forecast (dAUC_LB95>0, point>=0.03, all folds positive),
+  survives matched-recency stratification, HHI<0.2, AND a predictor-driven eviction
+  policy beats LRU in the capacity sim'
+map_delta_proposals:
+- 'CLAIM-0022/PROJ-0011: KILL predictability claim -> cemetery. SURVIVING characterization
+  (CC reuse-distance BIMODALITY 18.9% far >8192tok p99 ~86k + recompute-mass Gini
+  ~0.66 + LRU provably suboptimal vs Belady <=13.3% gap) re-scoped as a MEASUREMENT
+  contribution (new measurement of KNOWN Belady/Mattson caching phenomena), NOT a
+  mechanism/usable-lever. Actionable pointer: only explicit-execution-plan approaches
+  (KVFlow 2507.07400 agent-step-graph / ScaleSim invocation-distance) can capture
+  the oracle gap, not cheap statistical history features'
+baseline_requirements:
+- SGLang RadixAttention 2312.07104 (LRU radix-tree eviction incumbent)
+- vLLM PagedAttention/APC 2309.06180 (LRU block eviction)
+- Marconi 2411.19379 (reuse-distance forecast)
+- Belady 1966 / Mattson 1970 (OPT-vs-LRU gap + stack-distance characterization)
+created_at: '2026-06-01T21:22:09Z'

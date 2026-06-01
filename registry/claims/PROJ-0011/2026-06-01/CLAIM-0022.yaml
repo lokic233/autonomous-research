@@ -28,13 +28,16 @@ negative_evidence:
     reuse-aware policies (RadixAttention/vLLM-APC LRU+LFU + Marconi forecast) SUFFICIENT;
     do NOT build a new cheap causal reuse-aware eviction feature.'
   data_path: experiments/2026-06-01/EXP-0057/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0067
+  date: '2026-06-01'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
 lifecycle_state: done
-next_action: killed -> cemetery; no further action
+next_action: killed by VERDICT-0067
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-01T20:33:44Z'
-last_updated: '2026-06-01T20:55:04Z'
+last_updated: '2026-06-01T21:22:09Z'
