@@ -1,0 +1,28 @@
+claim_id: CLAIM-0025
+project_id: PROJ-0014
+stage: seed
+status: seed
+claim: CLAIM-0025
+why_it_matters: 'Agent KV eviction BENCHMARK vs Belady (committee-checked DISTINCT
+  from DEAD-0018/DEAD-0019: B is a policy-comparison of deployed/classical eviction
+  {SGLang LFU/SLRU,ARC,LRU-K,pin+LRU} vs Belady oracle on agent traces, NOT a predictor;
+  DEAD-0019''s own revival gate invited a policy that beats LRU). proj0013_design
+  B=yellow (RED reframed). ARC+LRU-K killer baselines; matched-residency; BH-corrected;
+  report Codex. Extends PROJ-0011 survivor. Cite KVFlow 2507.07400/CDN-Belady 2212.13671.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: v001
+lifecycle_state: experiment_running
+next_action: await EXP-0060 result, then ros exp complete --exp EXP-0060 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0060
+created_at: '2026-06-01T22:36:34Z'
+last_updated: '2026-06-01T22:36:49Z'
