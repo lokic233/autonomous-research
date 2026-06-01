@@ -1,0 +1,43 @@
+claim_id: CLAIM-0014
+project_id: PROJ-0005
+stage: seed
+status: seed
+claim: "Tool-result re-tokenization boundary churn defeats exact-prefix KV-cache reuse:\
+  \ injecting a tool result perturbs BPE token boundaries straddling the injection\
+  \ seam, so the re-tokenized token-ID prefix diverges from the cached prefix at a\
+  \ delimiter-class-predictable rate, silently demoting a vLLM-APC/RadixAttention\
+  \ exact-prefix block-hash HIT to a MISS for a quantifiable fraction of tool-call\
+  \ turns \u2014 measured at BLOCK granularity, exceeding a clean-newline-append control\
+  \ (CI>0), and predicted model-free from seam delimiter class (AUC CI>0.5)."
+why_it_matters: 'PROJ-0005 first claim, selected by honest 6-member design committee
+  (runtime/committee_run_proj5_design, ALL_COMMITTEE_DONE, 6/6 real votes clean of
+  EMPTY_OUTPUT; systems_reviewer+product_realist GREEN, 3 YELLOW fixable-measurement-design,
+  0 RED on Candidate A; B->RED roofline-accounting-identity DEAD-0009/0010-class,
+  C->backup TA-Fast-reduction-risk). Refill-to-4-investing after PROJ-0001 converged.
+  Cheapest-to-first-signal CPU-only cheap-kill (production-tokenizer block-granularity
+  sim on existing PROJ-0003 traces, no GPU/weights). Inference-opt/KV-cache Meta value.
+  LEXICAL/tokenizer layer orthogonal to PROJ-0002 semantic / PROJ-0004 decode; INVERSE
+  of DEAD-0006. 7 committee fixes baked into project_overview.md: block-granularity
+  primary endpoint, regime stratification, clean-append control as pre-registered
+  primary gate, characterization reframe + token-healing/2601.06007 citations, production
+  Rust tokenizer, chat-template canonicalization control, DEAD-0006 non-collision
+  attestation, + mandatory live prior-art search.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history:
+- verdict_id: VERDICT-0052
+  date: '2026-06-01'
+  result: yellow
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: v001
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0052=yellow: address required_evidence to advance'
+blocking_on: ''
+active_experiments:
+- EXP-0048
+created_at: '2026-06-01T11:46:15Z'
+last_updated: '2026-06-01T11:46:55Z'

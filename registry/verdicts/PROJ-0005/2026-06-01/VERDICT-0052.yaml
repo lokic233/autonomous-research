@@ -1,0 +1,68 @@
+verdict_id: VERDICT-0052
+claim_id: CLAIM-0014
+project_id: PROJ-0005
+date: '2026-06-01'
+experiment_ids:
+- EXP-0048
+experiment_paths:
+- experiments/2026-06-01/EXP-0048
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: systems_reviewer
+  vote: green
+- role: product_realist
+  vote: green
+- role: novelty_killer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- "BLOCK-GRANULARITY primary endpoint (blocks-invalidated-per-turn vs real block-hash\
+  \ schedule block=16, NOT raw LCP) \u2014 HIGHEST priority, 3-reviewer convergence"
+- '>95% blocks survive => claim falsified no L1'
+- "RE-TOKENIZATION REGIME stratification: full-prompt-retokenize-per-turn [churn possible]\
+  \ vs token-ID-cache/delta-tokenize [churn structurally 0] \u2014 headline must not\
+  \ be a regime-mix artifact"
+- CLEAN-newline-APPEND control as PRE-REGISTERED PRIMARY anti-tautology gate (churn
+  must EXCEED control CI>0 BEFORE delimiter-AUC reported
+- churn~=control => BPE-does-BPE clean kill)
+- 'mandatory LIVE prior-art search before L0 (web was blocked at design): tokenization-boundary-cache-invalidation
+  / BPE-seam-prefix-cache / re-tokenization-KV-reuse'
+map_delta_proposals:
+- CREATE node PROJ-0005 charter=Tool-Result Re-Tokenization Boundary Churn Defeats
+  Exact-Prefix KV-Cache Reuse
+- stage=L0-DESIGN
+- first_claim=CLAIM-0014 (amended per 7 fixes)
+- occupied_territory=LEXICAL/tokenizer-layer exact-prefix KV-cache hit->miss from
+  BPE boundary churn at tool-result injection seams (prefill-time
+- NOT PROJ-0002 semantic invalidation
+- NOT PROJ-0004 decode-draft-acceptance
+- INVERSE of DEAD-0006)
+- status=yellow/seed-with-fixes
+- Candidate B RED (roofline accounting identity L*=HBM_BW/(2*layers*KV_bytes/tok)
+  textbook Pope 2211.05102
+- "\xB120% under matched-kernels ill-defined when kernel-maturity is dominant variance\
+  \ = DEAD-0009/0010 class)"
+- Candidate C backup (schema-position ~ TA-Fast anchor-adjacency 2604.11288 reduction
+  risk
+- viable only on anchor-less positional subset)
+- 'mandatory related work: token/boundary healing + Don''t-Break-the-Cache arXiv:2601.06007
+  (white-box tokenizer mechanism vs its black-box provider $/TTFT)'
+baseline_requirements:
+- vLLM APC block-hash simulator OR live APC hit/miss counters (block granularity is
+  the production unit
+- LCP overestimates miss cost)
+- clean newline-append control
+- production Rust HF Tokenizers (NOT naive Python BPE)
+- chat-template/special-token canonicalization control (<|im_start|>/<tool_call> may
+  reset BPE state + canonicalize seam)
+- '>=2 tokenizers x >=2 trace corpora'
+created_at: '2026-06-01T11:46:55Z'
