@@ -87,3 +87,10 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
   DECISION: NO action — forward delivered, committee is orchestrator's job (sub-monitor does NOT judge/convene).
     Floor HELD below 1 (killed L0 claim = not open work; refill = make-work; L1+ only IF committee revives, and
     that's orchestrator-dispatched). NO HUMAN GATE. Heartbeat #6, ros commit. Continue polling for the verdict.
+- 2026-06-01 ~19:3xZ — CYCLE (heartbeat #7). STEADY-STATE / AWAITING COMMITTEE (not a human gate).
+    * Q-0008 (CLAIM-0020/EXP-0055) still PENDING in orchestrator committee-queue (submitted 19:27:02Z). No
+      registry/verdicts/PROJ-0009 yet. Sibling Q-0007 also PENDING -> orchestrator convenes ONE committee at a
+      time; normal latency. cemetery/PROJ-0009 dir exists (researcher's DEAD-0018 staging) but the AUTHORITATIVE
+      kill verdict is the committee's, not the sub-monitor's or researcher's.
+    * No PROJ-0009 open work; researcher-0020-L0-r7 terminal-completed. Floor HELD below 1 (killed L0 = not work).
+  DECISION: NO action — forward delivered, committee = orchestrator's job. Heartbeat #7, ros commit. Poll on.
