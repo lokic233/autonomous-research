@@ -1,26 +1,29 @@
 claim_id: CLAIM-0019
 project_id: PROJ-0008
-stage: seed
-status: seed
+stage: retired
+status: retired
 claim: CLAIM-0018
-why_it_matters: 'Redundant Tool-Call Prefill Tax (WITHIN-session INTERIOR byte-identical
-  tool re-invocation, exact-prefix-unrecoverable). DISTINCT from CLAIM-0017 (cross-session
-  prefix-reuse ceiling from drift): CLAIM-0018 is within-session interior self-repetition
-  that was never a reusable prefix, NOT cross-session shared-head drift. Design committee
-  proj0608_design body-checked non-collision vs PROJ-0007. Rescoped to exact-prefix;
-  5/5 yellow seed-with-7-fixes.'
+why_it_matters: 'Redundant Tool-Call Prefill Tax (WITHIN-session INTERIOR byte-identical tool re-invocation,
+  exact-prefix-unrecoverable). DISTINCT from CLAIM-0017 (cross-session prefix-reuse ceiling from drift):
+  CLAIM-0018 is within-session interior self-repetition that was never a reusable prefix, NOT cross-session
+  shared-head drift. Design committee proj0608_design body-checked non-collision vs PROJ-0007. Rescoped
+  to exact-prefix; 5/5 yellow seed-with-7-fixes.'
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
 negative_evidence: []
 verdict_history: []
-revival_conditions: ''
+revival_conditions: 'See DEAD-0016 (same thesis): revive only if a corpus shows result_equiv_rate>=50%
+  on long-gap interior repeats AND f>=2% recoverable-tax.'
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: drafted
-next_action: prior-art + skeptic check, then design a bounded probe
-blocking_on: ''
+lifecycle_state: done
+next_action: RETIRED as accidental duplicate of CLAIM-0018 (same Redundant-Tool-Call-Prefill-Tax thesis;
+  its claim field literally points to CLAIM-0018). CLAIM-0018 ran EXP-0054 and was KILLED (DEAD-0016,
+  ratified VERDICT pending). CLAIM-0019 never had its own experiment/verdict; no separate cemetery entry
+  needed - it IS DEAD-0016. Double-seed artifact from an interrupted (provider-5xx) seed turn.
+blocking_on: NONE - retired duplicate, no work
 active_experiments: []
 created_at: '2026-06-01T17:37:26Z'
 last_updated: '2026-06-01T17:37:26Z'
