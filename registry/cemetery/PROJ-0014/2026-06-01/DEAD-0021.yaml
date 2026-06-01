@@ -5,12 +5,25 @@ reason_killed: 'CLEAN-NEGATIVE: agent-KV LRU->Belady gap (<=11%) is oracle-only;
   cheap policy static-pin N=2 captures >=50% at only 1/5 caps at matched residency;
   ARC & LRU-K capture 0/5; SGLang-LFU worse than LRU at tight caps; HHI 0.08, 0/15
   pin cells survive BH/Bonferroni; ship classical LRU.'
-killing_verdict: ''
+killing_verdict: VERDICT-0070
 killing_experiments:
 - EXP-0060
 duplicate_patterns:
 - CLAIM-0025
 - 0025 claim
-revival_conditions: ''
-related_prior_work: []
+- agent KV eviction cheap policy beats LRU toward Belady
+- frequency-aware / LFU / ARC / LRU-K / static-pin captures the agent-KV Belady gap
+revival_conditions: 'A corpus + policy where a CHEAP, deployed-realistic, history-only
+  eviction policy captures >=50% of the LRU->Belady recompute-mass gap at >=3/5 pre-declared
+  capacities at MATCHED RESIDENCY, session-robust (HHI<0.2), AND survives multiplicity
+  correction (BH/Bonferroni). Closed from BOTH predictor (DEAD-0019/EXP-0057) and policy
+  (this/EXP-0060) sides -> revival realistically needs the KVFlow 2507.07400 / ScaleSim
+  explicit step-graph FUTURE-KNOWLEDGE direction, not a cheap statistical policy.'
+related_prior_work:
+- 'SGLang RadixAttention 2312.07104 / vLLM APC 2309.06180 (deployed LRU incumbents benchmarked)'
+- 'ARC Megiddo-Modha FAST03 + LRU-K O''Neil SIGMOD93 (parameter-free adaptive killer baselines; both fail 0/5)'
+- 'Sleator-Tarjan CACM85 k-competitiveness (foundational: no cheap online policy matches Belady worst-case)'
+- 'LRB/NSDI20 learned-Belady (positive CDN contrast: gap IS closable on some workloads -> agent-KV negative is workload-specific)'
+- 'H2O 2306.14048 / SnapKV (token-level intra-sequence KV eviction, distinct layer)'
+- 'KVFlow 2507.07400 / ScaleSim (explicit step-graph future-knowledge = the only live forward route)'
 date_killed: '2026-06-01T22:50:01Z'
