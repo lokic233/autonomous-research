@@ -158,12 +158,15 @@ verdict_history:
 - verdict_id: VERDICT-0049
   date: '2026-06-01'
   result: yellow
+- verdict_id: VERDICT-0051
+  date: '2026-06-01'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0047; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0051=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-06-01T11:29:18Z'
+last_updated: '2026-06-01T11:43:05Z'

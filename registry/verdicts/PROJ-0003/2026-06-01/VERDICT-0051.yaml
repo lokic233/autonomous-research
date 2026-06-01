@@ -1,0 +1,58 @@
+verdict_id: VERDICT-0051
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-06-01'
+experiment_ids:
+- EXP-0047
+experiment_paths:
+- experiments/2026-06-01/EXP-0047
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- NONE
+required_evidence:
+- "Pre-registered strict OOS bar met 0/3 splits \u2014 parametric Hawkes kernel does\
+  \ NOT beat a trivial recent-rate window (dLL(haw-recent) strongly negative at f=0.5"
+- CI crosses 0 / timing-perm loses power f=0.6/0.7)
+- unrebutted
+- Variance/CI on the 7.8-10.9x early-warning lift RATIO itself unreported (13-40 test
+  failures/split -> ratio CI likely spans several-fold)
+- Timing-permutation null may not permute within-session/within-tool strata (potential
+  significance inflation)
+- "No held-out SESSIONS or HARNESSES in OOS test \u2014 temporal-within-distribution,\
+  \ not generalization"
+map_delta_proposals:
+- "CLAIM-0012: adopt framing (ii) \u2014 parametric Hawkes self-excitation remains\
+  \ DESCRIPTIVE/IN-SAMPLE (BIC/LOSO from VERDICT-0049)"
+- add SEPARATE honest sub-finding that OOS predictive self-excitation is real via
+  the SIMPLE recent-failure-rate heuristic (8-11x early-warning lift, timing-perm
+  p=5e-4, memory>memoryless 3/3) WITH mandatory SRE burn-rate citation acknowledging
+  the operational mechanism is occupied. Stage=verdict_recorded
+- altitude stays YELLOW (NOT promoted, NO override). ON-NODE altitude lever now EXHAUSTED
+  (off-node 2nd-harness map-blocked)
+- the parametric kernel cannot clear its own pre-registered OOS bar on N=111 Codex
+  events. CLAIM-0012 retains VERDICT-0049 standing (descriptive over-dispersion/self-excitation
+  real + domain-novel) + gains the honest operational sub-finding.
+baseline_requirements:
+- "Google SRE Workbook burn-rate/error-rate window alerting MUST be cited as operational\
+  \ prior art for the recent-failure-rate trigger (currently UNCITED) \u2014 the operational\
+  \ mechanism is occupied"
+- Calibration curves / Brier score for the recovery-trigger probabilities
+- Rolling-window classifier (e.g. XGBoost w/ recent tool/failure features) as the
+  industry-standard operational baseline above the trivial recent-rate heuristic
+created_at: '2026-06-01T11:43:05Z'
