@@ -1,7 +1,7 @@
 claim_id: CLAIM-0023
 project_id: PROJ-0012
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0023
 why_it_matters: 'Multi-tool batch admission mis-estimation CHARACTERIZATION: parallel-call
   batch token-total NOT predicted by batch SIZE (live CC: 50% bursts multi-call, batch-total
@@ -19,16 +19,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0058
+  summary: 'EARLY-KILL-DEAD-0018-RESKIN (first-class clean negative). FIX-2 early-kill
+    FIRED: for genuine co-issued Codex parallel-tool batches (86 sessions, 704 multi-call
+    batches, 60.3% multi), the cheap pre-execution JOINT-ARGUMENT oracle adds NOTHING
+    over {count,gap,freq,tool-mix,pair/triple,matched-max/sum-per-call} B0 (RE-B2
+    dAUC=-0.0045, LB95=-0.017, folds not all+). matched-max-per-call ALONE captures
+    ~88% of above-chance batch-whale signal -> batch whale = max(per-call whale) ->
+    collapses to DEAD-0018 per-call axis. Reinforced: RE-B0 top-decile mass 0.481<0.50;
+    RE-B1 size-only AUC 0.626>0.60 (count not useless); robustness(tight-ts,698 batches)
+    same negative. FIX-1 strawman RESOLVED (Codex co-issued calls=genuine pre-exec
+    dispatch point, 1ms median gap). FIX-4: CC emits ZERO parallel calls -> RE-B5
+    single-instrument-by-design (Codex), not waived. RE-B3 no-leakage by construction.'
+  data_path: experiments/2026-06-01/EXP-0058/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0058 result, then ros exp complete --exp EXP-0058 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0058
+active_experiments: []
 created_at: '2026-06-01T20:39:19Z'
-last_updated: '2026-06-01T20:39:32Z'
+last_updated: '2026-06-01T21:01:54Z'
