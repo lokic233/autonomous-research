@@ -87,3 +87,4 @@ PRE-REGISTERED GATES (frozen in charter): RE-B0 premise re-confirm (far-share>=0
   judge). researcher-0025 proc count=0 (exited cleanly, work complete) -> NO respawn (rule = respawn only if proc
   exited WITH open work; EXP-0060 is the only CPU lane + it's done). No .converged marker (orchestrator's call,
   BUG-28). Inbox empty. Floor=1 drained. NO action beyond heartbeat+commit. Heartbeat #5, ros commit.
+- 2026-06-01 ~23:01Z — CYCLE (hb #6). HOLDING unchanged: Q-0012 PENDING, no CLAIM-0025 verdict, proc gone (work complete, NO respawn), no .converged, inbox empty. Floor=1 drained. NO action. Heartbeat #6, ros commit.
