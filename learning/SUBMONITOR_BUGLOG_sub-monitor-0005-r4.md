@@ -18,3 +18,11 @@ Approved gating exp: EXP-0048 (L0, CPU)
 - 2026-06-01 ~11:48Z — BOOT. Registered sub-monitor-0005-r4 (role=sub-monitor, project=PROJ-0005,
   session e4e27cfd). Heartbeat #1 OK. Read sub-monitor.md + project_overview.md + VERDICT-0052 +
   researcher_v001.md. Floor N=2. Next: spawn researcher-0014-L0-r4 (EXP-0048, permission-bypass).
+
+- 2026-06-01 ~11:51Z — SPAWN researcher-0014-L0-r4 (EXP-0048). Prompt: runtime/researcher-0014-L0-r4_prompt.md (63 lines). Log: runtime/researcher-0014-L0-r4.log.
+  BUG+FIX (permission-bypass lesson #2): first launch with only `--dangerously-skip-permissions` DIED instantly:
+  `sandbox-exec: sandbox_apply: Operation not permitted`. On macOS the claude binary ALSO needs
+  `--dangerously-disable-osx-sandbox` (the navi-node itself runs with it; sibling researcher-0013 log header showed it).
+  RELAUNCH cmd: cat prompt | claude --dangerously-disable-osx-sandbox --dangerously-skip-permissions
+    --add-dir=/Users/dengcchi/autonomous-research --add-dir=/Users/dengcchi/research-os -p > log 2>&1 &
+  Launched OK (pid 55985), no sandbox error. CARRY FORWARD: ALWAYS use BOTH dangerous flags to launch researchers on the Mac.
