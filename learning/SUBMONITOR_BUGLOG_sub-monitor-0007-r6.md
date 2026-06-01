@@ -24,3 +24,19 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   sandbox disabled, all flags present). Floor: 1 live lane on the only open CPU work (EXP-0053). 2nd slot HELD —
   L1 real-APC is H100/orchestrator-dispatched, not mine; refilling a 2nd CPU lane now = make-work. Hold at 1
   until researcher-0017 reports --next with concrete follow-on.
+
+- 2026-06-01 ~16:1xZ — CYCLE (heartbeat #3). researcher-0017-L0-r6 ALIVE (PID 74750, etime 08:40, running,
+  last=7.4m). HEALTHY + ON-TRACK, NOT a stall. Progress verified:
+    * Boot report: parsed 3 distinct template families — CC=248, Codex=109, Gemini=84 trace files
+      (RE-B6 >=2-family gate satisfiable; Gemini flagged as degenerate/low-drift control, not counted).
+    * PRE_REGISTRATION.md (11279B) WRITTEN + LOCKED + COMMITTED BEFORE the main run (commit b83fb0c,
+      locked-ts 2026-06-01T16:09:03Z) — exactly the pre-registration discipline VERDICT-0060 demands.
+    * Gates frozen & verified: RE-B1 KILLER (PASS iff shortfall_after mean>=16tok AND CI_lo>=16tok; KILL if
+      collapses to quantization floor), RE-B2 (>=16tok drift-attributable, CI_lo>=16), RE-B3 (AUC>=0.70 AND
+      real>sham), RE-B4 fold-trigger X=50% (majority BPE-seam -> fold into PROJ-0005). Overall kill rule +
+      honest-negative-is-first-class language present. Design grounded in observed truth (Codex
+      base_instructions byte-identical /109; available_skills 109 distinct hashes = dynamic-list drift).
+    * No results/ yet (main run not started) — expected; harness build is next per --next.
+  DECISION: NO action needed — researcher on-task, gates correct. NO queue submit yet (no committee-ready
+  evidence: main run not run, RE-B1/B2/B3 not yet resolved). Floor held at 1 (EXP-0053 only open CPU lane;
+  L1 real-APC = H100/orchestrator). Refill only on concrete --next follow-on. Heartbeat #3, commit.
