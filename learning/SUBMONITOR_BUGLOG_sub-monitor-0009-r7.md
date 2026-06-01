@@ -44,3 +44,18 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
     a live computing proc (double-spawn corrupts EXP-0055). NO queue submit (RE-A1/A3/A4/A5 not yet resolved; no
     committee-ready evidence). Floor held at 1 (EXP-0055 only open CPU lane; L1+ = orchestrator-dispatched).
     Heartbeat #2, ros commit.
+- 2026-06-01 ~19:2xZ — CYCLE (heartbeat #3). researcher-0020-L0-r7 ALIVE + ITERATING (NOT a stall):
+    * BUG-26/29 proc check: python child PID ROTATED 18459->24628 @ 100% CPU (etime 1:53) running
+      whale_prefill_predict.py. PID rotation + a NEW results/summary.json (written 12:17 PDT) = the first run
+      finished + a SECOND run launched (likely Codex RE-A3 replication / re-run). ros liveness: running, last=8.6m.
+    * FIRST-PASS summary.json landed (CC corpus, n=2362, 65 sessions): RE_A0_global_share=0.789 (matches charter
+      live ref 78.9%) -> RE-A0 PASS. Powered tools Bash(n=1312) + Read(n=510). HEADLINE (researcher's numbers,
+      NOT my judgment): Bash RE-A1 FAIL (dAUC_point=-0.0135, LB95=-0.061, all_folds_positive=False [folds
+      +.014/+.022/+.027/-.128/-.007], RE-A5 permuted dAUC=-0.005 -> RE_A5_survives=False, HHI=0.079 no flag).
+      Read RE-A1 FAIL (dAUC_point=+0.021 but LB95=-0.110, not >=0.03 point). RE-A4 Bash spearman=0.271 (CI
+      0.115..0.390), masscap_lift=+0.022 (weak). => LOOKS like a CLEAN NEGATIVE on CC (arg-structure adds nothing
+      over arg-template B0 -> sub-tool identity recovery, the pre-registered falsification path).
+    * BUT: status still pending; NO analysis.md; Codex RE-A3 replication run still EXECUTING (2nd python proc).
+      NOT committee-ready until status=completed + analysis.md + Codex sign-agreement resolved + DISPOSITION written.
+  DECISION: NO action — researcher healthy @100% CPU mid-2nd-run; NEVER double-spawn (corrupts EXP-0055). NO queue
+    submit yet (RE-A3 unresolved, no DISPOSITION/analysis.md). Floor held at 1. Heartbeat #3, ros commit.

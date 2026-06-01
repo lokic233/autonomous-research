@@ -1,0 +1,19 @@
+[EXP-0055] locked 2026-06-01T19:11:52Z  seed 20260601
+Loading corpora...
+
+===== cc: 65 sessions (>= 8 calls) =====
+   total calls: 2368
+   [Bash] n=1313 pos_rate=0.100 powered=True dAUC=-0.013426589684969237 LB95=-0.05986602785910744 A1=False allfolds+=False A5surv=False
+   [Read] n=510 pos_rate=0.100 powered=True dAUC=0.021231150412234612 LB95=-0.10988887155215754 A1=False allfolds+=False A5surv=True
+   [POOLED 2 tools] n=1823 dAUC=-0.026322397894609995 LB95=-0.07705500234827256 A1=False
+
+===== codex: 83 sessions (>= 8 calls) =====
+   total calls: 2770
+   [exec_command] n=1677 pos_rate=0.100 powered=True dAUC=0.20925566086370306 LB95=0.1475608349671318 A1=True allfolds+=True A5surv=True
+   [three_pai_external_web_search] n=618 pos_rate=0.097 powered=True dAUC=0.16096176821983277 LB95=0.03918012422360251 A1=True allfolds+=True A5surv=True
+   [write_stdin] n=236 pos_rate=0.097 powered=True dAUC=0.05970606246172688 LB95=-0.05208333333333337 A1=False allfolds+=False A5surv=True
+   [knowledge_load] n=236 pos_rate=0.000 powered=False dAUC=None LB95=None A1=None allfolds+=None A5surv=None
+   [POOLED 3 tools] n=2531 dAUC=0.13514861902674258 LB95=0.0877587365591398 A1=True
+
+DISPOSITION: KILL-NEGATIVE  (RE-A3 cross-instrument HARD GATE (sign flip / non-replication) + RE-A5 (within-session confound) — within-instrument signal does NOT generalize)
+wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0055/results/summary.json

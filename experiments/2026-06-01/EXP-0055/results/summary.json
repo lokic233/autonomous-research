@@ -4,13 +4,13 @@
   "corpora": {
     "cc": {
       "n_sessions": 65,
-      "total_calls": 2362,
-      "RE_A0_global_share": 0.7888376108205977,
+      "total_calls": 2368,
+      "RE_A0_global_share": 0.7894139572449139,
       "tool_counts": {
-        "Bash": 1312,
+        "Bash": 1313,
         "Read": 510,
         "mcp__plugin_meta_mux__three_pai_external_web_search": 131,
-        "Edit": 71,
+        "Edit": 76,
         "ToolSearch": 64,
         "Glob": 64,
         "WebFetch": 49,
@@ -28,39 +28,42 @@
       "tools": {
         "Bash": {
           "unit": "Bash",
-          "n": 1312,
-          "pos_rate": 0.09984756097560976,
+          "n": 1313,
+          "pos_rate": 0.09977151561309977,
           "whale_thr_tok": 461.75,
           "n_pos": 131,
           "n_templates": 25,
           "powered": true,
-          "RE_A0_share": 0.7182290445466921,
+          "RE_A0_share": 0.717334995436636,
           "RE_A0_PASS": true,
-          "auc_B0": 0.7506124322123184,
-          "auc_B1": 0.7371421553735675,
-          "dAUC_point": -0.013470276838750905,
-          "dAUC_LB95": -0.06080622752087872,
-          "dAUC_UB95": 0.03582101654079595,
+          "auc_B0": 0.7505973831389416,
+          "auc_B1": 0.7371707934539724,
+          "dAUC_point": -0.013426589684969237,
+          "dAUC_LB95": -0.05986602785910744,
+          "dAUC_UB95": 0.0354213735260438,
           "fold_dAUC": [
-            0.0142,
-            0.0222,
-            0.0266,
-            -0.1282,
-            -0.0067
+            0.015,
+            0.0233,
+            0.0258,
+            -0.1262,
+            -0.009
           ],
-          "fold_dAUC_std": 0.0580685057821298,
+          "fold_dAUC_std": 0.05730218960380539,
           "all_folds_positive": false,
           "RE_A1_PASS": false,
-          "RE_A4_spearman_B1": 0.27105219276625653,
+          "RE_A4_spearman_B1": 0.27236739621895706,
           "RE_A4_spearman_CI95": [
-            0.11515678813721282,
-            0.39043716187390703
+            0.11644144033250463,
+            0.39064358352018735
           ],
-          "RE_A4_masscap_B0": 0.3721196030586345,
-          "RE_A4_masscap_B1": 0.3943818051007554,
-          "RE_A4_masscap_lift": 0.02226220204212087,
-          "RE_A5_permuted_dAUC_point": -0.004679693105209104,
+          "RE_A4_masscap_B0": 0.3716563898225853,
+          "RE_A4_masscap_B1": 0.39164971172895846,
+          "RE_A4_masscap_lift": 0.01999332190637315,
+          "RE_A5_permuted_dAUC_point": -0.004959894602239667,
           "RE_A5_survives": false,
+          "RE_A5b_permall_dAUC_point": -0.028047945647821648,
+          "RE_A5b_session_confound": false,
+          "semantic_class": "SHELL",
           "HHI_whale_mass": 0.07890435960413261,
           "HHI_flag": false,
           "status": "ok"
@@ -78,8 +81,8 @@
           "auc_B0": 0.42989875688837625,
           "auc_B1": 0.45112990730061087,
           "dAUC_point": 0.021231150412234612,
-          "dAUC_LB95": -0.10963297634984387,
-          "dAUC_UB95": 0.19899607158446098,
+          "dAUC_LB95": -0.10988887155215754,
+          "dAUC_UB95": 0.20796178343949046,
           "fold_dAUC": [
             0.137,
             0.3337,
@@ -92,51 +95,56 @@
           "RE_A1_PASS": false,
           "RE_A4_spearman_B1": 0.21084858383380886,
           "RE_A4_spearman_CI95": [
-            -0.0493280032283501,
-            0.3130635531192261
+            -0.053217462862340505,
+            0.30747868358865266
           ],
           "RE_A4_masscap_B0": 0.06998933366626046,
           "RE_A4_masscap_B1": 0.09223664604870688,
           "RE_A4_masscap_lift": 0.022247312382446413,
-          "RE_A5_permuted_dAUC_point": -0.031569054637105354,
-          "RE_A5_survives": false,
+          "RE_A5_permuted_dAUC_point": 0.0870605322739118,
+          "RE_A5_survives": true,
+          "RE_A5b_permall_dAUC_point": 0.014588406168567658,
+          "RE_A5b_session_confound": false,
+          "semantic_class": "READ",
           "HHI_whale_mass": 0.4597960226517125,
           "HHI_flag": true,
           "status": "ok"
         },
         "__POOLED__": {
           "unit": "POOLED",
-          "n": 1822,
+          "n": 1823,
           "pooled_tools": [
             "Bash",
             "Read"
           ],
-          "pos_rate": 0.09989023051591657,
+          "pos_rate": 0.09983543609434997,
           "n_pos": 182,
           "powered": true,
-          "RE_A0_share": 0.6478976070400415,
+          "RE_A0_share": 0.6477534088551828,
           "RE_A0_PASS": true,
-          "auc_B0": 0.6946261056017153,
-          "auc_B1": 0.6679626775663361,
-          "dAUC_point": -0.026663428035379244,
-          "dAUC_LB95": -0.07771716993064715,
-          "dAUC_UB95": 0.004267600012280881,
+          "auc_B0": 0.694323348802325,
+          "auc_B1": 0.668000950907715,
+          "dAUC_point": -0.026322397894609995,
+          "dAUC_LB95": -0.07705500234827256,
+          "dAUC_UB95": 0.004205670872337586,
           "fold_dAUC": [
-            -0.0234,
-            0.0026,
-            -0.0213,
-            -0.1537,
-            0.0032
+            -0.0238,
+            -0.0012,
+            -0.0217,
+            -0.1514,
+            0.0026
           ],
-          "fold_dAUC_std": 0.0586882836610104,
+          "fold_dAUC_std": 0.05714077652475763,
           "all_folds_positive": false,
           "RE_A1_PASS": false,
-          "RE_A4_spearman_B1": 0.2822158692894444,
-          "RE_A4_masscap_B0": 0.0911443268057471,
-          "RE_A4_masscap_B1": 0.09765678555749453,
-          "RE_A4_masscap_lift": 0.006512458751747427,
-          "RE_A5_permuted_dAUC_point": -0.03269900830876438,
+          "RE_A4_spearman_B1": 0.2836016634396319,
+          "RE_A4_masscap_B0": 0.09112802145904367,
+          "RE_A4_masscap_B1": 0.09764937885276774,
+          "RE_A4_masscap_lift": 0.006521357393724073,
+          "RE_A5_permuted_dAUC_point": -0.032083090584004714,
           "RE_A5_survives": false,
+          "RE_A5b_permall_dAUC_point": -0.014153122928260098,
+          "RE_A5b_session_confound": false,
           "HHI_whale_mass": 0.34697922531284275,
           "HHI_flag": true,
           "status": "ok"
@@ -172,8 +180,8 @@
           "auc_B0": 0.5011718285283737,
           "auc_B1": 0.7104274893920768,
           "dAUC_point": 0.20925566086370306,
-          "dAUC_LB95": 0.14833952145214518,
-          "dAUC_UB95": 0.2743985962165856,
+          "dAUC_LB95": 0.1475608349671318,
+          "dAUC_UB95": 0.2716740258002566,
           "fold_dAUC": [
             0.0936,
             0.21,
@@ -186,14 +194,17 @@
           "RE_A1_PASS": true,
           "RE_A4_spearman_B1": 0.33593681897389027,
           "RE_A4_spearman_CI95": [
-            0.27136957310021903,
-            0.3972768596194316
+            0.26675041014681866,
+            0.3987462213879335
           ],
           "RE_A4_masscap_B0": 0.09969469654314096,
           "RE_A4_masscap_B1": 0.15755769691933358,
           "RE_A4_masscap_lift": 0.057863000376192616,
-          "RE_A5_permuted_dAUC_point": 0.20957092437641278,
+          "RE_A5_permuted_dAUC_point": 0.2000693976285839,
           "RE_A5_survives": true,
+          "RE_A5b_permall_dAUC_point": 0.0020997739620097766,
+          "RE_A5b_session_confound": false,
+          "semantic_class": "SHELL",
           "HHI_whale_mass": 0.02902832751461129,
           "HHI_flag": false,
           "status": "ok"
@@ -211,8 +222,8 @@
           "auc_B0": 0.4492980884109916,
           "auc_B1": 0.6102598566308244,
           "dAUC_point": 0.16096176821983277,
-          "dAUC_LB95": 0.0378715435492869,
-          "dAUC_UB95": 0.2862093315200334,
+          "dAUC_LB95": 0.03918012422360251,
+          "dAUC_UB95": 0.28440661859243116,
           "fold_dAUC": [
             0.1998,
             0.1361,
@@ -225,14 +236,17 @@
           "RE_A1_PASS": true,
           "RE_A4_spearman_B1": 0.0772101623535122,
           "RE_A4_spearman_CI95": [
-            -0.019682573259967914,
-            0.16824883698014623
+            -0.01741802320386058,
+            0.1626394955795474
           ],
           "RE_A4_masscap_B0": 0.08658213130836027,
           "RE_A4_masscap_B1": 0.12106238418777023,
           "RE_A4_masscap_lift": 0.03448025287940995,
-          "RE_A5_permuted_dAUC_point": 0.06520310633213866,
+          "RE_A5_permuted_dAUC_point": 0.06820489844683397,
           "RE_A5_survives": true,
+          "RE_A5b_permall_dAUC_point": -0.055197132616487454,
+          "RE_A5b_session_confound": false,
+          "semantic_class": "WEB",
           "HHI_whale_mass": 0.03642771255298561,
           "HHI_flag": false,
           "status": "ok"
@@ -250,8 +264,8 @@
           "auc_B0": 0.39977546438048583,
           "auc_B1": 0.4594815268422127,
           "dAUC_point": 0.05970606246172688,
-          "dAUC_LB95": -0.051506456241033005,
-          "dAUC_UB95": 0.18494835218888345,
+          "dAUC_LB95": -0.05208333333333337,
+          "dAUC_UB95": 0.2003759398496241,
           "fold_dAUC": [
             0.2572,
             -0.2625,
@@ -264,14 +278,17 @@
           "RE_A1_PASS": false,
           "RE_A4_spearman_B1": 0.12952765966770974,
           "RE_A4_spearman_CI95": [
-            -0.01037470882637236,
-            0.256672314036266
+            -0.025986721529906952,
+            0.26816479213856015
           ],
           "RE_A4_masscap_B0": 0.08666920231602777,
           "RE_A4_masscap_B1": 0.14845065257613388,
           "RE_A4_masscap_lift": 0.061781450260106105,
           "RE_A5_permuted_dAUC_point": 0.05970606246172688,
           "RE_A5_survives": true,
+          "RE_A5b_permall_dAUC_point": 0.11083894672382122,
+          "RE_A5b_session_confound": true,
+          "semantic_class": "SHELL",
           "HHI_whale_mass": 0.08969615512204505,
           "HHI_flag": false,
           "status": "ok"
@@ -302,8 +319,8 @@
           "auc_B0": 0.4847479175800088,
           "auc_B1": 0.6198965366067514,
           "dAUC_point": 0.13514861902674258,
-          "dAUC_LB95": 0.08923931151642639,
-          "dAUC_UB95": 0.18047913862718712,
+          "dAUC_LB95": 0.0877587365591398,
+          "dAUC_UB95": 0.18207303477717057,
           "fold_dAUC": [
             0.0831,
             0.2171,
@@ -318,8 +335,10 @@
           "RE_A4_masscap_B0": 0.10815046777201862,
           "RE_A4_masscap_B1": 0.17790795083611857,
           "RE_A4_masscap_lift": 0.06975748306409996,
-          "RE_A5_permuted_dAUC_point": 0.1123805348531346,
+          "RE_A5_permuted_dAUC_point": 0.11412626041209994,
           "RE_A5_survives": true,
+          "RE_A5b_permall_dAUC_point": 0.014665497588776832,
+          "RE_A5b_session_confound": false,
           "HHI_whale_mass": 0.026438496494967267,
           "HHI_flag": false,
           "status": "ok"
@@ -333,23 +352,54 @@
     }
   },
   "RE_A3": {
-    "__POOLED__": {
-      "cc_dAUC": -0.026663428035379244,
-      "codex_dAUC": 0.13514861902674258,
-      "sign_agree": false
+    "READ": {
+      "cc": {
+        "tool": "Read",
+        "n": 510,
+        "dAUC": 0.021231150412234612
+      },
+      "codex": null,
+      "sign_agree": null,
+      "both_present": false
+    },
+    "SHELL": {
+      "cc": {
+        "tool": "Bash",
+        "n": 1313,
+        "dAUC": -0.013426589684969237
+      },
+      "codex": {
+        "tool": "exec_command",
+        "n": 1677,
+        "dAUC": 0.20925566086370306
+      },
+      "sign_agree": false,
+      "both_present": true
+    },
+    "WEB": {
+      "cc": null,
+      "codex": {
+        "tool": "three_pai_external_web_search",
+        "n": 618,
+        "dAUC": 0.16096176821983277
+      },
+      "sign_agree": null,
+      "both_present": false
     }
   },
   "DISPOSITION": {
     "verdict": "KILL-NEGATIVE",
-    "gate_fired": "RE-A1 (arg-structure adds nothing over arg-template B0 -> sub-tool identity recovery)",
+    "gate_fired": "RE-A3 cross-instrument HARD GATE (sign flip / non-replication) + RE-A5 (within-session confound) \u2014 within-instrument signal does NOT generalize",
+    "a1_passing_tools": [
+      "codex:exec_command",
+      "codex:three_pai_external_web_search"
+    ],
     "reasons": [
-      "cc:Bash RE-A1 fail (dAUC_point=-0.013470276838750905, LB95=-0.06080622752087872)",
-      "cc:Read RE-A1 fail (dAUC_point=0.021231150412234612, LB95=-0.10963297634984387)",
-      "cc:__POOLED__ RE-A1 fail (dAUC_point=-0.026663428035379244, LB95=-0.07771716993064715)",
-      "codex:exec_command RE-A5 session-confound (permuted dAUC survives)",
-      "codex:three_pai_external_web_search RE-A5 session-confound (permuted dAUC survives)",
-      "codex:write_stdin RE-A1 fail (dAUC_point=0.05970606246172688, LB95=-0.051506456241033005)",
-      "codex:__POOLED__ RE-A5 session-confound (permuted dAUC survives)"
+      "cc:Bash RE-A1 fail (dAUC_point=-0.013, LB95=-0.06) -> arg-structure adds nothing over arg-template B0",
+      "cc:Read RE-A1 fail (dAUC_point=0.021, LB95=-0.11) -> arg-structure adds nothing over arg-template B0",
+      "codex:exec_command(SHELL) A1-pass(dAUC=0.209) but RE-A5 path/glob permutation survives (perm=0.2); A5b-permall=0.002 session_confound=False",
+      "codex:three_pai_external_web_search(WEB) A1-pass(dAUC=0.161) but RE-A5 path/glob permutation survives (perm=0.068); A5b-permall=-0.055 session_confound=False",
+      "codex:write_stdin RE-A1 fail (dAUC_point=0.06, LB95=-0.052) -> arg-structure adds nothing over arg-template B0"
     ]
   }
 }
