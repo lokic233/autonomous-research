@@ -31,3 +31,33 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
   clean negative first-class, NEVER fabricate, NO human gates. PROC verified ALIVE (ps: PID 86798 @running, native
   child 86879 @0.8% mem growing). Sibling researcher-0022-L0-r7 (PROJ-0011) also running — NOT mine, untouched.
   Floor held at 1. NO queue submit (no committee-ready evidence yet). Heartbeat #1, ros commit.
+
+- 2026-06-01 ~20:5xZ — CYCLE (heartbeat #3). researcher-0023-L0-r7 ALIVE + ITERATING (NOT a stall):
+    * BUG-26/29 proc check: claude -p PID 86798 + native child 86879 alive (etime ~7m, low CPU = between
+      compute bursts). ros liveness: researcher running last=4.0m -> alive. status still `pending`.
+    * PRE_REGISTRATION.md LOCKED-TS 20:52:44Z (committed BEFORE run). FIX-1 RESOLVED (Codex co-issued parallel
+      calls = genuine pre-execution batch-dispatch decision point; Sarathi-Serve 2403.02310 cited). FIX-2 honored
+      (matched_max_per_call + matched_sum_per_call in B0, leakage-safe per-call whale predictor; RE-B2b decomp vs
+      max-null). Gates frozen correctly. GOOD pre-registration discipline.
+    * FIRST-PASS summary.json landed (wall=5.85s). HEADLINE (researcher's numbers, NOT my judgment):
+      DISPOSITION=CLEAN-NEGATIVE-KILL, gate_fired=RE-B0 magnitude floor fail (topdecile_mass_share=0.255 << 0.50).
+    * CRITICAL STRUCTURAL FLAGS I am tracking for the forward (NOT judging — orchestrator/committee decides):
+      (1) FIX-4/RE-B5 HARD GATE FLIPPED: CC emits ZERO co-issued parallel tool calls in THIS corpus (1 tool_use
+          per assistant msg x2581 msgs; n_msgs_multi_tool_use=0). This DIRECTLY CONTRADICTS the charter premise
+          ("50% of CC bursts multi-call, mean 2.94, max 26"). Researcher declared RE-B5 = NOT-SATISFIABLE /
+          single-instrument-by-design and pivoted to Codex as sole instrument (honest, per FIX-4 anti-silent-waiver
+          rule — did NOT fake CC). But the charter's live-reference magnitude numbers came from CC; their absence
+          here is a premise problem the committee must weigh.
+      (2) Codex "batches" = whole sessions with >=8 calls (sizes 8..72), NOT stream-adjacent co-issued parallel-tool
+          bursts (gap<5 tok). That is a COARSER unit than the charter's "one assistant turn parallel tool use" ->
+          may explain RE-B1 premise flip (size->total Spearman=0.523, size-only whale-AUC=0.856: SIZE PREDICTS
+          TOTAL here, OPPOSITE of thesis) and RE-B0 fail. If true co-issued bursts are the right unit, this corpus
+          may simply lack them -> still a clean (corpus-limited) negative, but the unit definition is load-bearing.
+      (3) n=86 batches/8 whale-batches/effective_n_sessions=7.6 = SEVERELY underpowered vs charter's n~606; per-size
+          strata 2/3/4 all n=0 (only >=5 populated). STAT all_folds_positive=False. This is a small-n single-instrument
+          run. RE-B2 dAUC_point=-0.024 (LB95<0) over JOINT B0 -> arg-structure adds nothing -> consistent w/ negative.
+      (4) RE-B2b decomposition_beats_maxnull=True (dAUC 0.255 over matched-max null) -> FIX-2 EARLY-KILL did NOT fire
+          (batch-whale does NOT reduce to max-of-per-call here). But RE-B0/B1 premise already failed upstream.
+  DECISION: NO action / NO queue submit. status=pending and proc ALIVE -> researcher likely iterating (the Codex
+    batch-unit definition + CC-zero-parallel finding may trigger a refinement pass). NEVER double-spawn a live proc.
+    Awaiting status=completed + analysis.md + final DISPOSITION before FORWARDING. Floor held at 1. Heartbeat #3, commit.
