@@ -1,0 +1,54 @@
+verdict_id: VERDICT-0062
+claim_id: CLAIM-0018
+project_id: PROJ-0008
+date: '2026-06-01'
+experiment_ids:
+- EXP-0054
+experiment_paths:
+- experiments/2026-06-01/EXP-0054
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- 'PRE-REGISTER all RE-A1..A7 before L0 with committee fixes: RE-A1 add TOOL-IDENTITY
+  one-hot to {gap+frequency} joint baseline (class~tool-name collinearity'
+- dAUC LB>0 over the augmented baseline or demote to 'agents repeat popular tools')
+- RE-A2 RESCOPE to EXACT-PREFIX caches + report fraction recoverable under non-prefix
+  KV reuse (CacheBlend/LMCache) as named scope boundary
+- RE-A3 result-equivalence CO-PRIMARY with byte-identical f (don't conflate args-repeat
+  with output-repeat)
+- RE-A4 add FLOPs/TTFT cost translation under chunked-prefill batching (2% floor alone
+  arbitrary)
+- RE-A6 tighten anti-tautology K with structural retry-detection
+- 'RE-A7 condition determinism class on intervening-WRITE state. PROMOTION owes: cite
+  CacheBlend 2405.16444, PromptCache 2311.04934, LMCache, ToolCacheAgent OpenReview
+  tX3YcbNa5w, LLM-dCache 2406.06799'
+map_delta_proposals:
+- CREATE PROJ-0008 with CLAIM-0018 (Redundant Tool-Call Prefill Tax under exact-prefix
+  caching)
+- 4th distinct prefill miss-mode (interior within-session exact-repeat). Candidate
+  B (Tool-Output Determinism Ceiling) REJECTED as first seed (collision ToolCacheAgent
+  tX3YcbNa5w + trivial RE-B1)
+- may revisit as secondary claim after A's determinism-class result known
+baseline_requirements:
+- exact-prefix vLLM-APC / SGLang-RadixAttention / TensorRT-LLM (prefix-only, correct)
+- tool-identity one-hot in RE-A1 joint
+- CacheBlend 2405.16444 / LMCache non-prefix reuse as named scope boundary or 2nd-tier
+  baseline
+- ToolCacheAgent tX3YcbNa5w named related work
+created_at: '2026-06-01T17:25:04Z'

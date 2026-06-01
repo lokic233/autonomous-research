@@ -1,0 +1,33 @@
+claim_id: CLAIM-0018
+project_id: PROJ-0008
+stage: seed
+status: seed
+claim: CLAIM-0018
+why_it_matters: Redundant Tool-Call Prefill Tax (under EXACT-PREFIX KV-caching). DISTINCT
+  from DEAD-0015/CLAIM-0017 (that = CROSS-SESSION prefix-reuse ceiling from tool-schema/system-prompt
+  DRIFT breaking the shared HEAD; this = WITHIN-SESSION INTERIOR byte-identical tool
+  re-invocations that were never a reusable prefix). Different mechanism, different
+  cost site, different miss-mode. Design committee proj0008_design 5Y+1G yellow seed-with-fixes
+  (rescoped to exact-prefix caches; RE-A1 adds tool-identity to the joint baseline;
+  CacheBlend/PromptCache/LMCache named as non-prefix scope boundary; Candidate B rejected
+  re ToolCacheAgent). Pre-measured CC 9.8% repeats, 100% exact-prefix-unrecoverable,
+  median gap 12.5k tokens.
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history:
+- verdict_id: VERDICT-0062
+  date: '2026-06-01'
+  result: yellow
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0062=yellow: address required_evidence to advance'
+blocking_on: ''
+active_experiments:
+- EXP-0054
+created_at: '2026-06-01T17:24:33Z'
+last_updated: '2026-06-01T17:25:04Z'
