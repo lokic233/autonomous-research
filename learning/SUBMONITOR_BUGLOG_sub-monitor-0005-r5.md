@@ -99,3 +99,5 @@ Floor N = 2 (work-gated)
   Pool 0 = correct. Heartbeat #12. Context healthy.
 
 - 2026-06-01 ~14:14Z — STANDBY (no change). CLAIM-0014 closed/verdict_recorded; no queue/verdict/gap. Pool 0 = correct. Heartbeat #14.
+
+- 2026-06-01 ~14:19Z — STANDBY (no change). CLAIM-0014 closed; no queue/verdict/gap. Pool 0 = correct. Heartbeat #15.
