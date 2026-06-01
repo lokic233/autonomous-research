@@ -120,3 +120,16 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   NOT BUG-26/29 false-DEAD-while-computing (EXP-0056 status=completed, no claude -p proc, no open work) -> NO
   respawn. PROJ-0010 still 4/4 investing (correct — not converged until committee rules). No blockers, no human
   gate. Heartbeat #7, ros commit.
+
+- 2026-06-01 ~19:4xZ — COMMITTEE OUTCOME (situational awareness only; ORCHESTRATOR writes the verdict, not me).
+  CLAIM-0021-kill committee = ALL_COMMITTEE_DONE, all 6 .out non-empty, no EMPTY_OUTPUT_NO_VOTE. area_chair
+  FINAL_VERDICT: kill -> RATIFY KILL, CLAIM-0021 -> DEAD-0021. Effective 5/5 red. NOTE the r6-warned VOTE-LABEL
+  ERROR: theory_skeptic cast "green" but every sentence of rationale was pro-kill (FIX-1 fails, RE-B2 no predictive
+  value, RE-B3 hard-gate falsification, "honest pre-registered negative"); area_chair correctly resolved by
+  SUBSTANCE-over-label -> red. Multi-basis kill (RE-B2/B2b/B3), pre-reg locked pre-run (384bcaf), no post-hoc
+  tuning, FIX-1/RE-B2b decisive (converts apparent positive -> clean falsification). Corroborates SGLang
+  RadixAttention 2312.07104 + vLLM APC 2309.06180 + TensorRT-LLM/FlashInfer/LMCache error-agnostic divergence
+  assumption. Verdict NOT yet written to verdicts/ (orchestrator's action). My forward (Q-0007) did its job cleanly.
+  Sub-monitor remains monitor-only; will not write verdict / converge project (orchestrator's call). Floor: no open
+  CPU lane (EXP-0056 done+killed); no respawn. Awaiting orchestrator verdict-write + any L1 dispatch or PROJ-0010
+  convergence instruction.
