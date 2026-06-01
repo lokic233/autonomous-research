@@ -401,5 +401,61 @@
       "codex:three_pai_external_web_search(WEB) A1-pass(dAUC=0.161) but RE-A5 path/glob permutation survives (perm=0.068); A5b-permall=-0.055 session_confound=False",
       "codex:write_stdin RE-A1 fail (dAUC_point=0.06, LB95=-0.052) -> arg-structure adds nothing over arg-template B0"
     ]
-  }
+  },
+  "RE_A0_corpus": {
+    "cc": {
+      "share": 0.7894139572449139,
+      "PASS": true
+    },
+    "codex": {
+      "share": 0.5704516636476078,
+      "PASS": true
+    }
+  },
+  "posthoc_fair_template": {
+    "note": "POST-HOC robustness (NOT a frozen gate): arg_template fixed to parse Codex cmd-list form so B0 recovers sub-tool identity in BOTH instruments. Tests whether the Codex apparent positive was a B0-weakness artifact.",
+    "results": {
+      "cc:Bash": {
+        "distinct_tmpl": 75,
+        "auc_B0": 0.7532386381937063,
+        "auc_B1": 0.7418752214384643,
+        "dAUC_point": -0.011363416755241995,
+        "dAUC_LB95": -0.052941149162755496,
+        "RE_A1_PASS": false
+      },
+      "cc:Read": {
+        "distinct_tmpl": 18,
+        "auc_B0": 0.42989875688837625,
+        "auc_B1": 0.45112990730061087,
+        "dAUC_point": 0.021231150412234612,
+        "dAUC_LB95": -0.10827452726774461,
+        "RE_A1_PASS": false
+      },
+      "codex:exec_command": {
+        "distinct_tmpl": 39,
+        "auc_B0": 0.6853808938414562,
+        "auc_B1": 0.7681226950073363,
+        "dAUC_point": 0.08274180116588015,
+        "dAUC_LB95": 0.04484154929577455,
+        "RE_A1_PASS": true
+      },
+      "codex:three_pai_external_web_search": {
+        "distinct_tmpl": 1,
+        "auc_B0": 0.4492980884109916,
+        "auc_B1": 0.6102598566308244,
+        "dAUC_point": 0.16096176821983277,
+        "dAUC_LB95": 0.03713640628665266,
+        "RE_A1_PASS": true
+      },
+      "codex:write_stdin": {
+        "distinct_tmpl": 1,
+        "auc_B0": 0.39977546438048583,
+        "auc_B1": 0.4594815268422127,
+        "dAUC_point": 0.05970606246172688,
+        "dAUC_LB95": -0.05107526881720431,
+        "RE_A1_PASS": false
+      }
+    }
+  },
+  "headline": "KILL-NEGATIVE. RE-A0 heavy-tail floor PASSES (cc 78.9%, codex 57.1%). Within-tool, arg-STRUCTURE does NOT robustly predict prefill whales over an arg-TEMPLATE (sub-tool identity) B0 in an instrument-general way. CC Bash dAUC=-0.013 (B1 worse than a strong B0, AUC 0.751) -> pure sub-tool identity recovery, the pre-registered falsification mode. Codex exec_command shows within-instrument dAUC=0.209, but (a) ~60% of it is a B0-weakness artifact (Codex serializes the command under key cmd as a LIST; the frozen template degenerated to 4 buckets; with a fair B0 dAUC drops to 0.083), and (b) it FAILS the RE-A3 cross-instrument HARD GATE: the SHELL-class effect has OPPOSITE sign in CC (-0.013) vs Codex (+0.209/+0.083). No transferable within-call pre-execution predictor of result-prefill size exists over sub-tool identity."
 }
