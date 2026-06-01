@@ -644,3 +644,15 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   warns on stderr, falls back to UTC today. Used by obj_dir() (all new objects) + cmd_verdict_write. No phantom
   date folders can ever be minted again. Orphan VERDICT-0010 moved to registry/_quarantine/ (documented, not
   deleted); status verdict count 47→46 (phantom no longer counted).
+
+### BUG-28 (monitor 87aa00c3, 2026-06-01 ~16:07Z) — ros submonitors false-positive on .converged projects
+- SYMPTOM: after PROJ-0001/0004/0005 marked .converged (throughput refill), `ros submonitors` flagged all 3 as
+  "❌ NO sub-monitor / ☠️ DEAD — orchestrator MUST spawn a replacement" every cycle, because their retired/dead
+  sub-monitors (0004-r5 45m, 0005-r5 70m) had no live successor. But a CONVERGED project's arc is closed — it
+  needs NO sub-monitor. The false-positive risked a future orchestrator needlessly respawning sub-monitors for
+  dead projects (make-work, the v2 anti-pattern).
+- FIX (commit 9ef6827): cmd_submonitors now excludes _is_converged_project() projects from the discovery list;
+  reports them separately as "N converged (no sub-monitor needed): PROJ-...". Only ACTIVE (investing/blocked)
+  projects require sub-monitor coverage. Verified: now shows "4 active; 3 converged" + "✅ every active project
+  has a live sub-monitor" instead of "⚠️ 3 need respawn".
+- (Pairs with the cmd_projects concurrent-investment capacity check that ALSO uses _is_converged_project.)
