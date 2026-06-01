@@ -99,3 +99,7 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       CONVENING the CLAIM-0021 committee (commit 604165c) -> orchestrator works the queue one-at-a-time; Q-0008
       is next. Healthy progress, NOT a human gate, NOT a blocker. No PROJ-0009 open work; floor held below 1.
   DECISION: NO action — forward delivered; committee = orchestrator's job (do NOT judge/convene). Heartbeat #8, commit.
+- 2026-06-01 ~19:4xZ — CYCLE (heartbeat #9). STEADY / AWAITING COMMITTEE. Q-0008 (CLAIM-0020) PENDING; no verdict;
+    inbox clear. Orchestrator just RATIFIED the sibling CLAIM-0021 kill (DEAD-0021, 5/5, commit 9d7aa19) -> queue
+    draining one-at-a-time, Q-0008 next. No PROJ-0009 open work; floor held below 1. NO action (forward delivered,
+    committee = orchestrator's job). Heartbeat #9, ros commit.
