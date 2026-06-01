@@ -300,6 +300,11 @@ def analyze_family(heads, tname, tok, bs=BLOCK):
     rows = []
     pred_scores = []; sham_scores = []; pred_labels = []
     seam_count = 0; struct_count = 0
+    # post-canonicalization first-divergence attribution (RE-B1 intent test):
+    # after best-practice canon, is the residual divergence at a DRIFT field (architectural drift survives)
+    # or at GENUINE content / tool-set membership (drift fully recovered => prompt-eng PSA)?
+    postcanon_drift = 0; postcanon_toollist = 0; postcanon_content = 0
+    ref_canon_txt = canonicalize(ref['text'])
     for i, e in enumerate(enc):
         if i == R:
             continue
@@ -330,6 +335,20 @@ def analyze_family(heads, tname, tok, bs=BLOCK):
                 seam_count += 1
             else:
                 struct_count += 1
+        # ---- post-canon residual attribution ----
+        e_canon_txt = canonicalize(e['text'])
+        oc = tok(e_canon_txt, add_special_tokens=False, return_offsets_mapping=True)
+        oref = tok(ref_canon_txt, add_special_tokens=False, return_offsets_mapping=True)
+        fdc = first_div_token(oc['input_ids'], oref['input_ids'])
+        if 0 <= fdc < len(oc['offset_mapping']):
+            cc = oc['offset_mapping'][fdc][0] if oc['offset_mapping'][fdc] else 0
+            win = e_canon_txt[max(0, cc - 40):cc + 40]
+            if find_volatile_spans(win):
+                postcanon_drift += 1
+            elif ('<skill' in win or '</skill' in win or '<path>' in win or 'SKILL.md' in win):
+                postcanon_toollist += 1
+            else:
+                postcanon_content += 1
         # ---- RE-B3: drift-class predictor vs sham, pooled blocks ----
         fdb = first_div_block(a, b, bs)
         vol_spans = find_volatile_spans(e['text'])
@@ -375,6 +394,20 @@ def analyze_family(heads, tname, tok, bs=BLOCK):
     out['RE_B4'] = {'n_firstdiv': tot, 'bpe_seam': seam_count, 'structural': struct_count,
                     'seam_fraction': seam_frac, 'X_threshold': 0.50,
                     'FOLD': bool(seam_frac >= 0.50), 'STAY_DISTINCT': bool(seam_frac < 0.50)}
+    # RE-B1 INTENT TEST: post-canon residual attribution. If ~0% of post-canon first-divergences are at a
+    # DRIFT field, the canonicalizer fully removed the drift -> architectural-ceiling claim NOT supported
+    # (residual is genuine content/tool-set membership) -> honest negative (prompt-eng PSA).
+    ptot = postcanon_drift + postcanon_toollist + postcanon_content
+    out['RE_B1_intent'] = {
+        'postcanon_first_div_at_drift': postcanon_drift,
+        'postcanon_first_div_at_toollist_membership': postcanon_toollist,
+        'postcanon_first_div_at_genuine_content': postcanon_content,
+        'n': ptot,
+        'drift_residual_fraction': (postcanon_drift / ptot) if ptot else 0.0,
+        'recoverable_drift_fraction_of_shortfall': (out['drift_cost']['mean'] / out['shortfall_raw']['mean'])
+            if out['shortfall_raw']['mean'] > 0 else 0.0,
+        'architectural_ceiling_supported': bool(ptot and (postcanon_drift / ptot) >= 0.50),
+    }
     out['rows'] = rows
     return out
 
@@ -419,6 +452,11 @@ def main():
                f"{'PASS' if r['RE_B3']['PASS'] else 'fail'}")
             pp(f"    RE-B4 seam_frac={r['RE_B4']['seam_fraction']:.3f} ({r['RE_B4']['bpe_seam']}/{r['RE_B4']['n_firstdiv']}) "
                f"{'FOLD' if r['RE_B4']['FOLD'] else 'STAY-DISTINCT'}")
+            ri = r['RE_B1_intent']
+            pp(f"    RE-B1[intent] post-canon first-div: drift={ri['postcanon_first_div_at_drift']} "
+               f"toollist={ri['postcanon_first_div_at_toollist_membership']} content={ri['postcanon_first_div_at_genuine_content']} "
+               f"| drift_residual_frac={ri['drift_residual_fraction']:.3f} recoverable_frac={ri['recoverable_drift_fraction_of_shortfall']:.3f} "
+               f"| architectural_ceiling_supported={ri['architectural_ceiling_supported']}")
             if tname == 'gpt2':
                 csvp = os.path.join(RESULTS_DIR, f"per_row_{fam}.csv")
                 with open(csvp, 'w') as f:
@@ -464,16 +502,26 @@ def main():
         if not c:
             continue
         kill_reasons = []
-        if c['RE_B1']['KILL']:
-            kill_reasons.append('RE-B1 shortfall vanishes under canonicalization (prompt-eng anti-pattern)')
+        # RE-B1 honest verdict uses the post-canon residual attribution (intent test), NOT the multiset
+        # shortfall (which conflates drift with genuine content). Architectural ceiling is supported only if
+        # the residual divergence after best-practice canonicalization still sits on a DRIFT field.
+        if not c['RE_B1_intent']['architectural_ceiling_supported']:
+            kill_reasons.append(
+                f"RE-B1 KILLER: drift-attributable shortfall is recoverable by best-practice canonicalization "
+                f"(recovered_frac={c['RE_B1_intent']['recoverable_drift_fraction_of_shortfall']:.2f}); post-canon "
+                f"residual is genuine content/tool-set membership (drift_residual_frac="
+                f"{c['RE_B1_intent']['drift_residual_fraction']:.2f}) -> prompt-engineering anti-pattern, NOT an "
+                f"architectural ceiling")
         if c['RE_B2']['KILL']:
             kill_reasons.append('RE-B2 drift-attributable effect < 1 block (quantization)')
         if c['RE_B4']['FOLD']:
             kill_reasons.append('RE-B4 fold-trigger fired (>=50% BPE-seam => fold into PROJ-0005)')
         overall[fam] = {'kill_reasons': kill_reasons,
                         'verdict': 'KILL/NEGATIVE' if kill_reasons else 'PASS',
-                        'RE_B1_PASS': c['RE_B1']['PASS'], 'RE_B2_PASS': c['RE_B2']['PASS'],
-                        'RE_B3_PASS': c['RE_B3']['PASS'], 'RE_B4_FOLD': c['RE_B4']['FOLD']}
+                        'RE_B1_literal_frozen_metric_PASS': c['RE_B1']['PASS'],
+                        'RE_B1_honest_architectural_supported': c['RE_B1_intent']['architectural_ceiling_supported'],
+                        'RE_B2_effect_real': c['RE_B2']['PASS'], 'RE_B3_PASS': c['RE_B3']['PASS'],
+                        'RE_B4_FOLD': c['RE_B4']['FOLD']}
     results['overall_per_family'] = overall
 
     with open(os.path.join(RESULTS_DIR, 'summary.json'), 'w') as f:
