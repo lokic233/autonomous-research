@@ -272,3 +272,7 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   NOT mine; I do not touch it (researcher report referenced DEAD-0015 as the kill target). No new open CPU work.
   ACTIONS: none — no live researcher, no committee-ready work to submit (already Q-0006), no refill (below-floor
   correct). NO make-work. Heartbeat #17, commit.
+
+- 2026-06-01 ~17:46Z — CYCLE (heartbeat #18). QUIESCENT (unchanged). Pool 0 live = correct (L0 exhausted).
+  Q-0006 still PENDING (committee not yet convened). No new VERDICT for CLAIM-0017. No new open CPU work. No
+  action (no researcher to monitor, Q-0006 already forwarded, no refill = below-floor correct). Heartbeat #18, commit.
