@@ -1,0 +1,19 @@
+id: EXP-XHARNESS-r3
+date: 2026-06-01
+agent: researcher-0009-xharness-r3
+domain: MAP-0002
+claim: CLAIM-0009
+title: Cross-harness Cramer's V (Codex) — apples-to-apples replication of EXP-0009
+type: re-analysis of existing logged data (CPU/stdlib-only)
+data_provenance: ~/.codex/sessions/**/*.jsonl (REAL, already-collected Codex CLI rollout logs; no new run)
+method: mirror EXP-0009 T1 parse/intent/routing; among-recovered error-class x modality (redirect/same); Cramer's V + 5000-shuffle permutation
+result:
+  codex_cramers_v: 0.586
+  codex_perm_p: 0.0002
+  codex_N_recovered: 78
+  codex_sessions: 69
+  cc_anchor_cramers_v: 0.717  # EXP-0009
+verdict: association replicates on 2nd harness (V 0.59-0.72, both perm-p=0.0002) BUT gate-structure differs (Codex has no web_disabled policy-gate; V carried by transient-exec redirects); cross-harness leg lands MIXED not GREEN. Consistent with FINALIZED negative-result disposition.
+files:
+  - impl/codex_cramersv.py
+  - results/codex_cramersv_out.txt
