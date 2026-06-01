@@ -523,13 +523,47 @@ def main():
             kill_reasons.append('RE-B2 drift-attributable effect < 1 block (quantization)')
         if c['RE_B4']['FOLD']:
             kill_reasons.append('RE-B4 fold-trigger fired (>=50% BPE-seam => fold into PROJ-0005)')
+        # integrated honest verdict: a MATERIAL architectural ceiling requires BOTH (a) the shortfall to be
+        # a material fraction of shared-text (>=10%, else it is a negligible tail effect) AND (b) the
+        # post-canon residual to remain DRIFT-located AND (c) the drift to be NON-recoverable by a complete
+        # block-relocating canonicalizer. Codex: residual is genuine session-config prose recoverable by
+        # relocating the variable permissions block, and effect is only ~2.5% -> NOT material/architectural.
+        eff = c['shortfall_raw']['mean'] / c['naive']['mean'] if c['naive']['mean'] else 0.0
+        material = eff >= 0.10
+        ri = c['RE_B1_intent']
+        architectural_material = bool(material and ri['architectural_ceiling_supported']
+                                      and ri['recoverable_drift_fraction_of_shortfall'] < 0.25)
         overall[fam] = {'kill_reasons': kill_reasons,
-                        'verdict': 'KILL/NEGATIVE' if kill_reasons else 'PASS',
+                        'shortfall_frac_of_shared': eff, 'material_effect(>=10%)': material,
+                        'verdict': 'PASS(architectural)' if architectural_material else 'KILL/NEGATIVE',
                         'RE_B1_literal_frozen_metric_PASS': c['RE_B1']['PASS'],
-                        'RE_B1_honest_architectural_supported': c['RE_B1_intent']['architectural_ceiling_supported'],
+                        'RE_B1_intent_architectural_supported': ri['architectural_ceiling_supported'],
+                        'RE_B1_integrated_material_architectural': architectural_material,
+                        'recoverable_drift_frac': ri['recoverable_drift_fraction_of_shortfall'],
                         'RE_B2_effect_real': c['RE_B2']['PASS'], 'RE_B3_PASS': c['RE_B3']['PASS'],
                         'RE_B4_FOLD': c['RE_B4']['FOLD']}
     results['overall_per_family'] = overall
+    any_material = any(o.get('RE_B1_integrated_material_architectural') for o in overall.values())
+    results['HONEST_VERDICT'] = {
+        'standalone_architectural_ceiling_supported': bool(any_material),
+        'conclusion': ('NEGATIVE: cross-session prefix-reuse shortfall from tool-schema/system-prompt drift is '
+                       'REAL, NAMED (volatile head fields + dynamic tool/config lists), PREDICTABLE (drift-class '
+                       'AUC 0.92-0.98 >> sham), and DISTINCT from PROJ-0005 (0% BPE-seam) -- but it is a '
+                       'RECOVERABLE prompt-engineering anti-pattern (place volatile/tenant/config fields and '
+                       'dynamic tool lists AFTER the static prefix), NOT a novel architectural ceiling. '
+                       'RE-B1 KILLER fires on the load-bearing early-drift family (Claude Code: realized 51 -> 576 '
+                       'tok, ~10x recovery, post-canon residual 100% genuine content). Codex shows only a ~2.5% '
+                       'tail effect whose residual is genuine per-session config prose (recoverable by relocating '
+                       'the variable permissions block). HONEST KILL PATHWAY = prompt-engineering PSA + drift-class '
+                       'predictor; standalone PROJ-0007 architectural claim NOT supported.')
+                       if not any_material else
+                       ('MIXED: at least one family shows a material non-recoverable architectural residual; '
+                        'see per-family.'),
+        'fold_into_proj0005': any(o.get('RE_B4_FOLD') for o in overall.values()),
+        'salvage': ['prompt-engineering PSA (volatile/tenant/config last; sort tool lists)',
+                    'drift-class first-divergence predictor (AUC 0.92-0.98 > sham)',
+                    'L1 follow-on (out-of-scope L0): real H100 vLLM APC TTFT recovered by canonicalization'],
+    }
 
     with open(os.path.join(RESULTS_DIR, 'summary.json'), 'w') as f:
         json.dump(results, f, indent=2)

@@ -1,0 +1,50 @@
+None of PyTorch, TensorFlow >= 2.0, or Flax have been found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+========================================================================
+EXP-0053: Cross-Session Prefix-Reuse Ceiling (PROJ-0007/CLAIM-0017)
+========================================================================
+Loading production tokenizers (Rust fast)...
+  gpt2: vocab=50257 fast=True
+  qwen2-0.5b: vocab=151643 fast=True
+
+Reconstructing heads...
+  codex: 111 sessions (shared-skeleton group)
+  claude_code: 39 sessions (shared-skeleton group)
+  gemini: 2 sessions (shared-skeleton group)
+
+--- analyze codex x gpt2 (n=111) ---
+Token indices sequence length is longer than the specified maximum sequence length for this model (6368 > 1024). Running this sequence through the model will result in indexing errors
+    naive=6776.5  realized_raw=6609.7  realized_canon=6648.1  realized_df=6386.2
+    shortfall_raw=166.8  shortfall_canon=175.4  drift_cost=38.4
+    RE-B1 PASS (shortfall_after=175.4 CI[91.4, 275.07272727272726])
+    RE-B2 PASS (drift_cost=38.4 CI[31.563636363636363, 44.36363636363637])
+    RE-B3 real_auc=0.944 sham_auc=0.718 PASS
+    RE-B4 seam_frac=0.000 (0/110) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=100 toollist=0 content=10 | drift_residual_frac=0.909 recoverable_frac=0.230 | architectural_ceiling_supported=True
+
+--- analyze codex x qwen2-0.5b (n=111) ---
+    naive=6271.0  realized_raw=6116.4  realized_canon=6141.1  realized_df=5937.5
+    shortfall_raw=154.7  shortfall_canon=159.0  drift_cost=24.7
+    RE-B1 PASS (shortfall_after=159.0 CI[83.55454545454545, 246.2])
+    RE-B2 PASS (drift_cost=24.7 CI[19.2, 29.236363636363638])
+    RE-B3 real_auc=0.946 sham_auc=0.730 PASS
+    RE-B4 seam_frac=0.000 (0/110) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=100 toollist=0 content=10 | drift_residual_frac=0.909 recoverable_frac=0.160 | architectural_ceiling_supported=True
+
+--- analyze claude_code x gpt2 (n=39) ---
+    naive=1094.6  realized_raw=51.4  realized_canon=576.0  realized_df=576.0
+    shortfall_raw=1043.3  shortfall_canon=545.2  drift_cost=524.6
+    RE-B1 PASS (shortfall_after=545.2 CI[492.86842105263156, 594.1578947368421])
+    RE-B2 PASS (drift_cost=524.6 CI[519.578947368421, 529.6842105263158])
+    RE-B3 real_auc=0.984 sham_auc=0.976 PASS
+    RE-B4 seam_frac=0.000 (0/38) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=0 toollist=0 content=38 | drift_residual_frac=0.000 recoverable_frac=0.503 | architectural_ceiling_supported=False
+
+--- analyze claude_code x qwen2-0.5b (n=39) ---
+    naive=1112.3  realized_raw=51.4  realized_canon=600.8  realized_df=598.3
+    shortfall_raw=1060.9  shortfall_canon=525.4  drift_cost=549.5
+    RE-B1 PASS (shortfall_after=525.4 CI[454.94736842105266, 589.6315789473684])
+    RE-B2 PASS (drift_cost=549.5 CI[466.5263157894737, 658.5263157894736])
+    RE-B3 real_auc=0.983 sham_auc=0.975 PASS
+    RE-B4 seam_frac=0.000 (0/38) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=3 toollist=0 content=35 | drift_residual_frac=0.079 recoverable_frac=0.518 | architectural_ceiling_supported=False
+  [skip gemini: <3 sessions]
