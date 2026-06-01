@@ -62,3 +62,18 @@ before treating a "DEAD" liveness flag as real. NEVER respawn a live computing r
   deterministic-output-tool-heavy corpus shows result_equiv>=50% AND f>=2% — no such corpus available.
   FLOOR drops to 0 legitimately (no open work) — NO refill (correct per work-gated rule; never churn make-work).
   An honest first-class negative is a valid terminal outcome. Heartbeat #3, commit.
+
+- 2026-06-01 ~18:0xZ — CYCLE (heartbeat #4). researcher-0018-L0-r6 still 🏁 completed/retired (terminal,
+  DEAD-0016 stands). NEW: ros resume surfaced CLAIM-0019 (PROJ-0008, status=seed, drafted). INSPECTED:
+    * owner=orchestrator-r6-001, created 2026-06-01T17:37:26Z (BEFORE the 17:47 EXP-0054 kill).
+    * lifecycle_state=drafted, next_action="prior-art + skeptic check, then design a bounded probe".
+    * NO linked EXP, NO verdict, empty novelty_hypothesis/mandatory_baselines/academic_map_nodes.
+    * claim: field points back to CLAIM-0018 -> appears to be an early placeholder/duplicate RESTATING the
+      same within-session interior exact-repeat thesis that was JUST killed as DEAD-0016 via EXP-0054.
+  DECISION: NOT a researcher-spawnable lane. It is an ORCHESTRATOR design-phase stub (seed/drafted; next_action
+    = prior-art+skeptic+design — orchestrator authority, NOT mine; Hard rule: never seed/design claims/verdicts/
+    committees). No EXP, no verdict, no design-committee output to execute against. Spawning a researcher on a
+    bare drafted stub = make-work, AND the thesis it restates is already refuted. NO refill. Floor stays 0
+    (no researcher-ready open work). FLAG to orchestrator (informational): CLAIM-0019 looks like a duplicate of
+    killed CLAIM-0018/DEAD-0016 — recommend orchestrator merge/retire it or sharpen to a distinct thesis before
+    any L0 lane is opened. Heartbeat #4, commit.
