@@ -1,7 +1,7 @@
 claim_id: CLAIM-0013
 project_id: PROJ-0004
 stage: seed
-status: seed
+status: killed
 claim: "Tool-boundary acceptance cliff: on agentic tool-calling trajectories, a speculative-decoding\
   \ draft model's token-acceptance rate drops a measurable, position-localized amount\
   \ in the K=8 decode steps immediately after each tool-result injection (resumption\
@@ -23,7 +23,18 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0046
+  summary: 'CLAIM-0013 FALSIFIED at L0 (clean kill, both corpora). Top-1-agreement
+    proxy (CC n=70, Codex n=76): real signal is a single-token d=1 acceptance collapse
+    (acc 0.025/0.051 vs interior baseline 0.253/0.271, Holm-sig, replicated) but NOT
+    a K=8 cliff (1/8 positions Holm-sig vs required >=4; Codex net mean penalty NEGATIVE).
+    Highest-priority control-1 content-type-matched null KILLS it: splicing identical
+    tool-result text at non-boundary positions reproduces (CC diff_content CI incl
+    0) or exceeds (Codex CI<0) the drop -> content-type not position. Does not survive
+    entropy conditioning. Corroborates 2510.02128; contextualizes 2601.11580 (generic
+    position dependence NOT attributable to tool boundary). No L1 spend motivated.'
+  data_path: experiments/2026-06-01/EXP-0046/
 verdict_history:
 - verdict_id: VERDICT-0050
   date: '2026-06-01'
@@ -31,10 +42,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: v001
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0050=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0046
+active_experiments: []
 created_at: '2026-06-01T11:20:18Z'
-last_updated: '2026-06-01T11:21:17Z'
+last_updated: '2026-06-01T11:41:19Z'

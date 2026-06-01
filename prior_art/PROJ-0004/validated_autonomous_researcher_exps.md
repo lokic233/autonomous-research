@@ -53,3 +53,15 @@ bound from "position-specific acceptance statistics."
 summary model flagged future submission dates. None occupy the position/boundary axis, so collision
 risk is LOW regardless; existence asserted at single-source confidence. 2604.13519 remains UNRESOLVED
 and must NOT be treated as a confirmed non-collision.
+
+------------------------------------------------------------------------
+## CLAIM-0013 L0 RESULT (EXP-0046, 2026-06-01) — added post-run
+**Outcome: FALSIFIED at L0 (clean kill), both corpora.** Top-1-agreement proxy on CC (n=70) + Codex
+(n=76). Real signal = single-token (d=1) acceptance collapse (acc 0.025/0.051 vs interior 0.253/0.271,
+Holm-sig, replicated) — but the content-type-matched null (control 1) reproduces it (CC splice d=1 pen
+0.239 ~ boundary 0.228; Codex splice 0.263 > boundary 0.220). diff_content CI includes 0 (CC) / negative
+(Codex); no K=8 cliff (1/8 Holm-sig vs >=4 required); does not survive entropy conditioning. => the
+position-dependent acceptance reported generically by **2601.11580** is NOT attributable to the
+tool-result boundary on agentic traces; corroborates **2510.02128** (content/task, not position).
+Artifact: projects/PROJ-0004/artifacts/NEGRESULT_CLAIM-0013_tool_boundary_acceptance_L0.md. No L1 spend
+motivated. (2604.13519 remains UNRESOLVED but is moot for a negative result.)

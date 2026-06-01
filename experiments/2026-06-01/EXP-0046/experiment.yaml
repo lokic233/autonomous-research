@@ -13,14 +13,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'CLAIM-0013 FALSIFIED at L0 (clean kill, both corpora). Top-1-agreement
+  proxy (CC n=70, Codex n=76): real signal is a single-token d=1 acceptance collapse
+  (acc 0.025/0.051 vs interior baseline 0.253/0.271, Holm-sig, replicated) but NOT
+  a K=8 cliff (1/8 positions Holm-sig vs required >=4; Codex net mean penalty NEGATIVE).
+  Highest-priority control-1 content-type-matched null KILLS it: splicing identical
+  tool-result text at non-boundary positions reproduces (CC diff_content CI incl 0)
+  or exceeds (Codex CI<0) the drop -> content-type not position. Does not survive
+  entropy conditioning. Corroborates 2510.02128; contextualizes 2601.11580 (generic
+  position dependence NOT attributable to tool boundary). No L1 spend motivated.'
+result_effect: kill
 artifacts_path: experiments/2026-06-01/EXP-0046/
 reproducibility: ''
 linked_verdicts:
 - VERDICT-0050
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T11:41:19Z'
 prompt_version: v001
 committee_approved: VERDICT-0050
