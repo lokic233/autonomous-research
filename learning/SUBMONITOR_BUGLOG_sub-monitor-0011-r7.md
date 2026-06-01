@@ -62,3 +62,12 @@ sign-agreement HARD GATE / STAT: fold-std + all-5-folds-positive + per-session H
   DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0057 done). Floor=1 satisfied + now drained
     (EXP-0057 was the only open CPU lane; L1+ = orchestrator-dispatched, not mine). Now in MONITOR-FORWARD-DONE
     holding pattern: await orchestrator committee verdict on Q-0009; no open researcher work. Heartbeat #3, ros commit.
+- 2026-06-01 ~21:00Z — CYCLE (heartbeat #5). HOLDING PATTERN: EXP-0057 done, Q-0009 forwarded, awaiting committee.
+    * Q-0009 PENDING in orchestrator queue (forwarded prev cycle 21:00:09Z) — did NOT re-submit (no double-submit).
+    * EXP-0057 status=completed, result_effect=kill (terminal, no open work). No new PROJ-0011 exp; no CLAIM-0022
+      verdict yet (orchestrator has not convened committee — nothing for me to do but wait; I do NOT judge).
+    * BUG-26/29 check: ros liveness shows researcher-0022-L0-r7 "running last=13.4m" (STALE heartbeat) BUT
+      pgrep researcher-0022 count=0 -> proc TRULY exited. NO respawn: work is COMPLETE (rule = respawn only if proc
+      exited WITH open work). Correctly held.
+    * Floor=1 drained (EXP-0057 was only open CPU lane; L1+ = orchestrator-dispatched, not mine).
+  DECISION: NO action beyond heartbeat+commit. Await orchestrator committee verdict on Q-0009. Heartbeat #5, ros commit.
