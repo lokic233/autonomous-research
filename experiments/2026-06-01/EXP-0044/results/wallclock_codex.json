@@ -1,0 +1,56 @@
+{
+  "diagnostics": {
+    "n_sessions": 48,
+    "n_calls": 1667,
+    "n_failures": 109,
+    "gap_median_s": 1.203,
+    "gap_mean_s": 3.095,
+    "gap_max_s": 253.8,
+    "frac_zero_gap": 0.204,
+    "frac_sub1s_gap": 0.477
+  },
+  "wallclock_result": {
+    "harness": "codex",
+    "clock": "wallclock_seconds",
+    "n_sessions": 48,
+    "n_calls": 1667,
+    "n_tools": 5,
+    "n_failures": 109,
+    "cox_logL": -371.12,
+    "cox_k": 5,
+    "cox_BIC": 779.33,
+    "hawkes_logL": -338.15,
+    "hawkes_k": 7,
+    "hawkes_BIC": 728.23,
+    "hawkes_alpha": 1.65,
+    "hawkes_beta_per_sec": 0.8,
+    "hawkes_halflife_sec": 0.866,
+    "delta_BIC_cox_minus_hawkes": 51.1,
+    "LR_2dll": 65.938,
+    "hawkes_earns_params": true,
+    "survives_dBIC_gt6": true
+  },
+  "callindex_reference_note": "compare to EXP-0042 results/latent_cox_vs_hawkes.csv (codex row)",
+  "robustness": {
+    "tie_failures_sharing_prior_ts": "13/109",
+    "decoarsen_+0.5s": {
+      "dBIC": 47.95,
+      "alpha": 1.85,
+      "beta": 0.625
+    },
+    "decoarsen_+2.0s": {
+      "dBIC": 26.22,
+      "alpha": 1.85,
+      "beta": 0.4
+    },
+    "dBIC_beta_curve_interior_max": "peak dBIC=51.1 at beta=0.8/s (hl=0.87s); rises smoothly, not edge-degenerate"
+  },
+  "callindex_reference": {
+    "EXP0042_plain_codex": {
+      "dBIC": 26.85,
+      "alpha": 4.3,
+      "beta": 1.2
+    },
+    "note": "wall-clock dBIC=51.1 SURVIVES; de-coarsened-to-+2s dBIC=26.2 ~= call-index ref"
+  }
+}
