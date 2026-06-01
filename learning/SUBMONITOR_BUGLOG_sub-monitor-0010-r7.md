@@ -101,3 +101,13 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
   (orchestrator not yet convened CLAIM-0021 committee). No CLAIM-0021 verdict yet. Forward-only; not chasing.
   No new spawn (no open CPU lane; L1+=orchestrator). No blockers. NO human gate (PENDING-on-orchestrator is the
   correct in-flight state, not a parked/awaiting-human bug). Heartbeat #5, ros commit.
+
+- 2026-06-01 ~19:3xZ — CYCLE (heartbeat #6). HANDOFF CONFIRMED. Q-0007 now ✓ACKED — orchestrator-r7-001 picked
+  up the CLAIM-0021 kill and CONVENED the committee (runtime/committee_run_CLAIM-0021-kill/ in progress;
+  runtime/committee/CLAIM-0021-2026-06-01-kill packet present). No CLAIM-0021 verdict written yet (committee
+  running). This is the correct forward->orchestrator->committee flow; I do NOT judge or intervene.
+  researcher-0021-L0-r7 now liveness=STALE (last=22.8m, past kick) but EXP-0056 is COMPLETED/kill and no claude -p
+  proc exists -> stale-because-DONE, NOT a false-DEAD-while-computing and NOT open work. NO respawn (BUG-26/29
+  correctly handled: a completed researcher with no proc + no open work is left retired-in-place, not revived).
+  Confirmed via orchestrator inbox note (19:20:07Z): 4/4 investing, sub-monitor-0010-r7 alive, queue advancing
+  (Q-0008/PROJ-0009 now the only pending). No blockers, no human gate, no new spawn. Heartbeat #6, ros commit.
