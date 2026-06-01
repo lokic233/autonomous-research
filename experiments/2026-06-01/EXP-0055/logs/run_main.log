@@ -1,0 +1,19 @@
+[EXP-0055] locked 2026-06-01T19:11:52Z  seed 20260601
+Loading corpora...
+
+===== cc: 65 sessions (>= 8 calls) =====
+   total calls: 2362
+   [Bash] n=1312 pos_rate=0.100 powered=True dAUC=-0.013470276838750905 LB95=-0.06080622752087872 A1=False allfolds+=False A5surv=False
+   [Read] n=510 pos_rate=0.100 powered=True dAUC=0.021231150412234612 LB95=-0.10963297634984387 A1=False allfolds+=False A5surv=False
+   [POOLED 2 tools] n=1822 dAUC=-0.026663428035379244 LB95=-0.07771716993064715 A1=False
+
+===== codex: 83 sessions (>= 8 calls) =====
+   total calls: 2770
+   [exec_command] n=1677 pos_rate=0.100 powered=True dAUC=0.20925566086370306 LB95=0.14833952145214518 A1=True allfolds+=True A5surv=True
+   [three_pai_external_web_search] n=618 pos_rate=0.097 powered=True dAUC=0.16096176821983277 LB95=0.0378715435492869 A1=True allfolds+=True A5surv=True
+   [write_stdin] n=236 pos_rate=0.097 powered=True dAUC=0.05970606246172688 LB95=-0.051506456241033005 A1=False allfolds+=False A5surv=True
+   [knowledge_load] n=236 pos_rate=0.000 powered=False dAUC=None LB95=None A1=None allfolds+=None A5surv=None
+   [POOLED 3 tools] n=2531 dAUC=0.13514861902674258 LB95=0.08923931151642639 A1=True
+
+DISPOSITION: KILL-NEGATIVE  (RE-A1 (arg-structure adds nothing over arg-template B0 -> sub-tool identity recovery))
+wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0055/results/summary.json

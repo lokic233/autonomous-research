@@ -1,0 +1,355 @@
+{
+  "locked_ts": "2026-06-01T19:11:52Z",
+  "seed": 20260601,
+  "corpora": {
+    "cc": {
+      "n_sessions": 65,
+      "total_calls": 2362,
+      "RE_A0_global_share": 0.7888376108205977,
+      "tool_counts": {
+        "Bash": 1312,
+        "Read": 510,
+        "mcp__plugin_meta_mux__three_pai_external_web_search": 131,
+        "Edit": 71,
+        "ToolSearch": 64,
+        "Glob": 64,
+        "WebFetch": 49,
+        "Write": 44,
+        "WebSearch": 39,
+        "Grep": 37,
+        "TaskUpdate": 12,
+        "TaskCreate": 9,
+        "Agent": 6,
+        "mcp__plugin_meta_mux__knowledge_load": 5,
+        "AskUserQuestion": 4,
+        "Skill": 3,
+        "mcp__plugin_meta_mux__get_phabricator_diff_details": 2
+      },
+      "tools": {
+        "Bash": {
+          "unit": "Bash",
+          "n": 1312,
+          "pos_rate": 0.09984756097560976,
+          "whale_thr_tok": 461.75,
+          "n_pos": 131,
+          "n_templates": 25,
+          "powered": true,
+          "RE_A0_share": 0.7182290445466921,
+          "RE_A0_PASS": true,
+          "auc_B0": 0.7506124322123184,
+          "auc_B1": 0.7371421553735675,
+          "dAUC_point": -0.013470276838750905,
+          "dAUC_LB95": -0.06080622752087872,
+          "dAUC_UB95": 0.03582101654079595,
+          "fold_dAUC": [
+            0.0142,
+            0.0222,
+            0.0266,
+            -0.1282,
+            -0.0067
+          ],
+          "fold_dAUC_std": 0.0580685057821298,
+          "all_folds_positive": false,
+          "RE_A1_PASS": false,
+          "RE_A4_spearman_B1": 0.27105219276625653,
+          "RE_A4_spearman_CI95": [
+            0.11515678813721282,
+            0.39043716187390703
+          ],
+          "RE_A4_masscap_B0": 0.3721196030586345,
+          "RE_A4_masscap_B1": 0.3943818051007554,
+          "RE_A4_masscap_lift": 0.02226220204212087,
+          "RE_A5_permuted_dAUC_point": -0.004679693105209104,
+          "RE_A5_survives": false,
+          "HHI_whale_mass": 0.07890435960413261,
+          "HHI_flag": false,
+          "status": "ok"
+        },
+        "Read": {
+          "unit": "Read",
+          "n": 510,
+          "pos_rate": 0.1,
+          "whale_thr_tok": 4698.5,
+          "n_pos": 51,
+          "n_templates": 19,
+          "powered": true,
+          "RE_A0_share": 0.6326039308405932,
+          "RE_A0_PASS": true,
+          "auc_B0": 0.42989875688837625,
+          "auc_B1": 0.45112990730061087,
+          "dAUC_point": 0.021231150412234612,
+          "dAUC_LB95": -0.10963297634984387,
+          "dAUC_UB95": 0.19899607158446098,
+          "fold_dAUC": [
+            0.137,
+            0.3337,
+            -0.0106,
+            -0.243,
+            -0.3184
+          ],
+          "fold_dAUC_std": 0.2402375750945618,
+          "all_folds_positive": false,
+          "RE_A1_PASS": false,
+          "RE_A4_spearman_B1": 0.21084858383380886,
+          "RE_A4_spearman_CI95": [
+            -0.0493280032283501,
+            0.3130635531192261
+          ],
+          "RE_A4_masscap_B0": 0.06998933366626046,
+          "RE_A4_masscap_B1": 0.09223664604870688,
+          "RE_A4_masscap_lift": 0.022247312382446413,
+          "RE_A5_permuted_dAUC_point": -0.031569054637105354,
+          "RE_A5_survives": false,
+          "HHI_whale_mass": 0.4597960226517125,
+          "HHI_flag": true,
+          "status": "ok"
+        },
+        "__POOLED__": {
+          "unit": "POOLED",
+          "n": 1822,
+          "pooled_tools": [
+            "Bash",
+            "Read"
+          ],
+          "pos_rate": 0.09989023051591657,
+          "n_pos": 182,
+          "powered": true,
+          "RE_A0_share": 0.6478976070400415,
+          "RE_A0_PASS": true,
+          "auc_B0": 0.6946261056017153,
+          "auc_B1": 0.6679626775663361,
+          "dAUC_point": -0.026663428035379244,
+          "dAUC_LB95": -0.07771716993064715,
+          "dAUC_UB95": 0.004267600012280881,
+          "fold_dAUC": [
+            -0.0234,
+            0.0026,
+            -0.0213,
+            -0.1537,
+            0.0032
+          ],
+          "fold_dAUC_std": 0.0586882836610104,
+          "all_folds_positive": false,
+          "RE_A1_PASS": false,
+          "RE_A4_spearman_B1": 0.2822158692894444,
+          "RE_A4_masscap_B0": 0.0911443268057471,
+          "RE_A4_masscap_B1": 0.09765678555749453,
+          "RE_A4_masscap_lift": 0.006512458751747427,
+          "RE_A5_permuted_dAUC_point": -0.03269900830876438,
+          "RE_A5_survives": false,
+          "HHI_whale_mass": 0.34697922531284275,
+          "HHI_flag": true,
+          "status": "ok"
+        }
+      },
+      "powered_tools": [
+        "Bash",
+        "Read"
+      ]
+    },
+    "codex": {
+      "n_sessions": 83,
+      "total_calls": 2770,
+      "RE_A0_global_share": 0.5704516636476078,
+      "tool_counts": {
+        "exec_command": 1677,
+        "three_pai_external_web_search": 618,
+        "write_stdin": 236,
+        "knowledge_load": 236,
+        "update_plan": 3
+      },
+      "tools": {
+        "exec_command": {
+          "unit": "exec_command",
+          "n": 1677,
+          "pos_rate": 0.09958258795468097,
+          "whale_thr_tok": 4041.0,
+          "n_pos": 167,
+          "n_templates": 5,
+          "powered": true,
+          "RE_A0_share": 0.46396277636814426,
+          "RE_A0_PASS": false,
+          "auc_B0": 0.5011718285283737,
+          "auc_B1": 0.7104274893920768,
+          "dAUC_point": 0.20925566086370306,
+          "dAUC_LB95": 0.14833952145214518,
+          "dAUC_UB95": 0.2743985962165856,
+          "fold_dAUC": [
+            0.0936,
+            0.21,
+            0.1817,
+            0.2058,
+            0.2266
+          ],
+          "fold_dAUC_std": 0.047202551227981934,
+          "all_folds_positive": true,
+          "RE_A1_PASS": true,
+          "RE_A4_spearman_B1": 0.33593681897389027,
+          "RE_A4_spearman_CI95": [
+            0.27136957310021903,
+            0.3972768596194316
+          ],
+          "RE_A4_masscap_B0": 0.09969469654314096,
+          "RE_A4_masscap_B1": 0.15755769691933358,
+          "RE_A4_masscap_lift": 0.057863000376192616,
+          "RE_A5_permuted_dAUC_point": 0.20957092437641278,
+          "RE_A5_survives": true,
+          "HHI_whale_mass": 0.02902832751461129,
+          "HHI_flag": false,
+          "status": "ok"
+        },
+        "three_pai_external_web_search": {
+          "unit": "three_pai_external_web_search",
+          "n": 618,
+          "pos_rate": 0.0970873786407767,
+          "whale_thr_tok": 212.25,
+          "n_pos": 60,
+          "n_templates": 2,
+          "powered": true,
+          "RE_A0_share": 0.20669258438396976,
+          "RE_A0_PASS": false,
+          "auc_B0": 0.4492980884109916,
+          "auc_B1": 0.6102598566308244,
+          "dAUC_point": 0.16096176821983277,
+          "dAUC_LB95": 0.0378715435492869,
+          "dAUC_UB95": 0.2862093315200334,
+          "fold_dAUC": [
+            0.1998,
+            0.1361,
+            0.0228,
+            0.0984,
+            0.2299
+          ],
+          "fold_dAUC_std": 0.07363462426124814,
+          "all_folds_positive": true,
+          "RE_A1_PASS": true,
+          "RE_A4_spearman_B1": 0.0772101623535122,
+          "RE_A4_spearman_CI95": [
+            -0.019682573259967914,
+            0.16824883698014623
+          ],
+          "RE_A4_masscap_B0": 0.08658213130836027,
+          "RE_A4_masscap_B1": 0.12106238418777023,
+          "RE_A4_masscap_lift": 0.03448025287940995,
+          "RE_A5_permuted_dAUC_point": 0.06520310633213866,
+          "RE_A5_survives": true,
+          "HHI_whale_mass": 0.03642771255298561,
+          "HHI_flag": false,
+          "status": "ok"
+        },
+        "write_stdin": {
+          "unit": "write_stdin",
+          "n": 236,
+          "pos_rate": 0.09745762711864407,
+          "whale_thr_tok": 2128.25,
+          "n_pos": 23,
+          "n_templates": 2,
+          "powered": true,
+          "RE_A0_share": 0.6248713865102444,
+          "RE_A0_PASS": true,
+          "auc_B0": 0.39977546438048583,
+          "auc_B1": 0.4594815268422127,
+          "dAUC_point": 0.05970606246172688,
+          "dAUC_LB95": -0.051506456241033005,
+          "dAUC_UB95": 0.18494835218888345,
+          "fold_dAUC": [
+            0.2572,
+            -0.2625,
+            0.1091,
+            -0.0333,
+            -0.0016
+          ],
+          "fold_dAUC_std": 0.17155464713906185,
+          "all_folds_positive": false,
+          "RE_A1_PASS": false,
+          "RE_A4_spearman_B1": 0.12952765966770974,
+          "RE_A4_spearman_CI95": [
+            -0.01037470882637236,
+            0.256672314036266
+          ],
+          "RE_A4_masscap_B0": 0.08666920231602777,
+          "RE_A4_masscap_B1": 0.14845065257613388,
+          "RE_A4_masscap_lift": 0.061781450260106105,
+          "RE_A5_permuted_dAUC_point": 0.05970606246172688,
+          "RE_A5_survives": true,
+          "HHI_whale_mass": 0.08969615512204505,
+          "HHI_flag": false,
+          "status": "ok"
+        },
+        "knowledge_load": {
+          "unit": "knowledge_load",
+          "n": 236,
+          "pos_rate": 0.0,
+          "whale_thr_tok": 100.5,
+          "n_pos": 0,
+          "n_templates": 25,
+          "powered": false,
+          "status": "underpowered"
+        },
+        "__POOLED__": {
+          "unit": "POOLED",
+          "n": 2531,
+          "pooled_tools": [
+            "exec_command",
+            "three_pai_external_web_search",
+            "write_stdin"
+          ],
+          "pos_rate": 0.09877518767285658,
+          "n_pos": 250,
+          "powered": true,
+          "RE_A0_share": 0.4674154219941461,
+          "RE_A0_PASS": false,
+          "auc_B0": 0.4847479175800088,
+          "auc_B1": 0.6198965366067514,
+          "dAUC_point": 0.13514861902674258,
+          "dAUC_LB95": 0.08923931151642639,
+          "dAUC_UB95": 0.18047913862718712,
+          "fold_dAUC": [
+            0.0831,
+            0.2171,
+            0.1454,
+            0.0881,
+            0.1274
+          ],
+          "fold_dAUC_std": 0.04851331895333446,
+          "all_folds_positive": true,
+          "RE_A1_PASS": true,
+          "RE_A4_spearman_B1": 0.17906636809626345,
+          "RE_A4_masscap_B0": 0.10815046777201862,
+          "RE_A4_masscap_B1": 0.17790795083611857,
+          "RE_A4_masscap_lift": 0.06975748306409996,
+          "RE_A5_permuted_dAUC_point": 0.1123805348531346,
+          "RE_A5_survives": true,
+          "HHI_whale_mass": 0.026438496494967267,
+          "HHI_flag": false,
+          "status": "ok"
+        }
+      },
+      "powered_tools": [
+        "exec_command",
+        "three_pai_external_web_search",
+        "write_stdin"
+      ]
+    }
+  },
+  "RE_A3": {
+    "__POOLED__": {
+      "cc_dAUC": -0.026663428035379244,
+      "codex_dAUC": 0.13514861902674258,
+      "sign_agree": false
+    }
+  },
+  "DISPOSITION": {
+    "verdict": "KILL-NEGATIVE",
+    "gate_fired": "RE-A1 (arg-structure adds nothing over arg-template B0 -> sub-tool identity recovery)",
+    "reasons": [
+      "cc:Bash RE-A1 fail (dAUC_point=-0.013470276838750905, LB95=-0.06080622752087872)",
+      "cc:Read RE-A1 fail (dAUC_point=0.021231150412234612, LB95=-0.10963297634984387)",
+      "cc:__POOLED__ RE-A1 fail (dAUC_point=-0.026663428035379244, LB95=-0.07771716993064715)",
+      "codex:exec_command RE-A5 session-confound (permuted dAUC survives)",
+      "codex:three_pai_external_web_search RE-A5 session-confound (permuted dAUC survives)",
+      "codex:write_stdin RE-A1 fail (dAUC_point=0.05970606246172688, LB95=-0.051506456241033005)",
+      "codex:__POOLED__ RE-A5 session-confound (permuted dAUC survives)"
+    ]
+  }
+}
