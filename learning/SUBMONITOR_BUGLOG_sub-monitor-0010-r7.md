@@ -62,3 +62,28 @@ BUG-26/29: ros liveness false-DEADs a CPU-busy researcher (heartbeat-age only). 
     No refill (no concrete --next; L1+ = orchestrator-dispatched). Floor legitimately 0 open CPU lanes pending
     committee verdict on Q-0007. Will hold and monitor for committee outcome / any orchestrator dispatch.
   Heartbeat #2, ros commit.
+
+- 2026-06-01 ~19:1xZ — CYCLE (heartbeat #3). researcher-0021-L0-r7 status transitioned ALIVE->COMPLETED within this
+  cycle. PROC CHECK (BUG-26/29): original claude -p PID 97661 GONE (turn finished cleanly), parent 6575 idle 0% CPU,
+  native worker ran to completion — NOT a crash, the experiment RAN. ros liveness still showed researcher running
+  (last=7.1m) + heartbeating. EXP-0056 engine state CONFIRMED: status=completed, result_effect=kill, completed_at set,
+  all 9 artifacts present + committed (HEAD f9beb91; PRE_REGISTRATION locked BEFORE run HEAD 384bcaf).
+  EVIDENCE COMMITTEE-READY — all RE gates resolved pass-or-kill (verified summary.json):
+    RE-B0 PASS both (downstream footprint 0.63 cc / 0.92 codex >= 0.20 floor — premise holds).
+    RE-B1 (load-bearing novel) re-convergence near-zero (sig 2.5%/0%, errresult 3.8%/0%) BUT researcher correctly
+      flagged the RE-B1 TRAP — near-zero reconv is uninformative w/o matched-success control.
+    RE-B2b (UPGRADE GATE, decisive) KILL both: matched length/entropy SUCCESS calls equally non-shareable
+      (~0.93-0.97, median label 0.98); error-vs-success statistically indistinguishable (cc delta -0.071 CI incl 0
+      sign NEG; codex +0.010 CI incl 0) -> error-fork thesis falsified as ORDINARY trajectory divergence.
+    RE-B2 KILL both: error features add no signal over joint cadence baseline (cc dAUC +0.007 LB95<0 mixed folds
+      Herfindahl 0.31 flag; codex dAUC -0.082 LB95<0 all folds negative).
+    RE-B3 HARD GATE FAIL: sign disagreement on both dAUC (+/-) and delta_b2b (-/+) across instruments.
+  DISPOSITION = KILL, clean first-class multi-gate negative. Useful knowledge: cross-session tool-sig sharing
+    negligible (~3-5%) + error-agnostic -> SGLang RadixAttention(2312.07104)/vLLM APC(2309.06180) error-agnostic
+    divergence assumption CORROBORATED; no error-aware KV accounting warranted. Methodological reusable: low
+    re-convergence rate is uninformative without a matched-success control. Distinction from DEAD-0015/PROJ-0007 held.
+  ACTION: queue submit FORWARD-ONLY (did NOT judge) -> already auto-queued as Q-0007 (PENDING, kind=committee, via
+    sub-monitor-0010-r7, cites EXP-0056) on the researcher's ros exp complete. Idempotent — no duplicate. Orchestrator
+    convenes the committee. FLOOR: EXP-0056 was the ONLY open CPU lane and it is now COMPLETE; researcher --next=none.
+    L1+ = orchestrator-dispatched. NO new spawn (would be make-work + no open work). Sub-monitor now in MONITOR mode:
+    keep researcher pool from false-respawn, await orchestrator committee verdict / any L1 dispatch.
