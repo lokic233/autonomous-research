@@ -81,3 +81,9 @@ PRE-REGISTERED GATES (frozen in charter): RE-B0 premise re-confirm (far-share>=0
   DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0060 done — the only open CPU lane). Floor=1
     satisfied + now drained. Now MONITOR-FORWARD-DONE holding pattern: await orchestrator committee verdict on Q-0012;
     no open researcher work. Heartbeat #4, ros commit.
+- 2026-06-01 ~22:56Z — CYCLE (hb #5). HOLDING PATTERN: EXP-0060 done (terminal kill), Q-0012 forwarded, awaiting
+  committee. Q-0012 PENDING in orchestrator queue (submitted 22:51:35Z) — did NOT re-submit (no double-submit). No
+  CLAIM-0025 verdict yet (orchestrator has not convened committee — nothing for me to do but wait; I forward, do NOT
+  judge). researcher-0025 proc count=0 (exited cleanly, work complete) -> NO respawn (rule = respawn only if proc
+  exited WITH open work; EXP-0060 is the only CPU lane + it's done). No .converged marker (orchestrator's call,
+  BUG-28). Inbox empty. Floor=1 drained. NO action beyond heartbeat+commit. Heartbeat #5, ros commit.
