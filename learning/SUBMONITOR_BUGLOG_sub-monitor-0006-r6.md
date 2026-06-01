@@ -129,3 +129,8 @@ Floor N = researcher pool (work-gated; only ONE genuine open CPU lane = EXP-0052
   CLAIM-0016 status=killed (DEAD-0014). No new PROJ-0006 verdict/claim/exp/open_gap. WORK-GATED HOLD CORRECT:
   0 researchers below floor=1 by design (killed direction = no make-work). Refill only on concrete orchestrator
   follow-on. Context healthy (<35%). Light cadence.
+
+- 2026-06-01 ~16:51Z — CYCLE#8 (standby, no change). heartbeat #8 OK. researcher-0016-L0-r6 = 🏁 completed/retired
+  (last=14.7m, terminal). Q-0005 ⏳PENDING ~16min (orchestrator convenes on its cadence — its authority, I do not
+  poke/judge). No new PROJ-0006 verdict/claim/exp; resume shows no advanceable PROJ-0006 work. WORK-GATED HOLD
+  CORRECT: 0 researchers below floor=1 (killed direction = no make-work). Context healthy (<35%). Light cadence.

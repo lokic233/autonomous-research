@@ -13,3 +13,38 @@ Reconstructing heads...
 
 --- analyze codex x gpt2 (n=110) ---
 Token indices sequence length is longer than the specified maximum sequence length for this model (6368 > 1024). Running this sequence through the model will result in indexing errors
+    naive=6776.4  realized_raw=6608.4  realized_canon=6647.3  realized_df=6400.3
+    shortfall_raw=167.9  shortfall_canon=171.0  drift_cost=38.9
+    RE-B1 PASS (shortfall_after=171.0 CI[86.29357798165138, 270.73394495412845])
+    RE-B2 PASS (drift_cost=38.9 CI[32.58715596330275, 44.330275229357795])
+    RE-B3 real_auc=0.925 sham_auc=0.731 PASS
+    RE-B4 seam_frac=0.000 (0/109) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=99 toollist=0 content=10 | drift_residual_frac=0.908 recoverable_frac=0.232 | architectural_ceiling_supported=True
+
+--- analyze codex x qwen2-0.5b (n=110) ---
+    naive=6270.9  realized_raw=6115.1  realized_canon=6140.6  realized_df=5937.2
+    shortfall_raw=155.8  shortfall_canon=154.3  drift_cost=25.5
+    RE-B1 PASS (shortfall_after=154.3 CI[78.55045871559633, 241.57798165137615])
+    RE-B2 PASS (drift_cost=25.5 CI[20.55045871559633, 29.65137614678899])
+    RE-B3 real_auc=0.932 sham_auc=0.744 PASS
+    RE-B4 seam_frac=0.000 (0/109) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=99 toollist=0 content=10 | drift_residual_frac=0.908 recoverable_frac=0.164 | architectural_ceiling_supported=True
+
+--- analyze claude_code x gpt2 (n=39) ---
+    naive=1094.6  realized_raw=51.4  realized_canon=576.0  realized_df=576.0
+    shortfall_raw=1043.3  shortfall_canon=545.2  drift_cost=524.6
+    RE-B1 PASS (shortfall_after=545.2 CI[492.9736842105263, 592.921052631579])
+    RE-B2 PASS (drift_cost=524.6 CI[519.578947368421, 529.6842105263158])
+    RE-B3 real_auc=0.984 sham_auc=0.976 PASS
+    RE-B4 seam_frac=0.000 (0/38) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=0 toollist=0 content=38 | drift_residual_frac=0.000 recoverable_frac=0.503 | architectural_ceiling_supported=False
+
+--- analyze claude_code x qwen2-0.5b (n=39) ---
+    naive=1112.3  realized_raw=51.4  realized_canon=600.8  realized_df=598.3
+    shortfall_raw=1060.9  shortfall_canon=525.4  drift_cost=549.5
+    RE-B1 PASS (shortfall_after=525.4 CI[454.6842105263158, 589.3947368421053])
+    RE-B2 PASS (drift_cost=549.5 CI[466.5263157894737, 658.5263157894736])
+    RE-B3 real_auc=0.983 sham_auc=0.975 PASS
+    RE-B4 seam_frac=0.000 (0/38) STAY-DISTINCT
+    RE-B1[intent] post-canon first-div: drift=3 toollist=0 content=35 | drift_residual_frac=0.079 recoverable_frac=0.518 | architectural_ceiling_supported=False
+  [skip gemini: <3 sessions]
