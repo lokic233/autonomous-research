@@ -162,3 +162,23 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   NOTE: if it dies before reconciling, respawn finalize-only lane MUST carry forward the intent-level family-split
      (codex ceiling=TRUE / CC ceiling=FALSE) — do NOT let a respawn revert to the crude-gate clean-PASS story.
   Heartbeat #10, commit.
+
+- 2026-06-01 ~16:56Z — CYCLE (heartbeat #11). researcher-0017-L0-r6 'stale' (last report 44.4m) but PROC ALIVE
+  (74750, 0% cpu, network-bound). 53m runtime. 4th run (run_main4.log @09:50). summary.json REGENERATED @09:50
+  (13529B) — NOW FULLY RECONCILED with the intent-level family-split (dual metric: literal-frozen + honest-architectural):
+    * CODEX (n=109): verdict PASS — RE_B1_literal_frozen_metric_PASS=TRUE AND RE_B1_honest_architectural_supported=TRUE,
+      RE_B2_effect_real=TRUE, RE_B3 PASS, RE_B4 no-fold. => GENUINE drift-attributable architectural cross-session
+      ceiling that SURVIVES canonicalization (91% post-canon residual still drift).
+    * CLAUDE_CODE (n=38): verdict KILL/NEGATIVE — literal frozen metric passes BUT honest RE-B1 KILLER FIRES:
+      drift-attributable shortfall is RECOVERABLE by best-practice canonicalization (recovered_frac=0.50), post-canon
+      residual is genuine CONTENT/tool-set MEMBERSHIP (drift_residual_frac=0.00) => prompt-engineering anti-pattern,
+      NOT an architectural ceiling.
+  => HONEST PER-FAMILY SPLIT, fully characterized: the RE-B1 KILLER (the load-bearing gate) fires for CC (prompt-eng
+     PSA) and HOLDS for Codex (architectural ceiling on a large rigid skeleton w/ embedded volatile fields). The
+     researcher refused to let the crude frozen metric mask the truth — exactly the pre-registered honest-kill
+     discipline. This IS substantively committee-ready (RE-B1 resolved per family, RE-B2/B3 done, RE-B4 no-fold).
+  FORWARD-GATE STATUS: (a) terminal status=completed report — NOT YET; (b) summary reconciled — ✅ DONE;
+     (c) analysis.md + prior_art/PROJ-0007 (RE-B7/B8) — NOT YET (still absent). => 1/3 formal deliverables; substance
+     ready. DO NOT forward until analysis.md + prior_art + terminal report land (RE-B7 vendor-guidance citation is a
+     hard VERDICT-0060 required_evidence item — cannot forward without it). NO queue submit. NO intervention. Floor 1.
+  Heartbeat #11, commit.
