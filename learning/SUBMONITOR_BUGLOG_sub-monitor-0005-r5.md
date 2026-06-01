@@ -71,3 +71,6 @@ Floor N = 2 (work-gated)
 
 - 2026-06-01 ~13:44Z — CYCLE (no change). Q-0004 PENDING. CLAIM-0014 evidence_ready/weakened. No new CPU
   work. Quiescent-correct. Heartbeat #7.
+
+- 2026-06-01 ~13:49Z — CYCLE (no change). Q-0004 PENDING ~30m. CLAIM-0014 evidence_ready/weakened. No new
+  CPU work. Quiescent-correct. Heartbeat #8.
