@@ -1,7 +1,7 @@
 claim_id: CLAIM-0018
 project_id: PROJ-0008
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0018
 why_it_matters: Redundant Tool-Call Prefill Tax (under EXACT-PREFIX KV-caching). DISTINCT
   from DEAD-0015/CLAIM-0017 (that = CROSS-SESSION prefix-reuse ceiling from tool-schema/system-prompt
@@ -16,7 +16,20 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0054
+  summary: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of within-session
+    byte-identical tool re-invocations are exact-prefix-unrecoverable interior repeats
+    (CC median gap 3593 tok) -> mechanism real. BUT RE-A3 (co-primary) decisive: byte-identical
+    ARGS yield byte-identical RESULTS only 15.4% CC / 0% Codex; class INVERTED (MUTATING
+    0.78 > DETERMINISTIC 0.11). RE-A4 KILL: recoverable tax f=0.19% CC / 0% Codex,
+    CI(0,0.30%) includes 0, <<2% floor. RE-A1 DEMOTE: determinism-class dAUC=+0.0003
+    LB<0 over {gap+freq+tool-identity} joint baseline -> class=repackaged tool identity.
+    RE-A5 no positive replication; RE-A6 175/36 surviving (non-tautological); RE-A7
+    conditioned+inverted. The 9.8% live signal conflated arg-repeat with output-repeat
+    (exactly committee RE-A3 concern). Useful negative: production exact-prefix KV
+    caching is SUFFICIENT for agent self-repetition.'
+  data_path: experiments/2026-06-01/EXP-0054/
 verdict_history:
 - verdict_id: VERDICT-0062
   date: '2026-06-01'
@@ -24,10 +37,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0062=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0054
+active_experiments: []
 created_at: '2026-06-01T17:24:33Z'
-last_updated: '2026-06-01T17:25:04Z'
+last_updated: '2026-06-01T17:47:39Z'

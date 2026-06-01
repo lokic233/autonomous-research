@@ -1,19 +1,7 @@
-exp_id: EXP-0054
-project_id: PROJ-0008
-claim_id: CLAIM-0018
-session_id: ''
-level: 0
-hardware: Mac CPU (stdlib, reuse EXP-0007/0037/0042 parsers, parsed CC/Codex traces)
-resource_budget:
-  max_wall_clock_minutes: 240
-  max_gpu_hours: 0.0
-  max_memory_gb: 0
-  host_mem_floor_gb: 0
-needs_gpu: false
-dispatched_by: ''
-node_lease: ''
-status: completed
-result_summary: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of within-session
+dead_id: DEAD-0016
+original_claim_id: CLAIM-0018
+original_claim: CLAIM-0018
+reason_killed: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of within-session
   byte-identical tool re-invocations are exact-prefix-unrecoverable interior repeats
   (CC median gap 3593 tok) -> mechanism real. BUT RE-A3 (co-primary) decisive: byte-identical
   ARGS yield byte-identical RESULTS only 15.4% CC / 0% Codex; class INVERTED (MUTATING
@@ -23,11 +11,14 @@ result_summary: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of 
   RE-A6 175/36 surviving (non-tautological); RE-A7 conditioned+inverted. The 9.8%
   live signal conflated arg-repeat with output-repeat (exactly committee RE-A3 concern).
   Useful negative: production exact-prefix KV caching is SUFFICIENT for agent self-repetition.'
-result_effect: kill
-artifacts_path: experiments/2026-06-01/EXP-0054/
-reproducibility: ''
-linked_verdicts:
-- VERDICT-0062
-started_at: '2026-06-01T17:40:50Z'
-completed_at: '2026-06-01T17:47:39Z'
-prompt_version: ''
+killing_verdict: ''
+killing_experiments:
+- EXP-0054
+duplicate_patterns:
+- CLAIM-0018
+- 0018 claim
+revival_conditions: Revive only if a corpus shows result_equiv_rate>=50% on long-gap
+  interior repeats (would require deterministic-output tool-heavy workloads, absent
+  in CC+Codex) AND f>=2% recoverable-tax tokens.
+related_prior_work: []
+date_killed: '2026-06-01T17:47:39Z'
