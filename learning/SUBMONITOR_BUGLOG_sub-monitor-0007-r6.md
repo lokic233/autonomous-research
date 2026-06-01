@@ -254,3 +254,13 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
     make-work (the exact failure mode the work-gated floor prevents). Pool now 0 live researchers on PROJ-0007,
     which is CORRECT. Re-check each cycle: refill ONLY if the committee verdict opens a concrete new CPU follow-on.
   Heartbeat #15, commit.
+
+- 2026-06-01 ~17:38Z — CYCLE (heartbeat #16). QUIESCENT / STEADY-STATE. researcher-0017-L0-r6 COMPLETED+retired
+  (terminal, not live). Pool = 0 live PROJ-0007 researchers = CORRECT (L0 lane exhausted; only follow-on L1
+  real-APC is GPU/orchestrator, out-of-scope for my CPU lane). Q-0006 still PENDING in committee_queue (orchestrator
+  has not yet convened the CLAIM-0017 committee). No new VERDICT for CLAIM-0017 beyond design-seed VERDICT-0060.
+  No new open CPU work appeared (re-checked). ACTIONS: none warranted — no researcher to monitor, no committee-ready
+  work to submit (Q-0006 already forwarded), no refill (below-floor is correct, not a gap). NO make-work. Floor
+  decision unchanged: refill ONLY if the committee verdict opens a concrete new CPU follow-on. Heartbeat #16, commit.
+  (Two provider-5xx interruptions hit the boot of this cycle's turn; recovered, no state lost — submit + completion
+  were already persisted in prior cycle commit 3ca2ba1 + queue Q-0006.)

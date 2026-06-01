@@ -1,56 +1,65 @@
-# PROJ-0008 — Redundant Tool-Call Prefill Tax (under EXACT-PREFIX KV-caching)
+# PROJ-0008 — Redundant Tool-Call Prefill Tax (interior byte-identical tool re-invocations under exact-prefix KV caching)
 
-**Created:** 2026-06-01 by orchestrator-r6-001 (design committee proj0008_design, 5Y+1G yellow seed-with-fixes; charter Candidate A; Candidate B REJECTED as first seed — ToolCacheAgent OpenReview tX3YcbNa5w owns its space).
-**Layer:** prefill-time within-session interior exact-repeat (distinct from PROJ-0002 edit-invalidation, PROJ-0005 BPE seam, PROJ-0007 cross-session drift — a 4th distinct miss-mode).
+**Created:** 2026-06-01 by orchestrator-r6-001 (design committee proj0008_design, 5/5 yellow seed-with-fixes; charter Candidate A; Candidate B REJECTED — ToolCacheAgent/LLM-dCache collision).
+**Layer:** prefill-time, within-session interior exact-repeat (3rd distinct miss-mode; distinct from PROJ-0002 edit-invalidation, PROJ-0005 BPE seam, PROJ-0007 cross-session drift).
 **First claim:** CLAIM-0018.
 
-## THESIS (RESCOPED per committee — load-bearing fix)
+## THESIS (RESCOPED per committee — central fix)
 On real long-horizon agent trajectories, a measurable fraction of tool invocations are BYTE-IDENTICAL re-invocations of an
-EARLIER same-session call, separated by a large divergent span of intervening tokens. Each pays a full prefill + decode that
-a PRODUCTION-DEPLOYED EXACT-PREFIX KV-cache (vLLM APC / SGLang RadixAttention block-hash / TensorRT-LLM / provider prompt
-caching) CANNOT recover, because the cached prefix up to the 2nd call differs from the 1st and exact-prefix caching only
-reuses prefixes, never interior repeats. SCOPE BOUNDARY (committee-mandated): this is the tax under EXACT-PREFIX caches ONLY
-— non-prefix interior KV-fusion systems (CacheBlend 2405.16444, PromptCache 2311.04934, LMCache) CAN target interior reuse;
-they are a named scope boundary / second-tier baseline, NOT claimed structurally impossible. This is a prefill-recompute
-CHARACTERIZATION on real traces + named structural cause, NOT a new caching mechanism.
+earlier same-session call, separated by a large divergent intervening-token span. Each pays a full prefill an EXACT-PREFIX
+KV-cache (vLLM APC / SGLang RadixAttention / TensorRT-LLM / provider prompt caching) cannot recover (prefix-caching reuses
+only prefixes, never interior repeats). This is a prefill-recompute CHARACTERIZATION on real traces measured against
+PRODUCTION-DEPLOYED EXACT-PREFIX caches — NOT a universal structural law and NOT a new caching mechanism.
 
-## FIRST CLAIM (CLAIM-0018)
-Across >=2 corpora (CC+Codex), within-session byte-identical tool re-invocations = fraction f of total tool-call prefill
-tokens (session-clustered 95% CI excludes 0); the tax SURVIVES an exact-prefix APC/RadixAttention (block=16) baseline (>=95%
-of repeats prefix-unrecoverable); AND per-call exact-prefix-non-recoverability is predicted model-free by tool-output
-DETERMINISM CLASS over a STRONG {token-gap + tool-frequency + TOOL-IDENTITY} JOINT baseline (dAUC 95% LB>0 both corpora).
+## SCOPE BOUNDARY (mandatory, committee fix #1+#4) — DO NOT claim "structurally unrecoverable" full stop
+Non-prefix interior KV reuse mechanisms EXIST and are published: CacheBlend (2405.16444), PromptCache (2311.04934), LMCache
+("any reused text, not necessarily prefix"). The claim is TRUE only against exact-prefix APC/RadixAttention/TensorRT-LLM.
+RE-A2 MUST be scoped to "unrecoverable by exact-prefix caching" AND add a second baseline tier: what fraction of interior
+repeats would a CacheBlend/LMCache-class non-prefix reuse recover? (Either test it as tier-2 OR state the explicit scope
+boundary "this study characterizes the tax under production-deployed exact-prefix caches; non-prefix KV fusion is an open
+mechanism we do not implement/evaluate." Silence is not acceptable.)
 
-## L0 GATING EXP (CPU-only, stdlib, reuse EXP-0007/0037/0042 parsers). PRE-REGISTER all RE gates BEFORE run (locked ts):
-- RE-A1 LOAD-BEARING/KILLER: determinism-class dAUC over the {token-gap + tool-frequency + TOOL-IDENTITY one-hot} JOINT
-  baseline, 95% LB>0 BOTH corpora. (COMMITTEE FIX: tool-identity ADDED — determinism class is near-collinear with tool name
-  Read≈READ/Bash≈VOLATILE; must beat that or demote to "agents repeat popular tools".)
-- RE-A2 APC-survival KILLER (RESCOPED): >=95% of repeats unrecoverable by EXACT-PREFIX caching (>=1 block prefix divergence).
-  SECOND-TIER (committee-mandated): also report what fraction WOULD be recoverable under non-prefix KV reuse (CacheBlend/LMCache
-  class) as a named scope boundary — OR formally state the exact-prefix scope boundary. Silence not acceptable.
-- RE-A3 byte-identical (PRIMARY, conservative) + result-equivalent (CO-PRIMARY per theory_skeptic): measure result-equivalence
-  rate alongside f — byte-identical args != byte-identical results for WRITE/VOLATILE; the 9.8% headline must not conflate.
-- RE-A4 min effect-size + COST TRANSLATION: f>=2% of tool-call prefill tokens AND a pre-registered FLOPs-or-TTFT impact estimate
-  under realistic chunked-prefill batching ($/latency grounding; 2% alone is arbitrary).
+## FIRST FALSIFIABLE CLAIM (CLAIM-0018, rescoped)
+Across >=2 corpora (CC + Codex), within-session byte-identical tool re-invocations = fraction f of total tool-call prefill
+tokens (session-clustered 95% CI excludes 0), the tax SURVIVES an exact-prefix KV-cache baseline (>=95% of repeats have
+>=1 block of prefix divergence -> exact-prefix reuse recovers 0), AND per-call exact-prefix-non-recoverability +
+result-reusability is predicted model-free by tool-output DETERMINISM CLASS over a STRONG baseline. PASS = (a) f CI>0 AND
+(b) >=95% repeats exact-prefix-unrecoverable AND (c) determinism-class dAUC 95% LB>0 over the JOINT {token-gap +
+tool-frequency + TOOL-IDENTITY one-hot} baseline BOTH corpora.
+
+## PRE-REGISTERED RE GATES (LOCK timestamp BEFORE the run; 7 mandatory committee fixes folded in)
+- RE-A1 LOAD-BEARING/KILLER (fix #2): determinism-class dAUC over {token-gap + tool-frequency + TOOL-IDENTITY one-hot} JOINT
+  baseline (OR stratify within-tool), 95% LB>0 BOTH corpora. Determinism class is near-collinear with tool NAME (Read=READ,
+  Bash=VOLATILE) — the predictor must beat tool-identity, not memorize it. If joint matches/beats class -> demote to
+  "agents repeat popular tools" workload restatement (clean negative).
+- RE-A2 EXACT-PREFIX-survival KILLER (fix #1): >=95% repeats exact-prefix-unrecoverable. Scoped to exact-prefix caches;
+  + tier-2 non-prefix-reuse fraction (CacheBlend/LMCache class) reported OR explicit scope-boundary stated (fix #4).
+- RE-A3 result-equivalence CO-PRIMARY (fix #7): report byte-identical f AND result-equivalence rate as co-primary (byte-
+  identical args != byte-identical results for WRITE/VOLATILE). The 9.8% headline must not conflate arg-repetition with
+  recoverable-output repetition.
+- RE-A4 min effect-size + COST TRANSLATION (fix #3): f>=2% of tool-call prefill tokens AND an estimated FLOPs/TTFT impact
+  under realistic chunked-prefill batching ($/latency grounding, not a bare arbitrary threshold).
 - RE-A5 cross-corpus sign replication CC+Codex.
-- RE-A6 anti-tautology (TIGHTENED): exclude trivially-prefix-reusable adjacent retries; define K with justification OR use a
-  structural retry-detection heuristic (same tool+args following an error on a prior call to same tool); must NOT miss long-gap
-  retry-after-investigation. Surviving tax = LONG-GAP interior repeats.
-- RE-A7 determinism class CONDITIONED on intervening-WRITE state (a READ invalidated by an intervening WRITE to same target);
-  predictor must condition on session state or acknowledge the ceiling.
-KILL/negatives (all clean+publishable): RE-A1 fail (gap/popularity/tool-identity explains it -> "agents repeat popular tools"
-restatement, demote); RE-A2 fail (repeats exact-prefix-reusable -> tax illusory, kill); f<2% (rare self-repeat, kill).
-PRE-MEASURED LIVE SIGNAL (design session, CC n=226): 9.8% byte-identical within-session repeats; 100% have intervening tokens
-(median gap 12,512) -> exact-prefix cannot recover; READ dup 3.1% vs WRITE/Bash 11.4% (counterintuitive — WRITE repeats MORE,
-naive "READ is cacheable" WRONG; discriminator must adjudicate).
-INSTRUMENTS: Mac CPU stdlib; parsed CC/Codex/Gemini traces. L1 (optional, H100-coordinator-gated, only if RE-A1+RE-A2 clear):
-real vLLM APC-enabled prefill-token-recompute count + recovered TTFT from an interior-content memo.
+- RE-A6 anti-tautology, TIGHTENED (fix #6): exclude trivially-cacheable adjacent error-retries via a STRUCTURAL retry-detection
+  heuristic (same tool+args following an error on a prior call to the same tool), not just a bare "within K tokens" cutoff;
+  surviving tax = LONG-GAP interior repeats not explained by retry.
+- RE-A7 determinism class CONDITIONED ON INTERVENING-WRITE STATE (fix #5): a READ is invalidated by an intervening WRITE to
+  the same target; the predictor must condition on session state or acknowledge the ceiling this imposes.
+PRE-MEASURED LIVE SIGNAL (design session, CC n=226): 9.8% within-session byte-identical repeats; 100% have intervening
+tokens (median gap 12,512) -> exact-prefix cannot recover; READ dup 3.1% vs WRITE/Bash 11.4% (counterintuitive WRITE>READ).
+INSTRUMENTS: Mac CPU stdlib, reuse EXP-0007 CC tool_result join + EXP-0037 Codex call_id dedup + EXP-0042 bootstrap. NO GPU L0.
+L1 (optional, orchestrator/GPU-dispatched): real vLLM APC-enabled prefill-FLOP/TTFT recovery from an interior-content memo.
 
-## PROMOTION-GATE OWED (committee PRIOR_ART_ADEQUATE=no — NOT a seeding blocker): cite CacheBlend 2405.16444, PromptCache
-2311.04934, LMCache (non-prefix reuse), ToolCacheAgent OpenReview tX3YcbNa5w, LLM-dCache 2406.06799 before any promotion.
+## NON-COLLISION
+PROJ-0002 (content-EDIT prefix invalidation) — A = byte-IDENTICAL interior repeat, never a prefix, no edit (opposite).
+PROJ-0005 (intra-session BPE seam HIT->MISS) / PROJ-0007 (cross-session template drift breaking shared HEAD) — A = within-
+session INTERIOR exact-repeat never a reusable prefix (3rd distinct miss-mode). DroidSpeak/PrefillShare = cross-agent reuse.
+Cemetery: DEAD-0010 (idle SPECULATIVE prefill — A recomputes REALIZED repeats), DEAD-0011/12/13/14 (DECODE-SD; A is PREFILL).
+ToolCacheAgent (OpenReview tX3YcbNa5w, withdrawn ICLR2026) + LLM-dCache 2406.06799 = tool-result CACHE mechanisms; A MEASURES
+the realized residual tax under exact-prefix caching (no cache built). PROMOTION owes: body-verify CacheBlend 2405.16444 /
+PromptCache 2311.04934 / LMCache + 2603.16104 (PRIOR_ART_ADEQUATE=no at seed, owed before promotion).
 
-## NON-COLLISION: 4th distinct prefill miss-mode vs PROJ-0002 (edit->recompute), PROJ-0005 (BPE seam HIT->MISS), PROJ-0007
-(cross-session drift breaking shared HEAD). Interior within-session exact-repeat never a reusable prefix. Distinct from
-DEAD-0010 (idle SPECULATIVE prefill) + DEAD-0011/12/13/14 (all DECODE-SD). DroidSpeak/PrefillShare = cross-agent (not single-session).
-
-## HONEST KILL PATHWAY: RE-A1 fail = popularity/tool-identity restatement (demote); RE-A2 fail = exact-prefix already recovers
-(tax illusory, kill); f<2% = rare self-repeat (kill). Each is a first-class publishable negative.
+## HONEST KILL PATHWAYS (all clean/publishable)
+RE-A1 fail (gap/popularity/tool-identity explains it -> workload restatement, demote); RE-A2 fail (repeats exact-prefix-
+reusable -> tax illusory, kill); f<2% (agents rarely self-repeat, kill); RE-A3 result-equivalence ~0 for the repeats (no
+recoverable output, tax illusory). "Prefix-caching is sufficient for agent self-repetition" is itself a useful negative.
