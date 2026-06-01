@@ -71,3 +71,6 @@ sign-agreement HARD GATE / STAT: fold-std + all-5-folds-positive + per-session H
       exited WITH open work). Correctly held.
     * Floor=1 drained (EXP-0057 was only open CPU lane; L1+ = orchestrator-dispatched, not mine).
   DECISION: NO action beyond heartbeat+commit. Await orchestrator committee verdict on Q-0009. Heartbeat #5, ros commit.
+- 2026-06-01 ~21:05Z — CYCLE (heartbeat #6). HOLDING: Q-0009 still PENDING, no CLAIM-0022 verdict yet. researcher-0022
+  proc count=0 (exited, work complete, stale liveness=BUG-26/29) -> NO respawn. Inbox empty, no report/need for me.
+  Floor=1 drained. NO action beyond heartbeat+commit. Await orchestrator committee. Heartbeat #6, ros commit.
