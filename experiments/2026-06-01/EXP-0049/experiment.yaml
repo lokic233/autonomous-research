@@ -12,12 +12,19 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PASS all 3 gates aggregate: block-churn mean=0.011 CI[0.010,0.012]
+  excl 0; diff-vs-control mean=0.003 CI[0.002,0.004]>0; delimiter-class AUC=0.724
+  CI[0.703,0.745]>0.5. n=12430 records (6215 seams x 2 tokenizers), 2 corpora (CC
+  3909 + Codex 2306), 2 production tokenizers (gpt2 + Qwen2-0.5B). CAVEATS: gate-b
+  fails per-slice (Qwen2 diff~0, Codex diff<0, only aggregate passes); chat-template
+  delimiter reduces churn 95pct (1.1pct to 0.05pct); regime-b (token-ID-cache) structurally
+  0. HONEST: phenomenon real+measurable but template-preventable and tokenizer-dependent.
+  Characterization contribution.'
+result_effect: support
 artifacts_path: experiments/2026-06-01/EXP-0049/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T12:17:35Z'
 prompt_version: ''
