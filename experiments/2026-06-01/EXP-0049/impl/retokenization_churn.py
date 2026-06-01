@@ -42,7 +42,12 @@ VENV_PYTHON = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.venv', 
 if sys.executable != VENV_PYTHON and os.path.exists(VENV_PYTHON):
     os.execv(VENV_PYTHON, [VENV_PYTHON] + sys.argv)
 
+import warnings
+warnings.filterwarnings("ignore")
 from transformers import AutoTokenizer
+
+def pprint(*args, **kwargs):
+    print(*args, **kwargs, flush=True)
 
 random.seed(42)
 BLOCK_SIZE = 16
@@ -488,49 +493,45 @@ def run_experiment():
         predictions.append(pred)
         actuals.append(r['has_churn'])
 
-    # Compute AUC (Mann-Whitney U statistic)
-    pos_preds = [predictions[i] for i in range(n_total) if actuals[i] == 1]
-    neg_preds = [predictions[i] for i in range(n_total) if actuals[i] == 0]
-    n_pos = len(pos_preds)
-    n_neg = len(neg_preds)
+    # Compute AUC via rank-based method (O(n log n), not O(n^2))
+    def fast_auc(preds_list, actuals_list):
+        paired = list(zip(preds_list, actuals_list))
+        paired.sort(key=lambda x: x[0])
+        n_p = sum(1 for _, a in paired if a == 1)
+        n_n = len(paired) - n_p
+        if n_p == 0 or n_n == 0:
+            return 0.5, n_p, n_n
+        rank_sum = 0.0
+        i = 0
+        while i < len(paired):
+            j = i
+            while j < len(paired) and paired[j][0] == paired[i][0]:
+                j += 1
+            avg_rank = (i + j + 1) / 2.0  # 1-based average rank for ties
+            for k in range(i, j):
+                if paired[k][1] == 1:
+                    rank_sum += avg_rank
+            i = j
+        u = rank_sum - n_p * (n_p + 1) / 2
+        return u / (n_p * n_n), n_p, n_n
 
-    if n_pos == 0 or n_neg == 0:
-        auc = 0.5
-        print(f"  WARNING: no positive or no negative cases. AUC=0.5 by default.")
-    else:
-        concordant = 0
-        tied = 0
-        for p in pos_preds:
-            for n in neg_preds:
-                if p > n:
-                    concordant += 1
-                elif p == n:
-                    tied += 1
-        auc = (concordant + 0.5 * tied) / (n_pos * n_neg)
-        print(f"  n_pos (has_churn=1) = {n_pos}, n_neg (has_churn=0) = {n_neg}")
-        print(f"  AUC = {auc:.4f}")
+    auc, n_pos, n_neg = fast_auc(predictions, actuals)
+    print(f"  n_pos (has_churn=1) = {n_pos}, n_neg (has_churn=0) = {n_neg}")
+    print(f"  AUC = {auc:.4f}")
 
-    # Bootstrap CI for AUC
+    # Bootstrap CI for AUC (rank-based, 2000 iterations for speed)
+    B_auc = 2000
     bootstrap_aucs = []
     indices = list(range(n_total))
-    for _ in range(B):
+    for _ in range(B_auc):
         sample_idx = [random.choice(indices) for _ in range(n_total)]
         s_preds = [predictions[i] for i in sample_idx]
         s_actuals = [actuals[i] for i in sample_idx]
-        s_pos = [s_preds[i] for i in range(n_total) if s_actuals[i] == 1]
-        s_neg = [s_preds[i] for i in range(n_total) if s_actuals[i] == 0]
-        if len(s_pos) == 0 or len(s_neg) == 0:
-            bootstrap_aucs.append(0.5)
-            continue
-        c = t = 0
-        for p in s_pos:
-            for n in s_neg:
-                if p > n: c += 1
-                elif p == n: t += 1
-        bootstrap_aucs.append((c + 0.5 * t) / (len(s_pos) * len(s_neg)))
+        a_val, _, _ = fast_auc(s_preds, s_actuals)
+        bootstrap_aucs.append(a_val)
     bootstrap_aucs.sort()
-    auc_ci_lo = bootstrap_aucs[int(0.025 * B)]
-    auc_ci_hi = bootstrap_aucs[int(0.975 * B)]
+    auc_ci_lo = bootstrap_aucs[int(0.025 * B_auc)]
+    auc_ci_hi = bootstrap_aucs[int(0.975 * B_auc)]
     gate_c = auc_ci_lo > 0.5
     print(f"  AUC 95% bootstrap CI = [{auc_ci_lo:.4f}, {auc_ci_hi:.4f}]")
     print(f"  GATE (c) {'PASS' if gate_c else 'FAIL'}: AUC CI {'>' if gate_c else '<='} 0.5")
