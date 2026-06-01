@@ -1,0 +1,1482 @@
+{
+  "locked_ts": "2026-06-01T22:42:08Z",
+  "seed": 20260601,
+  "frozen": {
+    "CAP_FRACS": [
+      0.1,
+      0.2,
+      0.3,
+      0.5,
+      0.7
+    ],
+    "PIN_NS": [
+      2,
+      3,
+      5
+    ],
+    "SLRU_PROTECTED": 0.8,
+    "LRUK_K": 2,
+    "FAR_TOK": 8192.0,
+    "B0_FAR_FLOOR": 0.15,
+    "B0_BELADY_FLOOR": 0.05,
+    "B1_CAPTURE_PASS": 0.5,
+    "B1_NCAP_PASS": 3,
+    "NBOOT": 2000,
+    "HHI_FLAG": 0.2,
+    "POLICIES": [
+      "lru",
+      "belady",
+      "lfu",
+      "slru",
+      "arc",
+      "lruk",
+      "pin2",
+      "pin3",
+      "pin5"
+    ],
+    "CHEAP": [
+      "lfu",
+      "slru",
+      "arc",
+      "lruk",
+      "pin2",
+      "pin3",
+      "pin5"
+    ],
+    "PIN_CELLS": [
+      "pin2",
+      "pin3",
+      "pin5"
+    ]
+  },
+  "corpora": {
+    "cc": {
+      "n_sessions": 68,
+      "per_capacity": {
+        "0.1": {
+          "cap_frac": 0.1,
+          "recompute": {
+            "lru": 3345525.2,
+            "belady": 2974520.5,
+            "lfu": 3622512.5,
+            "slru": 3490599.2,
+            "arc": 3290282.0,
+            "lruk": 3275311.2,
+            "pin2": 3280987.0,
+            "pin3": 3262187.5,
+            "pin5": 3254881.2
+          },
+          "captured": {
+            "lfu": -0.7465868024600764,
+            "slru": -0.3910300339820447,
+            "arc": 0.14890173239021873,
+            "lruk": 0.18925364163127292,
+            "pin2": 0.17395531997905686,
+            "pin3": 0.22462717795392106,
+            "pin5": 0.2443203220443943
+          },
+          "LRU_minus_Belady": 371004.8,
+          "belady_saved_frac": 0.11089581523857875,
+          "captured_CI95": {
+            "lfu": [
+              -2.5945,
+              0.3572
+            ],
+            "slru": [
+              -1.5846,
+              0.3457
+            ],
+            "arc": [
+              -0.1597,
+              0.3997
+            ],
+            "lruk": [
+              -0.1712,
+              0.4691
+            ],
+            "pin2": [
+              0.0671,
+              0.328
+            ],
+            "pin3": [
+              0.1104,
+              0.3839
+            ],
+            "pin5": [
+              0.1225,
+              0.3852
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 1.0,
+            "slru": 1.0,
+            "arc": 0.9995,
+            "lruk": 0.991,
+            "pin2": 0.9995,
+            "pin3": 0.9965,
+            "pin5": 0.999
+          }
+        },
+        "0.2": {
+          "cap_frac": 0.2,
+          "recompute": {
+            "lru": 3056798.5,
+            "belady": 2774005.5,
+            "lfu": 3168673.0,
+            "slru": 3021300.5,
+            "arc": 3021202.8,
+            "lruk": 3069385.5,
+            "pin2": 3028190.0,
+            "pin3": 3036343.2,
+            "pin5": 3026583.0
+          },
+          "captured": {
+            "lfu": -0.39560561965819524,
+            "slru": 0.1255264451383167,
+            "arc": 0.12587210433072954,
+            "lruk": -0.04450958828542432,
+            "pin2": 0.10116410236462713,
+            "pin3": 0.07233294317751854,
+            "pin5": 0.10684670412633976
+          },
+          "LRU_minus_Belady": 282793.0,
+          "belady_saved_frac": 0.09251280383708642,
+          "captured_CI95": {
+            "lfu": [
+              -1.7241,
+              0.2306
+            ],
+            "slru": [
+              0.0016,
+              0.2577
+            ],
+            "arc": [
+              -0.0088,
+              0.2839
+            ],
+            "lruk": [
+              -0.6811,
+              0.3342
+            ],
+            "pin2": [
+              -0.001,
+              0.2334
+            ],
+            "pin3": [
+              -0.047,
+              0.1912
+            ],
+            "pin5": [
+              -0.0181,
+              0.2108
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 1.0,
+            "slru": 1.0,
+            "arc": 1.0,
+            "lruk": 0.9985,
+            "pin2": 1.0,
+            "pin3": 1.0,
+            "pin5": 1.0
+          }
+        },
+        "0.3": {
+          "cap_frac": 0.3,
+          "recompute": {
+            "lru": 2930215.0,
+            "belady": 2744809.5,
+            "lfu": 2988998.8,
+            "slru": 2873321.8,
+            "arc": 2875122.5,
+            "lruk": 2942290.0,
+            "pin2": 2905305.8,
+            "pin3": 2919058.2,
+            "pin5": 2912415.0
+          },
+          "captured": {
+            "lfu": -0.317055049607482,
+            "slru": 0.30685848046578984,
+            "arc": 0.29714598542114445,
+            "lruk": -0.06512751779208276,
+            "pin2": 0.13435011366976707,
+            "pin3": 0.06017485996909477,
+            "pin5": 0.09600578192124828
+          },
+          "LRU_minus_Belady": 185405.5,
+          "belady_saved_frac": 0.06327368469549163,
+          "captured_CI95": {
+            "lfu": [
+              -2.029,
+              0.4327
+            ],
+            "slru": [
+              0.1512,
+              0.4624
+            ],
+            "arc": [
+              0.125,
+              0.4562
+            ],
+            "lruk": [
+              -1.0698,
+              0.4414
+            ],
+            "pin2": [
+              -0.0118,
+              0.3224
+            ],
+            "pin3": [
+              -0.0978,
+              0.2041
+            ],
+            "pin5": [
+              -0.0795,
+              0.2475
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.996,
+            "slru": 0.9925,
+            "arc": 0.9935,
+            "lruk": 0.9965,
+            "pin2": 0.9985,
+            "pin3": 1.0,
+            "pin5": 0.9995
+          }
+        },
+        "0.5": {
+          "cap_frac": 0.5,
+          "recompute": {
+            "lru": 2825567.8,
+            "belady": 2739146.0,
+            "lfu": 2798590.0,
+            "slru": 2798590.0,
+            "arc": 2798590.0,
+            "lruk": 2798590.0,
+            "pin2": 2806432.0,
+            "pin3": 2806728.0,
+            "pin5": 2817660.5
+          },
+          "captured": {
+            "lfu": 0.3121638939271653,
+            "slru": 0.3121638939271653,
+            "arc": 0.3121638939271653,
+            "lruk": 0.3121638939271653,
+            "pin2": 0.2214228478363375,
+            "pin3": 0.21799778412263116,
+            "pin5": 0.09149606435879856
+          },
+          "LRU_minus_Belady": 86421.8,
+          "belady_saved_frac": 0.030585623013286444,
+          "captured_CI95": {
+            "lfu": [
+              0.0944,
+              0.5637
+            ],
+            "slru": [
+              0.0944,
+              0.5637
+            ],
+            "arc": [
+              0.0944,
+              0.5637
+            ],
+            "lruk": [
+              0.0944,
+              0.5637
+            ],
+            "pin2": [
+              0.0632,
+              0.5185
+            ],
+            "pin3": [
+              0.0532,
+              0.5113
+            ],
+            "pin5": [
+              -0.1933,
+              0.3931
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.937,
+            "slru": 0.937,
+            "arc": 0.937,
+            "lruk": 0.937,
+            "pin2": 0.9715,
+            "pin3": 0.974,
+            "pin5": 0.995
+          }
+        },
+        "0.7": {
+          "cap_frac": 0.7,
+          "recompute": {
+            "lru": 2755897.0,
+            "belady": 2739146.0,
+            "lfu": 2752964.0,
+            "slru": 2752964.0,
+            "arc": 2752964.0,
+            "lruk": 2752964.0,
+            "pin2": 2746859.8,
+            "pin3": 2746859.8,
+            "pin5": 2746859.8
+          },
+          "captured": {
+            "lfu": 0.17509402423735895,
+            "slru": 0.17509402423735895,
+            "arc": 0.17509402423735895,
+            "lruk": 0.17509402423735895,
+            "pin2": 0.5395051041728852,
+            "pin3": 0.5395051041728852,
+            "pin5": 0.5395051041728852
+          },
+          "LRU_minus_Belady": 16751.0,
+          "belady_saved_frac": 0.006078238773074611,
+          "captured_CI95": {
+            "lfu": [
+              0.0115,
+              0.4788
+            ],
+            "slru": [
+              0.0115,
+              0.4788
+            ],
+            "arc": [
+              0.0115,
+              0.4788
+            ],
+            "lruk": [
+              0.0115,
+              0.4788
+            ],
+            "pin2": [
+              0.0,
+              0.8842
+            ],
+            "pin3": [
+              0.0,
+              0.8842
+            ],
+            "pin5": [
+              0.0,
+              0.8842
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.987,
+            "slru": 0.987,
+            "arc": 0.987,
+            "lruk": 0.987,
+            "pin2": 0.491,
+            "pin3": 0.491,
+            "pin5": 0.491
+          }
+        }
+      },
+      "HHI_by_cap": {
+        "0.1": {
+          "HHI": 0.081021409867495,
+          "flag": false
+        },
+        "0.2": {
+          "HHI": 0.07990525094392376,
+          "flag": false
+        },
+        "0.3": {
+          "HHI": 0.08211095596569264,
+          "flag": false
+        },
+        "0.5": {
+          "HHI": 0.08274939648187951,
+          "flag": false
+        },
+        "0.7": {
+          "HHI": 0.08432014401639737,
+          "flag": false
+        }
+      },
+      "reuse_units": 3307,
+      "far_share": 0.18778348956758392,
+      "near_share": 0.46507408527366195,
+      "median_gap_tok": 685.0,
+      "belady_saved_by_cap": [
+        0.11089581523857875,
+        0.09251280383708642,
+        0.06327368469549163,
+        0.030585623013286444,
+        0.006078238773074611
+      ],
+      "belady_saved_max": 0.11089581523857875,
+      "RE_B0_PASS": true,
+      "RE_B1": {
+        "by_policy": {
+          "lfu": {
+            "captured_by_cap": [
+              -0.7466,
+              -0.3956,
+              -0.3171,
+              0.3122,
+              0.1751
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "slru": {
+            "captured_by_cap": [
+              -0.391,
+              0.1255,
+              0.3069,
+              0.3122,
+              0.1751
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "arc": {
+            "captured_by_cap": [
+              0.1489,
+              0.1259,
+              0.2971,
+              0.3122,
+              0.1751
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "lruk": {
+            "captured_by_cap": [
+              0.1893,
+              -0.0445,
+              -0.0651,
+              0.3122,
+              0.1751
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "pin2": {
+            "captured_by_cap": [
+              0.174,
+              0.1012,
+              0.1344,
+              0.2214,
+              0.5395
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "pin3": {
+            "captured_by_cap": [
+              0.2246,
+              0.0723,
+              0.0602,
+              0.218,
+              0.5395
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "pin5": {
+            "captured_by_cap": [
+              0.2443,
+              0.1068,
+              0.096,
+              0.0915,
+              0.5395
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          }
+        },
+        "best_policy": "pin2",
+        "PASS": false
+      },
+      "FIX2_arc_vs_custom": {
+        "arc_n_caps": 0,
+        "lruk_n_caps": 0,
+        "best_pin": "pin2",
+        "best_pin_n_caps": 1,
+        "custom_obsolete": false
+      },
+      "FIX3_pin_correction": {
+        "pin2@0.1": {
+          "p": 0.9995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.1": {
+          "p": 0.9965,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.1": {
+          "p": 0.999,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.3": {
+          "p": 0.9985,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.3": {
+          "p": 0.9995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.5": {
+          "p": 0.9715,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.5": {
+          "p": 0.974,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.5": {
+          "p": 0.995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        }
+      },
+      "FIX3_all_correction": {
+        "lfu@0.1": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.1": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.1": {
+          "p": 0.9995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.1": {
+          "p": 0.991,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.1": {
+          "p": 0.9995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.1": {
+          "p": 0.9965,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.1": {
+          "p": 0.999,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.2": {
+          "p": 0.9985,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.3": {
+          "p": 0.996,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.3": {
+          "p": 0.9925,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.3": {
+          "p": 0.9935,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.3": {
+          "p": 0.9965,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.3": {
+          "p": 0.9985,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.3": {
+          "p": 0.9995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.5": {
+          "p": 0.937,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.5": {
+          "p": 0.937,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.5": {
+          "p": 0.937,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.5": {
+          "p": 0.937,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.5": {
+          "p": 0.9715,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.5": {
+          "p": 0.974,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.5": {
+          "p": 0.995,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.7": {
+          "p": 0.987,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.7": {
+          "p": 0.987,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.7": {
+          "p": 0.987,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.7": {
+          "p": 0.987,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.7": {
+          "p": 0.491,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        }
+      },
+      "HHI_flag_any": false,
+      "cap_used_example": {
+        "0.1": 1,
+        "0.2": 2,
+        "0.3": 3,
+        "0.5": 5,
+        "0.7": 7
+      }
+    },
+    "codex": {
+      "n_sessions": 89,
+      "per_capacity": {
+        "0.1": {
+          "cap_frac": 0.1,
+          "recompute": {
+            "lru": 3384413.0,
+            "belady": 3068328.5,
+            "lfu": 3241519.0,
+            "slru": 3342389.8,
+            "arc": 3253236.2,
+            "lruk": 3240353.8,
+            "pin2": 3237972.2,
+            "pin3": 3251924.0,
+            "pin5": 3246767.2
+          },
+          "captured": {
+            "lfu": 0.4520753153033445,
+            "slru": 0.13294941700716106,
+            "arc": 0.4150053229437065,
+            "lruk": 0.45576182951077954,
+            "pin2": 0.463296207185104,
+            "pin3": 0.41915690266368644,
+            "pin5": 0.435471369206652
+          },
+          "LRU_minus_Belady": 316084.5,
+          "belady_saved_frac": 0.09339418682058011,
+          "captured_CI95": {
+            "lfu": [
+              0.1705,
+              0.6926
+            ],
+            "slru": [
+              -0.2696,
+              0.4917
+            ],
+            "arc": [
+              0.2793,
+              0.5577
+            ],
+            "lruk": [
+              0.3015,
+              0.6196
+            ],
+            "pin2": [
+              0.3033,
+              0.6265
+            ],
+            "pin3": [
+              0.2598,
+              0.5781
+            ],
+            "pin5": [
+              0.3098,
+              0.5712
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.6065,
+            "slru": 0.979,
+            "arc": 0.8805,
+            "lruk": 0.693,
+            "pin2": 0.674,
+            "pin3": 0.8305,
+            "pin5": 0.8395
+          }
+        },
+        "0.2": {
+          "cap_frac": 0.2,
+          "recompute": {
+            "lru": 3009232.0,
+            "belady": 2740727.8,
+            "lfu": 2937025.0,
+            "slru": 2974616.2,
+            "arc": 2926463.2,
+            "lruk": 2918687.8,
+            "pin2": 2960532.0,
+            "pin3": 2967478.2,
+            "pin5": 2995670.8
+          },
+          "captured": {
+            "lfu": 0.2689231176042837,
+            "slru": 0.1289206781643121,
+            "arc": 0.308258621604686,
+            "lruk": 0.33721719488611446,
+            "pin2": 0.1813751551418646,
+            "pin3": 0.15550498735122442,
+            "pin5": 0.05050664933609059
+          },
+          "LRU_minus_Belady": 268504.2,
+          "belady_saved_frac": 0.08922683595016935,
+          "captured_CI95": {
+            "lfu": [
+              0.0246,
+              0.481
+            ],
+            "slru": [
+              -0.3589,
+              0.4532
+            ],
+            "arc": [
+              0.1556,
+              0.4599
+            ],
+            "lruk": [
+              0.1684,
+              0.4836
+            ],
+            "pin2": [
+              0.0247,
+              0.3189
+            ],
+            "pin3": [
+              -0.0391,
+              0.3385
+            ],
+            "pin5": [
+              -0.1642,
+              0.2206
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.9835,
+            "slru": 0.99,
+            "arc": 0.996,
+            "lruk": 0.9835,
+            "pin2": 1.0,
+            "pin3": 1.0,
+            "pin5": 1.0
+          }
+        },
+        "0.3": {
+          "cap_frac": 0.3,
+          "recompute": {
+            "lru": 2752998.8,
+            "belady": 2590441.8,
+            "lfu": 2732198.2,
+            "slru": 2736209.2,
+            "arc": 2706609.2,
+            "lruk": 2718608.8,
+            "pin2": 2717362.2,
+            "pin3": 2747720.0,
+            "pin5": 2774573.8
+          },
+          "captured": {
+            "lfu": 0.12795819312610346,
+            "slru": 0.10328377123101436,
+            "arc": 0.28537374582454156,
+            "lruk": 0.21155656169835813,
+            "pin2": 0.2192246412027781,
+            "pin3": 0.032473224776539925,
+            "pin5": -0.1327226757383564
+          },
+          "LRU_minus_Belady": 162557.0,
+          "belady_saved_frac": 0.05904724802363241,
+          "captured_CI95": {
+            "lfu": [
+              -0.3249,
+              0.4438
+            ],
+            "slru": [
+              -0.3612,
+              0.4267
+            ],
+            "arc": [
+              0.0658,
+              0.4935
+            ],
+            "lruk": [
+              -0.0505,
+              0.4355
+            ],
+            "pin2": [
+              0.0248,
+              0.4121
+            ],
+            "pin3": [
+              -0.1949,
+              0.2381
+            ],
+            "pin5": [
+              -0.5169,
+              0.1236
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.99,
+            "slru": 0.991,
+            "arc": 0.9795,
+            "lruk": 0.9925,
+            "pin2": 0.996,
+            "pin3": 1.0,
+            "pin5": 1.0
+          }
+        },
+        "0.5": {
+          "cap_frac": 0.5,
+          "recompute": {
+            "lru": 2627259.5,
+            "belady": 2574134.0,
+            "lfu": 2623279.2,
+            "slru": 2622563.2,
+            "arc": 2623850.2,
+            "lruk": 2623365.5,
+            "pin2": 2625913.0,
+            "pin3": 2647843.0,
+            "pin5": 2659667.5
+          },
+          "captured": {
+            "lfu": 0.07492164779625604,
+            "slru": 0.08839916800783051,
+            "arc": 0.0641735136610479,
+            "lruk": 0.07329813366462433,
+            "pin2": 0.025345643805705358,
+            "pin3": -0.38745047105439007,
+            "pin5": -0.6100271997440024
+          },
+          "LRU_minus_Belady": 53125.5,
+          "belady_saved_frac": 0.020220880350798998,
+          "captured_CI95": {
+            "lfu": [
+              -1.0803,
+              0.5256
+            ],
+            "slru": [
+              -1.0609,
+              0.5379
+            ],
+            "arc": [
+              -1.0625,
+              0.5196
+            ],
+            "lruk": [
+              -1.0803,
+              0.5241
+            ],
+            "pin2": [
+              -0.3949,
+              0.3355
+            ],
+            "pin3": [
+              -1.66,
+              0.1607
+            ],
+            "pin5": [
+              -2.6266,
+              0.1089
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.958,
+            "slru": 0.954,
+            "arc": 0.9655,
+            "lruk": 0.9595,
+            "pin2": 0.997,
+            "pin3": 1.0,
+            "pin5": 1.0
+          }
+        },
+        "0.7": {
+          "cap_frac": 0.7,
+          "recompute": {
+            "lru": 2601621.5,
+            "belady": 2572840.5,
+            "lfu": 2583107.2,
+            "slru": 2583107.2,
+            "arc": 2583107.2,
+            "lruk": 2583107.2,
+            "pin2": 2596649.0,
+            "pin3": 2593769.0,
+            "pin5": 2592074.8
+          },
+          "captured": {
+            "lfu": 0.6432802890796011,
+            "slru": 0.6432802890796011,
+            "arc": 0.6432802890796011,
+            "lruk": 0.6432802890796011,
+            "pin2": 0.17277023036030714,
+            "pin3": 0.27283624613460267,
+            "pin5": 0.331703206976825
+          },
+          "LRU_minus_Belady": 28781.0,
+          "belady_saved_frac": 0.011062716079183695,
+          "captured_CI95": {
+            "lfu": [
+              -0.4462,
+              0.9229
+            ],
+            "slru": [
+              -0.4462,
+              0.9229
+            ],
+            "arc": [
+              -0.4462,
+              0.9229
+            ],
+            "lruk": [
+              -0.4462,
+              0.9229
+            ],
+            "pin2": [
+              -0.7719,
+              0.7249
+            ],
+            "pin3": [
+              -0.5309,
+              0.8847
+            ],
+            "pin5": [
+              -2.4265,
+              0.9059
+            ]
+          },
+          "pval_H0_le_0.50": {
+            "lfu": 0.274,
+            "slru": 0.274,
+            "arc": 0.274,
+            "lruk": 0.274,
+            "pin2": 0.8755,
+            "pin3": 0.7665,
+            "pin5": 0.62
+          }
+        }
+      },
+      "HHI_by_cap": {
+        "0.1": {
+          "HHI": 0.01960733363168812,
+          "flag": false
+        },
+        "0.2": {
+          "HHI": 0.021471620412934222,
+          "flag": false
+        },
+        "0.3": {
+          "HHI": 0.02307610393322026,
+          "flag": false
+        },
+        "0.5": {
+          "HHI": 0.023913974411655322,
+          "flag": false
+        },
+        "0.7": {
+          "HHI": 0.024126619724311835,
+          "flag": false
+        }
+      },
+      "reuse_units": 2122,
+      "far_share": 0.0353440150801131,
+      "near_share": 0.7983034872761545,
+      "median_gap_tok": 0.0,
+      "belady_saved_by_cap": [
+        0.09339418682058011,
+        0.08922683595016935,
+        0.05904724802363241,
+        0.020220880350798998,
+        0.011062716079183695
+      ],
+      "belady_saved_max": 0.09339418682058011,
+      "RE_B0_PASS": false,
+      "RE_B1": {
+        "by_policy": {
+          "lfu": {
+            "captured_by_cap": [
+              0.4521,
+              0.2689,
+              0.128,
+              0.0749,
+              0.6433
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "slru": {
+            "captured_by_cap": [
+              0.1329,
+              0.1289,
+              0.1033,
+              0.0884,
+              0.6433
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "arc": {
+            "captured_by_cap": [
+              0.415,
+              0.3083,
+              0.2854,
+              0.0642,
+              0.6433
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "lruk": {
+            "captured_by_cap": [
+              0.4558,
+              0.3372,
+              0.2116,
+              0.0733,
+              0.6433
+            ],
+            "n_caps_ge_0.50": 1,
+            "pass": false
+          },
+          "pin2": {
+            "captured_by_cap": [
+              0.4633,
+              0.1814,
+              0.2192,
+              0.0253,
+              0.1728
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "pin3": {
+            "captured_by_cap": [
+              0.4192,
+              0.1555,
+              0.0325,
+              -0.3875,
+              0.2728
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          },
+          "pin5": {
+            "captured_by_cap": [
+              0.4355,
+              0.0505,
+              -0.1327,
+              -0.61,
+              0.3317
+            ],
+            "n_caps_ge_0.50": 0,
+            "pass": false
+          }
+        },
+        "best_policy": "lfu",
+        "PASS": false
+      },
+      "FIX2_arc_vs_custom": {
+        "arc_n_caps": 1,
+        "lruk_n_caps": 1,
+        "best_pin": "pin2",
+        "best_pin_n_caps": 0,
+        "custom_obsolete": true
+      },
+      "FIX3_pin_correction": {
+        "pin2@0.1": {
+          "p": 0.674,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.1": {
+          "p": 0.8305,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.1": {
+          "p": 0.8395,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.3": {
+          "p": 0.996,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.5": {
+          "p": 0.997,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.5": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.5": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.7": {
+          "p": 0.8755,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.7": {
+          "p": 0.7665,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.7": {
+          "p": 0.62,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        }
+      },
+      "FIX3_all_correction": {
+        "lfu@0.1": {
+          "p": 0.6065,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.1": {
+          "p": 0.979,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.1": {
+          "p": 0.8805,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.1": {
+          "p": 0.693,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.1": {
+          "p": 0.674,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.1": {
+          "p": 0.8305,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.1": {
+          "p": 0.8395,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.2": {
+          "p": 0.9835,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.2": {
+          "p": 0.99,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.2": {
+          "p": 0.996,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.2": {
+          "p": 0.9835,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.2": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.3": {
+          "p": 0.99,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.3": {
+          "p": 0.991,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.3": {
+          "p": 0.9795,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.3": {
+          "p": 0.9925,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.3": {
+          "p": 0.996,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.3": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.5": {
+          "p": 0.958,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.5": {
+          "p": 0.954,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.5": {
+          "p": 0.9655,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.5": {
+          "p": 0.9595,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.5": {
+          "p": 0.997,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.5": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.5": {
+          "p": 1.0,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lfu@0.7": {
+          "p": 0.274,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "slru@0.7": {
+          "p": 0.274,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "arc@0.7": {
+          "p": 0.274,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "lruk@0.7": {
+          "p": 0.274,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin2@0.7": {
+          "p": 0.8755,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin3@0.7": {
+          "p": 0.7665,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        },
+        "pin5@0.7": {
+          "p": 0.62,
+          "bonferroni_sig": false,
+          "bh_sig": false
+        }
+      },
+      "HHI_flag_any": false,
+      "cap_used_example": {
+        "0.1": 1,
+        "0.2": 2,
+        "0.3": 3,
+        "0.5": 5,
+        "0.7": 7
+      }
+    }
+  },
+  "DISPOSITION": {
+    "verdict": "CLEAN-NEGATIVE-KILL (RE-B1)",
+    "rationale": "NO cheap policy captures >=50% of (LRU-Belady) gap at >=3/5 caps. Best='pin2' reaches threshold at 1/5 caps only. Belady gap is ORACLE-ONLY -> ship classical eviction (LRU/LFU); reinforces DEAD-0019 from the policy side. HHI_flag=False."
+  }
+}

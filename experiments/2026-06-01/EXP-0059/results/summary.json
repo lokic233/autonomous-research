@@ -1,0 +1,597 @@
+{
+  "experiment": "EXP-0059",
+  "claim": "CLAIM-0024",
+  "project": "PROJ-0013",
+  "level": 0,
+  "prompt_version": "v001",
+  "locked_ts": "2026-06-01T22:43:20Z",
+  "prereg_commit": "0d14531",
+  "block": 16,
+  "seed": 20260601,
+  "tokenizer": "gpt2",
+  "taxonomy": [
+    "session_uuid",
+    "cwd",
+    "pid",
+    "timestamp",
+    "date",
+    "uuid",
+    "abspath",
+    "version",
+    "epoch",
+    "gitbranch",
+    "sandbox",
+    "approval"
+  ],
+  "inert_classes": [
+    "date",
+    "epoch",
+    "pid",
+    "session_uuid",
+    "timestamp",
+    "uuid"
+  ],
+  "semantic_classes": [
+    "abspath",
+    "approval",
+    "cwd",
+    "gitbranch",
+    "sandbox",
+    "version"
+  ],
+  "family_sizes": {
+    "claude_code": 50,
+    "codex": 122
+  },
+  "corpora": {
+    "claude_code": {
+      "corpus": "claude_code",
+      "n_sessions": 50,
+      "n_compared": 49,
+      "ref_file": "6c3afbac-c044-476a-8b76-6db26b954f1a.jsonl",
+      "block": 16,
+      "RE_A0": {
+        "mean_realized_raw": 47.3469387755102,
+        "mean_canon_max": 577.6326530612245,
+        "mean_gap": 530.2857142857143,
+        "realized_frac": 0.0819672131147541,
+        "threshold": 0.6,
+        "PASS_gap_exists": true,
+        "CLEAN_KILL_no_ceiling": false
+      },
+      "RE_A1": {
+        "class_mass": {
+          "session_uuid": 11616.0,
+          "cwd": 0.0,
+          "pid": 0.0,
+          "timestamp": 0.0,
+          "date": 384.0,
+          "uuid": 0.0,
+          "abspath": 0.0,
+          "version": 0.0,
+          "epoch": 0.0,
+          "gitbranch": 384.0,
+          "sandbox": 0.0,
+          "approval": 0.0
+        },
+        "class_mass_ranked": [
+          [
+            "session_uuid",
+            11616.0
+          ],
+          [
+            "date",
+            384.0
+          ],
+          [
+            "gitbranch",
+            384.0
+          ],
+          [
+            "cwd",
+            0.0
+          ],
+          [
+            "pid",
+            0.0
+          ],
+          [
+            "timestamp",
+            0.0
+          ],
+          [
+            "uuid",
+            0.0
+          ],
+          [
+            "abspath",
+            0.0
+          ],
+          [
+            "version",
+            0.0
+          ],
+          [
+            "epoch",
+            0.0
+          ],
+          [
+            "sandbox",
+            0.0
+          ],
+          [
+            "approval",
+            0.0
+          ]
+        ],
+        "total_unlocked_mass(sum_marginals)": 12384.0,
+        "total_gap_mass(canon-raw)": 25984,
+        "top3_classes": [
+          "session_uuid",
+          "date",
+          "gitbranch"
+        ],
+        "top3_share": 1.0,
+        "threshold": 0.5,
+        "gini_across_classes": 0.6046511627906976,
+        "lorenz_points": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.08333333333333333,
+            0.0
+          ],
+          [
+            0.16666666666666666,
+            0.0
+          ],
+          [
+            0.25,
+            0.0
+          ],
+          [
+            0.3333333333333333,
+            0.0
+          ],
+          [
+            0.4166666666666667,
+            0.0
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            0.5833333333333334,
+            0.0
+          ],
+          [
+            0.6666666666666666,
+            0.0
+          ],
+          [
+            0.75,
+            0.0
+          ],
+          [
+            0.8333333333333334,
+            0.031007751937984496
+          ],
+          [
+            0.9166666666666666,
+            0.06201550387596899
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ],
+        "PASS_concentrated": true,
+        "FAIL_diffuse": false,
+        "per_class_marginal_share": {
+          "session_uuid": 0.937984496124031,
+          "cwd": 0.0,
+          "pid": 0.0,
+          "timestamp": 0.0,
+          "date": 0.031007751937984496,
+          "uuid": 0.0,
+          "abspath": 0.0,
+          "version": 0.0,
+          "epoch": 0.0,
+          "gitbranch": 0.031007751937984496,
+          "sandbox": 0.0,
+          "approval": 0.0
+        },
+        "top1_share_of_top3": 0.937984496124031,
+        "single_class_dominates_top3": true
+      },
+      "RE_A3": {
+        "top3_share_point": 1.0,
+        "top3_share_CI95": [
+          0.7356687898089171,
+          1.0
+        ],
+        "bootstrap_B": 2000,
+        "includes_class_selection_variance": true,
+        "HHI_unlocked_mass_across_sessions": 0.02042863816156665,
+        "HHI_flag_domination": false
+      },
+      "collision": {
+        "unlocked_class_instances": 70,
+        "alias_rate_overall": 0.6571428571428571,
+        "alias_rate_semantic_classes": 0.0,
+        "noop_unlock_rate(identical_raw)": 0.34285714285714286,
+        "diff_inert": 46,
+        "diff_semantic": 0,
+        "same_inert": 0,
+        "same_semantic": 24,
+        "note": "alias = unlocked prefix relies on masking a class whose RAW value differs cross-session; semantic-class alias rate is the real cost side (cwd/abspath/version/gitbranch/sandbox/approval)."
+      },
+      "RE_A2": {
+        "curve": [
+          {
+            "cap_frac": 0.05,
+            "C": 2,
+            "recompute_raw": 114660,
+            "recompute_canon": 88348,
+            "recompute_saved_tok": 26312,
+            "recompute_saved_frac": 0.22947845804988662,
+            "hit_rate_raw": 0.02210623272950568,
+            "hit_rate_canon": 0.2571053782247486,
+            "hit_rate_delta": 0.23499914549524292
+          },
+          {
+            "cap_frac": 0.1,
+            "C": 5,
+            "recompute_raw": 114228,
+            "recompute_canon": 88268,
+            "recompute_saved_tok": 25960,
+            "recompute_saved_frac": 0.22726476870819765,
+            "hit_rate_raw": 0.02579060485108996,
+            "hit_rate_canon": 0.2577780767549023,
+            "hit_rate_delta": 0.2319874719038123
+          },
+          {
+            "cap_frac": 0.2,
+            "C": 10,
+            "recompute_raw": 114180,
+            "recompute_canon": 83052,
+            "recompute_saved_tok": 31128,
+            "recompute_saved_frac": 0.2726221755123489,
+            "hit_rate_raw": 0.02619997953126599,
+            "hit_rate_canon": 0.3016380209209243,
+            "hit_rate_delta": 0.2754380413896583
+          },
+          {
+            "cap_frac": 0.3,
+            "C": 15,
+            "recompute_raw": 114180,
+            "recompute_canon": 82140,
+            "recompute_saved_tok": 32040,
+            "recompute_saved_frac": 0.28060956384655805,
+            "hit_rate_raw": 0.02619997953126599,
+            "hit_rate_canon": 0.3093067841646766,
+            "hit_rate_delta": 0.2831068046334106
+          },
+          {
+            "cap_frac": 0.5,
+            "C": 25,
+            "recompute_raw": 114180,
+            "recompute_canon": 81244,
+            "recompute_saved_tok": 32936,
+            "recompute_saved_frac": 0.2884568225608688,
+            "hit_rate_raw": 0.02619997953126599,
+            "hit_rate_canon": 0.31684100770239815,
+            "hit_rate_delta": 0.29064102817113213
+          },
+          {
+            "cap_frac": 0.7,
+            "C": 35,
+            "recompute_raw": 114180,
+            "recompute_canon": 77980,
+            "recompute_saved_tok": 36200,
+            "recompute_saved_frac": 0.3170432650201436,
+            "hit_rate_raw": 0.02619997953126599,
+            "hit_rate_canon": 0.34428710773266963,
+            "hit_rate_delta": 0.3180871282014036
+          },
+          {
+            "cap_frac": 1.0,
+            "C": 50,
+            "recompute_raw": 114180,
+            "recompute_canon": 77980,
+            "recompute_saved_tok": 36200,
+            "recompute_saved_frac": 0.3170432650201436,
+            "hit_rate_raw": 0.02619997953126599,
+            "hit_rate_canon": 0.34428710773266963,
+            "hit_rate_delta": 0.3180871282014036
+          }
+        ],
+        "PASS_policy_gap": true,
+        "note": "WITH vs WITHOUT canonicalizer at fixed capacity; recompute_saved = the decisive policy GAP. UPPER BOUND (FIX-2): assumes masked-prefix reuse is output-equivalent."
+      },
+      "DISPOSITION": "POSITIVE (UPPER BOUND): concentrated volatile-token normalization budget + capacity-sim gap"
+    },
+    "codex": {
+      "corpus": "codex",
+      "n_sessions": 122,
+      "n_compared": 121,
+      "ref_file": "rollout-2026-05-31T09-29-27-019e7ede-6ed6-7251-8f05-974d9705e08e.jsonl",
+      "block": 16,
+      "RE_A0": {
+        "mean_realized_raw": 6628.760330578512,
+        "mean_canon_max": 6677.9504132231405,
+        "mean_gap": 53.950413223140494,
+        "realized_frac": 0.9926339550908875,
+        "threshold": 0.6,
+        "PASS_gap_exists": false,
+        "CLEAN_KILL_no_ceiling": true
+      },
+      "RE_A1": {
+        "class_mass": {
+          "session_uuid": 0.0,
+          "cwd": 0.0,
+          "pid": 0.0,
+          "timestamp": 0.0,
+          "date": 0.0,
+          "uuid": 1200.0,
+          "abspath": 0.0,
+          "version": 0.0,
+          "epoch": 0.0,
+          "gitbranch": 0.0,
+          "sandbox": 0.0,
+          "approval": 0.0
+        },
+        "class_mass_ranked": [
+          [
+            "uuid",
+            1200.0
+          ],
+          [
+            "session_uuid",
+            0.0
+          ],
+          [
+            "cwd",
+            0.0
+          ],
+          [
+            "pid",
+            0.0
+          ],
+          [
+            "timestamp",
+            0.0
+          ],
+          [
+            "date",
+            0.0
+          ],
+          [
+            "abspath",
+            0.0
+          ],
+          [
+            "version",
+            0.0
+          ],
+          [
+            "epoch",
+            0.0
+          ],
+          [
+            "gitbranch",
+            0.0
+          ],
+          [
+            "sandbox",
+            0.0
+          ],
+          [
+            "approval",
+            0.0
+          ]
+        ],
+        "total_unlocked_mass(sum_marginals)": 1200.0,
+        "total_gap_mass(canon-raw)": 6528,
+        "top3_classes": [
+          "uuid",
+          "session_uuid",
+          "cwd"
+        ],
+        "top3_share": 1.0,
+        "threshold": 0.5,
+        "gini_across_classes": 0.0,
+        "lorenz_points": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.08333333333333333,
+            0.0
+          ],
+          [
+            0.16666666666666666,
+            0.0
+          ],
+          [
+            0.25,
+            0.0
+          ],
+          [
+            0.3333333333333333,
+            0.0
+          ],
+          [
+            0.4166666666666667,
+            0.0
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            0.5833333333333334,
+            0.0
+          ],
+          [
+            0.6666666666666666,
+            0.0
+          ],
+          [
+            0.75,
+            0.0
+          ],
+          [
+            0.8333333333333334,
+            0.0
+          ],
+          [
+            0.9166666666666666,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ],
+        "PASS_concentrated": true,
+        "FAIL_diffuse": false,
+        "per_class_marginal_share": {
+          "session_uuid": 0.0,
+          "cwd": 0.0,
+          "pid": 0.0,
+          "timestamp": 0.0,
+          "date": 0.0,
+          "uuid": 1.0,
+          "abspath": 0.0,
+          "version": 0.0,
+          "epoch": 0.0,
+          "gitbranch": 0.0,
+          "sandbox": 0.0,
+          "approval": 0.0
+        },
+        "top1_share_of_top3": 1.0,
+        "single_class_dominates_top3": true
+      },
+      "RE_A3": {
+        "top3_share_point": 1.0,
+        "top3_share_CI95": [
+          1.0,
+          1.0
+        ],
+        "bootstrap_B": 2000,
+        "includes_class_selection_variance": true,
+        "HHI_unlocked_mass_across_sessions": 0.00915513264129181,
+        "HHI_flag_domination": false
+      },
+      "collision": {
+        "unlocked_class_instances": 75,
+        "alias_rate_overall": 1.0,
+        "alias_rate_semantic_classes": 0.0,
+        "noop_unlock_rate(identical_raw)": 0.0,
+        "diff_inert": 75,
+        "diff_semantic": 0,
+        "same_inert": 0,
+        "same_semantic": 0,
+        "note": "alias = unlocked prefix relies on masking a class whose RAW value differs cross-session; semantic-class alias rate is the real cost side (cwd/abspath/version/gitbranch/sandbox/approval)."
+      },
+      "RE_A2": {
+        "curve": [
+          {
+            "cap_frac": 0.05,
+            "C": 6,
+            "recompute_raw": 20526,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -405,
+            "recompute_saved_frac": -0.019731072785735167,
+            "hit_rate_raw": 0.9753050475106535,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.00030233054448358665
+          },
+          {
+            "cap_frac": 0.1,
+            "C": 12,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          },
+          {
+            "cap_frac": 0.2,
+            "C": 24,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          },
+          {
+            "cap_frac": 0.3,
+            "C": 37,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          },
+          {
+            "cap_frac": 0.5,
+            "C": 61,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          },
+          {
+            "cap_frac": 0.7,
+            "C": 85,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          },
+          {
+            "cap_frac": 1.0,
+            "C": 122,
+            "recompute_raw": 20382,
+            "recompute_canon": 20931,
+            "recompute_saved_tok": -549,
+            "recompute_saved_frac": -0.026935531351192227,
+            "hit_rate_raw": 0.9754782947657673,
+            "hit_rate_canon": 0.9750027169661699,
+            "hit_rate_delta": -0.0004755777995973931
+          }
+        ],
+        "PASS_policy_gap": false,
+        "note": "WITH vs WITHOUT canonicalizer at fixed capacity; recompute_saved = the decisive policy GAP. UPPER BOUND (FIX-2): assumes masked-prefix reuse is output-equivalent."
+      },
+      "DISPOSITION": "CLEAN-NEGATIVE (RE-A0): realized ~ canonicalized-max; volatile tokens NOT the bottleneck"
+    }
+  },
+  "CROSS_INSTRUMENT": {
+    "cc_disposition": "POSITIVE (UPPER BOUND): concentrated volatile-token normalization budget + capacity-sim gap",
+    "codex_disposition": "CLEAN-NEGATIVE (RE-A0): realized ~ canonicalized-max; volatile tokens NOT the bottleneck",
+    "cc_realized_frac": 0.0819672131147541,
+    "codex_realized_frac": 0.9926339550908875,
+    "cc_top3_share": 1.0,
+    "codex_top3_share": 1.0,
+    "concordant": false
+  }
+}

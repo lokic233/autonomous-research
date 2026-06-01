@@ -1,0 +1,32 @@
+[EXP-0060] locked 2026-06-01T22:42:08Z  seed 20260601  caps [0.1, 0.2, 0.3, 0.5, 0.7]  policies ['lru', 'belady', 'lfu', 'slru', 'arc', 'lruk', 'pin2', 'pin3', 'pin5']
+Loading corpora...
+
+===== cc: 72 sessions (>= 8 calls) =====
+   reuse units=3290  far_share=0.1884498480243161  near_share=0.464741641337386
+   RE-B0 far_share=0.1884498480243161 belady_max=0.11033364262243593 -> PASS=True
+   captured-fraction by cap (best cheap policy 'pin2'): [0.1733, 0.1022, 0.1341, 0.2214, 0.5395]
+      lfu    captured=[-0.747, -0.3867, -0.3094, 0.3122, 0.1751] ncaps>=0.5=0 pass=False
+      slru   captured=[-0.3887, 0.137, 0.3132, 0.3122, 0.1751] ncaps>=0.5=0 pass=False
+      arc    captured=[0.1501, 0.1277, 0.3024, 0.3122, 0.1751] ncaps>=0.5=0 pass=False
+      lruk   captured=[0.1876, -0.0436, -0.056, 0.3122, 0.1751] ncaps>=0.5=0 pass=False
+      pin2   captured=[0.1733, 0.1022, 0.1341, 0.2214, 0.5395] ncaps>=0.5=1 pass=False
+      pin3   captured=[0.2237, 0.08, 0.07, 0.218, 0.5395] ncaps>=0.5=1 pass=False
+      pin5   captured=[0.2414, 0.1085, 0.1055, 0.0894, 0.5395] ncaps>=0.5=1 pass=False
+   RE-B1 PASS=False | FIX2 custom_obsolete=False (arc 0 / lruk 0 / bestpin pin2 1) | HHI_flag=False
+
+===== codex: 90 sessions (>= 8 calls) =====
+   reuse units=2122  far_share=0.0353440150801131  near_share=0.7983034872761545
+   RE-B0 far_share=0.0353440150801131 belady_max=0.09339418682058011 -> PASS=False
+   captured-fraction by cap (best cheap policy 'lfu'): [0.4521, 0.2689, 0.128, 0.0749, 0.6433]
+      lfu    captured=[0.4521, 0.2689, 0.128, 0.0749, 0.6433] ncaps>=0.5=1 pass=False
+      slru   captured=[0.1329, 0.1289, 0.1033, 0.0884, 0.6433] ncaps>=0.5=1 pass=False
+      arc    captured=[0.415, 0.3083, 0.2854, 0.0642, 0.6433] ncaps>=0.5=1 pass=False
+      lruk   captured=[0.4558, 0.3372, 0.2116, 0.0733, 0.6433] ncaps>=0.5=1 pass=False
+      pin2   captured=[0.4629, 0.1814, 0.2192, 0.0253, 0.1728] ncaps>=0.5=0 pass=False
+      pin3   captured=[0.4192, 0.1565, 0.0302, -0.3858, 0.2728] ncaps>=0.5=0 pass=False
+      pin5   captured=[0.3344, 0.0095, -0.2127, -0.8471, -0.0281] ncaps>=0.5=0 pass=False
+   RE-B1 PASS=False | FIX2 custom_obsolete=True (arc 1 / lruk 1 / bestpin pin2 0) | HHI_flag=False
+
+DISPOSITION: CLEAN-NEGATIVE-KILL (RE-B1)
+  NO cheap policy captures >=50% of (LRU-Belady) gap at >=3/5 caps. Best='pin2' reaches threshold at 1/5 caps only. Belady gap is ORACLE-ONLY -> ship classical eviction (LRU/LFU); reinforces DEAD-0019 from the policy side. HHI_flag=False.
+wrote /Users/dengcchi/autonomous-research/experiments/2026-06-01/EXP-0060/results/summary.json

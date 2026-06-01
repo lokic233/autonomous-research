@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'DISCORDANT, both first-class. Claude Code (n=50): POSITIVE volatile-token
+  normalization budget (UPPER BOUND) — realized cross-session exact-prefix = 8.2% of
+  canonicalized-max (47 vs 578 tok; RE-A0 PASS, >90% gap); budget concentrated in
+  essentially ONE inert field session_uuid (93.8% of marginal unlocked mass; FIX-4
+  single-class-domination flag fires; top-3 share 1.0 CI95 [0.736,1.0]); ~0 semantic
+  collision cost (semantic-class alias rate 0.000); capacity-sim saves +22-32% recompute
+  mass at fixed radix capacity (hit Δ +0.23..+0.32). Codex (n=122): CLEAN NEGATIVE —
+  realized = 99.3% of canonicalized-max (6629 vs 6678 tok; byte-identical base_instructions
+  already shares ~6.6k-tok head); volatile tokens NOT the bottleneck; canonicalizer saves
+  -2.7% (worse). HHI across sessions <0.02 (no session domination) both corpora. Sum of
+  per-class marginals captures 48% of CC gap (rest = joint-masking interaction).'
+result_effect: 'CC positive (single-field session_uuid ceiling, upper bound, ~0 collision
+  cost); Codex clean negative (no ceiling). Top-3-unlock claim holds for CC only as a top-1
+  lever and does NOT generalize cross-instrument.'
 artifacts_path: experiments/2026-06-01/EXP-0059/
-reproducibility: ''
+reproducibility: '/usr/bin/python3 experiments/2026-06-01/EXP-0059/impl/xsession_kv_share_census.py
+  (re-execs into EXP-0049 venv for gpt2; seed 20260601; block 16; prereg commit 0d14531).'
 linked_verdicts: []
 started_at: '2026-06-01T22:43:01Z'
-completed_at: ''
+completed_at: '2026-06-01T22:49:18Z'
 prompt_version: v001
