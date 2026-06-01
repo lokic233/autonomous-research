@@ -53,3 +53,30 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
     + gates resolved). Floor=1 satisfied (researcher active on only open CPU lane). Inbox empty.
   DECISION: NO action beyond heartbeat+commit. Researcher computing healthily, pre-reg discipline honored. Await
     completion. Heartbeat #3, ros commit.
+- 2026-06-01 ~22:53Z — CYCLE (hb #4). researcher-0024-L0-r7 COMPLETED EXP-0059 — committee-ready, FORWARDED Q-0011.
+  * BUG-26/29 proc check: pgrep researcher-0024 count=0 + ps PID 84730 empty -> proc TRULY EXITED (NOT stale-heartbeat
+    false-DEAD). EXP-0059 experiment.yaml status=completed, completed_at 22:49:18Z. Artifacts committed (HEAD 4ca524f),
+    tree clean. NOT a respawn case (proc exited WITH work complete).
+  * DISCIPLINE VERIFIED: PRE_REGISTRATION committed BEFORE run (0d14531, LOCKED-TS 22:43:20Z, no threshold moved post-lock).
+    Full artifact set: impl/xsession_kv_share_census.py (25KB), impl/analysis.md (per-gate disposition + all FIXES),
+    results/summary.json (16KB) + per_session_{claude_code,codex}.csv.
+  * GATE RESULTS (researcher's numbers — I FORWARD only, do NOT judge):
+    DISCORDANT, both first-class. CC (n=50): RE-A0 PASS (realized_frac 0.082 = 92% gap vs canon-max). RE-A1 PASS-but-
+    DEGENERATE (top-3 share 1.000 BUT FIX-4 single-class flag FIRES: session_uuid alone=93.8% -> honestly a TOP-1 lever,
+    not a 3-class budget; add-one-in marginals capture 48% of the 25,984-tok gap, ~52% is joint-masking interaction,
+    reported honestly). RE-A2 PASS (+22.7-31.7% recompute saved, hit Δ +0.23-0.32, robust to capacity). RE-A3 (top-3
+    CI95 [0.736,1.000] incl class-selection bootstrap var per FIX-1; session HHI 0.020 = fleet-wide, no domination).
+    Codex (n=122): RE-A0 CLEAN KILL (realized_frac 0.993 — byte-identical base_instructions ~6.6k shared; volatile
+    tokens NOT the bottleneck; masking adds only ~49 tok). FIX-2 UPPER BOUND framing explicit (CC head is reconstructed
+    envelope; magnitude instrument-specific; bound TIGHT because binding class session_uuid is INERT). FIX-3 collision:
+    alias_rate_overall 0.657 BUT semantic-class alias rate 0.000 (every genuine alias is on an inert id -> ~0 semantic-
+    collision cost = best case). CC+Codex reported SEPARATELY, no averaging, honest discordance disclosed.
+    DISPOSITION (researcher): CC POSITIVE quantified normalization budget (upper bound, single inert-field lever);
+    Codex CLEAN NEGATIVE. CLAIM-0024 "top-3 unlock majority" holds for CC only as a TOP-1 lever, does NOT generalize
+    cross-instrument.
+  * ACTION: ros queue submit -> Q-0011 (claim CLAIM-0024, exp EXP-0059, kind=committee, by sub-monitor-0013-r7,
+    researcher researcher-0024-L0-r7). Verified no pre-existing CLAIM-0024/EXP-0059 queue entry first (no double-submit).
+    FORWARD ONLY — did NOT judge; orchestrator convenes the committee.
+  DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0059 done). Floor=1 satisfied + now drained
+    (EXP-0059 was the only open CPU lane; L1+ = orchestrator-dispatched). Now MONITOR-FORWARD-DONE holding pattern:
+    await orchestrator committee verdict on Q-0011. Heartbeat #4, ros commit.
