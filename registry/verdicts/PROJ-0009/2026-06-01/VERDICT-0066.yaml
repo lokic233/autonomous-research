@@ -1,0 +1,58 @@
+verdict_id: VERDICT-0066
+claim_id: CLAIM-0020
+project_id: PROJ-0009
+date: '2026-06-01'
+experiment_ids:
+- EXP-0055
+experiment_paths:
+- experiments/2026-06-01/EXP-0055
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'RE-A1 FAIL all CC tools + pooled: dAUC<=0 (Bash -0.013, pooled -0.026) vs strong
+  arg-TEMPLATE B0 (AUC 0.751)'
+- all-5-folds-positive fails every CC tool -> arg-structure adds nothing over sub-tool
+  identity
+- 'RE-A3 cross-instrument SHELL hard gate FAIL: sign flip CC Bash -0.013 vs Codex
+  exec_command +0.209 -> no instrument-general within-call predictor'
+- 'B0-weakness artifact: ~60% of Codex apparent signal (dAUC 0.209->0.083) was sub-tool
+  identity recovery via degenerate 4-bucket template (Codex cmd-as-list)'
+- researcher self-caught, correction STRENGTHENS kill
+- RE-A5b collapses Codex residual dAUC to 0.002 under full 6-feature permutation ->
+  instrument-specific non-replicating non-transferable
+required_evidence:
+- Revival requires a corpus where static arg-STRUCTURE beats a FAIR arg-TEMPLATE B0
+  (dAUC_LB95>0, point>=0.03, all folds positive) AND replicates cross-instrument with
+  sign agreement
+- no such evidence in EXP-0055 or literature
+map_delta_proposals:
+- 'CLAIM-0020 YELLOW->DEAD: publishable clean negative'
+- within-tool result-prefill whales NOT pre-predictable from static arg-STRUCTURE
+  beyond sub-tool identity
+- identity signal does not transfer cross-harness
+- PROJ-0009 charter answered in the negative
+- 'heavy tail real (RE-A0 78.9%/57.1%) so head-of-line scheduling problem stands but
+  arg-structure refinement does not. Revival gate: dAUC_LB95>0 point>=0.03 all-folds+
+  cross-instrument sign agreement over fair arg-TEMPLATE B0'
+baseline_requirements:
+- arg-TEMPLATE (sub-tool identity) with per-harness-correct serialization parsing
+  (string vs list) - CC Bash B0 AUC 0.751 / 75 templates reference
+- S3/TetriInfer 2401.11181/SSJF predict MODEL output length not tool-result prefill
+  (distinct)
+- vLLM chunked prefill / Sarathi-Serve 2403.02310 chunk after tokens exist (distinct)
+created_at: '2026-06-01T20:07:32Z'
