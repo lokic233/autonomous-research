@@ -53,3 +53,9 @@ Floor N = 2 (work-gated)
   No 2nd CPU lane of open work exists -> correctly SIT BELOW floor (1->0 live as lane completes). Refilling
   = make-work. Re-check open_gaps / advanceable claims each cycle; refill only if orchestrator's committee
   re-convene opens a new CPU follow-on. Pool now 0/2 live with NO open CPU work = correct quiescent state.
+
+- 2026-06-01 ~13:24Z — CYCLE (no change). researcher-0014-L1prep-r5 = completed/retired (clean, no zombie).
+  Q-0004 still PENDING in committee-queue (orchestrator has not re-convened yet). No new VERDICT-0005x.
+  ros resume: CLAIM-0014 = evidence_ready / status=weakened -> packet staged, awaiting ORCHESTRATOR committee,
+  not awaiting me. No open CPU follow-on. Correctly holding pool below floor (no make-work). RE-03/RE-04 remain
+  orchestrator/H100 out-of-scope. Heartbeat #3. Quiescent-correct.
