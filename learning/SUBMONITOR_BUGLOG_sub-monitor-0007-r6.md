@@ -204,3 +204,27 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
   inject into a running claude -p). If proc has EXITED with deliverables incomplete -> respawn SHORT finalize-only
   lane (write analysis.md from committed summary.json@09:50 + gather RE-B7/B8 prior_art + file terminal report;
   NO experiment re-run — carry forward the per-family split codex=ceiling / CC=RE-B1-killer-PSA).
+
+- 2026-06-01 ~17:11Z — CYCLE (heartbeat #13). researcher-0017-L0-r6 ☠️ DEAD in liveness (heartbeat 59m stale) but
+  PROC 74750 STILL ALIVE (1:08:23). AGAIN A FALSE-POSITIVE-DEAD: investigated -> fresh zsh 88838 (8:49) running
+  python 88840 @97.6% CPU = run_main5.log (5th/6th harness exec), now grepping "HONEST_VERDICT|conclusion" = the
+  researcher is producing the FINAL honest-verdict output. NOT crashed; computing hard. DO NOT RESPAWN (live proc).
+  DISPOSITION STABLE + CORRECT across runs (harness mtime frozen @10:03): summary.json @10:02 ->
+    codex PASS / arch_supported=TRUE ; claude_code KILL-NEGATIVE / arch_supported=FALSE (RE-B1 killer fires).
+  CONCERN (now moderate, not pathological): 68m runtime, ~6 harness re-runs (~8m each over n=109 bootstrap),
+    last report 59m ago, STILL no analysis.md / prior_art/PROJ-0007 / terminal report. Researcher is OVER-
+    VERIFYING (re-running an already-stable, already-committed result) instead of just writing the analysis from
+    the frozen summary.json. Transcript jsonl ~948KB = turn context growing -> small risk of context-exhaustion
+    death before finalize. Within 240m budget; making forward progress (HONEST_VERDICT output now).
+  ACTION: none (live proc, can't inject into claude -p). NO queue submit (no terminal report; RE-B7 prior_art
+    missing = hard required_evidence). Floor held at 1. NOTE for orchestrator: 0017 in revive list but ALIVE
+    (74750/88840) — DO NOT revive. Heartbeat #13, commit.
+  CONTINGENCY READY: if proc EXITS without analysis.md+prior_art+terminal report, respawn SHORT FINALIZE-ONLY lane
+    (researcher-0017b-finalize-r6): inputs = committed summary.json@10:02 + per_row CSVs + run_main*.log +
+    PRE_REGISTRATION; tasks = (1) write results/analysis.md narrating the HONEST PER-FAMILY SPLIT (codex genuine
+    drift-attributable architectural cross-session ceiling surviving canonicalization; CC RE-B1 KILLER fires =
+    canonicalization-recoverable -> prompt-eng PSA; both 0% BPE-seam = distinct from PROJ-0005, no fold),
+    (2) gather RE-B7 (Anthropic/OpenAI volatile-field prompt-caching guidance) + RE-B8 (SGLang LPM/DFS + TensorRT
+    + cache_salt) into prior_art/PROJ-0007/, (3) file terminal report status=completed. *** DO NOT re-run the
+    experiment — results are correct + committed. *** macOS: BOTH --dangerously-skip-permissions +
+    --dangerously-disable-osx-sandbox + --dangerously-enable-internet-mode + --add-dir both + --model claude-opus-4-8.
