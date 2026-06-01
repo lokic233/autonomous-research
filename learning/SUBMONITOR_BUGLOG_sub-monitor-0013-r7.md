@@ -107,3 +107,4 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
     (metacode reviewer) is also gone. Floor=1 drained. Inbox empty.
   DECISION: NO action beyond heartbeat+commit. Committee done (yellow per area_chair, observation only); await
     orchestrator to record the CLAIM-0024 verdict + decide convergence. Heartbeat #9, ros commit.
+- 2026-06-01 ~23:18Z — CYCLE (hb #10). HOLDING: committee DONE (area_chair yellow, observed last cycle) but orchestrator has NOT yet recorded a CLAIM-0024 verdict or marked .converged — ratification is orchestrator's lane, not mine. researcher-0024 proc gone (work complete), EXP-0059 terminal, inbox empty, floor=1 drained. NO action beyond heartbeat+commit.
