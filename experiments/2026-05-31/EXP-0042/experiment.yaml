@@ -1,0 +1,37 @@
+exp_id: EXP-0042
+project_id: PROJ-0003
+claim_id: CLAIM-0012
+session_id: ''
+level: 2
+hardware: cpu
+resource_budget:
+  max_wall_clock_minutes: 30
+  max_gpu_hours: 0.0
+  max_memory_gb: 0
+  host_mem_floor_gb: 0
+needs_gpu: false
+dispatched_by: ''
+node_lease: ''
+status: completed
+result_summary: 'L4 ROBUSTNESS (CPU/stdlib, reuses EXP-0041 burst_L3 machinery). Knocks
+  out 3 STATS-ROBUSTNESS blockers from VERDICT-0046. (1) CC-LEG: per-session tool-strat-Z
+  distribution (19 shufflable sess) is 12/19 EXACTLY 0 (median=0, the EXP-0040 killed
+  mode); unweighted Stouffer -2.33 (p.0098) COLLAPSES to -0.891 (p~.19, ns) on LOSO
+  of ONE 862-call session; weighted Stouffer -6.59 looks strong only b/c it over-weights
+  that same outlier (w=29 vs 3-8). CC rate-stratified signal is FRAGILE/aggregation-carried.
+  (2) COX-vs-HAWKES BIC: Hawkes self-excitation EARNS its 2 params on ALL 3 harnesses
+  (deltaBIC CC+9.7, Codex+26.9, Gemini+13.8; all alpha>0) -> genuine temporal memory
+  beyond rate-heterogeneity, quantified (resolves ''both contribute''). (3) BONFERRONI/HOLM
+  over 9-test family: CC tool-strat is the ONLY test failing Bonferroni (.0086->.078);
+  ''survives'' Holm only artifactually as rank-9/9. Codex 3/3 + Gemini 3/3 survive
+  both decisively. HONEST VERDICT: over-dispersion/burstiness = 3-harness robust;
+  within-tool memory surviving rate-stratification = 2-harness strong (Codex+Gemini),
+  CC WEAK (EXP-0040 failure mode, fails Bonferroni). Reframe to 2-harness on the discriminating
+  claim. Files: experiments/2026-05-31/EXP-0042/{impl/robust_L4.py,result.md,results/*.csv,robust_L4.json}.'
+result_effect: weaken
+artifacts_path: experiments/2026-05-31/EXP-0042/
+reproducibility: ''
+linked_verdicts: []
+started_at: ''
+completed_at: '2026-05-31T23:28:31Z'
+prompt_version: ''

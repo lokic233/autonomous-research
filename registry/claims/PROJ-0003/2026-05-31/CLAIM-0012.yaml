@@ -1,7 +1,7 @@
 claim_id: CLAIM-0012
 project_id: PROJ-0003
 stage: seed
-status: seed
+status: weakened
 claim: "In real multi-harness agent traces, tool-call failures are temporally OVER-DISPERSED\
   \ within a session relative to a within-session Bernoulli null (failures cluster\
   \ / are bursty); replicates across Claude Code (Stouffer Z=-4.07) and Codex (deduped\
@@ -87,7 +87,24 @@ supporting_evidence:
     \ temporal-memory component that survives rate-stratification' \u2014 NOT pure\
     \ temporal burstiness (both Cox-mixture + Hawkes-like memory contribute)."
   data_path: experiments/2026-05-31/EXP-0041/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0042
+  summary: 'L4 ROBUSTNESS (CPU/stdlib, reuses EXP-0041 burst_L3 machinery). Knocks
+    out 3 STATS-ROBUSTNESS blockers from VERDICT-0046. (1) CC-LEG: per-session tool-strat-Z
+    distribution (19 shufflable sess) is 12/19 EXACTLY 0 (median=0, the EXP-0040 killed
+    mode); unweighted Stouffer -2.33 (p.0098) COLLAPSES to -0.891 (p~.19, ns) on LOSO
+    of ONE 862-call session; weighted Stouffer -6.59 looks strong only b/c it over-weights
+    that same outlier (w=29 vs 3-8). CC rate-stratified signal is FRAGILE/aggregation-carried.
+    (2) COX-vs-HAWKES BIC: Hawkes self-excitation EARNS its 2 params on ALL 3 harnesses
+    (deltaBIC CC+9.7, Codex+26.9, Gemini+13.8; all alpha>0) -> genuine temporal memory
+    beyond rate-heterogeneity, quantified (resolves ''both contribute''). (3) BONFERRONI/HOLM
+    over 9-test family: CC tool-strat is the ONLY test failing Bonferroni (.0086->.078);
+    ''survives'' Holm only artifactually as rank-9/9. Codex 3/3 + Gemini 3/3 survive
+    both decisively. HONEST VERDICT: over-dispersion/burstiness = 3-harness robust;
+    within-tool memory surviving rate-stratification = 2-harness strong (Codex+Gemini),
+    CC WEAK (EXP-0040 failure mode, fails Bonferroni). Reframe to 2-harness on the
+    discriminating claim. Files: experiments/2026-05-31/EXP-0042/{impl/robust_L4.py,result.md,results/*.csv,robust_L4.json}.'
+  data_path: experiments/2026-05-31/EXP-0042/
 verdict_history:
 - verdict_id: VERDICT-0045
   date: '2026-05-31'
@@ -99,13 +116,8 @@ revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
 lifecycle_state: evidence_ready
-next_action: '6/6 YELLOW (VERDICT-0046). Both discriminating ablations PASSED (real
-  over-dispersion+within-tool memory). GREEN needs (several CPU-doable): live prior-art
-  sweep + related-work (Barabasi/Goh/Hawkes/SRE/2604.14528); CC-leg per-session-strat-Z
-  distribution + size-weighted Stouffer + LOSO (same bar as EXP-0040 kill); (B,M)-plane
-  vs SRE+human baselines (universal-burstiness null); Cox-vs-Hawkes BIC; label audit
-  + Bonferroni. Phenomenon real; altitude unproven.'
+next_action: review evidence from EXP-0042; convene committee if candidate-grade
 blocking_on: ''
 active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-05-31T23:12:26Z'
+last_updated: '2026-05-31T23:28:31Z'

@@ -1,0 +1,79 @@
+Parsing corpora via L3 machinery...
+  CC sessions: 41  Codex: 63  Gemini: 11
+
+======================================================================
+(1) CC-LEG ROBUSTNESS
+======================================================================
+   n_sessions_shufflable     : 19
+   median_z_strat            : 0.0
+   mean_z_strat              : -0.535
+   frac_sessions_z_neg       : 0.263
+   frac_sessions_p_sig       : 0.105
+   stouffer_unweighted       : -2.334
+   stouffer_weighted_sqrtn   : -6.585
+   stouffer_unw_p            : 0.009799035090364006
+   stouffer_wt_p             : 2.2667978605284134e-11
+   quantiles(z_strat)        : {0: -6.395, 5: -3.768, 10: -2.275, 25: -0.143, 50: 0.0, 75: 0.459, 90: 0.553, 95: 0.785, 100: 0.874}
+   hist edges                : [-6, -4, -3, -2, -1, -0.5, 0, 0.5, 1, 2, 4, 6]
+   hist counts               : [0, 1, 0, 2, 0, 1, 12, 2, 0, 0, 0]
+   LOSO worst (unw, drop->Z) : {'dropped': '1c2df215-5397-4f4e-8125-bc712a452295.jsonl', 'n_left': 18, 'stouffer_unw': -0.891, 'stouffer_wt': -2.402, 'dropped_z': -6.395, 'dropped_w': 29.36}
+   LOSO worst (wt,  drop->Z) : {'dropped': '1c2df215-5397-4f4e-8125-bc712a452295.jsonl', 'n_left': 18, 'stouffer_unw': -0.891, 'stouffer_wt': -2.402, 'dropped_z': -6.395, 'dropped_w': 29.36}
+
+======================================================================
+(2) COX-only vs COX+HAWKES BIC
+======================================================================
+  --- claude_code ---
+     n_sessions                    : 19
+     n_calls                       : 1317
+     n_tools                       : 15
+     cox_logL                      : -321.17
+     cox_BIC                       : 750.1
+     hawkes_logL                   : -309.12
+     hawkes_BIC                    : 740.35
+     hawkes_alpha                  : 1.25
+     hawkes_beta                   : 0.45
+     delta_BIC_cox_minus_hawkes    : 9.74
+     LR_2dll                       : 24.11
+     hawkes_earns_params           : True
+  --- codex ---
+     n_sessions                    : 45
+     n_calls                       : 1545
+     n_tools                       : 5
+     cox_logL                      : -351.19
+     cox_BIC                       : 739.1
+     hawkes_logL                   : -330.42
+     hawkes_BIC                    : 712.25
+     hawkes_alpha                  : 4.3
+     hawkes_beta                   : 1.2
+     delta_BIC_cox_minus_hawkes    : 26.85
+     LR_2dll                       : 41.54
+     hawkes_earns_params           : True
+  --- gemini ---
+     n_sessions                    : 10
+     n_calls                       : 159
+     n_tools                       : 7
+     cox_logL                      : -81.77
+     cox_BIC                       : 199.02
+     hawkes_logL                   : -69.82
+     hawkes_BIC                    : 185.26
+     hawkes_alpha                  : 3.55
+     hawkes_beta                   : 1.15
+     delta_BIC_cox_minus_hawkes    : 13.76
+     LR_2dll                       : 23.895
+     hawkes_earns_params           : True
+
+======================================================================
+(3) MULTIPLE-COMPARISON CORRECTION
+======================================================================
+  Family size m = 9
+   claude_code:whole_perm             p=2.978e-06  bonf=2.681e-05(True)  holm=1.787e-05(True)
+   claude_code:tool_strat             p=8.623e-03  bonf=7.760e-02(False)  holm=8.623e-03(True)
+   claude_code:retry_collapse_06      p=2.835e-05  bonf=2.552e-04(True)  holm=1.134e-04(True)
+   codex:whole_perm                   p=0.000e+00  bonf=0.000e+00(True)  holm=0.000e+00(True)
+   codex:tool_strat                   p=0.000e+00  bonf=0.000e+00(True)  holm=0.000e+00(True)
+   codex:retry_collapse_06            p=0.000e+00  bonf=0.000e+00(True)  holm=0.000e+00(True)
+   gemini:whole_perm                  p=5.183e-05  bonf=4.664e-04(True)  holm=1.555e-04(True)
+   gemini:tool_strat                  p=3.846e-04  bonf=3.462e-03(True)  holm=7.692e-04(True)
+   gemini:retry_collapse_06           p=5.919e-06  bonf=5.327e-05(True)  holm=2.959e-05(True)
+
+CSVs+JSON -> /Users/dengcchi/autonomous-research/experiments/2026-05-31/EXP-0042/results/
