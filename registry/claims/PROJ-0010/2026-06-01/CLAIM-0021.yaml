@@ -1,7 +1,7 @@
 claim_id: CLAIM-0021
 project_id: PROJ-0010
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0021
 why_it_matters: 'Error-fork KV fragmentation: post-error prefill is non-shareable
   across sessions (RadixAttention/APC radix-tree fork). LOAD-BEARING NOVEL claim =
@@ -15,16 +15,33 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0056
+  summary: 'CLAIM-0021 KILLED (clean negative, multi-gate). Thesis: tool errors create
+    a predictable error-specific class of permanently-non-shareable post-error prefill
+    in cross-session RadixAttention. FALSIFIED as ordinary trajectory divergence.
+    RE-B0 PASS (downstream-of-1st-error footprint large: CC 63% / codex 92%) so premise
+    floor holds. RE-B1 reconv near-zero (sig 2.5%/0%, err-result 3.8%/0%) BUT matched-success
+    control (RE-B2b) shows non-shareable frac ~89-97% for SUCCESSES too (label median
+    0.98) => near-zero reconv is the UNIVERSAL base rate, not error-specific (the
+    committee FIX-1 upgrade gate decisive). RE-B2 KILL: error features add no signal
+    over joint cadence baseline (CC dAUC +0.007 LB95<0 not-all-folds-positive HHI-flag
+    0.31; codex dAUC -0.082 LB95<0 all-folds-negative). RE-B2b KILL: error vs length/entropy-matched-success
+    non-shareability statistically indistinguishable (CC delta -0.071 CI incl 0 &
+    sign NEGATIVE; codex +0.010 CI incl 0). RE-B3 HARD GATE FAIL: cross-instrument
+    sign disagreement on both dAUC and delta_b2b. Useful: cross-session tool-signature
+    sharing is negligible (~3-5%) and error-agnostic; RadixAttention/vLLM-APC error-agnostic
+    designs adequate. Non-collision vs PROJ-0007/DEAD-0015/0016/PROJ-0003/EXP-0054
+    stated. arXiv 2312.07104 & 2309.06180 verified live. Pre-reg locked+committed
+    before run; honest negative.'
+  data_path: experiments/2026-06-01/EXP-0056/
 verdict_history: []
 revival_conditions: ''
 owner: ''
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0056 result, then ros exp complete --exp EXP-0056 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0056
+active_experiments: []
 created_at: '2026-06-01T18:44:54Z'
-last_updated: '2026-06-01T18:45:50Z'
+last_updated: '2026-06-01T19:12:47Z'

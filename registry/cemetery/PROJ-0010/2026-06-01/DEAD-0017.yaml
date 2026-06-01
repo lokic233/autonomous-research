@@ -1,19 +1,7 @@
-exp_id: EXP-0056
-project_id: PROJ-0010
-claim_id: CLAIM-0021
-session_id: ''
-level: 0
-hardware: Mac CPU stdlib
-resource_budget:
-  max_wall_clock_minutes: 30
-  max_gpu_hours: 0.0
-  max_memory_gb: 0
-  host_mem_floor_gb: 0
-needs_gpu: false
-dispatched_by: ''
-node_lease: ''
-status: completed
-result_summary: 'CLAIM-0021 KILLED (clean negative, multi-gate). Thesis: tool errors
+dead_id: DEAD-0017
+original_claim_id: CLAIM-0021
+original_claim: CLAIM-0021
+reason_killed: 'CLAIM-0021 KILLED (clean negative, multi-gate). Thesis: tool errors
   create a predictable error-specific class of permanently-non-shareable post-error
   prefill in cross-session RadixAttention. FALSIFIED as ordinary trajectory divergence.
   RE-B0 PASS (downstream-of-1st-error footprint large: CC 63% / codex 92%) so premise
@@ -29,10 +17,12 @@ result_summary: 'CLAIM-0021 KILLED (clean negative, multi-gate). Thesis: tool er
   (~3-5%) and error-agnostic; RadixAttention/vLLM-APC error-agnostic designs adequate.
   Non-collision vs PROJ-0007/DEAD-0015/0016/PROJ-0003/EXP-0054 stated. arXiv 2312.07104
   & 2309.06180 verified live. Pre-reg locked+committed before run; honest negative.'
-result_effect: kill
-artifacts_path: experiments/2026-06-01/EXP-0056/
-reproducibility: ''
-linked_verdicts: []
-started_at: ''
-completed_at: '2026-06-01T19:12:47Z'
-prompt_version: v001
+killing_verdict: ''
+killing_experiments:
+- EXP-0056
+duplicate_patterns:
+- CLAIM-0021
+- 0021 claim
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-01T19:12:47Z'
