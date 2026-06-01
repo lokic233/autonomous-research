@@ -1,19 +1,7 @@
-exp_id: EXP-0057
-project_id: PROJ-0011
-claim_id: CLAIM-0022
-session_id: ''
-level: 0
-hardware: Mac CPU stdlib
-resource_budget:
-  max_wall_clock_minutes: 20
-  max_gpu_hours: 0.0
-  max_memory_gb: 0
-  host_mem_floor_gb: 0
-needs_gpu: false
-dispatched_by: ''
-node_lease: ''
-status: completed
-result_summary: 'CLEAN NEGATIVE-KILL (RE-A1). CC primary (69 sess/3213 reuse units):
+dead_id: DEAD-0019
+original_claim_id: CLAIM-0022
+original_claim: CLAIM-0022
+reason_killed: 'CLEAN NEGATIVE-KILL (RE-A1). CC primary (69 sess/3213 reuse units):
   reuse-distance IS bimodal (RE-A0 PASS: 18.9% far>8192tok, p99 86k) but far-reuse
   NOT predictable by a cheap causal working-set feature beyond LRU+LFU+tool+file-class
   (dAUC=+0.017, 95%LB=-0.003, <0.03 floor, folds not all+). Signal is recency-in-disguise
@@ -25,10 +13,12 @@ result_summary: 'CLEAN NEGATIVE-KILL (RE-A1). CC primary (69 sess/3213 reuse uni
   + <=13% oracle gap) stands & publishable; cheap-causal-predictability falsified
   -> existing reuse-aware policies (RadixAttention/vLLM-APC LRU+LFU + Marconi forecast)
   SUFFICIENT; do NOT build a new cheap causal reuse-aware eviction feature.'
-result_effect: kill
-artifacts_path: experiments/2026-06-01/EXP-0057/
-reproducibility: ''
-linked_verdicts: []
-started_at: ''
-completed_at: '2026-06-01T20:55:04Z'
-prompt_version: v001
+killing_verdict: ''
+killing_experiments:
+- EXP-0057
+duplicate_patterns:
+- CLAIM-0022
+- 0022 claim
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-01T20:55:04Z'

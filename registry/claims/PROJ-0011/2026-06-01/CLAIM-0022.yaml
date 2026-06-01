@@ -1,7 +1,7 @@
 claim_id: CLAIM-0022
 project_id: PROJ-0011
 stage: seed
-status: seed
+status: killed
 claim: CLAIM-0022
 why_it_matters: 'Agent KV reuse-distance bimodality CHARACTERIZATION (cache RETENTION/eviction
   axis, distinct from DEAD-0018 within-tool prefill-whale PREDICTION). Committee-checked
@@ -13,16 +13,28 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0057
+  summary: 'CLEAN NEGATIVE-KILL (RE-A1). CC primary (69 sess/3213 reuse units): reuse-distance
+    IS bimodal (RE-A0 PASS: 18.9% far>8192tok, p99 86k) but far-reuse NOT predictable
+    by a cheap causal working-set feature beyond LRU+LFU+tool+file-class (dAUC=+0.017,
+    95%LB=-0.003, <0.03 floor, folds not all+). Signal is recency-in-disguise (RE-A2a
+    0/10 matched-recency deciles separate) and does NOT beat a Marconi-style reuse
+    forecast (RE-A2b dAUC_fc=+0.015, LB=-0.021). RE-A3: B1-predictor eviction underperforms
+    LRU at ALL 7 capacities; only Belady oracle saves <=13%. HHI=0.42 (>0.2) flags
+    dominance by 2-3 sessions. RE-A4 sign agrees (cc+0.017/codex+0.038) but moot (CC
+    A1 fails; Codex not bimodal, 73 far-pos). Characterization (bimodality + <=13%
+    oracle gap) stands & publishable; cheap-causal-predictability falsified -> existing
+    reuse-aware policies (RadixAttention/vLLM-APC LRU+LFU + Marconi forecast) SUFFICIENT;
+    do NOT build a new cheap causal reuse-aware eviction feature.'
+  data_path: experiments/2026-06-01/EXP-0057/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0057 result, then ros exp complete --exp EXP-0057 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0057
+active_experiments: []
 created_at: '2026-06-01T20:33:44Z'
-last_updated: '2026-06-01T20:39:32Z'
+last_updated: '2026-06-01T20:55:04Z'
