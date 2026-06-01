@@ -28,3 +28,19 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
   within-session permutation; ALL-5-folds-positive + HHI flag; honest pass-or-kill, clean negative first-class,
   NEVER fabricate. PROC verified ALIVE (pgrep, all flags present). Floor held at 1 (L1+ = orchestrator-dispatched).
   NO queue submit yet (no committee-ready evidence). Heartbeat #1, ros commit.
+- 2026-06-01 ~19:1xZ — CYCLE (heartbeat #2). researcher-0020-L0-r7 ALIVE + COMPUTING (NOT a stall):
+    * pgrep/ps verified (BUG-26/29 check): python child PID 18459 @ 98.8% CPU running
+      experiments/2026-06-01/EXP-0055/impl/whale_prefill_predict.py | tee logs/run_main.log. claude -p parent
+      (6575) @0% CPU = normal (blocked waiting on child). ros liveness: researcher running, last=3.7m -> alive.
+    * PRE-REGISTRATION DISCIPLINE VERIFIED: impl/PRE_REGISTRATION.md (117 lines) LOCKED-TS 2026-06-01T19:11:52Z,
+      committed (289476a) BEFORE the main run (run started 12:15PM PDT=19:15Z). arXiv IDs live-verified per commit.
+      Gates frozen: RE-A0 mass floor / RE-A1 LOAD-BEARING dAUC over arg-template B0 (LB95>0 AND point>=0.03) /
+      RE-A2 no-leakage / RE-A3 Codex sign-agreement / RE-A4 heavy-tail mass / RE-A5 within-session permutation.
+    * harness whale_prefill_predict.py written; main run EXECUTING (run_main.log empty = tee/claude-p buffering
+      to run-end, normal mid-run). No results/summary.json yet — expected.
+    * SIBLING NOTE: PROJ-0010 EXP-0056 already landed a CLEAN KILL (CLAIM-0021 DEAD-negative, commit 32e3d7c) —
+      not mine to act on; sub-monitor-0010-r7 owns the forward.
+  DECISION: NO action — researcher on-task, gates correctly frozen pre-run, proc healthy @98.8% CPU. NEVER respawn
+    a live computing proc (double-spawn corrupts EXP-0055). NO queue submit (RE-A1/A3/A4/A5 not yet resolved; no
+    committee-ready evidence). Floor held at 1 (EXP-0055 only open CPU lane; L1+ = orchestrator-dispatched).
+    Heartbeat #2, ros commit.
