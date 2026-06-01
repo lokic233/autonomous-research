@@ -1,24 +1,23 @@
 dead_id: DEAD-0016
 original_claim_id: CLAIM-0018
 original_claim: CLAIM-0018
-reason_killed: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of within-session
-  byte-identical tool re-invocations are exact-prefix-unrecoverable interior repeats
-  (CC median gap 3593 tok) -> mechanism real. BUT RE-A3 (co-primary) decisive: byte-identical
-  ARGS yield byte-identical RESULTS only 15.4% CC / 0% Codex; class INVERTED (MUTATING
-  0.78 > DETERMINISTIC 0.11). RE-A4 KILL: recoverable tax f=0.19% CC / 0% Codex, CI(0,0.30%)
-  includes 0, <<2% floor. RE-A1 DEMOTE: determinism-class dAUC=+0.0003 LB<0 over {gap+freq+tool-identity}
-  joint baseline -> class=repackaged tool identity. RE-A5 no positive replication;
-  RE-A6 175/36 surviving (non-tautological); RE-A7 conditioned+inverted. The 9.8%
-  live signal conflated arg-repeat with output-repeat (exactly committee RE-A3 concern).
-  Useful negative: production exact-prefix KV caching is SUFFICIENT for agent self-repetition.'
-killing_verdict: ''
+reason_killed: 'CLAIM-0018 KILLED (clean triple-negative). RE-A2 PASS: 100% of within-session byte-identical
+  tool re-invocations are exact-prefix-unrecoverable interior repeats (CC median gap 3593 tok) -> mechanism
+  real. BUT RE-A3 (co-primary) decisive: byte-identical ARGS yield byte-identical RESULTS only 15.4% CC
+  / 0% Codex; class INVERTED (MUTATING 0.78 > DETERMINISTIC 0.11). RE-A4 KILL: recoverable tax f=0.19%
+  CC / 0% Codex, CI(0,0.30%) includes 0, <<2% floor. RE-A1 DEMOTE: determinism-class dAUC=+0.0003 LB<0
+  over {gap+freq+tool-identity} joint baseline -> class=repackaged tool identity. RE-A5 no positive replication;
+  RE-A6 175/36 surviving (non-tautological); RE-A7 conditioned+inverted. The 9.8% live signal conflated
+  arg-repeat with output-repeat (exactly committee RE-A3 concern). Useful negative: production exact-prefix
+  KV caching is SUFFICIENT for agent self-repetition.'
+killing_verdict: VERDICT-0064 (6/6 unanimous kill; theory_skeptic green=label-error, rationale pro-kill)
 killing_experiments:
 - EXP-0054
 duplicate_patterns:
 - CLAIM-0018
 - 0018 claim
-revival_conditions: Revive only if a corpus shows result_equiv_rate>=50% on long-gap
-  interior repeats (would require deterministic-output tool-heavy workloads, absent
-  in CC+Codex) AND f>=2% recoverable-tax tokens.
+revival_conditions: Revive only if a corpus shows result_equiv_rate>=50% on long-gap interior repeats
+  (would require deterministic-output tool-heavy workloads, absent in CC+Codex) AND f>=2% recoverable-tax
+  tokens.
 related_prior_work: []
 date_killed: '2026-06-01T17:47:39Z'

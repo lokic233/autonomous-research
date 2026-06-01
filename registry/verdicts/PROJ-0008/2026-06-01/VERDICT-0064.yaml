@@ -1,0 +1,62 @@
+verdict_id: VERDICT-0064
+claim_id: CLAIM-0018
+project_id: PROJ-0008
+date: '2026-06-01'
+experiment_ids:
+- EXP-0054
+experiment_paths:
+- experiments/2026-06-01/EXP-0054
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'Clean TRIPLE-NEGATIVE, pre-registered 17:40:50Z with committee''s exact fixes.
+  RE-A4 KILL: recoverable tax f=0.19% CC / 0% Codex, 95% CI(0,0.30%) INCLUDES 0 <<
+  2% floor. RE-A3 (co-primary) DECISIVE: byte-identical ARGS -> byte-identical RESULTS
+  only 15.4% CC / 0% Codex, class INVERTED (MUTATING 0.78 > DETERMINISTIC 0.11) ->
+  the mechanism premise (same-args=>reusable-result) is empirically FALSE in the modal
+  agent workload (agents poll volatile state more than recompute pure functions)'
+- 'the 9.8% design-session ''live signal'' conflated arg-repeat with output-repeat
+  (exactly the committee''s pre-flagged RE-A3 concern). RE-A1 DEMOTE: determinism-class
+  dAUC=+0.00025, 95% LB<0 over the {token-gap+tool-frequency+tool-identity} joint
+  -> repackaged Zipfian tool-identity (DEAD-0012/0014 failure mode). RE-A2 PASS (100%
+  prefix-unrecoverable, median gap 3593 tok) but NECESSARY-NOT-SUFFICIENT (structural
+  unrecoverability moot when nothing is semantically safe to recover). Kill symmetric
+  across both corpora'
+- CI honest
+required_evidence:
+- 'REVIVAL ONLY: a corpus with result_equiv_rate>=50% on long-gap interior repeats
+  (deterministic-output tool-heavy workloads, ABSENT in CC+Codex) AND f>=2% recoverable-tax
+  tokens. The L0 result does NOT motivate L1 GPU (kill is at the result-equivalence
+  layer, not FLOP-precision)'
+map_delta_proposals:
+- 'CLAIM-0018 -> cemetery DEAD-0016 (publishable honest negative: production exact-prefix
+  KV caching is SUFFICIENT for agent self-repetition'
+- 'the redundant tool-call prefill tax is ILLUSORY at the result-equivalence layer
+  - same-args re-calls mostly return DIFFERENT results, recoverable tax <0.2%, determinism-class
+  adds nothing over tool identity). NOTE: theory_skeptic cast VOTE:green but its rationale
+  is unambiguously PRO-KILL (''Ratify KILL -> DEAD-0016. Honest first-class negative'')
+  = LABEL ERROR'
+- 'substantive committee = UNANIMOUS kill (area_chair weighted rationale). Accidental
+  duplicate CLAIM-0019 (same thesis) retired as DEAD-0016 dup. SALVAGE (not a claim):
+  production prefix-caching sufficiency is itself the useful result'
+baseline_requirements:
+- '{token-gap + tool-frequency + tool-identity} joint (RE-A1 confound baseline)'
+- result-equivalence measured on payloads (RE-A3 co-primary)
+- structural retry-detection (RE-A6)
+- APC/RadixAttention block-hash (RE-A2)
+created_at: '2026-06-01T18:03:46Z'
