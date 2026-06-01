@@ -1,0 +1,50 @@
+verdict_id: VERDICT-0059
+claim_id: CLAIM-0016
+project_id: PROJ-0006
+date: '2026-06-01'
+experiment_ids:
+- EXP-0052
+experiment_paths:
+- experiments/2026-06-01/EXP-0052
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- 'PRE-REGISTER all RE-A1..A7 before EXP-0052 L0 (RE-A1 LOAD-BEARING: phase-aligned
+  composition goodput over STATIC-TASK-TYPE grouping baseline 95%LB>0 = killer'
+- RE-A2 sham-cluster control
+- RE-A3 min tax floor >=5%
+- RE-A4 within-session within-position-bucket permutation null
+- RE-A5 multiplicity correction
+- RE-A6 scheduler overhead net>0
+- 'RE-A7 cite DEAD-0011/0012). Restructure CLAIM-0016 so contribution rests on COMPOSITION+RECOVERY
+  (legs a+c), phase predictor=grouping mechanism NOT standalone dAUC. PROMOTION (later)
+  owes: body-verify TETRIS arXiv-id + Semi-Clairvoyant 2505.17074/BASS-class non-collision
+  + real batch-SD telemetry L1.'
+map_delta_proposals:
+- CREATE PROJ-0006 (decode-time batch-SD verification goodput
+- cross-sequence composition, distinct from PROJ-0004 single-sequence)
+- PREDECESSOR_KILLS DEAD-0011/0012 (same discriminator same proxy - leg b restructured
+  to not re-run dead dAUC)
+baseline_requirements:
+- STATIC-TASK-TYPE GROUPING SCHEDULER (killer)
+- SHAM-CLUSTER (running-mean-acceptance only)
+- TETRIS in-batch selection
+- ECHO 2604.09603 per-request gate
+- Batch-SD-Done-Right 2510.22876 correctness
+created_at: '2026-06-01T15:54:12Z'

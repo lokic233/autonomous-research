@@ -1,0 +1,52 @@
+verdict_id: VERDICT-0060
+claim_id: CLAIM-0017
+project_id: PROJ-0007
+date: '2026-06-01'
+experiment_ids:
+- EXP-0053
+experiment_paths:
+- experiments/2026-06-01/EXP-0053
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections: []
+required_evidence:
+- 'PRE-REGISTER all RE-B1..B8 before EXP-0053 L0 (RE-B1 KILLER: shortfall must SURVIVE
+  a caching-best-practice canonicalizer - strip volatile fields/move to suffix - else
+  clean kill = prompt-eng anti-pattern'
+- RE-B2 min effect size >=1 block(16tok) of drift-attributable shortfall NOT quantization
+- RE-B3 drift-class predictor AUC>=0.70 + sham predictor
+- RE-B4 fold-into-PROJ-0005 numeric trigger if BPE-seam-driven
+- RE-B5 tokenizer-seam stratification
+- RE-B6 template-family stratification >=2 distinct families
+- RE-B7 cite Anthropic/OpenAI volatile-field guidance as quantified prior art
+- 'RE-B8 SGLang LPM/DFS/routing-key + TensorRT block/concurrency + cache_salt baselines).
+  PROMOTION (later) owes: body-verify Tail-Optimized 2510.15152 + Continuum 2511.02230
+  non-overlap + real APC hit-counter L1.'
+map_delta_proposals:
+- CREATE PROJ-0007 (prefill-time cross-session prefix reuse
+- INVERSE of DEAD-0006
+- pre-registered FOLD into PROJ-0005 if BPE-seam-driven)
+- links Prompt Cache 2311.04934 (engineered reuse vs B realized ceiling)
+baseline_requirements:
+- CACHING-BEST-PRACTICE CANONICALIZER (killer)
+- drift-free template control
+- SHAM predictor (first non-template byte offset)
+- SGLang LPM/DFS/routing-key
+- TensorRT full-block/concurrency/cache_salt
+- Prompt Cache 2311.04934
+created_at: '2026-06-01T15:54:55Z'

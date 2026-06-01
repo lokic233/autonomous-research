@@ -1,0 +1,33 @@
+claim_id: CLAIM-0016
+project_id: PROJ-0006
+stage: seed
+status: seed
+claim: CLAIM-0016
+why_it_matters: 'Agent-Event-Phase Desynchronization Tax in Batch SD: ragged-min-bound
+  batch verification goodput tax driven by agent-event phase; phase-aligned batch-COMPOSITION
+  recovers goodput at zero accuracy change (SD exact). DISTINCT from DEAD-0010 idle-window
+  speculative prefill (that = single speculate-or-skip break-even identity h*f>=alpha/(1+alpha);
+  this = cross-sequence batch-composition over a min-bound ragged tensor, no break-even
+  identity). Contribution = composition+recovery legs, phase predictor is grouping
+  mechanism only (NOT standalone dAUC; cites DEAD-0011/0012). Design committee proj0607_design
+  5/5 yellow reseed-with-fixes, non-collision body-checked vs ECHO 2604.09603 / TETRIS
+  / Batch-SD-Done-Right 2510.22876.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history:
+- verdict_id: VERDICT-0059
+  date: '2026-06-01'
+  result: yellow
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0059=yellow: address required_evidence to advance'
+blocking_on: ''
+active_experiments:
+- EXP-0052
+created_at: '2026-06-01T15:49:53Z'
+last_updated: '2026-06-01T15:54:12Z'
