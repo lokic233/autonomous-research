@@ -1,2 +1,3 @@
 # SUBMONITOR BUGLOG — sub-monitor-0015-r8 (PROJ-0015 / CLAIM-0026 / EXP-0061)
 - 2026-06-01T23:36:01Z BOOT cycle1: registered (session 5cfa0bb9-0ab2-483e-95b4-637700ab3e6f), heartbeat #1. EXP-0061 status=pending, NO researcher-0026 proc alive -> spawned researcher-0026-L0-r8 (PID 3542, claude -p opus-4-8, nohup, log runtime/researcher-0026-L0-r8_launch.log). Floor=1 satisfied. No queue submissions in-flight.
+- 2026-06-01T23:41:29Z cycle2: heartbeat #3. PROC CHECK: researcher-0026-L0-r8 PID 3542 ALIVE (etime 5m37s), computing. NOT yet in liveness, no impl/ yet — normal claude -p cold-start bootstrap (reading prompts/setting up). EXP-0061 status=pending. NO double-spawn (proc alive). Floor=1 OK. No queue submissions in-flight.
