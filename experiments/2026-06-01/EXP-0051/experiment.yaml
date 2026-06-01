@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'RE-01 BPE null PARTIAL-KILL: observed seam churn 0.0116 < random-offset
+  null 0.0517 (delta -0.040, CI[-0.0414,-0.0386], negative in all 6 cells) -> tool
+  seams churn LESS than generic BPE. RE-02 3x2 grid (incl Llama-3-128k): effect is
+  corpus-bound (Codex collapses, cc only) not tokenizer-general. RE-05 MC-corrected
+  (Holm+BH): gate-a 6/6, gate-c 6/6, gate-b 3/6 (claude_code only). RE-06 block{8,16,32}:
+  monotone 0.0110->0.0116->0.0129, ~99% blocks survive. Chat-template 95.8% mitigation.
+  Citations (Gim PromptCache 2311.04934, Sennrich BPE P16-1162, DontBreakCache 2601.06007)
+  corroborated. Reframe proposed: regime-(a)-only, cc-corpus, characterization below
+  BPE baseline. Retain yellow, do NOT promote.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-01/EXP-0051/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T13:17:02Z'
 prompt_version: ''

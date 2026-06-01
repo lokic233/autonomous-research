@@ -91,3 +91,50 @@ genuinely unstudied as of 2026-06-01.
 
 ---
 *Prior art search: researcher-0014-L0-r4, 2026-06-01, prompt_version v001*
+
+---
+
+## ADDENDUM (researcher-0014-L1prep-r5, 2026-06-01, EXP-0051) — CITATIONS MANDATED BY VERDICT-0055
+
+### 6. Gim et al. — "Prompt Cache: Modular Attention Reuse for Low-Latency Inference" (MISSING in EXP-0049; NOW CITED)
+- **Source:** arXiv:2311.04934 ; MLSys 2024.
+- **Corroborating sources (>=2):**
+  - https://arxiv.org/pdf/2311.04934 (arXiv full text)
+  - https://proceedings.mlsys.org/paper_files/paper/2024/hash/a66caa1703fe34705a4368c3014c1966-Abstract-Conference.html (MLSys 2024 proceedings)
+- **Verified:** YES (external web search 2026-06-01, both URLs returned for the exact title).
+- **Key idea:** Prompt Cache precomputes and REUSES attention states of frequently-recurring text SEGMENTS across
+  prompts via a "Prompt Markup Language" (PML) schema that declares reusable modules; reuse is by EXPLICIT,
+  STRUCTURED module identity, enabling position-independent attention reuse for non-prefix segments.
+- **CRITICAL DISTINCTION from CLAIM-0014:**
+  - Prompt Cache = MODULAR / SCHEMA-DRIVEN reuse (author declares reusable segments; reuse is by structured module id,
+    not raw token-prefix identity). It SOLVES the "reuse non-contiguous structured content" problem ABOVE the
+    tokenizer.
+  - CLAIM-0014 = WHITE-BOX BPE-seam churn that silently breaks EXACT-PREFIX block-hash reuse (vLLM APC /
+    RadixAttention), which operate on raw token-ID prefixes with NO schema. Prompt Cache's mechanism is orthogonal:
+    it would AVOID the issue by construction (modules carry their own precomputed states), but it does not
+    characterize or measure the token-ID-prefix churn that defeats schema-LESS exact-prefix caches.
+  - Prompt Cache does not study tokenization-boundary / re-tokenization effects; it assumes module token boundaries
+    are fixed by the schema.
+
+### 7. Sennrich, Haddow, Birch — "Neural Machine Translation of Rare Words with Subword Units" (BPE foundation)
+- **Source:** ACL 2016, P16-1162.
+- **Corroborating sources (>=2):**
+  - https://aclanthology.org/P16-1162/ (ACL Anthology canonical entry)
+  - https://aclanthology.org/events/acl-2016/ (ACL 2016 proceedings index)
+- **Verified:** YES (external web search 2026-06-01).
+- **Key idea:** Introduces byte-pair-encoding (BPE) as a subword segmentation for open-vocabulary NMT: greedy,
+  frequency-ranked merge operations applied left-to-right build a deterministic merge table.
+- **Relevance to CLAIM-0014 / RE-01:** This is the BPE foundation underlying the EXP-0051 NULL MODEL. The greedy,
+  non-associative merge process is WHY tokenize(A||B) != tokenize(A)||tokenize(B) at arbitrary boundaries. The RE-01
+  null inserts the tool-result at RANDOM byte offsets to measure the EXPECTED churn from generic BPE non-associativity
+  (Sennrich merge mechanics + delimiter byte distribution), against which the real tool-seam churn is compared.
+  **EXP-0051 finding:** real tool seams churn LESS (0.0116) than this generic-BPE null (0.0517), i.e. the observed
+  effect does NOT exceed the textbook BPE-stability baseline — it is below it.
+
+### PRIOR_ART_ADEQUATE status update
+- All three VERDICT-0055 baseline_requirements citations are now present and corroborated (>=2 sources each):
+  Gim Prompt Cache (added), Don't-Break-the-Cache 2601.06007 (sec 2, retained), Sennrich BPE (added).
+- No 🚩 UNRESOLVED remaining for the mandated citations. (The "no arXiv paper specifically on BPE-boundary KV-cache
+  hit rates" gap from EXP-0049 sec 8 persists — that gap is the contribution space; EXP-0051's RE-01 null narrows it.)
+
+*Citations addendum: researcher-0014-L1prep-r5, 2026-06-01, prompt_version v001, EXP-0051.*

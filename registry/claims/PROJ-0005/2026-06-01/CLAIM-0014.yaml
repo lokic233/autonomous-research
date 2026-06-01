@@ -43,6 +43,17 @@ negative_evidence:
     production relevance, novelty=characterization-only (Lundberg/Sennrich folklore),
     prior-art inadequate (Prompt Cache 2311.04934 missing). RE-01..RE-06 = L1 gates.'
   data_path: experiments/2026-06-01/EXP-0049/
+- exp_id: EXP-0051
+  summary: 'RE-01 BPE null PARTIAL-KILL: observed seam churn 0.0116 < random-offset
+    null 0.0517 (delta -0.040, CI[-0.0414,-0.0386], negative in all 6 cells) -> tool
+    seams churn LESS than generic BPE. RE-02 3x2 grid (incl Llama-3-128k): effect
+    is corpus-bound (Codex collapses, cc only) not tokenizer-general. RE-05 MC-corrected
+    (Holm+BH): gate-a 6/6, gate-c 6/6, gate-b 3/6 (claude_code only). RE-06 block{8,16,32}:
+    monotone 0.0110->0.0116->0.0129, ~99% blocks survive. Chat-template 95.8% mitigation.
+    Citations (Gim PromptCache 2311.04934, Sennrich BPE P16-1162, DontBreakCache 2601.06007)
+    corroborated. Reframe proposed: regime-(a)-only, cc-corpus, characterization below
+    BPE baseline. Retain yellow, do NOT promote.'
+  data_path: experiments/2026-06-01/EXP-0051/
 verdict_history:
 - verdict_id: VERDICT-0052
   date: '2026-06-01'
@@ -53,12 +64,10 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0051 result, then ros exp complete --exp EXP-0051 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0051; convene committee if candidate-grade
 blocking_on: ''
 active_experiments:
 - EXP-0048
-- EXP-0051
 created_at: '2026-06-01T11:46:15Z'
-last_updated: '2026-06-01T12:59:48Z'
+last_updated: '2026-06-01T13:17:02Z'
