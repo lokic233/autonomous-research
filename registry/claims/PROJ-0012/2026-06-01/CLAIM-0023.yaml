@@ -1,0 +1,34 @@
+claim_id: CLAIM-0023
+project_id: PROJ-0012
+stage: seed
+status: seed
+claim: CLAIM-0023
+why_it_matters: 'Multi-tool batch admission mis-estimation CHARACTERIZATION: parallel-call
+  batch token-total NOT predicted by batch SIZE (live CC: 50% bursts multi-call, batch-total
+  flat across sizes 2-7 medians 278/177/162/170/203, within-size CV 3.3-3.9, top-10%
+  batches=75.7% mass). LOAD-BEARING: static pre-execution joint-arg feature predicts
+  a whale BATCH over B0={log1p(batch-size),log1p(mean-gap),log1p(mean-freq),tool-mix,MATCHED-MAX-PER-CALL}
+  w/ matched-count stratification (RE-B2b). proj0011_design B=yellow (1G 3Y 1R). BINDING
+  design-phase gate (strawman resolution) + DEAD-0018-reskin EARLY-KILL: if batch-whale=max(independent
+  per-call whales) the batch axis collapses to PROJ-0009 -> kill. COMMITTEE-CHECKED
+  DISTINCT from DEAD-0018 (per-call within-tool whale, no count confound; B is batch-level
+  w/ batch-SIZE confound + matched-max-per-call baseline + early-kill if collapses
+  to per-call) + LLMCompiler/Parrot dependency-graph (no parallelization claim). Sarathi-Serve
+  2403.02310 chunks AFTER tokens exist.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: v001
+lifecycle_state: experiment_running
+next_action: await EXP-0058 result, then ros exp complete --exp EXP-0058 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0058
+created_at: '2026-06-01T20:39:19Z'
+last_updated: '2026-06-01T20:39:32Z'
