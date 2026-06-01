@@ -619,3 +619,14 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
 - ALSO: node has NO numpy/scipy (only stdlib python at /usr/local/bin/python3 + /usr/bin/python3); the EXP-0041/0042/0043 machinery is stdlib-only by design — tell stats researchers to reuse it, not import numpy.
 - ALSO: researchers must use the FULL engine path /Users/dengcchi/research-os/engine/ros.py (a relative `engine/ros.py` fails — the engine repo is NOT under the instance dir).
 - STANDING FIX baked into all subsequent r3 researcher prompts: heredoc-direct file writes + stdlib-only + full ros.py path.
+
+### ARCHITECTURE UPDATE (dengcchi, commit 220d535, 2026-06-01) — SUB-MONITOR delegation + committee QUEUE. ADOPT ON NEXT REBOOT (additive; current run unaffected).
+- NEW per-project SUB-MONITOR role: prompts/orchestrator/subagent/sub-monitor.md. On (re)boot, spawn ONE sub-monitor per active project. The sub-monitor OWNS that project's researcher pool: keeps it at floor (research.researchers_per_project), and does ALL researcher-health debugging (investigate-on-death -> diagnose -> respawn-with-fix). ORCHESTRATOR DELEGATES researcher floor/health/debug to sub-monitors and STOPS spawning/poking researchers directly (direct-researcher-spawn path is now DEPRECATED).
+- NEW committee-submission QUEUE (replaces ros inbox as the candidate-work channel):
+  * `ros queue list` -> pull pending committee-ready submissions a sub-monitor pushed via `ros queue submit`.
+  * convene the hostile committee on each (run_committee.sh -> verify ALL_COMMITTEE_DONE + every .err clean of EMPTY_OUTPUT_NO_VOTE), write the parity verdict (real 6/6 for green; unanimous rule; never --override-rule without explicit human OK), then `ros queue ack --id <Q-id> --by orchestrator-<id> --answer <verdict>`.
+  * `ros inbox` is now ONLY for sub-monitor HARD-BLOCKER escalations.
+- ops_metrics tracks claim_submissions/pending/acked per project; operational/README.md surfaces submission->verdict throughput.
+- GLOBAL retire-and-respawn rule codified: at 35% / ~350k tokens, long-running/standby agents (orchestrator, monitor, sub-monitors) must retire with a graceful handoff (the r2 orchestrator DIED at ~51% with 400s — do not exceed; hand off earlier).
+- ORCHESTRATOR remains SOLE authority for claims/verdicts/committee/GPU. All safety preserved (real 6/6 green, COMMITTEE_INCOMPLETE never counts, devgpu499 host_mem_floor, never force-demote, CLAIM-0006 parked on vLLM>=0.7).
+- ADOPTION PLAN (next reboot): (1) read prompts/orchestrator/subagent/sub-monitor.md; (2) spawn 3 sub-monitors (PROJ-0001/0002/0003), each owning its researcher floor+health; (3) switch my loop from direct-researcher-management to: ros queue list -> committee -> verdict -> queue ack, + handle sub-monitor hard-blockers from ros inbox; (4) honor the 35% retire-and-handoff.
