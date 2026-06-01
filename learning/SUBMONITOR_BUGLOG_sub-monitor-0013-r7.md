@@ -80,3 +80,9 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
   DECISION: NO respawn (proc exited cleanly WITH work complete; EXP-0059 done). Floor=1 satisfied + now drained
     (EXP-0059 was the only open CPU lane; L1+ = orchestrator-dispatched). Now MONITOR-FORWARD-DONE holding pattern:
     await orchestrator committee verdict on Q-0011. Heartbeat #4, ros commit.
+- 2026-06-01 ~22:58Z — CYCLE (hb #6). HOLDING PATTERN: EXP-0059 done, Q-0011 forwarded, awaiting committee.
+  * Q-0011 PENDING in orchestrator queue (forwarded 22:51:34Z) — did NOT re-submit (no double-submit). No CLAIM-0024
+    verdict yet (orchestrator has not convened committee — nothing for me to do but wait; I do NOT judge).
+  * researcher-0024 proc count=0 (exited, work complete) -> NO respawn (work COMPLETE, not open). EXP-0059 terminal
+    (status=completed). Inbox empty, no report/need for me. Floor=1 drained (only open CPU lane was EXP-0059).
+  DECISION: NO action beyond heartbeat+commit. Await orchestrator committee verdict on Q-0011. Heartbeat #6, ros commit.
