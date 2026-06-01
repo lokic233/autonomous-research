@@ -30,3 +30,17 @@ Token indices sequence length is longer than the specified maximum sequence leng
 ======================================================================
 RE-01: BPE NULL MODEL (observed seam churn - random-offset null)
 ======================================================================
+  observed mean (block16) = 0.011597
+  null     mean (block16) = 0.051661
+  delta (obs-null) mean   = -0.040065  95% CI [-0.041444, -0.038626]
+  RE-01 PARTIAL/KILL (indistinguishable from generic BPE)
+    gpt2          x claude_code n= 4010 delta=-0.039247 CI[-0.042339,-0.036240] no
+    gpt2          x codex       n= 2399 delta=-0.043974 CI[-0.048030,-0.039876] no
+    qwen2-0.5b    x claude_code n= 4010 delta=-0.024774 CI[-0.027825,-0.021794] no
+    qwen2-0.5b    x codex       n= 2399 delta=-0.060028 CI[-0.063953,-0.056185] no
+    llama-3-128k  x claude_code n= 4010 delta=-0.030067 CI[-0.033122,-0.027000] no
+    llama-3-128k  x codex       n= 2399 delta=-0.059829 CI[-0.063814,-0.055896] no
+
+======================================================================
+RE-05: PER-CELL GATES (block=16) + MULTIPLE-COMPARISON CORRECTION
+======================================================================
