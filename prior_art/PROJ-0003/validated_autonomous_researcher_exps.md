@@ -178,3 +178,40 @@ dengcchi's A/B decision.
 
 - **`crossharness_scripts/`** — executable cross-harness analysis code, retained. (`codex_redirgate.py`,
   `codex_xharness.py` — the apples-to-apples Codex cross-harness Cramér's-V / redirect-gate analyses.)
+
+## 8. CLAIM-0012 — OOS predictive altitude-lift (EXP-0047) — HONEST MIXED/PARTIAL
+
+**Goal (path B, no override):** answer product_realist's lone-YELLOW altitude objection
+(CLAIM-0012 is "descriptive-only") by testing whether the fitted Hawkes self-excitation
+kernel has genuine **out-of-sample predictive teeth** — earned on-node, CPU/stdlib only, no
+2nd harness (off-node lever map-confirmed BLOCKED).
+
+**Method:** forward time-split, one-step-ahead **prequential** OOS on Codex (49 mixed
+sessions / 1716 calls / 111 fails). Params fit on TRAIN prefixes only (no leakage); test
+intensities use observed history (filtering). Hawkes vs Poisson / Cox(per-tool rate, no
+memory) / model-free recent-rate window. Session-bootstrap 95% CI + timing-permutation null.
+Pre-registered pass-bar with explicit honest-null clause. Reuses `EXP-0041/burst_L3.parse_codex`
++ `EXP-0042/robust_L4.{cox_baseline_rates,fit_hawkes,...}`.
+
+**Result — strict bar FAILS (0/3 splits); signal is real but heuristic-sized:**
+- **Early-warning lift 7.8×–10.9×** (3/3 splits): a just-occurred failure raises forecastable
+  next-call failure prob to ~0.19–0.37 vs ~0.024–0.038 base. Real, actionable recovery trigger.
+- **Timing-permutation p=0.0005** (f=0.5,0.6): the Hawkes-over-Cox gain is genuine
+  timing/clustering, not marginal rate. (Loses power at f=0.7: only 13 test fails.)
+- **Memory > memorylessness OOS:** AUC_hawkes > AUC_cox > AUC_poisson in 3/3 splits; Hawkes
+  beats Cox on dLL in 3/3 (boot95 lo>0 at f=0.5).
+- **But** the **parametric Hawkes kernel does NOT robustly beat a trivial recent-failure-rate
+  window** — at f=0.5 the recent-rate heuristic *beats* Hawkes (AUC 0.65 vs 0.60). No single
+  split satisfies dLL(haw−cox)>0 & dLL(haw−recent)>0 & timing-p<0.05 & AUC_haw>AUC_cox together.
+
+**Altitude implication (honest, for the committee — NOT a verdict):** the descriptive claim
+**can** be lifted to an **operational early-warning** framing (self-excitation is predictive
+OOS, ~8–11× early-warning lift, memory beats memoryless), but it **cannot** be lifted to
+"parametric Hawkes has operational predictive superiority" — a one-line recent-rate window is a
+sufficient/superior operationalization. CLAIM-0012's parametric content stays best supported as
+**descriptive/in-sample** (BIC/LOSO per VERDICT-0049); the *operational* generalization is the
+simpler heuristic, not the kernel. Legitimate honest mixed/partial terminal result; no
+fabrication, no override sought. Engine effect=keep-exploring (claim weakened, not killed).
+
+**Artifacts:** `experiments/2026-06-01/EXP-0047/{impl/predictive_oos.py, results/predictive_oos.{json,csv}, analysis.md}`;
+write-up `projects/PROJ-0003/artifacts/CLAIM-0012_oos_predictive_altitude_lift_EXP-0047.md`.

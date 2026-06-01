@@ -12,12 +12,17 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'OOS predictive altitude-lift (forward time-split, prequential, Codex
+  49 sess/1716 calls): self-excitation IS predictively real OOS (early-warning 7.8-10.9x;
+  timing-perm p=5e-4; memory-aware AUC>memoryless 3/3) BUT parametric Hawkes does
+  NOT robustly beat a trivial recent-rate window; strict pre-registered bar met 0/3
+  splits -> operational early-warning altitude earned via heuristic, NOT via the kernel.
+  Honest mixed/partial result.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-01/EXP-0047/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-01T11:29:18Z'
 prompt_version: ''

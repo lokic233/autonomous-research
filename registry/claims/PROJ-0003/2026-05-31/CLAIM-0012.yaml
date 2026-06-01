@@ -116,6 +116,14 @@ supporting_evidence:
     Narrowed claim committee-GREEN-ready. Self-caught+fixed a classifier mis-match
     (documented). No GPU/numpy; heredoc-direct writes.'
   data_path: experiments/2026-06-01/EXP-0044/
+- exp_id: EXP-0047
+  summary: 'OOS predictive altitude-lift (forward time-split, prequential, Codex 49
+    sess/1716 calls): self-excitation IS predictively real OOS (early-warning 7.8-10.9x;
+    timing-perm p=5e-4; memory-aware AUC>memoryless 3/3) BUT parametric Hawkes does
+    NOT robustly beat a trivial recent-rate window; strict pre-registered bar met
+    0/3 splits -> operational early-warning altitude earned via heuristic, NOT via
+    the kernel. Honest mixed/partial result.'
+  data_path: experiments/2026-06-01/EXP-0047/
 negative_evidence:
 - exp_id: EXP-0042
   summary: 'L4 ROBUSTNESS (CPU/stdlib, reuses EXP-0041 burst_L3 machinery). Knocks
@@ -153,11 +161,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: v001
-lifecycle_state: experiment_running
-next_action: await EXP-0047 result, then ros exp complete --exp EXP-0047 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0047; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0047
+active_experiments: []
 created_at: '2026-05-31T22:29:58Z'
-last_updated: '2026-06-01T11:27:31Z'
+last_updated: '2026-06-01T11:29:18Z'
