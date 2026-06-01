@@ -61,3 +61,28 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
   DECISION: NO action / NO queue submit. status=pending and proc ALIVE -> researcher likely iterating (the Codex
     batch-unit definition + CC-zero-parallel finding may trigger a refinement pass). NEVER double-spawn a live proc.
     Awaiting status=completed + analysis.md + final DISPOSITION before FORWARDING. Floor held at 1. Heartbeat #3, commit.
+- 2026-06-01 ~21:0xZ — CYCLE (heartbeat #4). researcher-0023-L0-r7 = TERMINAL COMPLETED.
+    * BUG-26/29 proc check: NO live claude -p / no batch_admission python child. experiment.yaml status=completed,
+      completed_at=2026-06-01T21:01:54Z, result_effect=kill. Authoritative terminal markers + analysis.md + summary.json
+      + DISPOSITION present -> genuinely done (not a false-DEAD).
+    * PRE-REG DISCIPLINE VERIFIED: impl/PRE_REGISTRATION.md (13283B) LOCKED-TS 2026-06-01T20:52:44Z, committed BEFORE
+      the main run (run ~13:59 PDT=20:59Z). FIX-1 strawman + FIX-2 early-kill rule + all RE-B0..B5 thresholds frozen.
+    * DISPOSITION = EARLY-KILL-DEAD-0018-RESKIN (FIX-2 FIRED). First-class clean negative, multiply confirmed:
+        - RE-B2 killer FAIL: B1 joint-arg over JOINT B0 {count,gap,freq,tool-mix,pair/triple,matched-max/sum-per-call}
+          dAUC=-0.0045, LB95(2000x sess-boot)=-0.017, folds [+.006,+.007,-.016,-.018,-.013] NOT all positive.
+        - RE-B2b decomposition (THE early-kill gate): matched-max-per-call ALONE AUC=0.795 (~88% of above-chance signal);
+          B1-over-maxnull +0.039 driven ENTIRELY by B0 count/mix NOT joint-arg -> batch whale = max(indep per-call whales)
+          -> collapses onto per-call axis killed in DEAD-0018 -> EARLY-KILL FIRED, immediate termination.
+        - RE-B0 FAIL (reinforcing): top-decile co-issued mass 48.1% < 50% floor.
+        - RE-B1 (reinforcing): size-only whale-AUC 0.626 > 0.60 -> call COUNT is NOT useless -> budget-by-count is fine.
+        - FIX-4/RE-B5: CC emits NO parallel tool calls at all; Codex DOES (60.3% multi-call, 704 batches) -> declared
+          SINGLE-INSTRUMENT (Codex) by design HONESTLY (NOT WAIVED-WITH-FLAG; HARD GATE NOT-SATISFIABLE -> no GREEN ever
+          available regardless). Stat: fold std 0.011; robustness re-run (stricter <1s co-issue, 698 batches) dAUC=-0.0039
+          -> not a small-n artifact.
+    * ACTION: ros queue submit -> Q-0010 (CLAIM-0023/EXP-0058, kind=committee, by sub-monitor-0012-r7,
+      researcher-0023-L0-r7). FORWARD ONLY — sub-monitor does NOT judge; orchestrator convenes committee. Summary states
+      the FIX-2 early-kill FIRED + Codex single-instrument disposition explicitly.
+  DECISION: Q-0010 forwarded. Researcher completed; L0 lane resolved (clean negative / early-kill, no concrete L0 --next).
+    Floor: HOLD below 1 — a KILLED/early-killed L0 claim is NOT open work; refilling now = make-work. L1+ =
+    orchestrator-dispatched only IF committee revives. NEVER respawn the completed proc. NO HUMAN GATE. Heartbeat #4,
+    ros commit. Await committee verdict.
