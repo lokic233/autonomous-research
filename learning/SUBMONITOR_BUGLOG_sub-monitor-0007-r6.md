@@ -124,3 +124,17 @@ MACOS SPAWN (BOTH required + internet for citations): claude -p <prompt> --dange
      mtime > run_main2 (i.e. regenerated to PASS) AND (c) analysis.md present. If researcher dies before
      reconciling, respawn-with-fix: a SHORT finalize-only lane (regenerate summary.json from run_main2 + write
      analysis.md + prior_art + terminal report; do NOT re-run the experiment).
+
+- 2026-06-01 ~16:41Z — CYCLE (heartbeat #9). researcher-0017-L0-r6 'stale' (last report 29.5m) but PROC ALIVE
+  (74750 + child 74857 active, network-bound, 0% cpu between tool calls — normal agentic turn). NO hang.
+  PROGRESS: summary.json REGENERATED @09:38 (11512B, mtime > run_main2 09:32) — NOW reflects the corrected PASS
+  run: overall_per_family codex=PASS (B1/B2/B3 true, no fold, kill_reasons=[]), claude_code=PASS (same).
+  family_sizes codex=109 / CC=38 / gemini=2. The stale-KILL contradiction is RESOLVED — summary.json is now
+  internally consistent with run_main2 (the candidate-grade POSITIVE).
+  FORWARD-GATE STATUS (need all 3): (a) terminal status=completed report — NOT YET (last report 16:11:39Z);
+    (b) summary.json regenerated to PASS — ✅ DONE; (c) analysis.md present + prior_art/PROJ-0007 (RE-B7/B8) — NOT YET
+    (analysis.md absent, prior_art dir empty). => 1/3 met. DO NOT forward yet. NO queue submit this cycle.
+  Researcher is finalizing (regenerated summary -> next analysis.md + prior_art + terminal report). NO intervention.
+  Floor held at 1. Heartbeat #9, commit. WATCH: if proc dies before analysis.md/terminal report, respawn a SHORT
+  finalize-only lane (write analysis.md from summary.json+run_main2, gather RE-B7/B8 prior art, file terminal
+  report; do NOT re-run experiment — results already correct + committed).
