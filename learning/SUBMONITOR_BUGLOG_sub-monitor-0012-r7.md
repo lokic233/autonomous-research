@@ -118,3 +118,7 @@ MACOS SPAWN: claude -p <prompt> --dangerously-skip-permissions --dangerously-dis
       it will design 2 new projects next (PROJ-0011+0012 both killing -> effective 2/4). This sub-monitor's
       mandate is COMPLETE. Will continue light heartbeat/poll for any orchestrator dispatch, but project is done.
       NO HUMAN GATE. Heartbeat #9, ros commit.
+- 2026-06-01 ~21:3xZ — CYCLE (heartbeat #11). STEADY-STATE / MANDATE COMPLETE. CLAIM-0023 status=killed (DEAD-0020,
+    ratified). No live researcher proc. No new PROJ-0012 claim/exp, no orchestrator dispatch addressed to me, no
+    blockers. NO action; floor HOLD below 1 (killed claim = not open work, revival_conditions empty). Heartbeat #11,
+    ros commit. Continue light poll for any dispatch.
