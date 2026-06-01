@@ -39,4 +39,4 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
   CC+Codex separate; honest pass-or-kill, clean negative first-class; do NOT self-submit to committee. PROC verified ALIVE
   via pgrep (researcher-0024 matched) + ps (PID 84730, all flags present incl both --dangerously-* + both --add-dir +
   --model claude-opus-4-8). NOTE: sibling researcher-0025-L0-r7 (PROJ-0014, PID 79950) also running — NOT mine.
-  Floor held at 1. NO queue submit yet (no committee-ready evidence). Heartbeat #1, ros commit.
+  Floor held at 1. NO queue submit yet (no committee-ready evidence). Created 5-min loop job 3b361378 (targets this session). Heartbeat #1, ros commit (boot sealed).
