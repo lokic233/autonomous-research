@@ -356,17 +356,28 @@ def hhi_whale_mass(recs):
     if tot<=0: return None
     return sum((m/tot)**2 for m in mass.values())
 
-def permute_struct_within_session(recs):
-    """Return struct_override: copy of _struct with PERMUTE_STRUCT_IDX columns shuffled WITHIN each session."""
+def permute_struct_within_session(recs, cols):
+    """Return struct_override: copy of _struct with `cols` shuffled WITHIN each session."""
     override=[list(r["_struct"]) for r in recs]
     by_sess=defaultdict(list)
     for i,r in enumerate(recs): by_sess[r["sess"]].append(i)
     for sn, idxs in by_sess.items():
-        for col in PERMUTE_STRUCT_IDX:
+        for col in cols:
             vals=[recs[i]["_struct"][col] for i in idxs]
             perm=vals[:]; random.shuffle(perm)
             for k,i in enumerate(idxs): override[i][col]=perm[k]
     return override
+
+# semantic tool-class map for RE-A3 cross-instrument (names differ across instruments)
+SEMANTIC_CLASS={
+    "Bash":"SHELL","exec_command":"SHELL","write_stdin":"SHELL","shell":"SHELL",
+    "Read":"READ","read_file":"READ","cat":"READ","knowledge_load":"FETCH",
+    "Grep":"SEARCH","grep":"SEARCH","Glob":"SEARCH",
+    "WebFetch":"WEB","WebSearch":"WEB","three_pai_external_web_search":"WEB",
+    "Write":"WRITE","Edit":"WRITE","apply_patch":"WRITE","Task":"TASK",
+}
+def semantic_class(tool):
+    return SEMANTIC_CLASS.get(tool, "OTHER:"+tool)
 
 def analyze_tool(tool, recs, pooled=False, tool_vocab=None):
     """recs already filtered to this tool (or pooled set). Returns gate dict."""
@@ -405,11 +416,19 @@ def analyze_tool(tool, recs, pooled=False, tool_vocab=None):
     out["RE_A4_masscap_B0"]=mass_capture(s0, rt); out["RE_A4_masscap_B1"]=mass_capture(s1, rt)
     if out["RE_A4_masscap_B0"] is not None and out["RE_A4_masscap_B1"] is not None:
         out["RE_A4_masscap_lift"]=out["RE_A4_masscap_B1"]-out["RE_A4_masscap_B0"]
-    # RE-A5 within-session permutation of struct features
-    ov=permute_struct_within_session(recs)
+    # RE-A5 (FROZEN) within-session permutation of path_depth/glob_breadth only
+    ov=permute_struct_within_session(recs, PERMUTE_STRUCT_IDX)
     s1p,_,_=cv_scores(recs,"B1",pooled,template_vocab,tool_vocab,struct_override=ov)
     a1p=auc(s1p,y0); out["RE_A5_permuted_dAUC_point"]=(a1p-a0) if (a1p is not None and a0 is not None) else None
     out["RE_A5_survives"]= (out["RE_A5_permuted_dAUC_point"] is not None and out["RE_A5_permuted_dAUC_point"]>=A1_POINT_FLOOR)
+    # RE-A5b (post-hoc diagnostic, NOT a frozen gate): permute ALL struct features within session.
+    # If dAUC survives THIS, the signal is a genuine session-level confound; if it collapses, the within-call
+    # arg-structure signal is real (just not carried by path/glob). Disambiguates the frozen RE-A5.
+    ovall=permute_struct_within_session(recs, list(range(len(STRUCT_NAMES))))
+    s1pa,_,_=cv_scores(recs,"B1",pooled,template_vocab,tool_vocab,struct_override=ovall)
+    a1pa=auc(s1pa,y0); out["RE_A5b_permall_dAUC_point"]=(a1pa-a0) if (a1pa is not None and a0 is not None) else None
+    out["RE_A5b_session_confound"]= (out["RE_A5b_permall_dAUC_point"] is not None and out["RE_A5b_permall_dAUC_point"]>=A1_POINT_FLOOR)
+    out["semantic_class"]=semantic_class(tool)
     # HHI
     out["HHI_whale_mass"]=hhi_whale_mass(recs)
     out["HHI_flag"]= (out["HHI_whale_mass"] is not None and out["HHI_whale_mass"]>HHI_FLAG)
@@ -499,54 +518,90 @@ def analyze_pooled(powered_tools, precs, tool_vocab_pool):
     out["RE_A4_masscap_B0"]=mass_capture(s0, rt); out["RE_A4_masscap_B1"]=mass_capture(s1, rt)
     if out["RE_A4_masscap_B0"] is not None and out["RE_A4_masscap_B1"] is not None:
         out["RE_A4_masscap_lift"]=out["RE_A4_masscap_B1"]-out["RE_A4_masscap_B0"]
-    ov=permute_struct_within_session(precs)
+    ov=permute_struct_within_session(precs, PERMUTE_STRUCT_IDX)
     s1p,_,_=cv_scores(precs,"B1",True,template_vocab,tool_vocab_pool,struct_override=ov)
     a1p=auc(s1p,y0); out["RE_A5_permuted_dAUC_point"]=(a1p-a0) if (a1p and a0) else None
     out["RE_A5_survives"]= out["RE_A5_permuted_dAUC_point"] is not None and out["RE_A5_permuted_dAUC_point"]>=A1_POINT_FLOOR
+    ovall=permute_struct_within_session(precs, list(range(len(STRUCT_NAMES))))
+    s1pa,_,_=cv_scores(precs,"B1",True,template_vocab,tool_vocab_pool,struct_override=ovall)
+    a1pa=auc(s1pa,y0); out["RE_A5b_permall_dAUC_point"]=(a1pa-a0) if (a1pa and a0) else None
+    out["RE_A5b_session_confound"]= out["RE_A5b_permall_dAUC_point"] is not None and out["RE_A5b_permall_dAUC_point"]>=A1_POINT_FLOOR
     out["HHI_whale_mass"]=hhi_whale_mass(precs); out["HHI_flag"]= out["HHI_whale_mass"] is not None and out["HHI_whale_mass"]>HHI_FLAG
     out["status"]="ok"
     return out
 
 def cross_instrument(bundle):
-    cc=bundle["corpora"].get("cc",{}).get("tools",{}); cx=bundle["corpora"].get("codex",{}).get("tools",{})
-    shared={}
-    for t in set(cc)&set(cx):
-        a=cc[t].get("dAUC_point"); b=cx[t].get("dAUC_point")
-        if cc[t].get("powered") and cx[t].get("powered") and a is not None and b is not None:
-            shared[t]={"cc_dAUC":a,"codex_dAUC":b,"sign_agree":((a>0)==(b>0))}
-    return shared
+    """RE-A3 HARD GATE by SEMANTIC class (tool names differ across instruments).
+    For each semantic class, take the highest-n powered tool's dAUC per corpus; report sign agreement."""
+    per={}
+    for cname in ("cc","codex"):
+        tools=bundle["corpora"].get(cname,{}).get("tools",{})
+        best={}
+        for t,res in tools.items():
+            if t=="__POOLED__" or res.get("status")!="ok" or not res.get("powered"): continue
+            sc=res.get("semantic_class") or semantic_class(t)
+            if sc not in best or res["n"]>best[sc]["n"]:
+                best[sc]={"tool":t,"n":res["n"],"dAUC":res.get("dAUC_point")}
+        per[cname]=best
+    classes=set(per["cc"])|set(per["codex"]); out={}
+    for sc in sorted(classes):
+        cc=per["cc"].get(sc); cx=per["codex"].get(sc)
+        rec={"cc":cc,"codex":cx}
+        if cc and cx and cc["dAUC"] is not None and cx["dAUC"] is not None:
+            rec["sign_agree"]=((cc["dAUC"]>0)==(cx["dAUC"]>0))
+            rec["both_present"]=True
+        else:
+            rec["sign_agree"]=None; rec["both_present"]=False
+        out[sc]=rec
+    return out
 
 def decide(bundle):
-    """PASS iff >=1 powered tool: RE_A1 PASS + all_folds_positive + RE-A3 sign agree + RE-A5 not survive."""
+    """PASS iff >=1 powered tool clears ALL of:
+       RE-A1 (dAUC_LB95>0 & point>=0.03) + all-folds-positive + RE-A5 not-survive (frozen)
+       + RE-A3 HARD GATE: its SEMANTIC class is powered in BOTH corpora with SAME-SIGN dAUC."""
     a3=bundle["RE_A3"]
-    winners=[]
+    winners=[]; near=[]
     for cname,cres in bundle["corpora"].items():
         for t,res in cres.get("tools",{}).items():
-            if res.get("status")!="ok": continue
-            if res.get("RE_A1_PASS") and res.get("all_folds_positive") and not res.get("RE_A5_survives"):
-                # cross-instrument: require sign agreement if the tool is shared & powered in both
-                shared=a3.get(t)
-                if shared is not None and not shared["sign_agree"]:
-                    continue
-                winners.append(f"{cname}:{t}")
+            if t=="__POOLED__" or res.get("status")!="ok": continue
+            if not (res.get("RE_A1_PASS") and res.get("all_folds_positive") and not res.get("RE_A5_survives")):
+                continue
+            near.append(f"{cname}:{t}")
+            sc=res.get("semantic_class") or semantic_class(t)
+            rec=a3.get(sc,{})
+            if rec.get("both_present") and rec.get("sign_agree"):
+                winners.append(f"{cname}:{t} ({sc})")
     if winners:
-        return {"verdict":"PASS","gate_fired":"RE-A1 (dAUC_LB95>0 & point>=0.03) + all-folds-positive + RE-A3 sign-agree + RE-A5 not-survive",
+        return {"verdict":"PASS",
+                "gate_fired":"RE-A1 + all-folds-positive + RE-A5 not-survive + RE-A3 cross-instrument sign-agree",
                 "winners":winners}
-    # name the dominant failure reason
-    # collect per powered tool why it failed
+    # Build the honest kill narrative naming exactly which gate stopped each A1-passing tool.
     reasons=[]
+    a1_pass=[]
     for cname,cres in bundle["corpora"].items():
         for t,res in cres.get("tools",{}).items():
-            if res.get("status")!="ok": continue
-            if not res.get("RE_A1_PASS"):
-                reasons.append(f"{cname}:{t} RE-A1 fail (dAUC_point={res.get('dAUC_point')}, LB95={res.get('dAUC_LB95')})")
-            elif not res.get("all_folds_positive"):
-                reasons.append(f"{cname}:{t} folds-not-all-positive")
-            elif res.get("RE_A5_survives"):
-                reasons.append(f"{cname}:{t} RE-A5 session-confound (permuted dAUC survives)")
-    return {"verdict":"KILL-NEGATIVE",
-            "gate_fired":"RE-A1 (arg-structure adds nothing over arg-template B0 -> sub-tool identity recovery)",
-            "reasons":reasons}
+            if t=="__POOLED__" or res.get("status")!="ok": continue
+            if res.get("RE_A1_PASS"):
+                a1_pass.append(f"{cname}:{t}")
+                sc=res.get("semantic_class") or semantic_class(t)
+                rec=a3.get(sc,{})
+                if res.get("RE_A5_survives"):
+                    reasons.append(f"{cname}:{t}({sc}) A1-pass(dAUC={round(res['dAUC_point'],3)}) but RE-A5 path/glob permutation survives (perm={round(res.get('RE_A5_permuted_dAUC_point') or 0,3)}); A5b-permall={round(res.get('RE_A5b_permall_dAUC_point') or 0,3)} session_confound={res.get('RE_A5b_session_confound')}")
+                elif not (rec.get("both_present") and rec.get("sign_agree")):
+                    if not rec.get("both_present"):
+                        reasons.append(f"{cname}:{t}({sc}) A1-pass(dAUC={round(res['dAUC_point'],3)}) but RE-A3 HARD GATE fails: semantic class not powered in the other instrument -> no cross-instrument replication")
+                    else:
+                        reasons.append(f"{cname}:{t}({sc}) A1-pass(dAUC={round(res['dAUC_point'],3)}) but RE-A3 sign DISAGREES across instruments: cc={rec['cc']['dAUC'] if rec.get('cc') else None} codex={rec['codex']['dAUC'] if rec.get('codex') else None}")
+                elif not res.get("all_folds_positive"):
+                    reasons.append(f"{cname}:{t}({sc}) A1-pass but folds not all positive")
+            else:
+                reasons.append(f"{cname}:{t} RE-A1 fail (dAUC_point={round(res['dAUC_point'],3) if res.get('dAUC_point') is not None else None}, LB95={round(res['dAUC_LB95'],3) if res.get('dAUC_LB95') is not None else None}) -> arg-structure adds nothing over arg-template B0")
+    # name the primary gate: if any A1-passing tool exists, the kill is RE-A3/RE-A5; else it's RE-A1.
+    if a1_pass:
+        gate="RE-A3 cross-instrument HARD GATE (sign flip / non-replication) + RE-A5 (within-session confound) — within-instrument signal does NOT generalize"
+    else:
+        gate="RE-A1 (arg-structure adds nothing over arg-template B0 -> sub-tool identity recovery)"
+    return {"verdict":"KILL-NEGATIVE","gate_fired":gate,"a1_passing_tools":a1_pass,"reasons":reasons}
 
 if __name__=="__main__":
     main()
