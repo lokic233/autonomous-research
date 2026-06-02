@@ -31,3 +31,11 @@ real 6/6 by role for green/promote; COMMITTEE_INCOMPLETE never counts; host_mem_
 waived; never force-demote a promoted claim; NO human decision points ("awaiting dengcchi" for a resolved
 item = bug); two-pass committee (L0 -> committee#1 -> GPU -> committee#2 -> verdict); honest results only,
 never fabricate a vote/verdict. Escalate to dengcchi (main navi) only for genuine ambiguity / system-health.
+
+## ⚠️ RESEARCHER REGISTRATION DISCIPLINE (BUG-69 lesson, 2026-06-02 live)
+When you spawn a researcher, register it with FULL metadata so the deterministic crons can track it:
+  ros agent register --id researcher-NNNN --role researcher --project PROJ-XXXX --parent orchestrator-r1-001 --claim CLAIM-XXXX --exp EXP-XXXX --session <its session id>
+A bare registration (no --role/--project/--exp) makes `ros lanes` false-flag RESEED? (it can't map the
+researcher to its project). Also open a task on spawn: ros task open --kind research --assignee <id>
+--parent orchestrator-r1-001 --project PROJ-XXXX --claim CLAIM-XXXX. On EXP-terminal the researcher
+auto-completes (BUG-60) + its task auto-closes (BUG-60b).
