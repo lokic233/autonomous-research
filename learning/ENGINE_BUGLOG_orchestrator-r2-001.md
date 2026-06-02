@@ -891,3 +891,23 @@ VALIDATED (/tmp/bb5_reaper): single-exp researcher -> completed on exp complete,
   agents" (was DEAD-flagged before); two-exp researcher stays 'running' after 1st exp completes, flips to
   'completed' only after the LAST exp completes.
 FILES: engine/ros.py cmd_exp_complete (owner auto-complete block) + exp complete --by arg. AST-valid.
+
+## 2026-06-02 ~15:35 UTC — BUGBASH #4 cont: BUG-60b + full-lifecycle cross-command integration test
+
+Ran a FULL claim lifecycle in one isolated instance (/tmp/bb6_e2e, /tmp/bb7_taskclose) exercising the new
+reaper/task/retire/tree primitives together: agent-register(orch->sub-monitor->researcher supervision tree)
+-> seed -> task open -> exp register -> exp complete --by (auto-completes researcher) -> queue submit
+-> queue list -> green verdict (real 6/6) -> queue ack -> resume. ALL consistent end-to-end:
+  - exp complete --by flips researcher to completed AND (BUG-60b below) closes its open task;
+  - reap correctly reports "no lingering agents" (completed researcher is terminal, NOT false-DEAD);
+  - tree renders orch->sub-monitor->[completed]researcher hierarchy;
+  - green verdict sets status=green + honest next_action; resume shows it correctly.
+
+★ BUG-60b (task-ledger tidiness / anti-sprawl) found during the integration test: a researcher that
+  auto-completes on EXP-terminal left its assigned TASK still status:open forever -> stale-open tasks
+  accumulate for finished researchers (and a future reap of any re-flagged agent could orphan them). FIX:
+  when exp complete --by marks a researcher completed, it now also closes that researcher's open/active
+  tasks (status=done, via supervise.task_update _internal, best-effort/non-fatal). VALIDATED: TASK-0001
+  goes open->done on exp complete; `task list --open` empty after. The task ledger no longer leaks tasks
+  for done researchers.
+FILES: engine/ros.py cmd_exp_complete (task-close in the owner-complete block). AST-valid.
