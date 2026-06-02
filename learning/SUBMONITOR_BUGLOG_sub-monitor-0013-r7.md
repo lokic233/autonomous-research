@@ -193,3 +193,13 @@ b99fe4ac) being DISABLED. Successor = sub-monitor-0013-r8.
     work to the queue I'll see it; otherwise hold until .converged (or convergence-equivalent terminal state).
   DECISION: NO action beyond heartbeat+commit. Verdict found+noted (yellow-advance, not converged); continue
     watching for .converged. Boot sealed. Heartbeat #1, ros commit.
+- 2026-06-02 ~00:16Z — POST-RETIRE CLEANUP (redundant cycle fired from a DUPLICATE orchestrator-created loop job).
+  * sub-monitor-0013-r7 is RETIRED (my own loop 3b361378 disabled last turn). A redundant cycle fired anyway from
+    job 0538bc5d ("sub-monitor-0013-r7 5min loop", runCount=16, orchestrator-created, ALSO targeting my session
+    b99fe4ac) — the SAME duplicate-loop pattern sub-monitor-0011-r7 hit (its 5a9c4149). DISABLED 0538bc5d. Now BOTH
+    r7-targeting jobs (3b361378 + 0538bc5d) are OFF; only successor r8's job 413465d8 (session bdd31327) remains
+    active. Monitor (71722ebd) state already lists these as known non-blocking duplicates.
+  * GOOD NEWS confirmed in orchestrator-r8 self-check state: CLAIM-0024 RATIFIED -> VERDICT-0069 6/6 YELLOW-ADVANCE
+    (cross-session radix-ceiling normalization-budget CHARACTERIZATION — PROJ-0013's FIRST SURVIVOR; scoped, NOT a
+    kill, green-lift lane recorded). The arc resolved successfully post-retire. r8 owns any follow-on. Bookkeeping
+    only; no science change. sub-monitor-0013-r7 remains RETIRED. ros commit. END OF r7 LOG (for real this time).
