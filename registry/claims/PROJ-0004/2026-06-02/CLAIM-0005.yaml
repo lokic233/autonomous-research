@@ -1,0 +1,32 @@
+claim_id: CLAIM-0005
+project_id: PROJ-0004
+stage: seed
+status: seed
+claim: On agentic/tool-calling traffic, an adaptive speculative-decoding policy that
+  lengthens the draft window inside constrained-grammar regions (tool-call/JSON spans,
+  where next-token entropy collapses and draft acceptance is structurally higher)
+  and shortens it in free prose achieves strictly higher net tokens/sec than a fixed-length
+  speculator at matched draft model, because acceptance rate is region-dependent and
+  a fixed window under-drafts in constrained regions and over-drafts in prose.
+why_it_matters: 'Spec-decode acceptance is region-dependent: constrained grammar collapses
+  the distribution -> high acceptance; prose -> low. A fixed draft length cannot exploit
+  this. Topic: inference-optimization. L0: measure region-conditioned acceptance on
+  agent traces + analytic optimal draft length per region; GPU pass real spec-decode
+  tokens/sec.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0006 result, then ros exp complete --exp EXP-0006 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0006
+created_at: '2026-06-02T23:22:30Z'
+last_updated: '2026-06-02T23:23:19Z'

@@ -1,0 +1,30 @@
+claim_id: CLAIM-0004
+project_id: PROJ-0003
+stage: seed
+status: seed
+claim: For agentic LLM serving, a prefix-family-aware batch admission policy that
+  co-schedules queued requests sharing a long system+tool-schema prefix into the same
+  running batch achieves strictly lower aggregate prefill cost (recomputed prefill
+  tokens) and higher prefix-cache hit rate than FCFS/priority admission at matched
+  fairness, because co-residency of a prefix family maximizes cache reuse before eviction.
+why_it_matters: 'Continuous-batching admission ignores prefix sharing; co-scheduling
+  a prefix family raises reuse and cuts prefill. Topic: llm-serving + agent-infra.
+  L0: queueing/cache sim over agentic arrival traces comparing FCFS vs prefix-family
+  admission at matched fairness; GPU pass on real vLLM scheduler.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0005 result, then ros exp complete --exp EXP-0005 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0005
+created_at: '2026-06-02T23:22:30Z'
+last_updated: '2026-06-02T23:23:19Z'

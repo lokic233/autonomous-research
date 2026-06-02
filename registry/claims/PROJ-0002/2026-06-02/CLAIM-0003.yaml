@@ -1,0 +1,32 @@
+claim_id: CLAIM-0003
+project_id: PROJ-0002
+stage: seed
+status: seed
+claim: In tool-calling LLM agents, speculatively initiating the tool call as soon
+  as the tool NAME plus high-confidence leading arguments are decoded (overlapping
+  execution with the remaining argument-JSON decode) reduces end-to-end agent-step
+  latency vs the standard serialize-then-call path, with a net win whenever the speculation-correctness
+  rate times the overlapped tool latency exceeds the wasted-work cost of mispeculated
+  calls.
+why_it_matters: 'Agent steps serialize decode-then-tool-call; tool latency is often
+  >> remaining-arg decode. If tool name + leading args are decoded early and are high-confidence,
+  overlapping the call hides latency. Topic: agentic-systems + inference-optimization.
+  L0: trace/analytic model of decode-vs-tool latency + speculation correctness; GPU
+  pass measures real decode token timings + speculation hit-rate.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0004 result, then ros exp complete --exp EXP-0004 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0004
+created_at: '2026-06-02T23:22:30Z'
+last_updated: '2026-06-02T23:23:19Z'
