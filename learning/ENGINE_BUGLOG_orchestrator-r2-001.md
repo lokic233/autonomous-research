@@ -656,3 +656,33 @@ file stays VALID YAML, role preserved=orchestrator, ros report does NOT crash. R
   projects require sub-monitor coverage. Verified: now shows "4 active; 3 converged" + "✅ every active project
   has a live sub-monitor" instead of "⚠️ 3 need respawn".
 - (Pairs with the cmd_projects concurrent-investment capacity check that ALSO uses _is_converged_project.)
+
+## BUG-31..34 (2026-06-02, monitor 16b52fb1 + dengcchi directive) — AGENT SPRAWL / LINGERING SESSIONS / NO TASK TRACKING
+ROOT CAUSE: the entire sub-monitor + orchestrator lifecycle was PROMPT-DRIVEN with NO engine primitive.
+Agents self-spawned successors via spawn_agent(new_session) + self-retired at 35% ctx — but the 35% was
+consumed re-reading their own bloated handoff prompt + 131-line buglog, NOT real work. Result:
+sub-monitor-0015 churned r8->r36 (28+ generations, ~5 NO-CHANGE cycles each) in hours; 191 agent yamls
+registered, 52 stuck status:running (nothing ever flipped a dead agent out of 'running'). 18h / 363
+commits / ZERO new science (all autosave + retire-respawn + buglog cycles). Self-maintenance became the
+workload. (Diagnosed with dengcchi awake; he directed: fix the architecture, no lingering agents, no
+lingering researchers, orchestrator must own an incrementing task-id + notification mechanism.)
+
+- BUG-31 Lingering agents: no reaper. FIX: `ros reap [--apply]` (engine/supervise.py). Flips past-grace
+  agents still in an alive state -> superseded (fresher r-version live) | retired (converged/no-project,
+  clean) | dead (ACTIVE project, no successor -> NOTIFY). Applied once: 45 lingering -> 26 superseded,
+  17 retired, 2 dead. status:running 52 -> 9.
+- BUG-32 Heartbeat-only handoff: retiring agent passed no STATE about its monitored researcher/seeder.
+  FIX: `ros handoff --from --to --researcher-state --seeder-state --open-work --evidence-delta
+  [--reseed-needed] [--task]`. Writes a structured handoff artifact + transfers the task carrying state;
+  --reseed-needed emits a RESEED_NEEDED orchestrator notification (dead seeder + open work -> dispatch fresh).
+- BUG-33 No system task tracking: no incrementing job id / parent-assignee tree. FIX: task ledger
+  `ros task open|update|list` -> registry/tasks/TASK-NNNN.yaml (incrementing via next_id, parent edge =
+  supervision tree, evidence_delta field). `ros tree` renders the live supervision tree.
+- BUG-34 No structured coverage-loss notification: submonitors only PRINTED. FIX: reaper + handoff drop
+  action-flagged AGENT_DOWN / TASK_ORPHANED / RESEED_NEEDED entries into the orchestrator inbox (Channel).
+FILES: engine/supervise.py (new, ~210 lines, stdlib+pyyaml), engine/ros.py (+5 handlers, +4 subparsers,
+_sup_helpers bundle to avoid circular import). AST-validated; all 4 commands smoke-tested on live instance.
+NOTE: orchestrator/sub-monitor PROMPT loops were DISABLED in the scheduler (4 jobs) to stop the spawn
+runaway while this landed. NEXT (design, not yet done): collapse sub-monitors into orchestrator sub-agents
+or a single multi-lane poller so the architecture STRUCTURALLY cannot sprawl; rewire spawn to set parent
+edge + open a TASK; mark researchers 'completed' on EXP terminal so they aren't reaped as false-dead.
