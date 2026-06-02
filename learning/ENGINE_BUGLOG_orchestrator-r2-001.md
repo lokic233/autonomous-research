@@ -1047,3 +1047,27 @@ ROUND 3 (coordinator / GPU dispatch safety — highest risk, fragile MI350X):
   (engine 52a01df)
 TALLY: 5 bugs across 3 rounds (BUG-62..66). 1 SAFETY (66 GPU-type mismatch), rest robustness/anti-churn.
 All minimal fixes, no new mechanisms. Standby cycle clean after every round.
+
+## 2026-06-02 ~21:45 UTC — v3 FULL E2E VALIDATION (whole project, two-pass committee, GPU exp) [v3-impl session#2]
+Drove the ENTIRE v3 pipeline in an isolated instance (/Users/dengcchi/autonomous-research-e2e, LOCAL
+runtime_dir, local-only repo) — every command + all 4 crons in sequence, simulating the 3 agent kinds:
+  warm-start (Tier-1 brain) -> register orchestrator+researcher (supervision tree) -> seed CLAIM-0001 ->
+  L0 exp register+complete (effect=support; --by auto-completes researcher BUG-60) -> claim advance
+  evidence_ready -> proj_monitor cron FORWARD (queue submit + notify) -> committee PASS#1 (6/6 yellow,
+  approves EXP-0002 GPU) -> committee_health cron READY -> orchestrator tally VERDICT-0001 yellow
+  +approves-exp -> ever-run researcher heartbeats back to running, picks up GPU follow-up -> coordinator
+  cron dispatches EXP-0002 to MI350X (gpu_type match + host_mem_floor 2000 enforced) -> GPU result lands
+  on channel -> orchestrator drains/acks/completes (lease auto-released) -> monitor cron: no stalls ->
+  pass#2 evidence forwarded -> committee PASS#2 (6/6 GREEN, now WITH gpu data) -> VERDICT-0002 green ->
+  VERDICT-0003 promote. claim status: promoted.
+INTEGRITY GATES CONFIRMED LIVE in the full flow:
+  - real 6/6 by ROLE: a fake 5-role green (missing area_chair) REJECTED (exit 1) — BUG-56/57 holds.
+  - BUG-58b demote-guard: a lone kill exp on the PROMOTED claim REFUSED (needs --force-demote + fresh
+    committee) — promoted result protected.
+  - BUG-66 gpu-type: GPU exp correctly required MI350X-matching node; host_mem_floor enforced; lease
+    recorded + released, no double-book.
+  - two-pass ros progress / committee_health: pass#1 verdict did not mask pass#2; idempotent notifies.
+RESULT: full e2e GREEN, ledger consistent (VERDICT-0001 yellow -> 0002 green -> 0003 promote on CLAIM-0001),
+all crons stamp .alive, cron-health fresh. Real v3 standby instance untouched + clean. No new bugs found
+in the e2e (rounds 1-3 hardening held). KNOWN-COSMETIC (not fixed, shared w/ frozen v2, no cron depends on
+it): project-tree prints "sub-monitor NONE (orchestrator must spawn)" — v2 vocabulary; v3 has no sub-monitors.
