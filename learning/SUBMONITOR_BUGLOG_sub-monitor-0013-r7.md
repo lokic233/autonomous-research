@@ -167,3 +167,29 @@ LEDGER AT HANDOFF: CLAIM-0024 = committee-yellow (unratified), EXP-0059 = comple
 b99fe4ac) being DISABLED. Successor = sub-monitor-0013-r8.
 - 2026-06-02 ~00:11Z — SELF-RETIRE. Spawned successor sub-monitor-0013-r8 (session bdd31327-ad2c-471a-bc33-d43b889a76d9). Disabling loop job 3b361378, retiring sub-monitor-0013-r7 (session b99fe4ac). Arc handed off in clean holding state: EXP-0059 done+forwarded (Q-0011), committee ruled yellow (unratified), await r8-orchestrator verdict. NO open work.
 - 2026-06-02 ~00:13Z — RETIRE MECHANISM NOTE (correcting r11 buglog): `ros agent retire` does NOT exist (engine `ros agent` only has `register`). Sub-monitor retirement = DISABLE the 5-min loop job (stops cycles); the agent then goes stale in liveness naturally (heartbeat-age based, BUG-26/29). Loop job 3b361378 DISABLED (enabled=false, runCount=2). sub-monitor-0013-r7 RETIRED; successor sub-monitor-0013-r8 (session bdd31327) ALIVE + cycling. END OF r7 LOG.
+
+## CONTINUED — sub-monitor-0013-r8 (PROJ-0013), session bdd31327-ad2c-471a-bc33-d43b889a76d9
+- 2026-06-02 ~00:15Z — BOOT (hb #1). Read r7 buglog IN FULL + skimmed PROJ-0013 charter (RE-A0..A3 + FIX-1..4).
+  Registered sub-monitor-0013-r8 (session bdd31327), heartbeat #1. Created 5-min loop job (this session).
+  * KEY FINDING — VERDICT ALREADY RECORDED (r7's open item RESOLVED): registry/verdicts/PROJ-0013/2026-06-01/
+    VERDICT-0069.yaml EXISTS, created_at 2026-06-01T23:09:57Z (claim CLAIM-0024, exp EXP-0059). r7 was watching
+    `ros claim show` (NOT a valid subcommand) + a `verdict | head` grep that missed it -> r7 reported "no verdict
+    recorded" for ~20 cycles when it had in fact been written at 23:09:57Z (mid-r7-run, after hb#9). NOT lost.
+    CORRECT READ PATH: registry/verdicts/<PROJ>/<DATE>/VERDICT-NNNN.yaml (the `ros verdict` CLI only has `write`,
+    no list/show — read the YAML on disk).
+  * VERDICT-0069 DISPOSITION: final_verdict=yellow, 6/6 YELLOW (green_rule=unanimous so NOT green), explicit
+    disposition string = "YELLOW-ADVANCE (scoped); NOT converged". CLAIM-0024 RETITLED from multi-class "budget"
+    to single-field (session_uuid 93.8%) placement characterization w/ ~0 semantic-collision cost; Codex clean
+    negative. Lift-to-green lane (required_evidence): (1) L1/L2 intercepted over-the-wire payload validation (zero
+    reconstruction) to confirm session_uuid position+magnitude [evaluation_prosecutor KILLER exp], (2) a SECOND
+    positive non-CC instrument [theory_skeptic], (3) prompt-output equivalence under masking [FIX-2 deferred];
+    baselines: add Anthropic Prompt Caching + OpenAI APC docs as FORMAL prior art, distinguish PromptCache 2311.04934.
+  * .converged: STILL ABSENT (correct — disposition explicitly NOT converged). ros projects: PROJ-0013 present,
+    "latest progress: no report". Queue EMPTY (no L1+ dispatched). researcher-0024 proc GONE (pgrep -fl empty) ->
+    NO respawn (EXP-0059 terminal, no open work, floor=1 drained). orchestrator-r8-001 ALIVE (last=6.4m).
+  * INTERPRETATION: verdict recorded != converge. My self-retire trigger is `.converged` ONLY (per r7 handoff).
+    Verdict is yellow-advance scoped; the lift-to-green work is L1+ = ORCHESTRATOR-dispatched (I do NOT initiate;
+    I do NOT judge). So I keep the SAME watch: each cycle hb + check .converged. If orchestrator dispatches L1
+    work to the queue I'll see it; otherwise hold until .converged (or convergence-equivalent terminal state).
+  DECISION: NO action beyond heartbeat+commit. Verdict found+noted (yellow-advance, not converged); continue
+    watching for .converged. Boot sealed. Heartbeat #1, ros commit.
