@@ -1,0 +1,16 @@
+4 skills discovered
+4 skills discovered
+```
+ROLE: product_realist  VOTE: yellow
+REAL_USE_CASE: Inference serving teams building agent platforms (coding assistants, research agents) who need to prioritize KV cache optimizations for tool-loop workloads where external tool outputs dominate prefill token mass.
+OPERATIONAL_SIGNIFICANCE: Microbenchmark-only? No—real traces show tool-result token-mass dominance (CC 0.752/Codex 0.697 true-token, both >=0.50) with heavy-tail quantification (Gini 0.86/0.75). However, cost-weighted impact collapses to ~0.20/0.03 (packet: EXP-0061 SECONDARY RE-A4), limiting dollar ROI. The "reframing" is valid guidance but not a demonstrated production win vs existing prefix caches.
+ADOPTION_BARRIER: [Requires serving-stack changes to identify/prioritize tool-result content in KV cache; cost-weighted share 0.03-0.20 reduces ROI justification; generalization beyond coding-agent traces (CC/Codex) unproven; existing prefix-cache systems (Mooncake 2407.00079, vLLM, SGLang) may capture partial benefit without explicit tool-result awareness; no measured advantage vs paged kernel or baseline system]
+RATIONALE: Measurement is robust (chat contrast: agent R/D1 0.657/0.770 vs chat 0.000; jackknife holds >0.50; true-token hardening confirms CC 0.752/Codex 0.697) but operational significance is constrained by cost collapse and unvalidated production advantage. The characterization is valuable for researchers, but product adoption requires infra investment for modest cost impact without evidence the win survives against already-fast paged kernels or existing prefix-cache implementations.
+```
+```
+ROLE: product_realist  VOTE: yellow
+REAL_USE_CASE: Inference serving teams building agent platforms (coding assistants, research agents) who need to prioritize KV cache optimizations for tool-loop workloads where external tool outputs dominate prefill token mass.
+OPERATIONAL_SIGNIFICANCE: Microbenchmark-only? No—real traces show tool-result token-mass dominance (CC 0.752/Codex 0.697 true-token, both >=0.50) with heavy-tail quantification (Gini 0.86/0.75). However, cost-weighted impact collapses to ~0.20/0.03 (packet: EXP-0061 SECONDARY RE-A4), limiting dollar ROI. The "reframing" is valid guidance but not a demonstrated production win vs existing prefix caches.
+ADOPTION_BARRIER: [Requires serving-stack changes to identify/prioritize tool-result content in KV cache; cost-weighted share 0.03-0.20 reduces ROI justification; generalization beyond coding-agent traces (CC/Codex) unproven; existing prefix-cache systems (Mooncake 2407.00079, vLLM, SGLang) may capture partial benefit without explicit tool-result awareness; no measured advantage vs paged kernel or baseline system]
+RATIONALE: Measurement is robust (chat contrast: agent R/D1 0.657/0.770 vs chat 0.000; jackknife holds >0.50; true-token hardening confirms CC 0.752/Codex 0.697) but operational significance is constrained by cost collapse and unvalidated production advantage. The characterization is valuable for researchers, but product adoption requires infra investment for modest cost impact without evidence the win survives against already-fast paged kernels or existing prefix-cache implementations.
+```

@@ -1,0 +1,77 @@
+verdict_id: VERDICT-0073
+claim_id: CLAIM-0026
+project_id: PROJ-0015
+date: '2026-06-02'
+experiment_ids:
+- EXP-0062
+experiment_paths:
+- experiments/2026-06-02/EXP-0062
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- none
+required_evidence:
+- 'SOLE remaining green-blocker (GAP 3, prior-art): the ''FIRST/ONLY granular decomposition''
+  ABSOLUTE-PRIORITY claim cannot be GREEN-certified with the mandated live >=2-source
+  web sweep egress-blocked (corroborated independently by novelty_killer''s own blocked
+  context). CLOSE via ONE of: (a) run the live >=2-source sweep when egress restored
+  confirming no prior agent-tool-loop token-mass decomposition, OR (b) SOFTEN headline
+  ''first granular'' -> ''to our knowledge, the first'' (scoping novelty as bounded-by-available-prior-art'
+- ZERO new measurement
+- 'area_chair: converts to GREEN, no re-convene needed if novelty_killer confirms
+  the scoping). Orchestrator applying (b) now.'
+map_delta_proposals:
+- 'CLAIM-0026 GREEN-UPGRADE attempt (Q-0014, EXP-0062): 2 GREEN (theory_skeptic, systems_reviewer)
+  + 3 YELLOW'
+- 'FINAL yellow resolved on SUBSTANCE. GAP 1 CLOSED (composition inversion structurally
+  robust: chat R/D1 UB95 0.000 / human-prompt-dominated vs agent R/D1 LB95 0.569/0.748
+  tool-result-dominated, separation 0.657/0.770>>0.40'
+- turn-count-invariant per-char
+- 'evaluation_prosecutor turn-depth concern rebutted). GAP 2 CLOSED + HARDENED (theory_skeptic''s
+  own load-bearing concern CONFIRMED then retired: gpt2 calibration R 1.87cpt vs U
+  3.08cpt -> char/4 UNDER-counts R -> true-token result-share ROSE CC 0.655->0.752
+  / held Codex 0.774->0.697, both>=0.50'
+- proxy was CONSERVATIVE not misleading
+- unanimous 5/5). GAP 3 = SOLE blocker (prior-art absolute-priority claim + egress-blocked
+  live sweep
+- 'zero collisions found, Mooncake/BurstGPT/MemGPT cited+differentiated). product_realist
+  cost concern OVERRULED (scope mismatch: token-mass not cost claim). Jackknife drop-top3
+  >0.50 both. CLOSE via headline-softening to ''to our knowledge, the first'' -> GREEN
+  candidate. PROJ-0015 STAYS INVESTING.'
+baseline_requirements:
+- GAP 1 (chat baseline) CLOSED by this verdict
+- GAP 2 (char/4 proxy) CLOSED by this verdict
+- 'optional refinement (non-gating, evaluation_prosecutor): a depth-matched multi-turn
+  chat baseline (>=5 turns) would refine the contrast MAGNITUDE but cannot invalidate
+  the composition-inversion DIRECTION (R=0 in chat is structurally guaranteed regardless
+  of turn count -> multi-turn chat would shift U->TX/TH dominance, REINFORCING the
+  reframing)'
+created_at: '2026-06-02T00:34:32Z'
+
+# ---- VERBATIM COMMITTEE VOTES (Q-0014 GREEN-UPGRADE; 2 GREEN + 3 YELLOW reviewers + area_chair FINAL_VERDICT yellow; committee_run CLAIM-0026-greenlift-2026-06-02; full .out in VERDICT-0073_committee/) ----
+# Third verdict on CLAIM-0026 (VERDICT-0071 design-seed, VERDICT-0072 L0-evidence, VERDICT-0073 green-upgrade attempt). --allow-dup.
+verbatim_votes_summary: |
+  Q-0014 GREEN-UPGRADE attempt on EXP-0062 (the green-lift closing the 3 VERDICT-0072 gaps). 2 GREEN + 3 YELLOW reviewers; area_chair FINAL yellow resolved on SUBSTANCE. Claim HARDENED, sole remaining blocker is a closable prior-art scoping fix. NO fabrication.
+  - theory_skeptic (opus-4-7) GREEN: my #1 EXP-0061 load-bearing concern (char/4 proxy) is genuinely RETIRED — gpt2 calibration CONFIRMED my hypothesis (R 1.87cpt vs U 3.08cpt) and the true-token headline ROSE CC 0.655->0.752 / held Codex 0.774->0.697 (both>=0.50 per frozen threshold). Chat circularity honestly disclosed; the U-vs-R composition inversion stands independent of it. All 3 blockers closed on substance; measurement-not-predictor, no dAUC overreach. GREEN earned.
+  - systems_reviewer (codex) GREEN: chat baseline is an honest instrument-consistent contrast (zero-tool R/D1 UB95 0.000 vs agent LB95 0.569/0.748, human-prompt collapses 0.092/0.042 -> circularity doesn't explain agent dominance). char/4 retired (true-token CC 0.752/Codex 0.697 above frozen 0.50 line). OSS sweep (vLLM-APC/RadixAttention/TensorRT-LLM/LMCache) implements prefix/KV reuse, NOT this measurement; Mooncake/BurstGPT/MemGPT adjacent not colliding. Honestly-scoped characterization.
+  - novelty_killer (opus-4-8) YELLOW (sole substantive green-blocker): ZERO collisions found, all 3 arXiv IDs verified vs domain knowledge (good non-fabrication signal), differentiation genuine, egress block INDEPENDENTLY corroborated (three_pai + WebSearch both permission-gated in reviewer's own context). BUT the headline is an ABSOLUTE-PRIORITY claim ('FIRST/ONLY granular decomposition') — the class where a single missed paper is fatal — and procedural fallback satisfaction != substantive certification. Won't fabricate GREEN for an unverifiable 'first'. CLOSABLE: (a) run live sweep when egress restored, OR (b) soften to 'to our knowledge, the first'. PRIOR_ART_ADEQUATE=no -> yellow.
+  - evaluation_prosecutor (gemini) YELLOW: chat baseline turn-depth mismatch (single-turn CC / 2-turn Codex vs multi-turn agent) = structural strawman; wants a depth-matched multi-turn chat (>=5 turns). [area_chair OVERRULED: per-char composition is turn-count-invariant + R=0 in chat is structurally guaranteed regardless of turns -> multi-turn chat would shift U->TX/TH, REINFORCING the inversion.]
+  - product_realist (metacode) YELLOW: measurement robust (true-token CC 0.752/Codex 0.697, jackknife>0.50) but cost-weighted impact collapses to ~0.20/0.03, no demonstrated production win vs existing prefix caches; adoption needs infra investment for modest cost ROI. [area_chair OVERRULED: scope mismatch — claim is explicitly TOKEN-MASS not cost; identifies the VOLUME target for prefix-cache hit-rate, not the dollar target.]
+  - area_chair (opus-4-6) FINAL_VERDICT: yellow. Resolved EACH yellow by EVIDENCE: GAP 1 CLOSED (overrule prosecutor — composition inversion structurally robust, turn-invariant); GAP 2 CLOSED+HARDENED (unanimous, proxy was conservative); GAP 3 UPHELD as the SOLE blocker (absolute-priority + egress-blocked sweep); product_realist OVERRULED (scope mismatch). Process integrity clean (pre-reg a632fc2->734955e, identical instrument by import, honest-negative branches none triggered). CLOSE via option (b) headline-softening to 'to our knowledge, the first' -> converts to GREEN, ZERO new measurement, no re-convene needed if novelty_killer confirms the scoping.
+disposition: YELLOW-ADVANCE (3rd verdict; claim HARDENED, GAP1+GAP2 closed). Sole green-blocker = prior-art absolute-priority scoping. PROJ-0015 STAYS INVESTING. Orchestrator applying scoping fix (b) immediately.
+committee_run_dir: runtime/committee_run_CLAIM-0026-greenlift-2026-06-02

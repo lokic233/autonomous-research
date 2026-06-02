@@ -1,0 +1,11 @@
+ROLE: systems_reviewer  VOTE: green
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "shipping prefix/KV reuse mechanism; no tool-result/tool-arg/decode token-mass attribution found"},
+  {system: "SGLang RadixAttention", url: "https://www.lmsys.org/blog/2024-01-17-sglang/", overlap: "automatic KV cache reuse across chained LLM calls, including agent workloads; no served-token class decomposition"},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "shared/reused KV pages for same prompt prefixes; no agent tool-result mass measurement"},
+  {system: "LMCache", url: "https://arxiv.org/html/2510.09665v2", overlap: "KV offload/reuse across vLLM/SGLang and real-trace evaluation; no tool-loop content-class decomposition"}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds for the supplied real CC/Codex agent workloads: agent R/D1 remains >0.50 after tokenizer calibration (CC 0.752, Codex 0.697) and drop-top3 jackknife (CC 0.583, Codex 0.765). Remaining gap is external production generality, but not a blocker for this honestly scoped characterization.
+RATIONALE: The chat baseline is an honest instrument-consistent contrast: zero-tool chat has R/D1 UB95 0.000 while CC/Codex agents have R/D1 LB95 0.569/0.748 and human-prompt share collapses to 0.092/0.042, so the zero-tool circularity does not explain the agent-side dominance. The char/4 concern is retired by real-token recompute staying above the pre-registered 0.50 downgrade line in both corpora (CC 0.752, Codex 0.697). The OSS/prior-art sweep finds existing systems implementing prefix/KV reuse, not this measurement: vLLM APC, SGLang RadixAttention, TensorRT-LLM KV reuse, and LMCache overlap on cache mechanisms, while Mooncake 2407.00079, BurstGPT 2401.17644, and MemGPT 2310.08560 cover adjacent hotspot/workload/context-pressure questions without the claimed tool-loop token-mass decomposition.

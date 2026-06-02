@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [{"name": "Deep multi-turn chat corpus (e.g., ShareGPT, WildChat)", "why": "Must match the turn depth and context length of the agent corpus to isolate the effect of tool use versus general multi-turn context accumulation.", "repo_or_cite": "ShareGPT or WildChat"}]
+STRAWMAN_RISKS: ["Comparing multi-turn agent tool-loops against single-turn (CC) and 2-turn (Codex) chat sessions.", "Conflating multi-turn context accumulation with agent-specific tool result accumulation, artificially suppressing the human-prompt and model-decode shares in the chat baseline."]
+MISSING_METRICS: ["Average turn depth for agent traces vs chat traces", "Total context length matching between chat and agent baselines"]
+KILLER_EXPERIMENT: Measure prefill token composition on a true multi-turn chat corpus (>= 5 turns) with total context lengths matched to the agent corpus, to test if cumulative human-prompt or assistant-message mass rivals the observed 66-77% tool-result dominance.
+RATIONALE: The chat baseline provided to resolve Gap 1 is a structural strawman. The packet explicitly acknowledges the on-node CC chat is "single-turn" and Codex chat is "2-turn". Comparing the prefill composition of multi-turn agent traces against 1- or 2-turn chat traces guarantees a skewed contrast, as a single-turn session fundamentally cannot exhibit heavy-tail context accumulation. This conflates the "agent regime" with mere "multi-turn accumulation". Until the agent traces are evaluated against a multi-turn chat baseline of comparable length, the claim that agents uniquely reframe the prefill optimization target lacks a fair comparative baseline. Gap 1 remains a valid yellow blocker.
+```

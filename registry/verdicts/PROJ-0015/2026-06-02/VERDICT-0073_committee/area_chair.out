@@ -1,0 +1,32 @@
+```
+ROLE: area_chair
+PROMPT_VERSION: v001
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: green, evaluation_prosecutor: yellow, theory_skeptic: green, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: ["Prior-art verification via ONE of: (a) live ≥2-source web sweep confirming no prior agent tool-loop token-mass decomposition exists, OR (b) soften headline from 'first granular ... decomposition' to 'to our knowledge, the first' — scoping novelty as bounded-by-available-prior-art"]
+MANDATORY_BASELINES: []
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0026", change: "stays YELLOW-ADVANCE; annotate novelty scope as 'to our knowledge' pending live prior-art sweep; Gap 1 and Gap 2 marked CLOSED by this verdict"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE:
+
+DISPOSITION OF EACH YELLOW — resolved by EVIDENCE, not vote-count:
+
+(1) evaluation_prosecutor YELLOW (Gap 1, chat turn-depth mismatch) — OVERRULED, gap CLOSED.
+The prosecutor argues single-turn CC / 2-turn Codex chat baselines are a structural strawman against multi-turn agent traces. This is rebutted by two independent lines of evidence from the packet and GREEN voters. First, per-char composition accounting is turn-count-invariant: each char belongs to exactly one class (R, U, A, TX, TH) regardless of how many turns produced it, so the SHARE metric is not inflated by turn-depth asymmetry (theory_skeptic: "turn-count-invariant at the per-char accounting level"). Second, and decisively, R/D1 = 0.000 in chat is STRUCTURALLY GUARANTEED regardless of turn count — zero-tool sessions have no tool-result chars whether they are 1-turn or 100-turn. The substantive finding is the COMPOSITION INVERSION: agent introduces a third content source (external tool output) absent in chat that becomes dominant (CC R/D1 0.657, Codex 0.770). In a hypothetical multi-turn chat, U/D1 would decrease as prior-assistant-decode (TX/TH) accumulates as prefill, but R would remain 0 — shifting chat from U-dominated to TX/TH-dominated, which would actually REINFORCE the reframing (chat prefill = model's own prior output; agent prefill = external tool output). The prosecutor's "killer experiment" (multi-turn chat ≥5 turns, length-matched) would refine the contrast magnitude but cannot invalidate the composition inversion direction, which is structurally guaranteed by R=0 in chat. Circularity disclosed honestly. Gap 1 is closed.
+
+(2) novelty_killer YELLOW (Gap 3, prior-art sweep incomplete) — UPHELD, sole remaining gap.
+The novelty_killer found ZERO collisions from domain knowledge, verified all 3 arXiv IDs (Mooncake 2407.00079, BurstGPT 2401.17644, MemGPT 2310.08560), confirmed genuine differentiation on measurement axis, and independently corroborated the egress block (three_pai + WebSearch both permission-gated in the reviewer's own context). The pre-reg fallback procedure was satisfied. However, the claim's headline asserts ABSOLUTE priority ("FIRST granular ... decomposition," "the ONLY granular cross-instrument decomposition"). Per the novelty_killer's mandate — which I find correctly applied — absolute-priority claims are exactly the class where a single missed paper is fatal, and procedural satisfaction of a fallback is not substantive certification. My rule is explicit: "do not emit GREEN if prior-art search was inadequate." The specialist reviewer says PRIOR_ART_ADEQUATE = no on sound reasoning; I defer. CLOSE-PATH is low-effort: option (b) — soften to "to our knowledge" — requires zero new measurement and is standard academic practice for egress-constrained novelty claims. This is a SCOPING fix, not a quality fix.
+
+(3) product_realist YELLOW (cost-weighted collapse, no production win) — OVERRULED, out of scope.
+The claim is explicitly and repeatedly scoped as a TOKEN-MASS characterization, not a cost-optimization claim. The packet discloses cost-weighting collapse to 0.20/0.03 (EXP-0061 SECONDARY RE-A4) and draws no cost-savings conclusions. The product_realist is evaluating against a standard the claim does not assert. A measurement that tells serving teams WHERE token mass lives is valuable even when cost-per-token varies across content classes — it identifies the VOLUME target for prefix-cache hit-rate, not the dollar target. Overruled as scope mismatch.
+
+GAP-BY-GAP SUMMARY (the 3 VERDICT-0072 blockers):
+- GAP 1 (chat baseline): CLOSED. Instrument-consistent contrast (R/D1 UB95 0.000 chat vs LB95 0.569/0.748 agent; separation 0.657/0.770 >> 0.40 gate). Composition inversion is structurally robust per above. evaluation_prosecutor's turn-depth concern rebutted by evidence.
+- GAP 2 (char/4 proxy): CLOSED. theory_skeptic's original load-bearing concern CONFIRMED and HARDENED — gpt2 calibration verified R tokenizes denser (CC R 1.87 cpt vs U 3.08 cpt), true-token result-share ROSE on CC (0.655→0.752) and held on Codex (0.774→0.697); both ≥ 0.50 per frozen pre-reg threshold. The proxy was CONSERVATIVE, not misleading. Unanimous across all 5 reviewers.
+- GAP 3 (prior-art): NOT FULLY CLOSED. Substantively strong (zero collisions found, differentiation genuine, egress block corroborated independently) but procedurally incomplete for an absolute-priority claim. Closable via headline softening.
+
+PROCESS INTEGRITY: Pre-registration before measurement (a632fc2→734955e), identical instrument by import, honest-negative branches at every gate (none triggered), circularity and limitations disclosed. No fabrication signals.
+
+CONSENSUS: 2 GREEN + 1 substantive YELLOW (novelty_killer on prior-art) = YELLOW-ADVANCE. The measurement is real, robust, honestly scoped, and the composition inversion is a genuine empirical contribution. GREEN is blocked solely by PRIOR_ART_ADEQUATE = no on a closable procedural gap. Recommend immediate close via headline softening to "to our knowledge, the first" — this converts to GREEN without any new measurement, no re-convene needed if the novelty_killer confirms the scoping fix satisfies option (b).
+```
