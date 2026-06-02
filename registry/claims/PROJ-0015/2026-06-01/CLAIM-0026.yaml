@@ -32,6 +32,18 @@ supporting_evidence:
     impl/{PRE_REGISTRATION.md,decomposition_census.py,analysis.md}+results/summary.json+per_session
     CSVs.'
   data_path: experiments/2026-06-01/EXP-0061/
+- exp_id: EXP-0062
+  summary: 'GREEN-LIFT CLAIM-0026: all 3 VERDICT-0072 gaps CLOSED, hardening. G1 on-node
+    chat baseline (IDENTICAL instrument, 159 CC + 22 Codex zero-tool sessions; ShareGPT
+    absent on-node, documented): chat tool-result share R/D1=0.000 (UB95 0.00) vs
+    agent 0.657/0.770; chat human-prompt-dominated (U/D1 0.659/0.460) -> served-prefill
+    knob INVERTS chat->agent, separation>>0.40, GATE-CHAT met. G2 char/4 calibration
+    w/ real gpt2 (stratified 10%): cpt_R 1.87(CC)/2.73(Codex)<<cpt_U ~3.1-3.3 -> char/4
+    undercounts R; true-token result-share CC 0.655->0.752 HARDENED, Codex 0.774->0.697
+    robust, BOTH>=0.50 -> NOT a proxy artifact. G3 +Mooncake 2407.00079/BurstGPT 2401.17644/MemGPT
+    2310.08560 cited+differentiated. Jackknife drop-top3 0.583(CC)/0.765(Codex) stays>0.50.
+    No self-judge,no GPU.'
+  data_path: experiments/2026-06-02/EXP-0062/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0071
@@ -43,11 +55,9 @@ verdict_history:
 revival_conditions: ''
 owner: ''
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0062 result, then ros exp complete --exp EXP-0062 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0062; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0062
+active_experiments: []
 created_at: '2026-06-01T23:30:33Z'
-last_updated: '2026-06-02T00:13:19Z'
+last_updated: '2026-06-02T00:18:19Z'
