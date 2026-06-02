@@ -911,3 +911,36 @@ reaper/task/retire/tree primitives together: agent-register(orch->sub-monitor->r
   goes open->done on exp complete; `task list --open` empty after. The task ledger no longer leaks tasks
   for done researchers.
 FILES: engine/ros.py cmd_exp_complete (task-close in the owner-complete block). AST-valid.
+
+## 2026-06-02 ~16:00 UTC — BUGBASH #4: THE BIG ONE — structural anti-sprawl (design + `ros lanes`)
+
+Addressed dengcchi's top structural item: collapse the N self-spawning sub-monitor SESSIONS (the root
+cause of the 18h productive-idleness sprawl) into a SINGLE multi-lane POLLER. Wrote the design doc
+(learning/DESIGN_anti-sprawl_single-poller.md) + built the engine primitive it relies on.
+
+DESIGN (full doc): EXACTLY 2 standing sessions — poller + orchestrator — instead of 4-15 self-replicating
+ones. A "lane" = one active project's observe+forward duty (what a sub-monitor did), but a lane is a LOOP
+ITERATION, not a session. No lane spawns a session. Only the poller + orchestrator hand off, one
+generation at a time, only at their own context limit -> generation growth bounded to O(time), not
+O(time x projects). The 28-generation sub-monitor-0015 churn becomes structurally impossible.
+
+NEW: `ros lanes` (read-only — computes a plan, never spawns/mutates). For every active (non-converged)
+project it emits the ONE next action the single poller should take:
+  HOLD    = below floor, no open work -> NO-OP (silent; no commit -> kills the 363-commits/no-science churn)
+  AWAIT   = researcher running OR committee submission pending -> just heartbeat
+  FORWARD = claim evidence_ready + not yet queued -> poller `ros queue submit` (observe+forward; never judge)
+  RESEED? = no live researcher + open non-terminal/non-green claim -> FLAG for orchestrator (lane NEVER
+            auto-respawns; orchestrator owns reseed via the existing reaper AGENT_DOWN/RESEED_NEEDED notif)
+Exits non-zero if any lane is FORWARD/RESEED? so the poller wrapper branches; one poller heartbeat replaces
+N sub-monitor heartbeats.
+
+VALIDATED (/tmp/bb9_lanes, 4 projects exercising all states): FORWARD (evidence_ready unqueued), AWAIT
+(live researcher), RESEED? (open claim no researcher), HOLD (converged excluded). Verified the full lane
+state machine CLOSES: FORWARD -> (poller queues) -> AWAIT (pending) -> (orchestrator acks + green verdict)
+-> HOLD (silent, no make-work). A green claim with no pending queue correctly becomes a silent HOLD.
+
+STATUS: design + primitive READY. NOT YET MIGRATED — the system stays FROZEN until dengcchi approves the
+poller-session cutover (write ONE poller schedule job, remove the per-sub-monitor loop jobs, reap the
+historical roster once). Anti-sprawl invariants (auto-open task on spawn = BUG-60 task wiring; researcher
+auto-complete on EXP-terminal = BUG-60; atomic task-id + notifications = BUG-31..34/52/59) are all in place.
+FILES: engine/ros.py cmd_lanes + parser; learning/DESIGN_anti-sprawl_single-poller.md. AST-valid.
