@@ -967,3 +967,32 @@ FIX: cmd_lanes now splits open_claims into reseed_open (lifecycle != verdict_rec
 VALIDATED (/tmp/bb_lanes2 + live validation instance): drafted claim -> RESEED?; yellow-verdict claim ->
   ADVANCE?. The validation instance's 2 yellows reclassified RESEED? -> ADVANCE? correctly.
 FILES: engine/ros.py cmd_lanes. AST-valid.
+
+## 2026-06-02 ~19:10 UTC — v3 PHASE 1: read-only monitor eyes (ros cron-health + ros progress) [v3-impl session#2]
+
+NOT a bug fix — these are the two net-new READ-ONLY engine commands the v3 deterministic monitor cron
+needs (DESIGN_v3_lean_architecture.md monitor jobs #1 and #4). Lowest-risk phase: pure reads, no spawn,
+no mutate. Built against engine HEAD 39a80cd -> committed 03dcd71 (pushed HTTPS lokic233/research-os).
+
+`ros cron-health` (monitor #1): reads runtime/cron/<job>.alive stamps. Every v3 cron drops its .alive on
+  a successful run; this flags FRESH / STALE (age > alive_stale_x x interval) / NEVER_STARTED per cron,
+  reading the interval+stale-multiplier from config `crons:` (falls back to design defaults monitor=5/
+  coordinator=2/committee_health=1/proj_monitor=5, all x3). Exit 3 + "ESCALATE TO TROUBLESHOOTER" on any
+  dead/stalled cron. `--cron <name>` checks a single cron.
+
+`ros progress` (monitor #4, "work isn't landing"): time-since-last-REAL-progress per in-flight claim (not
+  liveness). Three stall types from the v3 stall taxonomy:
+   - local-but-uncommitted    : `git status --porcelain` shows the claim's registry file dirty + mtime > stall_min
+   - committee-done-no-verdict : a committee_run_*<CLAIM>* dir has _status==ALL_COMMITTEE_DONE but the newest
+                                 verdict file mtime is OLDER than that run's finish — TWO-PASS aware (a pass#1
+                                 verdict can't mask a pass#2 run that finished later with no new verdict)
+   - gpu-result-not-resubmitted: an unacked gpu_results channel item for one of the claim's active/cited exps
+  Thresholds from config progress.stall_min(20) / gpu_stall_min(30). Over threshold -> exit 3 + "NOTIFY
+  ORCHESTRATOR". Worst-first ordering. Green/terminal claims excluded; pending-queue claims not double-flagged.
+
+VALIDATED (isolated /tmp instances, LOCAL runtime_dir -> zero live leak): cron FRESH/STALE/NEVER_STARTED +
+  --cron filter; all 3 stall types fire then resolve cleanly (commit / verdict / ack); two-pass pass#2-after-
+  pass#1-verdict correctly stalls then clears when a newer verdict lands; no false positives on a fully
+  committed/dispositioned instance. Regression: status/lanes/--help intact on live v2; live v2 untouched.
+FILES: engine/ros.py (cmd_cron_health, cmd_progress, _cron_table, _alive_age_min, _git_committed_clean +
+  2 parser entries). AST-valid. v3 instance config (crons:/progress:) already carries the thresholds.
