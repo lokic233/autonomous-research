@@ -42,4 +42,4 @@ NO OTHER IMMEDIATE OPEN WORK — portfolio full and healthy. Your job is the ONG
 
 ## LIVE ROSTER (verify via ros liveness): sub-monitor-0002-r7, sub-monitor-0003-r4, sub-monitor-0013-r17, sub-monitor-0015-r32, gpu-coord-h100-r4b, gpu-coord-mi350x-r4c. MONITOR = session 16b52fb1, alive, tracks you + backstops persistence/.converged/new-day reports + repoints your self-check job.
 
-## r15 SESSION ID: <r15 writes it here on boot>
+## r15 SESSION ID: af0bb868-1811-49bb-af49-cd948e7e42c7 (spawned by r14 on retire 2026-06-02 ~10:50Z)
