@@ -1,7 +1,7 @@
 claim_id: CLAIM-0003
 project_id: PROJ-0002
 stage: seed
-status: seed
+status: weakened
 claim: In tool-calling LLM agents, speculatively initiating the tool call as soon
   as the tool NAME plus high-confidence leading arguments are decoded (overlapping
   execution with the remaining argument-JSON decode) reduces end-to-end agent-step
@@ -17,16 +17,25 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0004
+  summary: PARTIAL/CONDITIONAL trending NEGATIVE. Speculative tool-call prefetch break-even
+    correctness p* rises monotonically toward 1.0 exactly in the high-tool-latency
+    regime (r=t_tool/t_args>=2) the claim emphasizes (p*=0.76-0.97 at w=1.0), because
+    overlap gain saturates at min(remaining-decode,tool-latency) while misspeculation
+    penalty scales linearly with tool-latency. Robust low-risk win only for r<=1,
+    which is the regime with least latency to overlap (modest absolute benefit). Win-condition
+    mechanically correct but realistic correctness requirements implausible where
+    it matters. MC validates analytic (max diff 0.049, 5 seeds). Prior-art sweep OWED
+    (no egress).
+  data_path: experiments/2026-06-02/EXP-0004/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0004 result, then ros exp complete --exp EXP-0004 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0004; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0004
+active_experiments: []
 created_at: '2026-06-02T23:22:30Z'
-last_updated: '2026-06-02T23:23:19Z'
+last_updated: '2026-06-02T23:27:12Z'
