@@ -1,0 +1,70 @@
+{
+  "n_grid_points": 288,
+  "median_gain_pct_all": 2.522,
+  "median_gain_pct_realistic_f_le_0p35": 1.555,
+  "mean_gain_pct_realistic": 2.399,
+  "median_gain_pct_low_f_0p1_0p2": 1.838,
+  "max_gain_pct": 18.716,
+  "max_gain_point": {
+    "p_constrained": 0.97,
+    "p_prose": 0.55,
+    "gap": 0.42,
+    "f": 0.6,
+    "r": 0.05,
+    "best_fixed_k": 7,
+    "tps_best_fixed": 2.79784,
+    "adapt_kc": 29,
+    "adapt_kp": 4,
+    "tps_adaptive": 3.32148,
+    "gain_pct": 18.716,
+    "spd_fixed_vs_nospec": 2.7978,
+    "spd_adapt_vs_nospec": 3.3215
+  },
+  "min_gain_pct": 0.11,
+  "frac_points_gain_ge_5pct": 0.299,
+  "frac_points_gain_ge_3pct": 0.458,
+  "frac_realistic_gain_ge_5pct": 0.141,
+  "mc_cross_check": [
+    {
+      "p": 0.94,
+      "k": 8,
+      "r": 0.1,
+      "analytic": 3.95375,
+      "mc_mean": 3.95211,
+      "mc_std": 0.000903,
+      "rel_err": 0.00042,
+      "pass_2pct": true
+    },
+    {
+      "p": 0.65,
+      "k": 4,
+      "r": 0.1,
+      "analytic": 1.80402,
+      "mc_mean": 1.80507,
+      "mc_std": 0.003876,
+      "rel_err": 0.00058,
+      "pass_2pct": true
+    },
+    {
+      "p": 0.9,
+      "k": 16,
+      "r": 0.2,
+      "analytic": 1.98388,
+      "mc_mean": 1.98297,
+      "mc_std": 0.004449,
+      "rel_err": 0.00046,
+      "pass_2pct": true
+    },
+    {
+      "p": 0.55,
+      "k": 2,
+      "r": 0.35,
+      "analytic": 1.08971,
+      "mc_mean": 1.09032,
+      "mc_std": 0.002145,
+      "rel_err": 0.00056,
+      "pass_2pct": true
+    }
+  ],
+  "mc_all_pass": true
+}

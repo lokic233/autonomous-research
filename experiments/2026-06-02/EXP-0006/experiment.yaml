@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL/leans-negative. Analytic spec-dec throughput proxy tps=(E[a]+1)/(k*r+1),
+  region-dependent acceptance, token-weighted harmonic trace aggregate. Adaptive (per-region
+  argmax k) vs BEST-TUNED-fixed k, 288-pt grid (p_c,p_p,f,r). Adaptive always >= best-fixed
+  but median gain only +1.3% at realistic agentic op points (f~0.1-0.2, gap<=0.30);
+  meaningful (>5%, up to +18.7%) only at high constrained-fraction f>=0.35 + large
+  gap. Tuned fixed window (best k mode=2) captures nearly all gain on prose-dominated
+  traffic. MC 5-seed cross-check matches analytic <0.06% rel err. Pre-registered honest-negative
+  trigger FIRED. GPU pass must measure real per-region acceptance + emitted-token
+  constrained fraction f. Prior-art owed: EAGLE/Medusa/SpecInfer/entropy-adaptive
+  specdec.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-02/EXP-0006/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-02T23:33:29Z'
 prompt_version: ''
