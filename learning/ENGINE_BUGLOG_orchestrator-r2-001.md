@@ -867,3 +867,27 @@ VALIDATED (isolated /tmp/bb3_qrace, /tmp/bb4_gpurace):
     after ack re-queues correctly.
 FILES: channeling/channel.py (_FileLock + locked submit/ack + mirror_id_key/mirror_key), ros.py
   (cmd_queue_submit mirror inside lock, cmd_queue_ack via mirror_key). AST-valid.
+
+## 2026-06-02 ~15:20 UTC — BUGBASH #4 cont: BUG-60 (anti-sprawl) — researcher false-DEAD on EXP-terminal
+
+This is one of dengcchi's named anti-sprawl items ("mark researchers 'completed' on EXP-terminal so they
+aren't reaped as false-dead"). Walked the reaper interaction with a finished researcher.
+
+★ BUG-60 (anti-sprawl / false-DEAD) `ros exp complete` updated the experiment + the claim ledger but
+  NEVER touched the RESEARCHER AGENT's status. So a researcher that finished its only experiment stayed
+  status:running in runtime/agents/, went past-grace, and `ros reap` flagged it DEAD (ACTIVE project, no
+  live successor) — a FALSE coverage gap that fired a spurious AGENT_DOWN notification and tempted the
+  orchestrator/sub-monitor to RESPAWN a researcher whose work was already done. This false-DEAD churn is a
+  direct contributor to the agent-sprawl idleness dengcchi diagnosed (the system constantly "rescuing"
+  agents that had simply finished).
+
+FIX: `ros exp complete --by <agent>` (explicit owner id — NO fragile id string-matching, which is the
+  BUG-26/29 trap) now marks the owning RESEARCHER agent 'completed' on EXP-terminal, but ONLY if:
+    (a) it's a researcher (never a sub-monitor/orchestrator/coordinator),
+    (b) it has NO OTHER pending/running/dispatched/faulted experiment (don't kill an agent mid-second-exp).
+  Owner resolves from --by, or the experiment's recorded ran_by/dispatched_by (so GPU-dispatched exps
+  auto-resolve). Reaper then sees a terminal agent and leaves it alone (no DEAD, no AGENT_DOWN, no respawn).
+VALIDATED (/tmp/bb5_reaper): single-exp researcher -> completed on exp complete, reap reports "no lingering
+  agents" (was DEAD-flagged before); two-exp researcher stays 'running' after 1st exp completes, flips to
+  'completed' only after the LAST exp completes.
+FILES: engine/ros.py cmd_exp_complete (owner auto-complete block) + exp complete --by arg. AST-valid.
