@@ -996,3 +996,23 @@ VALIDATED (isolated /tmp instances, LOCAL runtime_dir -> zero live leak): cron F
   committed/dispositioned instance. Regression: status/lanes/--help intact on live v2; live v2 untouched.
 FILES: engine/ros.py (cmd_cron_health, cmd_progress, _cron_table, _alive_age_min, _git_committed_clean +
   2 parser entries). AST-valid. v3 instance config (crons:/progress:) already carries the thresholds.
+
+## 2026-06-02 ~19:20 UTC — v3 PHASES 2-4 [v3-impl session#2] (engine dbe4274)
+
+P2 TWO-TIER LEARNING (529beda): `ros learn warm|note|distill`. Tier-1 learning/roles/<fam>.md (curated
+  warm-start, read on boot) + Tier-2 learning/<fam>/YYYY-MM-DD.md (append-only daily). _role_family folds
+  agent ids -> 7 families (committee = the 6 member roles). distill appends to BOTH tiers @retire,
+  warns >16KB. Seeded v3 Tier-1 brains (orchestrator/researcher/committee, bef778b in v3 instance).
+P3 EVER-RUN CONTRACT (61e4309): heartbeat --tokens (-> tokens_used) + `ros ceiling` (read-only):
+  OVER(>=350k)/WARN(>=85%)/OK per live ever-run agent. Full lifecycle validated: OVER -> learn distill ->
+  ros retire atomic to ONE successor -> drops off, successor OK. Agents do NOT self-kill at ctx%.
+P4 THE 4 CRONS as deterministic SCRIPTS (dbe4274): engine/crons/*.sh + ros notify (escalation primitive
+  -> orchestrator inbox | troubleshooter file). Each WRAPS hardened primitives (no BUG-31..61 regression),
+  drops runtime/cron/<job>.alive ONLY on success. monitor(5m): cron-health #1 --exclude monitor ->
+  troubleshooter, progress #4 -> orchestrator; coordinator(2m): self-feed -> exp dispatch (engine owns
+  lease/floor/approval refusal); committee_health(1m): ALL_COMMITTEE_DONE+no EMPTY_OUTPUT_NO_VOTE ->
+  READY else INCOMPLETE (idempotent sentinel); proj_monitor(5m): ros lanes -> FORWARD/RESEED?/ADVANCE?.
+  cron-health gains --exclude (monitor doesn't self-flag; MAIN NAVI watches the monitor's .alive).
+  All validated in isolated /tmp instances (LOCAL runtime_dir, zero live leak). Regression clean.
+NEXT: P5 wire-up (cron entries in STANDBY — not enabled) + standby validation cycle -> escalate dengcchi
+  for cutover. THEN bugbash rounds (dengcchi requested).
