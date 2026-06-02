@@ -125,3 +125,4 @@ side / [FIX-4] per-class Lorenz separately + per-class marginals (don't let time
     Heartbeat #16, ros commit.
 - 2026-06-01 ~23:53Z — CYCLE (hb #17). HOLDING: orchestrator-r8-001 ALIVE (9.2m), still no CLAIM-0024 verdict recorded, no .converged. Inbox grep = same STALE r4-era items (not mine). proc gone, EXP-0059 terminal, floor=1 drained. Await r8 ratification of yellow CLAIM-0024 committee. NO action beyond heartbeat+commit.
 - 2026-06-01 ~23:58Z — CYCLE (hb #18). HOLDING unchanged: no CLAIM-0024 verdict recorded, no .converged, proc gone, floor=1 drained. Await r8 ratification. NO action beyond heartbeat+commit.
+- 2026-06-02 ~00:03Z — CYCLE (hb #19). HOLDING unchanged: r8 ALIVE (4.6m), no CLAIM-0024 verdict recorded, no .converged, proc gone, floor=1 drained. Await r8 ratification. NO action beyond heartbeat+commit.
