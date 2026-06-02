@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: PARTIAL/CONDITIONAL trending NEGATIVE. Speculative tool-call prefetch
+  break-even correctness p* rises monotonically toward 1.0 exactly in the high-tool-latency
+  regime (r=t_tool/t_args>=2) the claim emphasizes (p*=0.76-0.97 at w=1.0), because
+  overlap gain saturates at min(remaining-decode,tool-latency) while misspeculation
+  penalty scales linearly with tool-latency. Robust low-risk win only for r<=1, which
+  is the regime with least latency to overlap (modest absolute benefit). Win-condition
+  mechanically correct but realistic correctness requirements implausible where it
+  matters. MC validates analytic (max diff 0.049, 5 seeds). Prior-art sweep OWED (no
+  egress).
+result_effect: weaken
 artifacts_path: experiments/2026-06-02/EXP-0004/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-02T23:27:12Z'
 prompt_version: ''
