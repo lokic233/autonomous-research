@@ -37,14 +37,15 @@ verdict_history:
 - verdict_id: VERDICT-0071
   date: '2026-06-01'
   result: yellow
+- verdict_id: VERDICT-0072
+  date: '2026-06-02'
+  result: yellow
 revival_conditions: ''
 owner: ''
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: sub-monitor-0015-r8 to forward EXP-0061 GREEN-PASS (all RE gates A0/A1/A2/A3
-  PASS both instruments) to orchestrator queue for committee review; candidate-grade
-  L0 characterization
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0072=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-01T23:30:33Z'
-last_updated: '2026-06-01T23:51:09Z'
+last_updated: '2026-06-02T00:02:45Z'

@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [{"name": "On-node chat trace (e.g., ShareGPT)", "why": "Need apples-to-apples comparison of agent vs chat token mixes using the exact same measurement instrument", "repo_or_cite": "ShareGPT / LMSYS"}]
+STRAWMAN_RISKS: ["Comparing char/4 proxied agent traces to published true-token chat numbers", "char/4 proxy may systematically miscount dense tool outputs (e.g. JSON/logs) compared to natural language"]
+MISSING_METRICS: ["True token counts (e.g., via tiktoken cl100k_base) on a subsample to validate the char/4 proxy error uniformity across result and decode categories"]
+KILLER_EXPERIMENT: Run the exact same char/4 proxy script over an on-node chat dataset (e.g., ShareGPT) AND run a real tokenizer over a subset of the agent traces. If the true-token count drops the tool-result share below the 0.50 threshold, the dominance claim is merely a proxy artifact.
+RATIONALE: The evaluation explicitly flags the absence of an on-node chat baseline (baseline a) and relies on published chat numbers while measuring agent traces with a char/4 proxy. This is a severe instrumentation mismatch. Furthermore, the char/4 proxy might artificially inflate the token mass of tool results (which often consist of dense, high-entropy text or code) relative to standard conversational text. An apples-to-apples comparison using the same methodology (either on-node chat with char/4, or true tokenizer for both) is strictly required to validate the structural contrast.
+```

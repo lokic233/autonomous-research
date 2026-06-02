@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0072
+claim_id: CLAIM-0026
+project_id: PROJ-0015
+date: '2026-06-02'
+experiment_ids:
+- EXP-0061
+experiment_paths:
+- experiments/2026-06-01/EXP-0061
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- none
+required_evidence:
+- "ON-NODE CHAT BASELINE (load-bearing, unanimous 5/5): identical char/4 pipeline\
+  \ over a chat corpus (ShareGPT/LMSYS) same node \u2014 agent-vs-chat 'reframes which\
+  \ knob' contrast currently instrument-inconsistent"
+- 'most blocking green. CHAR/4 CALIBRATION: real tokenizer (cl100k_base) on stratified
+  10% subsample across R/A/TX/TH/U'
+- 'per-category chars/tok (JSON/code ~2.5-3.5 vs prose ~4 -> likely UNDER-counts R
+  -> would RAISE result-share, confirm empirically). NOVELTY SWEEP: complete mandated
+  live >=2-source search (tooling-blocked this run).'
+map_delta_proposals:
+- 'Q-0013 L0-EVIDENCE committee (distinct from VERDICT-0071 design-seed pick): CLAIM-0026
+  YELLOW-ADVANCE on EXP-0061 actual results. Measurement REAL+ROBUST (D1 result-share
+  CC 0.657 LB95 0.569/Codex 0.770 LB95 0.748'
+- HHI 0.166/0.016<0.20
+- cross-instrument |d|0.113<0.40
+- 's7 reconciliation HONEST no-threshold-moved). 3 CLOSABLE L0-feasible green-lift
+  gaps: (1) on-node chat baseline, (2) char/4 tokenizer calibration, (3) prior-art
+  sweep + Mooncake/BurstGPT/context-compression cites. Strong green candidate on closing.
+  PROJ-0015 STAYS INVESTING. SESSION''S SECOND NON-KILL.'
+baseline_requirements:
+- On-node chat trace (ShareGPT/LMSYS) same char/4 pipeline
+- tokenizer-calibration subsample
+- cite+differentiate Mooncake 2407.00079 (MISSING, nearest to heavy-tail framing),
+  BurstGPT 2401.17644, >=1 agent-context-compression work
+created_at: '2026-06-02T00:02:45Z'
+
+# ---- VERBATIM COMMITTEE VOTES (Q-0013 L0-evidence; 6/6 YELLOW-ADVANCE; committee_run CLAIM-0026-2026-06-01; full .out in VERDICT-0072_committee/) ----
+# NOTE: distinct from VERDICT-0071 which was the proj0015_design CHARTER-PICK (no experiment run). VERDICT-0072 is the Q-0013 committee on EXP-0061 ACTUAL RESULTS.
+verbatim_votes_summary: |
+  Q-0013 L0-evidence committee, 6/6 YELLOW-ADVANCE (5 reviewers + area_chair FINAL_VERDICT yellow). Session's SECOND non-kill. Aggregated on SUBSTANCE; NO fabrication; pre-reg integrity (s7) accepted honest.
+  - novelty_killer (opus-4-8) YELLOW: real MEASUREMENT delta not a rename (granular R/A/TX/TH/U/O buckets + Gini 0.86/0.75 w/ CIs + cross-instrument |d|0.113<0.40 on real agent tool-loops the disaggregation/caching literature parameterizes but does not decompose). No fatal collision VERIFIED. Cannot green: (1) mandated live >=2-source novelty sweep tooling-BLOCKED -> 'first granular...never MEASURES' superlative uncertified; (2) Mooncake 2407.00079 (real-trace prefix-cache hot-spot characterization, nearest to heavy-tail framing) MISSING from the 8-work list + BurstGPT + qualitative tool-output-dominance lit uncited. Scoping gap, not a kill.
+  - systems_reviewer (codex) YELLOW: CONTRIBUTION_TYPE=insight. No OSS collision (vLLM-APC/RadixAttention/LMCache/TensorRT-LLM/FlashInfer implement KV reuse, don't MEASURE this decomposition). Majority real on packet (D1 CC 0.657 LB95 0.569 / Codex 0.770 LB95 0.748; HHI<0.20; session-medians>0.50; Gini 0.863/0.749). s7 reconciliation acceptable if frozen D1+parser defs auditable at HEAD 8e60c29/8968a5b (threshold not moved). Yellow: systems realism limited (74/93 sessions, char/4 proxy, no on-node chat contrast, no production-scale serving validation).
+  - evaluation_prosecutor (gemini) YELLOW: flags ABSENCE of on-node chat baseline (relies on published chat numbers while measuring agent with char/4 = instrumentation mismatch) + char/4 may inflate dense tool-result (JSON/logs) mass vs prose. KILLER EXPERIMENT: run the same char/4 pipeline over ShareGPT AND a real tokenizer over an agent subset; if true-token drops result-share <0.50 the dominance is a proxy artifact. Apples-to-apples required.
+  - theory_skeptic (opus-4-7) YELLOW: measurement REAL (D1 0.657 LB95 0.569 / 0.770 LB95 0.748, monotone denominator robustness, HHI<0.20; FIX-1 token-mass-not-dollar honest; FIX-2 concession correctly narrows contribution to a genuine gap). Two non-fatal gaps: (a) char/4 NOT tokenizer-invariant for shares (JSON/code ~2.5-3.5 vs prose ~4 chars/tok -> R likely UNDER-counted -> true R-share probably HIGHER, but assert->verify w/ one calibration pass); (b) chat-baseline contrast is the load-bearing leg of 'reframes which knob' and is instrument-inconsistent. Heavy-tailedness is theoretically EXPECTED for bounded-prompt + unbounded-I/O mixtures -> frame as QUANTIFIED not DISCOVERED. Suggests jackknife-by-session (drop top-1/top-3) to harden. Not a kill; publishable on closing/scoping.
+  - product_realist (metacode) YELLOW: real+robust (D1 + session-median + cross-instrument + heavy-tail CIs) but operational win MICROBENCHMARK-only — cost-share collapses to CC 0.198/0.025 at 10x/100x -> prefill caching saves <20% $ at best; does not change the dollar optimization target (decode); RadixAttention/vLLM-APC already handle prefix caching. Actionable as a 'do not over-invest in prefill caching for cost' negative + a characterization, NOT a production deployment win. Adoption needs cross-user reuse evidence + complete static split (CC system prompt missing). (yellow x2 identical.)
+  - area_chair (opus-4-6) FINAL_VERDICT: yellow. Unanimous 5/5. Measurement REAL; pre-reg integrity ACCEPTED (HEAD 8e60c29 LOCK-TS before measurement, frozen defs, D1 stayed conservative headline, s7 reconciliation = clean bucketing NOT threshold movement); all 9 fixes + 2 baselines honored; cost-weighting honestly SECONDARY (correct reading: characterization not cost story). Cannot green for 3 independently-sufficient reasons: (1) prior-art sweep INCOMPLETE (tooling-blocked) + Mooncake/BurstGPT/context-compression uncited; (2) on-node chat baseline MISSING (unanimous, the load-bearing 'reframes which knob' contrast is instrument-inconsistent); (3) char/4 proxy UNVALIDATED (likely strengthens claim but must verify w/ tokenizer subsample). All 3 L0-feasible (no new infra). STRONG GREEN CANDIDATE on closing. Heavy-tail = quantified-known-expected not discovered (presentation fix). NO kill pressure.
+disposition: YELLOW-ADVANCE (session's 2nd non-kill); NOT converged. PROJ-0015 STAYS INVESTING. Lift-to-green lane = the 3 closable L0-feasible gaps in required_evidence + baselines.
+committee_run_dir: runtime/committee_run_CLAIM-0026-2026-06-01

@@ -1,0 +1,26 @@
+Both external search tools are permission-blocked in this session, so I could not complete the mandate's required live ≥2-source prior-art sweep. I ran the search attempts (logged above) and they were denied. I therefore vote from the packet's cited prior art + my own knowledge through Jan 2026, and I flag the verification gap explicitly rather than fabricate sources.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Patel et al., SplitWise (arXiv 2311.18677)", url: "https://arxiv.org/abs/2311.18677",
+   why_close: "Characterizes prompt-vs-generation token distributions from REAL Azure production traces (coding + conversation) to motivate prefill/decode split. This is the strongest 'already measures a token-mass mix' prior — but it measures chat/coding-completion, NOT agent tool-loops, and does NOT decompose the prompt into tool-result / tool-call-arg / decode-interstitial buckets. The packet's 'never MEASURES the agent mix' survives, but ONLY because of the workload (agent vs chat) and granularity (bucketed) deltas."},
+  {cite: "Zhong et al., DistServe (arXiv 2401.09670)", url: "https://arxiv.org/abs/2401.09670",
+   why_close: "Assumes a workload mix to motivate disaggregation; packet correctly concedes the prefill-heavy direction is prior, not the claim."},
+  {cite: "Qin et al., Mooncake (arXiv 2407.00079)", url: "https://arxiv.org/abs/2407.00079",
+   why_close: "KVCache-centric disaggregation that DOES characterize real Kimi production traces and prefix-cache reuse/hot-spots. Directly adjacent to the 'heavy-tail = cacheable hot spots' framing. NOT cited in the packet's 8-work list — a gap, see MANDATORY_RELATED_WORK."}
+]
+
+NAMING_VS_MECHANISM: This is a real MEASUREMENT delta, not a rename. The contribution is a granularity (mutually-exclusive R/A/TX/TH/U/O buckets) + a structural metric (per-call Gini 0.86/0.75 with CIs, top-decile>0.50) + cross-instrument replication (|f_CC-f_Codex|=0.113<0.40) applied to a workload (real agent tool-loops) that the disaggregation/caching literature parameterizes but does not decompose. The packet honestly demotes the bare "prefill-heavy" direction to conceded folklore (FIX-2), so the novelty is NOT resting on relabeling known direction.
+
+FATAL_COLLISIONS: [NONE VERIFIED. No prior work I can cite measures the agent tool-result / tool-call-arg / decode-interstitial token-mass split with heavy-tail + cross-instrument replication. CAVEAT: I could not complete the mandated live ≥2-source novelty sweep (web search denied this session), so I cannot CERTIFY absence at the 6/6 green bar — specifically I cannot rule out a 2025-era agent-serving workload-characterization paper (coding-agent traces) post my Jan-2026 knowledge horizon.]
+
+MANDATORY_RELATED_WORK: [
+  "Mooncake (2407.00079) — must cite + differentiate; its real-trace prefix-cache hot-spot characterization is the nearest thing to the 'heavy-tail = cacheable hot spots' claim and is currently absent from the 8-work list.",
+  "A real-world LLM-serving workload study (e.g. BurstGPT, arXiv 2401.17644, or equivalent) — to back the 'literature ASSUMES but never MEASURES' superlative with the concrete chat/API-workload baseline it implicitly contrasts against.",
+  "At least one agent-memory / context-compression work asserting tool/observation-output dominance qualitatively (e.g. MemGPT-style or context-compression papers) — to defend the 'first to QUANTIFY what others qualitatively assume' framing and pre-empt a 'folklore already says this' reviewer."
+]
+
+RATIONALE: The mechanism/measurement is genuinely distinct from the cited disaggregation (SplitWise/DistServe ASSUME the mix; SplitWise's real-trace distributions are chat/coding, not bucketed agent tool-loops) and caching (RadixAttention/vLLM-APC/Sarathi cache uniformly, do not characterize). No fatal collision is verifiable. I cannot vote green because (1) the mandate's live ≥2-source independent novelty verification was tooling-blocked, so the "first granular ... never MEASURES" superlative is uncertified, and (2) three directly-bearing works (Mooncake, a real-world workload study, the qualitative tool-output-dominance literature) are not yet cited/differentiated — without them the novelty framing is exposed. This is a scoping/related-work gap, not a kill: real measurement, real delta, no demonstrated collision.
+```
