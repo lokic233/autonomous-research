@@ -686,3 +686,38 @@ NOTE: orchestrator/sub-monitor PROMPT loops were DISABLED in the scheduler (4 jo
 runaway while this landed. NEXT (design, not yet done): collapse sub-monitors into orchestrator sub-agents
 or a single multi-lane poller so the architecture STRUCTURALLY cannot sprawl; rewire spawn to set parent
 edge + open a TASK; mark researchers 'completed' on EXP terminal so they aren't reaped as false-dead.
+
+## BUG-35..41 (2026-06-02, monitor 16b52fb1 — BUGBASH w/ dengcchi, 3 focus areas) — RETIRE/INHERIT/HIERARCHY edges
+Bugbash in isolated /tmp/bugbash instance (found+fixed a test-hygiene leak first: config runtime_dir was
+absolute -> test agents leaked into LIVE runtime; cleaned + made test runtime_dir local).
+
+- BUG-35 handoff did NOT re-parent the researcher TASK (only moved the monitor task) -> researcher's
+  supervisory parent broke silently on sub-monitor retire.
+- BUG-36 handoff did not register successor nor flip predecessor -> `submonitors` still showed the OLD
+  sub-monitor alive; successor was fiction until a separate prompt step. Split-state if prompt died mid-handoff.
+- BUG-37 retire was 3 non-atomic prompt steps (handoff + register + stop-hb) -> any interruption = ghost.
+  FIX BUG-35/36/37: `ros retire --from --to [--project --researcher-state --seeder-state --open-work
+  --evidence-delta --reseed-needed --by]` — ONE atomic engine call: registers successor inheriting
+  parent/project edges, re-parents EVERY task assigned-to OR parented-by frm -> to, re-parents EVERY
+  supervised agent (parent==frm) -> to, flips frm->retired(+retired_to), writes structured handoff,
+  optional RESEED_NEEDED notify. Tested: alive-researcher inherit clean; dead-researcher+reseed notifies
+  orchestrator + reap orphans the task (belt-and-suspenders).
+- BUG-38 (minor) retire leaves the dead researcher's task assignee=corpse; reap independently re-flags it
+  orphaned + notifies. Acceptable (double-signal). 
+- BUG-39 self-retire (from==to) bricked the lane (final write = retired -> false coverage gap). FIX: reject.
+- BUG-40 retire to an id already held by a DIFFERENT live agent clobbered it (flipped a live researcher's
+  role to sub-monitor). FIX: reject clobber of a live different-role/non-successor agent.
+- BUG-41 ★ THE RECURRING FALSE-FLAG (cost every prior monitor cycles): `ros submonitors` (and
+  `coordinators`) kept the FRESHEST-BY-AGE agent per project, ignoring status. When a sub-monitor retired
+  in the SAME tick its successor registered, the just-retired r1 (age 0.0m) tied/beat the live r2 ->
+  "retired-no-successor — respawn" FALSE-FLAG (risked double-spawn). FIX: prefer a LIVE agent over a
+  terminal one (status beats age; freshest only within same liveness class). Applied to BOTH submonitors
+  + coordinators. This is the root cause of the "0013/0015 lane false-flag" my predecessors hand-waved.
+
+NEW CMDS: ros retire, ros project-tree (area-3 hierarchical memory: project->live sub-monitor(+gen count)
+->claim-seeders[active/killed]->live researchers; reads COMMITTED registry index not per-agent jsonl/
+buglog -> bounded memory, fixes the "re-read 131-line buglog every generation -> 35% ctx -> respawn"
+overflow loop). agent register gains --parent (supervision-tree edge). tree now renders nested hierarchy.
+FILES: engine/supervise.py (+retire +project_tree +guards), engine/ros.py (+cmd_retire +cmd_project_tree,
+--parent on register, submonitors+coordinators live-preference fix, nested tree). AST-validated; all edges
+tested in isolation. Live coordinators regression-clean.
