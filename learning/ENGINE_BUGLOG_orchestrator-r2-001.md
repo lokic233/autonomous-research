@@ -944,3 +944,26 @@ poller-session cutover (write ONE poller schedule job, remove the per-sub-monito
 historical roster once). Anti-sprawl invariants (auto-open task on spawn = BUG-60 task wiring; researcher
 auto-complete on EXP-terminal = BUG-60; atomic task-id + notifications = BUG-31..34/52/59) are all in place.
 FILES: engine/ros.py cmd_lanes + parser; learning/DESIGN_anti-sprawl_single-poller.md. AST-valid.
+
+## 2026-06-02 ~15:55 UTC — BUG-61 (ros lanes mis-classified verdict_recorded as RESEED?) — found via Navi-orchestrator validation
+
+While watching the Navi-session orchestrator (validation instance) run a full pipeline, both lanes whose
+claims had a recorded YELLOW verdict showed RESEED? for ~34 min, and the orchestrator correctly hesitated
+(a yellow doesn't mean "spawn a fresh L0").
+
+★ BUG-61 (lane classification) `ros lanes` lumped EVERY non-terminal/non-green in-flight claim into
+  RESEED? — including verdict_recorded (committee already ruled, e.g. yellow/needs-more-evidence). But a
+  verdict_recorded claim is a DIFFERENT state than a fresh drafted claim:
+    - drafted / experiment_designing, no researcher -> genuinely RESEED? (spawn an L0 researcher).
+    - verdict_recorded (yellow) -> ADVANCE? : the committee asked for SPECIFIC required_evidence. The
+      right move is an ORCHESTRATOR-JUDGMENT targeted follow-up (or accept the honest yellow as converged)
+      — NOT a blind reseed that re-runs the same L0 the committee already saw.
+  Conflating them would make a real orchestrator churn (re-running redundant experiments) or look stuck.
+FIX: cmd_lanes now splits open_claims into reseed_open (lifecycle != verdict_recorded) vs verdict_open
+  (== verdict_recorded). New ADVANCE? action (🔬) for verdict_open with the last verdict result + guidance
+  "dispatch TARGETED follow-up for required_evidence OR accept/converge (NOT a blind reseed)". RESEED? now
+  fires only for un-experimented claims. Both are actionable (exit 3). Updated the orchestrator charter +
+  self-check job to handle ADVANCE? as a judgment call (no make-work, no 'await dengcchi').
+VALIDATED (/tmp/bb_lanes2 + live validation instance): drafted claim -> RESEED?; yellow-verdict claim ->
+  ADVANCE?. The validation instance's 2 yellows reclassified RESEED? -> ADVANCE? correctly.
+FILES: engine/ros.py cmd_lanes. AST-valid.
