@@ -1016,3 +1016,15 @@ P4 THE 4 CRONS as deterministic SCRIPTS (dbe4274): engine/crons/*.sh + ros notif
   All validated in isolated /tmp instances (LOCAL runtime_dir, zero live leak). Regression clean.
 NEXT: P5 wire-up (cron entries in STANDBY — not enabled) + standby validation cycle -> escalate dengcchi
   for cutover. THEN bugbash rounds (dengcchi requested).
+
+## 2026-06-02 ~20:55 UTC — v3 BUGBASH ROUND 1: BUG-62..64 (cron robustness; minimal fixes) [v3-impl session#2]
+- BUG-62 (path safety): _common.sh stamped .alive to '/cron' when RUNTIME_DIR() couldn't resolve (broken
+  python/missing config); no-stamp was ACCIDENTAL (relied on /cron unwritable). FIX: resolve once, fail-fast
+  exit 1 if empty/'/'. (engine 84db8a0)
+- BUG-63 (notify churn): proj_monitor re-notified RESEED?/ADVANCE? every 5m for a stuck lane -> orchestrator
+  inbox churn. FIX: one sentinel per (lane,action) under $CRON_DIR/.proj_notified; notify ONCE, clear when
+  the lane leaves that state. FORWARD self-clears (queue dedup). (engine 2266950)
+- BUG-64 (notify churn): monitor (CRON_DEAD/WORK_NOT_LANDING) + coordinator (GPU_FAULT) re-escalated every
+  cycle. FIX: _changed sentinel — re-notify only when the condition CONTENT changes (new failure still
+  escalates; unchanged stays quiet; clears when condition ends). (engine 06fb8ef)
+- All 3 minimal, reuse the existing sentinel-file pattern (no new mechanism). Standby cycle stays clean.
