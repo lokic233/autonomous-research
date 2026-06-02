@@ -1028,3 +1028,22 @@ NEXT: P5 wire-up (cron entries in STANDBY — not enabled) + standby validation 
   cycle. FIX: _changed sentinel — re-notify only when the condition CONTENT changes (new failure still
   escalates; unchanged stays quiet; clears when condition ends). (engine 06fb8ef)
 - All 3 minimal, reuse the existing sentinel-file pattern (no new mechanism). Standby cycle stays clean.
+
+## 2026-06-02 ~21:10 UTC — v3 BUGBASH ROUNDS 2-3: BUG-65, BUG-66 [v3-impl session#2]
+ROUND 2 (ros progress / notify / ceiling / committee_health):
+- BUG-65 (cosmetic): heartbeat --tokens accepted a negative value -> ros ceiling showed negative %. FIX:
+  max(0,int) one-liner. (engine eac5aeb)
+- CLEAN: ros progress robust to missing-fields + torn/corrupt claim yaml (BUG-10 salvage holds); ros notify
+  inherits the BUG-59 channel-lock (8/8 + 6/6 parallel submits, zero lost writes); monitor _changed sentinel
+  re-escalates a NEW stall but stays quiet on an unchanged set (no silent drop, no churn); committee_health
+  ignores in-progress runs (no _status.txt) and surfaces COMMITTEE_INCOMPLETE (never passes as ready).
+ROUND 3 (coordinator / GPU dispatch safety — highest risk, fragile MI350X):
+- ★ BUG-66 (SAFETY): coordinator looped over ALL free nodes + the engine `exp dispatch` gate did NOT check
+  gpu_type -> an H100-required exp could be dispatched onto the FRAGILE MI350X (crash risk, the exact class
+  of the MI350X crash postmortem). FIX at the ENGINE gate (defense-in-depth, also guards manual orchestrator
+  dispatch; mirrors the fragile/floor gate): refuse if exp.gpu_type set and != node.gpu_type ('any'/empty
+  unconstrained; --force overrides). Validated: H100 exp refused on MI350X / ok on H100; coordinator with
+  only MI350X free correctly WAITS. host_mem_floor + committee gate + BUG-54 double-book guard all intact.
+  (engine 52a01df)
+TALLY: 5 bugs across 3 rounds (BUG-62..66). 1 SAFETY (66 GPU-type mismatch), rest robustness/anti-churn.
+All minimal fixes, no new mechanisms. Standby cycle clean after every round.
