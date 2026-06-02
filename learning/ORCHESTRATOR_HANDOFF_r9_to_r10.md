@@ -42,4 +42,4 @@ NO OTHER IMMEDIATE OPEN WORK — the portfolio is full and healthy. Your job is 
 
 ## LIVE ROSTER (verify via ros liveness): sub-monitor-0002-r7, sub-monitor-0003-r4, sub-monitor-0013-r10, sub-monitor-0015-r11, gpu-coord-h100-r4b, gpu-coord-mi350x-r4c. MONITOR = session 71722ebd, alive, tracks you + backstops persistence/.converged/new-day reports.
 
-## r10 SESSION ID: e33e8cf4-5ff8-4861-b88d-6cc60efffa24  (booted 2026-06-02 ~02:50Z; register+heartbeat+commit OK; monitor 71722ebd to repoint self-check job to this session)
+## r10 SESSION ID: e33e8cf4-5ff8-4861-b88d-6cc60efffa24  (booted 2026-06-02 ~02:50Z; register+heartbeat+commit OK; monitor 71722ebd REPOINTED self-check job to e199b0c5 @03:17Z + removed stale r9 130f0f20 = two-orchestrator race resolved. PROJ-0013 transient retired-no-successor flag self-cleared: sub-monitor-0013-r11 sess 9380880a alive+holding w/ own loop job 3dd1b828 — NO respawn done. cycles 0-3 all STEADY.)
