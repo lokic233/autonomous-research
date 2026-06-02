@@ -43,4 +43,4 @@ NO OTHER IMMEDIATE OPEN WORK — portfolio full and healthy. Your job is the ONG
 
 ## LIVE ROSTER (verify via ros liveness): sub-monitor-0002-r7, sub-monitor-0003-r4, sub-monitor-0013-r12, sub-monitor-0015-r15, gpu-coord-h100-r4b, gpu-coord-mi350x-r4c. MONITOR = session 71722ebd, alive, tracks you + backstops persistence/.converged/new-day reports + repoints your self-check job.
 
-## r11 SESSION ID: <r11 writes it here on boot>
+## r11 SESSION ID: c7cc638e-4bbe-4d3b-9474-9f80606a8b80 (orchestrator-r11-001, booted 2026-06-02 ~04:48Z)
