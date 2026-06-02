@@ -721,3 +721,33 @@ overflow loop). agent register gains --parent (supervision-tree edge). tree now 
 FILES: engine/supervise.py (+retire +project_tree +guards), engine/ros.py (+cmd_retire +cmd_project_tree,
 --parent on register, submonitors+coordinators live-preference fix, nested tree). AST-validated; all edges
 tested in isolation. Live coordinators regression-clean.
+
+## BUG-43..52 (2026-06-02, monitor 16b52fb1 — BUGBASH #2: concurrency/atomicity/recovery) 
+Discovered a PRIOR timed-out turn of mine had written (uncommitted) fixes BUG-43/46/47/48/49 to
+supervise.py that were NEVER VALIDATED. Bugbash #2 validated them, found one fatal + several real bugs.
+
+- BUG-43 task-id race: next_id (max-scan+write) collided under concurrent `task open`. FIX (recovered):
+  _alloc_task_id via O_CREAT|O_EXCL placeholder + bump-on-collision. VALIDATED: 8 parallel -> 8 unique.
+- BUG-46 task status not validated (typo silently corrupts ledger). FIX (recovered): validate vs TASK_STATES.
+- BUG-47 terminal task (done/dropped) was mutable (could be reopened). FIX (recovered): immutable unless _internal.
+- BUG-48 blind RESEED_NEEDED could make orchestrator double-spawn onto a still-live researcher. FIX
+  (recovered): _live_researchers cross-check -> downgrade to RESEED_CONFLICT ("verify, do not double-spawn").
+- BUG-49 reaper superseding an agent didn't re-parent its LIVE children -> tree fragments. FIX (recovered):
+  re-parent children + parented-tasks to the live successor on supersede. VALIDATED.
+- ★ BUG-50 (NEW, fatal): the recovered BUG-43 _alloc_task_id used re.search but supervise.py NEVER imported
+  `re` -> EVERY `ros task open` crashed NameError (silent under backgrounded stderr; the 8-parallel test
+  produced ZERO files). This is why uncommitted/unvalidated code is dangerous. FIX: import re. Re-validated
+  8 parallel -> 8 unique, no empty placeholders.
+- BUG-51 (cosmetic): cmd_retire printed "RESEED_NEEDED" even when handoff downgraded to RESEED_CONFLICT.
+  FIX: retire() now propagates reseed_conflict; cmd_retire prints the accurate one.
+- ★ BUG-52 (NEW, HIGH-SEVERITY, pre-existing in core engine): next_id() for CLAIM/EXP/VERDICT/DEAD was
+  non-atomic (max-scan+return). 6 parallel `seed new` ALL got CLAIM-0001 and clobbered each other -> 5 of 6
+  claims SILENTLY LOST. Same for verdicts/experiments/cemetery. Any concurrent seed/verdict by two
+  sub-monitors/orchestrators destroyed scientific ledger data. FIX: next_id now serializes under a per-
+  (root,kind) O_EXCL lockfile (30s stale-break) + persists a reservation high-watermark covering the window
+  before the caller writes its file. VALIDATED: 6 parallel seed -> CLAIM-0001..0006 unique; 5 parallel
+  verdict -> VERDICT-0001..0005 unique. Reap verified idempotent (double-apply clean).
+FILES: engine/supervise.py (+re import, +retire reseed_conflict propagation; BUG-43/46/47/48/49 recovered),
+engine/ros.py (next_id atomic lock+reservation; cmd_retire accurate reseed print). AST-valid; all tested in
+isolated /tmp/bb* instances. NOTE: bugbash also caught a TEST-HYGIENE issue — config runtime_dir was
+absolute, leaking test agents into live runtime; always set a local runtime_dir for test instances.
