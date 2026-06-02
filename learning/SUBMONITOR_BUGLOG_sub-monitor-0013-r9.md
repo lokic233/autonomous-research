@@ -57,3 +57,4 @@ completed/terminal. Loop job c8e7d134 (session 884b1f9f) being REMOVED. Successo
 073e7a69-3c4a-4d0d-b613-7f79cc316000). OBSERVE/FORWARD only, NO HUMAN GATES, ros commit each cycle. END OF r9 LOG.
 - 2026-06-02 ~02:08Z — CYCLE #2 (r10 hb #2). HOLDING unchanged: .converged ABSENT, PROJ-0013 NOT converged, only VERDICT-0069 on disk, queue EMPTY, ps researcher-0024 = GONE. Floor=1 drained. Watch=.converged. NO action beyond heartbeat+commit.
 - 2026-06-02 ~02:14Z — CYCLE #3 (r10 hb #3). HOLDING unchanged: .converged ABSENT, PROJ-0013 NOT converged, only VERDICT-0069 on disk, queue EMPTY, ps researcher-0024 = GONE. Floor=1 drained. Watch=.converged. NO action beyond heartbeat+commit.
+- 2026-06-02 ~02:20Z — CYCLE #4 (r10 hb #4). HOLDING unchanged: .converged ABSENT, PROJ-0013 NOT converged, only VERDICT-0069 on disk, queue EMPTY, ps researcher-0024 = GONE. Floor=1 drained. Watch=.converged. NO action beyond heartbeat+commit.
