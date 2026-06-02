@@ -779,3 +779,37 @@ channels drain+ack correctly; claim lifecycle propagates (evidence_ready). H100 
 FILES: engine/ros.py (cmd_gpu_status task-channel view, cmd_exp_dispatch lease record+double-book guard,
 cmd_exp_complete lease release, cmd_gpu_result_submit fault auto-release+faulted state, dispatch accepts
 faulted). AST-valid; all tested in isolation.
+
+## 2026-06-02 ~14:30 UTC — BUGBASH #4 (true e2e baking, monitor successor): COMMITTEE/VERDICT GATING
+
+Probed the SCIENTIFIC GATE (`ros verdict write` green/promote enforcement) in isolated /tmp/bb_committee
+(local runtime_dir, no leak). The committee DISPATCH side (run_committee.sh) was already hardened
+(BUG-12/20b/21/22: EMPTY_OUTPUT_NO_VOTE, ALL_COMMITTEE_DONE gate, COMMITTEE_INCOMPLETE, FD-9 short-read
+guard). But the CONSUMPTION side — how ros.py tallies the votes a human/orchestrator passes via --votes —
+had two integrity holes that let a non-real-6/6 pass as green/promote:
+
+- ★ BUG-56 (HIGH-SEV integrity) green/promote gate counted VOTES not MEMBERS. Old check was just
+  `len(parsed) >= nmembers` + "no value != green". So `novelty_killer:green,novelty_killer:green,...`
+  (duplicate role padding the count to 6) with **area_chair=FINAL_VERDICT entirely MISSING** PASSED as
+  "6/6 green". The single most important gate in the system (real 6/6 for green) could be satisfied
+  without the chair ever voting and with a member double-counted. ROOT CAUSE: no per-role coverage check.
+- ★ BUG-57 (integrity) arbitrary/unknown role names accepted. `a:green,b:green,...,f:green` (none of them
+  configured committee members) PASSED. A typo'd or fabricated slate, or one that swaps a real member for
+  a placeholder, sailed through. ROOT CAUSE: voted roles never validated ⊆ configured member roles.
+
+FIX (ros.py cmd_verdict_write, green/promote branch): the gate now derives member_roles from config
+committee.members and requires, for green/promote (unless --override-rule):
+  (1) EVERY configured member role present by name (missing area_chair -> REFUSE),
+  (2) each role appears AT MOST ONCE (no duplicate-role padding),
+  (3) NO unknown roles (votes ⊆ configured members),
+  (4) unanimous rule: every member's vote == green (lists the specific non-green role:vote).
+--override-rule still bypasses (explicit escape hatch, prints votes N/6). yellow/red/kill/needs-more
+unchanged (no unanimity requirement — honest yellow/kill is first-class).
+
+VALIDATED (11 probes, all correct):
+  3-votes->REFUSE missing 3; 6-with-1-yellow->REFUSE non-green; full-6-distinct-green->PASS;
+  dup-role-pad(area_chair missing)->REFUSE duplicate; 7-bogus-roles->REFUSE missing all; 6-bogus->REFUSE;
+  area_chair-swapped-for-x->REFUSE missing area_chair; promote-full-6->PASS; override-rule-2-votes->PASS.
+SAFETY: real 6/6 (every named member green) now structurally required for green/promote; area_chair can
+no longer be silently dropped; no fabricated/duplicate roles count. COMMITTEE_INCOMPLETE (dispatch side)
+still never produces an ALL_COMMITTEE_DONE. AST-valid.
