@@ -1,0 +1,37 @@
+claim_id: CLAIM-0002
+project_id: PROJ-0001
+stage: seed
+status: seed
+claim: "For multi-turn agentic LLM serving under cache pressure, an adaptive 3-class\
+  \ KV/prefix retention policy that distinguishes COMMITTED-conversation scratch (appended\
+  \ to running context, reused by later turns) from TRANSIENT scratch (one-shot tool\
+  \ payloads never re-referenced) and protects a hot-prefix FLOOR, achieves a strictly\
+  \ better hit-rate/recompute Pareto frontier than (a) plain LRU and (b) a pin-shared-prefix-only\
+  \ baseline across the full cache-capacity sweep AND across shared_prefix_frac in\
+  \ {0.25,0.5,0.75,0.9} \u2014 i.e. the win does NOT collapse to trivial shared-prefix\
+  \ pinning and does NOT invert with cache headroom."
+why_it_matters: 'Committee#1 (VERDICT-0001) refuted the naive 2-class ''evict scratch
+  first'' claim because conversational scratch has real temporal locality; the open
+  question it surfaced is whether an adaptive policy that separates reused-scratch
+  from transient-scratch within a hot floor can beat BOTH LRU and trivial shared-prefix
+  pinning WITHOUT the cap>=1 inversion. Directly addresses VERDICT-0001 required_evidence
+  (claim rewrite + pin-shared-prefix-only ablation + shared_prefix_frac sweep + bootstrap
+  CI). Topic: inference-optimization + kv-cache + agent-infra. L0 is CPU sim; only
+  a non-collapsing, non-inverting result earns a GPU pass.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0002 result, then ros exp complete --exp EXP-0002 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0002
+created_at: '2026-06-02T22:32:47Z'
+last_updated: '2026-06-02T22:32:59Z'

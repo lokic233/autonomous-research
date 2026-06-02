@@ -1,0 +1,39 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: red}
+FATAL_OBJECTIONS: [
+  "Universal claim falsified by L0 (all 5 reviewers concur): TBA loses at cap_frac≥1.0 by 1.4–1.7pp hit rate and +14.5k–17.7k recomputed tokens. Not disputed.",
+  "systems_reviewer (RED, unrebutted): TensorRT-LLM already ships prioritized LRU with configurable token-range retention policies — system prompt tokens at priority 100, decode at 35, lower-priority evicted first. The proposed 'pin system+tool-schema, evict scratch first' is expressible as existing retention-policy configuration, not a new systems design. Cited: nvidia.github.io/TensorRT-LLM/features/kvcache.html. SGLang PriorityStrategy provides the same generic priority mechanism. No evidence in the packet rebuts this overlap.",
+  "product_realist (RED, unrebutted): The surviving conditional win (cap_frac≤0.25, +0.71pp) operates in a regime no mainstream serving fleet intentionally provisions — cache capacity below 50% of the hot-prefix working set. At realistic operating points (cap_frac≥1.0) TBA is strictly worse than LRU. The packet offers no evidence that the starvation regime is operationally relevant.",
+  "Prior-art search inadequate (per committee rules, bars GREEN): novelty_killer's egress was blocked; no live ≥2-source sweep was completed. Four high-probability collisions identified from domain knowledge (SGLang/RadixAttention, Prompt Cache, CachedAttention, vLLM prefix caching) but none verified to the ≥2-source standard. systems_reviewer independently confirmed TensorRT-LLM overlap via live URL."
+]
+REQUIRED_EVIDENCE: [
+  "CLAIM REWRITE (prerequisite to any GPU pass): The current claim ('tool-boundary-aware retention yields strictly higher hit rate than LRU') is dead in universal form and the conditional survivor ('only under starvation') is both operationally marginal and mechanism-anticipated by TensorRT-LLM priority eviction. A GPU pass re-running the same crossover on H100 vLLM would inherit all weaknesses. Before advancing, the claim must be rewritten to target a genuinely open question — e.g., an adaptive policy that distinguishes committed-conversation scratch from transient scratch within a hot-floor budget, which L0's own mechanism section proposes but has not tested.",
+  "Live ≥2-source prior-art sweep (owed, egress-blocked at L0): Must compare the surviving mechanism against SGLang/RadixAttention, Prompt Cache (Gim et al. MLSys 2024), CachedAttention (Gao et al. ATC 2024), TensorRT-LLM retention policies. Deliver a table: {prior work, what it does, does it report the capacity-vs-working-set crossover for agent/multi-turn traffic? Y/N, verified citation+URL}. If any source already reports the crossover → kill the conditional claim.",
+  "Ablation isolating 'pin shared-prefix blocks only' vs full TBA at cap≤0.5 (theory_skeptic): If pin-shared-prefix captures ≥80% of Δhit, the 'tool-boundary' framing is empty and collapses to a known shared-prefix-pinning result.",
+  "Sensitivity sweep over shared_prefix_frac ∈ {0.25, 0.5, 0.75, 0.9} (theory_skeptic): L0 used a single point (0.75); the entire result regime may depend on it.",
+  "Paired bootstrap CI on per-session Δhit and Δrecomp at cap∈{0.25, 0.5} with win zone defined as CI excluding 0 (theory_skeptic): n=3 seeds with population std is insufficient; the +0.0071 win is ~1 motivated seed from collapsing."
+]
+MANDATORY_BASELINES: [
+  "TensorRT-LLM prioritized LRU with token-range retention (systems_reviewer: already ships the core mechanism as config)",
+  "SGLang PriorityStrategy / RadixAttention cache-aware scheduling (novelty_killer + systems_reviewer)",
+  "Pin-shared-prefix-only ablation — LRU with cross-session shared blocks pinned, no tool-boundary tagging (theory_skeptic: isolates whether 'tool-boundary' adds signal beyond 'pin shared prefix')",
+  "ARC/LIRS/protected-LRU with HOT floor (theory_skeptic: standard adaptive replacement baselines the 2-class policy must beat)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0001", change: "status: weakened → refuted-as-stated. The universal claim is falsified by L0 evidence (TBA loses at cap≥1.0). The conditional survivor (TBA wins at cap<0.5) is (a) operationally marginal (product_realist: no fleet provisions below hot-set), (b) mechanism-anticipated by TensorRT-LLM priority eviction (systems_reviewer), (c) potentially explained by trivial shared-prefix pinning without tool-boundary awareness (theory_skeptic ablation owed), and (d) statistically fragile (n=3, no bootstrap CI). Do NOT advance to GPU under the current claim formulation. If the researcher wishes to continue, a new CLAIM (e.g., adaptive 3-class policy distinguishing committed-conversation vs transient scratch, benchmarked against TensorRT-LLM retention + SGLang priority eviction on real agent traces) must be seeded and re-enter at L0."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Two REDs are unrebutted by evidence in the packet, and the prior-art search was not completed — per committee rules, this bars GREEN. More substantively, the evidence picture is clear across all five reviewers:
+
+(1) The universal claim is dead. All reviewers agree; L0's own RESULTS.md commits to "PARTIAL → mostly NEGATIVE" and "claim's universal phrasing FALSIFIED." This is settled.
+
+(2) The conditional survivor is triply undermined. The systems_reviewer found that TensorRT-LLM already ships configurable priority-based LRU with explicit token-range retention policies — the proposed mechanism is not a design contribution but a configuration of an existing system. The product_realist demonstrated that the win regime (cap<50% of hot working set) is operationally irrelevant: no production fleet intentionally provisions this far below the hot set, and the alternative of simply provisioning adequate cache is cheaper and safer. The theory_skeptic showed the win is predicted by textbook 2-class priority cache analysis and may collapse to trivial shared-prefix pinning once properly ablated.
+
+(3) The three YELLOWs do not rescue the claim. The evaluation_prosecutor's YELLOW asks for GPU validation — but a GPU pass under the current claim would reproduce the same crossover on more expensive hardware without addressing the novelty gap (TensorRT-LLM) or the operational irrelevance. The novelty_killer's YELLOW is explicitly precautionary (egress blocked, cannot verify or refute collisions) — the systems_reviewer's independently verified TensorRT-LLM finding resolves the uncertainty in the unfavorable direction. The theory_skeptic's YELLOW credits honest reporting but identifies confounds (single shared_prefix_frac, trace-model dependence, n=3) that weaken even the conditional signal.
+
+(4) What is salvageable. The L0 produced a genuinely useful NEGATIVE finding: the crossover mechanism (conversational scratch has real temporal locality, so 2-class "evict scratch first" backfires with adequate capacity) is well-characterized and honestly reported. This insight could seed a NEW claim about adaptive multi-class policies — but that is a different claim requiring a fresh L0, not a GPU validation of the current one.
+
+I am resolving the 3Y/2R split by evidence weight, not vote count: the two REDs cite concrete, verified evidence (shipping system overlap, operationally irrelevant regime) that the three YELLOWs do not rebut. A YELLOW consensus would imply the claim is conditionally advanceable; the evidence says it is not advanceable under its current formulation. RED is the honest call.
+
+PROMPT_VERSION: v001
+```

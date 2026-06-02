@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The cap=0.25 win is the trivial consequence of `shared_prefix_frac=0.75`: when capacity < shared working set, ANY policy that protects the cross-session shared boilerplate (even a 1-line "pin blocks seen by ≥2 sessions") beats LRU. "Tool-boundary" framing adds no explanatory power beyond "pin the high-reuse class." A non-agentic workload with the same shared-prefix fraction would replicate the +0.71pp.
+- The crossover at cap≈hot-working-set is basic textbook cache theory: 2-class static priority is provably dominated by LRU/Belady once capacity exceeds the protected class's working set, because the priority forbids Belady-optimal evictions on the unprotected class. This is *predicted*, not "surprising."
+- The cap≥1.0 loss is mechanically forced by the trace generator's definition of scratch as appended-to-context: any policy that demotes recently-touched conversation blocks will trail LRU. The "interesting mechanism" is a definitional artifact of how scratch reuse was modeled.
+
+CONFOUNDS:
+- shared_prefix_frac=0.75 is a single point — the entire result regime depends on it; not swept.
+- block_size=16 fixed; cap_frac grid rounded to block units — small-N quantization can shift Δhit by ≥1 block at low capacities.
+- Trace generator decides both the "claim" (scratch is cold) and the "test" (scratch reuse via accumulation). The researcher's own scratch-reuse modeling choice is what falsified the claim; an equally defensible trace where ASSISTANT replies are summarized/dropped would have produced a uniform TBA win. Result is trace-model-bound, not workload-bound.
+- No comparison vs. the obvious stronger baselines that would isolate the real signal: (a) "pin cross-session-shared blocks only, LRU elsewhere", (b) LFU, (c) ARC/LIRS, (d) protected-LRU with a HOT floor (which is what the L0's own mechanism paragraph implicitly proposes). Without these, the +0.71pp is unattributable.
+
+ASSUMPTIONS_UNTESTED:
+- "Bimodal, structurally-predictable reuse" — never operationalized as a measurable trace statistic (e.g. reuse-distance histogram, stack-distance bimodality test). The premise was asserted, not measured, then falsified by the run.
+- Independence of hits across capacity points — same trace replayed, so seeds are correlated across capacities; reported ±std understates uncertainty on Δ.
+- Equivalence of "prompt tokens served from cache" to "tokens-not-recomputed" assumes radix chaining with no partial-block credit; correct for vLLM but not stated as an assumption the GPU pass must preserve.
+- Block hash collisions assumed zero (content-addressed proxy tokens); not stated, not tested.
+
+STATISTICAL_GAPS:
+- n=3 seeds. No formal test (Welch's t, paired bootstrap on per-session Δ). The +0.0071 win at cap=0.25 has LRU σ=.0032, TBA σ=.0018 → pooled SE ≈ .0021, t≈3.4 — *probably* real, but with df≈4 this is one motivated seed away from collapsing. The "non-overlapping at 1σ" criterion is weaker than the pre-reg's "ideally ≥1σ" reads, and ≠ significance.
+- ±std on RESULTS table is population std, not SEM — under-disclosure of estimator variance.
+- No effect-size CI on Δhit or Δrecomp at any capacity. The "tie" at cap=0.75 (Δ=−0.0001) is unanchored — could be ±0.01 for all we can tell.
+- No sensitivity sweep over shared_prefix_frac, scratch_len, turns_per_session, block_size — so the cap_frac sweep is along the single axis least likely to falsify the surviving conditional claim.
+
+RATIONALE: The L0 is honestly run and honestly reported (RESULTS.md commits to PARTIAL→mostly NEGATIVE and identifies the right mechanism, sim.py + pre-reg + 3 seeds committed pre-run). That earns a YELLOW floor, not a RED. But the *theory* the project is now reduced to ("TBA wins in the cache-starved regime") is (i) predicted by basic 2-class priority cache analysis, (ii) confounded with "pin cross-session-shared blocks," (iii) sensitive to a single un-swept trace parameter (shared_prefix_frac=0.75), and (iv) not statistically separated from a paired-bootstrap-null at the only capacity where it survives. A GPU pass that just re-runs the same crossover on H100 vLLM `enable_prefix_caching` would inherit all four problems and produce a prettier version of the same weakened result. Required_evidence to advance: (1) ablation isolating "pin shared-prefix blocks only" vs full TBA at cap≤0.5 — if the ablation captures ≥80% of Δhit, the "tool-boundary" framing is empty and the claim collapses to a known shared-prefix-pinning result; (2) sensitivity sweep over shared_prefix_frac ∈ {0.25, 0.5, 0.75, 0.9} to map the actual region of TBA dominance, not declare it from one point; (3) paired bootstrap CI on per-session Δhit and Δrecomp at cap∈{0.25, 0.5}, with the win zone defined as CI excluding 0; (4) live ≥2-source prior-art sweep vs vLLM/SGLang RadixAttention eviction, prompt-cache retention, and agent-KV eviction work — without this the "novel mechanism" framing is unverifiable, and the orchestrator already flagged egress as owed. Cite Belady (1966) on optimal replacement and Megiddo-Modha ARC (2003) as the theoretical baselines TBA must out-argue, not just out-score on one trace. v001
+```

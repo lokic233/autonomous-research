@@ -1,0 +1,55 @@
+Both egress tools (the meta external web search and WebSearch) were denied at my end, so I could not complete the mandated live ≥2-source prior-art sweep. Per the committee rules I will not fabricate a green or invent verified collisions. Honest YELLOW with a concrete scoping fix and the high-probability collisions the authors must clear.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK (candidate collisions — from knowledge, NOT live-verified; egress blocked):
+- {cite: "SGLang / RadixAttention (Zheng et al., 2023–24)", url: "arxiv.org/abs/2312.07104 (UNVERIFIED this session)",
+   why_close: "Radix-tree prefix cache with LRU eviction AND cache-aware scheduling that prioritizes shared
+   prefixes. This is the canonical 'structure-aware prefix retention vs blind LRU' system. Directly overlaps
+   the mechanism. The packet's own LRU baseline is essentially vLLM/SGLang prefix caching."}
+- {cite: "Prompt Cache: Modular Attention Reuse (Gim et al., MLSys 2024)", url: "UNVERIFIED this session",
+   why_close: "Segments prompts into reusable modules (system / schema / boilerplate) and reuses their attention
+   state — i.e. 'pin system + tool-schema prefixes' is its core idea under a different name."}
+- {cite: "CachedAttention / AttentionStore (Gao et al., USENIX ATC 2024)", url: "UNVERIFIED this session",
+   why_close: "Multi-turn conversation KV retention across turns with scheduling-aware eviction. Anticipates the
+   L0 finding that intra-session scratch has real temporal locality and must be retained — the exact mechanism
+   that falsified the naive claim."}
+- {cite: "vLLM enable_prefix_caching (block-level prefix cache, LRU eviction)", url: "docs.vllm.ai (UNVERIFIED)",
+   why_close: "Is the exact baseline being beaten; its design already discusses prefix-aware block retention."}
+
+NAMING_VS_MECHANISM: Predominantly NAMING. "Tool-boundary-aware retention" relabels structure/segment-aware
+prefix caching (Prompt Cache) + prefix-priority eviction (SGLang). The only candidate MECHANISM delta is the
+CROSSOVER characterization (TBA wins iff capacity < shared-prefix working set; the naive 2-class rule backfires
+with headroom because conversational scratch is reused) — and even that insight is foreshadowed by CachedAttention's
+multi-turn retention. The originally-seeded 2-class "pin hot / evict scratch first" rule has no mechanism novelty:
+it is a strictly weaker instance of cache-aware prefix priority that L0 already showed is dominated by LRU at
+adequate capacity.
+
+FATAL_COLLISIONS: None CONFIRMED — a fatal collision requires ≥2 independent verified sources, and egress was
+denied so I verified zero. The four above are HIGH-PROBABILITY collisions, not certified kills. I am explicitly
+NOT casting red on unverifiable memory.
+
+MANDATORY_RELATED_WORK (authors MUST cite + differentiate before any green): SGLang/RadixAttention; Prompt Cache;
+CachedAttention/AttentionStore; vLLM prefix caching internals. If any one of these already reports the
+capacity-dependent crossover for conversational/agent traffic, the remaining novelty collapses to zero.
+
+REQUIRED_EVIDENCE for advancing (this is a novelty gate, separate from the GPU systems pass):
+1. A real ≥2-independent-source prior-art sweep (run with egress) explicitly comparing the surviving conditional
+   claim against the 4 works above. Deliver a table: {prior work, what it does, does it report the
+   capacity-vs-working-set crossover for agent/multi-turn traffic? Y/N, citation+URL}.
+2. A one-paragraph differentiation stating precisely what is left that is NOT in prior art. Acceptable surviving
+   novelty would have to be something like: "the policy that distinguishes COMMITTED conversation scratch (reused)
+   from TRANSIENT scratch within a hot-floor budget" — which L0 itself proposed and has NOT yet been built/tested.
+3. If the sweep shows the crossover is already published → RED / kill the conditional claim too. If no source
+   reports it for agentic tool-call traces → upgrade to yellow-green pending the GPU systems evidence.
+
+RATIONALE: Egress denied this session (mcp three_pai search and WebSearch both permission-blocked), so the
+mandated live sweep is OWED, not done — that alone forbids a green. From domain knowledge, the seeded mechanism
+collides heavily with SGLang cache-aware prefix scheduling, Prompt Cache modular reuse, and CachedAttention
+multi-turn retention; the naive 2-class rule is already falsified by L0 and is a known-dominated special case.
+The only defensible residual novelty is the crossover characterization for agentic traces, which must be checked
+against the 4 works above before it can be claimed. I will not inflate to green (no sweep) nor to red (no
+verified ≥2-source collision); honest YELLOW with the sweep as the gating required_evidence is the correct call.
+PROMPT_VERSION: v001
+```

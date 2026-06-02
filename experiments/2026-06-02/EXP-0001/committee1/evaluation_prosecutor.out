@@ -1,0 +1,11 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [
+  {"name": "vLLM RadixAttention", "why": "Production standard for prefix caching and block eviction. Comparing against a toy simulator LRU is invalid.", "repo_or_cite": "https://github.com/vllm-project/vllm"},
+  {"name": "SGLang", "why": "Specifically designed for complex, multi-turn prompt sharing and radix attention caching in agent workloads.", "repo_or_cite": "https://github.com/sgl-project/sglang"}
+]
+STRAWMAN_RISKS: ["Comparing a bespoke Python CPU simulator's 'plain LRU' against the proposed heuristic ignores the complex paging (PagedAttention) and tree-based eviction dynamics of production engines.", "Assuming the -1.4% recompute savings in the starved regime justifies the heuristic without accounting for the CPU overhead of block classification."]
+MISSING_METRICS: ["Time To First Token (TTFT)", "End-to-end generation throughput (req/s)", "Eviction policy execution overhead (CPU latency)"]
+KILLER_EXPERIMENT: Implement the TBA heuristic directly inside vLLM's block manager. Run a realistic multi-turn agent benchmark (e.g., ToolBench) on an H100 across the 0.25 to 1.5 capacity sweep, measuring TTFT and throughput against native vLLM with `enable_prefix_caching=True`.
+RATIONALE: The L0 simulation already falsified the universal claim, showing the naive 2-class rule destroys recoverable cold-block locality under ample capacity. To validate the remaining narrow claim (the starvation-regime win), the required_evidence is an end-to-end GPU pass that demonstrates tangible TTFT or throughput improvements against a production baseline (vLLM RadixAttention), as simulation token-hit-rates are insufficient evidence of real-world serving performance.
+```

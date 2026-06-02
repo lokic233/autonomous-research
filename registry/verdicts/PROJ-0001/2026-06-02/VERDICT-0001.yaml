@@ -1,0 +1,66 @@
+verdict_id: VERDICT-0001
+claim_id: CLAIM-0001
+project_id: PROJ-0001
+date: '2026-06-02'
+experiment_ids:
+- EXP-0001
+experiment_paths:
+- experiments/2026-06-02/EXP-0001
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- 'Universal claim falsified by L0 (TBA loses at cap>=1.0: -1.4..-1.7pp hit, +14.5k..17.7k
+  recomp toks'
+- all 5 reviewers concur)
+- TensorRT-LLM already ships prioritized LRU with token-range retention (system=pri100,
+  decode=pri35) -> proposed mechanism is existing config not a new design (systems_reviewer
+  RED, live URL, unrebutted)
+- Surviving conditional win lives in cap<0.5x hot-WS regime no production fleet provisions
+  (product_realist RED, unrebutted)
+- Prior-art sweep incomplete (novelty_killer egress-blocked) -> bars GREEN per committee
+  rules
+- systems_reviewer independently verified TensorRT-LLM overlap
+required_evidence:
+- 'CLAIM REWRITE before any GPU pass: current claim refuted-as-stated'
+- conditional survivor is mechanism-anticipated by TRT-LLM priority eviction. New
+  claim must target an open question (adaptive policy distinguishing committed-conversation
+  scratch from transient scratch within a hot-floor budget) and re-enter at L0
+- Live >=2-source prior-art sweep vs SGLang/RadixAttention, Prompt Cache (Gim MLSys24),
+  CachedAttention (Gao ATC24), TRT-LLM retention -> table with crossover Y/N + verified
+  URLs
+- Ablation pin-shared-prefix-only vs full TBA at cap<=0.5 (if >=80% of dhit captured,
+  tool-boundary framing is empty)
+- Sensitivity sweep shared_prefix_frac in {0.25,0.5,0.75,0.9} (L0 used single point
+  0.75)
+- Paired bootstrap CI on per-session dhit/drecomp at cap in {0.25,0.5}, win zone =
+  CI excludes 0 (n=3 insufficient)
+map_delta_proposals:
+- 'CLAIM-0001: weakened -> refuted-as-stated'
+- universal claim falsified by L0
+- conditional survivor operationally marginal + mechanism-anticipated by TRT-LLM +
+  possibly trivial shared-prefix pinning (ablation owed) + statistically fragile (n=3)
+- do NOT advance to GPU under current formulation
+- 'salvageable NEGATIVE finding (crossover: conversational scratch has temporal locality,
+  2-class evict-scratch-first backfires with headroom) should seed a NEW adaptive-multi-class
+  claim re-entering at L0'
+baseline_requirements:
+- TensorRT-LLM prioritized LRU token-range retention
+- SGLang PriorityStrategy/RadixAttention cache-aware scheduling
+- pin-shared-prefix-only ablation (no tool-boundary tagging)
+- ARC/LIRS/protected-LRU with HOT floor
+created_at: '2026-06-02T22:32:02Z'
