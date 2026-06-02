@@ -1,0 +1,13 @@
+PARAMS: {'n_sessions': 40, 'turns_per_session': 8, 'prefix_len': 2048, 'scratch_len': 256, 'shared_prefix_frac': 0.75}
+seed=11 requests=320 distinct_hot_blocks=1376 prefix_blocks/sess=128 scratch_blocks/turn=16
+seed=23 requests=320 distinct_hot_blocks=1376 prefix_blocks/sess=128 scratch_blocks/turn=16
+seed=47 requests=320 distinct_hot_blocks=1376 prefix_blocks/sess=128 scratch_blocks/turn=16
+
+cap_frac    cap |   LRU hit   TBA hit     Δhit |  LRU recomp  TBA recomp    Δrecomp | verdict
+    0.25    344 |    0.5045    0.5116  +0.0071 |      507392      500139      -7253 | TBA wins
+     0.5    688 |    0.5556    0.5570  +0.0014 |      455083      453632      -1451 | TBA wins
+    0.75   1032 |    0.5958    0.5957  -0.0001 |      413952      414037        +85 | TBA loses
+     1.0   1376 |    0.6412    0.6271  -0.0142 |      367360      381867     +14507 | TBA loses
+     1.5   2064 |    0.7272    0.7099  -0.0173 |      279381      297045     +17664 | TBA loses
+
+CSV: /Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0001/results/results.csv

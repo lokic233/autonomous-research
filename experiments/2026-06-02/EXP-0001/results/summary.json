@@ -1,0 +1,113 @@
+{
+  "params": {
+    "n_sessions": 40,
+    "turns_per_session": 8,
+    "prefix_len": 2048,
+    "scratch_len": 256,
+    "shared_prefix_frac": 0.75
+  },
+  "cap_fracs": [
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.5
+  ],
+  "seeds": [
+    11,
+    23,
+    47
+  ],
+  "summary": [
+    {
+      "cap_frac": 0.25,
+      "lru": {
+        "hit_rate_mean": 0.5045,
+        "hit_rate_std": 0.0031885210782848232,
+        "recomp_mean": 507392,
+        "recomp_std": 3265.0455841636676,
+        "evict_mean": 31368
+      },
+      "tba": {
+        "hit_rate_mean": 0.5115833333333334,
+        "hit_rate_std": 0.0017834112132527169,
+        "recomp_mean": 500138.6666666667,
+        "recomp_std": 1826.21308237079,
+        "evict_mean": 30914.666666666668
+      },
+      "capacity": 344
+    },
+    {
+      "cap_frac": 0.5,
+      "lru": {
+        "hit_rate_mean": 0.5555833333333333,
+        "hit_rate_std": 0.003595908168398592,
+        "recomp_mean": 455082.6666666667,
+        "recomp_std": 3682.209964440135,
+        "evict_mean": 27754.666666666668
+      },
+      "tba": {
+        "hit_rate_mean": 0.557,
+        "hit_rate_std": 0.0030618621784789524,
+        "recomp_mean": 453632,
+        "recomp_std": 3135.346870762468,
+        "evict_mean": 27664
+      },
+      "capacity": 688
+    },
+    {
+      "cap_frac": 0.75,
+      "lru": {
+        "hit_rate_mean": 0.59575,
+        "hit_rate_std": 0.009396364545219945,
+        "recomp_mean": 413952,
+        "recomp_std": 9621.877294305237,
+        "evict_mean": 24840
+      },
+      "tba": {
+        "hit_rate_mean": 0.5956666666666667,
+        "hit_rate_std": 0.0020034692133619257,
+        "recomp_mean": 414037.3333333333,
+        "recomp_std": 2051.55247448257,
+        "evict_mean": 24845.333333333332
+      },
+      "capacity": 1032
+    },
+    {
+      "cap_frac": 1.0,
+      "lru": {
+        "hit_rate_mean": 0.64125,
+        "hit_rate_std": 0.006347571714180724,
+        "recomp_mean": 367360,
+        "recomp_std": 6499.913435321017,
+        "evict_mean": 21584
+      },
+      "tba": {
+        "hit_rate_mean": 0.6270833333333333,
+        "hit_rate_std": 0.0022391714737573934,
+        "recomp_mean": 381866.6666666667,
+        "recomp_std": 2292.911589127578,
+        "evict_mean": 22408
+      },
+      "capacity": 1376
+    },
+    {
+      "cap_frac": 1.5,
+      "lru": {
+        "hit_rate_mean": 0.7271666666666667,
+        "hit_rate_std": 0.00368178700572909,
+        "recomp_mean": 279381.3333333333,
+        "recomp_std": 3770.1498938665854,
+        "evict_mean": 15397.333333333334
+      },
+      "tba": {
+        "hit_rate_mean": 0.7099166666666666,
+        "hit_rate_std": 0.007843079043901646,
+        "recomp_mean": 297045.3333333333,
+        "recomp_std": 8031.3129409552685,
+        "evict_mean": 16501.333333333332
+      },
+      "capacity": 2064
+    }
+  ]
+}
