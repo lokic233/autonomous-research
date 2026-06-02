@@ -12,12 +12,27 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL/held-leaning -> SUPPORT. Adaptive 3-class (committed-vs-transient
+  + hot-prefix floor) STRICTLY Pareto-dominates BOTH required baselines (LRU, pin-shared-prefix)
+  at every cap_frac AND every shared_prefix_frac (n=6 seeds, paired bootstrap 95%
+  CIs all exclude 0): a3-LRU Dhit +1.2..+3.0pp at cap>=0.5, a3-PIN Dhit +0.0004..+0.0376,
+  recompute -274..-650 tok. FIXES naive2 headroom inversion: a3 GAINS +2.3pp/+3.0pp
+  over LRU at cap1.0/1.5 (naive2 had LOST -1.4..-1.7pp in EXP-0001). Win is NON-trivial:
+  pin captures 0% of the a3-vs-LRU gap in 19/20 (cap x shared) regimes; the win comes
+  from evicting TRANSIENT tool payloads first while keeping COMMITTED scratch as LRU,
+  not from shared-prefix pinning. PARTIAL (not clean HELD) because (1) lone corner
+  cap0.25/sf0.90: LRU thrashes (0.17), any prefix protection rescues, pin captures
+  99.9% -> degenerates to trivial pinning there; (2) naive2 marginally out-hits a3
+  under deep starvation cap<=0.5 (a3-naive2 -0.4pp/-0.1pp). Robust compelling regime
+  = cap0.5..1.5. CANDIDATE-GRADE for GPU pass: real vLLM enable_prefix_caching on
+  devgpu014/H100 (NEVER MI350X devgpu499). OWED at committee: live prior-art sweep
+  vs SGLang/RadixAttention, Prompt Cache (Gim MLSys24), CachedAttention (Gao ATC24),
+  TensorRT-LLM token-range retention (no egress at L0). Artifacts: experiments/2026-06-02/EXP-0002/{sim.py,RESULTS.md,PRE_REGISTRATION.md,results/results.csv,results/summary.json}.'
+result_effect: support
 artifacts_path: experiments/2026-06-02/EXP-0002/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-02T22:47:30Z'
 prompt_version: ''
