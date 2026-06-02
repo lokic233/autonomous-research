@@ -14,17 +14,29 @@ why_it_matters: 'Continuous-batching admission ignores prefix sharing; co-schedu
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0005
+  summary: 'PARTIAL/conditional HELD. L0 CPU queueing+block-prefix-cache sim, 96 cells/576
+    rows/6 seeds/paired bootstrap CI. At MATCHED FAIRNESS (bounded reorder W, p99<=1.10x
+    FCFS, achieved ~1.02x) PFA admission cuts recomputed prefill up to 76% (CI excludes
+    0; 15/92 matched cells clean wins) and raises prefix hit-rate (e.g. 0.46->0.87),
+    BUT ONLY when cache cannot hold all families AND under load (one/few regime +
+    heavy: mean 9-11% sav, 6/16 wins; light: ~0%). HONEST-NEGATIVE N2 FIRED: cache
+    holds all families => 0/32 wins, exactly 0% (no eviction => no co-residency benefit).
+    Unbounded-greedy PFA gets +17% but at 1.29-1.34x p99 (fairness overclaim, NOT
+    counted as matched win). No matched cell ever favored FCFS. GPU pass: real vLLM/SGLang
+    scheduler+APC/RadixAttention, real TTFT p99. Prior-art caveat (no egress): SGLang
+    cache-aware scheduling + vLLM prefix-cache scheduling likely related; contribution
+    is the matched-fairness control.'
+  data_path: experiments/2026-06-02/EXP-0005/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0005 result, then ros exp complete --exp EXP-0005 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0005; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0005
+active_experiments: []
 created_at: '2026-06-02T23:22:30Z'
-last_updated: '2026-06-02T23:23:19Z'
+last_updated: '2026-06-02T23:45:32Z'

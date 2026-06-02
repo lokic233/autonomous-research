@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL/conditional HELD. L0 CPU queueing+block-prefix-cache sim,
+  96 cells/576 rows/6 seeds/paired bootstrap CI. At MATCHED FAIRNESS (bounded reorder
+  W, p99<=1.10x FCFS, achieved ~1.02x) PFA admission cuts recomputed prefill up to
+  76% (CI excludes 0; 15/92 matched cells clean wins) and raises prefix hit-rate (e.g.
+  0.46->0.87), BUT ONLY when cache cannot hold all families AND under load (one/few
+  regime + heavy: mean 9-11% sav, 6/16 wins; light: ~0%). HONEST-NEGATIVE N2 FIRED:
+  cache holds all families => 0/32 wins, exactly 0% (no eviction => no co-residency
+  benefit). Unbounded-greedy PFA gets +17% but at 1.29-1.34x p99 (fairness overclaim,
+  NOT counted as matched win). No matched cell ever favored FCFS. GPU pass: real vLLM/SGLang
+  scheduler+APC/RadixAttention, real TTFT p99. Prior-art caveat (no egress): SGLang
+  cache-aware scheduling + vLLM prefix-cache scheduling likely related; contribution
+  is the matched-fairness control.'
+result_effect: support
 artifacts_path: experiments/2026-06-02/EXP-0005/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-02T23:45:32Z'
 prompt_version: ''
