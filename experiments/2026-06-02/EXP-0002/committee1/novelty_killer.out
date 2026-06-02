@@ -1,0 +1,46 @@
+Both live web-search tools are permission-gated and were denied in this environment — egress is blocked. Per my mandate (a KILL collision must be verified in ≥2 *independent, retrievable* sources) and the packet's explicit instruction ("If egress blocked → honest YELLOW with scoping fix, not a fabricated green"), I cannot complete the OWED live prior-art sweep. I will not fabricate a verified-collision green. Here is my honest vote, with prior-art drawn from training knowledge (cutoff Jan 2026) and flagged as NOT live-verified.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Gao et al., 'Cost-Efficient LLM Serving for Multi-turn Conversations with CachedAttention', USENIX ATC 2024",
+   url: "arxiv.org/abs/2403.19708 (NOT live-verified — egress blocked)",
+   why_close: "Reuses conversation-context KV across turns with scheduler-aware load/evict. Directly overlaps CLAIM-0002's COMMITTED-scratch reuse mechanism. Does NOT (to my recollection) tag one-shot tool-output payloads as a distinct evict-first class — that distinction is the claimed delta and MUST be drawn explicitly."},
+  {cite: "Zheng et al., 'SGLang: Efficient Execution of Structured LM Programs / RadixAttention', NeurIPS 2024",
+   url: "arxiv.org/abs/2312.07104 (NOT live-verified)",
+   why_close: "Radix-tree prefix sharing + LRU eviction + reference counting + cache-aware scheduling. This IS the LRU+radix baseline; eviction is frequency/recency-driven, not semantically tool-vs-committed classified."},
+  {cite: "TensorRT-LLM KvCacheRetentionConfig (token-range / block retention priority)",
+   url: "github.com/NVIDIA/TensorRT-LLM docs (NOT live-verified)",
+   why_close: "Already exposes priority/duration-based block retention. The pin/floor MECHANISM is largely pre-existing; the open question (defer to systems_reviewer) is whether 'evict tool-output token range first, keep committed scratch as LRU' is just a config of this — if so the mechanism contribution is empty."},
+  {cite: "Gim et al., 'Prompt Cache', MLSys 2024",
+   url: "arxiv.org/abs/2311.04934 (NOT live-verified)",
+   why_close: "Modular position-independent prompt-segment reuse. Tangential (storage/reuse, not eviction priority) but mandatory to distinguish."},
+  {cite: "CLASSIC scan-resistant caching: Megiddo & Modha 'ARC' (FAST 2003); Jiang & Zhang 'LIRS' (SIGMETRICS 2002); also MRU-for-scan",
+   url: "well-known literature (NOT live-verified)",
+   why_close: "MOST DANGEROUS analogy: 'evict one-touch / never-re-referenced references before they pollute LRU' is the canonical scan-resistance problem solved decades ago. Transient tool payloads = scan/one-touch references; evict-transient-first = scan-resistant eviction. The 19/20-cell win (pin captures 0%) is explained entirely by this classical effect, NOT by anything LLM-specific."}
+]
+
+NAMING_VS_MECHANISM: Largely NAMING/application, not a new caching mechanism. The eviction MECHANISM (protected floor + priority/class-ordered eviction over prefix blocks) is pre-existing (TRT-LLM retention priority, SGLang refcount+LRU, CachedAttention scheduler). The genuinely-distinct piece is the SEMANTIC CLASSIFIER — labeling one-shot TOOL-RESULT payloads COMMITTED-vs-TRANSIENT to set eviction order. But the demonstrated benefit reduces to classical scan-resistant caching (evict one-touch data first), re-applied to LLM tool outputs. So the delta over prior work is "use a tool-call-boundary signal to detect one-touch KV blocks," i.e. a domain-specific hint feeding a known mechanism — an application contribution, not a mechanism contribution. That can still be publishable, but it must be FRAMED honestly as such, not as a novel cache policy.
+
+FATAL_COLLISIONS: NONE VERIFIED (egress blocked → cannot meet the ≥2-independent-source bar for a KILL). Two unconfirmed collision RISKS that would be fatal-to-novelty if true: (1) TRT-LLM KvCacheRetentionConfig can already express "evict tool-output token ranges first" as config (systems_reviewer must adjudicate — if yes, mechanism novelty is empty); (2) the effect is fully subsumed by scan-resistant caching (ARC/LIRS), making the contribution "scan-resistance with a tool-boundary detector." Neither is confirmed-fatal; both must be closed before any green.
+
+MANDATORY_RELATED_WORK: [
+  "CachedAttention (Gao, ATC'24) — distinguish OUR eviction-classification contribution from THEIR cross-turn reuse/storage contribution.",
+  "SGLang/RadixAttention (Zheng, NeurIPS'24) — cite as the LRU+radix baseline's real eviction policy.",
+  "TensorRT-LLM KvCacheRetentionConfig — must demonstrate the policy is NOT trivially config-expressible there.",
+  "Prompt Cache (Gim, MLSys'24).",
+  "Scan-resistant caching: ARC (Megiddo&Modha, FAST'03), LIRS (Jiang&Zhang'02) — REQUIRED framing; transient-evict-first IS scan resistance.",
+  "Attention-score KV eviction: H2O (Zhang, NeurIPS'23, arxiv 2306.14048), StreamingLLM (Xiao, ICLR'24), SnapKV — position why a SEMANTIC tool-boundary classifier beats attention-magnitude eviction."
+]
+
+RATIONALE: The OWED live ≥2-source prior-art sweep (carried over from VERDICT-0001 required_evidence #2) is STILL not done — both web tools (mcp__plugin_meta_mux__three_pai_external_web_search and WebSearch) were permission-denied this session, so I have zero live-retrievable sources and cannot certify any collision as fatal, nor certify novelty as clear. Issuing green would be unauditable; issuing red would assert a fatal collision I cannot verify. Honest verdict = YELLOW. The novelty I can identify from training knowledge is thin-but-not-dead: the committed-vs-transient tool-payload classifier is a plausible application-level delta over CachedAttention/SGLang, but the eviction effect is anticipated by classical scan-resistant caching and possibly by TRT-LLM retention-priority config.
+
+REQUIRED_EVIDENCE (scoping fix; gate on these before committee#2/green):
+  1. Run the live ≥2-source prior-art sweep on an egress-enabled host (the original owed item). Search specifically: "tool-output / scratch KV eviction", "one-shot KV cache hint LLM agent", "scan-resistant caching LLM KV". Confirm NO published policy already keys eviction on tool-call boundary / committed-vs-transient.
+  2. systems_reviewer must adjudicate TRT-LLM KvCacheRetentionConfig expressibility; if the policy is pure config, mechanism novelty is empty (downgrade to red).
+  3. GPU pass must add a baseline: classical scan-resistant eviction (e.g. evict-last-touched-one-touch / MRU-on-tail) WITHOUT the tool-boundary semantic tag, to isolate whether the tool-boundary CLASSIFIER (vs generic one-touch detection) adds anything.
+  4. Paper must position against CachedAttention, SGLang/RadixAttention, TRT-LLM retention, ARC/LIRS, and H2O/StreamingLLM, drawing the OUR-classifier-vs-THEIR-mechanism line explicitly.
+
+PROMPT_VERSION: v001
+```

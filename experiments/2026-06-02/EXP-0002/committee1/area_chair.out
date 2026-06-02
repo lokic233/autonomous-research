@@ -1,0 +1,62 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "1. OWED PRIOR-ART SWEEP (carried from VERDICT-0001, still unexecuted): live >=2-source search on egress-enabled host. Mandatory queries: 'tool-output KV eviction priority LLM', 'one-shot scratch cache hint LLM agent', 'scan-resistant caching KV LLM'. Must confirm no published policy already keys eviction on tool-call-boundary / committed-vs-transient classification. This gates ANY green.",
+  "2. TRT-LLM EXPRESSIBILITY ADJUDICATION: demonstrate on TRT-LLM's shipping KvCacheRetentionConfig whether 'evict tool-output token ranges first, keep committed conversation scratch as LRU' is achievable as pure config WITHOUT a new classifier. If yes: mechanism novelty is empty and claim must be reframed to 'automatic classification policy for existing eviction infrastructure' (application contribution, not mechanism). If no: document what is missing and why.",
+  "3. SCAN-RESISTANT BASELINE in GPU pass: implement classical one-touch / MRU-on-tail eviction (evict blocks touched exactly once before blocks touched >1) WITHOUT the tool-boundary semantic tag. If this captures >=80% of adaptive3's gain over LRU, the tool-boundary CLASSIFIER adds nothing beyond generic one-touch detection and the domain-specific contribution is empty.",
+  "4. COMMITTED:TRANSIENT RATIO SWEEP: {1:3, 1:1, 3:1} at minimum. The entire effect scales with transient fraction (theory_skeptic); 1:1 is a single point. If win vanishes at 1:3 the policy is brittle.",
+  "5. MISCLASSIFICATION ROBUSTNESS: degrade curve where X% of TRANSIENT-labeled blocks are actually re-referenced (X in {0, 10, 25, 50}). Find the crossover where adaptive3 collapses to LRU. If crossover is <25%, production classifier accuracy requirements are unrealistic.",
+  "6. BELADY/OPTIMAL-OFFLINE UPPER BOUND on the same trace, so the 1-3pp gains are interpretable as fraction of achievable headroom. Without this we cannot tell if adaptive3 captures 30% or 95% of what is possible.",
+  "7. GPU VALIDATION: real vLLM enable_prefix_caching on devgpu014/H100 with two-typed agentic trace. Measure TTFT, end-to-end throughput (req/sec), prefix-cache hit-rate, recomputed-prefill-tokens. Sweep --gpu-memory-utilization as cap_frac proxy. TRANSIENT classification must be derived from a real prompt-template inspector, NOT an oracle label, so we measure the SYSTEM (classifier + eviction), not the oracle.",
+  "8. FRAMING: paper/claim must position explicitly against CachedAttention (Gao ATC'24), SGLang/RadixAttention (Zheng NeurIPS'24), TRT-LLM KvCacheRetentionConfig, Prompt Cache (Gim MLSys'24), ARC (Megiddo&Modha FAST'03), LIRS (Jiang&Zhang SIGMETRICS'02), H2O (Zhang NeurIPS'23), StreamingLLM (Xiao ICLR'24). Draw the line: our contribution is the SEMANTIC CLASSIFIER (tool-boundary → eviction priority), not the eviction mechanism."
+]
+MANDATORY_BASELINES: [
+  "LRU (plain, as in L0)",
+  "pin-shared-prefix-only (as in L0)",
+  "TRT-LLM KvCacheRetentionConfig with manually-set tool-output token ranges at lowest priority (to test whether the mechanism is already available as config)",
+  "Classical scan-resistant / one-touch eviction (ARC-style or MRU-on-tail) WITHOUT tool-boundary semantic tag",
+  "Belady / optimal-offline (upper bound)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0002", change: "Reframe from 'novel cache policy' to 'application-level semantic classifier feeding existing priority-eviction infrastructure (TRT-LLM retention, SGLang priority eviction).' The contribution is the tool-boundary signal as a domain-specific scan-resistance hint, not a new eviction mechanism. Adjust novelty claim accordingly. Add required_evidence items 1-8 above. Status remains PARTIAL/candidate-grade for GPU pass with expanded baselines."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE:
+
+## Aggregation
+
+Four YELLOWs and one RED. I resolve by evidence weight, not vote count.
+
+### The RED (systems_reviewer) — serious but not definitively fatal
+
+The systems_reviewer found that TRT-LLM's shipping KvCacheRetentionConfig already supports priority/duration-based token-range retention, with documentation explicitly describing the two use cases that map to CLAIM-0002: "system prompt blocks at max priority" and "blocks known never to be reused at lowest priority so they are evicted first." SGLang also ships priority-aware eviction (lower priority evicted first, LRU within same priority). This is a real overlap.
+
+However, the RED overstates the collision. Having a priority API (mechanism) is not identical to having a published, tested policy that automatically classifies tool-output tokens as TRANSIENT via tool-call-boundary signals (the classifier). The novelty_killer — whose specific job is collision detection — examined this same question and concluded "thin-but-not-dead" YELLOW, not RED. The distinction between "the API CAN express it" vs "someone HAS published a policy that DOES express it via automatic classification" is load-bearing and must be settled by the owed prior-art sweep, not assumed either way. I therefore do NOT treat this RED as definitively fatal, but I DO require TRT-LLM expressibility adjudication (required_evidence #2) as a hard gate.
+
+### Prior-art adequacy — NO
+
+The live ≥2-source prior-art sweep was required_evidence item (2) from VERDICT-0001. It is STILL unexecuted (egress blocked at L0, and again for the novelty_killer in this committee session). Per my mandate: no GREEN without adequate prior-art search. This alone blocks promotion.
+
+### The L0 evidence — solid within its scope
+
+The experiment is pre-registered (committed before run), uses n=6 seeds with paired bootstrap CIs, honestly discloses two blemishes (cap=0.25/sf=0.90 degeneration; naive2 starvation edge), and demonstrates strict Pareto dominance over both required baselines at all 20 cells. The evaluation_prosecutor correctly notes the effects are operationally modest (+2.3pp at cap=1.0), and the theory_skeptic correctly identifies the win as the predicted Belady-style benefit of an oracle dead-block hint — but the experiment does what it set out to do. PARTIAL/held-leaning is the right self-assessment for an L0.
+
+### The theory_skeptic's critique — the deepest challenge
+
+The most penetrating objection is that the entire 3-class effect is textbook scan-resistant caching (evict one-touch/never-re-referenced data before it pollutes LRU), re-applied to LLM tool outputs with an oracle label that is ground-truth BY CONSTRUCTION in the trace generator. The pin-shared-prefix ablation is degenerate in 19/20 cells (pin==LRU exactly), so it does not actually isolate what it claims in the cells where it matters — the ONE cell where pin differs (cap=0.25, sf=0.90) is the cell where pin captures 99.9% of the gap, i.e. the only real test of the ablation fails the empty-framing check. This does not kill the claim but it significantly weakens the "non-trivial" framing: the ablation proves the win exists, but does not prove it requires domain-specific (tool-boundary) classification vs. generic one-touch detection. Required_evidence #3 (scan-resistant baseline) directly tests this.
+
+### Candidate-grade for GPU pass?
+
+YES, but with a significantly expanded scope. The L0 answered its three pre-registered questions honestly. The GPU pass must answer the COMMITTEE's questions, which go beyond replicating the L0 at higher fidelity. Specifically: items 1-8 above are ALL required before committee#2 can consider GREEN. Items 3 (scan-resistant baseline), 4 (ratio sweep), 5 (misclassification robustness), and 6 (Belady bound) are theoretically motivated and prevent the GPU pass from "replicating a tautology at higher fidelity" (theory_skeptic). Item 7 requires real TTFT/throughput (evaluation_prosecutor). Items 1-2 are the owed novelty gates.
+
+### Why YELLOW not RED
+
+The systems_reviewer's RED is partially rebutted: the novelty_killer's analysis draws the mechanism-vs-classifier distinction, and no reviewer provides evidence that the automatic tool-boundary classification policy has been PUBLISHED (vs. the API being available). The RED is a serious risk, not a confirmed kill. Escalating to committee-RED requires either (a) the prior-art sweep confirming a published policy collision, or (b) demonstrating TRT-LLM config-expressibility in required_evidence #2. Neither is in hand.
+
+### Why YELLOW not GREEN
+
+Prior-art search is inadequate (still owed). The systems_reviewer's RED is unrebutted by concrete counter-evidence (no one has shown TRT-LLM CAN'T express this as config). The theory_skeptic's scan-resistance framing is unchallenged. The claim must be reframed from "novel cache policy" to "domain-specific semantic classifier for existing eviction infrastructure" pending items 1-3.
+
+PROMPT_VERSION: v001
+```

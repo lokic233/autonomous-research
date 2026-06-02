@@ -1,0 +1,74 @@
+verdict_id: VERDICT-0002
+claim_id: CLAIM-0002
+project_id: PROJ-0001
+date: '2026-06-02'
+experiment_ids:
+- EXP-0002
+experiment_paths:
+- experiments/2026-06-02/EXP-0002
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(none \u2014 no confirmed fatal collision"
+- 'systems_reviewer RED is a serious novelty RISK not a verified kill: TRT-LLM KvCacheRetentionConfig
+  exposes the priority/token-range MECHANISM but no reviewer showed a PUBLISHED policy
+  that auto-classifies tool-output as TRANSIENT via tool-call boundary)'
+required_evidence:
+- 1. OWED live >=2-source prior-art sweep (carried from VERDICT-0001, still unexecuted
+- "egress blocked again this committee): queries 'tool-output KV eviction priority\
+  \ LLM', 'one-shot scratch cache hint LLM agent', 'scan-resistant caching KV LLM'\
+  \ \u2014 confirm no published policy keys eviction on tool-call boundary / committed-vs-transient.\
+  \ Gates ANY green"
+- '2. TRT-LLM expressibility adjudication: can ''evict tool-output token ranges first,
+  keep committed scratch as LRU'' be pure KvCacheRetentionConfig WITHOUT a new classifier?
+  If yes -> reframe to application-level classifier (not mechanism)'
+- if no -> document the gap
+- "3. SCAN-RESISTANT BASELINE in GPU pass: classical one-touch/MRU-on-tail eviction\
+  \ WITHOUT tool-boundary tag \u2014 if it captures >=80% of adaptive3's gain over\
+  \ LRU, the semantic classifier adds nothing"
+- "4. COMMITTED:TRANSIENT ratio sweep {1:3,1:1,3:1} \u2014 effect scales with transient\
+  \ fraction (L0 used only 1:1)"
+- '5. MISCLASSIFICATION robustness: degrade curve where X% of TRANSIENT blocks are
+  actually re-referenced (X in {0,10,25,50})'
+- find crossover where adaptive3 collapses to LRU
+- 6. BELADY/optimal-offline upper bound on same trace -> interpret 1-3pp gains as
+  fraction of achievable headroom
+- '7. GPU validation EXP-0003: real vLLM enable_prefix_caching on devgpu014/H100,
+  two-typed agentic trace, sweep --gpu-memory-utilization as cap proxy'
+- measure TTFT + throughput + hit-rate + recomputed-prefill-tokens
+- TRANSIENT class from a REAL prompt-template inspector NOT an oracle label
+- '8. FRAMING vs CachedAttention(ATC24), SGLang/RadixAttention(NeurIPS24), TRT-LLM
+  retention, Prompt Cache(MLSys24), ARC(FAST03), LIRS(SIGMETRICS02), H2O(NeurIPS23),
+  StreamingLLM(ICLR24): contribution = the SEMANTIC tool-boundary classifier, not
+  the eviction mechanism'
+map_delta_proposals:
+- 'CLAIM-0002: reframe from ''novel cache policy'' to ''application-level SEMANTIC
+  classifier (tool-boundary -> eviction priority) feeding existing priority-eviction
+  infra (TRT-LLM retention / SGLang priority)''. Contribution = tool-boundary signal
+  as domain-specific scan-resistance HINT, not a new eviction mechanism. PARTIAL/candidate-grade'
+- advance to GPU pass (EXP-0003) with expanded baselines
+- committee#2 gated on required_evidence 1-8
+baseline_requirements:
+- LRU (plain)
+- pin-shared-prefix-only
+- TRT-LLM KvCacheRetentionConfig with tool-output token ranges at lowest priority
+  (tests config-expressibility)
+- classical scan-resistant/one-touch (ARC-style or MRU-on-tail) WITHOUT tool-boundary
+  tag
+- Belady/optimal-offline upper bound
+created_at: '2026-06-02T23:02:15Z'
