@@ -30,13 +30,16 @@ negative_evidence:
     per-region acceptance + emitted-token constrained fraction f. Prior-art owed:
     EAGLE/Medusa/SpecInfer/entropy-adaptive specdec.'
   data_path: experiments/2026-06-02/EXP-0006/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0005
+  date: '2026-06-02'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0006; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0005=red: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-02T23:22:30Z'
-last_updated: '2026-06-02T23:33:29Z'
+last_updated: '2026-06-02T23:41:51Z'

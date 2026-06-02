@@ -1,0 +1,14 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: 
+  - {name: "Confidence/Entropy-Adaptive Speculative Decoding", why: "Constrained grammar naturally collapses next-token entropy. An existing confidence-adaptive speculator will automatically lengthen the draft window in these regions without requiring explicit grammar labels, making it the true dominant baseline.", repo_or_cite: "Standard 2024 dynamic draft-length literature"}
+STRAWMAN_RISKS: 
+  - Comparing a dynamic-length policy solely against a fixed-length policy (even if tuned) is a structural strawman when dynamic/confidence-based baselines already exist in the literature.
+  - Relying on a theoretical cost ratio (r) abstracts away non-linear GPU overheads like KV cache synchronization and variable sequence length memory management.
+  - Assuming i.i.d. Bernoulli acceptance per-region ignores autocorrelation; real constrained regions likely have bursty acceptance which breaks the analytic E[a] model.
+MISSING_METRICS: 
+  - Wall-clock net tokens/second measured on actual GPU hardware.
+  - Empirical measurements of the constrained fraction (f), p_constrained, and p_prose directly extracted from real production agentic tool-calling traces.
+KILLER_EXPERIMENT: A wall-clock GPU A/B test on real agentic traces (e.g., BFCL) comparing the grammar-region-adaptive speculator directly against a confidence-adaptive speculator using a real draft/target pair (e.g., Llama-3-8B/70B). If the confidence-adaptive baseline achieves the same or better speedup because high confidence correlates perfectly with constrained grammar, the explicit grammar-labeling mechanism is falsified as redundant.
+RATIONALE: The evaluation framework fundamentally advantages the proposed mechanism by missing the true state-of-the-art baseline. Pitting a dynamic-length policy against a tuned fixed-length policy is insufficient. Because grammar constraints inherently reduce entropy, existing confidence-adaptive speculative decoding methods would natively expand their draft windows in the exact same regions. Combined with the use of an analytic `tps` proxy that ignores real-world GPU dynamic-k overheads, the current evaluation risks inflating a marginal 1.33% theoretical gain that would likely vanish entirely in a fair, wall-clock hardware comparison against the correct dynamic baseline.
+```

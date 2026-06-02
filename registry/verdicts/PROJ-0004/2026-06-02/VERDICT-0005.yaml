@@ -1,0 +1,67 @@
+verdict_id: VERDICT-0005
+claim_id: CLAIM-0005
+project_id: PROJ-0004
+date: '2026-06-02'
+experiment_ids:
+- EXP-0006
+experiment_paths:
+- experiments/2026-06-02/EXP-0006
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- 'Mechanism NOT novel: >=2 independent 2024 publications of adaptive draft length
+  keyed on acceptance/entropy (SpecDec++ arXiv 2405.19715'
+- "Dynamic Speculation Lookahead arXiv 2405.04304) \u2014 same mechanism AND same\
+  \ adaptive-vs-best-tuned-fixed comparison"
+- "True baseline is confidence/entropy-adaptive speculator (natively lengthens in\
+  \ constrained regions since grammar collapses entropy) \u2014 NEVER tested"
+- grammar-region label is a strictly weaker proxy for a signal the literature already
+  uses
+- "'Adaptive never worse' is a Jensen's-inequality TAUTOLOGY (per-region argmax weakly\
+  \ dominates single shared argmax on the harmonic tps proxy) \u2014 a theorem, not\
+  \ a finding"
+- 'Pre-registered honest-negative trigger FIRED: +1.33% realistic-cell median < 3%
+  gate'
+- +18.7% corner needs f=0.60 (no production relevance)
+- SGLang + HF Transformers already SHIP runtime adaptive speculative decoding
+required_evidence:
+- "Head-to-head GPU wall-clock: grammar-region-adaptive vs CONFIDENCE/ENTROPY-adaptive\
+  \ spec-decode on real agentic traces (BFCL/production tool-calling) with real draft/target\
+  \ pair \u2014 the ONLY path to a residual claim (does a grammar oracle beat a cheap\
+  \ online signal as the trigger?)"
+- Empirical real emitted-token constrained fraction f + per-region acceptance (p_constrained,p_prose)
+  + within-region autocorrelation
+- Wall-clock net tok/s incl draft-launch/verify/KV overheads at variable k (c_target=1
+  proxy understates verify cost)
+- Sensitivity to K_MAX<=8 (realistic ceiling
+- +18.7% corner likely collapses)
+map_delta_proposals:
+- 'CLAIM-0005 -> red: mechanism not novel (>=2 indep 2024 pubs)'
+- effect below pre-registered honest-negative gate at realistic operating points (+1.33%
+  vs 3%)
+- true confidence-adaptive baseline never tested. Narrow reframe = systems benchmark
+  (grammar-oracle vs entropy/confidence trigger on real agentic traces), NOT a novelty
+  claim. CONVERGED-at-L0 red
+- no GPU pass for a published+marginal mechanism
+baseline_requirements:
+- "Confidence/entropy-adaptive spec-decode (the actual SOTA dynamic-draft-length \u2014\
+  \ any GPU pass without it is structurally incomplete)"
+- SpecDec++ arXiv 2405.19715
+- Dynamic Speculation Lookahead arXiv 2405.04304
+- SGLang adaptive speculative decoding (shipping)
+created_at: '2026-06-02T23:41:51Z'

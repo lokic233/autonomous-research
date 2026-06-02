@@ -1,0 +1,41 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: red, product_realist: red}
+FATAL_OBJECTIONS:
+  - "Adaptive draft length keyed on acceptance/entropy" is independently published in ≥2 2024 works (SpecDec++ arxiv.org/abs/2405.19715; Dynamic Speculation Lookahead arxiv.org/abs/2405.04304) — the core mechanism of CLAIM-0005 is not novel. novelty_killer RED is unrebutted.
+  - The true baseline is a confidence/entropy-adaptive speculator (which natively lengthens in constrained regions because grammar collapses entropy), NOT a fixed-k speculator. The experiment never compares against this dominant baseline; evaluation_prosecutor RED is unrebutted.
+  - Per-region argmax of a convex 1-D throughput proxy must weakly dominate a single shared argmax by construction (Jensen on the harmonic aggregate). "Adaptive never worse" is a theorem, not a finding; the 288-point sweep confirms a tautology. theory_skeptic RED is unrebutted.
+  - Pre-registered honest-negative trigger fired: median realistic-cell gain +1.33% < 3% threshold. The claim's strong form does not hold at realistic operating points. product_realist RED is unrebutted.
+  - SGLang and HF Transformers already ship runtime adaptive speculative decoding keyed on observed acceptance. systems_reviewer RED is unrebutted.
+REQUIRED_EVIDENCE:
+  - Head-to-head GPU wall-clock comparison of grammar-region-adaptive vs confidence/entropy-adaptive speculative decoding on real agentic traces (e.g., BFCL or production tool-calling logs) with a real draft/target pair. This is the ONLY path that could rescue a residual claim — specifically that a grammar oracle outperforms a cheap online signal as the adaptation trigger.
+  - Empirical measurement of real emitted-token constrained fraction f, real per-region acceptance (p_constrained, p_prose), and within-region acceptance autocorrelation on production agentic traces.
+  - Wall-clock net tokens/sec including draft-launch, verify, and KV-management overheads at variable k (the analytic c_target=1 proxy understates verify cost at large k).
+  - Sensitivity of results to K_MAX ≤ 8 (realistic deployment ceiling); the +18.7% extreme corner likely collapses.
+MANDATORY_BASELINES:
+  - Confidence/entropy-adaptive speculative decoding (the actual state-of-the-art dynamic-draft-length method; any GPU pass without this baseline is structurally incomplete)
+  - SpecDec++ (arxiv.org/abs/2405.19715) — adaptive candidate length via learned acceptance head
+  - Dynamic Speculation Lookahead (arxiv.org/abs/2405.04304) — adaptive lookahead vs best-tuned fixed
+  - SGLang adaptive speculative decoding (shipping system, EMA-tier runtime adaptation)
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0005", change: "status -> red; verdict_summary -> 'Mechanism not novel (≥2 independent 2024 publications of adaptive draft length); effect size below pre-registered honest-negative threshold at realistic operating points (+1.33% vs 3% gate); true baseline (confidence-adaptive) never tested. Narrow reframe path exists: engineering comparison of grammar-oracle vs entropy/confidence as adaptation signal on real agentic traces, but this is a systems benchmark, not a novelty claim.'"}
+PRIOR_ART_ADEQUATE: yes-with-caveat
+RATIONALE:
+All five reviewers voted RED independently, and no RED is rebutted by evidence in the packet. The committee's conclusion is convergent across all dimensions:
+
+**Novelty (fatal).** novelty_killer identifies ≥2 independent 2024 publications (SpecDec++ and Dynamic Speculation Lookahead) that publish the exact mechanism — adaptive draft length keyed on per-position acceptance — and the exact comparison (adaptive vs best-tuned fixed k). The sole residual delta is using a grammar-region label instead of entropy/confidence as the adaptation signal; but as theory_skeptic and evaluation_prosecutor both note, constrained grammar spans are *defined by* entropy collapse, so an entropy-adaptive speculator captures the claim's win natively without a grammar oracle. The grammar label is a strictly weaker proxy for a signal the literature already uses. Prior-art search was knowledge-cited (live egress denied twice — noted transparently by novelty_killer), but the citations carry specific retrievable arXiv IDs and the ≥2-source collision bar is met; a GPU-pass researcher MUST confirm live retrieval. Marking adequate-with-caveat.
+
+**Effect size (below threshold).** The experiment's own pre-registered honest-negative trigger fired: +1.33% median gain in the realistic agentic cell (f∈{0.1,0.2}, gap≤0.30) against the 3% gate. The +18.7% extreme corner requires f=0.60 and gap=0.42 — an operating point with no evidence of production relevance. The best-tuned fixed k (mode k=2) captures nearly all available gain because realistic traces are prose-dominated.
+
+**Theory (tautological).** theory_skeptic correctly identifies that per-region argmax of the standard spec-dec throughput proxy must weakly dominate a single shared argmax (Jensen's inequality on the token-weighted harmonic mean). "Adaptive is never worse" is not a finding but a mathematical necessity. The claimed mechanism (grammar-region label specifically) is confounded with cheaper known mechanisms (entropy threshold, confidence threshold) and is never isolated against them.
+
+**Evaluation (structurally incomplete).** evaluation_prosecutor flags the core design flaw: comparing a dynamic policy against a fixed policy when dynamic baselines already exist is a structural strawman. The analytic tps proxy (c_target=1, independent of k) also biases toward large-k adaptive policies by understating real verify cost.
+
+**Systems and product (already shipped, marginal).** systems_reviewer documents that SGLang and HF Transformers already ship runtime adaptive speculative decoding. product_realist notes the 1.33% gain sits below production measurement noise and does not justify the operational complexity of grammar-region instrumentation.
+
+**Path forward (narrow, reframed).** The claim as stated — that grammar-region-adaptive spec-dec beats fixed-k on agentic traffic — is a re-derivation of published work with a weaker signal and a below-threshold effect. The ONLY defensible reframe is an *engineering benchmark*: does a cheap grammar-region oracle outperform entropy/confidence-adaptive draft length in net wall-clock tok/s on real agentic traces? That is a systems comparison against named baselines (REQUIRED_EVIDENCE item 1), not a novelty claim. If pursued, the GPU pass MUST include the MANDATORY_BASELINES above and measure real (p_constrained, p_prose, f) before any further committee review.
+
+**Credit.** The experimental methodology is honest and well-executed: pre-registration committed before runs, honest-negative triggers pre-specified and honored, MC validates the analytic model to <0.06% rel err. The researcher conducted a rigorous L0 and correctly reported a negative result. The RED is on the claim's viability, not on the researcher's integrity.
+
+Prompt version: v001.
+```

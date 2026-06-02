@@ -1,0 +1,75 @@
+Live egress was denied twice (permission not granted), so I cannot do a *fresh-retrieved* sweep. I'm falling back to knowledge-cited prior art (cutoff Jan 2026 — covers all relevant 2024 work) with retrievable arXiv IDs, and flagging this transparently. The mechanism collision is strong and multi-source.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "SpecDec++: Boosting Speculative Decoding via Adaptive Candidate Lengths (Huang et al., 2024)",
+   url: "arxiv.org/abs/2405.19715",
+   why_close: "FATAL. Trains an acceptance-prediction head that ADAPTIVELY decides how many
+   tokens to draft (when to stop) based on predicted per-position acceptance probability.
+   This IS 'lengthen the draft window where acceptance is high, shorten it where low' — the
+   exact mechanism of CLAIM-0005, with a strictly more general signal (learned acceptance prob)
+   than a hand-labeled grammar region."}
+- {cite: "Dynamic Speculation Lookahead Accelerates Speculative Decoding of LLMs (Mamou et al., 2024)",
+   url: "arxiv.org/abs/2405.04304",
+   why_close: "FATAL. Dynamically sets the speculation lookahead (draft length) per step instead
+   of a fixed window, and shows it beats the best fixed lookahead — the SAME comparison
+   (adaptive vs best-tuned-fixed k) this claim runs."}
+- {cite: "AdaEDL / entropy-based dynamic draft-length stopping (2024)",
+   url: "(entropy-threshold adaptive draft length line of work, 2024)",
+   why_close: "Stops drafting when draft-token ENTROPY rises. Constrained-grammar spans are
+   defined by entropy COLLAPSE, so an entropy-adaptive speculator already lengthens exactly
+   inside JSON/tool-call regions — capturing the claim's win 'for free' without any grammar
+   labeler. The grammar label is a coarse PROXY for the entropy signal these methods key on."}
+- {cite: "EAGLE-2: Faster Inference of LLMs with Dynamic Draft Trees (Li et al., 2024)",
+   url: "arxiv.org/abs/2406.16858",
+   why_close: "Context-aware dynamic draft TREE sized by draft-model confidence — adaptive
+   draft budget driven by confidence, region-by-region. Same family."}
+
+NAMING_VS_MECHANISM:
+The MECHANISM (adapt draft length to a per-region high-acceptance / low-entropy signal) is NOT
+new — it is the explicit contribution of ≥3 independent 2024 works (SpecDec++, Dynamic
+Speculation Lookahead, entropy-adaptive draft length), plus the EAGLE-2/Medusa/SpecInfer dynamic-
+draft family. The ONLY delta is the adaptation SIGNAL: a hand-labeled "grammar region"
+(in-JSON/tool-call) instead of the model's own entropy/confidence. That is a NAMING/re-derivation
+delta, not a mechanism delta — and it is strictly weaker than the learned/entropy signals already
+published, because (a) entropy collapse already identifies those exact spans without a grammar
+oracle, and (b) the grammar label cannot capture intra-prose high-confidence runs that
+entropy/learned signals do.
+
+FATAL_COLLISIONS:
+- Adaptive-draft-length-vs-best-fixed mechanism: collides with SpecDec++ (2405.19715) AND
+  Dynamic Speculation Lookahead (2405.04304) — TWO independent sources, mechanism + the exact
+  best-fixed-k control. Collision verified ≥2-source.
+- "Lengthen where entropy is low": collides with entropy-adaptive draft-length stopping work.
+- The residual novelty (grammar-region label on agentic traffic) is ALSO undercut by THIS
+  experiment's own L0 finding: a single tuned fixed k captures essentially all gain at realistic
+  f (median +1.33% in the realistic agentic cell). So even the narrow delta is economically near-
+  null at the operating points that matter.
+
+MANDATORY_RELATED_WORK (authors MUST cite and differentiate against, or the claim is dead):
+- SpecDec++ (arxiv.org/abs/2405.19715) — adaptive candidate length via acceptance head
+- Dynamic Speculation Lookahead (arxiv.org/abs/2405.04304) — adaptive lookahead vs best fixed
+- EAGLE-2 (arxiv.org/abs/2406.16858) — confidence-driven dynamic draft trees
+- Entropy/confidence-adaptive draft-length stopping (2024 line, e.g. AdaEDL)
+- Medusa (arxiv.org/abs/2401.10774) and SpecInfer (arxiv.org/abs/2305.09781) for completeness
+- Constrained/grammar-aware decoding speedups (e.g. XGrammar) if the grammar-region signal is
+  to be argued as the contribution
+
+RATIONALE:
+HONESTY FLAG: live web egress was DENIED twice this pass (permission not granted), so these are
+KNOWLEDGE-cited (model cutoff Jan 2026), not freshly retrieved; the arXiv IDs are retrievable and
+a GPU-pass researcher MUST confirm them live. With that caveat, the ≥2-independent-source bar for
+a KILL is met from knowledge: SpecDec++ (2405.19715) and Dynamic Speculation Lookahead
+(2405.04304) independently publish the adaptive-draft-length mechanism AND the adaptive-vs-best-
+fixed comparison this claim makes its core. The claim's mechanism is therefore not novel; the
+sole residual delta is using a grammar-region label as the trigger, which is a weaker proxy for
+the entropy/confidence signals already in the literature — and the experiment's own honest-
+negative result shows that delta buys ~1.3% at realistic agentic operating points. RED on
+novelty: this is a re-labeling of confidence/entropy-adaptive speculative decoding, not a new
+mechanism. A defensible future angle would have to be empirical, not novelty-based: measuring
+that a cheap grammar-region oracle beats a learned/entropy controller in net tok/s on real
+agentic traces — but that is an engineering comparison against named baselines, not a novel
+mechanism, and would require the GPU pass to first establish real (p_constrained, p_prose, f).
+```
