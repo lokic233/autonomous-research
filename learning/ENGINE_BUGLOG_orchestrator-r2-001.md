@@ -837,3 +837,33 @@ Walked seed->exp->green->promote->stray-kill in isolated /tmp/bb2_lifecycle. Two
   + fresh committee). Top results are now actually immutable to stray exps regardless of promote path.
 
 FILES: engine/ros.py cmd_verdict_write (green/promote/kill claim status+next_action). AST-valid.
+
+## 2026-06-02 ~15:00 UTC — BUGBASH #4 cont: ★ BUG-59 (HIGH-SEV silent data loss) — Channel rmw race
+
+Stress-tested the COMMITTEE QUEUE end-to-end (Area 3). 6 PARALLEL `ros queue submit` of DISTINCT claims
+-> only 2 survived. Four submissions collided on the same Q-id and CLOBBERED each other.
+
+★ BUG-59 (HIGH-SEV, silent data loss) channeling/channel.py Channel.submit/ack did a non-atomic
+  READ-MODIFY-WRITE: _read() current state -> _next_id (= len+1) -> append -> _dump. _dump is atomic
+  PER-WRITE (tempfile+os.replace), but two concurrent submitters both read the same state, compute the
+  SAME next id, and the 2nd os.replace overwrites the 1st. SAME class as BUG-43/52 (registry next_id),
+  but in the CHANNEL layer — which backs the orchestrator INBOX, the COMMITTEE QUEUE, and the GPU
+  TASK + RESULT channels. Real-world impact: two sub-monitors submitting committee requests at the same
+  time -> one researcher's work silently never reviewed; two GPU results landing together -> one
+  faulted/completed run the orchestrator never drains (node stuck, or a real result lost). Prior bugbashes
+  hardened registry next_id but NEVER stress-tested the Channel — this was live the whole time.
+
+FIX: serialize the whole submit/ack read-modify-write under a per-channel O_EXCL lockfile (_FileLock,
+  30s timeout, 60s stale-lock reclaim for crashed holders) — same pattern as the BUG-52 next_id fix.
+  Also: cmd_queue_submit did a SECOND unlocked read-modify-write (the queue_id back-compat mirror) AFTER
+  submit() returned -> re-introduced the race; moved the mirror INSIDE submit() (new mirror_id_key arg,
+  written under the lock). And cmd_queue_ack's legacy back-compat branch did another unlocked rmw -> folded
+  into Channel.ack via a new mirror_key arg (matches legacy queue_id items inside the lock).
+
+VALIDATED (isolated /tmp/bb3_qrace, /tmp/bb4_gpurace):
+  - 6 parallel committee submits -> 6 UNIQUE Q-ids, all 6 survive, queue_id mirrored on all 6, no stderr.
+  - 6 parallel GPU-RESULT submits (distinct exps) -> 6 unique GR-ids, all survive (the scariest channel).
+  - submit/ack/re-submit-after-ack regression clean; dedup still blocks duplicate PENDING; re-review
+    after ack re-queues correctly.
+FILES: channeling/channel.py (_FileLock + locked submit/ack + mirror_id_key/mirror_key), ros.py
+  (cmd_queue_submit mirror inside lock, cmd_queue_ack via mirror_key). AST-valid.
