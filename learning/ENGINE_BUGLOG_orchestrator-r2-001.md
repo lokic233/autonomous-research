@@ -751,3 +751,31 @@ FILES: engine/supervise.py (+re import, +retire reseed_conflict propagation; BUG
 engine/ros.py (next_id atomic lock+reservation; cmd_retire accurate reseed print). AST-valid; all tested in
 isolated /tmp/bb* instances. NOTE: bugbash also caught a TEST-HYGIENE issue — config runtime_dir was
 absolute, leaking test agents into live runtime; always set a local runtime_dir for test instances.
+
+## BUG-53..55 (2026-06-02, monitor 16b52fb1 — BUGBASH #3: full GPU cycle self-troubleshoot, dengcchi napping)
+Goal (dengcchi): self-troubleshoot until a GPU exp runs a FULL cycle with no problems. Walked the entire
+pipeline in isolated /tmp/gpu: seed -> exp register(GPU) -> committee-approve(verdict --approves-exp) ->
+gpu-task submit -> exp dispatch -> gpu-result submit -> drain/ack -> exp complete. Found 3 real bugs.
+
+- BUG-53 `gpu status` was BLIND to the v2 gpu-task CHANNEL (only read the legacy gpu_queue), so it
+  reported "QUEUE 0 pending" while tasks waited in the channel orchestrators actually use. An orchestrator
+  checking status would think nothing's queued. FIX: gpu status now also surfaces the gpu-task channel
+  pending list ("TASK CHANNEL (N pending)").
+- ★ BUG-54 (safety) `exp dispatch` wrote node_lease onto the experiment.yaml but NOT into the shared
+  gpu_queue leases map that `gpu status`/`gpu poll`/`gpu release` read -> node showed FREE after dispatch
+  -> a 2nd dispatch could DOUBLE-BOOK the GPU (critical on fragile MI350X). And `exp complete` never
+  released the lease -> node leased forever. FIX: dispatch records the lease + REFUSES an already-leased
+  node (double-book guard); exp complete releases the lease. VALIDATED: BUSY after dispatch, double-book
+  refused, FREE after complete.
+- ★ BUG-55 (safety/recovery) a FAULTED GPU run (`gpu-result submit --fault`) left the node leased FOREVER
+  (esp. fragile MI350X stuck BUSY -> orchestrator never re-dispatches). FIX: on --fault, auto-release the
+  node lease + mark exp 'faulted' (not stuck 'running'); `exp dispatch` now accepts 'faulted' exps for
+  re-dispatch (recovery). VALIDATED full cycle: dispatch->fault(auto-free,faulted)->re-dispatch(recovered)
+  ->success->complete(free).
+ALSO VERIFIED CLEAN: committee-approval gate refuses un-approved exps at BOTH gpu-task submit AND dispatch;
+fragile-node host_mem_floor gate refuses no-floor MI350X at BOTH entry points (never waived); result/task
+channels drain+ack correctly; claim lifecycle propagates (evidence_ready). H100 (non-fragile) + MI350X
+(fragile) both run a full cycle with zero manual intervention.
+FILES: engine/ros.py (cmd_gpu_status task-channel view, cmd_exp_dispatch lease record+double-book guard,
+cmd_exp_complete lease release, cmd_gpu_result_submit fault auto-release+faulted state, dispatch accepts
+faulted). AST-valid; all tested in isolation.
