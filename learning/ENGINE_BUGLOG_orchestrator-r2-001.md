@@ -813,3 +813,27 @@ VALIDATED (11 probes, all correct):
 SAFETY: real 6/6 (every named member green) now structurally required for green/promote; area_chair can
 no longer be silently dropped; no fabricated/duplicate roles count. COMMITTEE_INCOMPLETE (dispatch side)
 still never produces an ALL_COMMITTEE_DONE. AST-valid.
+
+## 2026-06-02 ~14:45 UTC — BUGBASH #4 cont: VERDICT->CLAIM lifecycle/status consistency (BUG-58/58b)
+
+Walked seed->exp->green->promote->stray-kill in isolated /tmp/bb2_lifecycle. Two state-machine bugs:
+
+- ★ BUG-58 (lifecycle/UX) a GREEN verdict (real 6/6 pass) set claim next_action = the YELLOW/RED string
+  "address required_evidence to advance". So every green claim lingered in `ros resume` telling the
+  orchestrator to fix evidence it had ALREADY cleared — exactly the kind of phantom open-work that fed the
+  agent-sprawl idleness (an orchestrator re-reading a green as "still needs evidence"). ROOT CAUSE: the
+  verdict_write else-branch lumped green with yellow/red. FIX: green now sets status='green' +
+  lifecycle='verdict_recorded' + an honest next_action ("promote or close; green-lift/follow-on optional,
+  not required"). Green stays non-terminal (green-lift/promote may follow, e.g. the egress-held CLAIM-0026
+  path) but no longer reads as unfinished.
+
+- ★ BUG-58b (SAFETY) a PROMOTE *verdict* never set claim status='promoted' — only the exp_complete
+  --effect promote path did. But the BUG-25 demote-guard (refuses a stray kill/weaken exp from
+  auto-demoting a top result) keys on status=='promoted'. So a claim promoted by COMMITTEE VERDICT was
+  left status='seed' and was NOT protected — a mis-bound kill exp could silently auto-demote a 6/6-green
+  promoted result. FIX: promote verdict now sets status='promoted' (and kill verdict sets status='dead'),
+  mirroring exp_complete. VALIDATED: after promote verdict, status='promoted'; a subsequent stray
+  `exp complete --effect kill` on that claim is REFUSED by the BUG-25 guard (needs explicit --force-demote
+  + fresh committee). Top results are now actually immutable to stray exps regardless of promote path.
+
+FILES: engine/ros.py cmd_verdict_write (green/promote/kill claim status+next_action). AST-valid.
