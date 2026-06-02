@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/scripts/sweep.py", line 80, in <module>
+    main()
+  File "/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/scripts/sweep.py", line 66, in main
+    with Pool(10) as p:
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/context.py", line 119, in Pool
+    return Pool(processes, initializer, initargs, maxtasksperchild,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/pool.py", line 191, in __init__
+    self._setup_queues()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/pool.py", line 343, in _setup_queues
+    self._inqueue = self._ctx.SimpleQueue()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/context.py", line 113, in SimpleQueue
+    return SimpleQueue(ctx=self.get_context())
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/queues.py", line 342, in __init__
+    self._rlock = ctx.Lock()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/synchronize.py", line 162, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+PermissionError: [Errno 1] Operation not permitted

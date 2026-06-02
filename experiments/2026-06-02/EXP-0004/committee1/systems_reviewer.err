@@ -289,3 +289,373 @@ hook: PostToolUse
  succeeded in 731ms:
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+codex
+`rg` is not installed in this environment, and the first filename search did not find those rule files under the current repo. I’ll continue with the rules embedded in the prompt and use external search for the prior-art check.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The broad search found one directly relevant paper, “Act While Thinking,” plus generic speculative pipeline writeups; the major inference projects surfaced only for ordinary inference/caching/kernels. I’m checking the direct hit and the named OSS systems’ docs/code surface for overlap level.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+url='https://arxiv.org/html/2603.18897v1'
+try:
+    data=urllib.request.urlopen(url, timeout=20).read(200000).decode('utf-8','ignore')
+    for term in ['tool', 'speculative', 'prefetch', 'argument', 'Act While Thinking']:
+        i=data.lower().find(term.lower())
+        print('TERM',term,'IDX',i)
+        if i>=0:
+            print(data[max(0,i-500):i+1200].replace('\\n',' ')[:2000])
+except Exception as e:
+    print('ERR',repr(e))
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+urls=['https://raw.githubusercontent.com/vllm-project/vllm/main/README.md','https://raw.githubusercontent.com/sgl-project/sglang/main/README.md','https://raw.githubusercontent.com/LMCache/LMCache/main/README.md','https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md','https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/README.md']
+for url in urls:
+    print('\\nURL',url)
+    try:
+        data=urllib.request.urlopen(url, timeout=15).read(120000).decode('utf-8','ignore')
+        low=data.lower()
+        for term in ['tool', 'function calling', 'speculative', 'prefetch', 'json']:
+            print(term, low.find(term))
+        print(data[:1000].replace('\\n',' ')[:1000])
+    except Exception as e:
+        print('ERR',e)
+PY" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 359ms:
+TERM tool IDX 188
+<!DOCTYPE html><html lang="en"> <head> <meta http-equiv="content-type" content="text/html; charset=UTF-8"> <title>Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution</title> <!--Generated on Thu Mar 19 13:36:15 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.--> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <link rel="stylesheet" href="/static/browse/0.3.4/css/arxiv-html-papers-20260131.css" type="text/css"> <script src="/static/browse/0.3.4/js/arxiv-html-papers-20260131.js"></script> <script>   // Restore the saved color scheme preference, or   // enact the browser preference if "automatic",    // without expecting DOM load to have completed.   //   // Also restore any saved readingmode and ToC display preferences.   function initializeReadingPreferences() {     let saved_theme = localStorage.getItem("ar5iv_theme") || "automatic";     if (saved_theme === "automatic") {       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {         saved_theme = "dark";       }     }     if (saved_theme == "dark") {       document.documentElement.setAttribute("data-theme", "dark");     } else {       document.documentElement.setAttribute("data-theme", "light");     }      const tocDisplay = localStorage.getItem('arxiv_html_paper_toc_display');     if (tocDisplay) {       docum
+TERM speculative IDX 176
+<!DOCTYPE html><html lang="en"> <head> <meta http-equiv="content-type" content="text/html; charset=UTF-8"> <title>Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution</title> <!--Generated on Thu Mar 19 13:36:15 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.--> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <link rel="stylesheet" href="/static/browse/0.3.4/css/arxiv-html-papers-20260131.css" type="text/css"> <script src="/static/browse/0.3.4/js/arxiv-html-papers-20260131.js"></script> <script>   // Restore the saved color scheme preference, or   // enact the browser preference if "automatic",    // without expecting DOM load to have completed.   //   // Also restore any saved readingmode and ToC display preferences.   function initializeReadingPreferences() {     let saved_theme = localStorage.getItem("ar5iv_theme") || "automatic";     if (saved_theme === "automatic") {       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {         saved_theme = "dark";       }     }     if (saved_theme == "dark") {       document.documentElement.setAttribute("data-theme", "dark");     } else {       document.documentElement.setAttribute("data-theme", "light");     }      const tocDisplay = localStorage.getItem('arxiv_html_paper_toc_display');     if (tocDisplay) {
+TERM prefetch IDX 61184
+ a continuous data path for serverless workflows in the 3d compute continuum" class="ltx_ref">2025</a>)</cite>. When these systems perform prediction, it is largely conditioned on the complete static DAG (i.e., predicting the next branch or request given the graph). This assumption breaks for agentic workloads: the control flow is generated online, and the next tool call is not known until the LLM finishes the current step. Without the full DAG a priori, ahead-of-time scheduling and graph-based prefetching provide limited benefit.</p> </div> <div id="S2.SS2.SSS2.p2" class="ltx_para"> <p id="S2.SS2.SSS2.p2.1" class="ltx_p">Prior work has focused on cold start mitigation and environment reuse <cite class="ltx_cite ltx_citemacro_citep">(Joosen<span class="ltx_text ltx_bib_etal"> et al.</span>, <a href="#bib.bib36" title="Serverless cold starts and where to find them" class="ltx_ref">2025</a>; Sui<span class="ltx_text ltx_bib_etal"> et al.</span>, <a href="#bib.bib55" title="Accelerating ml inference via opportunistic pre-loading on serverless clusters" class="ltx_ref">2026</a>; Liu<span class="ltx_text ltx_bib_etal"> et al.</span>, <a href="#bib.bib37" title="Harmonizing efficiency and practicability: optimizing resource utilization in serverless computing with Jiagu" class="ltx_ref">2024</a>)</cite>. However, in our agent traces, initialization typically accounts for less than 20% of overall tool latency. In addition, speculation in agent workloads is constrained by tool side effects and a large, context dependent argument space. Prior works are ineffective in the agent serving scenario <cite class="ltx_cite ltx_citemacro_citep">(Stojkovic<span class="ltx_text ltx_bib_etal"
+TERM argument IDX 44225
+ agent serving by leveraging speculative tool execution. The design is motivated by two key observations about agent workloads. First, tool invocations exhibit strong application-level control flow (recurring tool-call sequences). For example, a <span id="S1.p6.1.8" class="ltx_text ltx_font_italic">git clone</span> operation is almost always followed by <span id="S1.p6.1.9" class="ltx_text ltx_font_italic">git checkout</span>. Second, tool parameters follow predictable data flow patterns, where arguments are implicitly derived from the outputs of earlier tools. As one example, the URL required by a <span id="S1.p6.1.10" class="ltx_text ltx_font_italic">download</span> tool is typically extracted directly from the JSON output produced by a preceding <span id="S1.p6.1.11" class="ltx_text ltx_font_italic">search</span> operation.</p> </div> <div id="S1.p7" class="ltx_para"> <p id="S1.p7.1" class="ltx_p">Operationalizing these insights, however, requires solving two fundamental problems: formalizing unstructured tool-call sequences and managing the risks of probabilistic execution. <span id="S1.p7.1.1" class="ltx_text ltx_font_smallcaps">PASTE</span> addresses these through two components: a novel pattern abstraction that decouples control flow from data flow, and a risk-aware scheduler that preserves the execution performance of authoritative tools.</p> </div> <div id="S1.p8" class="ltx_para"> <p id="S1.p8.1" class="ltx_p">To resolve the formalization problem, <span id="S1.p8.1.1" class="ltx_text ltx_font_smallcaps">PASTE</span> introduces the <span id="S1.p8.1.2" class="ltx_text ltx_font_bold">Pattern Tuple</span> (context, prediction, function, probability). This abstracti
+TERM Act While Thinking IDX 114
+<!DOCTYPE html><html lang="en"> <head> <meta http-equiv="content-type" content="text/html; charset=UTF-8"> <title>Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution</title> <!--Generated on Thu Mar 19 13:36:15 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.--> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <link rel="stylesheet" href="/static/browse/0.3.4/css/arxiv-html-papers-20260131.css" type="text/css"> <script src="/static/browse/0.3.4/js/arxiv-html-papers-20260131.js"></script> <script>   // Restore the saved color scheme preference, or   // enact the browser preference if "automatic",    // without expecting DOM load to have completed.   //   // Also restore any saved readingmode and ToC display preferences.   function initializeReadingPreferences() {     let saved_theme = localStorage.getItem("ar5iv_theme") || "automatic";     if (saved_theme === "automatic") {       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {         saved_theme = "dark";       }     }     if (saved_theme == "dark") {       document.documentElement.setAttribute("data-theme", "dark");     } else {       document.documentElement.setAttribute("data-theme", "light");     }      const tocDisplay = localStorage.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1163ms:
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/README.md
+tool 2688
+function calling -1
+speculative 2121
+prefetch -1
+json -1
+<!-- markdownlint-disable MD001 MD041 --> <p align="center">   <picture>     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-dark.png">     <img alt="vLLM" src="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png" width=55%>   </picture> </p>  <h3 align="center"> Easy, fast, and cheap LLM serving for everyone </h3>  <p align="center"> | <a href="https://docs.vllm.ai"><b>Documentation</b></a> | <a href="https://blog.vllm.ai/"><b>Blog</b></a> | <a href="https://arxiv.org/abs/2309.06180"><b>Paper</b></a> | <a href="https://x.com/vllm_project"><b>Twitter/X</b></a> | <a href="https://discuss.vllm.ai"><b>User Forum</b></a> | <a href="https://slack.vllm.ai"><b>Developer Slack</b></a> | </p>  🔥 We have built a vLLM website to help you get started with vLLM. Please visit [vllm.ai](https://vllm.ai) to learn more. For events, please visit [vllm.ai/events](
+
+URL https://raw.githubusercontent.com/sgl-project/sglang/main/README.md
+tool -1
+function calling -1
+speculative 6779
+prefetch -1
+json 5936
+<div align="center" id="sglangtop"> <img src="https://raw.githubusercontent.com/sgl-project/sglang/main/assets/logo.png" alt="logo" width="400" margin="10px"></img>  [![PyPI](https://img.shields.io/pypi/v/sglang)](https://pypi.org/project/sglang) ![PyPI - Downloads](https://static.pepy.tech/badge/sglang?period=month) [![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE) [![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues) [![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)  </div>  --------------------------------------------------------------------------------  <p align="center"> <a href="https://lmsys.org/blog/"><b>Blog</b></a> | <a href="https://docs.sglang.io/"><b
+
+URL https://raw.githubusercontent.com/LMCache/LMCache/main/README.md
+tool -1
+function calling -1
+speculative -1
+prefetch -1
+json -1
+# LMCache core library  ## Installation  **Prerequisite:** Python >= 3.10  ```bash pip install -e . ```  ## Demos Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).  ## Quickstart:   **Prerequisites**: To run the quickstart demo, your server should have 1 GPU and the [docker environment](https://docs.docker.com/engine/install/) installed.  **Step 1:** Pull docker images ```bash docker pull apostacyh/vllm:lmcache-0.1.0 ```  **Step 2:** Start vLLM + LMCache  ```bash model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name sudo docker run --runtime nvidia --gpus '"device=0"' \     -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \     -p 8000:8000 \     --env "HF_TOKEN=<Your huggingface access token>" \     --ipc=host \     --network=host \     apostacyh/vllm:lmcache-0.1.0 \     --model $model --gpu-memory-utilization 0.6 --port 8000 \     --lmcache-config-file /lmcache/L
+
+URL https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md
+tool 6323
+function calling -1
+speculative 3091
+prefetch -1
+json 7904
+<p align="center">   <picture>     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-black-background.png?raw=true">     <img alt="FlashInfer" src="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-white-background.png?raw=true" width=55%>   </picture> </p> <h1 align="center"> High-Performance GPU Kernels for Inference </h1>  <p align="center"> | <a href="https://docs.flashinfer.ai"><b>Documentation</b></a> | <a href="https://github.com/flashinfer-ai/flashinfer/releases/latest"><b>Latest Release</b></a> | <a href="https://flashinfer.ai"><b>Blog</b></a> | <a href="https://join.slack.com/t/flashinfer/shared_invite/zt-379wct3hc-D5jR~1ZKQcU00WHsXhgvtA"><b>Slack</b></a> |  <a href="https://github.com/orgs/flashinfer-ai/discussions"><b>Discussion Forum</b></a> | </p>  [![Build Status](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/badge/icon)](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/) [![Docum
+
+URL https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/README.md
+tool 10247
+function calling -1
+speculative 3962
+prefetch -1
+json -1
+<div align="center">  TensorRT LLM =========================== <h4>TensorRT LLM optimizes inference for LLMs and Visual Gen models with specialized kernels for common operations, an efficient runtime, and a pythonic framework that enables you to customize and extend the system.</h4>  [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://nvidia.github.io/TensorRT-LLM/) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/NVIDIA/TensorRT-LLM) [![python](https://img.shields.io/badge/python-3.12-green)](https://www.python.org/downloads/release/python-3123/) [![python](https://img.shields.io/badge/python-3.10-green)](https://www.python.org/downloads/release/python-31012/) [![cuda](https://img.shields.io/badge/cuda-13.1.1-green)](https://developer.nvidia.com/cuda-downloads) [![torch](https://img.shields.io/badge/torch-2.10.0-green)](https://pytorch.org) [![version](https://img.shields.io/badge/release-1.3.0rc17-green)](https://githu
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request, re
+urls=['https://docs.vllm.ai/en/stable/features/tool_calling/','https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html','https://docs.flashinfer.ai/','https://docs.lmcache.ai/']
+for url in urls:
+ print('\\nURL',url)
+ try:
+  data=urllib.request.urlopen(url,timeout=15).read(300000).decode('utf-8','ignore')
+  text=re.sub('<["'^<]+?>'"',' ',data)
+  text=re.sub(r'\\s+',' ',text)
+  for term in ['tool calling','stream','speculative','prefetch','JSON','function']:
+   idx=text.lower().find(term.lower())
+   print(term,idx, text[max(0,idx-250):idx+600] if idx>=0 else '')
+ except Exception as e: print('ERR',e)
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request, re
+url='https://arxiv.org/html/2603.18897v1'
+data=urllib.request.urlopen(url,timeout=15).read(1000000).decode('utf-8','ignore')
+text=re.sub('<["'^<]+?>'"',' ',data)
+text=re.sub(r'\\s+',' ',text)
+for term in ['Abstract','Pattern Tuple','risk-aware scheduler','correctness','latency','agent traces','speculative tool execution','side effects']:
+ idx=text.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',idx)
+ if idx>=0: print(text[max(0,idx-500):idx+1500])
+PY" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 196ms:
+
+TERM Abstract IDX 1303
+ent.documentElement.setAttribute("data-toc-display", tocDisplay); } const readingMode = localStorage.getItem('arxiv_html_paper_reading_mode'); if (readingMode) { document.documentElement.setAttribute("data-reading-mode", readingMode); } } // Run as soon as JS starts, to minimize repainting initializeReadingPreferences(); Report GitHub Issue × Title: Content selection saved. Describe the issue below: Description: Submit without GitHub Submit in GitHub Back to arXiv Why HTML? Report Issue Back to Abstract Download PDF Abstract. 1 Introduction 2 Background and Motivation 2.1 The LLM Agent Basics 2.1.1 The Era of LLM Agents 2.1.2 The Agent Execution Model 2.2 Problems and Challenges 2.2.1 Problems of Current Agents 2.2.2 Inefficiencies of Current Approaches 2.2.3 Opportunities and Challenges 2.3 Observations and Insights 2.3.1 Insight 1: Predictable Control Flow Patterns 2.3.2 Insight 2: Implicit Data Flow and Parameter Derivation 2.3.3 Insight 3: Latent Parallelism in Serial Agent Execution Implication for agent system design: 3 Overview 3.1 Abstraction 3.2 Scheduling 4 Pattern Abstraction 4.1 The Pattern Tuple 4.2 Pattern Mining and Validation 4.2.1 Phase I: Structural Mining (The ”Where”) 4.2.2 Phase II: Symbolic Dependency Inference (The ”How”) 4.2.3 Validation 4.3 Online Pattern Prediction 4.3.1 Context Matching (Control Flow) 4.3.2 Function Evaluation (Data Flow) 4.3.3 Probabilistic Hint Generation 5 Scheduling with Opportunistic Speculation 5.1 Opportunistic Speculative Scheduling 5.2 Speculation Eligibility Policy Speculative Invocation Arbitration. Policy-Constrained Graded Speculation. 6 Implementation 7 Evaluation 7.1 Evaluation Methodology Experimental setup and controls. Workloads and baselines. Real-world trace-driven request arrivals. LLM configuration. Metrics. 7.2 E2E Latency Reduction 7.3 Time Breakdown and Overlap Analysis 7.4 System Scalability 7.5 Pattern Prediction Accuracy 7.6 Side-effect Evaluation 7.7 Resource Overhead 8 Related Works 9 Conclusi
+
+TERM Pattern Tuple IDX 1915
+a of LLM Agents 2.1.2 The Agent Execution Model 2.2 Problems and Challenges 2.2.1 Problems of Current Agents 2.2.2 Inefficiencies of Current Approaches 2.2.3 Opportunities and Challenges 2.3 Observations and Insights 2.3.1 Insight 1: Predictable Control Flow Patterns 2.3.2 Insight 2: Implicit Data Flow and Parameter Derivation 2.3.3 Insight 3: Latent Parallelism in Serial Agent Execution Implication for agent system design: 3 Overview 3.1 Abstraction 3.2 Scheduling 4 Pattern Abstraction 4.1 The Pattern Tuple 4.2 Pattern Mining and Validation 4.2.1 Phase I: Structural Mining (The ”Where”) 4.2.2 Phase II: Symbolic Dependency Inference (The ”How”) 4.2.3 Validation 4.3 Online Pattern Prediction 4.3.1 Context Matching (Control Flow) 4.3.2 Function Evaluation (Data Flow) 4.3.3 Probabilistic Hint Generation 5 Scheduling with Opportunistic Speculation 5.1 Opportunistic Speculative Scheduling 5.2 Speculation Eligibility Policy Speculative Invocation Arbitration. Policy-Constrained Graded Speculation. 6 Implementation 7 Evaluation 7.1 Evaluation Methodology Experimental setup and controls. Workloads and baselines. Real-world trace-driven request arrivals. LLM configuration. Metrics. 7.2 E2E Latency Reduction 7.3 Time Breakdown and Overlap Analysis 7.4 System Scalability 7.5 Pattern Prediction Accuracy 7.6 Side-effect Evaluation 7.7 Resource Overhead 8 Related Works 9 Conclusion References License: CC BY-NC-ND 4.0 arXiv:2603.18897v1 [cs.DC] 19 Mar 2026 Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution Yifan Sui Shanghai Jiao Tong University Shanghai China suiyifan@sjtu.edu.cn , Han Zhao Shanghai Jiao Tong University Shanghai China zhaohan˙miven@sjtu.edu.cn , Rui Ma Microsoft Research Beijing China mrui@microsoft.com , Zhiyuan He Microsoft Research Beijing China zhiyuhe@microsoft.com , Hao Wang Stevens Institute of Technology Hoboken NJ USA hwang9@stevens.edu , Jianxun Li Shanghai Jiao Tong University Shanghai China lijx@sjtu.edu.cn and Yu
+
+TERM risk-aware scheduler IDX 8970
+itly derived from the outputs of earlier tools. As one example, the URL required by a download tool is typically extracted directly from the JSON output produced by a preceding search operation. Operationalizing these insights, however, requires solving two fundamental problems: formalizing unstructured tool-call sequences and managing the risks of probabilistic execution. PASTE addresses these through two components: a novel pattern abstraction that decouples control flow from data flow, and a risk-aware scheduler that preserves the execution performance of authoritative tools. To resolve the formalization problem, PASTE introduces the Pattern Tuple (context, prediction, function, probability). This abstraction achieves robustness by strictly separating execution structure from execution content . While agents may solve similar problems using diverse natural language phrasing, the tuple defines context strictly over event signatures (sequences of tool types), allowing the system to identify stable control flows amidst volatile user inputs. Furthermore, the tuple utilizes a symbolic value mapping function to encode the logical relationships between data, enabling the system to automatically resolve implicit parameter passing between tools without invoking the LLM. To manage execution risk at runtime, the PASTE scheduler strictly partitions the workload into authoritative invocations and speculative invocations. It employs opportunistic scheduling : speculative jobs run only on slack resources (i.e., transient idle compute/memory/IO capacity) and are throttled by a dynamic slack budget, so they can harvest otherwise-wasted cycles without competing with the normal LLM inference or critical-path tool execution. Critically, PASTE guarantees non-interference by instantaneously preempting speculative work the moment resource contention arises, ensuring that mispredictions never slow down authoritative progress. Experimental methodology and artifact availability Our evalua
+
+TERM correctness IDX 25299
+babilistic ( p &lt; 1 p&lt;1 ). Blindly executing every predicted tool would lead to severe resource contention and waste. To solve this, PASTE employs scheduling with opportunistic speculation. This design treats speculation not as a mandate, but as a mechanism for harvesting slack resources. The scheduler is designed by two principles: strict prioritization with isolation and the promotion mechanism. The scheduler partitions the workload into authoritative invocations (generated by the agent, correctness-critical) and speculative Invocations (generated by PASTE , best-effort). Authoritative jobs are given strict priority and preemption capability. Speculative jobs are confined to a dynamic slack budget, which allows them to hide latency when resources are available. PASTE also ensures they are immediately suppressed when contention arises. To maximize efficiency, PASTE implements a promotion protocol. When an authoritative request arrives and matches a running speculative job, that job is immediately promoted. It moves from low priority to high priority, and its result is committed directly to the agent history. This mechanism allows PASTE to safely convert uncertain bets into guaranteed latency reductions without redundant computation. 4. Pattern Abstraction To operationalize the formalization of probabilistic dependencies, PASTE centers its design on the Pattern Tuple . This abstraction is defined to isolate structural regularity(control flow) from parameter dependencies (data flow). By doing so, the system can generalize across diverse agent sessions while preserving precise execution semantics. 4.1. The Pattern Tuple Table 1 . An example pattern definition C C T T f f p p P1 [(Search, success)] Web_fetch Web_fetch: arg0 = SearchRes[”list”][0][”url”] 0.9 P2 [(Search, success), (Web_fetch, fail)] Web_fetch Web_fetch: arg0 = SearchRes[”list”][1][”url”] 0.8 We define a speculative pattern 𝒫 \mathcal{P} as a tuple ( C , T , f , p ) (C,T,f,p) . Table 1 presents two 
+
+TERM latency IDX 2615
+4.3.1 Context Matching (Control Flow) 4.3.2 Function Evaluation (Data Flow) 4.3.3 Probabilistic Hint Generation 5 Scheduling with Opportunistic Speculation 5.1 Opportunistic Speculative Scheduling 5.2 Speculation Eligibility Policy Speculative Invocation Arbitration. Policy-Constrained Graded Speculation. 6 Implementation 7 Evaluation 7.1 Evaluation Methodology Experimental setup and controls. Workloads and baselines. Real-world trace-driven request arrivals. LLM configuration. Metrics. 7.2 E2E Latency Reduction 7.3 Time Breakdown and Overlap Analysis 7.4 System Scalability 7.5 Pattern Prediction Accuracy 7.6 Side-effect Evaluation 7.7 Resource Overhead 8 Related Works 9 Conclusion References License: CC BY-NC-ND 4.0 arXiv:2603.18897v1 [cs.DC] 19 Mar 2026 Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution Yifan Sui Shanghai Jiao Tong University Shanghai China suiyifan@sjtu.edu.cn , Han Zhao Shanghai Jiao Tong University Shanghai China zhaohan˙miven@sjtu.edu.cn , Rui Ma Microsoft Research Beijing China mrui@microsoft.com , Zhiyuan He Microsoft Research Beijing China zhiyuhe@microsoft.com , Hao Wang Stevens Institute of Technology Hoboken NJ USA hwang9@stevens.edu , Jianxun Li Shanghai Jiao Tong University Shanghai China lijx@sjtu.edu.cn and Yuqing Yang Microsoft Research Redmond WA USA yuqyang@microsoft.com Abstract. LLM-powered agents are emerging as a dominant paradigm for autonomous task solving. Unlike standard inference workloads, agents operate in a strictly serial “LLM-tool” loop, where the LLM must wait for external tool execution at every step. This execution model introduces severe latency bottlenecks. To address this problem, we propose PASTE, a P attern- A ware S peculative T ool E xecution method designed to hide tool latency through speculation. PASTE is based on the insight that although agent requests are semantically diverse, they exhibit stable application level control flows (recurring tool-call sequences) and 
+
+TERM agent traces IDX 15953
+ete static DAG (i.e., predicting the next branch or request given the graph). This assumption breaks for agentic workloads: the control flow is generated online, and the next tool call is not known until the LLM finishes the current step. Without the full DAG a priori, ahead-of-time scheduling and graph-based prefetching provide limited benefit. Prior work has focused on cold start mitigation and environment reuse (Joosen et al. , 2025 ; Sui et al. , 2026 ; Liu et al. , 2024 ) . However, in our agent traces, initialization typically accounts for less than 20% of overall tool latency. In addition, speculation in agent workloads is constrained by tool side effects and a large, context dependent argument space. Prior works are ineffective in the agent serving scenario (Stojkovic et al. , 2023 ; Ye et al. , 2025 ) . 2.2.3. Opportunities and Challenges First, predicting the next tool to be used is highly challenging. Unlike traditional branch prediction in CPUs, which operates over a limited and well structured set of instructions, agent requests are highly diverse and unstructured. It is therefore difficult to design a simple method that can achieve highly accurate tool prediction. If the predictor fails to identify the tool invocation earlier than the LLM itself, speculation provides no performance benefit. Second, predicting the next tool alone is not sufficient. The system must also accurately predict the exact input parameters required by that tool. This intent plus argument prediction is computationally difficult because the arguments, such as specific code snippets, file paths, or search queries, are often generated on the fly and depend heavily on the current context. Third, integrating pre-execution is complicated by the state mutating nature of agent tools. Unlike read only operations, inaccurate pre-execution can corrupt the environment, such as by installing incompatible dependencies, and disrupt the original workflow. Restoring consistency then requires expe
+
+TERM speculative tool execution IDX 63
+ Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution // Restore the saved color scheme preference, or // enact the browser preference if "automatic", // without expecting DOM load to have completed. // // Also restore any saved readingmode and ToC display preferences. function initializeReadingPreferences() { let saved_theme = localStorage.getItem("ar5iv_theme") || "automatic"; if (saved_theme === "automatic") { if (window.matchMedia("(prefers-color-scheme: dark)").matches) { saved_theme = "dark"; } } if (saved_theme == "dark") { document.documentElement.setAttribute("data-theme", "dark"); } else { document.documentElement.setAttribute("data-theme", "light"); } const tocDisplay = localStorage.getItem('arxiv_html_paper_toc_display'); if (tocDisplay) { document.documentElement.setAttribute("data-toc-display", tocDisplay); } const readingMode = localStorage.getItem('arxiv_html_paper_reading_mode'); if (readingMode) { document.documentElement.setAttribute("data-reading-mode", readingMode); } } // Run as soon as JS starts, to minimize repainting initializeReadingPreferences(); Report GitHub Issue × Title: Content selection saved. Describe the issue below: Description: Submit without GitHub Submit in GitHub Back to arXiv Why HTML? Report Issue Back to Abstract Download PDF Abstract. 1 Introduction 2 Background and Motivation 2.1 The LLM Agent Basics 2.1.1 The Era of LLM Agents 2.1.2 The Agent Execution Model 2.2 Problems and Challenges 2.2.1 Problems of Current Agents 2.2.2 Inefficiencies of Current Approac
+
+TERM side effects IDX 16111
+ne, and the next tool call is not known until the LLM finishes the current step. Without the full DAG a priori, ahead-of-time scheduling and graph-based prefetching provide limited benefit. Prior work has focused on cold start mitigation and environment reuse (Joosen et al. , 2025 ; Sui et al. , 2026 ; Liu et al. , 2024 ) . However, in our agent traces, initialization typically accounts for less than 20% of overall tool latency. In addition, speculation in agent workloads is constrained by tool side effects and a large, context dependent argument space. Prior works are ineffective in the agent serving scenario (Stojkovic et al. , 2023 ; Ye et al. , 2025 ) . 2.2.3. Opportunities and Challenges First, predicting the next tool to be used is highly challenging. Unlike traditional branch prediction in CPUs, which operates over a limited and well structured set of instructions, agent requests are highly diverse and unstructured. It is therefore difficult to design a simple method that can achieve highly accurate tool prediction. If the predictor fails to identify the tool invocation earlier than the LLM itself, speculation provides no performance benefit. Second, predicting the next tool alone is not sufficient. The system must also accurately predict the exact input parameters required by that tool. This intent plus argument prediction is computationally difficult because the arguments, such as specific code snippets, file paths, or search queries, are often generated on the fly and depend heavily on the current context. Third, integrating pre-execution is complicated by the state mutating nature of agent tools. Unlike read only operations, inaccurate pre-execution can corrupt the environment, such as by installing incompatible dependencies, and disrupt the original workflow. Restoring consistency then requires expensive rollback mechanisms and intricate system design. 2.3. Observations and Insights Figure 4 . Histogram of tool execution time. Blue bars represent tool ca
+
+ succeeded in 1466ms:
+
+URL https://docs.vllm.ai/en/stable/features/tool_calling/
+ERR HTTP Error 403: Forbidden
+
+URL https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html
+tool calling -1 
+stream 1180 etting Started Overview Quick Start Guide Installation Pre-built release container images on NGC Installing on Linux via pip Building from Source Code on Linux Deployment Guide LLM Examples Generate text Generate text asynchronously Generate text in streaming Distributed LLM Generation Generate text with guided decoding Control generated text using logits processor Generate text with multiple LoRA adapters Speculative Decoding KV Cache Connector Runtime Configuration Examples Sampling Techniques Showcase Run LLM-API with pytorch backend on Slurm Run trtllm-bench with pytorch backend on Slurm Run trtllm-serve with pytorch backend on Slurm Online Serving Examples Curl Chat Client Curl Chat Client For Multimodal Curl Completion Client Deepseek R1 Reasoning Parser Genai Perf Client Genai Perf Client For Multimodal OpenAI Chat Client OpenAI Ch
+speculative 1  Speculative Sampling &#8212; TensorRT-LLM document.documentElement.dataset.mode = localStorage.getItem("mode") || ""; document.documentElement.dataset.theme = localStorage.getItem("theme") || ""; .pst-js-only { display: none !important; } let toggleHintShow = 'Click to show'; let toggleHintHide = 'Click to hide'; let toggleOpenOnPrint = 'true'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; DOCUMENTATION_OPTIONS.pagename = 'advanced/speculative-decoding'; DOCUMENTATION_OPTIONS.theme_version = '0.16.1'; DOCUMENTATION_OPTIO
+prefetch -1 
+JSON 619 tor = '.toggle, .admonition.dropdown'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; DOCUMENTATION_OPTIONS.pagename = 'advanced/speculative-decoding'; DOCUMENTATION_OPTIONS.theme_version = '0.16.1'; DOCUMENTATION_OPTIONS.theme_switcher_json_url = './_static/switcher.json'; DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.1.0rc5'; DOCUMENTATION_OPTIONS.show_version_warning_banner = false; Skip to main content Back to top Ctrl + K TensorRT-LLM Choose version Search Ctrl + K Search Ctrl + K TensorRT-LLM Choose version Table of Contents Getting Started Overview Quick Start Guide Installation Pre-built release container images on NGC Installing on Linux via pip Building from Source Code on Linux Deployment Guide LLM Examples Generate text Generate text asynchronously Generate text in streaming Distributed LLM Generation Ge
+function -1 
+
+URL https://docs.flashinfer.ai/
+tool calling -1 
+stream -1 
+speculative 5822 bs flashinfer.sampling.top_k_top_p_sampling_from_logits flashinfer.sampling.top_k_top_p_sampling_from_probs flashinfer.sampling.top_p_renorm_probs flashinfer.sampling.top_k_renorm_probs flashinfer.sampling.top_k_mask_logits flashinfer.sampling.chain_speculative_sampling flashinfer.topk Toggle navigation of flashinfer.topk flashinfer.top_k flashinfer.top_k_page_table_transform flashinfer.top_k_ragged_transform flashinfer.topk.can_implement_filtered_topk flashinfer.logits_processor Toggle navigation of flashinfer.logits_processor flashinfer.logits_processor.LogitsPipe flashinfer.logits_processor.LogitsProcessor flashinfer.logits_processor.Temperature flashinfer.logits_processor.Softmax flashinfer.logits_processor.TopK flashinfer.logits_processor.TopP flashinfer.logits_processor.MinP flashinfer.logits_processor.Sample flashinfer.logits_proce
+prefetch -1 
+JSON 9879 gement Replay Recorded Calls Logging Quick Start Logging Levels Environment Variables Miscellaneous Notes and Examples Flight Recorder &amp; Replay Python-Based Replay Examples fi_trace — Operation Schema Extraction Quick Start Environment Variables JSON File Format Calling .fi_trace() Directly Covered Operations MoE Routing Types Example: Collecting Traces from a Real Workload Adding Trace Support to a New Kernel Consistency Tests Autotuning What Is Autotuning? Enabling Autotuning Config Lookup Priority Config Caching API Reference Multi-Thread / Multi-Process Considerations Tutorials Attention States and Recursive Attention Applications Related APIs KV-Cache Layout in FlashInfer Layout: NHD/HND Ragged Tensor Mask Layout (2D Ragged Tensor) Page Table Layout Multi-level Cascade Inference Data Layout FAQ FlashInfer on JAX with TVM FFI Exec
+function 10763 erence FlashInfer Attention Kernels flashinfer.decode flashinfer.prefill flashinfer.mla flashinfer.gemm BF16 GEMM FP4 GEMM MXFP8 GEMM FP8 GEMM Mixed Precision GEMM (fp8 x fp4) Grouped GEMM (Ampere/Hopper) flashinfer.fused_moe Types and Enums Utility Functions CUTLASS Fused MoE TensorRT-LLM Fused MoE flashinfer.cascade Merge Attention States Cascade Attention Cascade Attention Wrapper Classes flashinfer.comm CUDA IPC Utilities DLPack Utilities Mapping Utilities TensorRT-LLM AllReduce Unified AllReduce Fusion API vLLM AllReduce MNNVL (Multi-Node NVLink) TensorRT-LLM MNNVL AllReduce MNNVL A2A (Throughput Backend) flashinfer.sparse BlockSparseAttentionWrapper VariableBlockSparseAttentionWrapper flashinfer.page Append new K/V tensors to Paged KV-Cache flashinfer.sampling flashinfer.sampling.sampling_from_probs flashinfer.sampling.top_p_samplin
+
+URL https://docs.lmcache.ai/
+ERR HTTP Error 403: Forbidden
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request,re
+text=re.sub('<["'^<]+?>'"',' ',urllib.request.urlopen('https://arxiv.org/html/2603.18897v1',timeout=15).read(1500000).decode('utf-8','ignore'))
+text=re.sub(r'\\s+',' ',text)
+for pat in ['reduces', '%', 'accuracy', 'overhead', 'p50', 'p95', 'speedup', 'AgentBench', 'SWE']:
+    idx=text.lower().find(pat.lower())
+    print('\\nPAT',pat,'IDX',idx)
+    if idx>=0: print(text[max(0,idx-700):idx+1800])
+# find all percentage-ish snippets around 'latency'
+for m in re.finditer(r'\\b\\d+(?:\\.\\d+)?\\s*%', text):
+    s=max(0,m.start()-220); e=min(len(text),m.end()+220)
+    sn=text[s:e]
+    if any(w in sn.lower() for w in ['latency','accuracy','overhead','reduction','paste','speed']):
+        print('\\nPCT',sn)
+PY" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 186ms:
+
+PAT reduces IDX 4361
+op, where the LLM must wait for external tool execution at every step. This execution model introduces severe latency bottlenecks. To address this problem, we propose PASTE, a P attern- A ware S peculative T ool E xecution method designed to hide tool latency through speculation. PASTE is based on the insight that although agent requests are semantically diverse, they exhibit stable application level control flows (recurring tool-call sequences) and predictable data dependencies (parameter passing between tools). By exploiting these properties, PASTE improves agent serving performance through speculative tool execution. Experimental results against state of the art baselines show that PASTE reduces average task completion time by 48.5% and improves tool execution throughput by 1.8 × \times . † † copyright: none † † journalyear: 2026 1. Introduction Figure 1 . Example patterns observed in execution of (a) deep research agents and (b) coding agents. Patterns indicate not only tool invocations in the near future but also latent data dependencies between tool calls (orange lines in this figure). As large language models (LLMs) continue to improve their reasoning and understanding capabilities, LLM-powered agents have emerged as a major research focus ( Moonshot AI (2025) ; 6 ; 9 ; 13 ; 2 ) . As exemplified by OpenAI Deep Research (OpenAI, 2025 ) and Manus (Manus, 2025 ) , the LLM acts as the “brain” of the agent. It decomposes a complex task into a sequence of sub-steps and invokes external tools at each step to interact with the outside world. By lowering the barrier to using powerful and complex tools, agents are widely expected to drive the productivity revolution. As a result, many companies have invested tens of billions of dollars in this line of research and development (Luo et al. , 2025 ; Zhang et al. , 2026 ; Giusti et al. , 2025 ) . Motivation. Figure 1 illustrates a typical workflow of a modern LLM-powered Agent. As shown, the LLM alternates between generating text and making external tool calls. These two steps operate strictly serially, as they have inherent dependencies. Our experimental results in § 2.2.2 show that tool execution accounts for 35% to 61% of total request time. This execution model forces LLMs to hold expensive memory resources, yet still delivers long end-to-end latency. These inefficiencies significantly hinder the rapid deployment and continued evolution of agent serving systems. Limitation of state-of-the-art approaches. Alth
+
+PAT % IDX 4405
+l execution at every step. This execution model introduces severe latency bottlenecks. To address this problem, we propose PASTE, a P attern- A ware S peculative T ool E xecution method designed to hide tool latency through speculation. PASTE is based on the insight that although agent requests are semantically diverse, they exhibit stable application level control flows (recurring tool-call sequences) and predictable data dependencies (parameter passing between tools). By exploiting these properties, PASTE improves agent serving performance through speculative tool execution. Experimental results against state of the art baselines show that PASTE reduces average task completion time by 48.5% and improves tool execution throughput by 1.8 × \times . † † copyright: none † † journalyear: 2026 1. Introduction Figure 1 . Example patterns observed in execution of (a) deep research agents and (b) coding agents. Patterns indicate not only tool invocations in the near future but also latent data dependencies between tool calls (orange lines in this figure). As large language models (LLMs) continue to improve their reasoning and understanding capabilities, LLM-powered agents have emerged as a major research focus ( Moonshot AI (2025) ; 6 ; 9 ; 13 ; 2 ) . As exemplified by OpenAI Deep Research (OpenAI, 2025 ) and Manus (Manus, 2025 ) , the LLM acts as the “brain” of the agent. It decomposes a complex task into a sequence of sub-steps and invokes external tools at each step to interact with the outside world. By lowering the barrier to using powerful and complex tools, agents are widely expected to drive the productivity revolution. As a result, many companies have invested tens of billions of dollars in this line of research and development (Luo et al. , 2025 ; Zhang et al. , 2026 ; Giusti et al. , 2025 ) . Motivation. Figure 1 illustrates a typical workflow of a modern LLM-powered Agent. As shown, the LLM alternates between generating text and making external tool calls. These two steps operate strictly serially, as they have inherent dependencies. Our experimental results in § 2.2.2 show that tool execution accounts for 35% to 61% of total request time. This execution model forces LLMs to hold expensive memory resources, yet still delivers long end-to-end latency. These inefficiencies significantly hinder the rapid deployment and continued evolution of agent serving systems. Limitation of state-of-the-art approaches. Although numerous existing works (Mahgoub et al.
+
+PAT accuracy IDX 2719
+se II: Symbolic Dependency Inference (The ”How”) 4.2.3 Validation 4.3 Online Pattern Prediction 4.3.1 Context Matching (Control Flow) 4.3.2 Function Evaluation (Data Flow) 4.3.3 Probabilistic Hint Generation 5 Scheduling with Opportunistic Speculation 5.1 Opportunistic Speculative Scheduling 5.2 Speculation Eligibility Policy Speculative Invocation Arbitration. Policy-Constrained Graded Speculation. 6 Implementation 7 Evaluation 7.1 Evaluation Methodology Experimental setup and controls. Workloads and baselines. Real-world trace-driven request arrivals. LLM configuration. Metrics. 7.2 E2E Latency Reduction 7.3 Time Breakdown and Overlap Analysis 7.4 System Scalability 7.5 Pattern Prediction Accuracy 7.6 Side-effect Evaluation 7.7 Resource Overhead 8 Related Works 9 Conclusion References License: CC BY-NC-ND 4.0 arXiv:2603.18897v1 [cs.DC] 19 Mar 2026 Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution Yifan Sui Shanghai Jiao Tong University Shanghai China suiyifan@sjtu.edu.cn , Han Zhao Shanghai Jiao Tong University Shanghai China zhaohan˙miven@sjtu.edu.cn , Rui Ma Microsoft Research Beijing China mrui@microsoft.com , Zhiyuan He Microsoft Research Beijing China zhiyuhe@microsoft.com , Hao Wang Stevens Institute of Technology Hoboken NJ USA hwang9@stevens.edu , Jianxun Li Shanghai Jiao Tong University Shanghai China lijx@sjtu.edu.cn and Yuqing Yang Microsoft Research Redmond WA USA yuqyang@microsoft.com Abstract. LLM-powered agents are emerging as a dominant paradigm for autonomous task solving. Unlike standard inference workloads, agents operate in a strictly serial “LLM-tool” loop, where the LLM must wait for external tool execution at every step. This execution model introduces severe latency bottlenecks. To address this problem, we propose PASTE, a P attern- A ware S peculative T ool E xecution method designed to hide tool latency through speculation. PASTE is based on the insight that although agent requests are semantically diverse, they exhibit stable application level control flows (recurring tool-call sequences) and predictable data dependencies (parameter passing between tools). By exploiting these properties, PASTE improves agent serving performance through speculative tool execution. Experimental results against state of the art baselines show that PASTE reduces average task completion time by 48.5% and improves tool execution throughput by 1.8 × \times . † † copyright: none † † journalyear: 2026 1. Introducti
+
+PAT overhead IDX 2768
+4.2.3 Validation 4.3 Online Pattern Prediction 4.3.1 Context Matching (Control Flow) 4.3.2 Function Evaluation (Data Flow) 4.3.3 Probabilistic Hint Generation 5 Scheduling with Opportunistic Speculation 5.1 Opportunistic Speculative Scheduling 5.2 Speculation Eligibility Policy Speculative Invocation Arbitration. Policy-Constrained Graded Speculation. 6 Implementation 7 Evaluation 7.1 Evaluation Methodology Experimental setup and controls. Workloads and baselines. Real-world trace-driven request arrivals. LLM configuration. Metrics. 7.2 E2E Latency Reduction 7.3 Time Breakdown and Overlap Analysis 7.4 System Scalability 7.5 Pattern Prediction Accuracy 7.6 Side-effect Evaluation 7.7 Resource Overhead 8 Related Works 9 Conclusion References License: CC BY-NC-ND 4.0 arXiv:2603.18897v1 [cs.DC] 19 Mar 2026 Act While Thinking: Accelerating LLM Agents via Pattern-Aware Speculative Tool Execution Yifan Sui Shanghai Jiao Tong University Shanghai China suiyifan@sjtu.edu.cn , Han Zhao Shanghai Jiao Tong University Shanghai China zhaohan˙miven@sjtu.edu.cn , Rui Ma Microsoft Research Beijing China mrui@microsoft.com , Zhiyuan He Microsoft Research Beijing China zhiyuhe@microsoft.com , Hao Wang Stevens Institute of Technology Hoboken NJ USA hwang9@stevens.edu , Jianxun Li Shanghai Jiao Tong University Shanghai China lijx@sjtu.edu.cn and Yuqing Yang Microsoft Research Redmond WA USA yuqyang@microsoft.com Abstract. LLM-powered agents are emerging as a dominant paradigm for autonomous task solving. Unlike standard inference workloads, agents operate in a strictly serial “LLM-tool” loop, where the LLM must wait for external tool execution at every step. This execution model introduces severe latency bottlenecks. To address this problem, we propose PASTE, a P attern- A ware S peculative T ool E xecution method designed to hide tool latency through speculation. PASTE is based on the insight that although agent requests are semantically diverse, they exhibit stable application level control flows (recurring tool-call sequences) and predictable data dependencies (parameter passing between tools). By exploiting these properties, PASTE improves agent serving performance through speculative tool execution. Experimental results against state of the art baselines show that PASTE reduces average task completion time by 48.5% and improves tool execution throughput by 1.8 × \times . † † copyright: none † † journalyear: 2026 1. Introduction Figure 1 . Example patterns observed in execut
+
+PAT p50 IDX -1
+
+PAT p95 IDX 52451
+ ) (speculative serverless execution) under the same tool interfaces and resource limits. Real-world trace-driven request arrivals. We replay a production Azure Functions invocation trace (Shahrad et al. , 2020 ) to generate realistic, bursty arrivals. Each trace record becomes one agent request issued at its logged timestamp, preserving the arrival process . LLM configuration. As Table 2 shows, we choose both state-of-the-art proprietary LLM APIs and locally hosted open-source models, and keep the model configuration identical across all experiments. Metrics. Our primary metric is E2E latency (request arrival to final agent response) and tool execution latency. We also report tail latency (p95/p99), tool stall time (time the agent waits for tool execution results), throughput, speculative hit rate , and resource overhead. Table 2 . Evaluation setup Component Setting Cluster 4 nodes Per-node CPU 96 vCPUs, AMD EPYC 7V13 Per-node Memory 512 GB Per-node GPU 8 GPU, NVIDIA A100 80GB Total GPUs 32 × \times NVIDIA A100 80GB LLM API Gemini-2.5-Pro, GPT-5.2 Local Model Qwen-DeepResearch-30B ( Team , 2025 ) 7.2. E2E Latency Reduction We first quantify whether PASTE reduces E2E latency for each agent. Figure 7 summarizes the results. Across all agents, PASTE consistently reduces E2E latency relative to both ORION and SpecFaaS. PASTE reduces average latency by up to 48.5%, and reduces p95/p99 tail latency by up to 48.6%/61.9%. Aggregating across all configurations, PASTE achieves an average speedup of 1.25 × \times /1.32 × \times over ORION/SpecFaaS. Figure 7 . Average E2E latency comparison. Figure 8 . CDF of E2E latency for each task. To further characterize the full latency distribution, Figure 8 plots the CDF of E2E latency aggregated across all configurations. PASTE stochastically dominates both baselines: for a given latency threshold, a larger fraction of requests complete within the threshold under PASTE . This indicates that speculation improves not only the tail but also the “bulk” of requests by reducing tool stalls on the critical path. We further quantify this mechanism (tool-stall reduction and overlap) in Sec 7.3 . In addition to end-to-end improvements, we evaluate PASTE ’s ability to accelerate tool execution. Figure 9 reports average tool latency aggregated across all agents, and Figure 10 plots the corresponding per-task CDF. Across agents and benchmarks, PASTE significantly reduces tool latency relative to both ORION and SpecFaaS. PASTE reduces ave
+
+PAT speedup IDX 53255
+ rate , and resource overhead. Table 2 . Evaluation setup Component Setting Cluster 4 nodes Per-node CPU 96 vCPUs, AMD EPYC 7V13 Per-node Memory 512 GB Per-node GPU 8 GPU, NVIDIA A100 80GB Total GPUs 32 × \times NVIDIA A100 80GB LLM API Gemini-2.5-Pro, GPT-5.2 Local Model Qwen-DeepResearch-30B ( Team , 2025 ) 7.2. E2E Latency Reduction We first quantify whether PASTE reduces E2E latency for each agent. Figure 7 summarizes the results. Across all agents, PASTE consistently reduces E2E latency relative to both ORION and SpecFaaS. PASTE reduces average latency by up to 48.5%, and reduces p95/p99 tail latency by up to 48.6%/61.9%. Aggregating across all configurations, PASTE achieves an average speedup of 1.25 × \times /1.32 × \times over ORION/SpecFaaS. Figure 7 . Average E2E latency comparison. Figure 8 . CDF of E2E latency for each task. To further characterize the full latency distribution, Figure 8 plots the CDF of E2E latency aggregated across all configurations. PASTE stochastically dominates both baselines: for a given latency threshold, a larger fraction of requests complete within the threshold under PASTE . This indicates that speculation improves not only the tail but also the “bulk” of requests by reducing tool stalls on the critical path. We further quantify this mechanism (tool-stall reduction and overlap) in Sec 7.3 . In addition to end-to-end improvements, we evaluate PASTE ’s ability to accelerate tool execution. Figure 9 reports average tool latency aggregated across all agents, and Figure 10 plots the corresponding per-task CDF. Across agents and benchmarks, PASTE significantly reduces tool latency relative to both ORION and SpecFaaS. PASTE reduces average tool latency by up to 55.2%, and reduces p95/p99 tool latency by up to 59.3%/60.6%. Aggregating across all configurations, PASTE achieves an average tool speedup of 1.71 × \times /1.83 × \times over ORION/SpecFaaS. These gains are consistent with speculative execution overlapping tool work with LLM generation and thus shortening the effective tool critical path. Figure 9 . Average tool latency comparison. Figure 10 . CDF of tool latency for each task. Figure 11 . Throughput evaluation. Finally, we aggregate all tasks and examine PASTE ’s overall speedup relative to the baselines. Figure 12 reports the CDF of per-request speedup over ORION and SpecFaaS after pooling all requests. Most requests observe positive speedup (97% above 1 × \times ), while the worst cases remain close to parity, c
+
+PAT AgentBench IDX -1
+
+PAT SWE IDX 13042
+nce workloads that are relatively short and independent, agent workloads are long-running, stateful, and highly sequential. A single user request (e.g., “Analyze this dataset and plot the trends”) triggers many intermediate reasoning steps and tool executions that may span minutes. Consequently, the system must transition from optimizing individual request latency (Time-to-First-Token) to optimizing the end-to-end latency. Figure 2 . Workflow of LLM agent. 2.1.2. The Agent Execution Model LLM agents naturally follow an Iterative LLM–Tool Loop , as shown in Figure 2 . In each iteration, the LLM is conditioned on the current context and execution history, and then either (i) emits the final answer and terminates, or (ii) decides to invoke a tool with concrete parameters. If a tool is invoked, the system executes the call, appends the tool output back into the session state, and resumes LLM inference on the updated context. This loop repeats until the LLM determines that enough evidence has been gathered and produces the final result as the session output. From a system perspective, end-to-end latency is jointly determined by LLM inference and tool execution. 2.2. Problems and Challenges 2.2.1. Problems of Current Agents The execution time of LLM agents can be divided into two parts, LLM generation and tool execution. We first measure the time spent in these two parts using three mainstream agent benchmarks (Deep Research Bench (Du et al. , 2025 ) , SWE Bench (Jimenez et al. , 2024 ) , ScholarQA (Asai et al. , 2024 ) ). These benchmarks all cover the three dominant application domains of deep research, bug-fix assistance, and scientific research. Our experimental setup uses three main-stream agent products, with both LLM API (Gemini-2.5, GPT-5.2), and a local deployed Qwen-DeepResearch-30B (Team, 2025 ) model on a server with 8 NVIDIA A100-80G GPUs. 3(a) shows the latency breakdown of representative requests from these benchmarks. The results show that tool execution constitutes a substantial portion of the total request lifetime. On average, tool execution accounts for 60% of the latency in coding tasks, 50% in deep research tasks, and 36% in scientific tasks. This observation remains consistent across all three benchmarks. As discussed earlier, the LLM generation and tool execution are strictly serialized because of inherent data dependencies. As a result, the large overhead of tool execution becomes a direct bottleneck, leading to suboptimal end-to-end lat
+
+PCT y exploiting these properties, PASTE improves agent serving performance through speculative tool execution. Experimental results against state of the art baselines show that PASTE reduces average task completion time by 48.5% and improves tool execution throughput by 1.8 × \times . † † copyright: none † † journalyear: 2026 1. Introduction Figure 1 . Example patterns observed in execution of (a) deep research agents and (b) coding agents. Pat
+
+PCT alternates between generating text and making external tool calls. These two steps operate strictly serially, as they have inherent dependencies. Our experimental results in § 2.2.2 show that tool execution accounts for 35% to 61% of total request time. This execution model forces LLMs to hold expensive memory resources, yet still delivers long end-to-end latency. These inefficiencies significantly hinder the rapid deployment and continued
+
+PCT tes between generating text and making external tool calls. These two steps operate strictly serially, as they have inherent dependencies. Our experimental results in § 2.2.2 show that tool execution accounts for 35% to 61% of total request time. This execution model forces LLMs to hold expensive memory resources, yet still delivers long end-to-end latency. These inefficiencies significantly hinder the rapid deployment and continued evolut
+
+PCT ology and artifact availability Our evaluation demonstrates that PASTE effectively improves the end-to-end latency of LLM agents. Compared to state-of-the-art baselines, PASTE reduces the average task completion time by 48.5% and accelerates average tool execution by 1.8 × \times . PASTE will be open-sourced after review. The main contributions of this paper are as follows: • Characterization of Agent Latency. We characterize modern LLM agen
+
+PCT shows the latency breakdown of representative requests from these benchmarks. The results show that tool execution constitutes a substantial portion of the total request lifetime. On average, tool execution accounts for 60% of the latency in coding tasks, 50% in deep research tasks, and 36% in scientific tasks. This observation remains consistent across all three benchmarks. As discussed earlier, the LLM generation and tool execution are s
+
+PCT sentative requests from these benchmarks. The results show that tool execution constitutes a substantial portion of the total request lifetime. On average, tool execution accounts for 60% of the latency in coding tasks, 50% in deep research tasks, and 36% in scientific tasks. This observation remains consistent across all three benchmarks. As discussed earlier, the LLM generation and tool execution are strictly serialized because of inhere
+
+PCT nchmarks. The results show that tool execution constitutes a substantial portion of the total request lifetime. On average, tool execution accounts for 60% of the latency in coding tasks, 50% in deep research tasks, and 36% in scientific tasks. This observation remains consistent across all three benchmarks. As discussed earlier, the LLM generation and tool execution are strictly serialized because of inherent data dependencies. As a resul
+
+PCT efit. Prior work has focused on cold start mitigation and environment reuse (Joosen et al. , 2025 ; Sui et al. , 2026 ; Liu et al. , 2024 ) . However, in our agent traces, initialization typically accounts for less than 20% of overall tool latency. In addition, speculation in agent workloads is constrained by tool side effects and a large, context dependent argument space. Prior works are ineffective in the agent serving scenario (Stojkovi
+
+PCT fy whether PASTE reduces E2E latency for each agent. Figure 7 summarizes the results. Across all agents, PASTE consistently reduces E2E latency relative to both ORION and SpecFaaS. PASTE reduces average latency by up to 48.5%, and reduces p95/p99 tail latency by up to 48.6%/61.9%. Aggregating across all configurations, PASTE achieves an average speedup of 1.25 × \times /1.32 × \times over ORION/SpecFaaS. Figure 7 . Average E2E latency compar
+
+PCT nt. Figure 7 summarizes the results. Across all agents, PASTE consistently reduces E2E latency relative to both ORION and SpecFaaS. PASTE reduces average latency by up to 48.5%, and reduces p95/p99 tail latency by up to 48.6%/61.9%. Aggregating across all configurations, PASTE achieves an average speedup of 1.25 × \times /1.32 × \times over ORION/SpecFaaS. Figure 7 . Average E2E latency comparison. Figure 8 . CDF of E2E latency for each task
+
+PCT gure 7 summarizes the results. Across all agents, PASTE consistently reduces E2E latency relative to both ORION and SpecFaaS. PASTE reduces average latency by up to 48.5%, and reduces p95/p99 tail latency by up to 48.6%/61.9%. Aggregating across all configurations, PASTE achieves an average speedup of 1.25 × \times /1.32 × \times over ORION/SpecFaaS. Figure 7 . Average E2E latency comparison. Figure 8 . CDF of E2E latency for each task. To f
+
+PCT oss all agents, and Figure 10 plots the corresponding per-task CDF. Across agents and benchmarks, PASTE significantly reduces tool latency relative to both ORION and SpecFaaS. PASTE reduces average tool latency by up to 55.2%, and reduces p95/p99 tool latency by up to 59.3%/60.6%. Aggregating across all configurations, PASTE achieves an average tool speedup of 1.71 × \times /1.83 × \times over ORION/SpecFaaS. These gains are consistent with 
+
+PCT ding per-task CDF. Across agents and benchmarks, PASTE significantly reduces tool latency relative to both ORION and SpecFaaS. PASTE reduces average tool latency by up to 55.2%, and reduces p95/p99 tool latency by up to 59.3%/60.6%. Aggregating across all configurations, PASTE achieves an average tool speedup of 1.71 × \times /1.83 × \times over ORION/SpecFaaS. These gains are consistent with speculative execution overlapping tool work with 
+
+PCT er-task CDF. Across agents and benchmarks, PASTE significantly reduces tool latency relative to both ORION and SpecFaaS. PASTE reduces average tool latency by up to 55.2%, and reduces p95/p99 tool latency by up to 59.3%/60.6%. Aggregating across all configurations, PASTE achieves an average tool speedup of 1.71 × \times /1.83 × \times over ORION/SpecFaaS. These gains are consistent with speculative execution overlapping tool work with LLM ge
+
+PCT gate all tasks and examine PASTE ’s overall speedup relative to the baselines. Figure 12 reports the CDF of per-request speedup over ORION and SpecFaaS after pooling all requests. Most requests observe positive speedup (97% above 1 × \times ), while the worst cases remain close to parity, consistent with PASTE ’s low speculation overhead when predictions do not hit. ((a)) CDF of per-request E2E speedup over ORION/SpecFaaS. ((b)) CDF of per
+
+PCT the LLM is still thinking. Overlap reflects the effectiveness of speculative tool execution. Figure 13 reports the breakdown for ORION, SpecFaaS, and PASTE . Compared with both baselines, PASTE reduces tool-wait time by 67%. Compared with SpecFaaS, PASTE increases the measured overlap by over 10 × \times . Figure 13 . Time breakdown and overlap analysis, showing where PASTE reduces tool stall time by overlapping speculative tool work with 
+
+PCT  system is lightly loaded and spare resources are available), overall hit rate can be high even when Top-1 accuracy is low. Figure 15 reports prediction quality by benchmark family. Overall, the predictor achieves up to 27.8% Top-1 accuracy, 43.9% Top-3 recall, and 93.8% overall hit rate. Accuracy is higher for structured tool sequences (e.g., compilation/test loops) and lower for open-ended exploration patterns typical of broad research tas
+
+PCT ded and spare resources are available), overall hit rate can be high even when Top-1 accuracy is low. Figure 15 reports prediction quality by benchmark family. Overall, the predictor achieves up to 27.8% Top-1 accuracy, 43.9% Top-3 recall, and 93.8% overall hit rate. Accuracy is higher for structured tool sequences (e.g., compilation/test loops) and lower for open-ended exploration patterns typical of broad research tasks. Despite imperfect 
+
+PCT are available), overall hit rate can be high even when Top-1 accuracy is low. Figure 15 reports prediction quality by benchmark family. Overall, the predictor achieves up to 27.8% Top-1 accuracy, 43.9% Top-3 recall, and 93.8% overall hit rate. Accuracy is higher for structured tool sequences (e.g., compilation/test loops) and lower for open-ended exploration patterns typical of broad research tasks. Despite imperfect Top-1 accuracy, strong T
+
+PCT e Overhead For the latency–overhead tradeoff, for every 1 second of latency reduction, the PASTE consumes 0.02 core-seconds of CPU, 2.6 MB of memory, and 0.9 MB of network bandwidth. At moderate settings, PASTE achieves 48% tool execution latency reduction with extra 1-3 idle CPU cores and 250 MB additional memory. These results show that PASTE can be tuned to a practical “sweet spot” in which most speculative work is converted into useful
+
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "PASTE / Act While Thinking", url: "https://arxiv.org/html/2603.18897v1", overlap: "High conceptual overlap: speculative tool execution for LLM agents, predicts tool + parameters from patterns, schedules speculative invocations on slack resources, reports up to 48.5% average task-completion reduction and 93.8% overall hit rate; not found as shipping OSS in this sweep."},
+  {system: "vLLM", url: "https://docs.vllm.ai/en/stable/features/tool_calling/", overlap: "Tool calling support, but no evidence found of firing tools before argument JSON is complete."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html", overlap: "Speculative decoding for tokens, not speculative external tool execution."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "Inference kernels and speculative sampling primitives, not agent tool-call prefetch."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache reuse/prefix caching for LLM serving, not tool-call speculation."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "Serving/constrained generation/speculative decoding features, but no evidence found of speculative tool execution during JSON decode."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: L0 does not establish realistic workload behavior. The analytic/MC model is internally coherent, but the deciding parameters are unmeasured: real agent-step p_correct for tool name + leading args, actual GPU decode timing ratio t_tool/t_args, cancellation/side-effect cost w, and commit overhead. At r>=2 the packet’s own table requires p*=0.755-0.970 for w=1, so the claimed high-tool-latency regime only holds if real traces show very high correctness or very low wasted-work cost. PASTE reports real-trace/cluster-scale speculative tool execution results, so this claim needs a head-to-head against that framing, not only serialize-then-call.
+RATIONALE: Prompt version v001. No exact shipping OSS implementation was found in vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM that starts an external tool as soon as partial tool-call JSON is decoded. However, PASTE is close prior work: it targets the same LLM-agent serial LLM-tool loop, speculates tool execution with predicted parameters, addresses side effects/resource contention, and reports 48.5% average task-completion reduction plus 1.8x tool throughput on a 32xA100 setup (https://arxiv.org/html/2603.18897v1). The packet’s proposed break-even p*=P/(S+P) is a standard speculative-execution tradeoff; the useful part is the agent-step instantiation and the negative finding that overlap gain saturates while miss cost grows with t_tool. Because the artifact is CPU-only simulation with no real p_correct or cancellation data, and because close prior work already evaluates speculative tool execution at realistic scale, this is candidate-grade only if the next pass measures real trace correctness and compares directly against PASTE-style pattern speculation and ordinary tool calling.
+```
+tokens used
+49,534

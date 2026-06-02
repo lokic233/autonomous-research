@@ -29,13 +29,19 @@ negative_evidence:
     it matters. MC validates analytic (max diff 0.049, 5 seeds). Prior-art sweep OWED
     (no egress).
   data_path: experiments/2026-06-02/EXP-0004/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0003
+  date: '2026-06-02'
+  result: yellow
+- verdict_id: VERDICT-0004
+  date: '2026-06-02'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0004; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0004=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-02T23:22:30Z'
-last_updated: '2026-06-02T23:27:12Z'
+last_updated: '2026-06-02T23:35:53Z'

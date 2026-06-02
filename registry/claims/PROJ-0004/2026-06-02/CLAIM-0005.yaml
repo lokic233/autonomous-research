@@ -1,7 +1,7 @@
 claim_id: CLAIM-0005
 project_id: PROJ-0004
 stage: seed
-status: seed
+status: weakened
 claim: On agentic/tool-calling traffic, an adaptive speculative-decoding policy that
   lengthens the draft window inside constrained-grammar regions (tool-call/JSON spans,
   where next-token entropy collapses and draft acceptance is structurally higher)
@@ -17,16 +17,26 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0006
+  summary: 'PARTIAL/leans-negative. Analytic spec-dec throughput proxy tps=(E[a]+1)/(k*r+1),
+    region-dependent acceptance, token-weighted harmonic trace aggregate. Adaptive
+    (per-region argmax k) vs BEST-TUNED-fixed k, 288-pt grid (p_c,p_p,f,r). Adaptive
+    always >= best-fixed but median gain only +1.3% at realistic agentic op points
+    (f~0.1-0.2, gap<=0.30); meaningful (>5%, up to +18.7%) only at high constrained-fraction
+    f>=0.35 + large gap. Tuned fixed window (best k mode=2) captures nearly all gain
+    on prose-dominated traffic. MC 5-seed cross-check matches analytic <0.06% rel
+    err. Pre-registered honest-negative trigger FIRED. GPU pass must measure real
+    per-region acceptance + emitted-token constrained fraction f. Prior-art owed:
+    EAGLE/Medusa/SpecInfer/entropy-adaptive specdec.'
+  data_path: experiments/2026-06-02/EXP-0006/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0006 result, then ros exp complete --exp EXP-0006 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0006; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0006
+active_experiments: []
 created_at: '2026-06-02T23:22:30Z'
-last_updated: '2026-06-02T23:23:19Z'
+last_updated: '2026-06-02T23:33:29Z'

@@ -1,0 +1,66 @@
+verdict_id: VERDICT-0003
+claim_id: CLAIM-0003
+project_id: PROJ-0002
+date: '2026-06-02'
+experiment_ids:
+- EXP-0004
+experiment_paths:
+- experiments/2026-06-02/EXP-0004
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'theory_skeptic RED (unrebutted, corroborated by 3/5): break-even p*=P/(S+P) with
+  saturating gain vs linear penalty is the TEXTBOOK speculative-execution cost model
+  (Smith 1981'
+- Hennessy&Patterson
+- "Leviathan 2023 spec-decoding) \u2014 agent-step framing adds no new term"
+- model even UNDERSTATES the negative (excludes w>1 side-effecting tools, assumes
+  p_correct independent of r when it likely anti-correlates, ignores contention +
+  batch effects)
+- "PASTE (arXiv 2603.18897) near-collision found live by systems_reviewer: speculative\
+  \ tool execution for LLM agents with predicted params, REAL-trace 48.5% task-completion\
+  \ reduction / 93.8% hit rate \u2014 exactly the empirical grounding CLAIM-0003 lacks"
+- not cited
+- Prior-art search inadequate (novelty_killer no egress
+- PASTE + LLMCompiler uncited)
+required_evidence:
+- 'PASTE head-to-head (arXiv 2603.18897): verify mechanism overlap, draw boundary
+  between PASTE pattern-predicted speculation and CLAIM-0003 partial-arg-decode speculation.
+  If PASTE subsumes the partial-arg case -> escalate RED/KILL. GATES any advance'
+- 'LLMCompiler (arXiv 2312.04511) boundary: does parallel function-calling DAG dispatch
+  already cover the overlapped-execution benefit?'
+- 'Real-trace p_correct (THE deciding unknown, all 5 agree): measure speculation-correctness
+  on real agent traces (ToolBench/SWE-bench) bucketed by tool + leading-arg fraction'
+- report correlation of p_correct with r (likely anti-correlated -> compounds negative)
+- 'Real w: cancellation/rollback cost for side-effecting tools (w>1 excluded from
+  sweep understates negative)'
+- "Reframe: if collisions cleared, this is a MEASUREMENT study of where the classic\
+  \ speculative-execution tradeoff lands for real agent tool calls \u2014 NOT a novel\
+  \ mechanism"
+map_delta_proposals:
+- 'CLAIM-0003: effect weaken'
+- status conditional-negative-at-L0
+- prior_art_risk HIGH (PASTE near-collision unresolved, mechanism confirmed classic
+  by 3/5)
+- do NOT advance to GPU without resolving PASTE/LLMCompiler + measuring real p_correct
+  + reframing as measurement study. CONVERGED-at-L0 pending egress-gated prior-art
+  resolution (no GPU pass for a weakened claim a published paper already does better
+  empirically)
+baseline_requirements:
+- serialize-then-call on real serving engine with measured t_args/t_tool per tool
+- PASTE-style pattern-predicted speculation (if collision cleared)
+- LLMCompiler parallel-calling DAG
+created_at: '2026-06-02T23:35:09Z'

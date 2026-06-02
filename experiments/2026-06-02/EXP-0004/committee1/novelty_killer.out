@@ -1,0 +1,51 @@
+Both external search paths (`three_pai_external_web_search` and `WebSearch`) are permission-blocked in this run — I have **no network egress**, the same constraint the L0 run flagged. The owed live ≥2-source sweep therefore cannot be completed by me either. Per committee rules I will not fabricate retrievable citations, and a KILL collision requires ≥2 independent *verified* sources — which I cannot produce. I vote on what I can defend: the structural-mechanism argument (a math identity, needs no URL) plus named prior work the authors MUST verify before any green.
+
+```
+ROLE: novelty_killer  VOTE: yellow  (prompt v001)
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Kim et al., 'An LLM Compiler for Parallel Function Calling' (LLMCompiler), 2023",
+   url: "NOT LIVE-VERIFIED (no egress this run) — arxiv 2312.04511 from memory, MUST be retrieved at GPU/egress pass",
+   why_close: "Closest known work: overlaps tool EXECUTION with LLM planning/decode by dispatching a DAG of calls as deps resolve. Differs in mechanism — it parallelizes ACROSS multiple resolved calls; it does NOT fire a single call on PARTIALLY-decoded (speculated) arguments before the arg-JSON is complete. The partial-arg speculation is the claim's only mechanism delta vs this."},
+  {cite: "Leviathan et al. 2023 / Chen et al. 2023 — Speculative Decoding",
+   url: "NOT LIVE-VERIFIED — arxiv 2211.17192 / 2302.01318 from memory",
+   why_close: "Same word 'speculative', different object: token-level draft/verify overlap, not overlapping tool-exec with arg-decode. Near in name, not a mechanism collision — but authors must distinguish explicitly."},
+  {cite: "Branch prediction / speculative execution under misprediction penalty (Hennessy & Patterson, Comp. Arch.); speculative I/O & prefetch cost models",
+   url: "textbook — no URL needed",
+   why_close: "The claim's entire analytic core — break-even p* = penalty/(gain+penalty), gain saturating while penalty grows linearly — IS this classic cost model, re-derived. No mechanism novelty in the math."}
+]
+
+NAMING_VS_MECHANISM: Predominantly NAMING/RE-FRAMING, not a new mechanism. The break-even p* = P/(S+P)
+  is the textbook speculative-execution-under-misprediction identity; instantiating it with agent-step
+  quantities (t_args, t_tool, lead, w) is an application, not a new mechanism. The "saturation-vs-linear-
+  penalty asymmetry" the packet floats as a delta is itself a direct consequence of S=min(remaining-decode,
+  tool-latency) vs P=w·t_tool — i.e. the same classic model, observed. The ONE thing that would be a genuine,
+  measurable contribution is empirical agent argument-prediction rates (p_correct) on real traces — and that
+  is exactly what is NOT yet measured (it is swept, not observed).
+
+FATAL_COLLISIONS: NONE VERIFIED. Cannot assert any kill-collision — requires ≥2 retrievable sources and
+  egress was denied this run. LLMCompiler is the only candidate near-collision and it is distinguishable
+  on the partial-arg-speculation mechanism; that distinction itself MUST be confirmed against the real paper.
+
+MANDATORY_RELATED_WORK: [
+  "LLMCompiler (parallel function calling DAG) — must cite + draw the partial-arg-speculation boundary",
+  "Speculative decoding (Leviathan / Chen) — must cite to disambiguate the overloaded 'speculative' term",
+  "Classic speculative-execution / branch-prediction break-even cost models — must cite; the analytic
+   contribution is NOT novel and should be framed as 'applying the classic model to agent steps'",
+  "Any published agent tool-arg prediction / API-prefetch rate study — OWED at egress pass; if measured
+   p_correct already exists in literature, the empirical contribution shrinks toward zero"
+]
+
+RATIONALE: I cannot green this — the owed prior-art sweep is still undone (egress denied to me as it was at
+  L0), and the mechanism is, on its face, a re-derivation of the textbook speculative-execution break-even
+  (this assertion needs no URL — it is a standard cost-model identity, and the packet's own pre-registration
+  derives exactly p* = penalty/(gain+penalty)). I cannot red this either: a KILL demands a fatal collision
+  verified in ≥2 retrievable sources, and I have zero live sources this run; the nearest known work
+  (LLMCompiler) is plausibly distinguishable on partial-argument speculation. Honest YELLOW.
+  REQUIRED_EVIDENCE before any green: (1) a LIVE ≥2-source prior-art sweep specifically clearing partial-arg
+  speculative tool dispatch against LLMCompiler-style parallel calling and any agent API-prefetch papers;
+  (2) measured real-trace p_correct (the single deciding unknown both the researcher and evaluation roles
+  name) — without it, even a cleared-novelty claim has no empirical leg, since the L0 already shows p* climbs
+  to 0.92–0.97 in the high-tool-latency regime the claim foregrounds. Naming-novel, mechanism-classic,
+  empirically-unverified.
+```

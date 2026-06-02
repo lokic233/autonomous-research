@@ -1,0 +1,29 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: red, product_realist: yellow}
+FATAL_OBJECTIONS: [
+  "theory_skeptic RED unrebutted and corroborated: p* = P/(S+P) is the textbook speculative-execution break-even (Smith 1981; Hennessy & Patterson; Leviathan 2023). The 'saturation-vs-linear-penalty asymmetry' is the algebraic consequence of min(a,b) vs linear term, not an emergent finding. No reviewer contests this.",
+  "PASTE (arXiv 2603.18897v1) found by systems_reviewer: speculative tool execution for LLM agents, predicted parameters, reports 48.5% task-completion reduction and 93.8% overall hit rate on 32xA100. Near-collision with the claim's mechanism. NOT cited in packet. Partial-arg vs pattern-prediction distinction must be verified but this is close prior work with real-trace results where CLAIM-0003 has none.",
+  "Prior-art search remains inadequate: novelty_killer had no egress (same constraint as L0); systems_reviewer found PASTE via web but packet does not cite it; LLMCompiler (arXiv 2312.04511) also uncited. Two independent reviewers confirm the mechanism is classic."
+]
+REQUIRED_EVIDENCE: [
+  "PASTE head-to-head: retrieve arXiv 2603.18897v1, verify mechanism overlap, draw the precise boundary between PASTE's pattern-predicted speculation and CLAIM-0003's partial-arg-decode speculation. If PASTE already subsumes the partial-arg case, this is a collision.",
+  "LLMCompiler (arXiv 2312.04511) retrieval and boundary verification: does parallel function-calling DAG dispatch already cover the overlapped-execution benefit claimed here?",
+  "Real-trace p_correct: measure speculation-correctness on actual agent traces (e.g. ToolBench, SWE-bench tool calls), bucketed by tool, leading-arg fraction, and argument complexity. This is THE deciding unknown (all 5 reviewers agree). Must also report correlation between p_correct and r — theory_skeptic's point that tools with high r likely have lower p_correct (more variable args) is untested and would compound the negative.",
+  "Real w measurement: cancellation latency and side-effect rollback cost for production tool mixes. theory_skeptic correctly notes w>1 for side-effecting tools (writes, posts, sends) is excluded from sweep, understating the negative.",
+  "Reframe contribution: if PASTE and LLMCompiler are cleared as non-collisions, reframe as a measurement/characterization study ('where does the classic speculative-execution tradeoff land for real agent tool calls?'), NOT as a novel mechanism. The math is not new; the empirical instantiation could be."
+]
+MANDATORY_BASELINES: [
+  "Serialize-then-call on a real serving engine with measured t_args, t_tool per tool (evaluation_prosecutor)",
+  "PASTE-style pattern-predicted speculation if collision is cleared (systems_reviewer)",
+  "LLMCompiler parallel-calling DAG (novelty_killer)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0003", change: "effect: weaken; status: conditional-negative-at-L0; prior_art_risk: high (PASTE near-collision unresolved, mechanism confirmed classic by 3/5 reviewers); advance_condition: clear PASTE/LLMCompiler collisions + measure real p_correct + reframe as measurement study; do NOT advance to GPU without resolving prior-art"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Four YELLOW votes and one RED. The RED (theory_skeptic) is unrebutted and independently corroborated by novelty_killer ("mechanism-classic") and systems_reviewer ("standard speculative-execution tradeoff"). The analytic core p* = P/(S+P) with gain saturating at min(remaining-decode, tool-latency) while penalty grows linearly is the textbook speculative-execution cost model — substituting agent-step variable names does not create a new mechanism. The systems_reviewer's discovery of PASTE (arXiv 2603.18897v1) significantly raises the prior-art risk: PASTE targets the identical problem (serial LLM-tool loop in agents), performs speculative tool execution with predicted parameters, and reports real-trace results (48.5% task-completion reduction, 93.8% hit rate) — exactly the kind of empirical grounding CLAIM-0003 lacks. This was not cited in the packet.
+
+I do NOT escalate to RED because: (1) the L0 methodology is genuinely sound — pre-registered, honest negative, MC-validated analytic model — and an honest conditional-negative is a legitimate research output; (2) the PASTE collision is not yet verified at mechanism-detail level (partial-arg-decode speculation vs pattern-level tool prediction may be distinguishable); (3) a viable path exists IF the claim is reframed as a measurement study and the prior-art collisions are cleared. But the path is narrow and the theory_skeptic's observation that the model UNDERSTATES the negative (w>1 excluded, p_correct likely anti-correlates with r, contention and batch effects ignored) means even the conditional-negative may be optimistic.
+
+VERDICT: YELLOW — do not advance to GPU/real-trace pass until PASTE and LLMCompiler collisions are resolved via live retrieval. If collisions are cleared, the next pass must measure real p_correct (the single deciding unknown) and reframe the contribution as empirical characterization of a classic tradeoff in a new domain, not a novel mechanism. If PASTE subsumes the partial-arg case, escalate to RED/KILL.
+```

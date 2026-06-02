@@ -1,0 +1,51 @@
+verdict_id: VERDICT-0004
+claim_id: CLAIM-0003
+project_id: PROJ-0002
+date: '2026-06-02'
+experiment_ids:
+- EXP-0004
+experiment_paths:
+- experiments/2026-06-02/EXP-0004
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- 'theory_skeptic RED (corroborated 3/5): break-even p*=P/(S+P) saturating-gain-vs-linear-penalty
+  is TEXTBOOK speculative-execution'
+- agent-step framing adds no term
+- model UNDERSTATES negative (w>1 excluded, p_correct likely anti-correlates with
+  r, contention+batch ignored)
+- PASTE arXiv 2603.18897 near-collision (real-trace 48.5% task-completion reduction)
+  found live, uncited
+- prior-art inadequate (novelty_killer no egress)
+required_evidence:
+- PASTE head-to-head arXiv 2603.18897 (GATES advance
+- if subsumes partial-arg case -> RED/KILL)
+- LLMCompiler arXiv 2312.04511 boundary
+- Real-trace p_correct bucketed by tool+leading-arg + corr with r (THE deciding unknown)
+- Real w for side-effecting tools
+- Reframe as MEASUREMENT study not novel mechanism
+map_delta_proposals:
+- CLAIM-0003 weaken/conditional-negative-at-L0
+- prior_art_risk HIGH
+- CONVERGED-at-L0 pending egress-gated PASTE resolution
+- NO GPU pass (weakened + published near-collision does it better empirically)
+baseline_requirements:
+- serialize-then-call on real engine w/ measured t_args,t_tool
+- PASTE pattern-predicted speculation
+- LLMCompiler DAG
+created_at: '2026-06-02T23:35:53Z'
