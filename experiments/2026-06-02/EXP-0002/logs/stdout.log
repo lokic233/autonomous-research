@@ -1,0 +1,21 @@
+PARAMS: {'n_sessions': 40, 'turns_per_session': 8, 'prefix_len': 2048, 'committed_blocks': 8, 'transient_blocks': 8}
+seeds=[11, 23, 47, 71, 97, 113] shared_fracs=[0.25, 0.5, 0.75, 0.9]
+
+=== POOLED over shared_frac & seeds, per cap_frac (mean hit-rate) ===
+  cap |               lru pin_shared_prefix            naive2         adaptive3
+ 0.25 |            0.3787            0.5036            0.5119            0.5082
+  0.5 |            0.5772            0.5772            0.5907            0.5896
+ 0.75 |            0.6455            0.6455            0.6558            0.6633
+  1.0 |            0.7020            0.7020            0.7133            0.7251
+  1.5 |            0.7883            0.7883            0.8010            0.8178
+
+=== Δhit vs baselines (adaptive3 - baseline), pooled, bootstrap 95% CI ===
+  cap |                   a3-LRU Δhit [CI] |                   a3-PIN Δhit [CI] | frac of LRU-gap kept by PIN
+ 0.25 | +0.12947 [+0.11574,+0.14383] | +0.00463 [+0.00349,+0.00587] |                    96.4%
+  0.5 | +0.01242 [+0.01056,+0.01435] | +0.01242 [+0.01056,+0.01435] |                     0.0%
+ 0.75 | +0.01779 [+0.01556,+0.02003] | +0.01779 [+0.01556,+0.02003] |                     0.0%
+  1.0 | +0.02310 [+0.02061,+0.02558] | +0.02310 [+0.02061,+0.02558] |                     0.0%
+  1.5 | +0.02951 [+0.02690,+0.03211] | +0.02951 [+0.02690,+0.03211] |                     0.0%
+
+CSV: /Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/results/results.csv
+rc=0
