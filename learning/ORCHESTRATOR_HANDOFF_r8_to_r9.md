@@ -46,4 +46,4 @@ GREEN PATH for r9 (DO NOT FABRICATE a green; green needs a real 6/6):
 
 ## LIVE ROSTER (verify via ros liveness): sub-monitor-0002-r7, sub-monitor-0003-r4, sub-monitor-0013-r8, sub-monitor-0015-r9, gpu-coord-h100-r4b, gpu-coord-mi350x-r4c. MONITOR = session a67dcadf (job e25d374b), alive, tracks you + backstops persistence/.converged/new-day reports.
 
-## r9 SESSION ID: <r9 writes it here on boot>
+## r9 SESSION ID: a8ec184a-d289-4a3e-8012-5138a8b86454 (spawned by r8 at maxTokens=8192, 2026-06-02 ~00:42Z; MONITOR a67dcadf to repoint self-check job 17860a88)
