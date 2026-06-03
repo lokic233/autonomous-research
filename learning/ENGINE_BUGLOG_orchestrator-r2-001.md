@@ -1566,3 +1566,35 @@ status onto the fresh record. 0/8 clobbered after (hb_count correctly 6, status 
 lock, so the two never contended under a lock there; this hardens v3's locked-heartbeat invariant end-to-end.
 **Lesson:** when you add a per-record lock to ONE writer (heartbeat, BUG-99), AUDIT every other writer of
 that same record — a single unlocked long-body RMW elsewhere silently reopens the race the lock was meant to close.
+
+---
+
+## BUG-102 — reaper leaves a dual-role task's `parent` dangling at the SUPERSEDED agent (supervision-tree fragmentation)
+
+**Surface:** reap edges / task orphans (`engine/supervise.py` `reap()`).
+**Severity:** correctness — supervision-tree integrity (a live task hangs off a dead node).
+
+**Bug:** In `supervise.reap()`, when a past-grace agent is SUPERSEDED by a fresh same-`(project,role)`
+successor, its open/active tasks are reassigned to the successor (BUG-88). But that reassign lives in the
+`if t.assignee == a` branch, and the task-`parent` re-parent branch immediately below is an `elif` of that
+SAME `if`. So a task that is BOTH **assigned-to** AND **parented-by** the superseded agent (a supervisor's
+own seed/work task) matched ONLY the assignee branch: its `assignee` moved to the successor, but its
+`parent` field stayed pointing at the now-superseded (dead) agent. The tree then has a live task hanging
+off a dead node — the exact fragmentation BUG-49 fixed for agent CHILDREN, missed here for the dual-role TASK.
+
+**Repro (isolated /tmp):** stale `sub-0001` superseded by fresh `sub-0002` (same PROJ/role); a task with
+`assignee=parent=sub-0001`. Before fix: after reap, `assignee=sub-0002` but `parent=sub-0001` (dangling).
+
+**Fix (no new mechanism):** in the supersede assignee branch, if `t.parent == superseded_agent`, also move
+`parent -> successor` (mirrors the existing BUG-49 child re-parent and the `elif` parent-reparent below),
+appending a `reparent` history entry. After fix: parent correctly moves to the successor (1/1).
+Regression: assignee-only (parent untouched) + parent-only (assignee untouched) both still PASS.
+AST-validated; `ros status` still loads on the live v3 instance.
+
+**v2-parity:** the shared engine's reap had this `if/elif` shape from the BUG-88/49 era; the dual-role
+(assignee==parent) task is the uncovered intersection. Brings v3 reap to full tree-integrity parity with
+the agent-child re-parent invariant.
+
+**Lesson:** when one `if` reassigns a field and an `elif` reassigns a DIFFERENT field on the same object,
+an object matching the first condition can never reach the second — audit for entities that legitimately
+need BOTH (here: a supervisor's own task is both assignee and parent).
