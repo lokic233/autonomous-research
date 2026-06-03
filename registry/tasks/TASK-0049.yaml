@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0023
 claim_id: CLAIM-0053
 exp_id: EXP-0059
-status: open
+status: done
 summary: 'L0: n-gram decontam as length-biased test-set sampler. Structural anchor
   (removal monotone in length + survivor shorter, must hold) + headline accuracy-inflation
   Delta(alpha,c,k); ALPHA=0 CONTROL is the load-bearing falsification (composition
@@ -16,8 +16,8 @@ summary: 'L0: n-gram decontam as length-biased test-set sampler. Structural anch
   c; PERSISTENT-SEEDER loop'
 evidence_delta: ''
 opened_at: '2026-06-03T21:53:34Z'
-updated_at: '2026-06-03T21:53:34Z'
-closed_at: ''
+updated_at: '2026-06-03T21:59:25Z'
+closed_at: '2026-06-03T21:59:25Z'
 history:
 - ts: '2026-06-03T21:53:34Z'
   event: open
@@ -29,3 +29,7 @@ history:
     k-sweep{8,13,25} (raise-k only shifts removal right); anti-circular (GT=d_i/p_i
     never seen by the filter); honest-neg if Delta~0 at high alpha+c or only at extreme
     c; PERSISTENT-SEEDER loop'
+- ts: '2026-06-03T21:59:25Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0057 completed EXP EXP-0059 (support)

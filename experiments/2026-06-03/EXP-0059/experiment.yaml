@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HELD/support. STRUCTURAL ANCHOR holds: removal-rate monotone-increasing
+  in length (all well-sampled bins), survivor mean-len < full (e.g. 24.7->18.3 tok),
+  matches union-bound 1-(1-q)^(L-k+1) MAE=0.012. alpha=0 CONTROL passes (LOAD-BEARING):
+  composition shifts but Delta~0 (CI covers 0, max|D|=0.001) => effect is coupling-driven
+  not artifact, filter blind to difficulty. Delta(alpha) grows monotone: 0.0/+0.009/+0.017/+0.025
+  at med-c k=13. Grows with coverage c: +0.004/+0.017/+0.064 (low/med/high). PERSISTS
+  across production k{8,13,25}: +0.016/+0.017/+0.011, CI excludes 0 all k. Realistic
+  params: ~+0.9 to +1.7 acc pts from decontam collateral length-selection alone (zero
+  real contamination); up to +9 pts at high c + strong coupling. NOT trivially-small.
+  Decontam mitigation is itself a length-biased test-set sampler that inflates score.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0059/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T21:59:24Z'
 prompt_version: ''

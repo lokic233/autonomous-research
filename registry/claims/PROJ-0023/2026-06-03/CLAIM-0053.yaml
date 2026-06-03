@@ -57,17 +57,27 @@ why_it_matters: "FRESH AREA (eval-and-safety: decontamination methodology). EMPI
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0059
+  summary: 'HELD/support. STRUCTURAL ANCHOR holds: removal-rate monotone-increasing
+    in length (all well-sampled bins), survivor mean-len < full (e.g. 24.7->18.3 tok),
+    matches union-bound 1-(1-q)^(L-k+1) MAE=0.012. alpha=0 CONTROL passes (LOAD-BEARING):
+    composition shifts but Delta~0 (CI covers 0, max|D|=0.001) => effect is coupling-driven
+    not artifact, filter blind to difficulty. Delta(alpha) grows monotone: 0.0/+0.009/+0.017/+0.025
+    at med-c k=13. Grows with coverage c: +0.004/+0.017/+0.064 (low/med/high). PERSISTS
+    across production k{8,13,25}: +0.016/+0.017/+0.011, CI excludes 0 all k. Realistic
+    params: ~+0.9 to +1.7 acc pts from decontam collateral length-selection alone
+    (zero real contamination); up to +9 pts at high c + strong coupling. NOT trivially-small.
+    Decontam mitigation is itself a length-biased test-set sampler that inflates score.'
+  data_path: experiments/2026-06-03/EXP-0059/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0059 result, then ros exp complete --exp EXP-0059 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0059; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0059
+active_experiments: []
 created_at: '2026-06-03T21:53:11Z'
-last_updated: '2026-06-03T21:53:34Z'
+last_updated: '2026-06-03T21:59:25Z'
