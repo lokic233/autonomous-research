@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'CONVERGE/RED: sigma_conf flip-point=0.50 (monitor beats self-confidence
+  only once conf-AUC drops below ~0.72; reproduces EXP-0033 at sigma=0.35 d=-0.006).
+  Flip IS within realistic VERBALIZED-confidence ranges (AUROC 0.5-0.7 per 2602.06948,
+  clinical PubMed 40378406, 2601.07264), so on that axis claim looked L1-worthy. BUT
+  prior-art kill: online stepwise failure detection on multi-step agent trajectories
+  is ALREADY PUBLISHED (Mavi et al 2511.07364, AUC~0.9 step-by-step self-eval; Vasudev
+  et al 2602.03338 critic AUROC 0.94; PRMs/AgentBoard adjacent). At that strong online-self-eval
+  calibration (sigma_conf << flip) OUR model says monitor LOSES. Surviving lead-time
+  novelty unsupported even at L0 (EXP-0033 42% coverage < 0.5 bar). Only robust win
+  (distinct-from-difficulty +0.095) is least-novel half, implicit in PRM/progress-rate
+  work. Pre-reg decision rule ELSE branch fires: strong claim is RELABELING. Recommend
+  RED. Cheap L0 avoided a wasted GPU L1.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0034/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T10:07:49Z'
 prompt_version: ''

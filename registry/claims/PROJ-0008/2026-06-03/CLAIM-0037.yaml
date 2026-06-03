@@ -40,6 +40,20 @@ negative_evidence:
     comparison. Surviving weak form: failure has a progression signature distinct
     from intrinsic difficulty with usable lead time.'
   data_path: experiments/2026-06-03/EXP-0033/
+- exp_id: EXP-0034
+  summary: 'CONVERGE/RED: sigma_conf flip-point=0.50 (monitor beats self-confidence
+    only once conf-AUC drops below ~0.72; reproduces EXP-0033 at sigma=0.35 d=-0.006).
+    Flip IS within realistic VERBALIZED-confidence ranges (AUROC 0.5-0.7 per 2602.06948,
+    clinical PubMed 40378406, 2601.07264), so on that axis claim looked L1-worthy.
+    BUT prior-art kill: online stepwise failure detection on multi-step agent trajectories
+    is ALREADY PUBLISHED (Mavi et al 2511.07364, AUC~0.9 step-by-step self-eval; Vasudev
+    et al 2602.03338 critic AUROC 0.94; PRMs/AgentBoard adjacent). At that strong
+    online-self-eval calibration (sigma_conf << flip) OUR model says monitor LOSES.
+    Surviving lead-time novelty unsupported even at L0 (EXP-0033 42% coverage < 0.5
+    bar). Only robust win (distinct-from-difficulty +0.095) is least-novel half, implicit
+    in PRM/progress-rate work. Pre-reg decision rule ELSE branch fires: strong claim
+    is RELABELING. Recommend RED. Cheap L0 avoided a wasted GPU L1.'
+  data_path: experiments/2026-06-03/EXP-0034/
 verdict_history:
 - verdict_id: VERDICT-0034
   date: '2026-06-03'
@@ -47,11 +61,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0034 result, then ros exp complete --exp EXP-0034 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0034; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0034
+active_experiments: []
 created_at: '2026-06-03T09:38:26Z'
-last_updated: '2026-06-03T10:01:03Z'
+last_updated: '2026-06-03T10:07:49Z'
