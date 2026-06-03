@@ -1,0 +1,63 @@
+claim_id: CLAIM-0050
+project_id: PROJ-0020
+stage: seed
+status: seed
+claim: "In continuous-batching multimodal (VLM) serving where the scheduler uses input/prefill-token\
+  \ count as the SJF priority proxy (the cheapest observable, image-token-dominated),\
+  \ there exists a rank-correlation sign-flip threshold tau* in the proxy-vs-true-decode-cost\
+  \ Kendall-tau such that for tau<tau* the input-length-SJF policy yields STRICTLY\
+  \ WORSE p99 request latency than plain FCFS \u2014 and realistic VLM request mixes\
+  \ sit at or below tau* (image-token count is near-zero/negatively correlated with\
+  \ output length: big OCR/caption images -> short answers, small-image reasoning\
+  \ prompts -> long CoT), so the harm is LARGE at realistic parameters, not adversarial\
+  \ extremes."
+why_it_matters: "FRESH AREA (multimodal-serving / VLM inference scheduling). EMPIRICAL-phenomenon,\
+  \ NO closed form (tau* emerges only from simulating the queue under heavy-tailed\
+  \ decode + batching; incumbent theory bounds the UNBIASED-error case, not the sign-flip\
+  \ location under class-structured anti-correlation). Passes all 6 anti-patterns:\
+  \ NOT metric-validity (a scheduling POLICY causes a real p99 latency regression\
+  \ in the same currency it optimizes); NOT closed-form (tau* empirical crossover);\
+  \ foundational incumbents ADDRESSED (Mitzenmacher 1902.00732 / Dell'Amico 1907.04824\
+  \ / SOAP-Gittins 1712.00790 ALL assume unbiased per-job size error \u2014 delta\
+  \ is the proxy-class-ANTICORRELATION regime they exclude); NOT known-mechanism-costume\
+  \ (textbook SJF-starvation = long jobs starve under a CORRECT ranking; here ranking\
+  \ is WRONG-BY-CLASS, actively promoting long-decode jobs \u2014 the discovery is\
+  \ the existence+realistic-location of tau* where 'smart' SJF is WORSE than dumb\
+  \ FCFS); NOT wrong-currency (both scored on p99/mean request latency, bound-independent,\
+  \ identical compute model+arrival trace, only dequeue order differs); NOT real-but-trivially-small-at-realistic-params\
+  \ (INVERTED: realistic VLM mixes sit at the HARMFUL end of tau because image-tokens\
+  \ anti-correlate with output length; the adversarial extreme tau->+1 is the BENIGN\
+  \ end; expected p99 regression at realistic tau is large, tens-of-pct, growing with\
+  \ load rho->1). NOT tuned-knob/KV-reuse/relabeling. Falsifiable: discrete-event\
+  \ M/G/1-style queue (serial), N requests Poisson arrivals load rho 0.7-0.95, each\
+  \ w/ hidden true_service_time=f(heavy-tailed decode length) = GT; observable proxy=input_token_count\
+  \ generated JOINTLY w/ true cost via a rank-coupling knob setting Kendall-tau (sweep\
+  \ +0.8 -> 0 -> -0.5); scheduler reads ONLY the proxy. Compute p99+mean latency FCFS\
+  \ vs input-length-SJF per (rho,tau). HEADLINE = the tau* where SJF p99 crosses ABOVE\
+  \ FCFS p99; SUPPORTED iff crossover exists at realistic rho AND tau*>plausible-VLM-tau\
+  \ (realistic mixes in the harmful region) w/ a LARGE gap (SJF p99>=1.2x FCFS at\
+  \ realistic tau). HONEST-NEGATIVE: if SJF p99<=FCFS across realistic tau[-0.2,+0.3]\
+  \ at all loads -> input-length-SJF SAFE on multimodal mixes (useful negative); graded\
+  \ weaken if crossover only at tau<-0.4. Anti-circular: GT=true_service_time (harness,\
+  \ never visible to scheduler); SJF reads only input_token_count. Controls: tau->+1\
+  \ SJF beats FCFS; FCFS tau-invariant. Topic: multimodal-serving. L1: replay a real\
+  \ VLM trace (vLLM/SGLang w/ Qwen-VL/LLaVA on perception+reasoning mix), measure\
+  \ actual Kendall-tau(input-tokens, realized decode-length) per request, run FCFS\
+  \ vs input-length-SJF, confirm measured tau < simulated tau* AND SJF p99 regresses\
+  \ by the predicted magnitude, and a modality-aware/output-length-predictor proxy\
+  \ restores SJF's advantage."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-03T19:03:29Z'
+last_updated: '2026-06-03T19:03:29Z'
