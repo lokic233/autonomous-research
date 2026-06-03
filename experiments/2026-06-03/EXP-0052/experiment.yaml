@@ -12,12 +12,19 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "CLAIM-0049 retention-policy quality skew: phenomenon REAL+clean (sign-flip\
+  \ Df=-Dl, monotone in rho, zero at rho=0, monotone in within-cluster variance) and\
+  \ AUDIT-INVISIBLE (3 policies remove identical cluster set, identical removal 2548/2548/2548,\
+  \ identical FP) \u2014 BUT MAGNITUDE NEGLIGIBLE at realistic rho: |Df|=0.0125 SD\
+  \ at rho=0.2 (below pre-reg 0.05 threshold), only 0.064 SD even at adversarial rho=1.0.\
+  \ Guard A FAILED, Guard B passed. Verdict NEAR-TAUTOLOGY: keep-first/arbitrary default\
+  \ (BigCode/datatrove/NeMo) VINDICATED; representative-selection is not a meaningful\
+  \ corpus-quality lever at realistic crawl-order correlation."
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0052/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T18:11:52Z'
 prompt_version: ''
