@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0021
 claim_id: CLAIM-0051
 exp_id: EXP-0056
-status: open
+status: done
 summary: "L0: bounded shuffle-buffer variance-inflation vs source-run-length L. Sweep\
   \ B{2b,10b,50b} x L{b/2,2b,20b,200b}; CONFIRM inflation>=1.5x + FLAT-in-B when L>=B\
   \ + falls only when B->L not B->b (THE SCALING-AXIS result, load-bearing \u2014\
@@ -15,8 +15,8 @@ summary: "L0: bounded shuffle-buffer variance-inflation vs source-run-length L. 
   \ loop"
 evidence_delta: ''
 opened_at: '2026-06-03T20:41:17Z'
-updated_at: '2026-06-03T20:41:17Z'
-closed_at: ''
+updated_at: '2026-06-03T20:59:18Z'
+closed_at: '2026-06-03T20:59:18Z'
 history:
 - ts: '2026-06-03T20:41:17Z'
   event: open
@@ -27,3 +27,7 @@ history:
     \ \u2014 not just 'variance inflated'); honest-neg if 10b->50b kills it or never\
     \ >1.1x; anti-circular (GT=source-id+g_s never read by measurement path); PERSISTENT-SEEDER\
     \ loop"
+- ts: '2026-06-03T20:59:18Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0054 completed EXP EXP-0056 (support)

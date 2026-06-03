@@ -12,12 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HELD/CONFIRM (L0, CPU stdlib serial, ~101s). Bounded-buffer sliding-window
+  shuffle over source-grouped runs (within-source grad corr=0.80, label-free metric).
+  INFLATION grid (b=32,5 seeds): L<<B->1.09x (heuristic works only here); at realistic
+  B=10b-50b with L>=B inflation 3.2-23.8x (15.1x at the common 10x-batch buffer /
+  20x-batch runs point). CEILING: hold L large, scale B WITH batch 2b->10b->50b ->
+  inflation FLAT-HIGH (24.8->23.8->19.1 at L=6400; still 5.3x at B=50b clean L=640)
+  - you CANNOT buy off the penalty with practitioner buffer sizes. AXIS: scale B WITH
+  run-length (B/L 0.1->0.5->1->2->5->10) -> monotone collapse 23.3->15.1->10.1->6.3->3.3->2.2;
+  penalty governed by B/L not B/b (rho_buf tracks it 0.90->0.05). Non-textbook content
+  = two-axis asymmetry (B/L is the governing var, heuristic indexed to wrong quantity).
+  Not textbook-restatement, not trivially small. L1 confirmatory (real transformer
+  per-domain grad corr + MosaicML StreamingDataset at prod B -> variance inflation
+  + loss-spike-freq vs oracle full-shuffle).'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0056/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T20:59:18Z'
 prompt_version: ''
