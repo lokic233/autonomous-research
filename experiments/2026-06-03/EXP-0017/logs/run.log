@@ -1,0 +1,33 @@
+== running workload sweep ==
+  A p_repeat=0.2 W=5 red_frac=0.235
+  A p_repeat=0.2 W=10 red_frac=0.283
+  A p_repeat=0.2 W=20 red_frac=0.355
+  A p_repeat=0.4 W=5 red_frac=0.431
+  A p_repeat=0.4 W=10 red_frac=0.459
+  A p_repeat=0.4 W=20 red_frac=0.505
+  A p_repeat=0.6 W=5 red_frac=0.616
+  A p_repeat=0.6 W=10 red_frac=0.630
+  A p_repeat=0.6 W=20 red_frac=0.657
+  A p_repeat=0.8 W=5 red_frac=0.803
+  A p_repeat=0.8 W=10 red_frac=0.809
+  A p_repeat=0.8 W=20 red_frac=0.816
+  B mode=jaccard para=0.0 AUC=1.000 bestF1=1.000@tau0.25
+  B mode=jaccard para=0.3 AUC=0.954 bestF1=0.922@tau0.2
+  B mode=jaccard para=0.6 AUC=0.901 bestF1=0.835@tau0.15
+  B mode=jaccard para=0.9 AUC=0.835 bestF1=0.764@tau0.1
+  B mode=hashed para=0.0 AUC=0.933 bestF1=0.869@tau0.4
+  B mode=hashed para=0.3 AUC=0.862 bestF1=0.801@tau0.4
+  B mode=hashed para=0.6 AUC=0.782 bestF1=0.735@tau0.3
+  B mode=hashed para=0.9 AUC=0.686 bestF1=0.716@tau0.2
+  C mode=jaccard pareto done
+  C mode=hashed pareto done
+wrote A_redundancy_vs_workload.csv 12 rows
+wrote B_check_quality.csv 8 rows
+wrote C_pareto.csv 42 rows
+wrote C_baselines.csv 2 rows
+DONE
+
+real	0m5.126s
+user	0m5.073s
+sys	0m0.035s
+EXIT 0
