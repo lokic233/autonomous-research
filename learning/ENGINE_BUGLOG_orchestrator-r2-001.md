@@ -1661,4 +1661,20 @@ brings the task ledger to the same locked-RMW discipline. No new mechanism.
 LESSON: when hardening a lost-update family (channel, agent, gpu_queue), AUDIT EVERY shared-file RMW with
 the same shape — the task ledger was the last bare load->dump that multiple supervision writers share.
 
-## BUG-107 (RESERVED v3-active-debug 2026-06-03T11:55Z)
+## BUG-107 — cmd_exp_complete UNLOCKED claim RMW -> lost-update on concurrent exp completions (fix=research-os 06a6dd1)
+SYMPTOM: two experiments completing against the SAME claim at once (realistic on multi-GPU: one H100 exp
++ one MI350X exp bound to one claim both finish) -> only one's evidence survives + active_experiments keeps
+a STALE back-link forever (the claim looks like it still has an in-flight exp -> the bogus
+'RESEED?/experiment_running, no live researcher' lane signal + orphan back-link accumulation).
+ROOT CAUSE: the claim-ledger propagation block was a bare load_yaml(cf) -> mutate (append evidence, remove
+exp from active_experiments, set status/lifecycle) -> dump_yaml(cf, claim). Unlocked RMW; LAST dump wins.
+Same lost-update family as BUG-106 (task ledger), BUG-99/101 (agent/gpu_queue), BUG-59/97 (channel).
+REPRO: 20/20 lost-evidence + 20/20 stale-backlink (isolated /tmp, two concurrent completers, widened window).
+FIX (no new mechanism): serialize the claim RMW under _file_lock(root, f'claim_{cid}') and RE-READ the claim
+on disk INSIDE the lock so each completer composes on the latest committed state; BUG-25 promoted-guard
+re-checked against the re-read state; unlocked fallback only if _file_lock unavailable.
+VERIFY: 0/8 lost + 0/8 stale-backlink after via the REAL 'ros exp complete' path; BUG-25 promoted-immutability
+regression still passes (kill on promoted still REFUSED).
+LESSON (continues BUG-106): the lost-update audit isn't done at the task ledger — cmd_exp_complete's claim
+propagation was the next bare shared-file RMW. Remaining candidates to audit by OUTCOME: cmd_claim_advance,
+cmd_verdict_write, cmd_exp_fault (each touches a shared mutable record under concurrent writers).
