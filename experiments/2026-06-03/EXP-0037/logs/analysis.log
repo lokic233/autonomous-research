@@ -1,0 +1,87 @@
+=== SMART: overall win rate (cells with mean dL>0) ===
+1094/1260 cells mean-win; robust(all 7 seeds win): 1064
+
+=== Effect of detector accuracy (avg pct_reduction across all f_fl,rho,W,mix) ===
+ acc=0.50: mean pct_red=+3.78%  win-frac=0.67
+ acc=0.60: mean pct_red=+8.42%  win-frac=0.73
+ acc=0.70: mean pct_red=+13.08%  win-frac=0.82
+ acc=0.80: mean pct_red=+17.76%  win-frac=0.90
+ acc=0.90: mean pct_red=+22.40%  win-frac=0.97
+ acc=0.95: mean pct_red=+24.74%  win-frac=0.99
+ acc=1.00: mean pct_red=+27.06%  win-frac=1.00
+
+=== Effect of front-load fraction (avg over acc>=0.8 only, realistic detector) ===
+ f_fl=0.1: mean pct_red=+9.91%
+ f_fl=0.3: mean pct_red=+16.46%
+ f_fl=0.5: mean pct_red=+22.99%
+ f_fl=0.7: mean pct_red=+29.53%
+ f_fl=0.9: mean pct_red=+36.05%
+
+=== Effect of latency ratio rho (acc>=0.8, f_fl>=0.5) ===
+ rho=0.25: mean pct_red=+8.86%
+ rho=0.5: mean pct_red=+16.40%
+ rho=1.0: mean pct_red=+25.88%
+ rho=2.0: mean pct_red=+35.28%
+ rho=4.0: mean pct_red=+42.82%
+ rho=8.0: mean pct_red=+47.90%
+
+=== Effect of wrong-commit penalty W (low-acc regime acc<=0.7) ===
+ W=0.5: mean pct_red=+12.87%  win-frac=0.87
+ W=1.0: mean pct_red=+9.55%  win-frac=0.74
+ W=2.0: mean pct_red=+2.86%  win-frac=0.61
+
+=== WHERE does it lose? worst cells ===
+ f_fl=0.1 tail_heavy acc=0.5 rho=0.25 W=2.0: pct=-57.3% pcf=0.26
+ f_fl=0.1 tail_heavy acc=0.5 rho=0.5 W=2.0: pct=-46.6% pcf=0.26
+ f_fl=0.1 tail_heavy acc=0.5 rho=1.0 W=2.0: pct=-32.9% pcf=0.26
+ f_fl=0.1 tail_heavy acc=0.6 rho=0.25 W=2.0: pct=-45.7% pcf=0.34
+ f_fl=0.1 tail_heavy acc=0.5 rho=2.0 W=2.0: pct=-18.7% pcf=0.25
+ f_fl=0.1 uniform_heavy acc=0.5 rho=0.25 W=2.0: pct=-43.9% pcf=0.41
+
+=== REALISTIC region: acc in {0.7,0.8}, f_fl in {0.3,0.5} (plausible), all W,rho,mix ===
+ 121/144 mean-win; robust(all seeds): 115
+ mean pct_red over realistic region: +12.10%
+
+=== BLIND detectability ablation (no signal, fixed d) — win rate ===
+ blind cells mean-win: 242/540; robust: 238
+ blind win examples: [(('0.9', 'uniform_heavy', '8', '0.5', '0.3'), 3.905), (('0.9', 'tail_heavy', '8', '0.5', '0.3'), 3.837), (('0.9', 'uniform_heavy', '8', '1.0', '0.3'), 3.797), (('0.9', 'tail_heavy', '8', '1.0', '0.3'), 3.736)]
+ blind worst: [(('0.1', 'tail_heavy', '0.25', '2.0', '0.2'), -1.755), (('0.1', 'tail_heavy', '0.5', '2.0', '0.2'), -1.727), (('0.1', 'tail_heavy', '1', '2.0', '0.2'), -1.685), (('0.1', 'tail_heavy', '0.25', '2.0', '0.3'), -1.654)]
+
+=== BREAK-EVEN p* table (required P(correct|fire) to net-win per fire) ===
+ d_fire rho  W   G(gain) P(pen) p*
+   0.2 0.25  0.5   0.20   0.5  0.714
+   0.2 0.25  1.0   0.20   1.0  0.833
+   0.2 0.25  2.0   0.20   2.0  0.909
+   0.2  0.5  0.5   0.40   0.5  0.556
+   0.2  0.5  1.0   0.40   1.0  0.714
+   0.2  0.5  2.0   0.40   2.0  0.833
+   0.2    1  0.5   0.80   0.5  0.385
+   0.2    1  1.0   0.80   1.0  0.556
+   0.2    1  2.0   0.80   2.0  0.714
+   0.2    2  0.5   1.60   0.5  0.238
+   0.2    2  1.0   1.60   1.0  0.385
+   0.2    2  2.0   1.60   2.0  0.556
+   0.2    4  0.5   3.20   0.5  0.135
+   0.2    4  1.0   3.20   1.0  0.238
+   0.2    4  2.0   3.20   2.0  0.385
+   0.2    8  0.5   6.40   0.5  0.072
+   0.2    8  1.0   6.40   1.0  0.135
+   0.2    8  2.0   6.40   2.0  0.238
+   0.5 0.25  0.5   0.12   0.5  0.800
+   0.5 0.25  1.0   0.12   1.0  0.889
+   0.5 0.25  2.0   0.12   2.0  0.941
+   0.5  0.5  0.5   0.25   0.5  0.667
+   0.5  0.5  1.0   0.25   1.0  0.800
+   0.5  0.5  2.0   0.25   2.0  0.889
+   0.5    1  0.5   0.50   0.5  0.500
+   0.5    1  1.0   0.50   1.0  0.667
+   0.5    1  2.0   0.50   2.0  0.800
+   0.5    2  0.5   1.00   0.5  0.333
+   0.5    2  1.0   1.00   1.0  0.500
+   0.5    2  2.0   1.00   2.0  0.667
+   0.5    4  0.5   2.00   0.5  0.200
+   0.5    4  1.0   2.00   1.0  0.333
+   0.5    4  2.0   2.00   2.0  0.500
+   0.5    8  0.5   4.00   0.5  0.111
+   0.5    8  1.0   4.00   1.0  0.200
+   0.5    8  2.0   4.00   2.0  0.333

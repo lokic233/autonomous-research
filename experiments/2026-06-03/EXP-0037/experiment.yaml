@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L0 analytic+MC sim (7 seeds, 1260 cells, serial, stdlib): early-commit
+  on streaming tool-result PREFIX for agent re-ingestion. HELD-PARTIAL. 1064/1260
+  cells robust-win; realistic region (acc 0.7-0.8, f_fl 0.3-0.5) +12.1%, high-rho
+  up to +48%. KEY: break-even p*=W/((1-d)rho+W) is LOW (0.07-0.39) exactly where payoff
+  is HIGH (rho>=2) -- the INVERSE of EXP-0004''s spec-tool-CALL-prefetch trap; a mediocre
+  detector (acc~0.75) clears p* in every rho>=2 cell (W<=2). The two model-internal
+  negative triggers (wrong-commit dominance, implausible-accuracy break-even) did
+  NOT fire. HELD because two falsifiable parts are EMPIRICAL and unmeasurable CPU-only:
+  (A) real front-loading rate, (B) real partial-stream detectability -- BLIND detector
+  ablation (242/540 win, loses to -57% on tail-heavy) proves detectability is load-bearing.
+  L1 must measure real tool-result corpora (API/RAG/code-exec/log), real rho=T_stream/T_step,
+  real redo cost W (side-effects=>W>1, gate to reversible steps). Novelty vs prior
+  art = the correctness-safety break-even map for SEMANTIC early-commit, not the overlap
+  (streaming-LLM) itself. Paths: experiments/2026-06-03/EXP-0037/{PRE_REGISTRATION.md,RESULTS.md,sim_early_commit.py,results/*.csv}.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0037/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T11:37:26Z'
 prompt_version: ''
