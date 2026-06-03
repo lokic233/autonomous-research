@@ -1,7 +1,7 @@
 claim_id: CLAIM-0044
 project_id: PROJ-0015
 stage: seed
-status: seed
+status: killed
 claim: "When a planted answer document and its distractors in a corpus share an identical\
   \ boilerplate block, the answer document's rank under standard BM25 (k1=1.2,b=0.75)\
   \ degrades NON-MONOTONICALLY (inverted-U) as boilerplate length grows: there exists\
@@ -37,16 +37,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0043
+  summary: 'INVERTED-U FALSIFIED. rank(answer|L) degrades MONOTONICALLY in shared-boilerplate
+    length L (non-decreasing in 20/20 seeds across all 3 spread fracs 0/0.25/1.0);
+    no interior peak passes the pre-registered CI test (interior CI excludes both
+    endpoint means) for any frac. Mechanism decomposition: the posited IDF-decay/length-norm
+    crossover CANNOT occur because bp_idf(L) is FLAT in L (a longer IDENTICAL boilerplate
+    block does not change df of boilerplate terms; IDF-decay is driven by SPREAD across
+    docs, NOT by length) AND boilerplate terms are non-query terms so never enter
+    the answer''s query-term score; length-norm grows monotone (1.0->16.2) suppressing
+    genuine content tf with nothing pushing back. frac=1.0 gives a gentler monotone
+    curve (distractors collapse in lockstep) but still no inverted-U. Clean corpus-hygiene
+    negative = WIN. N=2000, stdlib BM25 k1=1.2 b=0.75 verified <1e-9 vs hand calc.'
+  data_path: experiments/2026-06-03/EXP-0043/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0043 result, then ros exp complete --exp EXP-0043 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0043
+active_experiments: []
 created_at: '2026-06-03T15:06:45Z'
-last_updated: '2026-06-03T15:07:00Z'
+last_updated: '2026-06-03T15:13:30Z'

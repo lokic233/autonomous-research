@@ -1,0 +1,48 @@
+dead_id: DEAD-0011
+original_claim_id: CLAIM-0044
+original_claim: "When a planted answer document and its distractors in a corpus share\
+  \ an identical boilerplate block, the answer document's rank under standard BM25\
+  \ (k1=1.2,b=0.75) degrades NON-MONOTONICALLY (inverted-U) as boilerplate length\
+  \ grows: there exists an intermediate boilerplate length that maximally displaces\
+  \ the answer doc out of top-k, after which further boilerplate growth PARTIALLY\
+  \ RECOVERS its rank \u2014 because IDF-decay of now-corpus-frequent boilerplate\
+  \ terms and BM25 document-length normalization (penalizing the answer doc carrying\
+  \ the genuine content) are opposing forces that cross over at a corpus-statistics-dependent\
+  \ point with no closed-form predictor."
+reason_killed: 'INVERTED-U FALSIFIED. rank(answer|L) degrades MONOTONICALLY in shared-boilerplate
+  length L (non-decreasing in 20/20 seeds across all 3 spread fracs 0/0.25/1.0); no
+  interior peak passes the pre-registered CI test (interior CI excludes both endpoint
+  means) for any frac. Mechanism decomposition: the posited IDF-decay/length-norm
+  crossover CANNOT occur because bp_idf(L) is FLAT in L (a longer IDENTICAL boilerplate
+  block does not change df of boilerplate terms; IDF-decay is driven by SPREAD across
+  docs, NOT by length) AND boilerplate terms are non-query terms so never enter the
+  answer''s query-term score; length-norm grows monotone (1.0->16.2) suppressing genuine
+  content tf with nothing pushing back. frac=1.0 gives a gentler monotone curve (distractors
+  collapse in lockstep) but still no inverted-U. Clean corpus-hygiene negative = WIN.
+  N=2000, stdlib BM25 k1=1.2 b=0.75 verified <1e-9 vs hand calc.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0043
+duplicate_patterns:
+- "When a planted answer document and its distractors in a corpus share an identical\
+  \ boilerplate block, the answer document's rank under standard BM25 (k1=1.2,b=0.75)\
+  \ degrades NON-MONOTONICALLY (inverted-U) as boilerplate length grows: there exists\
+  \ an intermediate boilerplate length that maximally displaces the answer doc out\
+  \ of top-k, after which further boilerplate growth PARTIALLY RECOVERS its rank \u2014\
+  \ because IDF-decay of now-corpus-frequent boilerplate terms and BM25 document-length\
+  \ normalization (penalizing the answer doc carrying the genuine content) are opposing\
+  \ forces that cross over at a corpus-statistics-dependent point with no closed-form\
+  \ predictor."
+- after answer because block bm25 boilerplate carrying closed content corpus cross
+  decay degrades dependent displaces distractors doc document exists forces form frequent
+  further genuine grows growth identical idf intermediate inverted its length maximally
+  monotonically non normalization now opposing out over partially penalizing planted
+  point predictor rank recovers share standard statistics terms there top under when
+  which
+revival_conditions: Reframe controllable variable from boilerplate LENGTH to boilerplate
+  OVERLAP/SPREAD fraction (the only axis that moves IDF); test on a real dense retriever
+  (bge/e5) whose saturation/normalization differs from BM25, on real boilerplate-heavy
+  corpora (SEC EDGAR/legal), measuring answer-rank + downstream RAG accuracy vs measured
+  overlap fraction.
+related_prior_work: []
+date_killed: '2026-06-03T15:13:30Z'
