@@ -1,0 +1,52 @@
+verdict_id: VERDICT-0008
+claim_id: CLAIM-0007
+project_id: PROJ-0001
+date: '2026-06-03'
+experiment_ids:
+- EXP-0009
+experiment_paths:
+- experiments/2026-06-03/EXP-0009
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "CDC-for-KV-dedup = LBFS (Muthitacharoen SOSP01) Rabin chunking pointed at a new\
+  \ object \u2014 naming, not mechanism"
+- "the hard sub-problem (position-shifted KV reuse despite RoPE) is solved by >=3\
+  \ prior works: Prompt Cache (Gim MLSys24, position-id remapping), CacheBlend (Yao\
+  \ EuroSys25, selective partial recompute), EPIC (position-independent caching) \u2014\
+  \ exceeds 2-source kill bar"
+- "the named revival (cheap R(delta) re-rope on cached K-blocks) IS CacheBlend's mechanism\
+  \ \u2014 revival = re-deriving CacheBlend with no differentiation"
+- "L0 baseline is exact-prefix only (vLLM APC) \u2014 true SOTA for non-prefix reuse\
+  \ is CacheBlend/LMCache/Prompt Cache"
+- the 4-7% beyond-prefix headline is vs an obsolete comparator, beyond-SOTA delta
+  likely ~0
+required_evidence:
+- "None rescues novelty \u2014 clean NEGATIVE needs no more evidence to sustain. Any\
+  \ revival must show a MECHANISM delta vs CacheBlend/Prompt Cache/EPIC, not reproduce\
+  \ them with CDC boundaries"
+map_delta_proposals:
+- CLAIM-0007 -> NEGATIVE-CONFIRMED, novelty KILLED (naming-only over LBFS + revival
+  = CacheBlend re-derivation)
+- close, no L1
+baseline_requirements:
+- CacheBlend (Yao 2025)
+- Prompt Cache (Gim 2024)
+- EPIC
+- LMCache (deployed)
+created_at: '2026-06-03T00:52:53Z'

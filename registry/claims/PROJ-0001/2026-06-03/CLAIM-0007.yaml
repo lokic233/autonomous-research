@@ -30,13 +30,16 @@ negative_evidence:
     (dedup same schema at different offsets). GPU follow-up: test cheap re-rope transform
     that could revive to PARTIAL.'
   data_path: experiments/2026-06-03/EXP-0009/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0008
+  date: '2026-06-03'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0009; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0008=red: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T00:11:41Z'
-last_updated: '2026-06-03T00:19:30Z'
+last_updated: '2026-06-03T00:52:53Z'

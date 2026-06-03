@@ -1,0 +1,40 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: green, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "Completed prior-art sweep (≥2 retrievable sources) against (i) bounded-bypass/aging scheduling in LLM serving and (ii) 2024-2025 SLO-aware LLM schedulers (Llumnix OSDI24, Sarathi-Serve OSDI24, Parrot OSDI24) — novelty_killer's egress was denied, sweep is owed and blocks any forward claim",
+  "If pivoting to multi-SLO/priority-class metric: a fresh novelty re-sweep demonstrating the pivot is not already covered by Llumnix/Sarathi-Serve/Preble before committing GPU time",
+  "BH-corrected secondary analysis promised in pre-reg but not reported in headline — needed to bound whether the 0/36 Bonferroni result masks marginal joint-dominance under a less conservative procedure"
+]
+MANDATORY_BASELINES: [
+  "SGLang RadixAttention (Zheng et al., NeurIPS 2024) — already used as baseline (a), correct",
+  "VTC (Sheng et al., OSDI 2024) — already used as baseline (b), correct",
+  "Preble (Srivatsa et al., 2024) — cited but not benchmarked; mandatory if any L1 GPU pass proceeds"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0006", change: "status -> NEGATIVE-ACCEPTED (L0 closure of VERDICT-0006 reframe); effect -> weaken; prior_art_status -> incomplete (sweep owed); forward_path -> conditional on prior-art sweep completion; pivot CLAIM (multi-SLO/priority-class bounded-W) should be a NEW claim node, not a continuation of CLAIM-0006, since it changes the metric from raw Pareto dominance to SLO-attainment-at-fixed-prefill"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE:
+
+**Methodology is sound; the negative is real and closes the reframe.** The experiment meets every pre-registered standard: 24 seeds (above the n≥20 floor), Bonferroni FWER across m=864 comparisons, service-time feedback coupling p99 and prefill (committee-required), and the RIGHT baselines (SGLang-greedy + VTC, not FCFS). The 0/36 joint-dominance result is not an empirical surprise — theory_skeptic correctly identifies it as predicted by Lagrangian duality: adding a fairness constraint (W<∞) to a reuse-maximization program cannot improve the reuse objective. evaluation_prosecutor concurs the negative is "highly valuable, valid." I accept the negative on CLAIM-0006 as literally stated.
+
+**Why not GREEN despite two green votes.** Two blocking conditions:
+
+(1) **Prior-art search is incomplete.** novelty_killer's egress was denied (both web-search tools permission-blocked). The rule is unambiguous: no GREEN without adequate prior-art. novelty_killer identifies a strong suspected collision — bounded-W = aging/bounded-bypass (textbook OS, Silberschatz) composed with cache-residency priority (SGLang) — but could not verify this to the ≥2-source kill standard. This is not a formality: if the multi-SLO pivot proceeds to L1, the novelty risk is real (Llumnix, Sarathi-Serve, Parrot already operate in SLO-aware LLM scheduling space). The sweep must happen BEFORE committing GPU time, not after.
+
+(2) **product_realist and systems_reviewer REDs are partially unrebutted.** Their core objection is not that the experiment is wrong but that the surviving contribution is thin: bounded-W dominates VTC in 36/36 cells, but this is near-tautological (VTC is cache-blind by construction; any cache-aware policy beats it on recomputed prefill under service-time feedback — theory_skeptic §MUNDANE_EXPLANATIONS confirms this is structural). Greedy itself mean-dominates VTC in 31/36 cells, so VTC is the easy, non-deployed baseline. The product_realist is correct that no production operator gains from this result as stated. I partially rebut: a clean negative that closes a committee reframe IS a legitimate L0 deliverable — it prevents wasted GPU time chasing a claim the theory predicts will fail. But I cannot fully rebut the point that the PARTIAL (VTC dominance) adds no actionable insight beyond "cache-awareness beats cache-blindness." That is known.
+
+**Resolution: YELLOW — accept the negative, block forward motion until prior-art clears.**
+
+The negative on CLAIM-0006 is accepted as methodologically valid. The reframe from VERDICT-0006 is closed: bounded-W does not jointly dominate both production-relevant extremes, and the structural reason (greedy = prefill floor by construction) means no tuning of W will change this. This is worth recording.
+
+However, any pivot to a new claim (multi-SLO/priority-class bounded-W where the metric becomes SLO-attainment-at-fixed-prefill) MUST:
+- Complete the owed prior-art sweep (≥2 retrievable sources) against aging/bounded-bypass in LLM serving AND against 2024-2025 SLO-aware schedulers
+- Be filed as a NEW claim node (it changes the metric, the baselines, and the contribution framing)
+- Not proceed to L1/GPU without the sweep confirming the pivot occupies unclaimed territory
+
+The theory_skeptic's confound on PREFILL_COEF sensitivity and the BH secondary analysis are noted as desirable but not blocking for this L0 closure — they would matter if the result were positive.
+
+PROMPT_VERSION: v001
+```

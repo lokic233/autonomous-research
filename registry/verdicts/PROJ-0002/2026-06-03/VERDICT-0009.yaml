@@ -1,0 +1,69 @@
+verdict_id: VERDICT-0009
+claim_id: CLAIM-0008
+project_id: PROJ-0002
+date: '2026-06-03'
+experiment_ids:
+- EXP-0010
+experiment_paths:
+- experiments/2026-06-03/EXP-0010
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "CIRCULARITY (theory_skeptic, decisive+unrebutted): EC's predictor features (salience/repeat-reference/recency)\
+  \ ARE the generative parameters of the trace's reference process \u2014 oracle-gap=[0,0]\
+  \ in the favorable regime is a MATHEMATICAL TAUTOLOGY of the trace model, not evidence\
+  \ about real attention signal. The L0 self-evaluates a retention objective against\
+  \ its own generating function"
+- honest-negative N3 was a hardcoded pass, not a refutation
+- 'STRAWMAN BASELINE (evaluation_prosecutor): only comparator is recency-truncation
+  (known to fail on early-turn recall)'
+- SnapKV/H2O/Scissorhands/LLMLingua/ACON all absent
+- 'TOOL-RESULT-SPECIFICITY not operationalized: spans are generic verbose tokens,
+  indistinguishable from any appended text -> contribution collapses into H2O/SnapKV/StreamingLLM
+  space'
+- "ACON (arXiv 2510.00615) already does real agent context compression on real benchmarks\
+  \ (26-54% token reduction) \u2014 closest domain competitor"
+required_evidence:
+- "Redesign L0 (or direct L1) breaking circularity: EC predicts from a NOISY proxy\
+  \ of salience (NOT the true generative parameter) + span-boundary detection error,\
+  \ vs >=1 attention-based KV-eviction baseline (H2O/SnapKV) \u2014 not just RT"
+- 'Real tool-output reference characterization: measure ref_density + predictor AUC
+  on real multi-tool traces (tau-bench/SWE-bench/AppWorld) to validate the assumed-by-construction
+  premise'
+- Real attention/citation signal as causal predictor on a real LLM, TRUE predictive
+  AUC reported
+- End-to-end task accuracy (not span-availability proxy) at matched token budgets
+- Live >=2-source prior-art sweep
+- explicitly distinguish Scissorhands (persistence-of-importance ~= causal future-reference
+  predictability) and ACON
+map_delta_proposals:
+- 'CLAIM-0008 -> HELD-RED-L0: L0 trace sim is structurally CIRCULAR (predictor features
+  = generative params)'
+- oracle-gap-zero tautological not empirical
+- RT-only baseline strawman
+- 'tool-result-specificity not operationalized. Claim INTUITION survives but this
+  L0 cannot adjudicate it. Path: (A) redesign L0 w/ noisy observables + KV-eviction
+  baseline + sensitivity, OR (B) direct GPU/real-model L1 on real attention + real
+  tool outputs. Prior-art owed (Scissorhands, ACON)'
+baseline_requirements:
+- "SnapKV / H2O (attention-based KV eviction \u2014 direct competitors)"
+- "Scissorhands (persistence-of-importance \u2014 closest prior framing)"
+- ACON (real agent context compression, AppWorld/OfficeBench)
+- LLMLingua/LongLLMLingua
+- StreamingLLM (the RT arm, + attention-sink variant)
+created_at: '2026-06-03T00:53:32Z'

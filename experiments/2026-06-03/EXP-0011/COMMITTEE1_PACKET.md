@@ -1,0 +1,197 @@
+# COMMITTEE#1 — CLAIM-0009 (PROJ-0004), evidence EXP-0011 (L0)
+## SPLIT result (effect=weaken). Part A (agentic>reasoning early-exit gap) HELD but delivered by the GLOBAL policy. Part B (structure-aware per-class threshold vs BEST-TUNED-GLOBAL — the actual novelty) NEGATIVE: +0.46pp at realistic f, 0/90 clear the 5pp bar (Jensen floor — per-class>=global is definitional; this reproduces the EXP-0006 grammar-region failure mode EXACTLY). Vote honestly — the novel knob dies vs a tuned baseline. novelty_killer: prior-art owed vs CALM(Schuster22)/Depth-Adaptive(Elbayad20)/SkipDecode(23)/LayerSkip(24).
+
+## CLAIM
+claim: "On agentic/tool-calling generation, token-level early-exit (computing fewer\
+  \ transformer layers when the LM head is confident at an intermediate layer) saves\
+  \ strictly MORE FLOPs at matched output quality than on free-form reasoning text,\
+  \ because agentic boilerplate tokens (JSON delimiters, tool-call scaffolding, schema\
+  \ keys) are low-entropy and saturate confidence at shallow layers \u2014 so a structure-aware\
+  \ early-exit threshold (looser inside scaffolding, stricter in argument values/reasoning)\
+  \ beats a single global threshold."
+why_it_matters: "Early-exit saves FLOPs where intermediate confidence is high; agentic\
+
+## L0 RESULTS
+# RESULTS — EXP-0011 (CLAIM-0009)
+researcher-0010 | L0 analytic model | CPU-only, stdlib-only, SERIAL, 5 seeds
+Pre-registration committed FIRST (commit 0f55794). Honest pipeline; negatives are wins.
+Numbers below are read from on-disk CSVs (results/sweep.csv, results/agentic_vs_reasoning.csv).
+
+## VERDICT: PARTIAL (split) — comparative claim HELD; structure-aware-conditioning claim NEGATIVE
+
+The claim has two separable parts. The model splits them cleanly:
+
+### PART A (comparative) — HELD in model
+"Agentic generation saves MORE FLOPs from early-exit than free-form reasoning."
+- Agentic best-tuned-global early-exit saves **3.6pp (f=0.2) / 5.5pp (f=0.3)** MORE FLOPs
+  than reasoning best-tuned-global at matched quality (realistic-f mean = **+4.56pp**,
+  max +14.8pp). Monotonic in f: +1.8pp (f=0.1) -> +9.2pp (f=0.5).
+- Mechanism confirmed in-model: shallow-saturating boilerplate tokens exit early, so a
+  workload with more boilerplate gives the SAME global threshold more cheap exits.
+
+### PART B (the actual novelty under test) — NEGATIVE
+"A STRUCTURE-AWARE per-class threshold beats a single GLOBAL threshold at matched quality."
+- Structure-aware per-class tau saves only **+0.46pp** FLOPs over the BEST-TUNED global at
+  realistic f (0.2-0.3); median +0.42pp, max +1.17pp.
+- **0 / 90** swept configurations clear the pre-registered 5pp meaningfulness bar — INCLUDING
+  the most favorable extreme (f=0.5, max depth-gap, max delta_pp overall = **1.52pp**).
+- This trips honest-negative branch **N1** (gap < 5pp at realistic f once global is tuned).
+- Seed std is tiny (struct_flop_sd <= 0.0043, global <= 0.0073); the tiny negative min
+  (-0.24pp) is Monte-Carlo noise around the Jensen floor, not a real reversal.
+
+## WHY (the mechanism, and why EXP-0006 is vindicated)
+Per-class >= global is DEFINITIONAL (Jensen): optimizing tau per partition cannot beat a
+shared tau by definition. The pre-registered question was the MAGNITUDE. The model shows
+the magnitude is ~0.5pp because **a single well-tuned global threshold already captures
+almost all the structural benefit**: once tau is tuned to the workload's error budget,
+shallow-saturating boilerplate tokens already exit early under that same global tau (their
+confidence crosses any reasonable tau at a shallow layer regardless). The per-class knob
+only buys the thin sliver where boilerplate could exit slightly shallower without blowing
+the shared error budget — and that sliver is ~0.5pp at realistic f. This is EXACTLY the
+EXP-0006 failure mode (grammar-region claim died against best-tuned-global), reproduced.
+
+## SWEEP SUMMARY (struct extra savings over best-tuned-global, delta_pp)
+- by f:      0.1->0.31 | 0.2->0.44 | 0.3->0.48 | 0.4->0.68 | 0.5->0.64  (mean over grid)
+- by gap:    0.20->0.42 | 0.35->0.55 | 0.50->0.42  (realistic f)
+- by E:      0.01->0.51 | 0.02->0.58 | 0.05->0.29  (realistic f)
+- best-tuned-global already saves ~10.8% FLOPs at realistic f; struct gets ~11.3%.
+
+## MAGNITUDE-AT-REALISTIC-f ANSWER (the headline)
+At realistic agentic boilerplate fraction (f = 0.2-0.35), structure-aware per-class
+early-exit beats a best-tuned global threshold by **< 0.5 percentage points of FLOPs at
+matched quality** — NOT meaningful, and not worth the policy complexity. The comparative
+"agentic > reasoning" effect (Part A) is real (~4.6pp) but it is delivered by the GLOBAL
+policy already; conditioning the threshold on token class adds almost nothing.
+
+## LIMITATIONS / WHAT A GPU PASS SHOULD MEASURE
+This is an ANALYTIC MODEL, not a real LM. It assumes a parametric sigmoidal class-conditioned
+confidence curve and a confidence-tied error model. A real-model L1/L2 pass should measure:
+1. REAL layer-wise intermediate-LM-head confidence by token class on actual agent traces
+   (tool-call JSON delimiters / schema keys / arg values / reasoning) with a real model
+   (e.g. via early-exit LM heads a la CALM/LayerSkip) — to get the TRUE per-class
+   saturation-depth gap and whether classes separate as assumed.
+2. REAL boilerplate fraction f on production tool-calling traces (we ASSUMED 0.2-0.35;
+   owed to measurement). If real f is higher and classes separate more crisply than the
+   model, Part B could move — but the Jensen-vs-global ceiling argument suggests not by much.
+3. REAL wall-clock with early-exit OVERHEAD (intermediate-head compute, batched-exit
+   raggedness, KV-cache implications) — FLOPs-saved overstates wall-clock wins.
+4. The matched-quality constraint at the SEQUENCE level (error propagation across a tool
+   call), not the per-token level modeled here.
+
+## PRIOR-ART CAVEAT (owed)
+Early-exit / depth-adaptive decoding is PUBLISHED: CALM (Schuster 2022), Depth-Adaptive
+Transformer (Elbayad 2020), SkipDecode (2023), LayerSkip (2024). This experiment does NOT
+re-derive early-exit; it isolates the AGENTIC-STRUCTURE-CONDITIONED threshold and tests it
+against a TUNED global baseline. The owed-and-flagged sweep is the real-model confidence-by-
+token-class measurement on agent traces (item 1 above). The comparative agentic>reasoning
+result (Part A) is, to our knowledge, the part most worth a real-model follow-up.
+
+## FILES
+- PREREGISTRATION.md (committed before run, commit 0f55794)
+- run_l0.py (analytic model, vectorized over noise samples; SERIAL)
+- results/sweep.csv (90 rows: slope x f x depth_gap x E, 5 seeds)
+- results/agentic_vs_reasoning.csv (90 rows: agentic vs reasoning best-tuned-global savings)
+
+## PRE-REG (committed pre-run 0f55794)
+# PRE-REGISTRATION — EXP-0011 (CLAIM-0009)
+researcher-0010 | L0 (CPU-only, stdlib-only, SERIAL, modeling/analytic) | <=15 min compute
+Committed BEFORE running. Honest pipeline — negatives are WINS.
+
+## THE CLAIM (CLAIM-0009)
+On agentic/tool-calling generation, token-level early-exit (computing fewer transformer
+layers when the intermediate LM head is confident) saves strictly MORE FLOPs at matched
+output quality than on free-form reasoning text, because agentic boilerplate tokens
+(JSON delimiters, tool-call scaffolding, schema keys) are low-entropy and saturate
+confidence at shallow layers — so a STRUCTURE-AWARE early-exit threshold (looser inside
+scaffolding, stricter in argument values/reasoning) beats a single GLOBAL threshold at
+matched quality.
+
+## HYPOTHESIS (falsifiable)
+H1: At matched token-error-rate, a STRUCTURE-AWARE per-class tau policy achieves lower
+    mean FLOPs/token (more layers skipped) than the BEST-TUNED GLOBAL single-tau policy.
+H2 (the magnitude question — the real test): the FLOP-savings GAP (structure-aware minus
+    best-tuned-global) at realistic boilerplate fraction f and realistic per-class depth
+    gap is MEANINGFUL (we set a pre-registered meaningfulness bar: >= 5 percentage points
+    of additional FLOPs saved at matched quality). If the gap is < 5pp at realistic f
+    once global is properly tuned, we REPORT NEGATIVE/PARTIAL.
+
+## EXP-0006 LESSON (explicitly honored)
+The baseline MUST be the BEST-TUNED global threshold, swept to the per-workload optimum —
+NOT an arbitrary one. Jensen's inequality guarantees per-class optimum >= global optimum
+TRIVIALLY (optimizing per-partition can't be worse than a shared constraint). So the
+existence of a gain is DEFINITIONAL, not a discovery. The ONLY honest question is the
+MAGNITUDE of the gain at realistic operating points and whether it justifies complexity.
+The EXP-0006 grammar-region claim DIED exactly here. We pre-commit to reporting magnitude.
+
+## PRIOR ART (caveat owed)
+Early-exit / depth-adaptive transformers are PUBLISHED: CALM (Schuster et al. 2022),
+Depth-Adaptive Transformer (Elbayad 2020), SkipDecode (2023), LayerSkip (2024). Novelty
+we must isolate: the AGENTIC-STRUCTURE-CONDITIONED threshold (tau by token class) and
+whether it beats a tuned global on agentic traces. We do NOT re-derive early-exit; we
+test the conditioning. This is a MODEL, not a real LM — flag the real-model sweep as owed.
+
+## MODEL (analytic, deterministic+stochastic)
+- L_total layers (default 32). A token exits at the shallowest layer L where intermediate
+  LM-head confidence c(L) >= tau. FLOPs_token ~ L / L_total (linear in layers computed).
+- An exit is CORRECT if early prediction == full-model prediction; else a QUALITY ERROR.
+  We model error as: a token of class k that exits at layer L < L_total has error
+  probability = P(early-pred != full-pred | exit at L), which DECREASES as L grows toward
+  the class's confidence-saturation depth.
+- CONFIDENCE-VS-LAYER is CLASS-DEPENDENT. We model confidence rising sigmoidally with
+  layer, saturating at a class-specific depth d_k (in [0,1] of L_total):
+    c_k(L) = sigmoid( a * (L/L_total - d_k) )   (a = slope)
+  Boilerplate/delimiter/schema-key tokens: SHALLOW saturation (small d_k, e.g. 0.25).
+  Argument-value / reasoning tokens: DEEP saturation (large d_k, e.g. 0.70).
+- Quality error of an early exit at layer L for class k: the full-model prediction is
+  "locked in" once c_k(L) crosses a correctness threshold; we model
+    err_k(L) = max(0, base_err * (1 - c_k(L)))   — confident exits are usually correct.
+  (So exiting early in a saturated region is nearly free of error; exiting before
+  saturation costs quality.)
+
+## TOKEN CLASSES & WORKLOADS
+- AGENTIC workload: fraction f of tokens are BOILERPLATE (shallow d_k), (1-f) are
+  VALUE/REASONING (deep d_k). f swept over {0.1, 0.2, 0.3, 0.4, 0.5}. Realistic-f anchor:
+  we treat f in [0.2, 0.35] as realistic for tool-calling traces (JSON scaffolding,
+  keys, delimiters) per published agent-trace token analyses — flagged as an ASSUMPTION
+  owed to real measurement.
+- FREE-FORM REASONING workload: f_boiler ~ 0 (almost all deep-saturating). Used to test
+  the comparative claim "agentic saves MORE than reasoning".
+
+## POLICIES
+(a) GLOBAL (HONEST BASELINE): single tau applied to ALL tokens. We SWEEP tau over a fine
+    grid and pick the tau that MINIMIZES FLOPs subject to error-rate <= budget. This is
+    the best-tuned global — the key control.
+(b) STRUCTURE-AWARE: per-class tau (tau_boiler, tau_value). Each swept; we pick the
+    per-class pair minimizing FLOPs subject to the SAME matched error budget. Looser tau
+    for boilerplate (exit shallow), stricter for value/reasoning.
+
+## PRIMARY METRIC
+FLOPs saved at MATCHED output quality. We fix an error budget E (token-error-rate), tune
+BOTH policies to operate at error <= E, and compare mean FLOPs/token. Report
+  delta_FLOP = FLOP_global_best - FLOP_structure_aware  (>=0 by Jensen; magnitude is the test).
+
+## SWEEPS
+- f in {0.1,0.2,0.3,0.4,0.5}
+- depth gap (d_value - d_boiler) in {0.2, 0.35, 0.5}  (boiler d=0.25 fixed; value d varies)
+- error budget E in {0.01, 0.02, 0.05}
+- L_total = 32; tau grids fine (>=50 points each); slope a sweep light {6,10}
+- STOCHASTIC component: per-token class assignment + confidence noise; >= 5 seeds; report
+  mean +/- std.
+
+## HONEST-NEGATIVE BRANCH (pre-committed)
+Report NEGATIVE or PARTIAL if ANY of:
+  (N1) structure-aware beats best-tuned-global by < 5pp FLOPs at realistic f (0.2-0.35);
+  (N2) realistic agentic boilerplate fraction f is too low for the gap to matter;
+  (N3) the matched-quality constraint erases the savings (tight E forces both policies
+       to compute most layers anyway);
+  (N4) the agentic-vs-reasoning comparative advantage is negligible.
+We will NOT spin a definitional Jensen gain as a discovery.
+
+## VERDICT RULE
+- HELD: structure-aware beats best-tuned-global by >= 5pp FLOPs at realistic f AND the
+  agentic>reasoning comparative gap holds, robust across seeds.
+- PARTIAL: gain exists but is small / only at extreme f / sensitive to E.
+- NEGATIVE: N1-N4 trip.
+
+## REPRO
+Single stdlib Python script run_l0.py, SERIAL (no multiprocessing). Trust on-disk CSVs.

@@ -1,0 +1,55 @@
+verdict_id: VERDICT-0007
+claim_id: CLAIM-0006
+project_id: PROJ-0003
+date: '2026-06-03'
+experiment_ids:
+- EXP-0007
+experiment_paths:
+- experiments/2026-06-03/EXP-0007
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- '(none fatal) negative ACCEPTED as valid L0 closure of VERDICT-0006 reframe: 0/36
+  joint-dominance is predicted by Lagrangian duality (fairness constraint can''t improve
+  the reuse objective)'
+- greedy=prefill floor by construction
+- "blocking-for-green: prior-art sweep INCOMPLETE (novelty_killer egress denied) \u2014\
+  \ suspected collision bounded-W = aging/bounded-bypass (Silberschatz) + cache-residency\
+  \ priority (SGLang)"
+- 'product_realist+systems_reviewer red: surviving PARTIAL (dominates VTC 36/36) is
+  near-tautological (cache-aware beats cache-blind)'
+- "greedy itself dominates VTC 31/36 \u2014 no actionable production insight"
+required_evidence:
+- "Completed >=2-source prior-art sweep vs bounded-bypass/aging LLM scheduling AND\
+  \ 2024-25 SLO-aware schedulers (Llumnix OSDI24, Sarathi-Serve OSDI24, Parrot OSDI24)\
+  \ \u2014 owed, blocks forward"
+- Multi-SLO/priority-class pivot must be a NEW claim node (changes metric to SLO-attainment-at-fixed-prefill,
+  not raw Pareto) + fresh novelty sweep before any GPU
+- BH-corrected secondary analysis (pre-registered, not in headline) to confirm 0/36
+  Bonferroni doesn't mask marginal joint-dominance
+map_delta_proposals:
+- CLAIM-0006 -> NEGATIVE-ACCEPTED (L0 closure of VERDICT-0006 reframe)
+- effect weaken
+- prior-art incomplete
+- forward path conditional on sweep
+- multi-SLO pivot = NEW claim node not a continuation
+baseline_requirements:
+- SGLang RadixAttention (used, correct)
+- VTC Sheng OSDI24 (used, correct)
+- Preble (cited, mandatory to benchmark if L1 proceeds)
+created_at: '2026-06-03T00:52:52Z'

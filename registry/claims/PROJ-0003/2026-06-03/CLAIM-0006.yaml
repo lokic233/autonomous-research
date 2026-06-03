@@ -36,13 +36,16 @@ negative_evidence:
     it past both corners; no free lunch over the reuse-maximizer. GPU pass owed: real
     SGLang+VTC on vLLM/APC, real p99 TTFT, multi-SLO classes.'
   data_path: experiments/2026-06-03/EXP-0007/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0007
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0007; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0007=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T00:01:16Z'
-last_updated: '2026-06-03T00:18:40Z'
+last_updated: '2026-06-03T00:52:52Z'
