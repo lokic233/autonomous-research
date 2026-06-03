@@ -52,3 +52,48 @@ Pre-committed gate = (phi-asymmetry real) AND (high-recall q > 0.6, with margin 
 - q = **1.0000** on both real datasets, 0 adversarial false merges ⇒ q-condition met with maximal margin.
 - phi-asymmetry is **real and substantial on MATH-500** (median phi≈−1.0, 86–90% asymmetric, in the recall-HURTS direction) ⇒ phi-condition met on real symbolic-math QA.
 **The L0 sign-flip HAS an ecological foothold:** real numeric graders are high-precision (so the effect is NOT washed out by over-merge), AND real symbolic-answer benchmarks (MATH) exhibit the correct-concentrated/errors-fragmented asymmetry the negative-slope regime requires. On integer-only QA (GSM8K) the asymmetry is weak (symmetric), so the hazard is dataset-specific — concentrated in rich-symbolic-answer-space evals.
+
+---
+
+## STAGE B — REAL model-pair maj@k ranking inversion (GATED THROUGH; run on devgpu014 H100)
+Stage A passed the gate, so we ran the expensive stage. **REAL models, REAL samples, FIXED.**
+- **Models:** Qwen2.5-0.5B-Instruct vs Qwen2.5-7B-Instruct (both genuine vLLM 0.22 inference on H100, bf16, gpu_mem 0.55, sequential, os._exit). 0.5B weights fetched via fwdproxy; 7B from cache.
+- **Benchmark:** 150 random REAL GSM8K test problems, k=16 samples/problem at temp=0.8, top_p=0.95, seed=0. Final answers extracted from `#### N`. (2 of 2400 / 4 of 2400 empty extractions — negligible.)
+- **Graders:** EXACT-MATCH vs the same high-recall NUMERIC/Minerva normalizer (canon.py). maj@k = does the plurality-voted *value bucket* equal the gold value.
+
+| model | maj@k EXACT | maj@k NUMERIC | distinct buckets (exact→numeric collapse) |
+|---|---|---|---|
+| Qwen2.5-0.5B | 0.480 | 0.487 | 1427 → 1338 (89) |
+| Qwen2.5-7B   | 0.780 | 0.780 | 522 → 479 (43) |
+
+- **EXACT grader:** 7B beats 0.5B by +0.300. **NUMERIC grader:** 7B beats 0.5B by +0.293.
+- **RANKING INVERSION: NO — HONEST NULL.** The grader swap does NOT flip the model ranking; 7B wins decisively under both.
+
+### Why the null (and why it's consistent with Stage A, NOT a refutation):
+The numeric grader barely moves accuracy (0.480→0.487 for 0.5B; 0.780→0.780 for 7B) and collapses only ~6%/8% of surface buckets. **GSM8K's integer-answer regime produces almost no fragmentation asymmetry** — exactly Stage A's finding (GSM8K **phi ≈ 0**). With no asymmetry to exploit, raising canonicalizer recall is near-neutral and CANNOT flip rankings. The L0 sign-flip's foothold is the **phi≪0 symbolic-answer regime (MATH, where Stage A found median phi ≈ −1.0)** — which integer GSM8K does not provide. The null is therefore the PREDICTED outcome on this benchmark, and it CONFIRMS rather than contradicts the phi-governs-the-sign mechanism. A positive Stage-B inversion would require a symbolic-answer benchmark (MATH/competition) with a robust answer-extractor + larger k — specified below for L2.
+
+### WHAT AN L2 / STAGE-B+ NEEDS for a real inversion demonstration:
+1. A **symbolic-answer benchmark** (MATH, MATH-500, or competition math) where the high-recall numeric grader genuinely recovers many true equivalences exact-match misses (`\frac{14}{3}`=`14/3`, `0.5`=`1/2`, `3\sqrt{13}`) — i.e. the phi≪0 regime Stage A measured on real MATH answers.
+2. A robust **`\boxed{}` answer extractor** + the numeric/sympy grader applied to free-form model output.
+3. **Two models with different answer-surface concentration** (e.g. one verbose/varied-format, one terse/canonical) so the grader swap differentially helps one — the in-the-wild spoiler analogue.
+4. Larger k (32–64) and ≥300 problems for tight maj@k CIs.
+
+## ARTIFACTS
+- PRE_REGISTRATION.md (committed BEFORE running)
+- canon.py — real EXACT / LEXICAL / NUMERIC(Minerva,sympy) canonicalizers
+- stage_a.py, stage_a_phi.py — Stage-A precision/recall + phi measurement
+- stage_b.py — real model-pair maj@k inversion runner (vLLM, H100)
+- results/precision_recall.csv, results/phi.csv, results/stage_b_summary.json
+
+## DISPOSITION
+**KEEP-EXPLORING (lean SUPPORT on ecology, NULL on the in-the-wild inversion demonstration).**
+- The L0 sign-flip HAS a real ecological foothold: real numeric graders are **high-precision (q=1.0, 0 adversarial over-merges)** — they do NOT wash out the effect (the L0 q≤0.6 death-zone does not apply to real numeric normalizers); AND real **symbolic-answer math (MATH-500) exhibits the phi≪0 correct-concentrated/errors-fragmented asymmetry** (median ≈ −1.0, 86–90% of problems) that the recall-HURTS regime requires.
+- BUT the hazard is **dataset-specific**: integer-answer QA (GSM8K) is phi≈0 (symmetric), so the effect has little foothold there — confirmed by the Stage-B real-model NULL (no ranking inversion on GSM8K).
+- The in-the-wild ranking-inversion DEMONSTRATION was NOT achieved (GSM8K is the wrong regime); it requires a symbolic-answer benchmark with a real extractor (L2 spec above). The phi-measurement uses real gold strings but proxy answer-*frequencies*; real model-sample phi on MATH is the remaining gap.
+- **FLAGS:** L0 inversion construction = EXPLORATORY (post-hoc retune). Stage-A wrong-answer *surface multiplicity* is a flagged proxy; q and the H_C-vs-H_W dataset structure are anchored in real gold strings; Stage-B uses fully real model samples.
+
+## CITATIONS
+- Spoiler effect / Duverger's Law (vote-splitting) — mechanism analogue.
+- Bulian et al. 2022, "Tomayto Tomahto..." (BEM / answer-equivalence beyond exact match).
+- Kuhn et al. 2023; Farquhar et al. 2024 — semantic entropy (answer-meaning clustering).
+- Biderman et al. 2024 (arXiv:2405.14782) — evaluation reproducibility / scoring sensitivity.
