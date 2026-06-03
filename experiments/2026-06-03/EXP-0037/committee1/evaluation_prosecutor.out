@@ -1,0 +1,17 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [
+  {"name": "Hard-Truncation / Max-Tokens Cap", "why": "If tails are mostly boilerplate or irrelevant, simply dropping the stream after N tokens achieves the same latency savings with zero complex redo/rollback logic.", "repo_or_cite": "Standard RAG/Tool-use practice (e.g., limiting search results to top-K or truncating JSONs)"},
+  {"name": "Incremental Prefill / Chunked Streaming", "why": "Production systems do not block entirely on 'serialize-then-read'; they continuously stream incoming tool tokens into the KV cache. The baseline must not assume synchronous blocking on EOF.", "repo_or_cite": "vLLM chunked prefill / Orca (Yu et al. 2022)"}
+]
+STRAWMAN_RISKS: [
+  "Comparing against a naive, synchronous 'wait for EOF then encode' baseline, artificially inflating the latency gap vs production systems that overlap network I/O with KV prefill.",
+  "Assuming 'serialize-then-read' retains 100% correctness without testing if the tail is actually needed. If the tail is garbage, dumb truncation wins for free."
+]
+MISSING_METRICS: [
+  "Wasted compute overhead (FLOPS/GPU-seconds burned on aborted reasoning steps).",
+  "Irreversibility rate: the fraction of wrong-early-commits that trigger an external side-effect before the rollback can catch them (W = infinity)."
+]
+KILLER_EXPERIMENT: The "Dumb Truncation vs Smart Redo" showdown. Run on a real tool-result corpus. Baseline A: Hard-cap stream at position X, drop the rest, never redo. Baseline B (Proposed): Early-commit at position X, keep buffering, redo if tail changes things. If Baseline A achieves ~equivalent correctness to Baseline B, the entire early-commit/redo apparatus is unjustifiable complexity.
+RATIONALE: The L0 math is sound for the narrow mechanism tested, but the evaluation axis is highly vulnerable to a baseline strawman. If real tool results are heavily front-loaded (the hypothesis in A), then simply truncating the stream is the dominant, zero-overhead baseline. The proposed method only justifies its complexity if it dramatically outperforms dumb truncation on correctness while preserving most of its latency gains. HELD is correct, but L1 must enforce these baselines.
+```

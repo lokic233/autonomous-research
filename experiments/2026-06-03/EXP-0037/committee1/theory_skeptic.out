@@ -1,0 +1,31 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The "favorable break-even in the lucrative regime" headline is largely a TAUTOLOGY of the formula p* = W·T_step / ((1−d)·T_stream + W·T_step): as rho = T_stream/T_step grows, p* must shrink — this is algebra, not a discovered phenomenon. The interesting empirical question is only whether real systems live at rho>=2, which L0 cannot answer.
+- The "inverse of EXP-0004" framing is mathematically just "early-commit on a long streamed object has more headroom than early-commit on a short call." Expected, not surprising; the symmetry between CLAIM-0003 and this claim follows directly from where the duration-to-overlap sits.
+- Monotone increase of win with f_fl and with detector accuracy is a definitional property of the simulator (more front-loaded content + more accurate fire ⇒ more correct early commits), not evidence about reality.
+
+CONFOUNDS:
+- Detector cost is implicitly ZERO in the simulator. A real partial-stream detector (LLM probe, classifier) consumes wall time that competes with T_step; if its cost is non-trivial, the effective p* tightens and the win region shrinks. Not modeled, not bounded.
+- W (wrong-commit penalty) is a scalar multiplier on T_step. Side-effecting / irreversible steps make W effectively unbounded (or the action illegal). The mean-W sweep (0.5/1/2) does not represent the bimodal real distribution (most steps cheap-redo, some catastrophic). Means hide tail risk.
+- The Beta(1.5,6) "front" assumption and the f_fl mixing weights are HAND-PICKED priors with no calibration to any corpus; sensitivity to the choice of Beta parameters is not reported. Different front-loading shapes that integrate to the same f_fl can give different p* outcomes via the position of d.
+- "d" (detector fire fractional position) is a free parameter swept independently of detector accuracy; in reality fire position and P(correct|fire) are jointly determined by the same detector and will be correlated, not independent.
+- Detector errors are assumed i.i.d. per cell; real detectors fail systematically on certain content types (e.g., paginated APIs, log tails), which is exactly the worst-case quadrant.
+
+ASSUMPTIONS_UNTESTED:
+- Joint distribution of (f_fl, rho, W, reversibility) across real agent traces — the simulator treats them as an independent crossed grid; in practice tool classes likely couple them (long log-tail tools have low f_fl AND high rho AND high W simultaneously, i.e. the bad corner may also be the common corner).
+- Stationarity of f_fl within a single tool's outputs across queries.
+- That the next reasoning step's correctness is a clean binary function of "actionable content seen at commit time" — real reasoning depends on multiple pieces possibly scattered through the stream (multi-evidence content; not modeled).
+- That partial-stream detectability is a property that exists at all on real text streams above chance — only the NECESSITY of detectability is shown, not its FEASIBILITY.
+- No accounting for cancellation/rollback overhead beyond W (orchestration cost, user-visible flicker, log noise).
+
+STATISTICAL_GAPS:
+- 7 seeds at N=2500 is fine for cell-level point estimates but NO standard errors / CIs are reported on the headline mean effects (+12.1%, +47.9%, etc.). "1064/1260 robust" is reported but variance per cell is not.
+- 1260 cells with no multiple-comparison adjustment; "cells with all-7-seeds-win" inflates apparent robustness because cell-mean signs are highly correlated with the deterministic break-even regime.
+- "Realistic region" (acc 0.7-0.8, f_fl 0.3-0.5) — confirm this slice was specified in PRE_REG, not chosen after seeing the sweep. If post-hoc, the +12.1% is a selected statistic.
+- The blind-ablation count (242/540 wins) is reported as a raw fraction with no test that blind ≠ smart; effect size of detectability is asserted, not quantified with a contrast estimate + CI.
+- No power/sensitivity analysis: how small a real f_fl shift would flip the verdict from net-positive to net-zero? The mechanism collapses quietly somewhere between the reported sweep and the unmeasured truth.
+
+RATIONALE: The model and pre-registration are CONSCIENTIOUSLY written and the failure-mode screens (Jensen, KV-reuse, predictor-relabeling) are honestly addressed — that earns this above RED. But the HEADLINE "low p* in the lucrative regime" is a re-derivation of the gain-vs-penalty algebra and not itself news; the genuinely novel claim (correctness-safety break-even MAP + partial-stream detectability NECESSITY) rests on (a) hand-chosen Beta priors for content position, (b) a zero-cost, error-i.i.d. detector abstraction, and (c) an independent factorization of (f_fl, rho, W) that is almost certainly correlated in real tool corpora. Two of four PRE_REG negative triggers are explicitly unresolved at L0 (corpus + detectability) and the two that "did not fire" are the model-internal ones the formula was designed to clear. HELD is the correct disposition. Promotion is not warranted. A CHEAP corpus-only L1 (measure f_fl and rho on real tool-result logs, NO detector training yet) is the right gate per the cost-aware-gating lesson — if real (f_fl, rho) don't put us in the lucrative cells, the whole stack dies before any detector work. Cite: results/breakeven.csv (p* algebra), results/sweep_blind.csv (BLIND 242/540 → detectability necessity), and the absence of any corpus measurement in EXP-0037.
+```
