@@ -1,7 +1,7 @@
 claim_id: CLAIM-0014
 project_id: PROJ-0003
 stage: seed
-status: seed
+status: weakened
 claim: For agentic LLM serving with bursty per-session KV pressure, a tiered KV-offload
   policy that proactively demotes a session's COLD prefix blocks to CPU/host memory
   (and prefetches them back on the session's next turn, overlapping fetch with the
@@ -38,7 +38,23 @@ supporting_evidence:
     PCIe BW, real vLLM/LMCache offload TTFT, real agent gap distribution + re-reference
     prob).'
   data_path: experiments/2026-06-03/EXP-0019/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0021
+  summary: 'L1 honest result: tiered KV demote-during-gap + prefetch-on-resume mechanism
+    is PRIOR ART (AttentionStore/CachedAttention ATC24, Pensieve, SGLang HiCache,
+    vLLM-v1; agent-gap framing subsumed by Continuum). Real measured H100 PCIe BW:
+    H2D 57 / D2H 53.5 GB/s solo; bidi agg 80-98 GB/s (-20-25%/dir self-contention);
+    concurrent active decode costs only -4.7% (DMA independent of SM/HBM, so L0 fair-share-under-decode
+    was pessimistic). With real BW + real prefill (30-40k tok/s, not strawman) + the
+    two omitted baselines, REACTIVE fetch-on-demand STRICTLY DOMINATES demote+prefetch
+    for all p_rr<1 (1.18-1.43x more effective serving capacity, zero wasted speculative
+    H2D) and ties at p_rr=1 (prefetch saves only ~18ms). Kill-corner BROADENED, not
+    shrank. Even the kill-corner characterization is pre-empted by Meng et al kappa_crit
+    (2601.19910). E5 real gap trace UNAVAILABLE (sensitivity used). Only survivor:
+    narrow measurement-only note that binding constraint is bidirectional self-contention
+    not compute-vs-copy fair-share. Committee#2 verdict: WEAKEN toward REFUTE; measurement-only
+    on what survives.'
+  data_path: experiments/2026-06-03/EXP-0021/
 verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-06-03'
@@ -46,10 +62,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0018=yellow: address required_evidence to advance'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0021; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0021
+active_experiments: []
 created_at: '2026-06-03T05:57:39Z'
-last_updated: '2026-06-03T06:18:47Z'
+last_updated: '2026-06-03T06:48:08Z'

@@ -1,0 +1,7 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [{"name": "Reactive fetch-on-demand", "why": "Strictly dominates at p_rr < 1 by avoiding wasted H2D bandwidth", "repo_or_cite": "Standard paging/caching baseline"}, {"name": "Prefix-cached recompute", "why": "PCIe-free alternative that scales when PCIe is saturated", "repo_or_cite": "vLLM APC"}]
+STRAWMAN_RISKS: ["Comparing against full-recompute when prefill is highly optimized", "Assuming bidirectional PCIe bandwidth is the sum of independent unidirectional bandwidths without self-contention penalties"]   MISSING_METRICS: ["None. L1 correctly shifted from isolated TTFT to effective serving capacity (max resumes per second)"]
+KILLER_EXPERIMENT: Measuring effective serving capacity across a sweep of realistic return probabilities (p_rr < 1) with real bidirectional PCIe contention, which L1 successfully executed to falsify the claim.
+RATIONALE: The L1 evaluation did exactly what rigorous prosecution demands: it replaced the L0 strawman (full recompute) with mandatory competitive baselines (reactive fetch and prefix-cached recompute). Under these proper baselines and realistic metrics (p_rr < 1), the proposed proactive demote+prefetch policy is strictly dominated. The claim is decisively refuted by its own corrected evaluation.
+```

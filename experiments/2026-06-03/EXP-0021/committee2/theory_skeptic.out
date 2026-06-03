@@ -1,0 +1,31 @@
+```
+ROLE: theory_skeptic  VOTE: red
+MUNDANE_EXPLANATIONS: [
+  "Prefetch 'wins' resume-TTFT only by hiding ~18ms (8k) / ~74-91ms (32k) fetch — predicted directly by KV_bytes / measured PCIe BW (1049MB / 53.5GB/s ≈ 19.6ms). No emergent effect; pure arithmetic.",
+  "Reactive dominance at p_rr<1 follows trivially from expected PCIe demand: prefetch pays 1.0·KV H2D per idle session, reactive pays p_rr·KV — ratio 1/p_rr (0.7→1.43, 0.4→2.5) matches the reported 1.18-1.43x within bidirectional-tax discount. Predicted by a one-line cost model, not a finding.",
+  "Bidirectional 'self-contention' at ~80-98 GB/s aggregate vs 57+53=110 nameplate is the standard PCIe Gen5 x16 duplex efficiency (~75-90% of ideal sum) documented in NVIDIA H100 perf guides; not a new phenomenon.",
+  "Independence of copy engines from SM/HBM (-4.7% under decode) is a documented H100 architectural property (dedicated DMA engines), not an empirical surprise.",
+  "Full-recompute strawman collapse (prefill 30-40k tok/s makes 8k prefix ~200ms) is expected from published Llama-3-8B prefill throughput on H100."
+]
+CONFOUNDS: [
+  "p_rr is treated as exogenous, but in real serving p_rr correlates with gap length (short gaps → high p_rr); the kill-corner table holds p_rr and gap independent, which may understate prefetch in the short-gap/high-p_rr regime and overstate it elsewhere.",
+  "'Effective serving capacity = resumes/sec on PCIe channel' assumes PCIe is the binding constraint for both policies; if HBM capacity (not PCIe BW) is what evict-and-recompute relieves, the comparison metric is mis-specified.",
+  "Bidirectional-contention measurement conflates demote-of-A with prefetch-of-B, but a real scheduler can serialize or rate-limit to avoid duplex — the -20-25% tax is a policy artifact, not a hardware floor.",
+  "Single-GPU H100 SXM5 with PCIe Gen5 x16: results do not generalize to Gen4 or multi-GPU NVLink-shared PCIe; the 'real BW' is one point, not a distribution.",
+  "Prefill throughput measured with SDPA may differ from production FlashAttention-3 / fused kernels; the recompute baseline could be even cheaper, further weakening prefetch."
+]
+ASSUMPTIONS_UNTESTED: [
+  "p_rr distribution in real agentic traffic — entire kill-corner verdict hinges on p_rr<1 being typical; no cited trace.",
+  "Gap distribution — explicitly UNAVAILABLE; sensitivity uses LogNormal(sigma=1) without justification from any agent workload.",
+  "Resume locality — 'demoted blocks re-referenced with high probability' (the claim's second leg) is never measured; p_rr is varied parametrically, not observed.",
+  "Scheduler policy: prefetch is assumed greedy (1.0·KV speculative H2D per idle session). A confidence-gated prefetch (only when p_rr_est > threshold) is not modeled and could close the gap.",
+  "Whether bidirectional self-contention is avoidable via stream priorities / copy-engine partitioning is not tested."
+]
+STATISTICAL_GAPS: [
+  "All PCIe and TTFT numbers report p50/p99 from a single node, single run regime; no seeds, no CI, no variance across runs reported in the packet.",
+  "Resume-TTFT table shows 0.0ms for demote+prefetch — this is an analytical 'fully hidden' assignment, not a measured distribution; tail behavior (gap < fetch) is given only via a parametric LogNormal, not bootstrapped from data.",
+  "Kill-corner capacity numbers are deterministic (BW/KV_MB); no error bars on PCIe BW propagated through, despite bidirectional BW spanning 80-98 GB/s (a ~20% range).",
+  "No reproducibility check across multiple H100 units / driver versions — single devgpu014."
+]
+RATIONALE: The L1 is methodologically clean and honest, but every 'finding' is predicted by a one-line cost model plus documented H100 hardware properties (independent copy engines, duplex PCIe efficiency, KV_bytes/BW arithmetic). The reactive-dominance result is a direct consequence of speculative-H2D waste = (1-p_rr)·KV, which Meng et al. 2601.19910 already formalized as kappa_crit. No surprising mechanism, no emergent effect — basic theory predicts the entire outcome. Combined with prior-art mechanism identity (AttentionStore/Pensieve/HiCache/vLLM/Continuum, cited E4) and missing empirical p_rr/gap distributions (the two assumptions the claim actually rests on), the contribution reduces to a hardware re-measurement of known crossovers. Red.
+```

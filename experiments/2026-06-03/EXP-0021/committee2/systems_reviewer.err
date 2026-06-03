@@ -1,0 +1,1285 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8c41-536d-7fb1-aff4-e1898e54cb28
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 — CLAIM-0014 (PROJ-0003), WITH real-H100 L1 (EXP-0019 L0 + EXP-0021 L1)
+## SECOND pass (post-L1). committee#1 (VERDICT-0018) voted yellow, DEMOTED the novelty to the PCIe-contention kill-corner measurement (mechanism = prior art AttentionStore/Pensieve), and required: real concurrent PCIe BW, reactive-fetch + prefix-cached-recompute baselines, AttentionStore/Pensieve mechanism-delta, real gap distribution. The L1 is in. Cast FINAL votes. Engine enforces real 6/6; GREEN only if truly unanimous green by role — NEVER fabricate. This L1 is a clean real-hardware WEAKEN->refute — vote honestly.
+
+## L1 KEY FINDINGS (real H100 SXM5, real PCIe bench, real Llama-3-8B prefill):
+1. Real PCIe BW: H2D 57.0 / D2H 53.5 GB/s solo; BIDIRECTIONAL collapses to ~40-46 GB/s per direction (20-25% self-contention). Concurrent active decode costs only -4.7% (H100 copy engines are INDEPENDENT of SM/HBM) — so the L0's 'fair-share PCIe under decode' assumption was TOO PESSIMISTIC on the compute-vs-copy axis; the REAL tax is the policy's OWN bidirectional demote+prefetch self-contention.
+2. Real Llama-3-8B GQA8 KV (8k=1049MB,16k=2097MB); real single-H100 prefill 30-40k tok/s = CHEAP -> collapses the L0's full-recompute strawman baseline.
+3. vs the 2 omitted baselines: resume-TTFT demote+prefetch ~0ms but only hides an ~18ms fetch (negligible vs multi-second gaps). EFFECTIVE SERVING CAPACITY (resumes/s on PCIe): at p_rr=1.0 demote+prefetch == reactive-fetch (identical PCIe demand, NO advantage); at realistic p_rr<1 REACTIVE STRICTLY DOMINATES (1.18x @0.7 to 1.43x @0.4 more resumes/s — wastes ZERO speculative H2D on misses). The kill-corner BROADENED; the loss region (all p_rr<1) dominates realistic agentic traffic.
+4. MECHANISM-DELTA: NONE. demote-during-gap + prefetch-on-resume is mechanistically IDENTICAL to AttentionStore/CachedAttention (Gao ATC24, 2403.19708), Pensieve (2312.05516), SGLang HiCache, vLLM-v1 KV offload+APC; the 'agent inter-turn gap' framing is subsumed by Continuum (2511.02230). WORSE: the PCIe-contention kill-corner (committee#1's last-resort contribution) is ITSELF prior art — Meng/Lee/Wang (2601.19910) derive kappa_crit, the exact offload-vs-recompute crossover. Only mildly-novel survivor: the bidirectional-self-contention measurement note (narrow, measurement-only).
+5. Real gap distribution UNAVAILABLE offline (reported honestly); sensitivity: for median gap >=0.5s real PCIe hides the fetch for BOTH policies anyway -> gap-timing gives no material edge.
+
+## CLAIM
+claim: For agentic LLM serving with bursty per-session KV pressure, a tiered KV-offload
+  policy that proactively demotes a session's COLD prefix blocks to CPU/host memory
+  (and prefetches them back on the session's next turn, overlapping fetch with the
+  inter-turn idle gap) achieves a strictly better effective-batch-size / TTFT Pareto
+  than evict-and-recompute, because agent inter-turn gaps are long enough to hide
+  PCIe fetch latency AND the demoted blocks are re-referenced with high probability
+  on resume.
+why_it_matters: "NEW axis (KV-offload tiering across the agent inter-turn gap \u2014\
+
+## FULL L1 RESULTS (EXP-0021)
+# RESULTS — EXP-0021 (L1, CLAIM-0014, PROJ-0003, TASK-0020)
+researcher-gpu-0021 | cli:devgpu014 (1x H100 SXM5, PCIe Gen5 x16 to host) | honest pipeline.
+Pre-reg committed BEFORE results (e279314). venv: torch 2.11+cu130, transformers 5.9.
+VERDICT: **PARTIAL / PRIOR-ART-DOMINATED — claim WEAKENED. Mechanism is prior art; the kill-corner moved
+AGAINST the claim (reactive fetch-on-demand strictly dominates whenever p_rr<1); and even the kill-corner
+CHARACTERIZATION (the L0's last-resort novelty) is itself prior art (Meng/Lee/Wang kappa_crit, arXiv 2601.19910).**
+
+================================================================================
+## E1 — REAL CONCURRENT PCIe BANDWIDTH UNDER CONTENTION (the load-bearing number)
+Measured on H100 SXM5, pinned host memory, bf16, cudaMemcpyAsync via torch copy on dedicated streams.
+
+  Direction / regime              effective GB/s (p50)    vs nameplate (Gen5 x16 ~64 GB/s/dir)
+  ------------------------------  --------------------    ------------------------------------
+  H2D unidirectional              57.0  (p99 57.5)        89% of nameplate
+  D2H unidirectional              53.5  (p99 53.6)        84% of nameplate
+  BIDIRECTIONAL D2H+H2D (agg)     80-98 (size-dep)        NOT 110 (=57+53); ~75-90% of ideal sum
+  BIDI + heavy decode (HBM-bound) 93.3  (p99 93.6)        only -4.7% vs bidi-idle (97.9)
+  decode-proxy verified HBM load                          2135 GB/s (64% of 3.35 TB/s HBM3 nameplate)
+
+  *** KEY FINDING (contradicts L0's pessimism in one axis, confirms it in another) ***
+  - Concurrent ACTIVE DECODE barely touches PCIe BW (-4.7%). On H100 the copy engines (DMA) are
+    INDEPENDENT of SM/HBM traffic. The L0's "fair-share PCIe under active decode" assumption was
+    PESSIMISTIC for the compute-vs-copy case — real arbitration is BETTER than fair-share there.
+  - The REAL bandwidth tax is BIDIRECTIONAL self-contention: simultaneous D2H (demote of session A) +
+    H2D (prefetch of session B) yields ~80-98 GB/s aggregate, i.e. each direction collapses to
+    ~40-46 GB/s (vs 53-57 solo) — a ~20-25% per-direction penalty. This is exactly the regime a tiered
+    demote+prefetch policy CREATES (it demotes and prefetches at once), so it pays its own tax.
+
+================================================================================
+## E2/E3 — DEMOTE+PREFETCH vs REACTIVE FETCH-ON-DEMAND vs PREFIX-CACHED RECOMPUTE
+Real GQA KV bytes (Llama-3-8B GQA8, bf16): 2k=262MB, 8k=1049MB, 16k=2097MB, 32k=4194MB.
+Real measured single-H100 prefill throughput (SDPA, 32 layers): 2k=40k tok/s, 8k=36k tok/s, 16k=31k tok/s.
+(Prefill is FAR cheaper than the L0's strawman assumed — this alone shrinks prefetch's win.)
+
+### Resume-TTFT (ms), prefix=8000, real measured BW + prefill:
+  gap   p_rr | demote+prefetch | reactive-fetch | prefix-cached-recompute | full-recompute(L0 strawman)
+  200   1.0  |       0.0       |     18.4       |        80.0             |        222
+  800   0.7  |       0.0       |     12.9       |        56.0             |        155
+  3000  0.4  |       0.0       |      7.4       |        32.0             |         89
+  -> Prefetch "wins" resume-TTFT only by hiding an ~18ms fetch in the gap. 18ms is NEGLIGIBLE vs typical
+     multi-second agent gaps. Reactive pays ~5-37ms on resume; prefix-cached ~30-80ms. All sub-100ms.
+
+### THE KILL-CORNER, RE-MEASURED — effective serving capacity (max resume-cycles/sec on the PCIe channel,
+### the metric that actually decides effective batch). Higher = better.
+  prefix  p_rr  KV_MB | demote+prefetch | reactive | prefix-cache(compute-bound)
+   2000   1.0    262  |     171.7       |  171.7   |    50.0
+   2000   0.7    262  |     171.7       |  202.0   |    50.0
+   2000   0.4    262  |     171.7       |  245.2   |    50.0
+   8000   1.0   1049  |      42.9       |   42.9   |    11.3
+   8000   0.7   1049  |      42.9       |   50.5   |    11.3
+   8000   0.4   1049  |      42.9       |   61.3   |    11.3
+  16000   1.0   2097  |      21.5       |   21.5   |     4.8
+  16000   0.7   2097  |      21.5       |   25.2   |     4.8
+  16000   0.4   2097  |      21.5       |   30.7   |     4.8
+
+  *** KILL-CORNER VERDICT ***
+  - At p_rr=1.0 (every idle session resumes): demote+prefetch == reactive (identical PCIe demand).
+    Prefetch's ONLY edge is hiding ~18ms — negligible. NO throughput advantage.
+  - At p_rr<1 (REALISTIC agentic traffic — many idle sessions abandoned/timed-out): reactive STRICTLY
+    DOMINATES, serving 1.18x (p_rr=0.7) to 1.43x (p_rr=0.4) MORE resume-cycles/sec, because it wastes
+    ZERO speculative H2D BW. Proactive prefetch burns 1x KV of H2D on every non-resuming session.
+  - With REAL (high) PCIe BW, the kill-corner did NOT shrink to a corner — it BROADENED to dominate the
+    entire p_rr<1 region. The proactive-prefetch advantage requires p_rr~=1 AND a gap long enough to
+    hide a fetch that is already only ~5-90ms. That intersection is small; the loss region is large.
+  - Prefix-cached recompute is PCIe-free (recompute unique suffix on GPU); it's compute-bound and here
+    sustains fewer resumes/s than the PCIe policies at these sizes, but it is the right tier exactly when
+    PCIe is saturated and suffixes are short — i.e. it removes the recompute baseline's strawman status.
+
+================================================================================
+## E4 — PRIOR-ART MECHANISM-DELTA TABLE (live >=2-source sweep)
+  System (venue)                        | gap-timed proactive demote? | prefetch-on-resume overlap? | Delta vs CLAIM-0014
+  AttentionStore/CachedAttention        | YES async save when session | YES scheduler-aware layerwise| NONE. Identical mechanism,
+   (Gao, USENIX ATC 2024, 2403.19708)   | goes idle between turns      | preload overlaps GPU compute | more mature
+  Pensieve (Yu&Li NYU, 2312.05516)      | YES stateful multi-turn      | YES pin/recall across tiers  | NONE on mechanism
+  SGLang HiCache / RadixAttention       | YES hierarchical host/disk   | YES prefix-tree reuse+fetch  | NONE; adds prefix sharing
+  vLLM v1 KV offload + APC               | YES CPU offload + block-swap | YES automatic prefix cache   | NONE
+  Continuum (Berkeley/Stanford 2511.02230)| YES explicit AGENT multi-turn| KV-TTL idle-gap scheduling   | SUPERSEDES agent-gap framing
+  Meng/Lee/Wang (UPenn/Intel 2601.19910)| analytical kappa_crit =      | PCIe-bound offload vs        | *** PRE-EMPTS the L0's
+                                         | critical cached/prefill ratio| recompute crossover          | last-resort kill-corner ***
+
+  *** E4 VERDICT: demote-during-gap + prefetch-on-resume is mechanistically IDENTICAL to AttentionStore/
+  CachedAttention (ATC24), Pensieve, SGLang HiCache, vLLM-v1. NO mechanism-level novelty. The "agent
+  inter-turn gap" framing is subsumed by Continuum. Worse: the PCIe-contention kill-corner (committee#1's
+  identified last-resort contribution) is ITSELF prior art (Meng et al. kappa_crit, Dec 2025). The
+  contribution collapses to a HARDWARE-SPECIFIC RE-MEASUREMENT of a known crossover on H100, plus the
+  minor (possibly-novel) observation that the binding constraint is BIDIRECTIONAL self-contention, not
+  compute-vs-copy fair-share. ***
+
+================================================================================
+## E5 — REAL AGENT INTER-TURN GAP DISTRIBUTION
+  UNAVAILABLE. No wall-clock-timestamped agent multi-turn trace reachable on node (CoQA present but has NO
+  turn timing). Reported honestly per pre-reg. Sensitivity substitute:
+  - Real measured fetch times: 8k KV=18-23ms, 32k KV=74-91ms.
+  - LogNormal gap (sigma=1): P(gap < fetch, prefetch can't fully hide):
+      median 0.2s: 8k=1.5%, 32k=21.7%   median 0.5s: 8k=0.1%, 32k=4.3%
+      median 1.0s: 8k=0.0%, 32k=0.8%    median 3.0s: 8k=0.0%, 32k=0.0%
+  - Implication: for median gap >=0.5s, real PCIe is fast enough that BOTH prefetch AND reactive (nearly)
+    fully hide the fetch. Gap-timing gives no material TTFT edge.
+
+================================================================================
+## SAFETY / BUDGET
+  1 GPU, peak <40GB alloc, no VMM probes, GPU returned to 106MB idle / 0% util at end. Wall < 60 min,
+  GPU-time well under 2 GPU-hours. Host pinned buffers freed.
+
+## COMMITTEE#2-READY VERDICT: **WEAKEN (toward REFUTE on the core claim; MEASUREMENT-ONLY on what survives)**
+  1. Mechanism = PRIOR ART (AttentionStore/Pensieve/HiCache/vLLM/Continuum). No novelty.
+  2. With REAL PCIe BW + REAL prefill cost + the two omitted baselines, the claim's win region SHRINKS and
+     the loss region BROADENS: reactive fetch-on-demand strictly dominates demote+prefetch for all p_rr<1
+     (1.18-1.43x more effective serving capacity), and ties at p_rr=1 (where prefetch saves only ~18ms).
+  3. Even the kill-corner characterization is pre-empted by Meng et al. kappa_crit (2601.19910).
+  4. ONE mildly-novel measurement: binding PCIe constraint for tiered offload is BIDIRECTIONAL demote+
+     prefetch self-contention (-20-25%/dir), NOT compute-vs-copy fair-share (~free on H100). Narrow,
+     honest, measurement-only — not a systems contribution.
+
+## ARTIFACT PATHS
+  GPU node cli:devgpu014: /home/dengcchi/ros-EXP-0021/ (bench_pcie.py, bench_pcie2.py, real_prefill.py,
+    kv_model.py, compare.py, killcorner.py, gap_sensitivity.py, *.json, *.csv, RESULTS.md)
+  Mac instance: /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/
+    (PRE_REGISTRATION.md, RESULTS.md, pcie_bw.csv, killcorner.csv, ttft_compare.csv)
+
+## committee#1 reference: VERDICT-0018 yellow (required this exact real-PCIe + baselines + mechanism-delta).
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "rg --files | rg '(_committee_common_v001\\.md|_shared/TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc pwd in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'find . -maxdepth 3 -type d | head -100' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.
+./learning
+./learning/roles
+./learning/orchestrator
+./experiments
+./experiments/2026-06-03
+./experiments/2026-06-03/EXP-0017
+./experiments/2026-06-03/EXP-0010
+./experiments/2026-06-03/EXP-0019
+./experiments/2026-06-03/EXP-0021
+./experiments/2026-06-03/EXP-0020
+./experiments/2026-06-03/EXP-0018
+./experiments/2026-06-03/EXP-0011
+./experiments/2026-06-03/EXP-0016
+./experiments/2026-06-03/EXP-0007
+./experiments/2026-06-03/EXP-0009
+./experiments/2026-06-03/EXP-0013
+./experiments/2026-06-03/EXP-0014
+./experiments/2026-06-03/EXP-0022
+./experiments/2026-06-03/EXP-0015
+./experiments/2026-06-03/EXP-0012
+./experiments/2026-06-02
+./experiments/2026-06-02/EXP-0005
+./experiments/2026-06-02/EXP-0002
+./experiments/2026-06-02/EXP-0003
+./experiments/2026-06-02/EXP-0004
+./experiments/2026-06-02/EXP-0001
+./experiments/2026-06-02/EXP-0006
+./projects
+./projects/PROJ-0001
+./projects/PROJ-0004
+./projects/PROJ-0003
+./projects/PROJ-0002
+./prior_art
+./runtime
+./runtime/locks
+./runtime/agents
+./runtime/escalation
+./runtime/handoffs
+./runtime/orchestrator
+./runtime/cron
+./runtime/cron/.proj_notified
+./runtime/cron/.mon_notified
+./runtime/cron/.coord_notified
+./sessions
+./registry
+./registry/tasks
+./registry/verdicts
+./registry/verdicts/PROJ-0001
+./registry/verdicts/PROJ-0004
+./registry/verdicts/PROJ-0003
+./registry/verdicts/PROJ-0002
+./registry/cemetery
+./registry/cemetery/PROJ-0001
+./registry/cemetery/PROJ-0002
+./registry/claims
+./registry/claims/PROJ-0001
+./registry/claims/PROJ-0004
+./registry/claims/PROJ-0003
+./registry/claims/PROJ-0002
+./.git
+./.git/sl
+./.git/sl/blackbox
+./.git/sl/sigtrace
+./.git/sl/store
+./.git/objects
+./.git/objects/61
+./.git/objects/0d
+./.git/objects/95
+./.git/objects/59
+./.git/objects/92
+./.git/objects/0c
+./.git/objects/66
+./.git/objects/3e
+./.git/objects/50
+./.git/objects/68
+./.git/objects/57
+./.git/objects/3b
+./.git/objects/6f
+./.git/objects/03
+./.git/objects/9b
+./.git/objects/9e
+./.git/objects/04
+./.git/objects/6a
+./.git/objects/32
+./.git/objects/35
+./.git/objects/69
+./.git/objects/3c
+./.git/objects/56
+./.git/objects/51
+./.git/objects/3d
+./.git/objects/58
+./.git/objects/67
+./.git/objects/0b
+./.git/objects/93
+./.git/objects/94
+./.git/objects/0e
+./.git/objects/60
+./.git/objects/34
+./.git/objects/5a
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -path '*/_shared/TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 267ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -name '*committee*' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0013/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0014/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0015/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0004/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0001/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0006/committee1
+/Users/dengcchi/autonomous-research-v3/runtime/orchestrator/committee_queue.yaml
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.log
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.alive
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi -name '_committee_common_v001.md' -o -path '*/_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+2026-06-03T06:53:10.831716Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+ exited 1 in 35185ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,240p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2312.05516 | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | cut -c1-2500" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2403.19708 | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | cut -c1-2500" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.ray.io/en/latest/serve/llm/user-guides/kv-cache-offloading.html | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(LMCache|KV cache offload|offload).{0,160}' | head -10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://vllm-project.github.io/2026/01/08/kv-offloading-connector.html | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(offload|prefetch|KV|automatic prefix).{0,160}' | head -12" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(KV cache reuse|offload|reuse|block).{0,160}' | head -10" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 338ms:
+ KV cache reuse &#8212; TensorRT-LLM document.documentElement.dataset.mode = localStorage.getItem("mode") || ""; document.documentElement.dataset.theme = localStorage.getItem(
+pdown'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; DOCUMENTATION_OPTIONS.pagename = 'advanced/kv-cache-reuse'; DOCUMENTATION_OPTIONS.theme_version = '0.16.1'; DOCUMENTATION_OPTIONS.theme_switcher_json_url = './_static/switcher.json'; DOCUMENTATION_OPTIONS.theme_switch
+tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine KV cache reuse KV cache reuse # This document describes how kv cache pages can be shared and reused by requests that start with the same prompt. This can greatly lower first 
+ken is generated. Many use cases can benefit from this, including multi-turn requests and system prompts. How to enable kv cache reuse # There are two steps to enabling kv cache reuse. Model must support it KV cache reuse requires the model to be built for paged context attention. This is done
+ with trtllm-build : trtllm-build --use_paged_context_fmha enable KV cache reuse is enabled by default in KVCacheManager If you are running gptManagerBenchmark application, you can disable kv cache reuse with a command-line switch: gptManag
+erBenchmark --enable_kv_cache_reuse enable=false If you are running a Triton server, you can enable kv cache reuse with a parameter: parameters : { key : &quot;enable_kv_cache_reuse&quot; value : { string_value : &quot;true&quot; } } If you are writing your own application 
+using Executor API, you can enable kv cache reuse by including enableBlockReuse=true when you create the KvCacheConfig object. Note that this is the default, if you wish to disable kv cache reuse, pass enableBlockReuse=false instead. Enabl
+e kv cache reuse for p-tuning # When using p-tuning, different requests may use same fake input ids (i.e. prompt ids whose values are larger than vocabulary size). That may lea
+d to incorrect kv cache reuse, since TRT-LLM could not distinguish these requests only by input ids. To enable kv cache reuse for p-tuning correctly, users should provide an extra id (uint64) for each input id. Extra ids for normal input ids (i.e. text token ids) should always be 0, w
+ , 103 , 5 , 6 , 7 , 8 ] extra_ids = [ 1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 ] Performance expectations # KV cache state can be reused when two requests start with the same partial prompt. This reduces first token latency, the time it takes until the first output token is generated. Bigger sa
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 458ms:
+ Inside vLLM’s New KV Offloading Connector: Smarter Memory Transfer for Maximizing Inference Throughput | vLLM Blog {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":
+01-08T00:00:00+00:00","datePublished":"2026-01-08T00:00:00+00:00","description":"In this post, we will describe the new KV cache offloading feature that was introduced in vLLM 0.11.0. We will focus on offloading to CPU memory (DRAM) and its benefits to improving overall inference t
+e second part of the blog, we deep dive into our efforts in optimizing host-to-device and device-to-host throughput for KV offloading.","headline":"Inside vLLM’s New KV Offloading Connector: Smarter Memory Transfer for Maximizing Inference Throughput","image":"https://vllm-project.
+github.io/assets/figures/2026-01-08-kv-offloading-connector/figure2.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://vllm-project.github.io/2026/01/08/kv-offloading-connector.html"},"publisher":{"@
+ght.png"},"name":"Or Ozeri, Danny Harnik (vLLM Team at IBM Research)"},"url":"https://vllm-project.github.io/2026/01/08/kv-offloading-connector.html"} window.dataLayer = window.dataLayer || []; function gtag(){window.dataLayer.push(arguments);} gtag('js', new Date()); gtag('config'
+, 'G-9C5R3JR3QS'); vLLM Blog Inside vLLM’s New KV Offloading Connector: Smarter Memory Transfer for Maximizing Inference Throughput Jan 8, 2026 • Or Ozeri, Danny Harnik (vLLM Team at IBM Research) In this post, we wil
+l describe the new KV cache offloading feature that was introduced in vLLM 0.11.0. We will focus on offloading to CPU memory (DRAM) and its benefits to improving overall inference throughput. In the second part of the blog, we deep dive into our efforts in optimizing
+ host-to-device and device-to-host throughput for KV offloading. Motivation Serving LLM models is a computationally complex operation, which at its core involves computing blobs of data known as KV data. The initial step
+ for generating a response to a user’s prompt is the computation of the KV values which correspond to that prompt. This phase is known as the prefill stage in the request-handling lifecycle. The prefill stage, where KV values are calc
+t, is computationally expensive, and requires specialized accelerated hardware (such as a GPU) to complete quickly. The KV values calculated for one prompt can be reused for other prompts that share the same prefix, to eliminate the need for recalculation. For many use-cases, cachi
+ng and re-using KV values can thus achieve two main benefits: Improving request latency (assuming reading from the cache is faster than re-calculating the KV data) Increasing per
+e throughput (as the load on the GPU cores is reduced, thus allowing to process more concurrent requests). Furthermore, KV cache offloading can be useful even for workloads where requests share no common prefix . Specifically, when handling many concurrent requests, the GPU can run
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 504ms:
+ KV cache offloading &#8212; Ray 2.55.1 document.documentElement.dataset.mode = localStorage.getItem("mode") || ""; document.documentElement.dataset.theme = localStorage.getItem
+("theme") || "light"; DOCUMENTATION_OPTIONS.pagename = 'serve/llm/user-guides/kv-cache-offloading'; DOCUMENTATION_OPTIONS.theme_version = '0.14.1'; DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.ray.io/en/master/_static/versions.json'; DOC
+-oss User Guides Cross-node parallelism Data parallel attention Deployment Initialization Prefill/decode disaggregation KV cache offloading Prefix-aware routing Multi-LoRA deployment vLLM compatibility Fractional GPU serving Observability and monitoring Architecture Architecture overview Core co
+ry Security Ray token authentication Project Governance People Ray Serve: Scalable and Programmable Serving User guides KV cache offloading KV cache offloading # Extend KV cache capacity by offloading to CPU memory or local disk for larger batch sizes and reduced GPU memory pressure. Note Ray Se
+rve doesn’t provide KV cache offloading out of the box, but integrates seamlessly with vLLM solutions. This guide demonstrates one such integration: LMCache. Benefits of KV cache offloading: Incre
+ible storage backends : Choose from multiple storage options including local CPU, disk, or distributed systems Consider KV cache offloading when your application has repeated prompts or multi-turn conversations where you can reuse cached prefills. If consecutive conversation queries aren’t sent 
+immediately, the GPU evicts these caches to make room for other concurrent requests, causing cache misses. Offloading KV caches to CPU memory or other storage backends, which has much larger capacity, preserves them for longer periods. Deploy with LMCache # LMCache provides
+ KV cache offloading with support for multiple storage backends. Prerequisites # Install LMCache: uv pip install lmcache Basic deployment # The following example shows how to deploy with LMCache for local CPU offloading: Python from ray.serve.llm import LLMConfig , build_openai_a
+e_kwargs = { &quot;tensor_parallel_size&quot; : 1 , &quot;kv_transfer_config&quot; : { &quot;kv_connector&quot; : &quot;LMCacheConnectorV1&quot; , &quot;kv_role&quot; : &quot;kv_both&quot; , } }, runtime_env = { &quot;env_vars&quot; : { &quot;LMCACHE_LOCAL_CPU&quot; : &quot;True&quot; ,
+ &quot;LMCACHE_CHUNK_SIZE&quot; : &quot;256&quot; , &quot;LMCACHE_MAX_LOCAL_CPU_SIZE&quot; : &quot;100&quot; , # 100GB } } ) app = build_openai_app ({ &quot;llm_configs&quot; : [ llm_config ]}) serve . run ( app ) YAML applic
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 558ms:
+ [2403.19708] Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate &gt; cs &gt; arXiv:2403.19708 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search GO quick links Login Help Pages About --> Computer Science > Computation and Language arXiv:2403.19708 (cs) [Submitted on 23 Mar 2024 ( v1 ), last revised 30 Jun 2024 (this version, v3)] Title: Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention Authors: Bin Gao , Zhuomin He , Puru Sharma , Qingxuan Kang , Djordje Jevdjic , Junbo Deng , Xingkun Yang , Zhou Yu , Pengfei Zuo View a PDF of the paper titled Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention, by Bin Gao and 8 other authors View PDF HTML (experimental) Abstract: Interacting with humans through multi-turn conversations is a fundamental feature of large language models (LLMs). However, existing LLM serving engines executing multi-turn conversations are inefficient due to the need to repeatedly compute the key-value (KV) caches of historical tokens, incurring high serving costs. To address the problem, this paper proposes CachedAttention, a new attention mechanism that enables reuse of KV caches across multi-turn conversations, significantly reducing the repetitive computation overheads. CachedAttention maintains a hierarchical KV caching system that leverages cost-effective memory/storage mediums to save KV caches for all requests. To reduce KV cache access overheads from slow mediums, CachedAttention employs layer-wise pre-loading and asynchronous saving schemes to overlap the KV cache access with the GPU computation. To ensure that the KV caches to be accessed are placed in the fastest hierarchy, CachedAttention employs scheduler-aware fetching and eviction schemes to consciously place the KV caches in different layers based on the hints from the inference job scheduler. To avoid the invalidation of the saved KV caches incurred by context window overflow, CachedAttention enables the saved KV caches to remain valid via decoupling the positional encoding and effectively truncating the KV cache
+
+ succeeded in 563ms:
+ [2312.05516] Stateful Large Language Model Serving with Pensieve Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate &gt; cs &gt; arXiv:2312.05516 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search GO quick links Login Help Pages About --> Computer Science > Machine Learning arXiv:2312.05516 (cs) [Submitted on 9 Dec 2023 ( v1 ), last revised 7 Oct 2024 (this version, v3)] Title: Stateful Large Language Model Serving with Pensieve Authors: Lingfan Yu , Jinkun Lin , Jinyang Li View a PDF of the paper titled Stateful Large Language Model Serving with Pensieve, by Lingfan Yu and 2 other authors View PDF HTML (experimental) Abstract: Large Language Models (LLMs) are wildly popular today and it is important to serve them efficiently. Existing LLM serving systems are stateless across requests. Consequently, when LLMs are used in the common setting of multi-turn conversations, a growing log of the conversation history must be processed alongside any request by the serving system at each turn, resulting in repeated processing. In this paper, we design $Pensieve$, a system optimized for multi-turn conversation LLM serving. $Pensieve$ maintains the conversation state across requests by caching previously processed history to avoid duplicate processing. $Pensieve$&#39;s multi-tier caching strategy can utilize both GPU and CPU memory to efficiently store and retrieve cached data. $Pensieve$ also generalizes the recent PagedAttention kernel to support attention between multiple input tokens with a GPU cache spread over non-contiguous memory. Our evaluation shows that $Pensieve$ can achieve $1.14$-$3.0\times$ the throughput of vLLM and TensorRT-LLM and significantly reduce latency. Subjects: Machine Learning (cs.LG) ; Distributed, Parallel, and Cluster Computing (cs.DC) Cite as: arXiv:2312.05516 [cs.LG] &nbsp; (or arXiv:2312.05516v3 [cs.LG] for this version) &nbsp; https://doi.org/10.48550/arXiv.2312.05516 Focus to learn more arXiv-issued DOI via DataCite Related DOI : https://doi.org/10.1145/3689031.3696086 Focus to learn more DOI(s) linking to related resources Submission history From: Lingfan Yu [ view email ] [v1] Sat, 9 Dec 2023 09:55:07 UTC (307 KB) [v2] Tue, 28 May 2024 04:34:37
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.sglang.ai/advanced_features/radix_attention.html | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(RadixAttention|cache|prefix|reuse|KV).{0,160}' | head -15" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.sglang.ai/advanced_features/hicache.html | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(HiCache|hierarchical|KV|offload|storage|CPU|prefetch).{0,160}' | head -15" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://github.com/sgl-project/sglang | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | grep -o -i -E '.{0,120}(HiCache|RadixAttention|KV cache|hierarchical).{0,160}' | head -10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2601.19910 | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | cut -c1-2200" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+ [2601.19910] Understanding Bottlenecks for Efficiently Serving LLM Inference With KV Offloading Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate &gt; cs &gt; arXiv:2601.19910 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search GO quick links Login Help Pages About --> Computer Science > Hardware Architecture arXiv:2601.19910 (cs) [Submitted on 16 Dec 2025] Title: Understanding Bottlenecks for Efficiently Serving LLM Inference With KV Offloading Authors: William Meng (1 and 2), Benjamin Lee (1), Hong Wang (2) ((1) University of Pennsylvania, (2) Intel) View a PDF of the paper titled Understanding Bottlenecks for Efficiently Serving LLM Inference With KV Offloading, by William Meng (1 and 2) and 3 other authors View PDF HTML (experimental) Abstract: KV cache offloading enables long-context LLM inference by storing caches in CPU DRAM, but PCIe bandwidth limitations create severe bottlenecks. In this paper, we develops an analytical framework that derives $\kappa_{\text{crit}}$, the critical cached-to-prefill token ratio where execution becomes memory-bound and show typical workloads exceed this threshold by orders of magnitude. Empirical characterization reveals 99\% of latency spent on transfers and serving offloaded requests results in GPU&#39;s consuming only 28\% of their rated TDP, motivating our proposed optimizations for hardware interconnects, model architectures, and scheduling algorithms. Comments: Submitted to MLSys 2026 Subjects: Hardware Architecture (cs.AR) ; Distributed, Parallel, and Cluster Computing (cs.DC) Cite as: arXiv:2601.19910 [cs.AR] &nbsp; (or arXiv:2601.19910v1 [cs.AR] for this version) &nbsp; https://doi.org/10.48550/arXiv.2601.19910 Focus to learn more arXiv-issued DOI via DataCite Submission history From: William Meng [ view email ] [v1] Tue, 16 Dec 2025 19:29:13 UTC (4,689 KB) Full-text links: Access Paper: View a PDF of the paper titled Understan
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2511.02230 | tr '\\n' ' ' | sed -E 's/<["'^>]+>/ /g; s/[[:space:]]+/ /g'"' | cut -c1-2200" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+ [2511.02230] Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live Skip to main content Learn about arXiv becoming an independent nonprofit. We gratefully acknowledge support from the Simons Foundation, member institutions , and all contributors. Donate &gt; cs &gt; arXiv:2511.02230 Help | Advanced Search All fields Title Author Abstract Comments Journal reference ACM classification MSC classification Report number arXiv identifier DOI ORCID arXiv author ID Help pages Full text Search GO quick links Login Help Pages About --> Computer Science > Operating Systems arXiv:2511.02230 (cs) [Submitted on 4 Nov 2025 ( v1 ), last revised 25 May 2026 (this version, v6)] Title: Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live Authors: Hanchen Li , Runyuan He , Qiuyang Mang , Qizheng Zhang , Huanzhi Mao , Xiaokun Chen , Hangrui Zhou , Alvin Cheung , Joseph Gonzalez , Ion Stoica View a PDF of the paper titled Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live, by Hanchen Li and 9 other authors View PDF HTML (experimental) Abstract: KV cache management is essential for efficient LLM inference. To maximize utilization, existing inference engines evict finished requests&#39; KV cache if new requests are waiting. This policy breaks for agentic workloads, which interleave LLM calls with tools, introducing pauses that prevent effective KV reuse across turns. Since many tool calls have much shorter durations than human response multi-turn chatbot, it would be promising to retain the KV cache in during these tools. However, many challenges remain. First, we need to consider both the potential cost of recomputation or reloading (if offloading enabled) as well as the increasing queueing delays after eviction from GPU. Second, due to the internal variance of tool call durations, the method needs to remain robust under limited predictability of tool call durations. We present Continuum, a serving system to optimize job completion time for multi-turn agent workloads by introducing time-to-live mechanism for KV cache retention. For requests that generate tool calls, Cont
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1207ms:
+c/li\u003e\n\u003cli\u003e[2024/01] SGLang provides up to \u003cstrong\u003e5x faster inference\u003c/strong\u003e with RadixAttention (\u003ca href=\"https://lmsys.org/blog/2024-01-17-sglang/\" rel=\"nofollow\"\u003eblog\u003c/a\u003e).\u003c/li\u003e\n\u003cli\u003e[2024/01] SGLang powers th
+ul dir=\"auto\"\u003e\n\u003cli\u003e\u003cstrong\u003eFast Runtime\u003c/strong\u003e: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/e
+r JSON decoding with compressed finite state machine ( blog ). [2024/01] SGLang provides up to 5x faster inference with RadixAttention ( blog ). [2024/01] SGLang powers the serving of the official LLaVA v1.6 release demo ( usage ). About SGLang is a high-performance serving framework for large
+m a single GPU to large distributed clusters. Its core features include: Fast Runtime : Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/e
+
+ succeeded in 2517ms:
+"docs/advanced_features/separate_reasoning\",\"docs/advanced_features/quantization\",\"docs/advanced_features/quantized_kv_cache\",\"docs/advanced_features/dp_dpa_smg_guide\",\"docs/advanced_features/expert_parallelism\",\"docs/advanced_features/lora\",\"docs/advanced_features/pd_d
+\"docs/advanced_features/epd_disaggregation\",\"docs/advanced_features/pipeline_parallelism\",{\"group\":\"Hierarchical KV Caching (HiCache)\",\"pages\":[\"docs/advanced_features/hicache\",\"docs/advanced_features/hicache_best_practices\",\"docs/advanced_features/hicache_design\",\
+"docs/advanced_features/hicache_storage_runtime_attach_detach\"]},\"docs/advanced_features/vlm_query\",\"docs/advanced_features/dp_for_multi_modal_encoder\",\"docs/advanced_features/cuda_grap
+\",\"docs/references/multi_node_deployment/lws_pd/lws_pd_deploy\",\"docs/references/multi_node_deployment/rbg_pd/deepseekv32_pd\"]},\"docs/references/custom_chat_template\",{\"group\":\"Frontend Language\",\"pages\":[\"docs/references/frontend/frontend_index\",\"docs/references/fro
+"]},{\"group\":\"Caching Strategies\",\"pages\":[\"docs/sglang-diffusion/caching-acceleration\",\"docs/sglang-diffusion/cache_dit\",\"docs/sglang-diffusion/teacache\"]},{\"group\":\"References\",\"pages\":[\"docs/sglang-diffusion/environment_variables\",\"docs/sglang-diffusion/support
+ures/forward_hooks.html\",\"destination\":\"/docs/advanced_features/forward_hooks\"},{\"source\":\"/advanced_features/hicache.html\",\"destination\":\"/docs/advanced_features/hicache\"},{\"source\":\"/advanced_features/hicache_best_practices.html\",\"destination\":\"/docs/advanced_fea
+tures/hicache_best_practices\"},{\"source\":\"/advanced_features/hicache_design.html\",\"destination\":\"/docs/advanced_features/hicache_design\"},{\"source\":\"/advanced_features/hicache_storage_runtime_attach_detach.html\",\"desti
+nation\":\"/docs/advanced_features/hicache_storage_runtime_attach_detach\"},{\"source\":\"/advanced_features/hisparse_guide.html\",\"destination\":\"/docs/advanced_features/hisparse_guide\"},{\"source\"
+uantization.html\",\"destination\":\"/docs/advanced_features/quantization\"},{\"source\":\"/advanced_features/quantized_kv_cache.html\",\"destination\":\"/docs/advanced_features/quantized_kv_cache\"},{\"source\":\"/advanced_features/rfork.html\",\"destination\":\"/docs/advanced_fea
+namic_batching.html\",\"destination\":\"/docs/sglang-diffusion/dynamic_batching\"},{\"source\":\"/diffusion/performance/cache/cache_dit.html\",\"destination\":\"/docs/sglang-diffusion/cache_dit\"},{\"source\":\"/diffusion/performance/cache/index.html\",\"destination\":\"/docs/sglang-d
+iffusion/caching-acceleration\"},{\"source\":\"/diffusion/performance/cache/teacache.html\",\"destination\":\"/docs/sglang-diffusion/teacache\"},{\"source\":\"/diffusion/performance/index.html\",\"destination\":\"/docs/sglang-diffusion/performa
+docs/references/multi_node_deployment/multi_node_index\"},{\"source\":\"/references/multi_node_deployment/rbg_pd/deepseekv32_pd.html\",\"destination\":\"/docs/references/multi_node_deployment/rbg_pd/deepseekv32_pd\"},{\"source\":\"/references/post_training_integration.html\",\"dest
+references/release_lookup.html\",\"destination\":\"/docs/references/overview\"},{\"source\":\"/references/torch_compile_cache.html\",\"destination\":\"/docs/references/torch_compile_cache\"},{\"source\":\"/supported_models/extending/index.html\",\"destination\":\"/docs/supported-model
+APIs\",\"metatags\":{\"description\":\"SGLang native server APIs for text generation, embedding, reranking, model info, cache management, and more.\"},\"description\":null,\"href\":\"/docs/basic_usage/native_api\"},{\"title\":\"Sampling Parameters\",\"metatags\":{\"description\":\"Com
+ical Sparse Attention\",\"metatags\":{\"description\":\"Use HiSparse hierarchical sparse attention to reduce decode GPU KV memory with CPU pinned host storage and PD disaggregation.\"},\"description\":null,\"href\":\"/docs/advanced_features/hisparse_guide\"},{\"title\":\"Speculativ
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 3895ms:
+ Hierarchical KV Caching (HiCache) - SGLang Documentation !function(){var b=""; function a(p){if(p==null)return"/";p=""+p;if(""===p)return"/";return"/"===p.charAt(0)?p:"/"+p} function u(p){if(p
+.add(f&&f[b]?f[b]:b)):i.setAttribute(a,b)}),c=b,h&&j.includes(c)&&(i.style.colorScheme=c)}if(d)k(d);else try{let a=localStorage.getItem(b)||c,d=g&&"system"===a?window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":a;k(d)}catch(a){}})("class","isDarkMode","system",null
+.content,g=c;break}}if(!f)return void document.documentElement.setAttribute(d,\"hidden\");let k=!0,l=0;for(;l\u003clocalStorage.length;){let a=localStorage.key(l);if(l++,!a?.endsWith(e))continue;let b=localStorage.getItem(a);if(b\u0026\u0026b===f){k=!1;break}g\u0026\u0026(a.startsWith(`
+lang:${g}_`)||!a.startsWith(\"lang:\"))\u0026\u0026(localStorage.removeItem(a),l--)}document.documentElement.setAttribute(d,k?\"visible\":\"hidden\")}catch(a){console.error(a),document.documentElement.setAttribute(d,\"hidden
+cumentElement.style.setProperty(c,"0px"),document.documentElement.setAttribute("data-assistant-state","closed"),d||localStorage.setItem(a,"false");return}let e=localStorage.getItem(a);if(null===e){document.documentElement.style.setProperty(c,"0px"),document.documentElement.setAttribute(
+"data-assistant-state","closed");return}let f=JSON.parse(e),g=localStorage.getItem(b),h=null!==g?JSON.parse(g):368;document.documentElement.style.setProperty(c,f?h+"px":"0px"),document.documentElement.setAttribute("data-assistant-stat
+dth", "--assistant-sheet-width", true ) SGLang Documentation home page Search... ⌘ K Ask Assistant Search... Navigation Hierarchical KV Caching (HiCache) Hierarchical KV Caching (HiCache) Get Started User Guide Hardware Cookbook SGLang Diffusion Basic Usage Basic Usage OpenAI-Compatible APIs
+ SGLang Native APIs Sampling Parameters Advanced Features Advanced Features Server Arguments Loading Models from Object Storage Hyperparameter Tuning Attention Backend HiSparse: Hierarchical Sparse Attention Speculative Decoding Adaptive Speculative Decoding Structured Outputs Structure
+d Outputs For Reasoning Models Tool Parser Reasoning Parser Quantization Quantized KV Cache DP, DPA and SGLang DP Router Expert Parallelism LoRA Serving PD Disaggregation EPD Disaggregation Pipeline Parallelism for Long Context Hierarchical KV C
+aching (HiCache) Hierarchical KV Caching (HiCache) SGLang HiCache Best Practices HiCache System Design and Optimization Runtime Attach/Detach HiCache Storage Backend (No Restart) Query VLM with Offline Engine DP for Multi-Modal Encoder in SGLang Cu
+ot(pre) > code, [data-theme="dark"] :not(pre) > code { background-color: rgba(255, 255, 255, 0.13); font-weight: 600; } Hierarchical KV Caching (HiCache) Hierarchical KV Caching (HiCache) Copy page Copy page Documentation Index Fetch the complete documentation index at: https://docs.sglang.i
+o/llms.txt Use this file to discover all available pages before exploring further. Hicache Best Practices Hicache Design Hicache Storage Runtime Attach Detach Was this page helpful? Yes No Pipeline Parallelism for Long Context Previous SGLang HiCache Best Practices Next ⌘ 
+,"0:{\"P\":null,\"b\":\"ogZj4hYfO7ZIPM6yuA7UU\",\"p\":\"/mintlify-assets\",\"c\":[\"\",\"docs\",\"advanced_features\",\"hicache\"],\"i\":false,\"f\":[[[\"\",{\"children\":[\"%5Fsites\",{\"children\":[[\"subdomain\",\"lmsysorg\",\"d\"],{\"children\":[\"(multitenant)\",{\"children\":[[\"s
+lug\",\"docs/advanced_features/hicache\",\"oc\"],{\"children\":[\"__PAGE__\",{}]}]}]}]}]},\"$undefined\",\"$undefined\",true],[\"\",[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\"
+{\"__html\":\"(function(a,b){try{let c=document.getElementById(\\\"banner\\\")?.innerText;if(c){for(let d=0;d\u003clocalStorage.length;d++){let e=localStorage.key(d);if(e?.endsWith(a)\u0026\u0026localStorage.getItem(e)===c)return void document.documentElement.setAttribute(b,\\\"hidden\\
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.sglang.ai/llms-full.txt | grep -i -A8 -B4 'HiCache' | head -100" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.sglang.ai/llms.txt | grep -i -A3 -B2 'hicache' | head -60" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/docs/advanced_features/hicache_design.md | head -120' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/docs/advanced_features/hicache_best_practices.md | head -100' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 225ms:
+404: Not Found
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 175ms:
+404: Not Found
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 481ms:
+- [EPD Disaggregation](https://docs.sglang.io/docs/advanced_features/epd_disaggregation.md)
+- [Expert Parallelism](https://docs.sglang.io/docs/advanced_features/expert_parallelism.md)
+- [Hierarchical KV Caching (HiCache)](https://docs.sglang.io/docs/advanced_features/hicache.md)
+- [SGLang HiCache Best Practices](https://docs.sglang.io/docs/advanced_features/hicache_best_practices.md)
+- [HiCache System Design and Optimization](https://docs.sglang.io/docs/advanced_features/hicache_design.md)
+- [Runtime Attach/Detach HiCache Storage Backend (No Restart)](https://docs.sglang.io/docs/advanced_features/hicache_storage_runtime_attach_detach.md)
+- [HiSparse: Hierarchical Sparse Attention](https://docs.sglang.io/docs/advanced_features/hisparse_guide.md)
+- [Hyperparameter Tuning](https://docs.sglang.io/docs/advanced_features/hyperparameter_tuning.md)
+- [LoRA Serving](https://docs.sglang.io/docs/advanced_features/lora.md)
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 866ms:
+  </｜DSML｜tool_calls>
+  ```
+</Accordion>
+
+#### 4.2.3 HiCache (Hierarchical KV Caching)
+
+HiCache enables multi-tier KV cache offloading (GPU → CPU → Storage), significantly expanding effective context capacity for long-context and multi-turn scenarios. Combined with UnifiedRadixTree, it provides intelligent prefix caching across all tiers.
+
+To enable HiCache, use the **HiCache** toggle in the [command generator above](#3-model-deployment):
+
+* **L2 (GPU + CPU):** Offloads cold KV pages to CPU memory. Enables `SGLANG_ENABLE_UNIFIED_RADIX_TREE=1` for intelligent hierarchical prefix caching.
+* **L3 (GPU + CPU + Storage):** Coming soon.
+
+For more details, see the [HiCache documentation](../../../docs/advanced_features/hicache).
+
+## 5. Benchmark
+
+### 5.1 Accuracy Benchmark
+
+For accuracy benchmarking on DeepSeek-V4 models, please make sure that:
+
+* `SGLANG_DEFAULT_THINKING=1 SGLANG_REASONING_EFFORT=max` are set when launching model.
+--
+* add `--enable-mm-global-cache` on the encoder server.
+
+`--enable-mm-global-cache` controls **whether multimodal embeddings are looked up and stored in the global Mooncake cache**. It is separate from `--encoder-transfer-backend`, which only controls encoder output transport.
+
+For Mooncake deployment and configuration details, see [HiCache best practices](./hicache_best_practices#deployment-with-mooncake) and the [Mooncake backend README](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/storage/mooncake_store/README.md).
+
+Example:
+
+```bash Command theme={null}
+# Shared Mooncake configuration
+export MOONCAKE_TE_META_DATA_SERVER="http://127.0.0.1:8080/metadata"
+export MOONCAKE_MASTER="127.0.0.1:50051"
+export MOONCAKE_PROTOCOL="rdma"
+--
+
+* `PADDING_BUFFSIZE`: A value of 20 or greater is recommended.
+
+
+# Hierarchical KV Caching (HiCache)
+Source: https://docs.sglang.io/docs/advanced_features/hicache
+
+
+
+* [Hicache Best Practices](./hicache_best_practices)
+* [Hicache Design](./hicache_design)
+* [Hicache Storage Runtime Attach Detach](./hicache_storage_runtime_attach_detach)
+
+
+# SGLang HiCache Best Practices
+Source: https://docs.sglang.io/docs/advanced_features/hicache_best_practices
+
+
+
+## Why HiCache Matters
+
+SGLang HiCache extends the traditional RadixAttention with a three-tier hierarchical KV caching system that dramatically improves performance for long-context and multi-turn conversation scenarios. By intelligently managing KV caches across GPU memory, host memory, and external storage backends, HiCache addresses the fundamental capacity bottleneck that limits cache hit rates in conventional systems.
+
+## Configuration Guidelines
+
+## Core HiCache Parameters
+
+```bash Command theme={null}
+# Essential HiCache flags
+--page-size 64                        # Page size for cache management
+--enable-hierarchical-cache           # Enable HiCache
+--hicache-ratio 2                     # Host memory ratio (2x GPU memory)
+--hicache-size 100                    # Host memory size in GBs, will override the above ratio
+--hicache-io-backend kernel           # The I/O backend of moving data between CPU and GPU
+--hicache-write-policy write_through  # Cache write policy from GPU to CPU
+--hicache-storage-backend             # Optional storage backend (e.g., hf3fs, mooncake, etc.)
+```
+
+Notes:
+
+* Besides configuring `--hicache-storage-backend` at startup, SGLang also supports **runtime attach/detach** of the HiCache storage backend (no restart required) via HTTP admin endpoints. See [Runtime Attach/Detach HiCache Storage Backend](./hicache_storage_runtime_attach_detach).
+
+## Key Configurations with Storage Backends Enabled
+
+### Memory Layout Optimization
+
+```bash Command theme={null}
+# Page-first: Optimized for I/O efficiency with zero-copy (recommended with kernel backend)
+--hicache-mem-layout page_first
+# Page-first-direct: Optimized for direct I/O operations (Compatible with fa3 and same zero-copy performance as page_first)
+--hicache-mem-layout page_first_direct
+# Layer-first
+--hicache-mem-layout layer_first
+```
+
+**Layout Compatibility:**
+
+* `page_first`: Only compatible with `kernel` I/O backend, automatically switches to `layer_first` with `direct` backend
+* `page_first_direct`: Specifically designed for `direct` I/O backend with optimized memory organization
+
+### Heterogeneous TP Support (GQA/MHA models)
+
+HiCache storage supports cross-cluster KV reuse when different deployments use different TP sizes (for example, `tp=4` and `tp=8`) and share the same storage backend namespace.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.sglang.io/llms-full.txt | grep -i -A120 'HiCache System Design' | head -140" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 677ms:
+# HiCache System Design and Optimization
+Source: https://docs.sglang.io/docs/advanced_features/hicache_design
+
+
+
+This document provides a comprehensive overview of SGLang HiCache, covering its system architecture, workflow and key components. It also details configuration parameters, optimization techniques, and integration with various L3 storage backends, serving as a complete reference for users and developers to understand and tune HiCache for efficient LLM inference.
+
+## Why and What is HiCache?
+
+In large language model inference, the prefill phase is often time-consuming: input sequences need to be first converted into Key-Value cache (KV cache) for subsequent decoding. When multiple requests share the same prefix, the KV cache for that prefix is identical. By caching and reusing these shared KV caches, redundant computation can be avoided. To address this, SGLang introduced RadixAttention, which leverages idle GPU memory to cache and reuse prefix KV caches, and **HiCache**, which extends this idea to host memory and distributed storage.
+
+Inspired by the classic three-level cache design of modern CPUs, HiCache organizes GPU memory as L1, host memory as L2, and distributed storage as L3. This hierarchy enables HiCache to fully exploit the "idle" storage space of GPUs and CPUs, while integrating distributed cache systems such as Mooncake, 3FS, NIXL, and AIBrix KVCache for global KV cache storage and scheduling. As a result, HiCache significantly expands KV cache capacity while maintaining strong read performance—especially in workloads such as multi-QA and long-context inference, where KV cache reuse is frequent. For detailed benchmark results, see [this blog](https://lmsys.org/blog/2025-09-10-sglang-hicache/).
+
+## System Design
+
+### Overall Architecture
+
+In many modern CPU architectures, the small but fast L1 and L2 caches are private to each core, enabling rapid access to the hottest data, while the larger L3 cache is shared across all cores to significantly reduce redundancy within the cache. Similarly, in HiCache, the L1 and L2 KV caches are private to each inference instance, whereas the L3 KV cache is shared among all inference instances within the cluster.
+
+### HiRadixTree: Metadata Organization in HiCache
+
+For KV cache data organization, HiCache builds upon the RadixTree structure introduced in RadixAttention and proposes HiRadixTree. In RadixAttention, each node of the RadixTree corresponds to the KV cache of a consecutive span of tokens in GPU memory. A path from the root to a leaf node represents the prefix of a request, and shared prefixes across multiple requests can reuse the same nodes, thereby avoiding redundant storage.
+
+HiRadixTree extends this idea: each node corresponds to the KV cache of a span of consecutive tokens and records where that KV cache is stored—whether in local GPU memory, CPU memory, L3 storage, or multiple of these tiers. If stored locally, HiRadixTree maintains precise metadata, including the exact storage address. However, to reduce overhead, HiRadixTree does not store or continuously synchronize metadata for L3 KV cache. Instead, when accessing L3 data, it queries the backend in real time to retrieve the necessary metadata, such as whether the data exists and on which server and location it resides.
+
+### Overall Workflow
+
+The workflow of HiCache mainly involves three key operations: **local match**, **prefetch** and **write-back**. When the system receives a new request, it first searches the local L1 and L2 caches for matching KV caches. For parts not found locally, it attempts to prefetch from L3. After prefetching, all required KV caches are loaded into the GPU for computation. Once the prefill computation is complete, the system considers storing the newly generated data into L2 or L3.
+
+<Frame>
+  <img alt="HiCache Workflow" />
+</Frame>
+
+### Local Match
+
+Local matching is the first step in HiCache's workflow, where incoming request tokens are matched against the HiRadixTree to locate cached KV data in local memory tiers (L1 GPU memory and L2 host memory).
+
+The matching algorithm traverses the HiRadixTree from the root node, following child nodes that match the token sequence prefix. At each node, the incoming token sequence is compared with the node’s stored token sequence. When `page_size > 1`, matching is performed at the page granularity to optimize memory access patterns. If a match terminates within a node’s stored sequence, the node is automatically split to create an exact boundary, improving the efficiency of future matches.
+
+The algorithm returns a continuous prefix of the request, with the first part residing in L1 and the latter part in L2.
+
+Since the process only requires traversing the local HiRadixTree and does not involve any actual data copying, local matching is extremely fast.
+
+### Prefetch from L3
+
+Data prefetching is one of HiCache’s core optimization techniques, designed to proactively load KV caches from L3 storage into local L2 memory, thereby reducing access latency during subsequent operations.
+
+**Prefetch Trigger Conditions**:
+After local matching, for the parts not found in L1 or L2, the system queries L3 to retrieve metadata for the next continuous matching KV caches. If the length of hit cache in L3 exceeds a threshold (default: 256 tokens, configurable), a prefetch operation is triggered.
+
+**Prefetch Strategies**: HiCache provides three different prefetch termination strategies to address different scenario needs:
+
+* **best\_effort**: Terminates immediately when GPU can execute prefill computation, with no waiting time, suitable for scenarios extremely sensitive to latency.
+* **wait\_complete**: Must wait for all prefetch operations to complete, suitable for scenarios requiring high cache hit rates.
+* **timeout**: Terminates after specified time or when complete, balancing latency and cache hit rate needs.
+
+After prefetching stops, the data already fetched is used together with the local data for the prefill computation.
+
+For **timeout** strategy, HiCache introduces three configuration parameters to support fine-grained control over prefetch timeout conditions:
+
+* `prefetch_timeout_base`: the base timeout, representing overhead unrelated to the number of tokens (e.g., scheduling and synchronization). Default: `2` seconds.
+* `prefetch_timeout_per_ki_token`: the incremental timeout per thousand tokens. Default: `0.1` seconds per 1024 tokens.
+* `prefetch_timeout_max`: the upper bound applied to the linear timeout, preventing very long prompts from waiting unboundedly. Default: `30` seconds.
+
+The timeout is computed as:
+
+```python Example theme={null}
+timeout = min(
+    prefetch_timeout_max,
+    prefetch_timeout_base + prefetch_timeout_per_ki_token * num_token_to_fetch / 1024,
+)
+```
+
+### Data Write-back
+
+The write-back mechanism is responsible for moving frequently accessed KV caches from L1 to L2 and L3, enabling larger and longer-term storage as well as cache sharing across instances.
+
+**Configurable Write-back Policies**: HiCache supports three write-back strategies:
+
+* **write\_through**: Every access is immediately written back to the next level. When bandwidth is sufficient, this strategy provides the strongest caching benefit.
+* **write\_through\_selective**: Data is written back only after the access frequency exceeds a threshold. This strategy backs up only hot data, reducing I/O overhead.
+* **write\_back**: Data is written back to the next level only when it is evicted from the upper level. This strategy alleviates storage pressure and is suitable for scenarios where storage capacity is limited but memory utilization must be maximized.
+
+**Cross-instance Sharing**: When data is written back from L2 to L3, only data not already present in L3 is transferred. KV caches stored in L3 can then be shared across all SGLang instances in the cluster (depending on the L3 backend implementation), significantly improving cache hit rates within the same memory budget.
+
+### Multi-Rank Synchronization
+
+During multi-GPU parallel computation, such as tensor parallelism (TP), HiCache must ensure consistent states across different ranks. Therefore, critical computation steps require the use of `all_reduce` for state synchronization.
+
+For example, during prefetching, `all_reduce(op=min)` is used to ensure that all ranks obtain the same number of L3 hits, preventing inconsistent judgments about whether the prefetch threshold has been reached. Similarly, after prefetching completes or terminates, `all_reduce(op=min)` is again required to guarantee consensus among ranks on the prefix length of the successfully retrieved KV cache.
+
+### Data Transfer Optimization
+
+**Zero-Copy Data Transfers**: Both prefetching and write-back involve substantial data movement. Minimizing the number of data copies can significantly improve system performance. HiCache supports passing memory addresses and sizes directly when transferring data from L2 memory to an L3 backend.
+
+**“Batch-Oriented” Data Organization**: The granularity of data reads and writes has a major impact on performance. To address this, HiCache L3 stores and transfers KV cache data at the granularity of **pages** and supports different data layouts beyond the existing `layer first` scheme, including `page first` and `page first direct`. Under the `page first` and `page first direct` layouts, all KV cache data belonging to the same page is placed in contiguous memory, allowing it to be passed as a single object to L3 using zero-copy transfers.
+
+<Frame>
+  <img alt="HiCache L2 MEM layout" />
+</Frame>
+
+However, because GPU KV computation is naturally performed layer by layer, the GPU inherently operates in a `layer first` layout. When transferring `page first` data from L2 to the GPU, data must be transferred at the granularity of one token per layer. The `page first direct` layout mitigates this issue by grouping together all tokens of a given layer within a page, allowing transfers from L2 to GPU to be aggregated at the page-layer level.
+
+**CPU-to-GPU Transfer Optimizations**: In HiCache, moving data from CPU memory to GPU is as performance-critical as prefetching data from L3 to L2. HiCache employs several optimizations for this process:
+
+* **Compute-Transfer Overlap**: During the prefill phase, when transferring data from CPU to GPU, HiCache overlaps layers by concurrently loading the KV cache of layer N+1 while computing layer N. This effectively hides data transfer latency.
+* **GPU-assisted I/O Kernels**: On top of `cudaMemcpyAsync`, HiCache implements a set of GPU-assisted I/O kernels specifically optimized for KV cache transfers between CPU and GPU. Compared to the baseline approach, these kernels achieve up to 3x higher transfer speed.
+
+**Write-back Optimization for MLA**: For MHA (Multi-Head Attention) models under multi-TP, each rank holds `1/tp_size` of a token’s KV data. In contrast, for MLA (Multi-Layer Attention) models, all ranks hold the complete and identical KV data for each token. HiCache includes a dedicated optimization for MLA: only one rank initiates the write-back operation, ensuring that data is not redundantly stored across ranks.
+
+### Integration with PD-Disaggregation Deployment Mode
+
+SGLang supports a PD (Prefill-Decode) disaggregation deployment mode through the Mooncake TransferEngine (for details, see [this doc](./pd_disaggregation)). In the PD-disaggregation deployment mode, HiCache can be enabled on both the prefill nodes and decode nodes to optimize prefill performance. If enabled on decode nodes, the decode output will also be written back to L3.
+
+### Unified Interfaces and Rich L3 Storage Backends
+
+HiCache encapsulates all read, write, and query operations on L3 backends within the `class HiCacheStorage(ABC)`, exposing a set of simple and consistent interfaces. This design supports a wide range of L3 storage backends and allows users to select the one that best fits their specific use cases.
+
+* **Mooncake**: Mooncake is a high-performance caching system for LLM inference that leverages RDMA and multi-NIC resources to enable zero-copy, ultra-fast data transfers. Try Mooncake [here](https://github.com/sgl-project/sglang/tree/main/python/sglang/srt/mem_cache/storage/mooncake_store).
+
+* **DeepSeek 3FS (HF3FS)**: HF3FS is a Kubernetes-native distributed storage solution with operator-based deployment. Try HF3FS [here](https://github.com/sgl-project/sglang/tree/main/python/sglang/srt/mem_cache/storage/hf3fs).
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "ls -la experiments/2026-06-03/EXP-0021 && sed -n '1,220p' experiments/2026-06-03/EXP-0021/RESULTS.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+total 104
+drwxr-xr-x  12 dengcchi  staff    384 Jun  2 23:52 .
+drwxr-xr-x  17 dengcchi  staff    544 Jun  2 23:18 ..
+-rw-r--r--   1 dengcchi  staff  12776 Jun  2 23:52 COMMITTEE2_PACKET.md
+-rw-r--r--   1 dengcchi  staff   4502 Jun  2 23:38 PRE_REGISTRATION.md
+-rw-r--r--   1 dengcchi  staff   9502 Jun  2 23:47 RESULTS.md
+drwxr-xr-x  15 dengcchi  staff    480 Jun  2 23:52 committee2
+-rw-------   1 dengcchi  staff   1690 Jun  2 23:48 experiment.yaml
+-rw-r--r--   1 dengcchi  staff    510 Jun  2 23:46 killcorner.csv
+drwxr-xr-x   2 dengcchi  staff     64 Jun  2 23:18 logs
+-rw-r--r--   1 dengcchi  staff    459 Jun  2 23:46 pcie_bw.csv
+drwxr-xr-x   2 dengcchi  staff     64 Jun  2 23:18 results
+-rw-r--r--   1 dengcchi  staff    556 Jun  2 23:46 ttft_compare.csv
+# RESULTS — EXP-0021 (L1, CLAIM-0014, PROJ-0003, TASK-0020)
+researcher-gpu-0021 | cli:devgpu014 (1x H100 SXM5, PCIe Gen5 x16 to host) | honest pipeline.
+Pre-reg committed BEFORE results (e279314). venv: torch 2.11+cu130, transformers 5.9.
+VERDICT: **PARTIAL / PRIOR-ART-DOMINATED — claim WEAKENED. Mechanism is prior art; the kill-corner moved
+AGAINST the claim (reactive fetch-on-demand strictly dominates whenever p_rr<1); and even the kill-corner
+CHARACTERIZATION (the L0's last-resort novelty) is itself prior art (Meng/Lee/Wang kappa_crit, arXiv 2601.19910).**
+
+================================================================================
+## E1 — REAL CONCURRENT PCIe BANDWIDTH UNDER CONTENTION (the load-bearing number)
+Measured on H100 SXM5, pinned host memory, bf16, cudaMemcpyAsync via torch copy on dedicated streams.
+
+  Direction / regime              effective GB/s (p50)    vs nameplate (Gen5 x16 ~64 GB/s/dir)
+  ------------------------------  --------------------    ------------------------------------
+  H2D unidirectional              57.0  (p99 57.5)        89% of nameplate
+  D2H unidirectional              53.5  (p99 53.6)        84% of nameplate
+  BIDIRECTIONAL D2H+H2D (agg)     80-98 (size-dep)        NOT 110 (=57+53); ~75-90% of ideal sum
+  BIDI + heavy decode (HBM-bound) 93.3  (p99 93.6)        only -4.7% vs bidi-idle (97.9)
+  decode-proxy verified HBM load                          2135 GB/s (64% of 3.35 TB/s HBM3 nameplate)
+
+  *** KEY FINDING (contradicts L0's pessimism in one axis, confirms it in another) ***
+  - Concurrent ACTIVE DECODE barely touches PCIe BW (-4.7%). On H100 the copy engines (DMA) are
+    INDEPENDENT of SM/HBM traffic. The L0's "fair-share PCIe under active decode" assumption was
+    PESSIMISTIC for the compute-vs-copy case — real arbitration is BETTER than fair-share there.
+  - The REAL bandwidth tax is BIDIRECTIONAL self-contention: simultaneous D2H (demote of session A) +
+    H2D (prefetch of session B) yields ~80-98 GB/s aggregate, i.e. each direction collapses to
+    ~40-46 GB/s (vs 53-57 solo) — a ~20-25% per-direction penalty. This is exactly the regime a tiered
+    demote+prefetch policy CREATES (it demotes and prefetches at once), so it pays its own tax.
+
+================================================================================
+## E2/E3 — DEMOTE+PREFETCH vs REACTIVE FETCH-ON-DEMAND vs PREFIX-CACHED RECOMPUTE
+Real GQA KV bytes (Llama-3-8B GQA8, bf16): 2k=262MB, 8k=1049MB, 16k=2097MB, 32k=4194MB.
+Real measured single-H100 prefill throughput (SDPA, 32 layers): 2k=40k tok/s, 8k=36k tok/s, 16k=31k tok/s.
+(Prefill is FAR cheaper than the L0's strawman assumed — this alone shrinks prefetch's win.)
+
+### Resume-TTFT (ms), prefix=8000, real measured BW + prefill:
+  gap   p_rr | demote+prefetch | reactive-fetch | prefix-cached-recompute | full-recompute(L0 strawman)
+  200   1.0  |       0.0       |     18.4       |        80.0             |        222
+  800   0.7  |       0.0       |     12.9       |        56.0             |        155
+  3000  0.4  |       0.0       |      7.4       |        32.0             |         89
+  -> Prefetch "wins" resume-TTFT only by hiding an ~18ms fetch in the gap. 18ms is NEGLIGIBLE vs typical
+     multi-second agent gaps. Reactive pays ~5-37ms on resume; prefix-cached ~30-80ms. All sub-100ms.
+
+### THE KILL-CORNER, RE-MEASURED — effective serving capacity (max resume-cycles/sec on the PCIe channel,
+### the metric that actually decides effective batch). Higher = better.
+  prefix  p_rr  KV_MB | demote+prefetch | reactive | prefix-cache(compute-bound)
+   2000   1.0    262  |     171.7       |  171.7   |    50.0
+   2000   0.7    262  |     171.7       |  202.0   |    50.0
+   2000   0.4    262  |     171.7       |  245.2   |    50.0
+   8000   1.0   1049  |      42.9       |   42.9   |    11.3
+   8000   0.7   1049  |      42.9       |   50.5   |    11.3
+   8000   0.4   1049  |      42.9       |   61.3   |    11.3
+  16000   1.0   2097  |      21.5       |   21.5   |     4.8
+  16000   0.7   2097  |      21.5       |   25.2   |     4.8
+  16000   0.4   2097  |      21.5       |   30.7   |     4.8
+
+  *** KILL-CORNER VERDICT ***
+  - At p_rr=1.0 (every idle session resumes): demote+prefetch == reactive (identical PCIe demand).
+    Prefetch's ONLY edge is hiding ~18ms — negligible. NO throughput advantage.
+  - At p_rr<1 (REALISTIC agentic traffic — many idle sessions abandoned/timed-out): reactive STRICTLY
+    DOMINATES, serving 1.18x (p_rr=0.7) to 1.43x (p_rr=0.4) MORE resume-cycles/sec, because it wastes
+    ZERO speculative H2D BW. Proactive prefetch burns 1x KV of H2D on every non-resuming session.
+  - With REAL (high) PCIe BW, the kill-corner did NOT shrink to a corner — it BROADENED to dominate the
+    entire p_rr<1 region. The proactive-prefetch advantage requires p_rr~=1 AND a gap long enough to
+    hide a fetch that is already only ~5-90ms. That intersection is small; the loss region is large.
+  - Prefix-cached recompute is PCIe-free (recompute unique suffix on GPU); it's compute-bound and here
+    sustains fewer resumes/s than the PCIe policies at these sizes, but it is the right tier exactly when
+    PCIe is saturated and suffixes are short — i.e. it removes the recompute baseline's strawman status.
+
+================================================================================
+## E4 — PRIOR-ART MECHANISM-DELTA TABLE (live >=2-source sweep)
+  System (venue)                        | gap-timed proactive demote? | prefetch-on-resume overlap? | Delta vs CLAIM-0014
+  AttentionStore/CachedAttention        | YES async save when session | YES scheduler-aware layerwise| NONE. Identical mechanism,
+   (Gao, USENIX ATC 2024, 2403.19708)   | goes idle between turns      | preload overlaps GPU compute | more mature
+  Pensieve (Yu&Li NYU, 2312.05516)      | YES stateful multi-turn      | YES pin/recall across tiers  | NONE on mechanism
+  SGLang HiCache / RadixAttention       | YES hierarchical host/disk   | YES prefix-tree reuse+fetch  | NONE; adds prefix sharing
+  vLLM v1 KV offload + APC               | YES CPU offload + block-swap | YES automatic prefix cache   | NONE
+  Continuum (Berkeley/Stanford 2511.02230)| YES explicit AGENT multi-turn| KV-TTL idle-gap scheduling   | SUPERSEDES agent-gap framing
+  Meng/Lee/Wang (UPenn/Intel 2601.19910)| analytical kappa_crit =      | PCIe-bound offload vs        | *** PRE-EMPTS the L0's
+                                         | critical cached/prefill ratio| recompute crossover          | last-resort kill-corner ***
+
+  *** E4 VERDICT: demote-during-gap + prefetch-on-resume is mechanistically IDENTICAL to AttentionStore/
+  CachedAttention (ATC24), Pensieve, SGLang HiCache, vLLM-v1. NO mechanism-level novelty. The "agent
+  inter-turn gap" framing is subsumed by Continuum. Worse: the PCIe-contention kill-corner (committee#1's
+  identified last-resort contribution) is ITSELF prior art (Meng et al. kappa_crit, Dec 2025). The
+  contribution collapses to a HARDWARE-SPECIFIC RE-MEASUREMENT of a known crossover on H100, plus the
+  minor (possibly-novel) observation that the binding constraint is BIDIRECTIONAL self-contention, not
+  compute-vs-copy fair-share. ***
+
+================================================================================
+## E5 — REAL AGENT INTER-TURN GAP DISTRIBUTION
+  UNAVAILABLE. No wall-clock-timestamped agent multi-turn trace reachable on node (CoQA present but has NO
+  turn timing). Reported honestly per pre-reg. Sensitivity substitute:
+  - Real measured fetch times: 8k KV=18-23ms, 32k KV=74-91ms.
+  - LogNormal gap (sigma=1): P(gap < fetch, prefetch can't fully hide):
+      median 0.2s: 8k=1.5%, 32k=21.7%   median 0.5s: 8k=0.1%, 32k=4.3%
+      median 1.0s: 8k=0.0%, 32k=0.8%    median 3.0s: 8k=0.0%, 32k=0.0%
+  - Implication: for median gap >=0.5s, real PCIe is fast enough that BOTH prefetch AND reactive (nearly)
+    fully hide the fetch. Gap-timing gives no material TTFT edge.
+
+================================================================================
+## SAFETY / BUDGET
+  1 GPU, peak <40GB alloc, no VMM probes, GPU returned to 106MB idle / 0% util at end. Wall < 60 min,
+  GPU-time well under 2 GPU-hours. Host pinned buffers freed.
+
+## COMMITTEE#2-READY VERDICT: **WEAKEN (toward REFUTE on the core claim; MEASUREMENT-ONLY on what survives)**
+  1. Mechanism = PRIOR ART (AttentionStore/Pensieve/HiCache/vLLM/Continuum). No novelty.
+  2. With REAL PCIe BW + REAL prefill cost + the two omitted baselines, the claim's win region SHRINKS and
+     the loss region BROADENS: reactive fetch-on-demand strictly dominates demote+prefetch for all p_rr<1
+     (1.18-1.43x more effective serving capacity), and ties at p_rr=1 (where prefetch saves only ~18ms).
+  3. Even the kill-corner characterization is pre-empted by Meng et al. kappa_crit (2601.19910).
+  4. ONE mildly-novel measurement: binding PCIe constraint for tiered offload is BIDIRECTIONAL demote+
+     prefetch self-contention (-20-25%/dir), NOT compute-vs-copy fair-share (~free on H100). Narrow,
+     honest, measurement-only — not a systems contribution.
+
+## ARTIFACT PATHS
+  GPU node cli:devgpu014: /home/dengcchi/ros-EXP-0021/ (bench_pcie.py, bench_pcie2.py, real_prefill.py,
+    kv_model.py, compare.py, killcorner.py, gap_sensitivity.py, *.json, *.csv, RESULTS.md)
+  Mac instance: /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/
+    (PRE_REGISTRATION.md, RESULTS.md, pcie_bw.csv, killcorner.csv, ttft_compare.csv)
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'head -20 experiments/2026-06-03/EXP-0021/pcie_bw.csv && head -20 experiments/2026-06-03/EXP-0021/killcorner.csv && head -20 experiments/2026-06-03/EXP-0021/ttft_compare.csv' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,160p' experiments/2026-06-03/EXP-0021/PRE_REGISTRATION.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+metric,size_MB,p50,p99,mean
+h2d_idle,64,56.75,57.24,55.49
+h2d_idle,256,57.39,57.46,57.3
+h2d_idle,1024,57.49,57.52,57.48
+d2h_idle,64,53.29,53.36,53.27
+d2h_idle,256,53.5,53.55,53.48
+d2h_idle,1024,53.51,53.62,53.48
+bidi_idle_aggGBs,64,74.72,80.19,74.43
+bidi_idle_aggGBs,256,87.26,99.66,88.47
+bidi_idle_aggGBs,1024,80.8,94.86,80.61
+bidi_contended_aggGBs,64,73.44,80.58,73.41
+bidi_contended_aggGBs,256,92.54,92.8,92.51
+bidi_contended_aggGBs,1024,87.78,93.62,87.06
+prefix,kv_mb,p_rr,dp_max_resumes_per_s,react_max_resumes_per_s,pc_max_resumes_per_s,dp_pcie_MB,react_pcie_MB,pc_pcie_MB
+2000,262,1.0,171.7,171.7,50.0,524,524,262
+2000,262,0.7,171.7,202.0,50.0,524,446,262
+2000,262,0.4,171.7,245.2,50.0,524,367,262
+8000,1049,1.0,42.9,42.9,11.3,2097,2097,1049
+8000,1049,0.7,42.9,50.5,11.3,2097,1783,1049
+8000,1049,0.4,42.9,61.3,11.3,2097,1468,1049
+16000,2097,1.0,21.5,21.5,4.8,4194,4194,2097
+16000,2097,0.7,21.5,25.2,4.8,4194,3565,2097
+16000,2097,0.4,21.5,30.7,4.8,4194,2936,2097
+prefix,kv_mb,gap,p_rr,dp_ttft,react_ttft,pc_ttft,fr_ttft,dp_wasted_mb,react_wasted_mb,h2d_bidi_ms
+2000,262,200,1.0,0.0,4.6,20.0,50.0,262,0.0,5.7
+2000,262,800,0.7,0.0,3.2,14.0,35.0,341,0.0,5.7
+2000,262,3000,0.4,0.0,1.8,8.0,20.0,419,0.0,5.7
+8000,1049,200,1.0,0.0,18.4,80.0,222.0,1049,0.0,22.8
+8000,1049,800,0.7,0.0,12.9,56.0,155.4,1363,0.0,22.8
+8000,1049,3000,0.4,0.0,7.4,32.0,88.8,1678,0.0,22.8
+16000,2097,200,1.0,0.0,36.8,177.6,520.6,2097,0.0,45.6
+16000,2097,800,0.7,0.0,25.8,124.3,364.4,2726,0.0,45.6
+16000,2097,3000,0.4,0.0,14.7,71.0,208.2,3355,0.0,45.6
+
+ succeeded in 0ms:
+# PRE-REGISTRATION — EXP-0021 (L1, CLAIM-0014, PROJ-0003, TASK-0020)
+researcher-gpu-0021 | committed BEFORE running results. Honest pipeline. Negatives / prior-art-dominated = WINS.
+Nodes: cli:devgpu014 (8xH100, devgpu014.eag3.facebook.com, NOT fragile, real egress via fwdproxy, reuse
+ros-EXP-0003 .venv: torch 2.11+cu130, vllm 0.22.0, flashinfer 0.6.11, transformers 5.9). cli:dengcchi-mac = engine + artifact dir.
+Budget: <=120 min wall, <=2 GPU-hours, 1 GPU sufficient.
+
+## CONTEXT — L1 of a YELLOW L0 (VERDICT-0018)
+The L0 (analytic + Monte-Carlo, modeled FAIR-SHARE PCIe) tested a tiered KV-offload policy that proactively
+DEMOTES a session's cold prefix KV to host memory during the agent inter-turn idle gap and PREFETCHES it back
+on resume (overlapping fetch with the gap), claiming it beats evict-and-recompute on the effective-batch / TTFT
+Pareto. L0 found it wins in 93.5% of cells but loses in a PCIe-contention corner.
+Committee#1 verdict: (a) mechanism is LARGELY PRIOR ART — AttentionStore/CachedAttention (Gao, USENIX ATC
+2024), Pensieve, SGLang HiCache, vLLM-v1 KV offload all do turn-gap-timed proactive demote+prefetch; the only
+candidate novelty is the PCIe-contention KILL-CORNER characterization. (b) L0 baselines were a strawman
+(full O(N) recompute) and did not isolate gap-timing.
+
+## THE CLAIM UNDER TEST (CLAIM-0014)
+Tiered KV-offload (proactive demote-during-gap + prefetch-on-resume, overlapping fetch with idle gap) beats
+evict-and-recompute on effective-batch/TTFT Pareto for agentic multi-turn serving.
+
+## REQUIRED EVIDENCE (from VERDICT-0018)
+E1. *** REAL concurrent PCIe / NVLink-C2C bandwidth *** under simultaneous D2H + H2D + active-decode traffic
+    on the H100. Measure cudaMemcpyAsync D2H+H2D effective GB/s WHILE a decode-like GEMM kernel runs; report
+    contended GB/s vs nameplate (PCIe Gen5 x16 ~= 64 GB/s/dir; SXM H100 has no C2C, uses PCIe to host).
+    Load-bearing: L0 assumed fair-share; real arbitration likely WIDENS the kill-corner.
+E2. Add omitted baselines: (a) REACTIVE fetch-on-demand (prefetch ON RESUME — pays latency, wastes ZERO BW on
+    p_rr<1 misses); (b) PREFIX-CACHED recompute (recompute only UNIQUE suffix, a la RadixAttention/vLLM APC).
+    Compare demote+prefetch vs BOTH on resume-TTFT + wasted-PCIe-BW + P99.
+E3. Real KV sizes + real transfer: move realistic 7B-class GQA prefix KV host<->GPU, measure real fetch latency
+    vs gap. vLLM/LMCache CPU-offload if standable; else real-transfer microbench + analytic prefill (labeled).
+E4. Live >=2-source prior-art sweep vs AttentionStore/CachedAttention (ATC24) + Pensieve + SGLang HiCache:
+    MECHANISM-DELTA TABLE. If mechanistically identical, contribution collapses to kill-corner; report so.
+E5. Real agent inter-turn gap distribution if obtainable, else state unavailable (LogNormal + sensitivity).
+
+## METHODS COMPARED (resume-TTFT, wasted-PCIe-BW, P99)
+- DEMOTE+PREFETCH (claim): proactive D2H demote during gap, H2D prefetch overlapping gap, recompute on miss.
+- REACTIVE fetch-on-demand: no proactive work; on resume H2D fetch prefix (full latency, 0 wasted BW).
+- PREFIX-CACHED RECOMPUTE: recompute only unique suffix (shared sysprompt prefix cached); cost = suffix prefill.
+- FULL-RECOMPUTE: L0 strawman reference.
+
+## MEASUREMENT PLAN
+1. Real GPU microbench: realistic prefix-KV tensors; pure H2D, pure D2H, CONCURRENT D2H+H2D, each idle and with
+   a concurrent decode-proxy GEMM stream saturating SMs. GB/s + p50/p99 per-transfer latency; sweep KV sizes.
+2. Plug REAL contended BW into L0-style cost model; re-run demote+prefetch vs reactive vs prefix-cached across
+   (gap, prefix_len, p_rr, concurrency). Report how kill-corner moves vs L0 fair-share.
+3. Real KV transfer latency vs gap distribution (E5 if available).
+4. Prior-art mechanism-delta table (E4).
+
+## HONEST-NEGATIVE BRANCH (pre-committed)
+Report NEGATIVE / prior-art-dominated if ANY of: real concurrent PCIe BW << nameplate (widening kill-corner to
+dominate realistic traffic); OR reactive-fetch comparable (no gap-timing advantage); OR prefix-cached-recompute
+makes recompute cheap enough that prefetch's win shrinks materially; OR AttentionStore/Pensieve/HiCache
+mechanistically identical (no novelty -> contribution = kill-corner only). A clean "mechanism = prior art,
+kill-corner is the only contribution" is a WIN.
+
+## SAFETY
+Cap GPU mem (<= ~40 GB), NO unbounded VMM probes, watch host RAM for pinned buffers, clean up GPU procs at end
+via nvidia-smi. <=2 GPU-hours / 120 min wall.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: red
+EXISTING_IMPLEMENTATIONS: [
+  {system: "AttentionStore/CachedAttention", url: "https://arxiv.org/abs/2403.19708", overlap: "multi-turn KV reuse; hierarchical KV caching; async saving; layer-wise pre-loading; scheduler-aware fetching/eviction"},
+  {system: "Pensieve", url: "https://arxiv.org/abs/2312.05516", overlap: "stateful multi-turn serving; GPU+CPU multi-tier KV caching; avoids repeated history processing"},
+  {system: "SGLang HiCache", url: "https://docs.sglang.io/docs/advanced_features/hicache_design", overlap: "GPU/CPU/storage hierarchical KV cache; local match, prefetch, write-back; CPU-to-GPU transfer overlap"},
+  {system: "vLLM KV offloading connector", url: "https://vllm-project.github.io/2026/01/08/kv-offloading-connector.html", overlap: "CPU DRAM KV offload; optimized H2D/D2H transfers; prefix KV reuse"},
+  {system: "Ray Serve + LMCache", url: "https://docs.ray.io/en/latest/serve/llm/user-guides/kv-cache-offloading.html", overlap: "KV offload to CPU/disk for repeated prompts and multi-turn conversations"},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "paged KV block reuse for shared prefixes/multi-turn requests; baseline for prefix-cache recompute"}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold as stated. On the packet's real H100 measurements, demote+prefetch ties reactive fetch at p_rr=1.0 and loses for p_rr<1, where reactive has 1.18x-1.43x higher resume capacity. Real gap distribution is unavailable, so workload realism is still insufficient; sensitivity says median gaps >=0.5s make both prefetch and reactive nearly hide fetch latency. Artifact is reasonably reproducible for microbench/model CSVs, but not an end-to-end shipping scheduler at cluster workload scale.
+RATIONALE: PROMPT_VERSION=v001. The claimed mechanism is already present in named prior systems: CachedAttention explicitly uses hierarchical KV caching plus layer-wise pre-loading and asynchronous saving (arXiv:2403.19708); Pensieve uses stateful multi-turn serving with GPU+CPU multi-tier KV caching (arXiv:2312.05516); SGLang HiCache documents GPU/host/storage KV tiers with prefetch/write-back and CPU-to-GPU overlap. The remaining H100 measurement is useful engineering characterization, but the core Pareto claim is refuted by the packet's own baselines: reactive fetch strictly dominates for realistic p_rr<1 and the claimed TTFT edge is only hiding roughly 18ms for 8k KV. Meng/Lee/Wang further pre-empts the offload-vs-recompute crossover framing via kappa_crit for PCIe-bound KV offloading (https://arxiv.org/abs/2601.19910).
+tokens used
+52,188

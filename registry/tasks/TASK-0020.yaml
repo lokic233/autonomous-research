@@ -6,15 +6,15 @@ session_id: ''
 project_id: PROJ-0003
 claim_id: CLAIM-0014
 exp_id: EXP-0021
-status: open
+status: done
 summary: 'L1 KV-offload tiering: real concurrent PCIe/NVLink BW (D2H+H2D+decode) +
   reactive-fetch-on-demand + prefix-cached-recompute(RadixAttention/APC) baselines
   + live AttentionStore/CachedAttention[ATC24]+Pensieve mechanism-delta + real agent
   inter-turn gap distribution. Per VERDICT-0018.'
 evidence_delta: ''
 opened_at: '2026-06-03T06:33:49Z'
-updated_at: '2026-06-03T06:33:49Z'
-closed_at: ''
+updated_at: '2026-06-03T06:48:08Z'
+closed_at: '2026-06-03T06:48:08Z'
 history:
 - ts: '2026-06-03T06:33:49Z'
   event: open
@@ -23,3 +23,7 @@ history:
     reactive-fetch-on-demand + prefix-cached-recompute(RadixAttention/APC) baselines
     + live AttentionStore/CachedAttention[ATC24]+Pensieve mechanism-delta + real agent
     inter-turn gap distribution. Per VERDICT-0018.'
+- ts: '2026-06-03T06:48:08Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-gpu-0021 completed EXP EXP-0021 (weaken)
