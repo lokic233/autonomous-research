@@ -1,0 +1,29 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: "API_ERROR — no vote received", systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "L1 on real LMs (Llama-3.1-8B / Qwen2.5-7B) with real constrained backends (Outlines / XGrammar / vLLM guided JSON) on BFCL/ToolBench OOS slices — this is where ALL empirical weight now falls",
+  "Unconstrained counterfactual baseline (evaluation_prosecutor): paired A/B on identical OOS prompts with and without hard grammar mask — if the unconstrained model also emits the near-miss tool, the constraint is not the causal culprit",
+  "Semantic monitor baseline (evaluation_prosecutor): LLM-as-judge / reflection recall on the misrouted outputs — monitorability collapse currently only defeats syntactic validators, which are trivially blind by definition",
+  "Real-LM logit monotonicity check (theory_skeptic): verify that real LM logits over tool-name tokens are actually monotone in semantic distance — without this the (K, neighbor-gap) law has no empirical anchor beyond the geometric proxy",
+  "Novelty_killer prior-art search must be completed — API error means the dedicated novelty assessment is missing; cannot confirm no prior work articulates support-removal coercion + monitorability collapse in constrained decoding"
+]
+MANDATORY_BASELINES: [
+  "Unconstrained generation on the same OOS prompts (isolate constraint-induced coercion from base-model parametric confusion)",
+  "Semantic monitor / reflection-based detector (defeat a non-trivial monitor, not just a schema parser)",
+  "Real-LM abstention/refusal rate without the grammar mask (what does instruction-tuned RLHF abstention buy before the mask erases it?)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0055", change: "status HELD/support -> YELLOW/pending-L1; add annotation: L0 establishes definitions and structural bounds, not behavioral predictions — theory_skeptic showed R1/R3/R4 are mathematical identities of the setup and R2/R5 are generic softmax algebra; conceptual novelty (support-removal as GAD-irrecoverable failure class + monitorability framing) is the surviving load-bearing contribution; L1 MUST include unconstrained baseline + semantic monitor + logit-monotonicity check to carry empirical weight"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: prompt_version=v001. Four of five reviewers voted YELLOW; the novelty_killer failed (API error), leaving the dedicated prior-art search incomplete — this alone blocks GREEN per standing rules.
+
+The surviving contribution is CONCEPTUAL, not empirical. Theory_skeptic delivered the sharpest critique and it is unrebutted: (1) R1 is a tautology — stream-misroute = P(OOS) = (144−K)/144 matches the reported numbers to 3 decimals; the "kernel-independent geometric law" is independent of the kernel because it never references the kernel. (2) R3 (validity-monitor recall = 0) and R4 (GAD recovery = 0) are true by construction/definition — no experiment was needed; one line of probability gives both. (3) R2 and R5 are generic softmax-over-distance behavior. The L0 results CANNOT FAIL given the construction. There is no risky prediction the L0 could have falsified. "Kernel-independence is the signature of a tautology, not of a robust law" — this reframing is correct and the packet's "STRONGEST possible anti-tuned-knob result" framing inverts the diagnosis.
+
+However, this does NOT kill the claim — it recategorizes it. The structural argument is sound and genuinely novel: (a) support-removal coercion as a named failure class that is by definition outside GAD's within-support recovery (theory_skeptic concurs this is "not in GAD or the abstention literature"); (b) the monitorability collapse framing (schema-validate + retry + GAD + escape-hatch all fail simultaneously) is a useful safety contribution even if each component follows from definitions; (c) the observation that "Wait that's not an option" (2409.00113) covers UNconstrained MCQ where the model retains the choice, while hard-constrained decoding REMOVES the choice, is a clean gap in the literature. Systems_reviewer confirms the substrate is real and dominant (vLLM, SGLang, TensorRT-LLM all implement hard grammar constraints). Product_realist confirms actionable guidance exists.
+
+The evaluation_prosecutor's objections are the most consequential for L1 design: (i) without an unconstrained baseline, the claim "the decoder mechanically coerces" is ungrounded — if the base model also emits the near-miss without the mask (due to semantic priming from the tool prompt or parametric confusion), then the constraint is not the causal agent; (ii) claiming "monitorability collapse" while only testing a schema parser is a strawman — semantic monitors (reflection/LLM-as-judge) are the production-relevant adversary and are untested. Both must be addressed in L1 or the causal and monitorability claims are hollow.
+
+YELLOW is the correct consensus. The claim advances to L1 with the explicit understanding that L0 established definitions and bounds, not behavior. The L1 must produce genuinely risky predictions: real-LM misroute rates that could falsify the (K, neighbor-gap) law on real logit geometry, an unconstrained baseline that could show the model already fails without the mask, and a semantic monitor that could break the monitorability collapse. If all three survive, GREEN. If the unconstrained model also misroutes, or real logits are non-monotone in tool-token distance, or a reflection step catches the near-miss — the claim's causal and safety framing collapses regardless of how clean the structural argument is.
+```
