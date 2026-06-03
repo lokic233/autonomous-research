@@ -1,0 +1,10 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "Dense Embedding Router (e.g., BGE/Instructor)", why: "Dense embeddings capture semantic similarity and could bridge the 'missing token' gap that purely lexical IDF fails to recover.", repo_or_cite: "ToolBench (Qin et al., 2023), Gorilla (Patil et al., 2023)"}
+  - {name: "Pooled Schema Router", why: "To determine if real systems suffer this gap or avoid it by indexing aggregated/concatenated member tool schemas instead of editorial blurbs (making c~1).", repo_or_cite: "Collection-selection theory, ColBERT (Khattab & Zaharia, 2020)"}
+STRAWMAN_RISKS: ["Comparing only against a lexical (IDF + query expansion) stage-1 retriever. Lexical retrievers are strictly bound by exact token overlap, making the failure to recover an absent token a tautology rather than a general structural ceiling for modern retrieval."]
+MISSING_METRICS: ["Semantic Reachability (measuring if the missing distinctive token is semantically proximate to the server's editorial blurb in a dense embedding space, overcoming the lexical gap)"]
+KILLER_EXPERIMENT: Test the two-stage pipeline using a state-of-the-art dense embedding model (e.g., text-embedding-3 or BGE) for stage-1 routing on a real-world tool registry. If the dense retriever successfully routes to the server despite the missing exact token (closing the gap via semantic similarity), the structural ceiling is falsified as merely a lexical artifact.
+RATIONALE: The L0 experiment proves that an absent exact token defeats a lexical matcher, which is mathematically expected. It does not prove that a semantic dense encoder—the production standard for modern agent retrieval—suffers the same unbounded structural ceiling. Therefore, claiming the gap is "not recoverable vocabulary-mismatch" is insufficiently supported by a strictly lexical test.
+```

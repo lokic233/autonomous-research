@@ -1,0 +1,68 @@
+I verified three sources by fetch (search egress was blocked, fetch worked). Here is my assessment.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Xiao et al., Beyond Precision: A Study on Recall of Initial Retrieval with Neural Representations, 2018",
+   url: "https://arxiv.org/abs/1806.10869",
+   why_close: "VERIFIED BY FETCH. Frames vocabulary mismatch as the central initial-retrieval recall problem and shows neural representations PARTIALLY RECOVER recall that symbolic/lexical indices miss. This is exactly the alternative hypothesis CLAIM-0052 must defeat — and the L0 only tested a LEXICAL stronger-stage-1, never the neural encoder that defines Xiao's recovery mechanism."}
+- {cite: "Kulkarni & Callan, Selective Search / shard ranking & cutoff (TOIS 2015) + Si & Callan ReDDE 'big-document' model + Callan & Connell query-based sampling",
+   url: "(asserted from background knowledge; live search egress blocked this session — see RATIONALE)",
+   why_close: "Resource/collection selection establishes the SAME phenomenon CLAIM-0052 calls a 'topological ceiling': probing top-m of S shards caps recall, and LOSSY/SAMPLED shard representations degrade selection independent of the scoring function. The 'editorial-aggregate-omits-token' coverage gap is the representation-incompleteness already studied for sampled shard reps."
+- {cite: "MCP-Zero: Hierarchical Semantic Routing (2025)",
+   url: "https://arxiv.org/abs/2506.01056",
+   why_close: "VERIFIED BY FETCH. Uses the exact two-stage server-then-tool routing structure. Does NOT identify a recall ceiling — so it does NOT preempt the finding, but it owns the domain framing the claim must cite."}
+- {cite: "ToolRerank (2024)", url: "https://arxiv.org/abs/2403.06551",
+   why_close: "VERIFIED BY FETCH. Treats tool-retrieval failure as a reranking/cutoff problem (hierarchy-aware). Confirms packet's positioning that prior tool-retrieval work is geometry/ranking, not topology — supports the delta but does not establish it."}
+
+NAMING_VS_MECHANISM:
+Mostly a NAMING/domain re-skin of an existing mechanism, with ONE candidate real delta that is untested.
+- The load-bearing mechanism ("recall capped at top-m < S, unbounded in S, fixed by m=S") is the
+  classical selective-search / resource-selection cutoff ceiling. Re-deriving it on synthetic MCP
+  registries is application novelty, not mechanism novelty.
+- "editorial-AGGREGATE-vs-member coverage gap" vs "lossy/sampled shard representation" is largely a
+  rename: both say an incomplete cluster representation that omits a member's distinctive signal makes
+  that member unrankable at top-m regardless of score geometry.
+- The ONLY genuine mechanism-delta candidate is "NOT closed by a stronger stage-1 (≠ recoverable
+  vocab-mismatch, Xiao)". That would be real — BUT at L0 it is shown only against a LEXICAL stage-1
+  (idf+expansion). Xiao 1806.10869 (verified) is precisely the result that a NEURAL representation
+  recovers recall a lexical/symbolic index misses by inferring from semantically related tokens. So
+  the differentiator is demonstrated against a strawman, not against the technique that defines the
+  alternative. Mechanism novelty is therefore ASSERTED, not yet earned.
+
+FATAL_COLLISIONS:
+- None verified to KILL standard. A KILL requires the exact collision confirmed in ≥2 independent
+  live sources; WebSearch egress was blocked this session (only WebFetch worked), so I could fetch the
+  named arXiv abstracts but could NOT run a live ≥2-source sweep to confirm the selective-search
+  collision at the "editorial-aggregate" granularity. Per committee rule (egress-blocked sweep ->
+  honest YELLOW, not fabricated green OR fabricated red), I downgrade the resource-selection overlap
+  to a serious-but-unconfirmed collision rather than a verified fatal one.
+- Strong (non-fatal) collision: the top-m/lossy-representation recall ceiling overlaps selective
+  search / sample-based resource selection. This is the load-bearing novelty risk.
+
+MANDATORY_RELATED_WORK (authors MUST cite and distinguish, not just IVF/nprobe + Salton):
+1. Kulkarni & Callan, Selective Search (shard ranking + cutoff recall ceiling).
+2. Si & Callan, ReDDE / "big-document" collection model (pooled member representation — the c≈1 regime).
+3. Callan & Connell, query-based sampling (representation incompleteness degrades selection — the (1-c) regime).
+4. Xiao et al. 1806.10869 (neural rep recovers recall lexical misses — the alternative the #4 arm must beat with a DENSE encoder, not lexical).
+5. MCP-Zero 2506.01056 and ToolRerank 2403.06551 (domain framing).
+
+RATIONALE:
+Sources verified by fetch: Xiao 1806.10869, MCP-Zero 2506.01056, ToolRerank 2403.06551 (WebSearch was
+permission-blocked; WebFetch succeeded). The L0 is clean, honest, and mechanism-attributed (100% of
+misses are coverage-gap), and MCP-Zero/ToolRerank confirm no agentic-tool-retrieval paper has named
+this ceiling — so it is not GREEN-killable as a duplicate. But it is not clean-novel either:
+(i) the top-m × lossy-cluster-rep recall ceiling is the classical resource-selection phenomenon, and
+the "editorial aggregate" coverage gap reads as sampled-shard representation-incompleteness renamed;
+(ii) the single differentiator that would make it genuinely new ("≠ recoverable vocab-mismatch") is
+proven only against a LEXICAL stage-1, while Xiao (verified) shows a NEURAL encoder is exactly what
+recovers absent-token recall — so the discriminator is untested against its defining alternative;
+(iii) ecological crux (a/c): if real registries route on member-POOLED schemas (the ReDDE big-document
+regime), coverage→1 and the ceiling does not bite, collapsing the result into known resource-selection
+behavior. YELLOW. Required to reach novelty-clean: (1) a DENSE-encoder stronger-stage-1 arm at L1 that
+still fails to close the gap; (2) explicit positioning vs selective-search/ReDDE/query-based-sampling
+showing the editorial-aggregate gap is not lossy-sample resource selection re-derived; (3) evidence
+that real MCP/agent registries actually route on under-covered editorial blurbs (c<1) rather than
+pooled member schemas.
+```

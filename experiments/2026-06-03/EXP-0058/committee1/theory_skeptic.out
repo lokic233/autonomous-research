@@ -1,0 +1,29 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+  - The "structural ceiling" is largely a CONSTRUCTIVE TAUTOLOGY of the generator: the harness defines server desc to omit the distinctive token w.p. (1-c), and a router scoring only that desc cannot produce signal for an absent unique token. The "100.00% coverage-gap attribution" is definitional, not empirical discovery.
+  - Unboundedness in S at fixed m=1 is the expected combinatorics of selecting m-of-S under near-zero discriminative signal (P(GT in top-m | no signal) ~ m/S). This is basic top-k geometry, not an emergent topological phenomenon.
+  - The "editorial AGGREGATE != member centroid" framing is the cluster hypothesis / collection-selection problem (Kulkarni&Callan 1998; CORI; relevant-document distribution) restated. The packet's own caveat concedes prior work models cluster score as member geometry — the differentiation is presentational, not formal (no closed-form distinction, by the packet's own admission).
+  - The #4 "stronger stage-1 does NOT close gap" arm uses IDF + query expansion ON THE SAME DESCRIPTION THAT, BY CONSTRUCTION, LACKS THE TOKEN. No lexical reweighting can synthesize signal for an absent literal — this is algebraically forced, not evidence about representational power.
+
+CONFOUNDS:
+  - Generator entangles "coverage" with "distinctive-token uniqueness" — a single one-hot capability token per tool with no semantic neighbors. Real capability text has correlated tokens (summarize ~ abstract ~ TL;DR) that a dense encoder could exploit; the synthetic world forbids this by construction.
+  - Query-expansion is fed boilerplate-laden corpus statistics, so it DEGRADES (negative lift). That's expansion-noise on a degenerate vocabulary, not a fair test of "stronger stage-1."
+  - "Reachable-recall@full" with FLAT=1.000 everywhere is itself a generator artifact (every flat query has its target's distinctive token in exactly one tool desc) — flat is trivially perfect, so the gap is mechanically large.
+  - T=8, single distinctive token per tool, binary coverage — all of these inflate the ceiling vs. realistic registries with multi-token capabilities and partial overlap.
+
+ASSUMPTIONS_UNTESTED:
+  - Coverage is binary (token present/absent). Partial/semantic coverage is the realistic regime and is exactly where a dense encoder could collapse the gap — and is exactly what L0 cannot probe.
+  - DENSE encoder behavior. The claim is "NOT closed by a stronger stage-1 representation," but only lexical variants tested. The packet's own honest caveat (b) flags this; L0 cannot adjudicate the load-bearing killer #4 in its strong form.
+  - Ecological premise: real MCP/agent registries route on editorial blurbs vs. member-pooled schemas (crux (a)/(c)). If pooling is standard, c->1 and the ceiling does not bite in deployment.
+  - Multi-token / soft-coverage interaction with S (does the unbounded-in-S result survive when each tool has k>=2 capability tokens with independent coverage probs?).
+
+STATISTICAL_GAPS:
+  - The null result "STRONG_S1 does NOT close" is reported as a point range (-0.001 to -0.066) without TOST / equivalence bounds. Failure-to-reject != equivalence; no power analysis for the equivalence margin.
+  - 24 seeds/cell — unclear whether variation is over registry construction, coverage realization, and query draw jointly, or just query order. The "+/- 0.013" CI on a quantity dominated by a constructive identity (coverage gap) is suspiciously tight; the appropriate variance source is registry resampling.
+  - 100.00% (39312/39312) mechanism attribution is too clean to be empirical — it confirms the identity "miss iff distinctive token absent" that the generator enforces, not an inferred mechanism.
+  - No reported variance on the FLAT=1.000 baseline (it is exact by construction); no negative control where the generator is permuted to break the coverage-miss identity.
+
+RATIONALE: The packet honestly reports a clean simulation and the boundary controls are correct, but the L0 result is mostly a constructive identity in the generator: a lexical router cannot recover a literally-absent token, and top-m of S under zero signal goes as m/S. The load-bearing killer #4 in its serious form (dense encoders inferring capability semantically from related tokens, per the packet's own caveat (b) and Xiao 1806.10869) is NOT tested at L0, because L0 is lexical-only. The "topological ceiling unbounded in S" framing is not formally distinguished from collection-selection theory (Kulkarni&Callan; cluster hypothesis) — the packet acknowledges no closed form. Direction is plausible and the experiment is cleaner than typical, but the strongest claim ("NOT closed by a stronger stage-1 representation") is overreach from a lexical-only L0. YELLOW: proceed to L1 with (i) real dense encoder, (ii) multi-token / partial coverage, (iii) TOST-style equivalence on the STRONG_S1-vs-2STG null, (iv) ecological check on real registry coverage c. v001.
+```

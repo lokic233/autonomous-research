@@ -537,3 +537,2431 @@ hook: PostToolUse Completed
 exec
 /bin/zsh -lc "find /Users/dengcchi -name '_committee_common_v001.md' -o -path '*/_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+exec
+/bin/zsh -lc 'curl -L --max-time 20 https://api.github.com/repos/zonlabs/mcp-ts/contents/packages/tool-router?ref=main' in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/zonlabs/mcp-ts/contents/packages/tool-router?ref=main
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/tool_calling.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/microsoft/mcp-for-beginners/main/05-AdvancedTopics/mcp-routing/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/KGT24k/mcp-tool-search/main/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 294ms:
+100 26369  100 26369    0     0  87769      0 --:--:-- --:--:-- --:--:-- 87896
+# Tool Calling
+
+vLLM currently supports named function calling, as well as the `auto`, `required` (as of `vllm>=0.8.3`), and `none` options for the `tool_choice` field in the chat completion API.
+
+## Quickstart
+
+Start the server with tool calling enabled. This example uses Meta's Llama 3.1 8B model, so we need to use the `llama3_json` tool calling chat template from the vLLM examples directory:
+
+```bash
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+    --enable-auto-tool-choice \
+    --tool-call-parser llama3_json \
+    --chat-template examples/tool_chat_template_llama3.1_json.jinja
+```
+
+Next, make a request that triggers the model to use the available tools:
+
+??? code
+
+    ```python
+    from openai import OpenAI
+    import json
+
+    client = OpenAI(base_url="http://localhost:8000/v1", api_key="dummy")
+
+    def get_weather(location: str, unit: str):
+        return f"Getting the weather for {location} in {unit}..."
+    tool_functions = {"get_weather": get_weather}
+
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "description": "Get the current weather in a given location",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {"type": "string", "description": "City and state, e.g., 'San Francisco, CA'"},
+                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}
+                    },
+                    "required": ["location", "unit"],
+                },
+            },
+        },
+    ]
+
+    response = client.chat.completions.create(
+        model=client.models.list().data[0].id,
+        messages=[{"role": "user", "content": "What's the weather like in San Francisco?"}],
+        tools=tools,
+        tool_choice="auto",
+    )
+
+    tool_call = response.choices[0].message.tool_calls[0].function
+    print(f"Function called: {tool_call.name}")
+    print(f"Arguments: {tool_call.arguments}")
+    print(f"Result: {tool_functions[tool_call.name](**json.loads(tool_call.arguments))}")
+    ```
+
+Example output:
+
+```text
+Function called: get_weather
+Arguments: {"location": "San Francisco, CA", "unit": "fahrenheit"}
+Result: Getting the weather for San Francisco, CA in fahrenheit...
+```
+
+This example demonstrates:
+
+* Setting up the server with tool calling enabled
+* Defining an actual function to handle tool calls
+* Making a request with `tool_choice="auto"`
+* Handling the structured response and executing the corresponding function
+
+You can also specify a particular function using named function calling by setting `tool_choice={"type": "function", "function": {"name": "get_weather"}}`. Note that this will use the structured outputs backend - so the first time this is used, there will be several seconds of latency (or more) as the FSM is compiled for the first time before it is cached for subsequent requests.
+
+Remember that it's the caller's responsibility to:
+
+1. Define appropriate tools in the request
+2. Include relevant context in the chat messages
+3. Handle the tool calls in your application logic
+
+For more advanced usage, including parallel tool calls and different model-specific parsers, see the sections below.
+
+## Named Function Calling
+
+vLLM supports named function calling in the chat completion API by default. This should work with most structured outputs backends supported by vLLM. You are guaranteed a validly-parsable function call - not a
+high-quality one.
+
+vLLM will use structured outputs to ensure the response matches the tool parameter object defined by the JSON schema in the `tools` parameter.
+For best results, we recommend ensuring that the expected output format / schema is specified in the prompt to ensure that the model's intended generation is aligned with the schema that it's being forced to generate by the structured outputs backend.
+
+To use a named function, you need to define the functions in the `tools` parameter of the chat completion request, and
+specify the `name` of one of the tools in the `tool_choice` parameter of the chat completion request.
+
+## Required Function Calling
+
+vLLM supports the `tool_choice='required'` option in the chat completion API. Similar to the named function calling, it also uses structured outputs, so this is enabled by default and will work with any supported model. However, support for alternative decoding backends are on the [roadmap](../usage/v1_guide.md#features) for the V1 engine.
+
+When tool_choice='required' is set, the model is guaranteed to generate one or more tool calls based on the specified tool list in the `tools` parameter. The number of tool calls depends on the user's query. The output format strictly follows the schema defined in the `tools` parameter.
+
+## None Function Calling
+
+vLLM supports the `tool_choice='none'` option in the chat completion API. When this option is set, the model will not generate any tool calls and will respond with regular text content only, even if tools are defined in the request.
+
+!!! note
+    When tools are specified in the request, vLLM includes tool definitions in the prompt by default, regardless of the `tool_choice` setting. To exclude tool definitions when `tool_choice='none'`, use the `--exclude-tools-when-tool-choice-none` option.
+
+## Constrained Decoding Behavior
+
+Whether vLLM enforces the tool parameter schema during generation depends on the `tool_choice` mode:
+
+| `tool_choice` value | Schema-constrained decoding | Behavior |
+| --- | --- | --- |
+| Named function | Yes (via structured outputs backend) | Arguments are guaranteed to be valid JSON conforming to the function's parameter schema. |
+| `"required"` | Yes (via structured outputs backend) | Same as named function. The model must produce at least one tool call. |
+| `"auto"` | No | The model generates freely. A tool-call parser extracts tool calls from the raw text. Arguments may be malformed or not match the schema. |
+| `"none"` | N/A | No tool calls are produced. |
+
+When schema conformance matters, prefer `tool_choice="required"` or named function calling over `"auto"`.
+
+### Strict Mode (`strict` parameter)
+
+The [OpenAI API](https://platform.openai.com/docs/guides/function-calling#strict-mode) supports a `strict` field on function definitions. When set to `true`, OpenAI uses constrained decoding to guarantee that tool-call arguments match the function schema, even in `tool_choice="auto"` mode.
+
+vLLM **does not implement** `strict` mode today. The `strict` field is accepted in requests (to avoid breaking clients that set it), but it has no effect on decoding behavior. In auto mode, argument validity depends entirely on the model's output quality and the parser's extraction logic.
+
+Tracking issues: [#15526](https://github.com/vllm-project/vllm/issues/15526), [#16313](https://github.com/vllm-project/vllm/issues/16313).
+
+## Automatic Function Calling
+
+To enable this feature, you should set the following flags:
+
+* `--enable-auto-tool-choice` -- **mandatory** Auto tool choice. It tells vLLM that you want to enable the model to generate its own tool calls when it
+deems appropriate.
+* `--tool-call-parser` -- select the tool parser to use (listed below). Additional tool parsers
+will continue to be added in the future. You can also register your own tool parsers in the `--tool-parser-plugin`.
+* `--tool-parser-plugin` -- **optional** tool parser plugin used to register user defined tool parsers into vllm, the registered tool parser name can be specified in `--tool-call-parser`.
+* `--chat-template` -- **optional** for auto tool choice. It's the path to the chat template which handles `tool`-role messages and `assistant`-role messages
+that contain previously generated tool calls. Hermes, Mistral and Llama models have tool-compatible chat templates in their
+`tokenizer_config.json` files, but you can specify a custom template. This argument can be set to `tool_use` if your model has a tool use-specific chat
+template configured in the `tokenizer_config.json`. In this case, it will be used per the `transformers` specification. More on this [here](https://huggingface.co/docs/transformers/en/chat_templating#why-do-some-models-have-multiple-templates)
+from HuggingFace; and you can find an example of this in a `tokenizer_config.json` [here](https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B/blob/main/tokenizer_config.json).
+
+If your favorite tool-calling model is not supported, please feel free to contribute a parser & tool use chat template!
+
+!!! note
+    With `tool_choice="auto"`, tool-call arguments are extracted from the model's raw text output by the selected parser. No schema-level constraint is applied during decoding, so arguments may occasionally be malformed or violate the function's parameter schema. See [Constrained Decoding Behavior](#constrained-decoding-behavior) for details.
+
+### Hermes Models (`hermes`)
+
+All Nous Research Hermes-series models newer than Hermes 2 Pro should be supported.
+
+* `NousResearch/Hermes-2-Pro-*`
+* `NousResearch/Hermes-2-Theta-*`
+* `NousResearch/Hermes-3-*`
+
+_Note that the Hermes 2 **Theta** models are known to have degraded tool call quality and capabilities due to the merge
+step in their creation_.
+
+Flags: `--tool-call-parser hermes`
+
+### Mistral Models (`mistral`)
+
+Supported models:
+
+* `mistralai/Mistral-7B-Instruct-v0.3` (confirmed)
+* Additional Mistral function-calling models are compatible as well.
+
+Known issues:
+
+1. Mistral 7B struggles to generate parallel tool calls correctly.
+2. **For Transformers tokenization backend only**: Mistral's `tokenizer_config.json` chat template requires tool call IDs that are exactly 9 digits, which is
+   much shorter than what vLLM generates. Since an exception is thrown when this condition
+   is not met, the following additional chat templates are provided:
+
+    * [examples/tool_chat_template_mistral.jinja](../../examples/tool_chat_template_mistral.jinja) - this is the "official" Mistral chat template, but tweaked so that
+      it works with vLLM's tool call IDs (provided `tool_call_id` fields are truncated to the last 9 digits)
+    * [examples/tool_chat_template_mistral_parallel.jinja](../../examples/tool_chat_template_mistral_parallel.jinja) - this is a "better" version that adds a tool-use system prompt
+
+ succeeded in 245ms:
+100    14  100    14    0     0     52      0 --:--:-- --:--:-- --:--:--    52
+404: Not Found
+ succeeded in 246ms:
+100 20060  100 20060    0     0  74611      0 --:--:-- --:--:-- --:--:-- 74850
+# Routing in Model Context Protocol
+
+Routing is essential for directing requests to the appropriate models, tools, or services within an MCP ecosystem.
+
+## Introduction
+
+Routing in the Model Context Protocol (MCP) involves directing requests to the most suitable models or services based on various criteria such as content type, user context, and system load. This ensures efficient processing and optimal resource utilization.
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+- Understand the principles of routing in MCP.
+- Implement content-based routing to direct requests to specialized services.
+- Apply intelligent load balancing strategies to optimize resource utilization.
+- Implement dynamic tool routing based on request context.
+
+## Content-Based Routing
+
+Content-based routing directs requests to specialized services based on the content of the request. For example, requests related to code generation can be routed to a specialized code model, while creative writing requests can be sent to a creative writing model.
+
+Let's look at an example implementation in different programming languages.
+
+<details>
+<summary>.NET</summary>
+
+```csharp
+// .NET Example: Content-based routing in MCP
+public class ContentBasedRouter
+{
+    private readonly Dictionary<string, McpClient> _specializedClients;
+    private readonly RoutingClassifier _classifier;
+    
+    public ContentBasedRouter()
+    {
+        // Initialize specialized clients for different domains
+        _specializedClients = new Dictionary<string, McpClient>
+        {
+            ["code"] = new McpClient("https://code-specialized-mcp.com"),
+            ["creative"] = new McpClient("https://creative-specialized-mcp.com"),
+            ["scientific"] = new McpClient("https://scientific-specialized-mcp.com"),
+            ["general"] = new McpClient("https://general-mcp.com")
+        };
+        
+        // Initialize content classifier
+        _classifier = new RoutingClassifier();
+    }
+    
+    public async Task<McpResponse> RouteAndProcessAsync(string prompt, IDictionary<string, object> parameters = null)
+    {
+        // Classify the prompt to determine the best specialized service
+        string category = await _classifier.ClassifyPromptAsync(prompt);
+        
+        // Get the appropriate client or fall back to general
+        var client = _specializedClients.ContainsKey(category) 
+            ? _specializedClients[category] 
+            : _specializedClients["general"];
+            
+        Console.WriteLine($"Routing request to {category} specialized service");
+        
+        // Send request to the selected service
+        return await client.SendPromptAsync(prompt, parameters);
+    }
+    
+    // Simple classifier for routing decisions
+    private class RoutingClassifier
+    {
+        public Task<string> ClassifyPromptAsync(string prompt)
+        {
+            prompt = prompt.ToLowerInvariant();
+            
+            if (prompt.Contains("code") || prompt.Contains("function") || 
+                prompt.Contains("program") || prompt.Contains("algorithm"))
+            {
+                return Task.FromResult("code");
+            }
+            
+            if (prompt.Contains("story") || prompt.Contains("creative") || 
+                prompt.Contains("imagine") || prompt.Contains("design"))
+            {
+                return Task.FromResult("creative");
+            }
+            
+            if (prompt.Contains("science") || prompt.Contains("research") || 
+                prompt.Contains("analyze") || prompt.Contains("study"))
+            {
+                return Task.FromResult("scientific");
+            }
+            
+            return Task.FromResult("general");
+        }
+    }
+}
+```
+
+In the preceding code, we've:
+
+- Created a `ContentBasedRouter` class that routes requests based on the content of the prompt.
+- Initialized specialized clients for different domains (code, creative, scientific, general).
+- Implemented a simple classifier that determines the category of the prompt and routes it to the appropriate specialized service.
+- Used a fallback mechanism to route requests to a general service if no specialized service is available.
+- Implemented asynchronous processing to handle requests efficiently.
+- Used a dictionary to map content categories to specialized MCP clients.
+- Implemented a simple classifier that analyzes the prompt and returns the appropriate category.
+- Used the specialized client to send the request and receive a response.
+- Handled cases where the prompt does not match any specialized category by routing to a general service.
+
+</details>
+
+## Intelligent Load Balancing
+
+Load balancing optimizes resource utilization and ensures high availability for MCP services. There are different ways to implement load balancing, such as round-robin, weighted response time, or content-aware strategies.
+
+Let's look at below example implementation that uses the following strategies:
+
+- **Round Robin**: Distributes requests evenly across available servers.
+- **Weighted Response Time**: Routes requests to servers based on their average response time.
+- **Content-Aware**: Routes requests to specialized servers based on the content of the request.
+
+<details>
+<summary>Java</summary>
+
+```java
+// Java Example: Intelligent load balancing for MCP servers
+public class McpLoadBalancer {
+    private final List<McpServerNode> serverNodes;
+    private final LoadBalancingStrategy strategy;
+    
+    public McpLoadBalancer(List<McpServerNode> nodes, LoadBalancingStrategy strategy) {
+        this.serverNodes = new ArrayList<>(nodes);
+        this.strategy = strategy;
+    }
+    
+    public McpResponse processRequest(McpRequest request) {
+        // Select the best server based on strategy
+        McpServerNode selectedNode = strategy.selectNode(serverNodes, request);
+        
+        try {
+            // Route the request to the selected node
+            return selectedNode.processRequest(request);
+        } catch (Exception e) {
+            // Handle failure - implement retry or fallback logic
+            System.err.println("Error processing request on node " + selectedNode.getId() + ": " + e.getMessage());
+            
+            // Mark node as potentially unhealthy
+            selectedNode.recordFailure();
+            
+            // Try next best node as fallback
+            List<McpServerNode> remainingNodes = new ArrayList<>(serverNodes);
+            remainingNodes.remove(selectedNode);
+            
+            if (!remainingNodes.isEmpty()) {
+                McpServerNode fallbackNode = strategy.selectNode(remainingNodes, request);
+                return fallbackNode.processRequest(request);
+            } else {
+                throw new RuntimeException("All MCP server nodes failed to process the request");
+            }
+        }
+    }
+    
+    // Node health check task
+    public void startHealthChecks(Duration interval) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            for (McpServerNode node : serverNodes) {
+                try {
+                    boolean isHealthy = node.checkHealth();
+                    System.out.println("Node " + node.getId() + " health status: " + 
+                                      (isHealthy ? "HEALTHY" : "UNHEALTHY"));
+                } catch (Exception e) {
+                    System.err.println("Health check failed for node " + node.getId());
+                    node.setHealthy(false);
+                }
+            }
+        }, 0, interval.toMillis(), TimeUnit.MILLISECONDS);
+    }
+    
+    // Interface for load balancing strategies
+    public interface LoadBalancingStrategy {
+        McpServerNode selectNode(List<McpServerNode> nodes, McpRequest request);
+    }
+    
+    // Round-robin strategy
+    public static class RoundRobinStrategy implements LoadBalancingStrategy {
+        private AtomicInteger counter = new AtomicInteger(0);
+        
+        @Override
+        public McpServerNode selectNode(List<McpServerNode> nodes, McpRequest request) {
+            List<McpServerNode> healthyNodes = nodes.stream()
+                .filter(McpServerNode::isHealthy)
+                .collect(Collectors.toList());
+            
+            if (healthyNodes.isEmpty()) {
+                throw new RuntimeException("No healthy nodes available");
+            }
+            
+            int index = counter.getAndIncrement() % healthyNodes.size();
+            return healthyNodes.get(index);
+        }
+    }
+    
+    // Weighted response time strategy
+    public static class ResponseTimeStrategy implements LoadBalancingStrategy {
+        @Override
+        public McpServerNode selectNode(List<McpServerNode> nodes, McpRequest request) {
+            return nodes.stream()
+                .filter(McpServerNode::isHealthy)
+                .min(Comparator.comparing(McpServerNode::getAverageResponseTime))
+                .orElseThrow(() -> new RuntimeException("No healthy nodes available"));
+        }
+    }
+    
+    // Content-aware strategy
+    public static class ContentAwareStrategy implements LoadBalancingStrategy {
+        @Override
+        public McpServerNode selectNode(List<McpServerNode> nodes, McpRequest request) {
+            // Determine request characteristics
+            boolean isCodeRequest = request.getPrompt().contains("code") || 
+                                   request.getAllowedTools().contains("codeInterpreter");
+            
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://api.github.com/repos/KGT24k/mcp-tool-search | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 'https://api.github.com/repos/zonlabs/mcp-ts/contents/packages/tool-router?ref=main' | sed -n '1,200p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://api.github.com/repos/sgl-project/sglang/contents | sed -n '1,80p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/docs/references/backend/server_arguments.md | grep -i -C 3 'tool' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 165ms:
+100    14  100    14    0     0     74      0 --:--:-- --:--:-- --:--:--    74
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 300ms:
+100   279  100   279    0     0    860      0 --:--:-- --:--:-- --:--:--   861
+{"message":"API rate limit exceeded for 163.114.132.6. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
+
+ succeeded in 302ms:
+100   279  100   279    0     0    853      0 --:--:-- --:--:-- --:--:--   855
+{"message":"API rate limit exceeded for 163.114.132.6. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
+
+ succeeded in 308ms:
+100   279  100   279    0     0    843      0 --:--:-- --:--:-- --:--:--   845
+{"message":"API rate limit exceeded for 163.114.132.6. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'git ls-remote --heads https://github.com/KGT24k/mcp-tool-search.git' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'git ls-remote --heads https://github.com/zonlabs/mcp-ts.git' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'git ls-remote --heads https://github.com/sgl-project/sglang.git' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 394ms:
+308e6735ef273d51f10dbd152046e037cb6edc55	refs/heads/master
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 384ms:
+7534621a02535560ca41d7e66cd8257e38069e19	refs/heads/cursor/elicitation-system-bugs-b1e4
+1daaa857e1582335bda1c868ad3da6078404c14b	refs/heads/feat/localStorage-backend
+0cfbe3cf0f1ec954295df64bebf55cbaa21903ee	refs/heads/feat/mcp-elicitation
+7157b3ff608cce917571d9fa2c3f6df1b3e24b4a	refs/heads/feat/oauth-state-validation
+43adaf93e23e6ec86f0da72f769b69b8e8868b0e	refs/heads/feat/sandbox
+53ec9b80735a9368bb545dca577ef417e3297bcf	refs/heads/feat/split-mcp-sessions
+4da3b12359820b629436baa97393ae98068588f5	refs/heads/gh-pages
+f1226de2bc0c078fe55e916a9250c8b2fa3d67f1	refs/heads/main
+5143383ae423e596caf80f7c9eabe7926623c955	refs/heads/mintlify/080fc191
+bd15b43e71dc24e60e449c2e47b3f8ca2007e403	refs/heads/mintlify/174d97c4
+f27c57edc0aa795d36f99426711d268944ce8e13	refs/heads/mintlify/406568dc
+9db31aaf3f925c8d74b0da26274dcd7ac26f6c0a	refs/heads/mintlify/417ddfe6
+6b86bfb6e7d74178ec8e3bcdf622f53102dfda86	refs/heads/mintlify/65a3e81a
+e70b46add9ede77fc2fcaa16e8fb3f28454df07f	refs/heads/mintlify/727908e0
+0805e9596143ad15a00ccc5c01a92273c9937a2c	refs/heads/mintlify/74e990fb
+7c0913f3321f741bd28b437ec0f0429489b52695	refs/heads/mintlify/770cea32
+1aeaf3025c3ef42a78803299c98d204bcfb8fc27	refs/heads/mintlify/79f1d30b
+7ef32297b6a9330dc95a0ba060a0ef6c051807c3	refs/heads/mintlify/9ef29668
+580de0f2f4bfa43f7897a4ed42f395f313d8fed3	refs/heads/mintlify/b39bf30b
+97c9ea5fbbacd73b92ba2ce57675d0b5bd763a6d	refs/heads/mintlify/changelog-1777752814
+cfbca06a0fb4e1594557f7adc511220a8ac2fb48	refs/heads/mintlify/e68a118c
+18b16bb1b89611b6b7d3ffaa79b4d630ef8c35c7	refs/heads/mintlify/f3519b03
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 451ms:
+d0802b5ac4d4294b1d1b01bf52085479bc5386f7	refs/heads/0step_adaptive
+48858397c85e0522362ec525090e166610418c95	refs/heads/5/N-Qwen3.5Opt
+21728650c2e0ed53e032070976e8f994b08b1809	refs/heads/MingxuZh-patch-1
+512fd60013f28c45f6990f3fbc1d2e402e39e959	refs/heads/ac8452/1/0
+2f23a761459f33763c8f44d0c832d71f7b1d0e88	refs/heads/add-gemma4-amd-accuracy-test
+6137600a64ac2b26549ed7e358976168f7ddfc73	refs/heads/add-glm51-nightly-perf-test
+5954ec49deb73c639a6e0e67d79313f73a9de38f	refs/heads/add-reasoning-usage-test
+0b95d13e2d2518bb7c8fb493b2196d5e036118cb	refs/heads/add_amd_dp_mtp_car
+8656da51fa6251d50acedf139027ec1ca59476dc	refs/heads/add_qwen3_5_ci
+74b3a02a4f990e6243a0a3a5874d4fa1e3fe64be	refs/heads/add_tls
+2fae403eaded9ad11430fe902b44ee9dfb020733	refs/heads/add_use_seperate_warmup_in_bench_serving
+4e0d3aa16fa73ac9e7c475beb176664847e3fd87	refs/heads/add_v32_pd_test
+5686d7e4de99f0641a65dc742ba999c5f056f69c	refs/heads/adding-pin-logic-docker
+d446c297501642c41a7e8f80d2bef8df4da9b60e	refs/heads/alexnails/bazel-with-generate-deps
+400e22a178fa1a39f5392a95cd4277843d5fa9a1	refs/heads/alexnails/ci-install-rust-release
+57223a07f60ea01d1ae598af157c1c4927dacacb	refs/heads/alexnails/cpu-scheduler-perf-tier-ab
+ae5725251d3a17a858437f31693208ba7eef5303	refs/heads/alexnails/cpu-scheduler-pipeline-overlap
+e6d8aea52000449f748fd366b55050c3e1f0ba7b	refs/heads/alexnails/decoupling-scheduler-decode-fix
+36aae8a628e6c631acc392a8ca6cbfafa429f40f	refs/heads/alexnails/dp-attn-perf-fix
+5d8d4f6297b54ba9b11a5d5bb02a734dbce571ad	refs/heads/alexnails/fix-rerun-test-cpu-protoc
+a1fe7c11b5ec760091da4abebc0ccbd55a665ed3	refs/heads/alexnails/grpc
+0ea2843175004895c69e2e2bc92a60ace87cd012	refs/heads/alexnails/grpc-phase1-fixes
+6ff8be6666e92cb6cfe27f6cc5d4c49879c6e1f4	refs/heads/alexnails/grpc-phase1/openai-stream-hook
+69c72d4f6ca6025bf8f29ea14b65087d7670a69a	refs/heads/alexnails/grpc-phase1/python-bridge
+14eb1453b0e18d82b563bef1adda9a05cf148bfb	refs/heads/alexnails/grpc-phase1/server-integration
+d6516af5192634ff59453937cfb0d5356e17038b	refs/heads/alexnails/grpc-phase1/tests
+25e863e44045c82501bdf7c3a556ea8ca92e3f41	refs/heads/alexnails/kernels-1
+1686d1d1d156646483f0f80141ac42b8d5ddaa94	refs/heads/alexnails/lint-ban-pickle
+7eddd5fea2a2964b84d4e31bc029ccb6181ca075	refs/heads/alexnails/macos-local-dev
+a2e1b898407cee919a2930643b6586ada0ff55a9	refs/heads/alexnails/mlx-hybrid-batching
+b2521eb9378a2431caace78d61f676b504521c32	refs/heads/alexnails/model-cache-sync-migration
+decaaf0af2e4bf48c4495e262587ee3ac5cd955a	refs/heads/alexnails/rust-vlm-tile-preproc
+95c14f6ddff83413de84172608d39886c57c3efb	refs/heads/alexnails/tokenizer-2
+45926e174bcea4ed480cb2ac8a0cecf17aa32c04	refs/heads/alexnails/tokenizer-3
+233f5e133f70036dd1fe66dd9b4b13acea025624	refs/heads/amd-diffusion-aiter-fix
+166df1a73d57702c80e91a645cb4774a46968800	refs/heads/amd/add-glm51-mxfp4-nightly
+f85ef4d57f8513fbdb253949d1772a8e6cd3ae65	refs/heads/amd/add-glm51-mxfp4-nightly-clean
+54b5d1ce06d8ab02e34581e1c2535effe3ee5a5e	refs/heads/amd/add-mimo-v25-pro-nightly-tests
+a1843524a5ccba645b361d9e22ebbc833f1feaea	refs/heads/amd/aiter-ci
+da281081ce380252f82ee52054ebb92864316fcf	refs/heads/amd/deepseek_v4
+583b1b65bd6d023d6acf7fbf1f20fced59f79aa9	refs/heads/amd/deepseek_v4_0430
+9b5cdbabf130d65d1099149ea9083939af3e7b6b	refs/heads/amd/deepseek_v4_0520
+22285d813ab83a6d28834397c05ec2d7298d0036	refs/heads/amd/deepseek_v4_migrate-main_0508
+07dc099bf3ae9e98fd2e485c1c26f2935c0a55c3	refs/heads/amd/deepseek_v4_rebase_main_0509
+3da2e867cb91230089f4dd5cbb1fd52bc0bb77c9	refs/heads/amd/dpsk_v4
+06b31104c1b1a157f8edb377b69a90b3fee4d310	refs/heads/amd/dsv4-rebase
+7924461e64c56bb0d945b73c1ecf7a895431638a	refs/heads/amd/e2e_amd_docker
+c7c4b777e4ca669711427c54b99c056f6132bec8	refs/heads/amd_diffusion
+14b229cd0318b6b84c04f1a9f8645d6a431b25ad	refs/heads/amd_fix_aiter_checkout_dockerfile
+9c66f9d576e1fed89ccf088a8fbe91c4e818eff7	refs/heads/amd_fix_ci_0525
+51319bd25f6ce24a30a8c9555861f7cacfafaf0a	refs/heads/amd_fix_ci_mi300
+ed73e5be5a1f1ab73052c72675488f5da10468f5	refs/heads/amd_fix_dpsk_0511
+67c94cc996271f63a1434caef9fcfb52784b084b	refs/heads/amd_fix_dpskv32_basic_0518
+30526707ecee46bed42785503562ed91e692bb6e	refs/heads/amd_fix_hf_path
+01fedf90eb5384a479e1640907828fc1710d4463	refs/heads/amd_fix_nightly_0506
+3d445b12011d9a72c85362a2c7cdc9b97c6d9556	refs/heads/amd_merge_720_dockerfile
+483a3540bf34632aac1a3397433c6cef3bdfe1c5	refs/heads/amd_minimax_nightly
+58604f0d395d5d65e66686b7c4654089abe6ffd2	refs/heads/amd_mori
+bb1dfe17827b8c79d40bfd3c8c6f37f218e370b3	refs/heads/amd_numa_balancing
+94c31aed108637e48aabe599eda47f0cfa4ad585	refs/heads/amd_pr_25266
+91f021b1f86f823687c07fdde7425bce5906b3a9	refs/heads/amd_relocate_ci_test_0528
+68cd29e15c8505854947057d133b1dd0f9ca1fb9	refs/heads/amd_test_26662
+4c7f30da4397e0ecc500a861fbe6435b71c367ba	refs/heads/amd_test_ci_0602
+5967633e9cee29b2b74c8aa5c20d1346af1bad44	refs/heads/amd_test_pr_21655
+27f70185f2ec1fb67532b3fe867d22d290a324ec	refs/heads/amd_test_pr_25898_0523
+0c451253fa6e27b57b8ddb7d9baabf9e87ecaec6	refs/heads/amd_test_rocm723
+74b943f48c8cc1644d2294d08057aa6cfcc27cef	refs/heads/auto-detect-environment
+0624deb8baa57f4be82dd941793ece7ada69f6ea	refs/heads/backup-pr26517
+2b3baa1d7f0a674c012fc8e1bf957731673a0c8f	refs/heads/backup/cheng/test/attention-runner-combination
+cd40d77d01670ba5d7e68d517ac32e5403a4839c	refs/heads/backup/mmgen-official-gt-alignment-20260425
+be9d3f1708f32df06532e1b5359dfef61c9e3595	refs/heads/backup/reland-pr26134
+311c741b73820197c20db4e0ae433d2908f4a725	refs/heads/baizhou/patch-4
+90f8402d5a9dd910c97b3af07264ea18b151e539	refs/heads/baizhou/v32-refactor
+da42cc33baecc74a40639c51b4d0c27c450ee1b9	refs/heads/bhe/grok2-piecewise
+34ae9246f2e2b367bbb29e1588485be607fe5854	refs/heads/bhe/radix_linear_attn
+aafdbfaceacd70067f051a491d37b42ecf25204b	refs/heads/bingxche/0415
+a5144234346c5f403dac0255687f20504627e53d	refs/heads/bingxche/add-aiter-fusion-8-gpu-test
+9973bf20b8fc97190689734370e6ea04c2c0ca6f	refs/heads/bingxche/add-car-test-amd
+229d14ace79fec81f385d449b2419cf944196fd2	refs/heads/bingxche/add-dsv4-pr-ci
+0d0fade902d4361054e67b9e77f7ca456733237c	refs/heads/bingxche/aiter-ci-fused-qk-rmsnorm
+04ea816a56734e469600ff9b68e477e8311679f9	refs/heads/bingxche/aiter-reinstall-triton
+04dcab2239c9a67de6e8f596ed5b556d2857f9ea	refs/heads/bingxche/aiter-unified-attn-for-qwen3-vl-8b-ins
+32b0f739e5ca2d09ad8f9e7c20165782b5cd9078	refs/heads/bingxche/debug-dsv32-mi35x-mtp-mem-access-fault
+18d41150303f9385df865882705c10180aeac386	refs/heads/bingxche/enhance-amd-ci
+6c8bbc7ce8fdc4c744e1a82b3d28b0a524b34526	refs/heads/bingxche/fix-amd-ci
+22effd504db1d5fcc780341b44d653a759dc32f3	refs/heads/bingxche/fix-amd-mm
+eac71796ed9d3ada5a1516257a389f6a843ac840	refs/heads/bingxche/fix-gptoss-mxfp4-20b
+9b65b0dcd78679582f4dc0ca884fba9592c185c9	refs/heads/bingxche/fix-install-depend-error
+9b17730ec791ad54163b8bd4408200dcab2e5322	refs/heads/bingxche/fix-mistral-7b
+78dcd82f3888a0ad0790279cd6515d6f0dd50dae	refs/heads/bingxche/fix-multi-turn-logs-prefix-2587
+22d55e913942ca408a9f0b00c24213d58fdc7131	refs/heads/bingxche/fix-no-registry-found
+0a4c1876c458113754ba32429230e15e8bfba34f	refs/heads/bingxche/fix-peft-torchao-amd
+9338ead4a68b1e17f97a1d6430ec97f5f0c95381	refs/heads/bingxche/fix-r53-dac-snake-rocm-6885
+b4eca800a2549e034c5603216b5df6fa2cc6c901	refs/heads/bingxche/fix-rocm-layernorm-compile
+55f4fc6908177a411a5341faef1a9c335e83463a	refs/heads/bingxche/lower-hip-eagle3-fwd-occupancy-threshold
+134d74afc16a374ec58ad07e31faacfa4966a560	refs/heads/bingxche/mxfp4-aiter-swiglu-gate-mode-5279
+eaad9c2e85aa77b45722cd5f31e4d918e313a8d3	refs/heads/bingxche/push-image-to-local-docker-registry
+0c9b06b4ed13b158a518d7f972c75f8290cb45bf	refs/heads/bingxche/register-amd-car-test
+701fb5de3c1580846d8d4fb4f3ab5315928c9518	refs/heads/bingxche/rename-nightly-amd-jobs-df8c
+8fbb557e0c92d5088ccfeaa970ea030b32382fdc	refs/heads/bingxche/revert-cache-host
+f8020bf13754e36b046174567e3256f4561b7206	refs/heads/bingxche/revert-mova-audio-vae-bf16-test-6885
+8f2a26ebdd3cdd28b0badec44696c80d441365c3	refs/heads/bingxche/test-aiter-upgrade
+d79a1bc0975daa1a839dec2b6dd4d69e0eeff260	refs/heads/bingxche/test-amd-mm
+741f82b28fd1f502a2c9b54ce376a1d85367c5c1	refs/heads/bingxche/test-count
+02290dd3eb1f9ffe7b14802b45057e9e6d4f3c5b	refs/heads/bingxche/test-docker-cache
+49a3f51f22e87c9b5542c9a80d0571abfd49c3c4	refs/heads/bingxche/test-dsv32-mi35x
+ebba21e74b3f1f68bfb158880ad29ee06b2ca618	refs/heads/bingxche/test-gpt-oss
+925028096458f609cbc8fc8a8dd85a0de5f74cc5	refs/heads/bingxche/test-pr-20023
+d5259bcbf2dc29e503752a355466dac130648507	refs/heads/bingxche/test-pr-21442
+71d4e39ddf47edf9e958f1db784d32f35c4a4227	refs/heads/bingxche/test-pr-21839
+edb1ca4513c08377adf2c113670395340c240f7f	refs/heads/bingxche/test-pr-22037
+b74846fd5672642de8e6d9b96e19c7cd1b7ca5ce	refs/heads/bingxche/test-runner
+16e0f7c5307f6e7d06a27c8d251b6cd33fb479e2	refs/heads/bingxche/upd-aiter-scout
+aaa682346ee562cf49e83e0a19f2c709a2fd8ff4	refs/heads/bingxche/upd-amd-ci
+d0e8d3c767478c538377261496d737c4177c039f	refs/heads/bingxche/workaround-int32-overflow
+d38f5033ac97838925fded4c9986cc5a7b81ceac	refs/heads/bked-default
+49c43dfcda034204e77d23ea8ad0d7fa8096c54e	refs/heads/bot/bump-flashinfer-version-0.6.8-6f8d
+91823a36f3dad9d0fec9e9ed2f96baae7ecb5ad2	refs/heads/bot/bump-kernel-version-0.3.21.post1-5f39
+fb3dd9bb462480d464ec33712743da004faa9769	refs/heads/bot/bump-kernel-version-to-sglang-0.4.2-3936
+a54a90c3d05aa929103dfec0f6144fd8defea3c6	refs/heads/bot/bump-kernel-version-to-sglang-0.4.2.post1-3eff
+5536d8c3c913b95d806a69574213698ebbbc52cb	refs/heads/bot/bump-kernel-version-to-sglang-0.4.2.post2-c64d
+52025d6f9f75c0fd86146f17ccbc3ebe99b5332c	refs/heads/bot/update-est-time-20260418
+c8058c2e364c90f9688d297eb7130685e55abe8f	refs/heads/bot/update-est-time-20260420
+228d4c850657e1fd969dfe3bf195887160f3e594	refs/heads/bot/update-est-time-20260504
+e9aab586893920a7160a29b58d0f22d53b766eaa	refs/heads/bot/update-est-time-20260511
+50578e6675a1265991ab0b64ea309f9d3d80787a	refs/heads/bot/update-est-time-20260514
+c2a380fbddccb98019d1e29798e7d6065d5b3eac	refs/heads/bot/update-est-time-20260601
+ccacd44817c666fa3ac2c5adc771c48ceb9b427d	refs/heads/bot/weekly-update-est-time
+0e6f34219ee31a5c10a9c2751e0cace6fab9d1b3	refs/heads/brayden/add-sm120-tuned
+e97a54663d6f3a5416652c0e4f97bc262ab4eacc	refs/heads/brayden/cute-dsl-mqa
+91073ca16656c9969e69c30e33d45ecc73ce0b7e	refs/heads/brayden/deepgemm-pdl
+644de225021897935775f11a26063d833e4ed98b	refs/heads/brayden/glm5-router-gemm
+2047e16e5f8b7f66cfbff3597b3a20f67788a7ce	refs/heads/brayden/nemotron-2
+5803249b1629b78a916205e97a4daf41951ae370	refs/heads/brayden/nextn-4-merge-main
+f5ea27545ae35c6ff2fe73ad853676f23936c407	refs/heads/brayden/quick-triton-fix
+883851eeb79cb9e47a7cbf891889cf07952541c2	refs/heads/brayden/reduce-fp4-ut
+1cbcabfdbddc63ee9f2d57e0d327708501d7418d	refs/heads/brayden/sm120-updates
+ebd70b50ec6ae2b700c6414ed96738329ef9d07b	refs/heads/brayden/weight-loader-refactor-part-1
+57b7f8ee438c17ec7069ee4f349fdff6db8d8c44	refs/heads/build-commit-sgl-kernel
+43c1422d57d0f65f3d9e3b5323f4f3fc789b67ab	refs/heads/byron/cherrypick-23734-onto-miles
+c5b61cbe69a317658e4ea33577505ecba18cf6b6	refs/heads/byron/compile-deepep-timeout-fix
+9772c0b81515fd2c1966a9eb1d9838fda8bcb233	refs/heads/byron/refactor-pcg-mm-2
+d172c9dbb406836ba59fcb7ff81f1ac2273c3f9b	refs/heads/ch-wan-patch-1
+f4bdf08609bc6b9dadd5bb5edf78f4586d566088	refs/heads/ch-wan-patch-2
+613578c1a45a4e0e4eb6cdf38191bce6f814f27f	refs/heads/ch-wan-patch-3
+1efabc2ee6b6f54963f40a6b7cca2cd030298aaa	refs/heads/chang/tokenizer
+ed89852e95be543f53e31aca78cb59a91035777a	refs/heads/cheng/ci/in-process-group-v2
+672959e03887ba47504df0e54bf555b84be822f0	refs/heads/cheng/dev/load-sliced-weight
+061aa68141e78b67e3dc054e23293452f9d7649d	refs/heads/cheng/dev/pcg-buffer
+66b31bf6e72f1cc553322b71360c9118d76d3f50	refs/heads/cheng/dev/pplx
+1c74b43b3c8aeb0a123051efc5f85434fd473c4e	refs/heads/cheng/dev/skip-padded-pcg
+b4e751fb163451730f9ceb2a99f3ca428bb484d4	refs/heads/cheng/fix/swa-trtllm-mha
+af65587ccab5d0c66cc028084e472174b9b447e6	refs/heads/cheng/fix/triton-kv-indices-stale-sum
+a8bb9a96c52fb242bda610837c25310cd381d3ef	refs/heads/cheng/move-activation-to-jit-kernel
+5821e8a682441d5b5957e0a1fcfa25be967826a5	refs/heads/cheng/presharded-load-format
+596d40372f5219c8c8c5518dda3f26cc9d14f0a4	refs/heads/cheng/refactor/aiter-moe-runner
+2ea30580b16db0b0d669ad1143dbed3355c0ca98	refs/heads/cheng/refactor/attn-backend-capture-replay-round2
+b17e882681fb9be638077eaee04394fb5b481ca1	refs/heads/cheng/refactor/attn-backend-capture-replay-round3
+d83050e99dbb9723b7a8dd7c78d999d1a78aa7c9	refs/heads/cheng/refactor/attn-backend-capture-replay-round4
+bfa428ffeabfcc2eb5913c0799975f0c74beb2b7	refs/heads/cheng/refactor/attn-backend-capture-replay-round5
+f47da9be40b130870d0b3e25c3f414b1d60e0ab2	refs/heads/cheng/refactor/attn-finish-plan
+15b8766382ed8eb84f277bc30c109de0720214e8	refs/heads/cheng/refactor/attn-registry-followups
+21c5115c82990d9b9aba575871ae06271f782287	refs/heads/cheng/refactor/attn-step05-a
+0aec48d4173255e829ed893951d562781cbd05b7	refs/heads/cheng/refactor/attn-step05-b
+f32ca8b06696686801cf3b8c3ec40dfd983772be	refs/heads/cheng/refactor/attn-step05-c
+59540356a7e223af2fa2c0d9fcdc940485af7ff6	refs/heads/cheng/refactor/attn-step05-capture
+f84a3e4c627e77d443e6fff818292eedfe1cdfdf	refs/heads/cheng/refactor/attn-step05-residual
+dbf3650b29ab9a00777e1316c8ebfbed7a6156d0	refs/heads/cheng/refactor/attn-step06
+c8492918d5f245c8407e5910072d524665e9f61d	refs/heads/cheng/refactor/attn-step08
+b1587ef6866dca4bb17cb4a24a092209e4f9518d	refs/heads/cheng/refactor/attn-step09
+89e3b80927a821f89598bf99acaffcd6e1b9a274	refs/heads/cheng/refactor/attn-step10
+d8d27c3a947349109772501381615b1643b5602e	refs/heads/cheng/refactor/decouple-forward-mode
+289bf347b9a36556e437f463e19d78e5399cc8e0	refs/heads/cheng/refactor/deepep-moe
+2d92224086afeb60b5ef3acb8a20e07b8d07b170	refs/heads/cheng/refactor/dp-pad
+20b348b227c045027b01db834f4bd747879ca2f6	refs/heads/cheng/refactor/kill-replay-side-channel
+e46983f36dac67627aac9e815064176ee7fa021f	refs/heads/cheng/refactor/moe-cleanup
+0e4be2b5bf6018c93b1af08ffc40ff2a6e675d9d	refs/heads/cheng/refactor/move-expert-mask-to-dispatcher
+0141f427e3911ea77d513d99d870c5c546f7ae82	refs/heads/cheng/refactor/req-len
+b3e7697a2c5962e367f7542c8867f37e755cba05	refs/heads/cheng/refactor/step02-pool-out-of-fb
+2660020e5fe9788666d5d5ed1cf19c061e67d037	refs/heads/cheng/refactor/step02d-fb-fields-backup
+18c166326559739a9d2c8f4b605c3270a212f8ba	refs/heads/cheng/refactor/step02d-swa-internal-translate
+4fdc3fed427df080c5d1551d9af1760c6aca2cdf	refs/heads/cheng/refactor/unified-attention-interface
+78cf89f17a9a391a58edf57d7930a7534e344fd7	refs/heads/cheng/refactor/unify-attn-backend-cuda-graph-capture-replay
+0121ce32ffe8aa2c0370d7c7b37d90f9bf2140e0	refs/heads/cheng/swa-translate-int64
+a934243a55edaadde29e504e5467e407f21f831e	refs/heads/cheng/test/attention-mutation-testing-journal
+374180b0e9e11cbfa1a1097ec02ccb5301f2b074	refs/heads/cheng/test/attention-runner-combination
+74ae58cb7584e3b376c62da6ea2ec39b072ead06	refs/heads/cheng/test/attn-coverage
+f8590f3cc58244cd23a94152de8fbba0db1dbde4	refs/heads/cheng/tmp
+6ab99dc41a85fbc9b84cf2f40fe63b7b94d29889	refs/heads/cherry-pick/79ea30d1f-to-v0.5.12-4fac644b
+036423f99029675020946bc249d2c6b6b2bd09b9	refs/heads/ci-cpu-hf-cache
+98baa7416a9f8224bf0538f4b2ea8fb43325510f	refs/heads/ci-maintain
+95a15686bf0587f1a989d370dc97cc4dafc78b88	refs/heads/ci-monitor/bump-est-time-20260506-233123
+d28989ac543b6807604f796ecfce97346e216956	refs/heads/ci-probe-rate-limit
+d0531606b3ab51351e0c5daa13e1aa69f173f31c	refs/heads/ci-uv-venv-migration-fixes
+cf5a2f8ec39f85070ef5df3f164a8af3a66d8cf8	refs/heads/ci/add-5090-test-stage
+753b0b07b28d30470aa1e0df07fb19b92884d9fa	refs/heads/ci/add-hybrid-dp-ep-tp-mtp-to-nightly
+fec69162f0ac80bf1296b77911f55cf221ef4a11	refs/heads/ci/auto-retry-scheduled-failures
+6c52815e2860aa7047279b122d812a9e69ae110f	refs/heads/ci/detect-consolidated-pt-format-mismatch
+9d14c6ac22285597822d216231b2b0bf4b7bca7c	refs/heads/ci/disable-gb200-stage
+41065161d0ffe64176d34c12c879b5bddd413351	refs/heads/ci/dsv4-pd-disagg-aime25-b200
+71959691ca840e2ab6a260a2921c8b1e4648250c	refs/heads/ci/dsv4-pd-disagg-nixl-b200
+ba8ec3938962e7901e54aa00ef48616b1448aefe	refs/heads/ci/eagle-dp-attn-nan-test
+a4787ad1f1722de4538bd6d2a8bdcda2a4bc1cd3	refs/heads/ci/enable-deepgemm-warmup-8gpu-h200
+dfd5d35736151c540f9400d6a1acdeb6c94feb58	refs/heads/ci/enable-weka-docker-cache-seeding
+e966b2b06ab043765e70ad9f4d21a7498b609ae8	refs/heads/ci/failure-tracking-infra
+3fcf466dfe2bc8a3e801a821950bfad5239cba56	refs/heads/ci/fix-blackwell-pip-race
+00d5f6ae455d35e0be9e55f5ab099e2e20a38e87	refs/heads/ci/flaky-test-reporting
+76e8274fa4c67affde327a6b79ef2f6fcd05b195	refs/heads/ci/migrate-5090-tests-to-registered
+8d7b2c7f177380b824dccb32653cf471b59262dd	refs/heads/ci/migrate-quant-tests
+40c6ef67c518c00a7fa059c6908cc55efda898dc	refs/heads/ci/nightly-1-gpu-5090-job
+b5c0cca162cf9bbac2d68fc1cf5fdf0f197c2573	refs/heads/ci/precache-hf-models
+37be8aeafa305d0477e62222a72249648c1a6f6f	refs/heads/ci/precision-test-dispatch
+b5cd91fc675500841cbfa04c4ac88f1ed463e21c	refs/heads/ci/weight-checksum-validation
+c01d84691f65201d0bdb0d26838b9cf0361b93b8	refs/heads/cleanup-5090-gpu-memory
+319144c3ac88432914ed1443c10b79f1f1e78ec0	refs/heads/codex-group-norm-silu-artifacts
+4cbef213d70eb3b6e02f83ad532af62b9812864a	refs/heads/codex/add-deepgemm-bump-workflow
+653e4419e80867b24cb9bdf77dd2249add0c795f	refs/heads/codex/component-residency-strategy-compat
+56e539f769a3c5058402577b792d21f4c9bf8322	refs/heads/codex/cosmos3-lossless-perf-20260602
+07222f7e8aa932f08b0193602ea72a9d3e7de2d5	refs/heads/codex/cosmos3-video-gt-test-20260602
+a7bcdc7509b57eb24b31f79aab069439b9da4857	refs/heads/codex/diffusion-cfg-text-batch-20260523
+0e0fdec71e271b8f373f5afb4ffefe49c1c0a788	refs/heads/codex/diffusion-ci-gt-sync-files
+c424702eaab9f08ca17e1613c841745c8de090f8	refs/heads/codex/diffusion-jit-kernel-optimizations
+f2ae45da210d75fd0992ee45ddd1aba9cbc79663	refs/heads/codex/diffusion-profile-stage-names-20260523
+c7092ae6028601b86b5f7fa1892a93f4fc35f91d	refs/heads/codex/fix-fa3-varlen-out
+2dce674d26a73f19c5152138548312e1b9417941	refs/heads/codex/fix-glm-nextn-v-head-dim
+3b2d125e116e31bb84b3f1e6e2ffdaa56d87881c	refs/heads/codex/glm4-lite-shared-expert-tp-flag
+4ab52c0b46700458f1765c3f51f9ced70a6ba500	refs/heads/codex/glm47flash-fa3-out-guard
+f3a5b370bd184706a689c6862789c9dcfd7e1057	refs/heads/codex/glm47flash-topk-shared-jit
+eac55cd7bb4f8fa2d1db63abba16f0f33e0ace59	refs/heads/codex/lingbot-full-runtime-session-refactor
+e44dab6653d6b95559790ad37caa26cd29222859	refs/heads/codex/ltx-official-gt-workflow-20260506
+22d4016ed991b8429c47a46e649d2b48c1bfff87	refs/heads/codex/ltx2-from-862f-clean-main
+1d9ae6479a1805e38db15c7f88022be02365e4ea	refs/heads/codex/ltx23-lossless-perturb-mask-20260505
+d269e23c787b2ae28e03e8c188c8d983668204bd	refs/heads/codex/ltx23-origin-main-20pct-20260505
+317452beae73c846a78282eb6e0a720db7aaba03	refs/heads/codex/mamba-track-interval-1024-20260523
+93e93f8388a665947bc4272301038a671081b296	refs/heads/codex/mmgen-cfg-text-batch-20260521
+ee6f5c8ba7f5ae4963a75004c8afc95156fca567	refs/heads/codex/omni-u1-orchestrator
+fad591b0a62ceb94cd6d0d597f49e16b0ad0b444	refs/heads/codex/port-pr-24082-specv2-disagg-grammar
+41bd891e5117c8e3a5a2614c05429a6287bc4068	refs/heads/codex/post-response-tasks-20260503
+148f208a121920ae1f9cdc8b7d589f1bcbad1938	refs/heads/codex/pr-21247-thresholds-20260502
+bebf841911a27372630f23fcaadd321c28594edb	refs/heads/codex/sgld-bench-case-fixes
+1499ff10dfad51448f0b64055ef5f135b534513d	refs/heads/codex/torch211-official-gt-gen-20260502
+08bad36be0212765a8118b8b14efc111ad1b4878	refs/heads/codex/ug-bagel-interleave-runtime
+cbe091b5e1934f86c2510ab371ec5bfde459c6c7	refs/heads/codex/ug-g-runtime-proof
+b74c13b654035641004b0d1ad83819ff0b497207	refs/heads/codex/vae-channels-last-3d-followup
+11b5d81f9ff66c15b0a308a8306df1a386150b8c	refs/heads/codex/vae-channels-last-true
+5df1d8b3e9e9fd8ed7ef0cd0c172d8823d7626fb	refs/heads/codex/vlm-preprocessed-01-core
+459217430390df83d0418bf69cdddd9d9b901c99	refs/heads/codex/vlm-preprocessed-03-tests
+494d6e9a30c14a80668876bdf08bf407a4ef5679	refs/heads/codex/vlm-preprocessed-06-qwen-copies
+9b156a4e0663efb36f598bc7c2c9ec53a073e15d	refs/heads/codex/vlm-preprocessed-07-qwen-offsets
+65d5c30f2bf0945f1f73bb73dbf278f5de63519f	refs/heads/codex/vlm-preprocessed-10-pretokenized
+71123606e79d67a6e5818c583c5f24b8e1877405	refs/heads/codex/vlm-preprocessed-11-input-list
+06568fe1e7c83b2badbc1c156e738374d02c5009	refs/heads/codex/vlm-preprocessed-12-shm
+d0303c47da4564daf290a64bf7b3166d89bc9dc8	refs/heads/codex/vlm-preprocessed-13-grpc-dispatch
+986c24b8fb2446013f3545bce8d219448028a53f	refs/heads/codex/vlm-preprocessed-input
+9d84268705a56df25842d6c7e4474b3f2ecf5230	refs/heads/codex/wan22-bisect-9d8426870
+03e3ce73896ee1ec4a4d3cd2850fcda2d5f05840	refs/heads/config-lifecycle-tightening
+7dd5ebcd642736d0bb54606df7ab7db99c6fdea6	refs/heads/consolidate-ci-weight-validation
+6448d51b6072b1f539a5e803223466252726c6b5	refs/heads/cookbook_renovation
+106fb1c4724bc241db0ca512c623dbd595533b2b	refs/heads/copilot/add-bootstrap-server-for-encoder
+abc297521f4c6b35d3f5597dff5d72df3a446721	refs/heads/copilot/add-decode-kv-cache-offload
+78043d444837a231a108f4049dafbc6c9e2545a6	refs/heads/copilot/add-epd-disaggregation-architecture
+8cbeacd783dae2191a43c3d74871adb7ae890874	refs/heads/copilot/add-new-feature
+78043d444837a231a108f4049dafbc6c9e2545a6	refs/heads/copilot/add-pipeline-parallelism-sglang
+ada52e5972aee0b34f606c7dda30255d52950b38	refs/heads/copilot/add-python-decorator-introduction
+78043d444837a231a108f4049dafbc6c9e2545a6	refs/heads/copilot/add-sglang-diffusion-support
+78043d444837a231a108f4049dafbc6c9e2545a6	refs/heads/copilot/add-specforge-training-framework
+4644d2821357eb7e2eb53264c0084cf0f11ea538	refs/heads/copilot/check-stars-for-issue-21846
+3c0a6c6987562a8fcd5c01b18e3b080faf3e32ca	refs/heads/copilot/chunked-prefill-mask-attention
+78043d444837a231a108f4049dafbc6c9e2545a6	refs/heads/copilot/create-presentation-script
+efee62efa6dc3b650c784a1bae42a372805318c0	refs/heads/copilot/derive-softmax-gradient
+3c007ee5d406c2cffd6cfa4edc8abdf66ed0c697	refs/heads/copilot/discussion-on-chunk-prefill
+9d576393fa36a253f2f19ff3df9640d9ba3eb6ce	refs/heads/copilot/enable-free-thread-support
+9805090a51773ccd290b6835b68e937816c5d282	refs/heads/copilot/enable-speculative-decoding-small-batchsize
+2cf3ac515b8ddebeda20b12cb7a58d83219b40a9	refs/heads/copilot/explain-chunk-prefill-process
+727a182067f05f70924f24c259345693b761c7e6	refs/heads/copilot/explain-code-functionality
+1c5c6dad5e912829cff2a249de26691511fc6092	refs/heads/copilot/explain-conn-py-code
+082eaed0a4ac295a2b9bd9785d805f99cdc02c10	refs/heads/copilot/explain-conn-py-details
+4c71c48c5250a250f52e3aabac8a5fa185cab037	refs/heads/copilot/explain-decode-schedule-batch-mixin
+3d3a32c0b9f50962ccdddadda02c52a59e45bbc8	refs/heads/copilot/explain-inference-parameters
+be0277f9a0e474ba14b3ed63e8a7316b1e2c81d1	refs/heads/copilot/explain-kv-events-code
+abc297521f4c6b35d3f5597dff5d72df3a446721	refs/heads/copilot/explain-prefill-py-code
+efa71ce5ab2a2fd669d09c7fd166967c3b442e41	refs/heads/copilot/explain-sglang-chunk-prefill
+925110ce7b732ab0502f7ae44a770823c7b04121	refs/heads/copilot/fix-build-and-test-job
+c37200f5e4305aa84e79051c74a60aa363a5e377	refs/heads/copilot/fix-ci-errors
+66727dbc4621de9a548740a6d2d71b53270d5cc5	refs/heads/copilot/fix-gloo-peer-rank-connection-issues
+0400edb514344a21e18d943ee724636466304c68	refs/heads/copilot/fix-lint-ci-error
+d6c9d9116bdc5ac5a6034a22d6d825198e39ac50	refs/heads/copilot/generate-ppt-script
+16f306fd85b647ec47258d124eded662d5eaa599	refs/heads/copilot/how-role-system-and-user-combine
+48daa831ead725e62ff37de5bacf89b35bdd0d78	refs/heads/copilot/implement-reduce-topk-gemm-permute
+314d6ecf0880eefbd9d56cdc21e1b57bb390df80	refs/heads/copilot/install-cu13-via-pypi
+87cdf2ce191cbdd569a7ef39c8188df53292612e	refs/heads/copilot/load-model-process
+89affff2904dc41e76bd4e045004c668eee3692b	refs/heads/copilot/research-model-loading-sglang
+862d39e06c4cbf44c2045f0ae91d1743f28f6313	refs/heads/copilot/review-pr-21661
+33bd5149b4226b85f51ab72bd69b1b3255deecbd	refs/heads/copilot/set-torch-cuda-arch-list-9-0
+3c1c66a0d6788ab25c385c43f98d5e56f94a0f13	refs/heads/copilot/sub-pr-12948
+32ebddc3e0bf6302f3d7b44247fd762dd7b53d4e	refs/heads/copilot/support-kimi25-epd-encoder-only
+8f0b7e92befefd76a06ac7878dfa15ac4a4cf65a	refs/heads/copilot/track-flaky-ci-tests
+7c399f3c82eb5b92f183022b0661a7a334e3059d	refs/heads/copilot/understanding-flow-matching-models
+cd3d47f7403ced3ffe43b917a4f4e3a19459cd40	refs/heads/copilot/update-make-layers-function
+86480710d49e9da2fd75fd8f20b36b3e7d9f15ea	refs/heads/cublas_qiaolin
+4bb88a42a9f83713f63b5232afb6386de1875eb9	refs/heads/cuda13_memcpy_hicache_restore
+42ff59ab56bb6e92d964ab959c326e00720931cf	refs/heads/cursor/amd-ci-use-system-triton-f7b1
+e46473b4f79301e23d7624463cb8c25ff212053a	refs/heads/cursor/bypass-fastfail-continue-on-error-f7e6
+e12c78aab6da868f6ef67609fba24657f73b1ca5	refs/heads/cursor/check-readme-file-composer-1-a466
+0a5afc002ba23c00cf0007ef44185ebfd2432391	refs/heads/cursor/ci-experiment-workflow-9019
+e0c237bd21591079d85986656ce0907fca18f0b0	refs/heads/cursor/clip-score-log-visibility-d45f
+686d7a6c6e4e32d130632e2434c0de24e992d79f	refs/heads/cursor/dispatch-pr-25301-moriep-oom-864f
+44ec79864fe2afb629f462a4415e517370ca6cbe	refs/heads/cursor/experiment-mi325-parallel-1319-9491
+4671c11051fa77b6f221795b6862b01023021a50	refs/heads/cursor/fix-amd-2gpu-nccl-flake-b0de
+4aa958a663774d270e69b339db24447a39358538	refs/heads/cursor/fix-amd-ci-log-formatter-prefix-5d53
+7379c8349e1185e01c8bc161748295642d3624dd	refs/heads/cursor/fix-ci-failure-monitor-silent-401-fc6e
+3613585a960bb9d11d0ecbcea3ac66ba65dd0ce5	refs/heads/cursor/gpu-kv-cache-management-4941
+e7524c7b60be1c0576d73678ecbb98b16958ebd8	refs/heads/cursor/kv-cache-management-891c
+7c4e9c16afcf5959be0fe169bfc00276a38122bd	refs/heads/cursor/logprobs-assertion-failure-37d6
+8764a781c96b7abcd2ba7e250959e9c579b29e59	refs/heads/cursor/move-test-moriep-small-to-mi35x-864f
+491307c6fb8dab30273b0c4b17de9644c482fc24	refs/heads/cursor/nv-downsampling-ratio-behavior-d5e9
+2af273a167bc64b34c63984261a23f618a490eeb	refs/heads/cursor/print-k8s-node-name-4515
+9335702c8cb0cd8250789b5395f27954e1dee770	refs/heads/cursor/register-amd-ci-unit-tests-8f21
+8c165778b787938f7d7e09fa175d458bf5fe3150	refs/heads/cursor/sglang-core-logic-3e29
+682058ec3f0ef355764f5cfb0077152a1251e9c4	refs/heads/cursor/sglang-pr-18938-review-6355
+8b6d8e5723a848559fda501cc0b9a061fe7fc872	refs/heads/cursor/sparse-attention-kernel-tests-3e52
+f162a57dee2f8ed0c18bba06f1d84e9b044c5081	refs/heads/cursor/sparse-attention-kernel-tests-888b
+10bc602c8fd1a666e159fb55a78460718394cbfa	refs/heads/curvezmq-shared-key
+3d5f20d01f886a8331501cf059985a86a27fa919	refs/heads/dcw02/dflash-spec-v2
+d95715ec658a7440d4f3813c447f5668914472a1	refs/heads/dcw02/draft-kv-unified-memory-pool
+5eef65d5a4a52361f230f82cc1575c5e7d81e7cf	refs/heads/dcw02/spec-mamba-logic
+58f54bbe54a676a0c26fca2a4c8bd079193c7ab2	refs/heads/debug-qwen2vl-context-length-test
+b69485ff4272b5a306045fa0cf7fc2c5692d391f	refs/heads/deepseek_v4
+751eb996298ff92be3bac437abba5131720de3a4	refs/heads/deepseek_v4_compressor
+3766f050861a9691759115d2f461ceb6dd4e7e22	refs/heads/deepseek_v4_dev
+72dc46926284fad866ce4665dc493576fe5a3e4b	refs/heads/deepseek_v4_mxfp4_shuffle_perf
+5e4717e995414460f6f0728c8fe9a992d1e6f190	refs/heads/deprecate-get-server-info-endpoint
+7dd6ab674818ec8aa39b4605d74dc24cce3a74d1	refs/heads/dev-19673
+dff3ba202ad034630a8faa53ae6550a06b981e90	refs/heads/dev/saienduri/test-ci
+663f05662be5c57c8ed825c406f6ce5471336413	refs/heads/diffuion-refactor-denoising
+3216c7a058ec70d3a14fb1aee901a8ec672f42fb	refs/heads/diffusion
+dbaa2e1d10e7191ca4d6eb8f26ed4ac71e043e43	refs/heads/diffusion-ci-cu13
+1c16751238979d23e2d3be9a10a9de92a4e58a76	refs/heads/diffusion-ci-with-qwen2509
+4ced751162f1146b1627b9dd6b419a2325a5a118	refs/heads/diffusion-component-residency-manager
+b27d79d606ca4171890123b25cc6e955df18dcec	refs/heads/diffusion-first-class-routes
+897c13e915be28796c05c6d3b0403da687035aba	refs/heads/diffusion-fix-component-resident-manager
+9bc32895c63604ac08e813364102813620d27594	refs/heads/diffusion-general
+07298e70fad98f1f8612997aae447e6b2eebc5ef	refs/heads/diffusion-norm-fusion-for-zimage
+fe71d63364c34c11c1d7dde979dc0e377b2c7493	refs/heads/diffusion-perf
+55dad9ae9d594d3129a56044e40a72a0e95f712a	refs/heads/diffusion-refactor-arch-config
+ffa72927b793437d1e56af74cb4cc7c86db6f473	refs/heads/diffusion-rl-base
+5f14ee5a1265c687e697f6c1feda869690b93771	refs/heads/diffusion-test
+cc5fe2bf5dec376c7423377007f49d414bbcbe75	refs/heads/diffusion-tmp
+4d369a2eba68245f8ac0e69d1bf61b5587f521d3	refs/heads/docs/add-glm5-usage-guide
+a9b2312ffc77bac938830a3280f4a1102e321858	refs/heads/dsv4-mxfp4-moe-backend
+bb52f69295c6d9414f1d7ed40785fbd906e9560e	refs/heads/dsv4-rebase
+a02625890929167ece0f099c135f93035d47150d	refs/heads/dsv4_pp_doc
+eb7eed5f9b37f43687e4d3a0f97670892ff00747	refs/heads/dynamic_tree_verify
+e20d359b017ef847ae4d828a4f55a2cd2f2060be	refs/heads/enable-fp8-nextn-moe
+39f679d1cbe6e4908d751dd2b93b398985022ca5	refs/heads/enable-uv-venv-deepgemm-cache
+e8d37175906dac36df025661c5c0bd6f864e4c5d	refs/heads/enable_cache_dit_in_test
+2b79f4c0767a539501904d163b72c1ce903fd1d4	refs/heads/eos
+28f0d69241406d601e7ec91ad85442869dad1b57	refs/heads/experimental-router-cli-args
+e05edfc33545599240dcfdfedfbf9f79201900ba	refs/heads/feat/amd-deterministic-kernel
+edb399d708570ba573c154bbe38fe1d007aeb5e5	refs/heads/feat/async_r3
+df29504d9e41a78ec80944f8e08726f18ab8ffb0	refs/heads/feat/deepep-shared-expert-fusion
+80399790fa40226412711829f34c00a2c31ea82c	refs/heads/feat/deepgemm-wheel-tests
+45a959d3e971be41cbad140137a1431fb82192c7	refs/heads/feat/dev_20251201
+e9eebe0f96d49f6c60a0e4fb6f4378e775d3e17f	refs/heads/feat/diffusion-placement-group-disagg
+29195b07cf23b668c8aa340c31e46681a7ed2268	refs/heads/feat/fuse-qwen35-attn-gate-sigmoid-mul
+ce8f0a6ccf36c98b783f27e62c8e8976c52e495f	refs/heads/feat/grpc-health
+4f08ce88aaf09d22cd95958943c76c195e997764	refs/heads/feat/ltx-two-stage
+f837f501e9c795b44fb70b07ab7919b160962714	refs/heads/feat/rerun-stage-fork-support
+e99c5bc4f6d24a727e3781bb8e84863137d2e674	refs/heads/feat/rerun-stage-path-filter
+fb517787a49229b3a3b59d8a95479ed19dfd0333	refs/heads/feat/sgl-router-m0-scaffold
+0d8d128adb5525cb435645a0903131497b0eac70	refs/heads/feat/test-summary-job-level
+fc1eb84457f01b9b5c1fffeb619d5e3950f0d2cf	refs/heads/feat/unified-metrics-s3
+48fd0587cdc8d393105c31ca39ce10faa15c3499	refs/heads/feature/disable_generation_healthcheck
+d1bf53ad4da1f8581c691e749e5fddaa1dbfd4a8	refs/heads/feature/eagle3
+640aecb8260552ec245a104b91eea44883d16ee7	refs/heads/fix-benchserving-vlm
+4a7f57f30bb335107f53feefa6cd43fc654c3fe9	refs/heads/fix-corruputed-weights
+5e3dd52021b9db7ceea8323001dad1eefc5899aa	refs/heads/fix-cp-nsa-prefill-context-parallel
+2c178f56795fa3f9952dedaa33048b8afb9bf44c	refs/heads/fix-deepgemm-cache-key
+a134a342219cfa4d589b927d256e8ecff3553977	refs/heads/fix-diffusion-ci-steps
+f9e5d0d82f30bde20e1cd43bfbfd797836dfdb95	refs/heads/fix-dllm-prefill-stats-none
+1bf6f9977d8093eda57c9c80a4bf49ec30ffe7ff	refs/heads/fix-flashinfer-fusion-preflight
+8fdcb742819ccf8582e5ccaae79e83306ad0cd0b	refs/heads/fix-flattened-bucket
+a7f7c8e8e6d77c5a98aeaa82c01acaa737c80358	refs/heads/fix-fsdp-amd
+595d256e7e064601bbf0bb1dc54f55cfef738c67	refs/heads/fix-jit-gb200
+166f16eab1fc3c2665b3a268616290c043587bd3	refs/heads/fix-kda-kernel-args
+9072aab27ea93aefbda90535264c25aaf62cc3ad	refs/heads/fix-lint-patch
+0f54280b8bd917d06ccb3ecdfa53be9c8a3fbf11	refs/heads/fix-llama-4-nightly
+ff712a702baf4070727c8076c23c4423c67390bf	refs/heads/fix-lora-batch-validation-none-count
+81d474d7116f8b093a9f844fc1d413c7628402b5	refs/heads/fix-lora-eviction-test-flakiness
+48a36fb19133f0943d87de23318d12b07832678b	refs/heads/fix-mcp-validation
+99699c9383d39e4354c3f80d3422ed249ad40a5d	refs/heads/fix-nvfp4-dispatch-dummy-weights
+6671bedc4650131c9c8cae350d1439b340611e4d	refs/heads/fix-qwen3-next-gdn
+cc29430c0dbb56d9714f8c458f4df5a313c3defe	refs/heads/fix-rocm-image-build
+cd9d9227f76f2f3155d57c7289efdbb391ac58a8	refs/heads/fix-run-with-timeout-exception-handling
+cf0376d876d59c155336e35f451e01b37d39e6fa	refs/heads/fix-streaming-parallel-auto
+3ddb0aed6063d196934df6208234bdb22da131d9	refs/heads/fix-svd
+447ca6667eccb530fa047ed4d9e032445172fd8e	refs/heads/fix/add-job-timeout-pr-test
+236f1244f2a2b8b59f5641bae493bb5db33603af	refs/heads/fix/aiter-oom-and-torchao-compat
+2f7f2edb89189a1b37c52bcb2997cd15347c73d5	refs/heads/fix/amd-deepseek-v32-mi300x-rope
+7e124983f4f12e6c75f87d8763aeffdd5eaf6176	refs/heads/fix/auto-format-main-branch
+ef6c26d686020e3eb10c14541ce4f0d9e8b8dbed	refs/heads/fix/bench-mmmu-multi-image
+205ce81c5bc9dfcc0061de9ae28b28480eae02a9	refs/heads/fix/ci-cleanup-stale-ipc
+62f0f2283d0c33780239a8bd99aa3e9e790aac34	refs/heads/fix/ci-env-source-cleanup
+562946dc3f8b62be3d1daf711a56fc22e4728026	refs/heads/fix/ci-port-offset-for-network-host
+63a8052f542c7027dc575f33711013dcdb3078e2	refs/heads/fix/ci-runner-stability-fixes
+d2c65d9175c97b873a14cdb8735e026573e45246	refs/heads/fix/cudnn-import-order
+43c8ac11f85deee18aaee174a5b783ee0729d8e0	refs/heads/fix/disable-jit-deepgemm-in-ci
+84378ff2a8b6a6496f8745a8a069106897ff47a9	refs/heads/fix/disable-transformers-test-amd
+4b3a984ceb266d2255428c741add007e55a1ca99	refs/heads/fix/disagg-bootstrap-port-conflict
+1c9feb2a3b4a81e727f0c77c17b993808752c517	refs/heads/fix/disagg-bootstrap-port-conflict-v2
+11b82c46b07e140427a68b92feecbe9e3c101268	refs/heads/fix/disagg-stale-bootstrap-port
+12d32f7172bc3c77c963249e417e137b5539c957	refs/heads/fix/eagle-dp-attn-large-crash
+d1b6132c1660ae25f82069701e31e565e4dee81a	refs/heads/fix/eagle-filter-merge-accept-length
+f18ec3330537173c97329407f9b7945c66b61515	refs/heads/fix/eagle3-mla-attn-backend
+0533f32128b4c2253d3281b7d45fff9b43e5dccb	refs/heads/fix/empty-logprobs-streaming
+ab3adec76ced79c5ac66fad4f38b75ba33ffcae3	refs/heads/fix/flashinfer-allreduce-fusion-probe
+c4cdc14661753b963c69077fec407d744b473dc2	refs/heads/fix/flashinfer-autotune-symm-mem-deadlock
+6ee0cbe06dffa35114f3835214935240de9e7cdf	refs/heads/fix/fused-moe-missing-import-rocm
+a5095d347ea7d2a58ae15af88bf100beaf10c6ed	refs/heads/fix/glm51-fp8-tp8-dp8-b200-oom
+3ad42ae4cecf67bd340947b080310c956e9efda8	refs/heads/fix/gpu-cleanup-between-tests
+080a08588a0e349246de0793d7ae2042a49548a7	refs/heads/fix/health-check-disagg-idle
+a72d814933b6845d5e8e45a087732b99a26c27c2	refs/heads/fix/hf-runner-lora-adapter-cleanup
+a27a2d310c8ead45f683f10b7e5cb35cecb28e3d	refs/heads/fix/hicache-3fs-batch-set-postprocess
+9bcd5932ee8db164035aca757726d4c940a6e5b6	refs/heads/fix/hicache-dsv4-none-crash
+da3d060ca010c846eccf0db7714c5da7a9c0a78e	refs/heads/fix/lora-update-test-flaky
+5088d5e3ec2ac0702d6471f119eba95ab9058e9a	refs/heads/fix/mem-fraction-static-eagle-draft-kv-cache
+2e2a50a3d1c3a53ce9a61752b0e095a2b8398bf9	refs/heads/fix/mem-fraction-static-eagle-draft-kv-cache-wip-snapshot-2026-05-08
+2ae026bce2e4259f8ad9907bb3555d2db72d5045	refs/heads/fix/mi35x-deepseek-v32-regression
+08018df7491a98eeb55410ac368c7090fcdfd37e	refs/heads/fix/mi35x-remove-data2-hardcoded-paths
+8a102b35859af9d1fdf0997afaee947e7f641988	refs/heads/fix/modelopt-auto-map-resolution
+429a737149cde45521fd7ab75dda85227e2b9c81	refs/heads/fix/modelopt-offline-quantized-detection
+2f4e825e0f7690ec28e8def9804044e7b1ad80da	refs/heads/fix/mooncake-nsa-l3-index-buffer
+489a0b7869047c358dbecc9fe64260ec6d2be86b	refs/heads/fix/nsa-indexer-tensor-aliasing-rocm
+f9a6d7a5eef65f3508be47f9677d7e86bc99687d	refs/heads/fix/pause-generation-writer-lock-deadlock-main
+bdf22f34db161c6ce265373c2e0017fb0e70fc6a	refs/heads/fix/pdl-cuda-graph-capture
+99fc39152224f4378fe06ac86b48cfcd241a9913	refs/heads/fix/qwen-image-edit-warmup-prompt
+74a13aebe352c3c2d1fadce751d2c554963b0ea7	refs/heads/fix/remove-dead-prewarm-mhc-token-count-buckets
+29195b07cf23b668c8aa340c31e46681a7ed2268	refs/heads/fix/remove-dead-prewarm-mhc-token-count-buckets-v2
+24ff44f907df7303473d483f27d9955a517ccee2	refs/heads/fix/rerun-failed-ci-cancelled-workflows
+d18268f3e215759795a90878db4031d52d0e4cae	refs/heads/fix/running-req-piling-logprob
+055007ad2e1c5d0bd85ce57faeef16faf445dd80	refs/heads/fix/sync-patch-logprob-fix
+86aee3d30f862e62f7a6524e3a16041c6418a573	refs/heads/fix/test-srt-backend-smaller-model
+fb8bf104572eadaba1af1450b68b4e36d8f8b880	refs/heads/fix/tilelang-tvm-ffi-isinstance-compat
+3994b73c480b0c0571bf6a929f5b5a843d043634	refs/heads/fix/torch-cuda-version-mismatch
+509e0c993f9180037f2a44b3b6f4a49a2ed25d13	refs/heads/fix/transformers-v5-easy-fixes
+1fe5a0ce1f776e1a7be947a1e02e88cef4ac03d7	refs/heads/fix_amd_ci_pr17784
+476170f2523135bce44a0b20b59f0ba8cfed810d	refs/heads/fix_amd_nightly_0413
+f436f57251157496607fda54ebd167760a1fc905	refs/heads/fix_amd_nightly_qwen3
+ffa5c7b07d23b75cbee0885f5f2d4e6777a5e9f8	refs/heads/fix_amd_stage_c_0427
+0e2ceb26be33f5f43ecfad1ac65118f46f35a6ab	refs/heads/fix_benchmark
+c1b422a02d70f03bcdbff6dbb9fac41a561177c8	refs/heads/fix_diffusion_1gpu_ci
+a4aad6d4e3bdf9b88501ad986118c21ec9f41d5a	refs/heads/fix_dp32_pd
+431a18c49676961ddff5b1a5620bb2813b69fece	refs/heads/fix_glm_test
+95bf0633987acc11f3b6f54fb30c6ebbbc15177c	refs/heads/fix_grouped_topk_warp_shfl
+779f3b17369201bcee6879dddfcdcd53b81ca206	refs/heads/fix_hicache_with_spec
+746f286993560967ad6ec524fcc952652a76526a	refs/heads/fix_mamba_leak
+6f6067a0bf3887c042d490946933031ee4e199d0	refs/heads/fix_nightly
+666214ecafcbbcffef7dba0ab690a1652f7ddc7a	refs/heads/fix_nightly_test
+dc75c1ea2997cfc5dfa74044dd87837b739c826f	refs/heads/fix_pp_ci
+5d184eb2c824b5c971728e1c3449ba20d83797f1	refs/heads/fix_qwen_mtp_eplb
+fd0472520306b8bbe2778a4a87e8f90a2be8419f	refs/heads/fix_v1_loads
+0da11b4e3344c04a530bd464da64e38870ab4169	refs/heads/fix_wan_channels_last_3d
+4ad2f3ae1e1f87e0f3d67b98a7aba6913991e0cd	refs/heads/flux-klein-qwen3-mask-threshold-rebase
+8f42617027931aea0f0df8e79d789b687004f85e	refs/heads/fzyzcjy-patch-1
+457172ebd59bcdb30ff2c8321301a62f2839df49	refs/heads/fzyzcjy-patch-2
+feed9d3935e0abb575e17e352817605c6f6b317a	refs/heads/fzyzcjy-patch-3
+ee1bae57f584e008da1d82df2153eb6567967077	refs/heads/fzyzcjy-patch-4
+cc01eaf22f6b4e4ca4a930d7b41c83d6bd9176d6	refs/heads/gemma4-triton-attn-tuning
+21e4380b9cd6d204651e771aa6463c565d728106	refs/heads/github_workflow_yaml
+2295478325b558e8aa036a13cf36552cf5482d90	refs/heads/glm
+896b2b2c469096349938a9df9e74778891802f9d	refs/heads/glm-fa4
+0276f4e09666d0fbd2431adcf6b697ac56324b5e	refs/heads/glm5-gb-image
+7c48b005c2a2f3d5651a2ce2bae70c10152ffbef	refs/heads/glm_interleave
+080eface2d315785cb241f98c3921ffea78ad3ec	refs/heads/gt-consistency-check
+a37618bd655404d86799185555745c95b694902a	refs/heads/hanming/debug-buffer-kl
+dda6e30faae22f7907237f8babf4d4b6b39a5fd6	refs/heads/hanming/eagle-beta-sync
+9c33c200896e3cdbcccd467665e9fc198838439f	refs/heads/hanming/extra-buffer-opt
+4285d2a6df64fc41e1090ac5cdbc506c836e7c5f	refs/heads/hanming/extra-buffer-opt-backup
+d5b6249c0cd1b6d7410759d9cfaf519c8c3b9fe8	refs/heads/hanming/fix-extra-buffer-debug
+9bddf3aa2a2f1e9a6db7eac0199d134642566854	refs/heads/hanming/gdn-pc-lps-decode
+083501984b0080328b55bcadde277e2a7db3f70b	refs/heads/hanming/out-cache-loc-swa
+9a1a1b4bf7fb1ff2d903e868079824238cbb8d02	refs/heads/hanming/sdv2-fix-output
+957652d3a82d72e78c0def79c619ea143850e343	refs/heads/hanming/spec-v2-kl
+6eaddc8be2d8d3154f269b1c17f2328144a4957c	refs/heads/hanming/trtllm-mha-draft-extend-cuda-graph
+a3cca64678d691dfcf0833ef7ce03d0da3b43b90	refs/heads/healthy_worker_count
+bdbb2f591aac282e51dd65b8a96640b9e5cd8655	refs/heads/hicache/sparse_coordinator
+e94575b85c1afdd54ada7f3aab4111ce1a35107d	refs/heads/hisparse-fix
+e568f8a362b4ae3a597b28b75716309814aa33fb	refs/heads/hisparse_quest
+322a27b77446055e237a0bc7c93879c900c12d1e	refs/heads/hybrid_tree/deepseek-v4-hicache-with-fix
+e48812ab5a5513da36dae30a6a2d79ce4cd93133	refs/heads/idhanani/cherry-pick-24234-v0.5.11
+2de713c6d14e425c0506f8aca731e398b4ea0381	refs/heads/idhanani/disagg-decode-radix-cache
+afa004488f110d6e185090585fc689300f85252a	refs/heads/idhanani/dyn-1986-tier-aware-pin
+37726ca4ee3082dc0e9054ddea390e25b30233af	refs/heads/idhanani/forward-pass-metrics
+67262dcfe3cfd14c9cebf589e2ada57837a3fbb9	refs/heads/idhanani/g2plus-main-review-20260524
+8e5bdd55b44d8b09995b690d23e675472c844334	refs/heads/idhanani/llm-83-sglang-emit-kv-events-for-l1l2-tier-transitions
+ac7b2e357bf770df207be77305159eeb8908249e	refs/heads/idhanani/mx-mixed-tp-v1
+cbaf3139f2adcd37e0d010d14ba70751bbe43433	refs/heads/idhanani/radix-native-sessions
+6c66660b0573464a7968d9f7044caa4c12bd2e02	refs/heads/ifmn/eagle-dp-attn
+2474bd1478c50b0a966995d639612c2745383f71	refs/heads/incomplete-tokenizer-cache-fallback
+dd1939914f6704da4e1779281b1d0c75c8082cc4	refs/heads/indexer-topk-shape
+ce721b1cfda957db4ff01b331cc48ee6b1fa7a73	refs/heads/intel_dev
+8b8b8a62e534c08644d325f5d62b3ef27d5cd5a1	refs/heads/ishan/add-dg-logging
+599686b8d5b9dc88a3d6deba1358892aa0917672	refs/heads/ishan/dnm-fi
+6d07bef85e10be333754fe560ba903f3794bafc2	refs/heads/ishan/fix-dp
+b1984faf488bf7869f04b0108499e1a3e4ee6693	refs/heads/ishan/fix-minimax25-deepep
+4c97ed44ad23ef8282942698475944ec573f5434	refs/heads/ishan/fix-nixl-hicache
+0824c56b9f85d4050f387b0bb2e5b9917f30a459	refs/heads/ishan/radix-cache-review-fixes
+e46b074f50d8c087821316be64ec6cdc3ea4ab41	refs/heads/ishan/retention-duration-priority
+1b28c622d0d0e20290e2144dbc1ea3673c0fb620	refs/heads/ishan/some-good-info
+9b048395f733207dec83b1f9d3123ab5cd75b9be	refs/heads/ishan/subagent-eviction-patterns
+d6d4f27f758d3c406a962f2bac83510af760ba98	refs/heads/jiaguo/restore-cu129-matrix
+a09bf41c1fd9ae4917adc407c9033d2081911c55	refs/heads/joesun/diffusion-unify-common-env-func
+d293d3b70e868e12c8de3dae2ace4bb3db46fdba	refs/heads/kernel/dual_fused_norm
+271c82096f84bffa675424561ce84dedc103ffab	refs/heads/kp/DEBUG-MLA-prefill-cp
+068ae6ce29605e8f338faad088b2a539a860b958	refs/heads/kp/add-memory-profile-instruments-flashinfer
+2699254d2803239a1c4acdcf8a95d001be1d8c03	refs/heads/kp/fix-MHA-cp-prefix-len-calculation
+5a843ea8babfd6ff599d6780839ff3311c3814d5	refs/heads/kp/fix-dpsk-v32-tool-call
+4750b1f539c62b2a6e0e0f3bcaad6a042d2bb8ca	refs/heads/kp/gemma4-mtp-trtllm_mha-backend
+f3f9dfc17ee73baa9d03c1b4450ffe7a90190f71	refs/heads/kp/gemma4-qkj-proj-refactor
+db28a95a5048b5b6580dfbe3df032069eef062a8	refs/heads/kp/patch-deep-ep
+e428baaabe5c9c36238751ed26baf93f41f37526	refs/heads/kp/rerun-ut-write-perm
+b0bf0df357e208a1ac51a5c74bb7e10290b6208a	refs/heads/kp/streaming-reasoning-parser-fix
+48cd09ff068acf60663dbd0e16cd2c653ce9268b	refs/heads/kv-cache-logging-temp
+b6125354816d626b8188180b7414975f41a31c87	refs/heads/lianmin/msgpack
+7154a3b7c37503fe06132b48f975110821ff845b	refs/heads/lianmin/output-processor
+3bc76390890b95d47617f0793a963292cc04b5c0	refs/heads/lianmin/print-non-torch-usage
+f2527eb6227aa23e2a21372c93e45ba0c1cfab0c	refs/heads/lianmin/rust-dev
+ec9a86f648f7849914c7cc62bb06ad391e8b3634	refs/heads/lianmin/rust-dev-backup
+f4eb79a407051e249ccb5e194058a556b6baa1d9	refs/heads/linear_attention_backend_vibe
+03fb259a8a087c1419b3d8156d53cd011d360d8d	refs/heads/linyu/auto-tune
+3912dab5752d192f1dda1e1587598d765a097cb7	refs/heads/lmzheng/cleanup-metrics-collector
+f9f12a0cef6c473bef79d37580a6b7c4229c040f	refs/heads/lmzheng/dp-ipv6-bench-params-routed-dp-log
+1edb9caf50029f8c05c235fff7f0171333072035	refs/heads/logging-worker-sglang-rotuer
+e0474fdd9bf4cf302653f6f16e01c5adbdf2ca96	refs/heads/lora-perf-optimize-2
+f7c4ac64c73bb11ee547a237919bed308f7f16d2	refs/heads/lsyin/dead-idle-branch
+5eb5a25798ca5c7786f802ac7d6b09316af73430	refs/heads/lsyin/debug-eagle-gather-oob
+c910a8abfb2b95a9dc8f111c3a092ef0ebe7c4aa	refs/heads/lsyin/draft-executor-abc
+c9fce3998f281dacff14764800da414a4e6927e6	refs/heads/lsyin/drop-future-negative
+30ad26f37a4293cba93c9d060443b7a596c84ae1	refs/heads/lsyin/dsv4-stream-barrier
+99d0453c70703a78c7382868ff4f6150ac8659ee	refs/heads/lsyin/eagle-draft-dtype-auto
+e4484e62c2488bca822c69c6304755029e58aaca	refs/heads/lsyin/enable-verify-plan-stream
+8750f011c3a132bcd201e11e1d12dd2c68cf6c11	refs/heads/lsyin/fix-beta-spec-log
+1e4af2e904b93378678c89bbfcccdd5a515edb0f	refs/heads/lsyin/gpu-health-hook
+f63c937c910741c081a7cc0f15248bb13770cb06	refs/heads/lsyin/killall-sh-pattern-sync
+b5bb58fb8edb2a13424b7448ca30371789370d5c	refs/heads/lsyin/kl-test-deterministic
+05293697877eaef3f20c232043bc421c26b70510	refs/heads/lsyin/page-alloc-unify
+46aaf989d566222ab761a8e2372b2bdbcc962474	refs/heads/lsyin/r3-rm-mwb
+8644d18b121c41936f63d811c7c3257c71dcf2bb	refs/heads/lsyin/re-introduce-tp-grammar
+71e1d6bdce5641aeb6feeeb24fefbf60b31e6441	refs/heads/lsyin/remove-delay-sample
+d9e4f98290cf4861f5d4eeefc738f72d411d3313	refs/heads/lsyin/rerun-test-merged-pr
+cc352937fd7d87f6088ce1820a6c7cb1c3f67f1a	refs/heads/lsyin/simplify-spec-info-fields
+c474ca603af8c2c5b26f7ffe6c47b36f4e48819a	refs/heads/lsyin/spec-draft-extend-input
+7124316842fe62d8f5c8edb6384c6f613118ca34	refs/heads/lsyin/spec-pr2
+ffc490ecf19db8bc07d7ea5622d5f519351174b9	refs/heads/lsyin/spec-pr3
+04f6f3b4eafa687ab35ae448ff6bd4623631fb27	refs/heads/lsyin/spec-v2-topk-page
+939f82a52ac05cc23b6a0d7e604167b2384ac25b	refs/heads/lsyin/swa-canary-observer
+4676e7f3cbeb6216aee4a50d22c387f326b6bde9	refs/heads/lsyin/test-cleanup
+92e319f18de5b221854569262d8c7c4d03feaa43	refs/heads/lsyin/unify-draft-runner
+97b65f16a0d682735874abf2a7140ef08e07d956	refs/heads/ltx-2.3-two-stage-ti2v
+200e0de3a55141da3c5793ac6e6d5d59611e2690	refs/heads/ltx-2.3-two-stage-ti2v-clean
+d8d8cd240908f0e9e71525af5e546956243d8767	refs/heads/ltx-batched-unify-all-paths
+bcf0a63c1bd47c07a644466e6b036557396222c2	refs/heads/ltx23-official-lora-merge-align
+76421cfa72c995c1673b7250592b31c57d871042	refs/heads/ltx23-tp-psnr20-latest-20260508
+64d34ae748f9167e309357fe0114ca0c3ac266c5	refs/heads/ltx23-transition-lora-support
+8980eb82de90f0d25dcaed3c9d1cc8c4ac4c3776	refs/heads/main
+cdf5771f914fd5a12948e338549e0c511d88a4a3	refs/heads/main-dev
+307f6ab6d3b350e24afc9a0b64fe9bb603b0e591	refs/heads/marv/add_ci_case_qwen3_235b
+6a96eeae3c2a3a7480a3291156cc92e191980329	refs/heads/measure-prescheduler-overhead
+efa49baa9eb317b7a9e3dc35cf1e8d074b577a76	refs/heads/mick-dynamic-batching
+470d2c43b9f3ac565c05ff3cc34eed0e5fd2e682	refs/heads/mick/codex-tmp-lingbot-block5-wanvae-20260602
+83f183af8de4b8349eedaf017325a3122e4e3a32	refs/heads/mick/codex-tmp-lingbot-ci-partition-append-order-20260602
+a06f83a6446f3329a5a73bf994c8541170f71a8f	refs/heads/mick/codex-tmp-lingbot-wanvae-batched-decode-20260602
+e87a8f598e1d36d0b2fcdbb8c1e4e16d476ca473	refs/heads/mick/codex-tmp-lingbot-wanvae-batched-main-20260602
+7a2fe3ba2f067e47a8bd66b2ebca5fda3575d484	refs/heads/mick/codex-tmp-lingbot-wanvae-block4-main-20260603
+d43ab88524e136fdf63aab4ec2719599bb2f6432	refs/heads/mick/codex/diffusion-bench-framework
+d90e6f4c6193e6fed5058d8300e643ad5962070c	refs/heads/mick/codex/lingbot-causal-dmd-refactor-validate-d90e6f4
+554b486e5a6edec0956d1f6d41fd0a8613b38f3a	refs/heads/mick/codex/lingbot-control-signal-validate-554b486
+165437945e2a632d1875feb0d33bf84610c1b665	refs/heads/mick/codex/lingbot-latent-spec-validate-1654379
+71e3b33b1a57b6ee304fac2281e66e1440918daf	refs/heads/mick/codex/lingbot-latent-spec-validate-71e3b33
+b18c4ad48cf554ef3fc1771bcb52b9c7a00c4ae8	refs/heads/mick/codex/lingbot-raw-frame-rename-validate-b18c4ad
+c93aaff75df49c4c69b867f14cab1738629aab18	refs/heads/mick/codex/ltx23-nonpr-perf-20260503
+47e48bc33e86c251f760e4c0cf103f1b56fb6427	refs/heads/mick/codex/omni-u1-orchestrator
+b362715cdcd84d19dda3c57c044202263cd92053	refs/heads/mick/codex/unipc-stack-candidate-20260603
+86f57020b5082b64532b180a9191eeae375b2c5f	refs/heads/mick/ltx23-hq-precision-align
+adb72bc072d095846dbc6532deab6b47a666466e	refs/heads/mick/ltx23-official-lora-merge-align
+fc059d280af8f6bf1ecedd3c850fff683e6789f9	refs/heads/mick/ltx23-tp-psnr20-20260506
+41f89956e3b3e1343950abb492917cf9e214df98	refs/heads/mick/mick/mmgen-multi-output-dedup
+26386d3d40a56142bb61c48af07aee805032f2ce	refs/heads/mick/mmgen-stage-a
+a390475a339ff58ef3b327a5cdbf8a2408edd12c	refs/heads/mick/tmp/image-edit-uploadfile-fix-20260602
+1395b54509f30db17a05bf3813d65f3e3074f78c	refs/heads/mick/tmp/lingbot-local-final-proj-gather-20260602
+36b89fe50f792e14d2f48cb10435b3b18a0d1b10	refs/heads/mick/tmp/lingbot-msgspec-fix-20260602
+667eb451d1da2fd79ee4abcd1e071748d5413ecf	refs/heads/mick/tmp/lingbot-skip-proj-after-msgspec-20260602
+1d7acdc11de2c1bdf8a3ce97a18d0851cfcdcbf9	refs/heads/mick/tmp/lingbot-skip-proj-verify-20260602
+82ce2bac30da70cdf301ebc1b37b41d4b07fc261	refs/heads/mick/tmp/lingbot-uniform-usp-fastpath-20260602
+9fd8825f844425becfd945f34533a2c76636555d	refs/heads/mick/wan-s2v-rebased-20260328
+db516e71334170aba2ecb79ab2eac8fba2b2cbbc	refs/heads/mick/worktree-ltx2-hq-pipeline
+9e8ad22c382ac3554813fad9066d3f0b51073442	refs/heads/migrate-rotary-embedding
+124c1e16bea1f709c8998b0c7688ecf9710fdfbc	refs/heads/mistral4-support
+10917097cc8f3ba0572228583e8bc5026994771a	refs/heads/multimodal-bench-serving-openai-compatible
+5ee253dbffb2c070ff2c2be7ac2419fbd6d44e5a	refs/heads/multimodal-gen-tokenizer-fix
+62be885afa8328b738884500f617cb5df106a331	refs/heads/nightly-ci
+f507b576a1839049c8d411f1d20d6121650cd8de	refs/heads/nightly/kimi-k25-mtp
+b94a5889fc68b33ad499066c5b8299558edec271	refs/heads/nightly_qiaolin
+61e22d4ebcdd8dce8cfc7dc76044d5034031bb6e	refs/heads/nsa-decode-dense-fallback
+c136b42d099d94253e8a7d6dc75adcc79d8f78d2	refs/heads/otel-2/n
+851af5cbe27ee8411faf87adbbef9a6b928b8079	refs/heads/patch-docker-merge-reworkd
+c8642f7484150b35c25ce56e25dae12fd1a86fc4	refs/heads/patch-docker-path-fix
+29f1fbd5818d0c7ae3db73489c95ff24efba533a	refs/heads/perf-accuracy-improvement
+0366e63800f4ff883e6d204381198c2b12d3dbf0	refs/heads/perf-regression-dashboard
+59e9f0fc4af2e18f32bbf2d8c2fe8f153eae3af9	refs/heads/performance-tracking-ci-failure-monitor
+1a8a1f5fcf36a6e1b65e69137c05e9e7d731f02e	refs/heads/piecewisemempool
+6b5ded7734e5c96e8bfa5e85ec546ae4a5445a02	refs/heads/pr-12263
+7b74b4202f69636d6e778608468c69e217ecf5b1	refs/heads/pr-13592
+943ac6f7b306dcca89ff5362211d835ff21ff9b1	refs/heads/pr-13728
+b4957cf0efc03f8be117ce1493775e658f4cb0b0	refs/heads/pr-14226
+4bae74406c334d754cdc4b4334387cd7bc3c656f	refs/heads/pr-16287
+d67a9f98778080cdcc94c4b7d8c2c0095703306f	refs/heads/pr-17247
+c63e41a74861161899cc6a4814d2dd0b519c576a	refs/heads/pr23119-fix
+f7aea7ae23de6ce997c67d88a45b49bc9c961a3a	refs/heads/qiaolin/draft-topk1-argmax-fastpath
+df190f755240a37db5c5bd16ee3bb4214aecc28c	refs/heads/qimcis-ltx2-i2v-support
+aeb72c50df71e7ec2861dcf62348609a35bacce9	refs/heads/qwen-vae-bf16-default
+da00d0f0252db6d2f6f7bd56eb7b2f491efcebef	refs/heads/qwen_coder
+40b4bcad147b80a8e95b51b1f85f23c271ef404e	refs/heads/radix-tree-n/1
+3b28fc81bb5725a3543dd2c776db697e81e9af2e	refs/heads/reenable-eagle-topk1-rocm-fastpath
+418b74f8fdad5a88874b9c7d3c79ed3505c96228	refs/heads/refactor/ci-install-dependency-functions
+559b30c83676038d16f8aa3f7c2ba82c6d7f1f98	refs/heads/refactor/extract-simple-markdown-report
+b31d76beb06ef56952e0993c4c2364871cf0bb0c	refs/heads/refactor/release-whl-kernel-composite-actions
+9a39d69ae7b8d4c50fa3d6d254136248430c3e3f	refs/heads/reland-pr26134
+1264a2e9f2cb7b0d7bda5a7d1802dd9d82fc45d2	refs/heads/release/v0.5.10
+853f032dfc61e8deefbe0c852e76bddc2e197ae4	refs/heads/release/v0.5.10rc0
+9c04dbd395ec0b4a129d64508bad12d3d0fde542	refs/heads/release/v0.5.11
+5a15cde858ea09b77116212a39356f2fc51b8584	refs/heads/release/v0.5.12
+232982a0dee4f0f9545189a7d9b6b9bb802e4910	refs/heads/release/v0.5.7
+c1f2241a32b69be69828288b61331887c5647a4b	refs/heads/release/v0.5.8
+e714db81a0e5c730f115ba2ee4302d94e1d51303	refs/heads/release/v0.5.9
+79587f2c51e6499c064580d9e33441fb594c6330	refs/heads/reorganize-test-registered-structure
+b2919b4949a726cf0dd7a3adfd788850d101be60	refs/heads/replay-audit-hooks
+a4f66745038f5ef1679ad963ef4ffe1f0961c193	refs/heads/research/linear-attn-fp16-state
+c810b8080c31b0868d5304373404eb339be1db73	refs/heads/resize-condition-image
+b72a6f23cadc19e98f186998cde37efb4841b552	refs/heads/return_routed_expert
+49ddb43607e90bd95261a851ad8f5a97f538a2e4	refs/heads/return_routed_expert_yizhang
+f832eac3377ced3b32297e1da8fd84aca911952a	refs/heads/revert-14717-feat/layernorm_scale_shift_kernel
+eba4a1741c8f8e112363d513b039ad745b3b48d7	refs/heads/revert-15829-feat/mamba2-radix-overlap
+ec17f5ec045ba44b7a8f2c5ebf9d101d590b9536	refs/heads/revert-20560-youngrok/fix-hicache-write-through-idle
+45b4604a313a94fd415385c3735fe950b4dd4f7e	refs/heads/revert-20660-bingxche/fix-amd-ci
+35b04557807a7dbce30a867f835657b315c6ad11	refs/heads/revert-21458-fused_qk_norm_mrope_decode
+3421bfdfb5c44dd3ac135d2297cfc03789cfee7b	refs/heads/revert-23943-yhyang201/dsv4-h200-pro-single-node
+c20bce534a3c78e4b81384750e786b60f55f9025	refs/heads/revert-24870-brayden/nextn-4
+88610ae7b0ba1845d8763ebd38220730ea62be7a	refs/heads/revert-25570-yhyang201/vision-attn-b300-triton
+af51d94aeb5a20078d0d23235b24b6fce19be3f4	refs/heads/revert-25576-update-cutlass-dsl-cu13-4.5.1
+9a7258680ac16ba3ec94e806ccb2f8c4731f626f	refs/heads/revert-26235-eagle-topk1-softmax-skip
+23eeabff7094ddab43d5b5881704480de354ce02	refs/heads/revert-26395-jacob/dsr1-r1-hicache-pr-test
+e690f6793dc8dd315337d9372bd838a8ec738a1f	refs/heads/revert-26396-jacob/glm51-mxfp4-tp2-gsm8k-amd-ci
+8daa826bf2f48be338ecd18b4f9d95fc68cd7d14	refs/heads/revert-26642-amd-ci-fix-cache-host-disk-full
+18d04fca9d3861da9b6770923a0583284fe2ce36	refs/heads/revert-26905-amd_change_hf_path_0601
+568a05e75321bbfa7f6c52b2239938f58c85137e	refs/heads/revert-hy3-preview-reenable-nemotron
+2024c3129075fcfa38bcc1c369d89afffcaa6f42	refs/heads/revert-pr-19140
+f2bc52cddebfc822d1f00391f2a853216fdf4e49	refs/heads/revert-pr26134
+5a45547de66e4349f5647f140fb85c9246990f91	refs/heads/revert-tf-4.57.1
+d1295279e5f36f57758613c663a673a6ac10f2eb	refs/heads/router-fallback-handler
+7ccff85f1f31cae174942329a47e624faae04f47	refs/heads/sahithi/gb200-8k1k-configs
+ae15ef61691395f1015fb2c878300e04e875b303	refs/heads/sahithi/gb200-accuracy-evals
+047eada3ed7ac75014931b7fd9a665435e29f2f4	refs/heads/save_mem_linear_mtp
+b70ddea01e8f8c642ff75eb2ac1c03897ae075bf	refs/heads/seq-lens-datatype
+d3b61d503b70f2cfcd575d3fa99af342124abca1	refs/heads/session-routing-dev
+be477ad756b079af177707793ca6a17d68617842	refs/heads/sgl-bot
+a8b8e1f5f94119e78c54c1b4fbd0996fe4abb3c5	refs/heads/sgl-compile-distributed-export-runtime
+783e88112f0ce8d37cc22eada83d245a68322dcc	refs/heads/sgl-compile-platform-export
+8da71333cbdb131a16b52072f6a67295ec764071	refs/heads/sglang-miles
+a11948897900b09bbef142aa6fcb900d73ae1013	refs/heads/sglang-miles-20260327
+363403a203b3f277aca04ff7487ff93b65bc9baf	refs/heads/sglang-miles-v0.5.10-final
+71bda1af3b01f2821b077cd91d25da2a15573e4d	refs/heads/sglang-miles-v0.5.12
+6b505b46ab099410dd24d146292c2259046acc14	refs/heads/sglang-miles-v0.5.8.post1
+c09a160e6ccf642e62f4ff3129786c583b9caae1	refs/heads/sglang-miles-v0.5.9
+2aa21ef0eb1dec5c828a7c2a56d451d0710e581d	refs/heads/sglang-miles-v0.5.9-final
+46728d49d8d8101328fc7d7f8b10328c5c92c0d5	refs/heads/sglang-miles_weight_checker
+6ae1b7f28a27abaafb04ea6016d24e1fa280d678	refs/heads/sglang-miles_weight_loader_threshold
+dce8b0606c06d3a191a24c7b8cbe8e238ab316c9	refs/heads/sglang-slime
+c34d9f1b2416df7e16bce51ea87827a11c0d99cf	refs/heads/sglang-slime-patched
+52d98157ba0348bcc35916e1ef7e48a98bf8f06d	refs/heads/shiyang/forwad_decouple
+eeba9236841b44e2d91d0771ca6546d9836361c2	refs/heads/shiyang/load-snapshot-shm
+a4f5e7491eeb327ccb8e033eee230c207e68be57	refs/heads/shiyang/mem_check
+85bc83606e0f6dfa23b939182cd34429b157c656	refs/heads/shiyang/mem_v2/decouple
+daacd1fbc691d8d18f912a758d5a050664e42fae	refs/heads/shiyang/mem_v2/first
+4809c6ad0dbd992df742958305a64ccf8eff0bda	refs/heads/shiyang/optimize-get-load-piggyback
+31c456691530044e89aca48508bd5086160afb8d	refs/heads/shiyang/req_to_token
+a85bace0a5dde8a446aed86fcce1685c764355c9	refs/heads/shiyang/sglang/waiting-uncached-tokens
+9a2cf5b9a429207743d1f37f338cca31d6a33f66	refs/heads/slime-patched-260303
+905965a129be17f092cb0a13a202935f034b2809	refs/heads/smg-mm-11/n
+950bcd72c10737d129e996f10b93efc3cf63b260	refs/heads/spec_hidden
+cc6a2a137235c7edbf1a88eec7da28468da2e5a5	refs/heads/split/pr24408-01-contracts
+b4566781c2a3d48aa0c5814c74d27e0c95ad31b3	refs/heads/split/pr24408-02-server-args
+8660d4aa5b7b3cc53ff09c5cfc97096f034cd224	refs/heads/split/pr24408-03-batch-invariant-ops
+7afdf08e840bfa3c3abc5b16608789faab77d840	refs/heads/split/pr24408-04-layernorm-batch-tests
+c10a49f4aba15e9e83d6ef010a01b0fd0e865768	refs/heads/split/pr24408-05-tp-invariant-ops
+f0d6959df80708209bffaf1bc2ea7e556174fd60	refs/heads/split/pr24408-06-tp-invariant-tests
+ce5f6009fcc1fa52094e5c12323a4c6cad02a45a	refs/heads/split/pr24408-07-collective-wiring
+9448f1c82e5fb8e546d9215da1b89de0e5b59c47	refs/heads/split/pr24408-08-dp-attention-padding
+309d7c7d5d73e0b188c5baec44a871fe9bdaef9b	refs/heads/split/pr24408-09-qwen3-moe-model
+e9f31bbbf862daa271b508a6813178e489449412	refs/heads/split/pr24408-12-wiring-cli-tests
+794d06dbe9eae829c7134c589bacc2a2d2b62cdf	refs/heads/split/pr24408-13-wiring-contract-tests
+83efc21bfd376cc69865fbda236d73a36cdaa54c	refs/heads/split/pr24408-14-wiring-runtime-tests
+90d500723edf9337d57dd4b5b2c1d2108ef32b2e	refs/heads/split/pr24408-15-wiring-reduction-tests
+b4140edb3e983f81d96ae66bf702679694d6b5c8	refs/heads/split/pr24408-16-wiring-cuda-tests
+03a5c12d7aa2b2b02bdf201a519e28c9508fde01	refs/heads/step-3.5-flash
+e3dd828a6dd63a3074ecdbc51b59fcaa96f294d9	refs/heads/stress-test-debugging
+9a06537d0770b924ed00db268a94be63d490bdcb	refs/heads/support_qwen3_guard
+67401062988bb450c717d03b159276fd8bfcee50	refs/heads/support_usp_for_wan_vae
+4589f2b528df23673fd4f77f70ba9e1077b09afb	refs/heads/sync-pr-test-from-main
+581dc14ef1cd7ba1e34e6cba630a1aa548562c7d	refs/heads/temp-docker-image
+c5d0920d94c139653e4a8f4aa80f95b366e149bd	refs/heads/test-gb200-runners
+693f64327707ce73383230863e8598ca698d8844	refs/heads/test-mm-amd-ci
+c4816ec5e7c8acf4dcc2662e1201676438286620	refs/heads/test/ci-disagg-tp-check
+36bcb90cea65021d38541e5e8866297dd99602ac	refs/heads/test/rerun-stage-8gpu-h200
+6911de406746b4a829bd54aaf8bb61dc3450e9dc	refs/heads/test/slash-command-handler-tests
+b0331348e4c6dac015fbb6957e236c51097f182f	refs/heads/test_new_x86_node
+0f4c5b16bd18360036d05e900dfcbf6a5762ac60	refs/heads/timestamp-debug
+7a54e718758f2548d340b49cd59493b1767b9984	refs/heads/tokenspeed_mla_prefill
+0ed8b6c9f43335b9ed699031efa9d0da137c75fe	refs/heads/tom/dumper_0531
+f53fafa3048afc3196bb92ba7e7097d24a862e32	refs/heads/tom/kv_canary
+e7ffb9ac65def8ef350cd10caad4f52125c31e6b	refs/heads/tom/kv_canary_revert_reversed
+a2e062294c5c662fca92e0d7bf18ca7fafa0de84	refs/heads/tom/opt_dump_comparator_percentile
+f463024b3e67f0ca8339d7ea76fd1f3479e3ec35	refs/heads/tom/pr_chain/tom_refactor_202605a/primary/mech_preflight/convert-self-x-to-locals
+541abbba42c80ed83e46510880d19b69349c5bb0	refs/heads/tom/probe-lora-bug-25690
+d45abc73f220defa9512604eac7aaea33c39de0b	refs/heads/tom/refactor_fill_ids
+8cd38d5e3c7b68c5b28c0aa75b32c929a4bd2d65	refs/heads/tom/refactor_fill_ids_b
+1c2bd6dc2fafc8a821700662ac3b0320bfc5249f	refs/heads/tom/refactor_retract_all
+85090b8d268b2d3ac602e53769b9115f1f1f6eb5	refs/heads/tom/release_req_free_func
+5f93545d04156662835c5122825162adb8b43083	refs/heads/tom/revert-25690-cutedsl
+33f3f8176e89d9fb972fd3a08d7012bf42992c56	refs/heads/tom/rm_chunked_req_scheduled_last_iter
+21414010fc26c24c6ad9eec6967fce2f09d97964	refs/heads/tom/scripted_runtime_and_chunked_testing
+d4bb9131736e6632707b007c5488da2f239a49c3	refs/heads/tom/scripted_runtime_extracted
+428763a05c10a0160d76fb0e54641db1f09eeec1	refs/heads/tom/scripted_runtime_extracted_chain
+cacbe410cf7633f272b2d77ba4faec262a70e7cd	refs/heads/tom/symmetric_ignore_eos_fill_len
+de6ced0bf59ba291b3240178826d07a4253d5d6a	refs/heads/tom/temp_ci
+139b4bf27586d4abd18ca1734d22b66b13995901	refs/heads/tom_refactor_202605a/primary/mech_model_runner
+c91ee1a596074629d0db9ad375830260004ffef9	refs/heads/tom_refactor_202605a/primary/mech_preflight
+7e9b22593384375d355b8e546d330f83f535c604	refs/heads/tom_refactor_202605a/primary/mech_scheduler
+3a4454145c166ee0f13b72cf08cb0feb1be2a0c4	refs/heads/tom_refactor_202605a/primary/mech_tokenizer_manager
+536d8fbeff66b358cecdc9dcd7b6d22baa4a8f28	refs/heads/tom_refactor_202605a/primary/nonmech_model_runner
+3cbf70ae7e058f65c87ed3256d82309bedc0a629	refs/heads/tom_refactor_202605a/primary/nonmech_scheduler
+ce8e20d2e624283935b5c85b88f7b0b28f0e59ab	refs/heads/tom_refactor_202605a/primary/nonmech_tokenizer_manager
+9ebb4c04fcd1dc28ef7a6104c2c9282f9011a803	refs/heads/tool_call_benchmark
+10e4572c26079507f914b462a3280cf264c2a88d	refs/heads/transformers-v5
+1260687bce1cd14b3ea5f484071d8b104bcd4a04	refs/heads/trtllm-mha-full-overlap
+9775e9396e8750a7ed6e96de42636790f3cdff3e	refs/heads/trtllm-mla-fix
+476d371a417bf124719c0694d3f310d396e32cb6	refs/heads/update-transformers-v5
+447174e3135c0b9e15741a3fe178e2e14b1ecdf0	refs/heads/update_perf_dashboard
+cfaf98a09cd0d47b50facc437de42682bb5ab54c	refs/heads/util-queue-timeline-chart
+e76078c070acc746ff097bf654a2f7e0705966ee	refs/heads/v4_pd_pp
+ac8b39b08e731ad8612866208fde2996f0374d1a	refs/heads/vit-cuda-graph-redesign
+09b7d9c02e87928667737461726e9eec5c946749	refs/heads/vz/qwen3-omni
+7a21d3577a45a3e043efc0b4a8e3ce014ed84fa2	refs/heads/wan-overlay-only-20260328
+10a9eaaa709d777c48ac91e37b7d6c120dfaaa09	refs/heads/wan-s2v-main-20260330
+8e3b3cfcd59cd9108dbe3c57592cdf30abf79811	refs/heads/wan-s2v-rebased-20260328
+361b139b062da7cbf8ce514db663a61d98a4f43d	refs/heads/wduan/fix_pause_generation
+68c999a2ab929e44673c4203b256409921de3cf2	refs/heads/whl-metadata-fix
+9ad90fb72b89e1ffd8ccd5d61cbdc70a9be2a571	refs/heads/worktree-agent-a5ee4203
+481c0e5a134098937db95cd48e90282d667d75b2	refs/heads/worktree-agent-ab2b777b
+efe5eaa64fc857f055d392e3b857487674de039c	refs/heads/xiaomi-mimo-v2-flash-0.5.5
+a362a0dee304043e617067fb3a922826da7c9b3f	refs/heads/xiezhq-schedule-new
+1407106d87ad616ae3e4eff58afedc9f129c4d8b	refs/heads/xiezhq-schedule-simplify
+056cc07fc1f45d145a10bceef8b29740fa67bb5e	refs/heads/xiezhq-session
+7e02a335ca4a6901f1f72a6ea0cc774c7af63f1c	refs/heads/xsun/amd_diffusion
+137b1ac68759d6a2c3075ca13aedd9844a32e4f1	refs/heads/yamy/mixed2048-fusion-piecewise-cg-bia
+a9b947897cb39e969d1c72f99142cf2743908cb9	refs/heads/yangmin/pr26245-fullchat-terminal-strict-rr
+8e8feb6c1142e2e7360bcde03c89cb108b2d220a	refs/heads/yhyang201/dsv4-add-non-mtp-tests
+32c82a340aac46a089dd8c544b767c6d8386b176	refs/heads/yhyang201/dsv4-h200-pro-single-node
+c3754728546103755e27c954469e3a4a25440d50	refs/heads/yhyang201/test-b200-ci
+538235dda38cef269c85066ce0cb0a78582dce7c	refs/heads/yizhang/decode_store_only_mamba_radix_cache
+4f425f08391db7b86448464aaf012722a0171f6b	refs/heads/yizhang/mamba_prefix_cache_support_large_page_size
+5623d7faf516d888012303b85d5875b98d3a2ed7	refs/heads/yizhang/tp-dp-invariant
+add43be3bf5e26aa1ee661a363730d453f26849a	refs/heads/yizhang/vlm_fix_radix_cache_for_qwen3vl
+88d92bf4953c97d9de27696dcc276eb352ab2bfe	refs/heads/yuwei/pcg
+36226ffbd68f30a4c8fb87d80b3b37af21a706e4	refs/heads/yyh/enable-swa-split-leaf-on-insert
+c7c4b777e4ca669711427c54b99c056f6132bec8	refs/heads/yz/amd_diffusion
+
+ exited 1 in 33855ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/KGT24k/mcp-tool-search.git "$tmp/mcp-tool-search" >/dev/null 2>&1 && find "$tmp/mcp-tool-search" -maxdepth 3 -type f | sed "s#$tmp/mcp-tool-search/##" | head -80 && printf '"'\\n--- README ---\\n' && sed -n '1,220p' \""'$tmp/mcp-tool-search/README.md"' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 794ms:
+.npmignore
+LICENSE
+CHANGELOG.md
+BENCHMARKS.md
+website/index.html
+README.md
+smithery.yaml
+install.bat
+.gitignore
+package-lock.json
+package.json
+.github/FUNDING.yml
+.github/workflows/publish-npm.yml
+.github/workflows/publish-github-packages.yml
+.github/ISSUE_TEMPLATE/feature_request.md
+.github/ISSUE_TEMPLATE/bug_report.md
+tsconfig.json
+.git/config
+.git/shallow
+.git/HEAD
+.git/info/exclude
+.git/logs/HEAD
+.git/description
+.git/hooks/commit-msg.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/sendemail-validate.sample
+.git/hooks/pre-commit.sample
+.git/hooks/applypatch-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/pre-receive.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-push.sample
+.git/hooks/update.sample
+.git/hooks/push-to-checkout.sample
+.git/index
+.git/packed-refs
+SECURITY.md
+src/pool.ts
+src/utils.ts
+src/types.ts
+src/__tests__/utils.test.ts
+src/__tests__/cache.test.ts
+src/__tests__/catalog.test.ts
+src/__tests__/pool.test.ts
+src/cache.ts
+src/build-catalog.ts
+src/index.ts
+src/catalog.ts
+
+--- README ---
+# MCP Tool Search
+
+[![npm version](https://img.shields.io/npm/v/mcp-tool-search.svg)](https://www.npmjs.com/package/mcp-tool-search)
+[![npm downloads](https://img.shields.io/npm/dm/mcp-tool-search.svg)](https://www.npmjs.com/package/mcp-tool-search)
+[![npm audit](https://img.shields.io/badge/npm%20audit-0%20vulnerabilities-brightgreen.svg)](https://www.npmjs.com/package/mcp-tool-search)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
+[![Tests](https://img.shields.io/badge/tests-81%2F81-brightgreen.svg)](src/__tests__)
+
+**Reduce MCP tool-definition context overhead by ~85–96%.**
+
+MCP Tool Search is a proxy server that replaces dozens of MCP tool schemas in your model's context window with just 4 lightweight tools. Instead of loading every tool definition upfront, the model searches for tools on-demand and calls them through the proxy.
+
+```
+Before: 50 tool schemas loaded → ~10,000 context tokens consumed every turn
+After:  4 proxy tools loaded   →    ~600 context tokens (constant)
+```
+
+## Problem
+
+Every MCP server you add dumps its full tool schemas into the model's context window. With 5+ servers and 40+ tools, that's **8,000–20,000+ tokens** of schema definitions the model must process on every single turn — even when it doesn't use any of them.
+
+## Solution
+
+MCP Tool Search sits between your MCP client and your backend servers:
+
+1. **Catalog Builder** pre-scans all your MCP servers and snapshots their tool definitions to a local JSON file
+2. **Proxy Server** exposes only 4 tools — the model searches, inspects, and calls tools through the proxy
+3. **Lazy Connections** — backend servers are spawned on first use and kept alive for 5 minutes
+
+```
+MCP Client ←→ MCP Tool Search Proxy ←→ Backend MCP Servers
+                     ↓                    (lazily spawned)
+               catalog.json             Context7, GitHub, etc.
+               (pre-built snapshot)
+```
+
+## The 4 Proxy Tools
+
+| Tool | Purpose |
+|------|---------|
+| `search_tools` | Fuzzy-search across all backend tools by keyword or capability |
+| `get_tool_schema` | Retrieve the full input schema for a specific tool |
+| `call_tool` | Execute a tool on its backend server through the proxy |
+| `list_servers` | List all cataloged servers and their connection status |
+
+## Quick Start
+
+```bash
+npx mcp-tool-search --help
+# Or: npm install -g mcp-tool-search && mcp-build-catalog && mcp-tool-search
+```
+
+## Installation
+
+### Option A: npm (recommended)
+
+```bash
+npm install -g mcp-tool-search
+```
+
+### Option B: From source
+
+```bash
+git clone https://github.com/KGT24k/mcp-tool-search.git
+cd mcp-tool-search
+npm install
+npm run build
+```
+
+## Setup
+
+### 1. Configure backend servers
+
+MCP Tool Search reads your MCP client's server configuration to discover backend tools. It uses the same `.mcp.json` format as Claude Code.
+
+### 2. Build the tool catalog
+
+```bash
+# If installed globally:
+mcp-build-catalog
+
+# If from source:
+npm run catalog
+```
+
+This connects to each configured MCP server, snapshots their tool definitions, and writes `catalog.json`. The proxy itself is automatically excluded from the catalog.
+
+### 3. Add the proxy to your MCP client
+
+Choose your client below for the correct configuration:
+
+<details>
+<summary><strong>Claude Code</strong></summary>
+
+Add to your `.mcp.json` in the project root (or `~/.mcp.json` for global config):
+
+```json
+{
+  "mcpServers": {
+    "mcp-tool-search": {
+      "command": "npx",
+      "args": ["-y", "mcp-tool-search"]
+    }
+  }
+}
+```
+
+Or if installed from source:
+
+```json
+{
+  "mcpServers": {
+    "mcp-tool-search": {
+      "command": "node",
+      "args": ["/path/to/mcp-tool-search/dist/index.js"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Claude Desktop</strong></summary>
+
+Add to your `claude_desktop_config.json`:
+
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "mcp-tool-search": {
+      "command": "npx",
+      "args": ["-y", "mcp-tool-search"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Cursor</strong></summary>
+
+Add to your Cursor MCP settings (`.cursor/mcp.json` in your project or global config):
+
+```json
+{
+  "mcpServers": {
+    "mcp-tool-search": {
+      "command": "npx",
+      "args": ["-y", "mcp-tool-search"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Windsurf</strong></summary>
+
+Add to your Windsurf MCP configuration (`~/.codeium/windsurf/mcp_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "mcp-tool-search": {
+      "command": "npx",
+      "args": ["-y", "mcp-tool-search"]
+    }
+  }
+}
+```
+
+</details>
+
+### 4. Disable direct backend servers
+
+Remove or disable your other MCP server entries in `.mcp.json` — the proxy handles all tool calls to them now.
+
+## Environment Variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `MCP_TOOL_SEARCH_CATALOG` | `./catalog.json` | Path to the catalog file |
+| `MCP_TOOL_SEARCH_METRICS` | *(none)* | Path to write JSON metrics (for monitoring dashboards) |
+
+## Token Savings
+
+The proxy's token footprint is **constant** — 4 tools regardless of how many backend servers exist.
+
+| Backend Tools | Direct Tokens | Proxy Tokens | Savings |
+|---|---|---|---|
+| 10 | ~2,000 | ~600 | 70% |
+| 25 | ~5,000 | ~600 | 88% |
+| 50 | ~10,000 | ~600 | 94% |
+| 100 | ~20,000 | ~600 | 97% |
+| 200 | ~40,000 | ~600 | 99% |
+
+See [BENCHMARKS.md](BENCHMARKS.md) for detailed methodology and measurements.
+
+## Security
+
+MCP Tool Search uses an **allowlist-based environment filter** when spawning backend servers. Only explicitly safe environment variables (PATH, HOME, NODE_PATH, etc.) are forwarded to child processes. API keys, tokens, and secrets from your shell environment are **never** leaked to backend servers unless explicitly configured in the catalog's per-server `env` block.
+
+Additional security measures:
+
+- **Connection cap**: Max 20 concurrent server connections (oldest idle connection evicted when limit reached)
+- **Connect timeout**: 15-second timeout on server spawn
+- **Idle cleanup**: Connections auto-close after 5 minutes of inactivity
+- **No shell execution**: Server commands passed as arrays to `child_process.spawn()`, never through shell interpretation
+- **TypeScript strict mode**: Full type safety with no `any` casts in core logic
+- **Minimal dependencies**: Only 2 runtime deps (`@modelcontextprotocol/sdk`, `zod`)
+
+> **Note:** `catalog.json` stores per-server env vars from your MCP config (including API tokens that backend servers need to function). Treat this file as sensitive — it is excluded from git (`.gitignore`) and npm publishing (`.npmignore` + `"files"` allowlist) by default. Do not share or commit it.
+
+
+exec
+/bin/zsh -lc 'tmp=$(find /var/folders -path '"'*mcp-tool-search' -type d 2>/dev/null | head -1); sed -n '1,260p' \""'$tmp/src/catalog.ts"; printf '"'\\n--- index search bits ---\\n'; grep -R \"search_tools\\|fuzzy\\|score\\|description\\|server\" -n \""'$tmp/src" | head -120' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 2562ms:
+/**
+ * MCP Tool Search — Catalog Manager
+ *
+ * Loads the tool catalog (catalog.json) and provides fuzzy search.
+ * The catalog is pre-built by build-catalog.ts which connects to
+ * each backend MCP server and snapshots its tool definitions.
+ */
+
+import { readFile } from "node:fs/promises";
+import type { CatalogData, CatalogServer, SearchResult } from "./types.js";
+import { LRUCache } from "./cache.js";
+import type { CacheStats } from "./cache.js";
+
+/** Pre-compiled regex for tokenization — avoids re-creation on every search call */
+const TOKENIZE_RE = /[^a-z0-9\s]/g;
+
+/**
+ * Compute Levenshtein (edit) distance between two strings.
+ * Used as lowest-priority fuzzy fallback for typo tolerance.
+ * Inline to avoid external dependencies.
+ */
+function levenshtein(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  // Early exits
+  if (m === 0) return n;
+  if (n === 0) return m;
+  if (a === b) return 0;
+
+  // Single-row DP (O(min(m,n)) space)
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  let curr = new Array<number>(n + 1);
+
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(
+        prev[j] + 1,      // deletion
+        curr[j - 1] + 1,  // insertion
+        prev[j - 1] + cost // substitution
+      );
+    }
+    [prev, curr] = [curr, prev];
+  }
+
+  return prev[n];
+}
+
+export class Catalog {
+  private data: CatalogData | null = null;
+  private searchIndex: Array<{
+    tool: string;
+    server: string;
+    description: string;
+    tokens: string[];
+  }> = [];
+
+  /** LRU cache for search results (key = "query:maxResults") */
+  private searchCache = new LRUCache<SearchResult[]>({
+    maxEntries: 128,
+    ttlMs: 60_000, // 1 minute — catalog is static, searches are repeatable
+  });
+
+  /** LRU cache for tool schemas (key = "server:tool") */
+  private schemaCache = new LRUCache<Record<string, unknown> | null>({
+    maxEntries: 256,
+    ttlMs: 0, // No expiry — schemas don't change until catalog reload
+  });
+
+  constructor(private readonly path: string) {}
+
+  /** Load catalog from disk */
+  async load(): Promise<void> {
+    const raw = await readFile(this.path, "utf-8");
+    const parsed = JSON.parse(raw);
+    this.validateCatalog(parsed);
+    this.data = parsed;
+    this.buildIndex();
+    this.clearCaches(); // Invalidate stale cache entries on reload
+  }
+
+  /** Load catalog from data directly (for testing without filesystem) */
+  loadFromData(data: CatalogData): void {
+    this.validateCatalog(data);
+    this.data = data;
+    this.buildIndex();
+    this.clearCaches(); // Invalidate stale cache entries on reload
+  }
+
+  /** Validate catalog shape to prevent cryptic runtime crashes */
+  private validateCatalog(data: unknown): asserts data is CatalogData {
+    if (!data || typeof data !== "object") {
+      throw new Error("Invalid catalog: not a JSON object");
+    }
+    const obj = data as Record<string, unknown>;
+    if (!obj.servers || typeof obj.servers !== "object") {
+      throw new Error("Invalid catalog: missing 'servers' object");
+    }
+    for (const [name, server] of Object.entries(
+      obj.servers as Record<string, unknown>
+    )) {
+      if (!server || typeof server !== "object") {
+        throw new Error(
+          `Invalid catalog: server '${name}' is not an object`
+        );
+      }
+      if (!Array.isArray((server as Record<string, unknown>).tools)) {
+        throw new Error(
+          `Invalid catalog: server '${name}' has no tools array`
+        );
+      }
+    }
+  }
+
+  /** Build search index from catalog data */
+  private buildIndex(): void {
+    if (!this.data) return;
+    this.searchIndex = [];
+
+    for (const [serverName, server] of Object.entries(this.data.servers)) {
+      for (const tool of server.tools) {
+        const tokens = this.tokenize(
+          `${tool.name} ${tool.description} ${serverName}`
+        );
+        this.searchIndex.push({
+          tool: tool.name,
+          server: serverName,
+          description: tool.description,
+          tokens,
+        });
+      }
+    }
+  }
+
+  /** Tokenize a string for fuzzy matching — splits on spaces, underscores, and hyphens */
+  private tokenize(text: string): string[] {
+    return text
+      .toLowerCase()
+      .replace(TOKENIZE_RE, " ")
+      .split(/[\s_\-]+/)
+      .filter((t) => t.length > 1);
+  }
+
+  /** Fuzzy search across all tools (with LRU caching) */
+  search(query: string, maxResults: number = 10): SearchResult[] {
+    // Check cache first
+    const cacheKey = `${query}:${maxResults}`;
+    const cached = this.searchCache.get(cacheKey);
+    if (cached) return cached;
+
+    let results: SearchResult[];
+
+    if (!query.trim()) {
+      // Empty query: return all tools (compact)
+      results = this.searchIndex.slice(0, maxResults).map((entry) => ({
+        tool: entry.tool,
+        server: entry.server,
+        description: entry.description,
+        score: 1,
+      }));
+    } else {
+      const queryTokens = this.tokenize(query);
+      const scored: SearchResult[] = [];
+
+      for (const entry of this.searchIndex) {
+        let score = 0;
+
+        for (const qt of queryTokens) {
+          // Exact token match
+          if (entry.tokens.includes(qt)) {
+            score += 3;
+            continue;
+          }
+          // Prefix match
+          if (entry.tokens.some((t) => t.startsWith(qt))) {
+            score += 2;
+            continue;
+          }
+          // Substring match
+          if (entry.tokens.some((t) => t.includes(qt))) {
+            score += 1;
+            continue;
+          }
+          // Tool name contains query
+          if (entry.tool.toLowerCase().includes(qt)) {
+            score += 2;
+            continue;
+          }
+          // Levenshtein fuzzy fallback — typo tolerance (e.g. "git_comit" → "git_commit")
+          // Only apply when both tokens are ≥ 4 chars to prevent short-word false positives
+          // (e.g. "get" ↔ "set" = distance 1, "run" ↔ "fun" = distance 1)
+          if (qt.length >= 4) {
+            const fuzzyMatch = entry.tokens.some(
+              (t) => t.length >= 4 && levenshtein(qt, t) <= 2
+            );
+            if (fuzzyMatch) {
+              score += 0.5;
+            }
+          }
+        }
+
+        if (score > 0) {
+          scored.push({
+            tool: entry.tool,
+            server: entry.server,
+            description: entry.description,
+            score,
+          });
+        }
+      }
+
+      results = scored
+        .sort((a, b) => b.score - a.score)
+        .slice(0, maxResults);
+    }
+
+    // Cache the result
+    this.searchCache.set(cacheKey, results);
+    return results;
+  }
+
+  /** Get a specific server's config */
+  getServer(name: string): CatalogServer | undefined {
+    return this.data?.servers[name];
+  }
+
+  /** Get a specific tool's full schema (with LRU caching) */
+  getToolSchema(
+    serverName: string,
+    toolName: string
+  ): Record<string, unknown> | undefined {
+    const cacheKey = `${serverName}:${toolName}`;
+
+    // Check cache (null means "confirmed not found")
+    if (this.schemaCache.has(cacheKey)) {
+      const cached = this.schemaCache.get(cacheKey);
+      return cached ?? undefined;
+    }
+
+    const server = this.data?.servers[serverName];
+    if (!server) {
+      this.schemaCache.set(cacheKey, null);
+      return undefined;
+    }
+    const tool = server.tools.find((t) => t.name === toolName);
+    const schema = tool?.inputSchema;
+
+    this.schemaCache.set(cacheKey, schema ?? null);
+    return schema;
+  }
+
+  /** Total number of servers in catalog */
+  get totalServers(): number {
+    return this.data ? Object.keys(this.data.servers).length : 0;
+  }
+
+  /** Total number of tools across all servers */
+  get totalTools(): number {
+    return this.searchIndex.length;
+
+--- index search bits ---
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:4: * Lazily spawns backend MCP servers on first tool call,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:25:const MAX_CONCURRENT = 20;             // max simultaneous server connections
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:36:  /** Get or create a connection to a backend MCP server */
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:37:  async getClient(serverName: string): Promise<Client> {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:39:    const existing = this.connections.get(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:42:      this.resetTimer(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:61:    const serverConfig = this.catalog.getServer(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:62:    if (!serverConfig) {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:63:      throw new Error(`Unknown server: ${serverName}`);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:67:      command: resolveCommand(serverConfig.command),
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:68:      args: serverConfig.args,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:69:      env: buildSafeEnv(serverConfig.env),
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:82:          () => reject(new Error(`Connection to ${serverName} timed out after ${CONNECT_TIMEOUT_MS}ms`)),
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:97:    this.connections.set(serverName, entry);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:98:    this.resetTimer(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:101:      `[mcp-tool-search] Connected to ${serverName}\n`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:108:   * Call a tool on a backend server with timeout + exponential backoff retry.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:116:    serverName: string,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:123:      const client = await this.getClient(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:124:      const entry = this.connections.get(serverName)!;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:132:          `${serverName}:${toolName}`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:145:              `[mcp-tool-search] ${serverName}:${toolName} failed after ${attempt + 1} attempts: ${lastError.message}\n`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:154:          `[mcp-tool-search] ${serverName}:${toolName} attempt ${attempt + 1} failed (${lastError.message}), retrying in ${delay}ms...\n`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:158:        if (this.connections.has(serverName)) {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:159:          await this.disconnect(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:166:    throw lastError ?? new Error(`${serverName}:${toolName} failed after retries`);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:221:  /** Reset idle timeout for a server */
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:222:  private resetTimer(serverName: string): void {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:223:    const entry = this.connections.get(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:229:      try { await this.disconnect(serverName); } catch { /* ignore */ }
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:234:  /** Disconnect a specific server */
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:235:  async disconnect(serverName: string): Promise<void> {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:236:    const entry = this.connections.get(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:247:    this.connections.delete(serverName);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:249:      `[mcp-tool-search] Disconnected ${serverName} (idle)\n`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:253:  /** Disconnect all servers (parallel) */
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:261:  stats(): { active: number; servers: string[]; metrics: ServerMetrics[] } {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:265:        server: name,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/pool.ts:275:      servers: Array.from(this.connections.keys()),
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/utils.ts:13: * to spawned MCP servers.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/utils.ts:38: * Filters process.env to only safe keys, then merges server-specific env vars.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/utils.ts:40: * they are explicitly declared by the user for that server.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/utils.ts:43:  serverEnv?: Record<string, string>
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/utils.ts:49:  if (serverEnv) Object.assign(filtered, serverEnv);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:3: * Shared types for catalog, pool, and proxy server.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:9:  description: string;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:13:/** A server entry in the catalog with its tools and spawn config */
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:25:  servers: Record<string, CatalogServer>;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:31:  server: string;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:32:  description: string;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:33:  score: number;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/types.ts:38:  server: string;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/utils.test.ts:71:  it("should merge server-specific env vars", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/utils.test.ts:80:  it("should allow server env to override safe keys", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:17:  servers: {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:18:    "test-server": {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:20:      args: ["test-server.js"],
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:24:          description: "Read contents of a file from the filesystem",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:28:              path: { type: "string", description: "File path to read" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:35:          description: "Write content to a file on the filesystem",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:39:              path: { type: "string", description: "File path to write" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:40:              content: { type: "string", description: "Content to write" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:47:          description: "Create a git commit with a message",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:51:              message: { type: "string", description: "Commit message" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:58:    "second-server": {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:60:      args: ["-y", "second-server"],
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:64:          description: "Search for code patterns across the codebase",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:68:              query: { type: "string", description: "Search query" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:75:          description: "Execute a shell command and return output",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:79:              command: { type: "string", description: "Shell command" },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:105:    it("should populate server names", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:106:      const names = catalog.serverNames;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:107:      assert.ok(names.includes("test-server"));
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:108:      assert.ok(names.includes("second-server"));
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:117:      assert.equal(results[0].server, "test-server");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:120:    it("should return highest score for exact matches", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:124:      // Exact match should score higher than partial
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:125:      assert.ok(results[0].score >= 3);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:140:    it("should find tools by substring in description", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:149:  describe("search — Levenshtein fuzzy match", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:157:    it("should NOT fuzzy match short tokens (< 4 chars)", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:158:      // "get" should NOT fuzzy-match "git" (both are 3 chars)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:161:      // (We can't guarantee zero results, but git_commit shouldn't score via fuzzy)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:186:      const schema = catalog.getToolSchema("test-server", "read_file");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:196:      const schema = catalog.getToolSchema("test-server", "nonexistent_tool");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:200:    it("should return undefined for missing server", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:201:      const schema = catalog.getToolSchema("nonexistent-server", "read_file");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:206:  describe("serverToolCounts", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:207:    it("should return correct counts per server", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:208:      const counts = catalog.serverToolCounts();
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:209:      assert.equal(counts["test-server"], 3);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:210:      assert.equal(counts["second-server"], 2);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:215:    it("should return server config for existing server", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:216:      const server = catalog.getServer("test-server");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:217:      assert.ok(server);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:218:      assert.equal(server.command, "node");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:219:      assert.equal(server.tools.length, 3);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:222:    it("should return undefined for missing server", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:223:      const server = catalog.getServer("nonexistent");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:224:      assert.equal(server, undefined);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:246:    it("should reject missing servers property", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:250:        { message: /missing 'servers' object/ }
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:254:    it("should reject server that is not an object", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:261:            servers: { bad: 42 },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:263:        { message: /server 'bad' is not an object/ }
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:267:    it("should reject server with no tools array", () => {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:274:            servers: { bad: { command: "node", args: [], tools: "nope" } },
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:276:        { message: /server 'bad' has no tools array/ }
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:313:      catalog.getToolSchema("test-server", "read_file");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:314:      catalog.getToolSchema("test-server", "read_file"); // cache hit
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:320:      catalog.getToolSchema("test-server", "nonexistent");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:321:      catalog.getToolSchema("test-server", "nonexistent"); // should hit cached null
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/catalog.test.ts:331:      catalog.getToolSchema("test-server", "read_file");
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:8: * classification logic. Integration tests with real MCP servers
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:22:  servers: {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:23:    "mock-server": {
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:29:          description: "Echo input back",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:44:          description: "Health check ping",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:67:      assert.deepEqual(stats.servers, []);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.dPKWoG3Afc/mcp-tool-search/src/__tests__/pool.test.ts:78:    it("should throw on unknown server", async () => {
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/README.md | grep -i -C 2 'tool\\|function' | head -60" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/LMCache/LMCache/main/README.md | grep -i -C 2 'tool\\|retriev\\|cache' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md | grep -i -C 2 'tool\\|kernel\\|attention' | head -80" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'git ls-remote --heads https://github.com/NVIDIA/TensorRT-LLM.git | head -5 && git ls-remote --heads https://github.com/LMCache/LMCache.git | head -5 && git ls-remote --heads https://github.com/flashinfer-ai/flashinfer.git | head -5' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 219ms:
+100 26863  100 26863    0     0   109k      0 --:--:-- --:--:-- --:--:--  109k
+[➡️ link](https://developer.nvidia.com/blog/boost-llama-3-3-70b-inference-throughput-3x-with-nvidia-tensorrt-llm-speculative-decoding/)
+
+* [2024/12/10] ⚡ Llama 3.3 70B from AI at Meta is accelerated by TensorRT-LLM. 🌟 State-of-the-art model on par with Llama 3.1 405B for reasoning, math, instruction following and tool use. Explore the preview
+[➡️ link](https://build.nvidia.com/meta/llama-3_3-70b-instruct)
+
+--
+[Architected on PyTorch](https://github.com/NVIDIA/TensorRT-LLM/blob/release/1.1/docs/source/developer-guide/overview.md), TensorRT LLM provides a high-level Python [LLM API](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html#llm-api) that supports a wide range of inference setups - from single-GPU to multi-GPU or multi-node deployments. It includes built-in support for various parallelism strategies and advanced features. The LLM API integrates seamlessly with the broader inference ecosystem, including NVIDIA [Dynamo](https://github.com/ai-dynamo/dynamo) and the [Triton Inference Server](https://github.com/triton-inference-server/server).
+
+TensorRT LLM is designed to be modular and easy to modify. Its PyTorch-native architecture allows developers to experiment with the runtime or extend functionality. Several popular models are also pre-defined and can be customized using [native PyTorch code](./tensorrt_llm/_torch/models/modeling_deepseekv3.py), making it easy to adapt the system to specific needs.
+
+
+--
+## Deprecation Policy
+
+Deprecation is used to inform developers that some APIs and tools are no longer recommended for use. Beginning with version 1.0, TensorRT LLM has the following deprecation policy:
+
+1. Communication of Deprecation
+--
+2. Migration Period
+  - TensorRT LLM provides a 3-month migration period after deprecation.
+  - During this period, deprecated APIs, tools, or parameters continue to work but trigger warnings.
+3. Scope of Deprecation
+  - Full API/Method/Class Deprecation: The entire API/method/class is marked for removal.
+  - Partial Deprecation: If only specific parameters of an API/method are deprecated (e.g., param1 in LLM.generate(param1, param2)), the method itself remains functional, but the deprecated parameters will be removed in a future release.
+4. Removal After Migration Period
+  - After the 3-month migration period ends, deprecated APIs, tools, or parameters are removed in a manner consistent with semantic versioning (major version changes may include breaking removals).
+
+## Telemetry Data Collection
+
+ succeeded in 209ms:
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5022  100  5022    0     0  21317      0 --:--:-- --:--:-- --:--:-- 21279
+# LMCache core library
+
+## Installation
+--
+
+## Demos
+Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).
+
+## Quickstart: 
+--
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start vLLM + LMCache 
+```bash
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface access token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.6 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example-local.yaml
+```
+Please fill `Huggingface cache dir on your local machine` and `Your huggingface access token` in the above command. 
+
+You can also change the `model` variable to use different models.
+--
+**Step 3:** Run demo application
+
+You can now run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+--
+
+
+## Use case 1: share prefix KV between different vLLM instance through LMCache
+The following instructions help deploy LMCache backend + multile vLLM instance by docker containers. The architecture of the demo application looks like this:
+
+<img width="817" alt="image" src="https://github.com/LMCache/LMCache/assets/25103655/ab64f84d-26e1-46ce-a503-e7e917b618bc">
+
+
+--
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/lmcache-server:0.1.0
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start LMCache backend server 
+```bash
+docker run --name lmcache-server --network host -d apostacyh/lmcache-server:0.1.0 0.0.0.0 65432
+```
+
+--
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+--
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=1"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8001:8001 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+
+hook: PostToolUse Completed
+ succeeded in 179ms:
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 10474  100 10474    0     0  50484      0 --:--:-- --:--:-- --:--:-- 50355
+</p>
+<h1 align="center">
+High-Performance GPU Kernels for Inference
+</h1>
+
+--
+[![Documentation](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml/badge.svg)](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml)
+
+**FlashInfer** is a library and kernel generator for inference that delivers state-of-the-art performance across diverse GPU architectures. It provides unified APIs for attention, GEMM, and MoE operations with multiple backend implementations including FlashAttention-2/3, cuDNN, CUTLASS, and TensorRT-LLM.
+
+## Why FlashInfer?
+
+- **State-of-the-art Performance**: Optimized kernels for prefill, decode, and mixed batching scenarios
+- **Multiple Backends**: Automatically selects the best backend for your hardware and workload
+- **Modern Architecture Support**: Support for SM75 (Turing) and later (through Blackwell)
+- **Low-Precision Compute**: FP8 and FP4 quantization for attention, GEMM, and MoE operations
+- **Production-Ready**: CUDAGraph and torch.compile compatible for low-latency serving
+
+## Core Features
+
+### Attention Kernels
+- **Paged and Ragged KV-Cache**: Efficient memory management for dynamic batch serving
+- **Decode, Prefill, and Append**: Optimized kernels for all attention phases
+- **MLA Attention**: Native support for DeepSeek's Multi-Latent Attention
+- **Cascade Attention**: Memory-efficient hierarchical KV-Cache for shared prefixes
+- **Sparse Attention**: Block-sparse and variable block-sparse patterns
+- **POD-Attention**: Fused prefill+decode for mixed batching
+
+### GEMM & Linear Operations
+--
+
+### Mixture of Experts (MoE)
+- **Fused MoE Kernels**
+- **Multiple Routing Methods**: DeepSeek-V3, Llama-4, and standard top-k routing
+- **Quantized MoE**: FP8 and FP4 expert weights with block-wise scaling
+--
+Notable updates:
+- [2025-10-08] Blackwell support added in [v0.4.0](https://github.com/flashinfer-ai/flashinfer/releases/tag/v0.4.0)
+- [2025-03-10] [Blog Post](https://flashinfer.ai/2025/03/10/sampling.html) Sorting-Free GPU Kernels for LLM Sampling, which explains the design of sampling kernels in FlashInfer.
+
+## Getting Started
+--
+**Package Options:**
+
+- **flashinfer-python**: Core package that compiles/downloads kernels on first use
+- **flashinfer-cubin**: Pre-compiled kernel binaries for all supported GPU architectures
+- **flashinfer-jit-cache**: Pre-built kernel cache for specific CUDA versions
+
+**For faster initialization and offline usage**, install the optional packages to have most kernels pre-compiled:
+
+```bash
+--
+```
+
+**For Blackwell (SM100+) CuTe DSL kernels**, install with the CUDA 13 extra to enable Blackwell-optimized kernels:
+
+```bash
+--
+import flashinfer
+
+# Single decode attention
+q = torch.randn(32, 128, device="cuda", dtype=torch.float16)  # [num_qo_heads, head_dim]
+k = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)  # [kv_len, num_kv_heads, head_dim]
+--
+```
+
+> **Note:** When using `--no-build-isolation`, pip does not automatically install build dependencies. FlashInfer requires `setuptools>=77`. If you encounter an error like `AttributeError: module 'setuptools.build_meta' has no attribute 'prepare_metadata_for_build_editable'`, upgrade pip and setuptools first:
+> ```bash
+> python -m pip install --upgrade pip setuptools
+> ```
+
+--
+```
+
+### CLI Tools
+
+FlashInfer provides several CLI commands for configuration, module management, and development:
+--
+For detailed information about logging levels, configuration, and advanced features, see [Logging](https://docs.flashinfer.ai/logging.html) in our documentation.
+
+
+hook: PostToolUse Completed
+ succeeded in 1249ms:
+158ebb089c6efba3a7e1eb650f598b4aa9553eea	refs/heads/1.0-mlpinf
+6d7a6a5c3bda123cafb8eb57efad47796c16165b	refs/heads/dev-sm87-trt101
+c63fb56cef60b3abb2a497a2d3d004db4395590c	refs/heads/dev-sm87-trt90
+7212c43f101c565fb0ee9cde475d0906c7d0dc6e	refs/heads/feat/1.2-mlpinf
+91142da9b45ca499c4513d2050375d78af93cab3	refs/heads/feat/bench_x
+cb7b6ac19dd0760fff4132b79ea826750c56cbd0	refs/heads/add-platform-module
+1cf60deea0c08b2af1ce63af33c30ebfce9cb5e5	refs/heads/automation/sync-torch-version
+9d5479cbb41261b9be2812afa67be3ab3c5819fd	refs/heads/automation/update-chinese-docs
+a9af6e30d40e3396693181d0e1554248e1655cda	refs/heads/benchmarks-main
+2eea5ae50503ffd287fc9b94144a09d246c93709	refs/heads/ci/update-dockerfile
+0e73b1020b439ecb50c08bf4cad231d6294a53fc	refs/heads/alex/i2356
+fda0d2d02fea5f57777cd2d0ebf7e8b9373084ee	refs/heads/auto-update-codeowners
+9a6113c4a8a6e0c9e15e4e74bd06bed0577c0c5e	refs/heads/auto-update-xfails-report
+5ccdc6122da0e31ddb7c7d3cf1fbfc3fb31facfc	refs/heads/claude/issue-1104-20260112-2306
+a22e90a0a6ab71324e76e311b185a866d5d6293f	refs/heads/claude/issue-1104-20260113-0540
+
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/volcengine/OpenViking.git "$tmp/OpenViking" >/dev/null 2>&1 && find "$tmp/OpenViking" -maxdepth 2 -type f | sed "s#$tmp/OpenViking/##" | head -80 && printf '"'\\n--- README search ---\\n' && grep -R \"tool\\|MCP\\|retriev\\|routing\\|server\" -in \""'$tmp/OpenViking"/README* "$tmp/OpenViking"/docs 2>/dev/null | head -120' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 7810ms:
+benchmark/.gitignore
+Cargo.toml
+crates/LICENSE
+docker/openviking-entrypoint.sh
+docker/pending_health_server.py
+README_JA.md
+LICENSE
+uv.lock
+web-studio/.cta.json
+web-studio/pnpm-lock.yaml
+web-studio/index.html
+web-studio/.prettierignore
+web-studio/README.md
+web-studio/README_CN.md
+web-studio/prettier.config.js
+web-studio/.gitignore
+web-studio/package-lock.json
+web-studio/package.json
+web-studio/components.json
+web-studio/tsconfig.json
+web-studio/eslint.config.js
+web-studio/vite.config.ts
+.pre-commit-config.yaml
+openviking/client.py
+openviking/__init__.py
+openviking/async_client.py
+openviking/sync_client.py
+Dockerfile
+Makefile
+pyproject.toml
+openviking_cli/rust_cli.py
+openviking_cli/__init__.py
+openviking_cli/setup_wizard.py
+openviking_cli/server_bootstrap.py
+openviking_cli/exceptions.py
+openviking_cli/doctor.py
+tests/test_code_hosting_utils.py
+tests/test_upload_utils.py
+tests/conftest.py
+tests/test_memory_lifecycle.py
+tests/test_telemetry_runtime.py
+tests/test_task_tracker.py
+tests/test_config_loader.py
+tests/test_task_backend_config.py
+tests/test_edge_cases_simple.py
+tests/__init__.py
+tests/debug_trace.py
+tests/test_server_config_loader.py
+tests/test_token_estimation.py
+tests/README.md
+tests/test_prompt_manager.py
+tests/test_session_async_commit.py
+tests/test_edge_cases.py
+tests/test_session_task_tracking.py
+tests/test_link_renderer.py
+Cargo.lock
+MANIFEST.in
+CONTRIBUTING_JA.md
+docs/.npmrc
+docs/package-lock.json
+docs/package.json
+docs/index.md
+README.md
+README_CN.md
+Caddyfile
+setup.py
+.gitignore
+build_support/x86_profiles.py
+build_support/__init__.py
+build_support/versioning.py
+CONTRIBUTING.md
+examples/LICENSE
+examples/watch_resource_example.py
+examples/quick_start.py
+examples/ov.conf.example
+examples/ovcli.conf.example
+scripts/test_ov_intent_planner.py
+.clang-format
+.github/PULL_REQUEST_TEMPLATE.md
+.github/dependabot.yml
+
+--- README search ---
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:42:- **Poor Retrieval Effectiveness**: Traditional RAG uses flat storage, lacking a global view and making it difficult to understand the full context of information.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:43:- **Unobservable Context**: The implicit retrieval chain of traditional RAG is like a black box, making it hard to debug when errors occur.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:56:- **Directory Recursive Retrieval** → **Improves Retrieval Effect**: Supports native filesystem retrieval methods, combining directory positioning with semantic search to achieve recursive and precise context acquisition.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:57:- **Visualized Retrieval Trajectory** → **Observable Context**: Supports visualization of directory retrieval trajectories, allowing users to clearly observe the root cause of issues and guide retrieval logic optimization.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:58:- **Automatic Session Management** → **Context Self-Iteration**: Automatically compresses content, resource references, tool calls, etc., in conversations, extracting long-term memory, making the Agent smarter with use.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:67:- **Rust Toolchain**: Cargo (Required for building RAGFS and CLI components from source)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:97:- **Embedding Model**: For vectorization and semantic retrieval
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:107:| `openai-codex` | Codex VLM                | Use `openviking-server init`                                                                                                                                                                                       |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:108:| `kimi`         | Kimi Code Membership     | Use `openviking-server init`                                                                                                                                                                                       |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:109:| `glm`          | GLM Coding Plan          | Use `openviking-server init`                                                                                                                                                                                       |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:181:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:183:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:202:> - `openviking-server doctor` validates that the current Codex auth is usable
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:212:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:214:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:244:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:246:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:277:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:289:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:292:`doctor` checks local prerequisites (config file, Python version, embedding/VLM provider connectivity, disk space) without requiring a running server.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:296:#### Server Configuration Template
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:301:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:302:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:305:If you choose `OpenAI Codex` inside `openviking-server init`, the wizard can import existing Codex auth or start the Codex sign-in flow for you.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:342:#### Server Configuration Examples
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:454:Use `openviking-server init` and choose `OpenAI Codex`, then run `openviking-server doctor`.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:481:#### Set Server Configuration Environment Variable
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:507:You can initialize the configuration of the CLI/client interactively through the `ov config` command. If you have multiple openviking servers, you can also switch to other configurations using the `ov config switch` command.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:511:<summary><b>Example: ovcli.conf for visiting localhost server</b></summary>
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:548:#### Launch Server
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:551:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:552:openviking-server
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:555:If you configured `provider=openai-codex`, `openviking-server doctor` already validates Codex auth.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:560:nohup openviking-server > /data/log/openviking.log 2>&1 &
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:588:# Start OpenViking server with Bot enabled
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:589:openviking-server --with-bot
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:595:If you use the official Docker image, `vikingbot` is already bundled in the image and starts by default together with the OpenViking server and console UI. You can disable it at runtime with either `--without-bot` or `-e OPENVIKING_WITH_BOT=0`.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:599:## Server Deployment Details
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:606:👉 **[View: Server Deployment & ECS Setup Guide](./docs/en/getting-started/03-quickstart-server.md)**
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:646:On multi-hop RAG tasks from HotpotQA, increasing OpenViking retrieval from top-5 to top-20 delivers the highest accuracy in this comparison while keeping retrieval latency low:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:648:| Method | Retrieval Pattern | Accuracy | Tokens / QA | Latency / QA |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:650:| Naive RAG | Vector retrieval | 62.50% | 1,290 | **0.11s** |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:654:| OpenViking (top-5) | Vector retrieval | 72.75% | 3,154 | 0.22s |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:655:| OpenViking (top-20) | Vector retrieval | **91.00%** | 12,533 | 0.23s |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:656:| Nanobot + OpenViking (Agent) | Vector retrieval + Agent | 87.00% | 71,300 | 61.6s |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:660:| Method | Retrieval Pattern | Average Accuracy | Indexing Tokens | Tokens / QA | Retrieval Latency |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:662:| Naive RAG | Vector retrieval | 53.93% | 2,755,356 | 1,435 | **0.13s** |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:666:| **OpenViking** | **Vector retrieval** | **66.87%** | **8,671,538** | **3,060** | **0.19s** |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:668:> Datasets: FinanceBench, NaturalQuestions, ClapNQ, Qasper, and SyllabusQA. OpenViking reaches 66.87% average accuracy with very low retrieval latency (0.19s), while indexing cost is only 13.8% of LightRAG.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:720:- **L0 (Abstract)**: A one-sentence summary for quick retrieval and identification.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:743:### 3. Directory Recursive Retrieval → Improves Retrieval Effect
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:745:Single vector retrieval struggles with complex query intents. OpenViking has designed an innovative **Directory Recursive Retrieval Strategy** that deeply integrates multiple retrieval methods:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:747:1. **Intent Analysis**: Generate multiple retrieval conditions through intent analysis.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:748:2. **Initial Positioning**: Use vector retrieval to quickly locate the high-score directory where the initial slice is located.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:749:3. **Refined Exploration**: Perform a secondary retrieval within that directory and update high-score results to the candidate set.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:750:4. **Recursive Drill-down**: If subdirectories exist, recursively repeat the secondary retrieval steps layer by layer.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:753:This "lock high-score directory first, then refine content exploration" strategy not only finds the semantically best-matching fragments but also understands the full context where the information resides, thereby improving the globality and accuracy of retrieval. Learn more: [Retrieval Mechanism](./docs/en/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:755:### 4. Visualized Retrieval Trajectory → Observable Context
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:759:The retrieval process adopts a directory recursive strategy. The trajectory of directory browsing and file positioning for each retrieval is fully preserved, allowing users to clearly observe the root cause of problems and guide the optimization of retrieval logic. Learn more: [Retrieval Mechanism](./docs/en/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:766:- **Agent Experience Accumulation**: Extract core content such as operational tips and tool usage experience from task execution experience, aiding efficient decision-making in subsequent tasks.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README.md:791:  - 🎮 **Discord**: [Join Discord Server](https://discord.com/invite/eHvx8E9XF3)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:107:| `openai-codex` | 通过 ChatGPT/Codex OAuth 使用 Codex VLM | 使用 `openviking-server init` |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:203:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:205:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:223:> - 可以通过 `openviking-server doctor` 校验当前 Codex 鉴权是否可用
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:234:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:245:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:257:openviking-server init
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:258:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:261:如果你在 `openviking-server init` 中选择了 `OpenAI Codex`，初始化向导会帮你导入已有 Codex 鉴权，或直接引导你完成登录。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:483:openviking-server doctor
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:484:openviking-server
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:487:如果你的 `vlm.provider` 是 `openai-codex`，`openviking-server doctor` 已经会校验 Codex 鉴权。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:492:nohup openviking-server > /data/log/openviking.log 2>&1 &
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:521:openviking-server --with-bot
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:536:👉 **[查看：服务器部署与 ECS 设置指南](./docs/zh/getting-started/03-quickstart-server.md)**
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:796:这种"先锁定高分目录，再精细化内容探索"的策略不仅找到语义最佳匹配的片段，还能理解信息所在的完整上下文，从而提高检索的全局性和准确性。了解更多：[检索机制](./docs/zh/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_CN.md:802:检索过程采用目录递归策略。每次检索的目录浏览和文件定位轨迹被完整保留，让用户能够清晰观察问题的根源，指导检索逻辑的优化。了解更多：[检索机制](./docs/zh/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:346:openviking-server
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:352:nohup openviking-server > /data/log/openviking.log 2>&1 &
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:381:openviking-server --with-bot
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:396:👉 **[参照: サーバーデプロイ＆ECSセットアップガイド](./docs/en/getting-started/03-quickstart-server.md)**
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:539:この「まず高スコアディレクトリを特定し、次にコンテンツ探索を精緻化する」戦略は、セマンティック的に最もマッチするフラグメントを見つけるだけでなく、情報が存在するコンテキスト全体を理解し、検索のグローバル性と精度を向上させます。詳細: [検索メカニズム](./docs/en/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/README_JA.md:545:検索プロセスはディレクトリ再帰戦略を採用しています。各検索のディレクトリブラウジングとファイル位置特定の軌跡が完全に保存され、ユーザーが問題の根本原因を明確に観察し、検索ロジックの最適化を導くことを可能にします。詳細: [検索メカニズム](./docs/en/concepts/07-retrieval.md)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:338:tools/
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:558:`role_id` 表示这条消息的 actor 身份，不等于真实调用者身份。后续从消息派生 tool / skill / memory 归属时，应以消息自身的 `role + role_id` 为准。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:562:`tool_uri` 统一调整为：
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:565:viking://session/{session_id}/tools/{tool_id}
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:568:后续凡是从 message 中派生 tool / skill / memory 归属时，都应优先使用消息上的 `role + role_id`，而不是默认使用当前请求上下文里的 agent / user。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/account-namespace-shared-session-design.md:963:### 10.4 retrieval / visibility
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/local-embedding-llama-cpp-design.md:330:- retriever 调用 `embed()`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/local-embedding-llama-cpp-design.md:334:- retriever 调用 `embed_query()`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/memory-link-design.md:147:| 1 | **put_page** | CLI / MCP / Agent | 解析 frontmatter → SHA256 去重 → 分块(300词) → embedding → 旧值快照 → 覆写 pages → 对账 tags → **runAutoLink**（auto-link hook，写 links 表 + stale-link reconciliation） |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/memory-link-design.md:685:- **触发**：CLI / gateway / tool 调用
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/memory-link-design.md:1891:| `tools.py` | 搜索 API 新增 PPR 后处理层（6.1.1）；prefetch 扩展 PPR（6.1.2） |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/memory-link-design.md:1894:| `server/routers/relations.py` | `LinkRequest` 扩展 `direction`/`link_type`/`weight` 等字段 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/memory-link-design.md:1897:| 新增模块 | `memory/dream_context_provider.py` — 整理上下文提供者；`utils/links_merge.py` — links/backlinks 合并逻辑；`retrieve/ppr.py` — PPR 算法 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:5:本方案讨论的是 OpenViking 的“指标体系（metrics）”，目标是把 `/metrics` 做成一个可持续抓取的 Prometheus 导出端点，并与 `/api/v1/observer/*`（瞬时状态）和 `/api/v1/stats/*`（分析统计）形成清晰边界。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:13:| `/api/v1/observer/*` | 组件瞬时状态查询 | `ObserverService` 组装 queue/vikingdb/models/lock/retrieval 状态 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:15:| `/metrics` | Prometheus 指标导出 | 当前依赖 `PrometheusObserver.render_metrics()` 输出文本 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:21:| `BaseObserver` | `openviking/storage/observers/base_observer.py` | `get_status_table/is_healthy/has_errors` | 瞬时状态语义清晰 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:22:| `PrometheusObserver` | `openviking/storage/observers/prometheus_observer.py` | 进程内存储 Counter/Histogram + 渲染 `/metrics` | 与 Observer 体系职责不一致，属于“异类” |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:23:| 业务埋点（retrieval/embedding/vlm 等） | 多处 | 直接回调 observer 写指标 | 采集层与导出层强耦合，难扩展/难测试 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:24:| `/metrics` 路由 | `openviking/server/routers/metrics.py` | 直接取 `app.state.prometheus_observer` | 路由层绑定具体实现对象，而非 exporter 抽象 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:26:当前 `/metrics` 已打通的指标主要集中在 retrieval/embedding/vlm/cache 的少量 counter/histogram 指标族，覆盖面偏窄。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:30:- `PrometheusObserver` 破坏 Observer 一致性：它本质是“注册中心 + 导出器”混合体，而非瞬时状态读取器。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:40:1. 让 `Observer` 回归“瞬时状态观测”本位。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:70:现有 Observer、Telemetry、TaskTracker、业务事件埋点，本质上都属于“数据来源”，但不等同于指标系统本身。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:79:这种拆分可以避免 retrieval、embedding、vlm 等业务代码直接耦合某一个 exporter。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:115:`/metrics`、`/api/v1/observer/*`、`/api/v1/stats/*` 三类入口继续并存，但必须保持清晰分工。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:118:- `/api/v1/observer/*` 面向人工诊断，强调瞬时状态可读性；
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:162:* 指标链路可以缺失或降级，但不能反向改变 retrieval、embedding、VLM、resource、session、task 与 observer 等核心功能的行为语义。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:173:在边界约束成立之后，模块划分也需要与之保持一致，避免目录结构重新把已经划清的职责边界混回同一层。为避免新指标体系继续与 `storage/observers/` 的职责混杂，集中放入 `openviking/metrics/`，并按“注册中心 / 采集器 / 导出器 / 规则 / 启动装配”进行分组。
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:180:| `collectors` | retrieval / embedding / vlm / queue / task / observer / telemetry 等采集器 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:211:### 1.6 `/metrics`、`/api/v1/observer`、`/api/v1/stats` 的职责边界
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:218:| `/api/v1/observer/*` | 人工诊断型瞬时状态接口 | 组件当前状态、表格或结构化描述 | JSON + 可读状态文本 |
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:253:    K["RetrievalStatsDataSource"]
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:255:    M["ObserverStateDataSource"]
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:259:    Q["RetrievalBackendProbeDataSource"]
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.ZBj6ZdBEgX/OpenViking/docs/design/metric-design.md:308:| `RetrievalStatsDataSource` | `DomainStatsMetricDataSource` | `RetrievalStatsCollector` | 检索累计统计 | query count、zero result、latency、rerank 情况 |
+
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "mcp-tool-search", url: "https://github.com/KGT24k/mcp-tool-search", overlap: "Shipping MCP proxy snapshots all backend tool definitions into a catalog and searches flat over tool.name + tool.description + serverName; this implements the packet's flat/no-ceiling mitigation, not editorial server-aggregate routing."},
+  {system: "Microsoft MCP routing tutorial", url: "https://github.com/microsoft/mcp-for-beginners/blob/main/05-AdvancedTopics/mcp-routing/README.md", overlap: "Shows content/category-based routing to MCP services/servers before service use; overlaps with server-first routing, but no tool-level recall ceiling or coverage-gap analysis."},
+  {system: "OpenViking", url: "https://github.com/volcengine/OpenViking", overlap: "Uses hierarchical/directory recursive retrieval: locate a high-score directory then refine within it. Mechanistically adjacent to aggregate-then-member retrieval, but it is RAG context retrieval, not MCP tool routing."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/blob/main/docs/features/tool_calling.md", overlap: "Supports tool calling/parsing with caller-supplied tools; no evidence of OSS server-to-tool retrieval or editorial aggregate routing."},
+  {system: "LMCache / FlashInfer / TensorRT-LLM / SGLang", url: "https://github.com/LMCache/LMCache ; https://github.com/flashinfer-ai/flashinfer ; https://github.com/NVIDIA/TensorRT-LLM ; https://github.com/sgl-project/sglang", overlap: "Primarily serving/cache/kernel/tool-call-parser infrastructure; no evidence found that they implement this MCP-style two-stage tool retrieval mechanism."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: L0 supports the synthetic mechanism cleanly: flat=1.000, two-stage gap +0.467 +/- 0.013 at S=40,c=0.5,m=1, 39,312/39,312 misses attributed to absent distinctive tokens, and controls c=1.0 or m=S close the gap. But realistic-scale evidence is insufficient: S<=40,T=8 is small for MCP-scale registries; stronger stage-1 is lexical only; no dense encoder/router; no measurements on real MCP/ToolBench registries; and at least one shipping MCP search proxy pools member tool descriptions directly, making the editorial-undercoverage premise non-universal.
+RATIONALE: Yellow, not red, because the packet demonstrates a real reachability mechanism rather than mere integration glue: if stage-1 only sees a lossy server description and top-m<S, within-server reranking cannot recover an un-routed server. Yellow, not green, because this is close to established hierarchical retrieval/collection-selection/IVF failure logic, and the packet has not shown that shipping agent systems commonly route on short editorial aggregates rather than pooled tool schemas. The OSS sweep cuts against broad ecological validity: mcp-tool-search explicitly pre-scans all MCP servers and builds a flat per-tool catalog, while vLLM-style systems leave tool selection to caller-supplied tool lists rather than implementing this router. Required L1: run real MCP/ToolBench registry as-written descriptions, compare editorial-server vs pooled-member vs flat retrieval, include dense embeddings/reranker, and report recall/latency under realistic registry sizes.
+tokens used
+81,509

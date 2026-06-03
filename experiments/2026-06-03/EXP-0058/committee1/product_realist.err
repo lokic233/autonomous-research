@@ -5,3 +5,57 @@ Using AI Gateway (Meta Model API upstream)
 [0m
 > build · avocado-code-latest
 [0m
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001\\.md"}
+[0m→ [0mRead .
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001"}
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/*committee_common*"[90m 0 matches[0m
+[0m✱ [0mGlob "**/TOOLING_v001.md"[90m 0 matches[0m
+[0m→ [0mRead prior_art
+[0m✱ [0mGlob "**/*_shared*"[90m 0 matches[0m
+[0m→ [0mRead projects
+[0m→ [0mRead projects/PROJ-0022
+[0m✱ [0mGlob "**/prompts/**"[90m 0 matches[0m
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*committee*" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0034/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0033/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0056/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0051/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0058/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0035/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0050/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0044/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0042/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0045/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*_committee_common*" 2>/dev/null
+[0m→ [0mRead experiments/2026-06-03/EXP-0058
+[0m→ [0mRead experiments/2026-06-03/EXP-0058/COMMITTEE1_PACKET.md
+[0m→ [0mRead experiments/2026-06-03/EXP-0058/committee1
+[0m→ [0mRead experiments/2026-06-03/EXP-0058/committee1/product_realist.out
+[0m
+[0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/committee/_committee_common_v001.md
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"MCP Model Context Protocol server description routing tool retrieval editorial aggregate vs pooled tool schemas"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"Tool-to-Agent 2511.01854 paper tool routing"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"MCP-Zero 2506.01056 paper tool retrieval"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"ToolRerank 2403.06551 paper"}
