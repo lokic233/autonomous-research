@@ -1722,7 +1722,7 @@ claims vs verdicts + live researchers, returns SEED-NEXT (frontier open, design 
 proj_monitor: add RESEARCHER_STALL notify when a live researcher's hb is past-grace mid-experiment (no
 result, not terminal) -> orchestrator troubleshoots. Engine fix next.
 
-## 2026-06-03 ~15:35 UTC — BUG-116 (RESERVED) seeder-next ignores lightweight posture -> over-mines a project [v3-impl]
+## 2026-06-03 ~15:40 UTC — BUG-116 (FIXED, engine b193b57) seeder-next ignores lightweight posture -> over-mines a project [v3-impl]
 dengcchi "without that much claim" + DECISION_expand_lightweight = on a claim's death, CONVERGE the project
 + move to a FRESH area; do NOT seed another claim in the same project. But BUG-115 seeder-next returns
 SEED-NEXT (design next claim in SAME project) whenever a slot is free — conflicts with lightweight, so
