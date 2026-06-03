@@ -1,0 +1,47 @@
+dead_id: DEAD-0003
+original_claim_id: CLAIM-0028
+original_claim: "For agent tool-result re-ingestion, a template-structured KV reuse\
+  \ scheme that caches KV for the FIXED-SCHEMA token positions of a tool's result\
+  \ envelope (recomputing only the variable value spans) reclaims strictly more reusable\
+  \ KV/prefill than exact-prefix caching (vLLM APC / RadixAttention) on realistic\
+  \ agent traffic where the SAME tool returns the SAME schema with DIFFERENT values\
+  \ \u2014 because exact-prefix caching breaks at the first differing value token\
+  \ while the schema positions are bytewise-identical AND (the load-bearing test)\
+  \ the fixed-schema KV is position-stable enough to reuse OR cheaply re-anchored,\
+  \ a STRUCTURAL reuse a tuned exact-prefix policy cannot capture by construction."
+reason_killed: 'NEGATIVE (RoPE position-shift kill; honest negative = WIN). Part A
+  real: exact-prefix/APC misses 30-38% of schema structure (token-level schema ceiling
+  42-44% vs APC 6-13%; APC breaks at first differing value). Part B fails: position-aware
+  schema reuse collapses to 11-19% (RoPE tax b-c = 0.24-0.32; only 26-42% of ceiling
+  survives). Honest structural win over APC only ~5-6% (c-a), below 10% HELD threshold.
+  Mechanism (diag_where): schema BEFORE first variable value 100% position-stable
+  (=exactly APC prefix) but 85% of schema tokens are POST-first-value, shifted by
+  variable value length, only 14.9% coincidental reuse. Without re-anchor: sub-threshold.
+  With re-anchor R(delta): collapses to published CacheBlend. Prompt Cache already
+  does position-independent modular reuse. Same RoPE wall that killed EXP-0009 CDC
+  dedup. L0 deterministic tokenizer (no transformers on Mac); 8 seeds; serial.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0029
+duplicate_patterns:
+- "For agent tool-result re-ingestion, a template-structured KV reuse scheme that\
+  \ caches KV for the FIXED-SCHEMA token positions of a tool's result envelope (recomputing\
+  \ only the variable value spans) reclaims strictly more reusable KV/prefill than\
+  \ exact-prefix caching (vLLM APC / RadixAttention) on realistic agent traffic where\
+  \ the SAME tool returns the SAME schema with DIFFERENT values \u2014 because exact-prefix\
+  \ caching breaks at the first differing value token while the schema positions are\
+  \ bytewise-identical AND (the load-bearing test) the fixed-schema KV is position-stable\
+  \ enough to reuse OR cheaply re-anchored, a STRUCTURAL reuse a tuned exact-prefix\
+  \ policy cannot capture by construction."
+- agent anchored apc bearing because breaks bytewise caches caching cannot capture
+  cheaply construction different differing enough envelope exact first fixed identical
+  ingestion load more only policy position positions prefill prefix radixattention
+  realistic reclaims recomputing result returns reusable reuse same schema scheme
+  spans stable strictly structural structured template test than token tool traffic
+  tuned value values variable vllm where while
+revival_conditions: Revivable only if real-tokenizer+real-KV L1 shows fixed-schema
+  token KV bytewise/allclose-equal across same-tool calls at SHIFTED positions WITHOUT
+  re-anchoring (predicted false), OR a re-anchor transform proven strictly cheaper
+  than published CacheBlend with a template-structure edge over Prompt Cache.
+related_prior_work: []
+date_killed: '2026-06-03T09:12:28Z'
