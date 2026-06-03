@@ -1,0 +1,68 @@
+claim_id: CLAIM-0052
+project_id: PROJ-0022
+stage: seed
+status: seed
+claim: "In two-stage (route-to-server-then-select-tool) agentic tool retrieval, a\
+  \ correct tool is structurally UNREACHABLE whenever its server's editorial AGGREGATE\
+  \ description fails to cover the tool's distinctive capability tokens \u2014 and\
+  \ this coverage-gap miss rate is INDEPENDENT of embedding/lexical score geometry,\
+  \ so it is NOT removed by raising the server-probe budget top-m below full scan,\
+  \ NOR by within-server reranking (the standard production mitigations); whereas\
+  \ flat (per-tool) retrieval over the same registry has no such ceiling. The reachable-recall\
+  \ gap between two-stage and flat GROWS with editorial under-coverage rate (1-c)\
+  \ and with registry size S \u2014 and critically, the gap is NOT closed by a stronger\
+  \ stage-1 representation (which distinguishes it from recoverable vocabulary-mismatch)."
+why_it_matters: "FRESH AREA (agentic-systems: tool routing / MCP-scale retrieval).\
+  \ EMPIRICAL-phenomenon, NO closed form. Survivor of scout-G's 8-vein search. Passes\
+  \ 6 of 7 killers: NOT metric-validity (reachability/recall mechanism); NOT closed-form\
+  \ (coverage x composition x top-m x rerank interaction, simulated); foundational\
+  \ incumbents ADDRESSED (collection-selection Kulkarni&Callan/Salton, IVF-nprobe,\
+  \ vocab-mismatch Xiao 1806.10869 \u2014 all model cluster score as MEMBER GEOMETRY\
+  \ where raising nprobe recovers recall; delta = the load-bearing quantity is the\
+  \ EDITORIAL AGGREGATE desc NOT the member centroid -> coverage-determined); NOT\
+  \ wrong-currency (reachable-recall@k = true tool-selection currency, bound-independent);\
+  \ NOT killer-#6 (editorial under-coverage is a STRUCTURAL count the harness controls,\
+  \ not an assumed real-world correlation that can evaporate; large at realistic params\
+  \ \u2014 MCP registries bundle heterogeneous tools under one short desc); NOT killer-#7\
+  \ OMITTED-MITIGATION (BOTH standard mitigations MODELED + shown insufficient: raising\
+  \ top-m only closes the gap at m>=#shadowing-servers; within-server rerank cannot\
+  \ recover a server never retrieved). HONEST RESIDUAL RISK = killer #4 (coverage-gap\
+  \ vs ordinary vocab-mismatch): the L0 is DESIGNED TO TEST THE #4 BOUNDARY as its\
+  \ PRIMARY falsification \u2014 does a STRONGER stage-1 REPRESENTATION close the\
+  \ gap (->recoverable vocab-mismatch, KILL) or not (->novel topological ceiling,\
+  \ HELD)? Falsifiable: synthetic registry S servers x T tools, each tool a bag of\
+  \ capability tokens w/ one distinctive token; server editorial desc covers each\
+  \ member's distinctive token w/ prob c (coverage, harness-controlled); queries target\
+  \ one tool via its distinctive token. Conditions: (i) flat over all tools; (ii)\
+  \ two-stage top-m in {1,2,...}; (iii) two-stage+within-server-rerank; (iv) \u2605\
+  \ two-stage + STRONGER stage-1 representation (the #4 test). Sweep c + S. reachable-recall@k\
+  \ = fraction of queries whose GT tool is in the final candidate set. PREDICT: two-stage\
+  \ recall CAPPED below flat at any m<#shadowing-servers, rerank doesn't lift it,\
+  \ stronger stage-1 representation does NOT close it (the #4 discriminator), gap\
+  \ rises with (1-c) and S. Anti-circular: GT = query's target tool (harness-held,\
+  \ never exposed); signal reads only lexical/embedding scores. HONEST-NEGATIVE: if\
+  \ at realistic c=0.7-0.9 gap negligible, OR top-m=2-3 closes it, OR no S-scaling,\
+  \ OR a stronger stage-1 representation closes it -> recoverable vocab-mismatch (killer\
+  \ #4 wins) -> weaken/kill (informative: 'raise m/rerank/better-encoder is sufficient').\
+  \ Topic: agentic-systems. L1: real two-stage tool retrieval over MCP-scale registry\
+  \ (ToolBench / real MCP catalog) + real embedding retriever + real reranker; reachable-recall@k\
+  \ flat vs two-stage vs +rerank w/ as-written editorial descs; confirm real under-coverage\
+  \ + the ceiling/S-scaling + RESOLVE #4 (show the miss is NOT closed by a stronger\
+  \ stage-1 encoder). CONFIRMATORY since L0 anchors coverage structurally."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0058 result, then ros exp complete --exp EXP-0058 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0058
+created_at: '2026-06-03T21:36:48Z'
+last_updated: '2026-06-03T21:37:08Z'
