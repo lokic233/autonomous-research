@@ -1166,3 +1166,29 @@ Pattern note: the 0-greens-21-verdicts state is HONEST hostile review (best clai
 blocked by legit measurement-only-novelty + egress-denied prior-art sweeps, same constraint as v2's 1st green)
 — NOT a broken gate. The risk is convergence into all-yellow dead-ends with no new frontier; BUG-81 ensures
 the orchestrator is always told to open a new frontier when below target.
+
+## 2026-06-03 ~09:10 UTC — CYCLE LOG (v3 active-debug, no new BUG) [v3-impl live debug]
+Cycle 1 of 12h watch (06:11→18:25 UTC). Tokens ~70k. Claims 15→18 (+3), verdicts 17→23 (+6) since 06:11 baseline.
+- AUDIT: caught the #1 recurring mess — local HEAD 9a4a1c2 (EXP-0029 pre-reg) committed-but-UNPUSHED, 1 ahead
+  of origin/v3-main. PUSHED (7578c68..9a4a1c2). Remaining audit "drift" = EXP-0029 results/+scripts/ untracked,
+  but verified LIVE (mtimes updating at 09:10, new diag_where.* just written; ros progress = no stall). Correct
+  to NOT commit a live experiment's output mid-run (would race the researcher / orphan-dup). Expected transient WIP.
+- V2-DIFF: V2-only claim keys green_lift_status / lifecycle_state_note are NOT referenced in engine code and
+  absent from V2 claim bodies via grep — COSMETIC annotation accretion, not behavioral. No fix. Top-level
+  CONTRIBUTING.md/README.md/operational/ V2-only = doc maturity gap, cosmetic.
+- HEALTH: clean orchestrator handoff r2-001→r3-001 @06:22 (handoff yaml present). ONE live orch (r3-001,
+  98k tokens <350k, alive 2m ago, session b433bb72), no split-brain. Driver pid 40199 alive. All 4 crons FRESH.
+  (Brief's "af9235ca self-check" was r2-era ID; r3-001 is the correct post-handoff live orch.)
+- INTEGRITY: VERDICT-0028 (CLAIM-0026 kill) reviewer votes EXACTLY match area_chair REVIEWER_VOTES line +
+  the 5 .out files (nk:red,sys:red,evalp:green,theory:green,prod:red). ZERO override_rule:true greens in live
+  registry; ZERO green/promote verdicts at all — every verdict red/kill/weakened. Honest hostile review, no fabrication.
+- BUGBASH (4 surfaces, isolated /tmp instance, all CLEAN):
+  (1) next_id N-way atomicity: 12 concurrent seed-new → 12 unique sequential IDs, no collision.
+  (2) corrupt-config / BUG-78 floor: live attack — 1-member config + green_rule:null → engine FORCED canonical
+      6-quorum, rejected 1/1 green. Floor holds.
+  (3) verdict idempotency/--allow-dup/override: identical verdict deduped; --allow-dup forced dup; override-rule
+      green w/ 1 red recorded override_rule:true + loud warning. As designed.
+  (4) date-rollover UTC midnight: --date 2026-05-31 lands in matching dir AND internal date field == dir-date;
+      all engine date paths use datetime.timezone.utc (NOW/TODAY L87-98). No local-time leak.
+- VERDICT: v3 IS maturing toward v2-parity and producing real reviewed science on v3-main — committee is
+  honestly refuting weak claims (no false greens), schema at near-parity (only cosmetic gaps), integrity solid.
