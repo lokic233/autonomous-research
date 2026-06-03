@@ -1,0 +1,40 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: red, product_realist: red}
+FATAL_OBJECTIONS:
+  - Core mechanism (proactive demote-during-gap + prefetch-on-resume overlapping idle gap) is IDENTICAL to AttentionStore/CachedAttention (Gao, ATC'24, 2403.19708) and Pensieve (2312.05516). Collision verified by ≥2 independent sources (novelty_killer's established-prior-art knowledge + L1's own live E4 mechanism-delta sweep returning delta=NONE across 5 systems). This is not a weak overlap — it is mechanical identity.
+  - Claim self-refuted by its own L1 data: reactive fetch-on-demand strictly dominates demote+prefetch for ALL p_rr<1 (1.18x at 0.7, 1.43x at 0.4 more resume-cycles/s). At p_rr=1.0 the policies TIE with prefetch saving only ~18ms — negligible vs multi-second agentic gaps. The claimed "strictly better Pareto" does not exist under proper baselines.
+  - "Agent inter-turn gap" framing is pure renaming of the conversation-turn gap that AttentionStore, Pensieve, and Continuum already target. No new scheduling, admission, or DMA mechanism.
+  - Kill-corner characterization (committee#1's last-resort novelty lifeline) is itself pre-empted by Meng/Lee/Wang kappa_crit (2601.19910), which derives the exact offload-vs-recompute crossover analytically. (CAVEAT: future-dated arXiv ID unverifiable via egress; kill does NOT depend on this — stands on the three points above.)
+REQUIRED_EVIDENCE: [] # No additional evidence can rescue this claim — the mechanism is prior art and the empirical claim is self-refuted.
+MANDATORY_BASELINES:
+  - Reactive fetch-on-demand (vLLM-style): already measured in L1; DOMINATES the proposed policy for realistic p_rr<1.
+  - Prefix-cached recompute (vLLM APC / TRT-LLM): already measured in L1; PCIe-free alternative that is the correct tier when PCIe is saturated.
+  - AttentionStore/CachedAttention (Gao ATC'24): the claim's mechanism already published, evaluated, and deployed — any future work must differentiate FROM this, not rediscover it.
+MAP_DELTA_PROPOSAL:
+  node: CLAIM-0014
+  change: STATUS -> KILLED. Rationale: mechanism = prior art (AttentionStore/Pensieve/HiCache/vLLM, verified ≥2 sources); empirical Pareto claim self-refuted by L1 (reactive dominates at p_rr<1, ties at p_rr=1); "agent gap" framing = renaming of conversation-turn gap. Surviving measurement note (bidirectional PCIe self-contention -20-25%/dir as binding constraint for tiered offload, not compute-vs-copy fair-share) is narrow, honest, and potentially mildly novel — but it is a MEASUREMENT OBSERVATION, not a systems contribution sufficient to sustain a claim. Archive as a negative result with the measurement note recorded for future reference. If PROJ-0003 continues KV-offload work, any new claim MUST differentiate mechanistically from AttentionStore/CachedAttention and empirically from reactive fetch-on-demand.
+PRIOR_ART_ADEQUATE: yes
+  # L1's E4 conducted a live ≥2-source sweep covering 6 systems (AttentionStore, Pensieve, SGLang HiCache, vLLM-v1, Continuum, Meng et al.). Novelty_killer independently corroborated the load-bearing collisions (AttentionStore, Pensieve) via established knowledge + L1's E4 table. Systems_reviewer provided retrievable URLs for all named systems. Two future-dated citations (2511.02230, 2601.19910) remain unverifiable via egress but are NOT load-bearing — the kill stands without them. Prior-art search is thorough and honest.
+RATIONALE:
+  All five reviewers vote RED unanimously, each from their distinct mandate, and their findings are mutually reinforcing rather than redundant:
+
+  (1) NOVELTY is dead at the mechanism level (novelty_killer). AttentionStore/CachedAttention (ATC'24) implements the EXACT loop — save KV to host tier when session goes idle between turns, pre-load on resume, overlap with scheduling/compute — with a published system evaluation. Pensieve provides a second independent collision. SGLang HiCache and vLLM-v1 ship the same offload+refetch path in production. The L1's own E4 table returns mechanism-delta = NONE across all five comparisons. The "agent inter-turn gap" is naming, not mechanism: an agent tool-call idle gap IS a conversation-turn idle gap. Two-source verification satisfied (novelty_killer's knowledge + L1's live E4 sweep).
+
+  (2) The EMPIRICAL CLAIM is self-refuted (evaluation_prosecutor, theory_skeptic). The L1 replaced the L0's full-recompute strawman with proper baselines (reactive fetch, prefix-cached recompute) and measured real H100 PCIe BW. Result: the proposed policy LOSES. Reactive fetch strictly dominates for all p_rr<1 because proactive prefetch wastes 1×KV of H2D bandwidth on every non-resuming session. At p_rr=1.0 the policies tie. The "strictly better Pareto" claim is falsified by the claim's own corrected evaluation. The theory_skeptic notes every "finding" is predicted by a one-line cost model (speculative waste = (1-p_rr)·KV) — no emergent effect, no surprise.
+
+  (3) NO PRODUCTION PATH exists (product_realist). The mechanism already ships in vLLM, SGLang, and AttentionStore. The TTFT advantage is ~18ms for 8k KV — below human perception, below network variance, and only available at p_rr≈1. No operator would adopt a policy that burns speculative PCIe bandwidth for an imperceptible latency saving that only materializes when every session resumes.
+
+  (4) SYSTEMS INTEGRITY confirms mechanism overlap across 6 named implementations with retrievable references (systems_reviewer). Contribution type: integration-only. Scale realism: microbench only, not an end-to-end scheduler.
+
+  (5) The LAST-RESORT NOVELTY (kill-corner characterization, the sole survivor from committee#1's yellow) is also challenged: Meng/Lee/Wang (2601.19910) derive kappa_crit, the analytical offload-vs-recompute crossover. However, I note the novelty_killer correctly refused to make this citation load-bearing (future-dated, egress-blocked). My kill verdict does NOT depend on kappa_crit pre-emption — it stands on (1)+(2)+(3) alone.
+
+  ONE HONEST SURVIVOR: The L1 produced a clean, mildly-novel measurement observation — that the binding PCIe constraint for tiered KV offload is bidirectional demote+prefetch self-contention (-20-25% per direction), NOT compute-vs-copy fair-share (which is essentially free on H100 due to independent copy engines). This is genuine, reproducible, and potentially useful as a footnote in future offload system designs. But it is a measurement note, not a mechanism contribution, and insufficient to sustain a claim of "strictly better Pareto."
+
+  ANTI-HALLUCINATION CHECK: All load-bearing collisions (AttentionStore, Pensieve, SGLang HiCache, vLLM-v1) are verified by ≥2 independent sources. The L1 researcher reported honestly (E5 gap distribution unavailable; E4 mechanism-delta = NONE; overall verdict = WEAKEN toward REFUTE). No coping language detected in any reviewer vote.
+
+  DISPOSITION: KILL, not RED. RED implies the claim could be rescued with additional evidence or experimental corrections. Here, the mechanism is prior art (unfixable by more experiments), the empirical claim is self-refuted under proper baselines (unfixable by more data), and the framing is subsumed. No reasonable modification of CLAIM-0014 survives. Archive as a well-executed negative result. The bidirectional-contention measurement note should be preserved in the project's knowledge base for future use.
+
+  PROMPT_VERSION: v001
+```

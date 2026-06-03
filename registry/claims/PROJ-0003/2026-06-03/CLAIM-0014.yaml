@@ -1,7 +1,7 @@
 claim_id: CLAIM-0014
 project_id: PROJ-0003
 stage: seed
-status: weakened
+status: dead
 claim: For agentic LLM serving with bursty per-session KV pressure, a tiered KV-offload
   policy that proactively demotes a session's COLD prefix blocks to CPU/host memory
   (and prefetches them back on the session's next turn, overlapping fetch with the
@@ -59,12 +59,16 @@ verdict_history:
 - verdict_id: VERDICT-0018
   date: '2026-06-03'
   result: yellow
+- verdict_id: VERDICT-0020
+  date: '2026-06-03'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0021; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal: VERDICT-0020 kill (mechanism identical to AttentionStore/Pensieve;\
+  \ self-refuted by L1 \u2014 reactive-fetch dominates at p_rr<1)"
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T05:57:39Z'
-last_updated: '2026-06-03T06:48:08Z'
+last_updated: '2026-06-03T07:11:00Z'

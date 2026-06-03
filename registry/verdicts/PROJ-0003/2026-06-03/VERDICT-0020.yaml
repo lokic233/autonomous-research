@@ -1,0 +1,66 @@
+verdict_id: VERDICT-0020
+claim_id: CLAIM-0014
+project_id: PROJ-0003
+date: '2026-06-03'
+experiment_ids:
+- EXP-0019
+- EXP-0021
+experiment_paths:
+- experiments/2026-06-03/EXP-0019
+- experiments/2026-06-03/EXP-0021
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- "Core mechanism (proactive demote-during-gap + prefetch-on-resume) is MECHANICALLY\
+  \ IDENTICAL to AttentionStore/CachedAttention (Gao ATC24, 2403.19708) + Pensieve\
+  \ (2312.05516) \u2014 verified by >=2 independent sources (novelty_killer prior-art\
+  \ + the L1's own live E4 mechanism-delta sweep returning delta=NONE across 5 systems)"
+- 'SELF-REFUTED by the L1''s own real-H100 data: reactive fetch-on-demand STRICTLY
+  DOMINATES demote+prefetch for ALL p_rr<1 (1.18x@0.7, 1.43x@0.4 more resume-cycles/s)'
+- at p_rr=1.0 they TIE with prefetch saving only ~18ms (negligible vs multi-second
+  agentic gaps). The claimed 'strictly better Pareto' does not exist under proper
+  baselines
+- "Kill-corner characterization (committee#1's last-resort novelty) is pre-empted\
+  \ by kappa_crit (Meng/Lee/Wang 2601.19910 \u2014 CAVEAT future-dated/unverifiable"
+- kill does NOT depend on it, stands on the prior two)
+required_evidence:
+- "None \u2014 mechanism is prior art AND the empirical claim is self-refuted by its\
+  \ own L1 data"
+- no additional evidence can rescue it
+map_delta_proposals:
+- CLAIM-0014 -> KILL (two-pass closure, real-H100 L1). Mechanism mechanically identical
+  to AttentionStore/Pensieve (delta=NONE across 5 systems in live sweep)
+- self-refuted (reactive-fetch dominates at all realistic p_rr<1
+- ~18ms tie at p_rr=1 negligible vs multi-second gaps)
+- 'kill-corner itself prior art. The L1 was VALUABLE: corrected the L0''s PCIe model
+  (compute-vs-copy ~free on H100'
+- 'real tax = bidirectional self-contention) but that''s a measurement note, not a
+  claim. Demonstrates two-pass value: a yellow L0 candidate honestly refuted on real
+  hardware. No false green'
+baseline_requirements:
+- "Reactive fetch-on-demand (dominates at p_rr<1) \u2014 real-H100 measured"
+- Prefix-cached recompute (RadixAttention/APC)
+- AttentionStore/CachedAttention (ATC24, mechanism-identical prior art)
+- Pensieve (mechanism-identical)
+- "Continuum (2511.02230, agent idle-gap KV-TTL \u2014 subsumes the framing)"
+committee_run_dir: ''
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T07:10:01Z'
