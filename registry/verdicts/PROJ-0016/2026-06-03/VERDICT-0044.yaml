@@ -1,0 +1,79 @@
+verdict_id: VERDICT-0044
+claim_id: CLAIM-0046
+project_id: PROJ-0016
+date: '2026-06-03'
+experiment_ids:
+- EXP-0045
+experiment_paths:
+- experiments/2026-06-03/EXP-0045
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "PRIOR-ART COLLISION with FOUNDATIONAL hubness theory (>=2 sources, unrebutted):\
+  \ the confirmed half ('low reverse-kNN in-degree -> elevated per-item FN, density-independent')\
+  \ collides with Radovanovic Nanopoulos Ivanovic 2010 (JMLR 11:2487-2531) which DEFINES\
+  \ N_k=reverse-kNN count, establishes ANTI-HUBS (low N_k) as systematically under-retrieved,\
+  \ and shows hubness is NOT a density artifact \u2014 the exact surviving claim restated\
+  \ for graph-ANN. Corroborated Schnitzer 2012 JMLR + the packet's own 2412.01940.\
+  \ Prior-art search INADEQUATE (omitted the 2010/2012 foundational literature, argued\
+  \ novelty only vs narrow recent 2510.22316/2405.17813/2412.01940) -> per chair rules\
+  \ GREEN blocked on inadequate prior-art"
+- "the NOVEL half ('a STABLE SUBSET of vectors') FAILED its own pre-registered threshold\
+  \ (stability Spearman 0.134<0.30, 0.079 at denom>=5) \u2014 what survived is most\
+  \ anticipated by prior art, what died is what would have been new"
+- "the mechanism delta (built-graph in-degree vs data-level reverse-kNN N_k) was NEVER\
+  \ MEASURED \u2014 in single-flat-layer NSW at N=4000 they're expected tightly coupled,\
+  \ so the predictor is not shown distinct from the classical hubness predictor"
+required_evidence:
+- "Reformulation needed (a different, not-yet-run claim): (1) measure corr(built-graph\
+  \ in-degree, data-level N_k) + show the RESIDUAL (in-degree after partialling out\
+  \ N_k) still predicts per-item FN \u2014 the ONLY viable delta over Radovanovic\
+  \ 2010"
+- "(2) degree-preserving random-graph null (rewire preserving degree seq) \u2014 if\
+  \ the partial survives, it's trivial reachability arithmetic not a topological signature"
+- (3) partial controlling for denom/exposure (low in-degree -> smaller denom = rate-estimator
+  confound)
+- "(4) ef_search sensitivity {10,16,24,32} \u2014 does the slope collapse as width\
+  \ grows (search-width artifact?)"
+- "(5) production multi-layer HNSW on high-intrinsic-dim real embeddings (SIFT1M d>=128)\
+  \ \u2014 the L0 regime (d=12,N=4000,flat) is where hubness is WEAK."
+map_delta_proposals:
+- CLAIM-0046 -> RED/KILLED. Confirmed half = anti-hub retrievability deficit (Radovanovic
+  2010) restated for graph-ANN WITHOUT citing/benchmarking the incumbent
+- novel half (stable subset) failed pre-registered threshold
+- "in-degree-vs-N_k delta never measured. PROJ-0016 converged (lightweight). No false\
+  \ green. Direction not dead but needs REFORMULATION (in-degree RESIDUAL over N_k\
+  \ in production multi-layer HNSW) = new claim. DISTILL: scout prior-art search found\
+  \ NARROW recent arxiv but MISSED the FOUNDATIONAL 2010 JMLR incumbent \u2014 same\
+  \ failure family as CLAIM-0042 strawman (missed the real baseline/incumbent). Scout\
+  \ briefing must require searching for the FOUNDATIONAL/seminal work in the area,\
+  \ not just recent neighbors."
+baseline_requirements:
+- Radovanovic 2010 data-level N_k as INCUMBENT per-item retrievability predictor (claim
+  must beat it, not replicate)
+- Schnitzer 2012 mutual-proximity/local-scaling hub-reduction as INCUMBENT repair
+  (vs the proposed add-reverse-edges)
+- ef_search widening = trivial operational tail-recall baseline (repair must beat
+  the latency/recall Pareto of just raising ef)
+- degree-preserving edge-rewired null matched on |E|+degree seq
+committee_run_dir: experiments/2026-06-03/EXP-0045/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T15:50:07Z'
