@@ -1,0 +1,57 @@
+claim_id: CLAIM-0046
+project_id: PROJ-0016
+stage: seed
+status: seed
+claim: "In a greedy-traversal graph ANN index (NSW/HNSW-style with RNG-pruned out-edges),\
+  \ a stable subset of database vectors suffer a systematically elevated per-item\
+  \ false-negative rate (they are the true top-k for some legitimate query yet greedy\
+  \ search never returns them), and this per-item miss rate is monotonically predicted\
+  \ by the item's reverse-kNN IN-DEGREE in the built graph, with predictive signal\
+  \ that SURVIVES after controlling for the item's local density (distance to its\
+  \ own kth true neighbor) \u2014 i.e. low-in-degree items are retrieval blind spots\
+  \ whose misses are a property of the indexed item's graph role, not of the query."
+why_it_matters: "FRESH AREA (retrieval-and-memory: graph vector-index recall structure).\
+  \ EMPIRICAL-phenomenon archetype, NO closed form (greedy-graph reachability under\
+  \ RNG pruning depends on emergent edge structure x cluster geometry x entry-point\
+  \ routing; a sim DISCOVERS the in-degree->miss relation, cannot re-derive it). Screened\
+  \ vs 3 anti-patterns (no tuned-knob \u2014 ef/M fixed; not KV-reuse; not relabeling-vs-logprob)\
+  \ + NOT the dead metric-validity shape (headline = a causal predictor of WHERE misses\
+  \ concentrate, a structural mechanism, not 'recall@k over/under-counts'). BOTH confounds\
+  \ verified ACTIVE: (a) local density active (varied-density GMM makes sparse-region\
+  \ items genuinely far \u2014 a real competing explanation); (b) in-degree variance\
+  \ active (RNG pruning provably yields wide hub/orphan in-degree spread). Novelty\
+  \ = in-degree adds signal BEYOND density. Falsifiable: partial correlation/stratified\
+  \ regression of per-item miss rate on in-degree CONTROLLING for dist-to-kth-true-neighbor.\
+  \ POSITIVE = significant negative monotone in-degree->miss persists WITHIN density\
+  \ strata. HONEST-NEGATIVE (informative): if in-degree carries ~no residual signal\
+  \ after partialling density, FALSIFIED -> 'blind spots are a density artifact not\
+  \ topological' (redirects index-repair effort). Anti-circular: GT = exact brute-force\
+  \ top-k (distance-only, graph-blind); tested signal = greedy-traversal result (graph-dependent);\
+  \ predictor = reverse-kNN in-degree (independent of query set AND oracle) \u2014\
+  \ no quantity on both sides. Stability sub-check: high-miss item IDENTITY correlated\
+  \ across insertion-order seeds (Spearman>chance) = stable not random. Topic: retrieval-and-memory.\
+  \ PRIOR-ART (precise): 2510.22316 per-QUERY reachability (OOD, query-side); 2405.17813\
+  \ AGGREGATE recall vs order/intrinsic-dim (not per-item); 2412.01940 HIGH-in-degree\
+  \ HUBS for search SPEED (not low-in-degree retrievability deficit); Aumuller SIGMOD\
+  \ fairness = EXACT search not graph-traversal FNs; 2310.19126 worst-case adversarial.\
+  \ Delta = isolate PER-ITEM FN rate as fn of reverse-kNN in-degree, controlled vs\
+  \ density, as the indexed item's TOPOLOGICAL role. L1: real embeddings (SIFT1M/sentence-corpus)\
+  \ + production faiss-HNSW/hnswlib; test if in-degree->miss law holds for deep embeddings\
+  \ (high intrinsic dim, intensified hubness) + whether cheap in-degree-based blind-spot\
+  \ repair (add reverse edges to low-in-degree items) lifts per-item recall without\
+  \ raising ef."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-03T15:21:21Z'
+last_updated: '2026-06-03T15:21:21Z'

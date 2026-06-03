@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'INVERTED-U HELD. When query-term-bearing topical boilerplate is on
+  the DISTRACTORS and the canonical answer doc stays CLEAN, the clean answer''s BM25
+  rank traces a clear inverted-U in template length L: worsens to an interior maximum
+  then RECOVERS to #1. HELD in 3/4 (frac,T_qterms) cells by the pre-registered CI
+  test (interior CI excludes both endpoint means); 20/20 seeds within-seed inverted-U
+  in the strongest cell (frac=1.0,T=2: rank 1.10->peak 5.20@L16->1.00@L512), 18/20
+  (0.5,2), 13/20 (1.0,1); weakest cell (0.5,1) non-monotone-NS only. MECHANISM CROSSOVER
+  EXPLICIT: top-distractor score jumps 25.8->32.9@L16 (query-term injection overtakes
+  flat ~29 answer score => rank worsens), then dist length-norm (1.0->7.6) crushes
+  bloated distractors back to 22.8 (=> recovery). This is the crossover DEAD-0011
+  lacked (there boilerplate was non-query on the ANSWER => monotone). Honest nuance:
+  qterm_idf flat across L>0 (df fixed once present), so the L-driven recovery is length-norm-dominated
+  while IDF-collapse modulates depth via the SPREAD axis. Distinct, complementary
+  to DEAD-0011. stdlib BM25 k1=1.2 b=0.75 verified <1e-9.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0044/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T15:21:34Z'
 prompt_version: ''
