@@ -12,13 +12,26 @@ resource_budget:
 needs_gpu: false
 dispatched_by: orchestrator-r3-001
 node_lease: devgpu014:EXP-0021
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L1 honest result: tiered KV demote-during-gap + prefetch-on-resume
+  mechanism is PRIOR ART (AttentionStore/CachedAttention ATC24, Pensieve, SGLang HiCache,
+  vLLM-v1; agent-gap framing subsumed by Continuum). Real measured H100 PCIe BW: H2D
+  57 / D2H 53.5 GB/s solo; bidi agg 80-98 GB/s (-20-25%/dir self-contention); concurrent
+  active decode costs only -4.7% (DMA independent of SM/HBM, so L0 fair-share-under-decode
+  was pessimistic). With real BW + real prefill (30-40k tok/s, not strawman) + the
+  two omitted baselines, REACTIVE fetch-on-demand STRICTLY DOMINATES demote+prefetch
+  for all p_rr<1 (1.18-1.43x more effective serving capacity, zero wasted speculative
+  H2D) and ties at p_rr=1 (prefetch saves only ~18ms). Kill-corner BROADENED, not
+  shrank. Even the kill-corner characterization is pre-empted by Meng et al kappa_crit
+  (2601.19910). E5 real gap trace UNAVAILABLE (sensitivity used). Only survivor: narrow
+  measurement-only note that binding constraint is bidirectional self-contention not
+  compute-vs-copy fair-share. Committee#2 verdict: WEAKEN toward REFUTE; measurement-only
+  on what survives.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0021/
 reproducibility: ''
 linked_verdicts: []
 started_at: '2026-06-03T06:33:10Z'
-completed_at: ''
+completed_at: '2026-06-03T06:48:07Z'
 prompt_version: ''
 committee_approved: VERDICT-0018
