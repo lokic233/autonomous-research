@@ -1,0 +1,45 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS:
+- Bordt 2410.03249 MIS-CITATION: novelty_killer VERIFIED via arXiv that Bordt is about whether contaminated examples are FORGOTTEN at scale, NOT about applying n-gram decontam and calling removal benign. The packet's entire novelty pivot ("Bordt saw removal, called it benign; our delta = it's NOT benign") rests on a paper that says no such thing. This is not a minor citation error — it is the LOAD-BEARING novelty anchor collapsing. Must be repaired before any GREEN.
+- PRIOR-ART SWEEP INCOMPLETE: novelty_killer could not complete a ≥2-independent-source collision sweep (egress blocked). Per committee rules, GREEN requires adequate prior-art search. Not met.
+- IID BERNOULLI ASSUMPTION UNVALIDATED: evaluation_prosecutor and theory_skeptic independently flag that modeling k-gram matches as independent Bernoulli(q) events overstates length-dependent removal in real text where n-gram overlaps are bursty/correlated (contiguous phrase copying, templates, boilerplate). The union-bound is an UPPER bound under IID; real removal-vs-length curve could be substantially flatter, shrinking Delta proportionally. No evidence presented that the IID model approximates real corpus behavior.
+
+REQUIRED_EVIDENCE:
+- [L1-CRITICAL] Real-benchmark removal curve: apply 8-gram and 13-gram decontam to GSM8K/QuALITY/MMLU test sets against a real web corpus (C4/Pile/FineWeb). Plot empirical removal probability vs item length. If the curve is substantially flatter than 1-(1-q)^(L-k+1), the IID model overstates the effect and the headline magnitude is wrong.
+- [L1-CRITICAL] Measured real length<->difficulty slope: compute per-item accuracy from a production model (Llama-3, GPT-4) on GSM8K/MMLU and regress against item length to obtain an empirical alpha. Without this, "+0.9-1.7pt" is a simulation artifact of chosen alpha, not a finding (theory_skeptic).
+- [L1-CRITICAL] Realized score inflation: using the real removal set and real per-item accuracies, compute the actual Delta on at least one benchmark where alpha is empirically confirmed >0.
+- [NOVELTY-CRITICAL] Complete prior-art sweep on "decontamination false positives / over-removal / length bias / selection bias in benchmark filtering" with ≥2 independent sources per collision candidate. Specifically search for any work that frames removal as a length-correlated or difficulty-correlated estimand bias (not just "significant filtering").
+- [NOVELTY-CRITICAL] Replace Bordt 2410.03249 anchor with the CORRECT sources: GPT-3 (2005.14165 Appendix C) and Llama-3 (2407.21783) both report large benign-treated removal fractions and re-score on "clean subsets." The novelty delta must be measured against THESE — "they treated removal as benign collateral; we show it isn't when alpha>0."
+
+MANDATORY_BASELINES:
+- Real corpus n-gram overlap vs IID Bernoulli: measure actual per-k-gram match correlation structure in (benchmark, web corpus) pairs to validate or refute the independence assumption (evaluation_prosecutor).
+- Length-independent null model: compare union-bound fit (MAE=0.012) against a constant removal-rate baseline to demonstrate the length-dependent model specifically fits better, not just "fits okay" (theory_skeptic).
+- Per-benchmark alpha measurement: empirical length<->difficulty slope on GSM8K, MMLU, QuALITY from published per-item accuracies — this is the ONLY thing that converts the structural shift into score inflation.
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0053", change: "status remains HELD/YELLOW; add required_for_green: [bordt_miscite_repair, prior_art_sweep_complete, L1_real_corpus_removal_curve, L1_real_alpha_measurement, L1_realized_delta]; add note: novelty_anchor_bordt_2410.03249_INVALID — replace with GPT3/Llama3 benign-removal sources; structural_mechanism=near_tautological_union_bound — reframe contribution as coupling-gated_inflation_isolation_via_alpha0_control not removal_monotonicity"}
+
+PRIOR_ART_ADEQUATE: no
+
+RATIONALE:
+Unanimous 5/5 YELLOW. The SCIENCE is clean — the structural anchor holds unconditionally, the alpha=0 control passes (the single strongest design element, proving the filter is difficulty-blind and inflation is coupling-gated), the pre-registration is honest, and the result HELD on all four pre-committed conditions. No reviewer disputes the L0 findings within the simulation's assumptions. This is well above RED.
+
+GREEN is blocked on three independent grounds:
+
+(1) NOVELTY ANCHOR COLLAPSED. The packet's central "delta vs Bordt" is built on a demonstrably wrong characterization of 2410.03249. Bordt's paper is about whether contaminated examples are forgotten as training data scales — it does NOT apply an n-gram decontam filter, does NOT characterize removal as benign, does NOT discuss length-biased removal. The novelty case must be rebuilt against the CORRECT prior art: GPT-3 and Llama-3 both treat large removal fractions as benign collateral and re-score on "clean subsets" — THAT is the real "called it benign" anchor. Until this is verified as the genuine delta (no prior work frames removal as a length/difficulty-correlated estimand bias), novelty is unestablished.
+
+(2) PRIOR-ART SWEEP INCOMPLETE. The novelty_killer could fetch arXiv abstracts but not run general web search. The ≥2-independent-source standard for either confirming freedom-to-operate or identifying a fatal collision is not met. Per committee rules: no GREEN without adequate prior-art search.
+
+(3) IID ASSUMPTION GAP (L0→L1 bridge). The theory_skeptic and evaluation_prosecutor converge: the entire quantitative edifice (union-bound match, +0.9-1.7pt headline, "persists at k=25") rests on per-k-gram match independence. Real web corpora have bursty, correlated n-gram frequencies. The union bound is an UPPER bound; if real removal-vs-length is substantially flatter, the headline magnitude is wrong. The structural DIRECTION (longer items removed more) likely survives, but the MAGNITUDE that makes the finding actionable vs noise requires L1 validation. The theory_skeptic correctly notes that the removal-monotonicity itself is elementary combinatorics, not a mechanism contribution — the contribution is the coupling-gated inflation framing + alpha=0 isolation, which is genuinely novel IF the real-data alpha is non-trivial AND no prior work has framed it this way.
+
+WHAT EARNS YELLOW (not RED): The alpha=0 control is the strongest single element — it proves the composition shift is unconditional while the score inflation is coupling-gated, ruling out the most dangerous confound (filter-sees-difficulty). The pre-registration discipline is honest. The mechanism is real even if near-tautological. The experiment design isolates variables cleanly. All reviewers acknowledge the L0 result held.
+
+WHAT BLOCKS GREEN: (a) Fix the Bordt mis-citation and rebuild the novelty case against GPT-3/Llama-3 benign-removal treatment; (b) complete a ≥2-source prior-art sweep on decontam over-removal / selection bias; (c) L1 confirmatory: real corpus removal curve + real alpha measurement + realized Delta on at least one benchmark. Until (a)-(c) are satisfied, the result is a clean L0 demonstration of a near-tautological mechanism with an unvalidated real-world magnitude and an unverified novelty claim.
+
+SCOPING FIX (cheapest path to GREEN or honest RED): (1) Repair Bordt citation — 1 hour, text-only. (2) Run prior-art sweep with web search enabled — 2 hours. (3) L1: download GSM8K + MMLU per-item data, measure length-difficulty slope (alpha), apply lm-eval-harness 13-gram decontam against C4/Pile n-gram index, plot removal-vs-length, compute realized Delta — 1-2 days. If real alpha~0 on all benchmarks that matter, the finding is an honest informative negative (structural shift real, score inflation ~0) — still publishable as a "decontam is safe" result, but a different paper. If real alpha>0 on GSM8K/QuALITY AND removal curve tracks the union bound, GREEN is reachable.
+
+PROMPT_VERSION: v001
+```

@@ -1,0 +1,94 @@
+verdict_id: VERDICT-0051
+claim_id: CLAIM-0053
+project_id: PROJ-0023
+date: '2026-06-03'
+experiment_ids:
+- EXP-0059
+experiment_paths:
+- experiments/2026-06-03/EXP-0059
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED). GREEN blocked on 3: (1) BORDT 2410.03249 MIS-CITATION\
+  \ (load-bearing): novelty_killer VERIFIED via arXiv that Bordt is about whether\
+  \ contaminated examples are FORGOTTEN at scale, NOT about applying n-gram decontam\
+  \ + calling removal benign \u2014 the packet's novelty pivot ('Bordt saw removal,\
+  \ called it benign"
+- our delta=it's NOT benign') rests on a paper that says no such thing = the novelty
+  anchor COLLAPSED, must be repaired
+- (2) PRIOR-ART SWEEP INCOMPLETE (egress blocked, no >=2-source collision sweep on
+  'decontamination false-positives/over-removal/length-bias/selection-bias in benchmark
+  filtering')
+- '(3) IID-BERNOULLI ASSUMPTION UNVALIDATED: modeling k-gram matches as independent
+  Bernoulli(q) OVERSTATES length-dependent removal in real text where overlaps are
+  BURSTY/correlated (contiguous phrase copying, templates, boilerplate)'
+- the union-bound is an UPPER bound under IID, real removal-vs-length could be substantially
+  FLATTER -> Delta proportionally smaller
+- "no evidence the IID model approximates real corpus behavior. Also: the structural\
+  \ mechanism is near-tautological union-bound \u2014 the genuine contribution is\
+  \ the COUPLING-GATED inflation isolation via the alpha=0 control, not removal-monotonicity."
+required_evidence:
+- "L1 (all CRITICAL): (1) REAL-BENCHMARK removal curve \u2014 apply 8/13-gram decontam\
+  \ to GSM8K/QuALITY/MMLU vs a real web corpus (C4/Pile/FineWeb), plot empirical removal-prob\
+  \ vs item length"
+- if substantially flatter than 1-(1-q)^(L-k+1), the IID model overstates + headline
+  magnitude is wrong
+- "(2) MEASURED real length<->difficulty slope \u2014 per-item accuracy from a production\
+  \ model (Llama-3/GPT-4) on GSM8K/MMLU regressed against length -> empirical alpha\
+  \ (without this '+0.9-1.7pt' is a sim artifact of chosen alpha)"
+- (3) REALIZED score inflation using the real removal set + real per-item accuracies
+  on >=1 benchmark where alpha empirically >0
+- "(4) NOVELTY: complete >=2-source prior-art sweep on decontam-over-removal/length-bias\
+  \ + REPLACE the Bordt anchor with GPT-3 (2005.14165 Appendix C) + Llama-3 (2407.21783)\
+  \ \u2014 both report large benign-treated removal fractions + re-score on clean\
+  \ subsets"
+- the delta = 'they treat removal as benign collateral
+- 'we show it isn''t when alpha>0''. BASELINES: real-corpus n-gram match correlation
+  structure vs IID Bernoulli (validate/refute independence)'
+- length-independent constant-removal null vs the union-bound fit
+- per-benchmark empirical alpha.
+map_delta_proposals:
+- "CLAIM-0053 -> HELD/YELLOW gated-on-L1 (committee#1, 5/5 no-RED). The alpha=0 integrity\
+  \ control + union-bound structural anchor (MAE0.012) are clean, BUT GREEN blocked:\
+  \ (a) the BORDT NOVELTY ANCHOR IS MIS-CITED (Bordt=forgetting-at-scale, not benign-removal)\
+  \ \u2014 repair to GPT-3-AppC/Llama-3"
+- (b) prior-art sweep incomplete (egress)
+- "(c) IID-Bernoulli union-bound OVERSTATES real bursty-overlap removal (real curve\
+  \ likely flatter -> smaller Delta) + the magnitude is alpha-dependent (sim artifact\
+  \ until real alpha measured). Reframe contribution: coupling-gated-inflation-isolation-via-alpha0-control,\
+  \ NOT removal-monotonicity (near-tautological). L1: real-corpus removal curve +\
+  \ real alpha + realized Delta + citation repair + prior-art sweep. risk_tags: bordt-miscite,\
+  \ IID-overstates-removal, alpha-dependent-magnitude, prior-art-incomplete. Alive\
+  \ toward L1, NOT a kill. LESSON: VERIFY scout/researcher CITATIONS before they become\
+  \ the novelty anchor \u2014 a mis-cited load-bearing reference nearly anchored a\
+  \ claim on a paper that says the opposite."
+baseline_requirements:
+- "GPT-3 (2005.14165 App.C) + Llama-3 (2407.21783) benign-treated-removal + clean-subset\
+  \ rescoring \u2014 the CORRECT novelty anchor (replacing the mis-cited Bordt)"
+- real-corpus n-gram match correlation structure vs IID Bernoulli
+- length-independent constant-removal null vs union-bound
+- per-benchmark empirical length<->difficulty alpha (GSM8K/MMLU/QuALITY from published
+  per-item accuracies)
+- Yang 2311.04850 (false-negatives, opposite direction)
+- Schaeffer 2601.04301 (un-removed-contamination inflation)
+committee_run_dir: experiments/2026-06-03/EXP-0059/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T22:24:14Z'

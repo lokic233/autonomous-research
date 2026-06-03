@@ -71,13 +71,22 @@ supporting_evidence:
     Decontam mitigation is itself a length-biased test-set sampler that inflates score.'
   data_path: experiments/2026-06-03/EXP-0059/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0051
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0059; convene committee if candidate-grade
+lifecycle_state: done
+next_action: 'terminal: HELD/YELLOW accepted-and-parked (VERDICT-0051, 5/5 no-RED).
+  The alpha=0-isolated structural finding stands (decontam is a length-biased sampler;
+  inflation is coupling-gated, provably difficulty-blind). GREEN gated on a real-corpus
+  L1 (real removal curve [IID likely OVERSTATES -> flatter], real alpha, realized
+  Delta) + Bordt-miscite repair (->GPT3-AppC/Llama3) + prior-art sweep. Parked vs
+  CLAIM-0052 (higher-EV dense-encoder L1 prioritized); the real-world magnitude is
+  owed-but-not-pursued now. Honest scoped contribution recorded.'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T21:53:11Z'
-last_updated: '2026-06-03T21:59:25Z'
+last_updated: '2026-06-03T22:24:46Z'
