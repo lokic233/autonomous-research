@@ -1292,3 +1292,27 @@ successor agents orphan. No new mechanism; mirrors handoff() transfer semantics 
 parented-task reparent block.
 **Verified:** post-fix → TASK-0001 reassigned to researcher-0002, status preserved (active), no
 TASK_ORPHANED. DEAD-agent (no successor) regression → task still orphaned + TASK_ORPHANED + AGENT_DOWN. AST OK.
+
+---
+
+## BUG-89 — cmd_exp_gc shadowed the `time` module with a task dict (latent crash footgun)
+**Commit:** 2530edf (research-os engine main) | **Found:** v3 ACTIVE-DEBUG pass 2026-06-03 (Navi lead debugger)
+**Surface:** exp gc stale-pending (rotating bugbash surface).
+**Symptom (latent — does not fire in current control flow):** `cmd_exp_gc` opens with `import time as _t`
+and uses `_t.time()` for the per-exp staleness check (skip exps modified < stale_min ago). The BUG-86
+orphan-task-closing block (added later, in the `--apply` loop) iterated `for _t in _sup.task_list(...)`,
+REBINDING `_t` from the `time` module to a task dict. After that loop, `_t` is no longer the module —
+any later `_t.time()` in the apply loop (e.g. a future per-orphan staleness re-check, or a maintenance
+edit) would crash `AttributeError: 'dict' object has no attribute 'time'`. Today the only `_t.time()`
+call lives in the FILTERING loop which fully completes before the apply loop, so it does not crash yet —
+but it is a genuine naming hazard one edit away from breaking the orphan-task GC path (which closes the
+task ledger entries of dead researchers whose exps never completed).
+**Repro (isolated /tmp):** reproduced the exact shadow — `import time as _t; for _t in [<dict>]: pass; _t.time()`
+→ `AttributeError 'dict' object has no attribute 'time'`.
+**Fix (minimal):** renamed the BUG-86 loop var `_t` → `_tk` (and `_t[...]` → `_tk[...]`), so `_t` stays
+the `time` module throughout `cmd_exp_gc`. No behavior change; no new mechanism. Symmetric-safe: the
+analogous BUG-60b block in `cmd_exp_complete` also uses `for _t in task_list(...)` but there `_t` was
+never the `time` module (no `import time as _t` in that scope), so it is harmless and left untouched.
+**Verified:** AST OK; `ros status` smoke OK; full `ros exp gc --apply` in an isolated /tmp instance →
+orphan pending EXP-0001 correctly identified as stale (the `_t.time()` staleness check works, proving
+no shadow), retired, and its owner's open TASK-0001 → done via the renamed `_tk` loop.
