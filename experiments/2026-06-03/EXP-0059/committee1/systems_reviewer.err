@@ -1,0 +1,443 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8f8e-9ea5-76b1-94e1-812c7c41d5ce
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0053 (PROJ-0023, eval-and-safety) — n-gram decontamination is a LENGTH-BIASED test-set sampler
+## EMPIRICAL-PHENOMENON, effect=support/HELD. NOT metric-validity (causal selection effect reshaping the surviving population's estimand). NO closed-form headline. Anti-circular (GT=(d_i,p_i) harness-held, NEVER read by the filter; filter reads only token-overlap). Vote HONESTLY by role.
+
+## CLAIM: standard GPT-3/Llama n-gram-overlap decontamination ('remove any test item sharing an >=k-gram with the training corpus') deletes test items with prob MONOTONE-increasing in item length (union-bound), so the SURVIVING benchmark shifts SHORTER; when item difficulty is length-correlated (QA/reasoning), this biases post-decontam accuracy UPWARD by a margin growing with corpus coverage, persisting at production k in {8,13}, even though the filter never inspects difficulty/labels. The harm is a property of the MITIGATION, not of contamination.
+
+## L0 RESULT (M=4000, 8 seeds/cell, 36 cells):
+STRUCTURAL ANCHOR (unconditional, HOLDS): removal-rate MONOTONE in length L in every well-sampled bin of all 9 (c,k) cells; survivor mean-length < full (24.7->18.3 tok); empirical removal MATCHES union-bound P(remove|L)=1-(1-q)^(L-k+1), MAE=0.012.
+ALPHA=0 CONTROL (LOAD-BEARING, PASSES): at alpha=0 (difficulty _|_ length) composition STILL shifts (survivors shorter, removal up to 51pct) but Delta~0 (every alpha=0 cell CI covers 0, max|Delta@a0|=0.00109 vs headline up to +0.091) => inflation is real-coupling-driven NOT artifact; filter provably blind to difficulty.
+Delta(alpha) med-c k13: 0.0/-0.0002/+0.0091/+0.0171/+0.0246 (monotone, CI excludes 0 for all alpha>0). c-dependence (a0.6,k13): low/med/high -> +0.004/+0.017/+0.064 (removal 2.6/10.9/36.5pct). k-SWEEP {8,13,25}: +0.016/+0.017/+0.011 (CI-excludes-0 at all 3; raise-k shrinks but does NOT kill -> NOT trivially-small). MAGNITUDE realistic: +0.9 to +1.7 acc pts (up to +6-9 at high coverage+coupling) purely from collateral length-selection, ZERO real contamination.
+
+## STRESS-TEST honestly: (a) is the real length<->difficulty coupling positive+non-trivial on benchmarks that matter? MMLU is mostly MCQ where question length is dominated by answer-option boilerplate -> maybe flat (alpha~0 -> score-safe); GSM8K/QuALITY/reasoning more likely positive. The headline is ISOLATED into swept alpha w/ alpha=0 honest-negative, so a flat real slope = informative negative not dead claim. (b) is the magnitude (+0.9-1.7pt typical) enough to MATTER vs eval measurement noise / does it flip real leaderboards (Llama3 reported 8-14pt contamination gains, so a 1-2pt mitigation-artifact is real but smaller)? (c) NOVELTY vs Bordt 2410.03249 — Bordt APPLIED the filter, SAW 'significant filtering', but called the removal BENIGN collateral; is 'it's NOT benign, it's length/difficulty-biased + inflates the score' the genuine delta, or did Bordt implicitly cover it?
+
+## CLAIM YAML
+claim: "N-gram-overlap benchmark decontamination (the standard GPT-3/Llama 'remove\
+  \ any test item sharing an >=k-gram with the training corpus' filter) deletes test\
+  \ items with a probability MONOTONE-INCREASING in item length (a re-derivable union-bound\
+  \ over per-n-gram match events), so the SURVIVING benchmark is systematically shifted\
+  \ toward shorter items \u2014 and when item difficulty is length-correlated (as\
+  \ it empirically is on QA/reasoning benchmarks), this length-selection biases the\
+  \ post-decontamination accuracy estimate UPWARD by a margin that grows with corpus\
+  \ n-gram coverage and persists at the production k in {8,13}, even though the filter\
+  \ never inspects difficulty or labels. The harm is a property of the MITIGATION,\
+  \ not of contamination."
+why_it_matters: "FRESH AREA (eval-and-safety: decontamination methodology). EMPIRICAL-phenomenon.\
+
+## L0 RESULTS (EXP-0059)
+# RESULTS — EXP-0059 (CLAIM-0053) — HELD / SUPPORT
+researcher-0057 | L0 CPU stdlib SERIAL | runtime 2.6s | M=4000, 8 seeds/cell, 36 cells
+
+## VERDICT: **HELD (support)** — all four pre-committed conditions satisfied,
+incl. the LOAD-BEARING alpha=0 control.
+
+## 1. STRUCTURAL ANCHOR (unconditional — must hold) — HOLDS
+- Removal-rate is **monotone-increasing in item length L** in every well-sampled (n>=50)
+  bin of all 9 (c,k) cells (apparent non-monotonicity occurs only in the L>110 tail where
+  n in {1,13,67} = pure sampling noise).
+- **Survivor mean-length < full-set mean-length** in every cell (e.g. high-c/k=8:
+  24.7 -> 18.3 tokens; med-c/k=13: 24.6 -> 22.6).
+- Empirical removal matches the **union-bound prediction** P(remove|L)=1-(1-q)^(L-k+1):
+  mean MAE = 0.012 across cells. The filter is a length-biased test-set sampler exactly
+  as the union-bound predicts.
+
+## 2. alpha=0 CONTROL (LOAD-BEARING — the proof it's coupling-driven, not artifact) — PASSES
+At alpha=0 (difficulty independent of length): composition STILL shifts (survivors shorter,
+removal up to 51%) but **Delta ~ 0** — every alpha=0 cell's 95% CI covers 0; max|Delta@a0|
+= 0.00109 (vs headline Delta up to +0.091). => the score shift is NOT an artifact of the
+filter seeing difficulty; the filter is provably blind to d_i/p_i. REQUIRED-for-support: MET.
+
+## 3. HEADLINE Delta(alpha) — grows with alpha (med c, k=13)
+  alpha=0.0: Delta = -0.00017 +/-0.00089   (CI covers 0 — control)
+  alpha=0.3: Delta = +0.00911 +/-0.00053
+  alpha=0.6: Delta = +0.01710 +/-0.00096
+  alpha=0.9: Delta = +0.02461 +/-0.00137
+Monotone in alpha, CI excludes 0 for all alpha>0.
+
+## 4. Delta grows with corpus coverage c (alpha=0.6, k=13)
+  c=low  (q=0.002): Delta=+0.0040  removal= 2.6%
+  c=med  (q=0.01):  Delta=+0.0171  removal=10.9%
+  c=high (q=0.05):  Delta=+0.0637  removal=36.5%
+
+## 5. PERSISTS across production k {8,13,25} (mitigation test) — YES
+(alpha=0.6, med c): k=8 Delta=+0.0161 (rem 15%), k=13 Delta=+0.0171 (rem 11%),
+k=25 Delta=+0.0108 (rem 5%). Raising k shifts the removal curve right (fewer/longer items
+removed) and shrinks but does NOT kill Delta — CI excludes 0 at all three k. Production
+k in {8,13} retain meaningful removal and meaningful inflation. NOT trivially-small.
+
+## MAGNITUDE AT REALISTIC PARAMS
+At plausible production settings (k=8/13, med coverage, alpha=0.3-0.6 = realistic
+QA/reasoning length<->difficulty slope): **Delta ~ +0.9 to +1.7 accuracy points** purely
+from decontamination's collateral length-selection. At high coverage + strong coupling it
+reaches +6 to +9 points. The inflation requires zero real contamination — it is a property
+of the MITIGATION.
+
+## DECISION-RULE EVALUATION (pre-committed)
+(1) structural anchor holds .......... YES
+(2) alpha=0 Delta ~ 0 (CI covers 0) ... YES (REQUIRED — passed)
+(3) Delta grows with alpha & c ........ YES
+(4) persists across production k ...... YES
+=> HELD / SUPPORT.
+
+## RESIDUAL FLAG (honest)
+Sign/size of inflation hinges on length<->difficulty coupling alpha>0 (real on QA/reasoning,
+weaker on MCQ-boilerplate) — isolated into the swept alpha; the alpha=0 control proves the
+structural composition shift is UNCONDITIONAL while the score inflation is coupling-gated.
+
+## ARTIFACTS
+- PRE_REGISTRATION.md (committed before run)
+- sim.py (stdlib-only, serial)
+- results/delta_table.csv (36 cells: alpha x c x k, Delta+CI+removal+mean-L)
+- results/anchor_table.csv (98 rows: removal-by-length emp vs union-bound)
+
+
+## PRE-REG
+# PRE_REGISTRATION — EXP-0059 (CLAIM-0053)
+researcher-0057 | PROJ-0023 | TASK-0049 | L0 CPU-only stdlib SERIAL <=15min
+Committed BEFORE running. Honest pipeline; negatives are wins.
+
+## CLAIM (CLAIM-0053)
+Standard GPT-3/Llama n-gram-overlap benchmark decontamination ("remove any test item
+sharing an >=k-gram with the training corpus") deletes test items with probability
+MONOTONE-INCREASING in item length (union bound over per-n-gram match events), so the
+SURVIVING benchmark shifts toward SHORTER items. When item difficulty is length-correlated
+(empirically true on QA/reasoning), this length-selection biases post-decontam accuracy
+UPWARD by a margin growing with corpus n-gram coverage c, persisting at production k in
+{8,13}. Harm is a property of the MITIGATION (decontam), not of contamination.
+
+## BENCHMARK MODEL (harness OWNS GT — strictly anti-circular)
+- M items (M=4000). Each item i = token sequence over a Zipfian vocab (|V|=5000, s=1.07).
+- Length L_i drawn from a realistic right-skewed dist: L_i = clip( round(lognormal(mu=3.0,
+  sigma=0.6)) , Lmin=12, Lmax=400 ). (median ~20 tokens, long tail — QA/reasoning-like.)
+- TRUE difficulty: d_i = alpha * g(L_i) + (1-alpha) * eps_i
+    g(L_i) = (rank-normalized length to ~N(0,1)): standardize log(L_i).
+    eps_i ~ N(0,1) independent of length.
+    => alpha=0 : difficulty INDEPENDENT of length. alpha>0 : longer = harder.
+- TRUE correct-answer prob: p_i = sigmoid(-d_i)  (harder => lower p).
+- alpha SWEPT in {0, 0.3, 0.6, 0.9}.
+
+## TRAINING CORPUS + FILTER (tested signal; reads ONLY tokens + corpus n-gram set)
+- Corpus n-gram set: built so that each individual k-gram of an item matches with
+  per-n-gram prob q, where q is set by coverage c. We model the corpus as a set; we draw,
+  for each k-gram position, a Bernoulli(q) "this k-gram is in corpus" with q controlled by c.
+
+## ORCHESTRATOR NOTE: PRIOR-ART — Brown2020 GPT-3 n-gram decontam (2005.14165) + Llama3 Dubey (2407.21783, 8gram) = standard practice benchmarked vs; Yang 2311.04850 rephrased = false-NEGATIVES (opposite direction); Bordt 2410.03249 applies filter + notes significant filtering but treats removal as BENIGN; Schaeffer 2601.04301 studies UN-removed contamination inflation. Novelty = the decontam filter is a LENGTH-BIASED sampler whose collateral removal (independent of real contamination) distorts surviving difficulty + inflates the score. Same structural-anchoring discipline as CLAIM-0052 (removal-monotonicity is combinatorial, can't evaporate) + the alpha=0 control proves integrity. RESIDUAL killer-#6 (honest): inflation sign/size hinges on length<->difficulty>0 (real QA/reasoning, weaker MCQ-boilerplate) — ISOLATED into swept alpha, structural shift unconditional. If candidate-grade, L1 CONFIRMATORY: real MMLU/GSM8K/QuALITY + actual GPT-3/Llama 8/13-gram decontam vs real web n-gram corpus (C4/Pile) -> confirm removal-rises-with-length+survivor-shorter (anchored), measure real length<->difficulty slope from public per-item accuracy, report realized inflation. If you judge the real slope is plausibly flat on the benchmarks that matter OR the magnitude too small to flip decisions OR Bordt already covers it, say YELLOW/RED honestly. Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling instructions first, then do a targeted prior-art search across local/online OSS references for decontamination implementations and comparable benchmark filtering behavior.
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -path '*_shared/TOOLING_v001.md' -o -name '_committee_common_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 291ms:
+hook: PostToolUse Completed
+codex
+`rg` is not installed here, so I’m falling back to `find`/`grep`. The requested rule files are not at the initial expected paths, so I’m checking the repository layout before proceeding.
+exec
+/bin/zsh -lc 'ls -la' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+total 88
+drwxr-xr-x  21 dengcchi  staff   672 Jun  3 07:42 .
+drwxr-x---+ 91 dengcchi  staff  2912 Jun  3 15:15 ..
+drwxr-xr-x  15 dengcchi  staff   480 Jun  3 15:15 .git
+-rw-r--r--   1 dengcchi  staff    56 Jun  2 11:39 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+-rw-r--r--   1 dengcchi  staff  1221 Jun  3 06:46 DECISION_expand_lightweight.md
+-rw-r--r--   1 dengcchi  staff  2699 Jun  2 17:24 HANDOFF_r1_to_r2.md
+-rw-r--r--   1 dengcchi  staff  2516 Jun  2 23:21 HANDOFF_r2_to_r3.md
+-rw-r--r--   1 dengcchi  staff  2856 Jun  3 03:22 HANDOFF_r3_to_r4.md
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 00:15 ORCHESTRATOR_CHARTER.md
+-rw-r--r--   1 dengcchi  staff  2222 Jun  3 04:48 QUIESCENCE_r4_001.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  3123 Jun  3 05:33 QUIESCENCE_r4_002.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  2055 Jun  3 07:42 RESEARCHER_CHARTER.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:01 experiments
+drwxr-xr-x   5 dengcchi  staff   160 Jun  3 02:14 learning
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x  26 dengcchi  staff   832 Jun  3 14:53 projects
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3696 Jun  3 08:36 research-os.config.yaml
+drwxr-xr-x  10 dengcchi  staff   320 Jun  3 11:29 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 829ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -maxdepth 4 -type f | sed 's#"'^./##'"' | sort | head -200" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 193ms:
+.git/COMMIT_EDITMSG
+.git/FETCH_HEAD
+.git/HEAD
+.git/config
+.git/description
+.git/hooks/applypatch-msg.sample
+.git/hooks/commit-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-commit.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/pre-push.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/pre-receive.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/push-to-checkout.sample
+.git/hooks/sendemail-validate.sample
+.git/hooks/update.sample
+.git/index
+.git/info/exclude
+.git/logs/HEAD
+.git/objects/00/8fc2211db35940f1db659b99a4d32dafc39083
+.git/objects/00/92f4e17c236ce10661d52c665c060789560acc
+.git/objects/00/98a8b98e3244b61571e7a6bc14e54f06832fe0
+.git/objects/00/a2c93ac2cb5abfc52049f4ace1a83e6976b30b
+.git/objects/00/b4aff37f3a7aa1a1e79bd3981d78fb9cbda984
+.git/objects/00/e90313e5fa70d41c9eda3b3c41609de26aa309
+.git/objects/00/e93f54222db7194ba6837d733e866bd4063a1c
+.git/objects/00/fed0a03392d43f491cabbac64608072f8f31f6
+.git/objects/01/077e744a0f8ced2d25d7feff39d1894a133675
+.git/objects/01/5ba6841ef5f63128beae497ff6aaec52e41c87
+.git/objects/01/5ed7b20874812a3fab9232c2c6b3904f97adec
+.git/objects/01/6b5cefbaaa14b15904e16306f4fb18b347e1d0
+.git/objects/01/742eeb681d4759820b94c50176b26bf69021d7
+.git/objects/01/803d5fb65d4c7e7945f44321f6b345cdba0acb
+.git/objects/01/83a1f0561607674aa670bdf649245ad771eb60
+.git/objects/01/850b3e73ae6e110446ff0740d9e4d011885789
+.git/objects/01/8cbdcf261894b33f1babd0ea377005b9b410fa
+.git/objects/01/a6e14b9834efe404bb99e07ab460236e85ad59
+.git/objects/01/a8cb88bed95762efcb4dd809e95a30ba13421f
+.git/objects/01/c0551a8008470cb235e9a3b56618185ac74933
+.git/objects/01/c7d1d224ce51aa3278746c440fb2e23b11fb0a
+.git/objects/01/c98380f11f31e4b768639500a07d1502519393
+.git/objects/01/d1f52eed1a7807b6d94640ecd0d63750a152f4
+.git/objects/01/d6515dd29a150f50654199c33e75bd86f42608
+.git/objects/01/e1eefe78d179946a6c419d6cff29f4bc4446b4
+.git/objects/01/fcb274ad58017376842b7e84903f38c2f460fa
+.git/objects/02/02ea6bc9334821f518850cebfa2c0db27a0d01
+.git/objects/02/0627e72792ed752613b18d0076a378e94deafc
+.git/objects/02/0b5f4519b9ba9440bd2aad8ffa5be5fa0d990f
+.git/objects/02/0d2ea5558200ff0fdaaec86d47456c4996f45f
+.git/objects/02/21ab8f776240260538ac81cd72173b075a27e4
+.git/objects/02/31c6b46f3516b3a9b3d0b7e49eaf6edda7e2e5
+.git/objects/02/3e95d838bcd7f532cfd0a41c3abc0a37de1653
+.git/objects/02/4671734507636e679c04df578a7d20f17d8f65
+.git/objects/02/4e141fd57b318c3bb3351c242869a893abaa24
+.git/objects/02/56673c8aa3eb8bcb276138969c7f9bf2f3920b
+.git/objects/02/5ff459c527373667611184fe05ae3be9c6c5a5
+.git/objects/02/7bbc45180c376ea78a6f1e64ae94fecdf734e7
+.git/objects/02/84080e76bf7ffe916f42e397fdcf0a4a401f75
+.git/objects/02/8b23ec39734bcafddf6b6935068189a9279ebd
+.git/objects/02/94d2d24b5a044c8a97072c467359a9a31f8a61
+.git/objects/02/94fd959eb9b078c0bb6b11c1bcd43a14ffdc91
+.git/objects/02/96b2efd57be8fd39eee2fa89169815b53d47a6
+.git/objects/02/c16f2228cadfbf63616ed954a7c200c73541c6
+.git/objects/03/3f34663cacfcf3e31e6e96ac06ed30e05fdb06
+.git/objects/03/42ffa005ae2b859c88c77585605dac55ab89de
+.git/objects/03/73b27bab7fdec1a08a3838630ccce0a53b2c51
+.git/objects/03/785b6ed645406ab3f01ff770945d424f54dadc
+.git/objects/03/88065b141a6f62851dfe03a25b22c13b09c5cf
+.git/objects/03/8846591fd7a48f2175f6ca53303716bfc10502
+.git/objects/03/8948bcba40366ec97e5e5484066efbc028ded2
+.git/objects/03/9eb69df6c91596fc13833dea2673e6e4299626
+.git/objects/03/b5ce155bc48d1bd7bf3cd833c45f12aedb0497
+.git/objects/03/d87cee21ab9ccc319cf2e0bd610c620cf8b28c
+.git/objects/03/e883ce4a7940cebb19ca7abbee751c6edd621e
+.git/objects/03/f7a524f95008dcb52e306e8e12aeab388651c5
+.git/objects/03/f8d7d43f6b86daf2baeea66434e8d647d41bf6
+.git/objects/04/11d524041cbd1a4b2f1c2aa5ce2f7cb9dfbb78
+.git/objects/04/11ffe13946f0fd8692aca978312299c73745f4
+.git/objects/04/2b5f8ab389515b182e7c02acf2f20c4db3e64b
+.git/objects/04/2e6893773b29985a5e84bdad64b3bae9ce7f49
+.git/objects/04/2e981c482ac80a0935a7eae55e28af86da52e8
+.git/objects/04/34b05d261e99829bd206144bce530f7f3f5706
+.git/objects/04/4c2a1901e511f9c2a82297ac0b078a95c3c74f
+.git/objects/04/62c9ae86944bdb3876b944cb0b9fba73133bd0
+.git/objects/04/63e9cc43e78cfe9075346949a5f15a4e4928e1
+.git/objects/04/94138ee23d9b3738f6b7b9bce177d004caf2d1
+.git/objects/04/b37a624997be91cc88d0cd8aeb21a246d03fb6
+.git/objects/04/c89fc9cbe2aac087ea736b48a54eaff90f623a
+.git/objects/04/c9dd5248d1c80011c356d063c197d5b470dc24
+.git/objects/04/d486faa6aaec05450f177ca179474d82f5ec08
+.git/objects/04/e4ff7f53ccfc81c6f07253b4143ad274484c03
+.git/objects/04/fbcf3df0071f6464cdb34958939072b4335192
+.git/objects/05/1e63975cb41d2e6b7f09319a7150e964a0149c
+.git/objects/05/2e987562e0147db5d0dc1a8663eae52e0b6805
+.git/objects/05/4963c4c61a1970f2311c1de8877ac9db188087
+.git/objects/05/57f0742b88c45380ce12ce2d3116a9a5299e62
+.git/objects/05/616048f256282e7bd147b53a9896be3a09f322
+.git/objects/05/8d65ab5d0a4d45f243cb890e1a6ae05a3a2896
+.git/objects/05/aa345c81c7f3b1fddccd0bede236fce1447df5
+.git/objects/05/b9524d196012f4a12d78f1920c6d90fc651bf0
+.git/objects/05/cefa4aece9528f01095fc6004814f56224491d
+.git/objects/05/d08234086728c96890a8ee6027b45d99429fba
+.git/objects/05/e423ff550620a9f753bb5348b2a1246fd8d4a2
+.git/objects/05/ffc34b4d02fb0cf6f9fb10af3e7ec0bd11d11c
+.git/objects/06/0e34169e8d24bd994b8fa73a7bd55711308da2
+.git/objects/06/15ab4ad5c2fd3788473ad5b0532a3ebb73bed9
+.git/objects/06/2709c941a985cf4b2c0cb9554a5b8478052082
+.git/objects/06/370ac96b242d2b41cef9cec4f0e5bcdf52de52
+.git/objects/06/5d39de66e77fde662da478b2c8903fb7ce84ec
+.git/objects/06/94bb9954b399a658c0934cc15df43271d411dc
+.git/objects/06/9781e7d042ad8eefcb0fdcd4846c389c9015cd
+.git/objects/06/97cceec1f671f5698dbdc764f1a55f933c0b4c
+.git/objects/06/a2445cce77769a8bca01eca0b56284c2f1b716
+.git/objects/06/df62cae40f438c51aac3d773d36e165926e045
+.git/objects/06/e0cde0416aa8e322979021c8915b3c4ea362b5
+.git/objects/06/e6b60065dc9ebee08fa203f046f78d1875295e
+.git/objects/06/e76fa7b7633b21cac2e30073de1d5b69166b26
+.git/objects/06/edf07a097e53ada8da390eb85833054b03adf5
+.git/objects/06/f716242af9c946498c99ec274cc97af8a24fde
+.git/objects/07/097c8203411b5c062bb0d3f869dda8ef860170
+.git/objects/07/09e50e9f3b6267257fc46ab6d44a32db901e42
+.git/objects/07/1ab825914079f4e7ef25e3f2d9b5e7bfab2a7d
+.git/objects/07/204b76c6cf65aa97ddcfad53b2a9d1bc489460
+.git/objects/07/21344831ec08318fb4c171cf01e82286b1994c
+.git/objects/07/22dd6cdca7b676d56134e7b9e2c5819c2cb013
+.git/objects/07/6533d370e5cbac6ae0c6362b39f42879d6eacb
+.git/objects/07/727d2af5f1bc43758ff7a4e951a4e116f386b4
+.git/objects/07/8bffdd65c14e27123eab1be8e6c0bb9e587d6a
+.git/objects/07/8fc8b7cc2fee27e3e829e6a7e9a38b5069b5e2
+.git/objects/07/a532cf0447968d13fb68eb744731d16d51c8b9
+.git/objects/07/b32790c0e2effe7fb2c0f40466dfd2c555f1fe
+.git/objects/07/b4c2d4bb8a772e93a04a0b9052e7035af53fda
+.git/objects/07/b5cab082b8d705d3cbbc73c0188ce654df96cd
+.git/objects/07/ce0665b654455cacd9de8ff69216dd2edb427d
+.git/objects/07/e5d6422b4b1080f5a9d40e2b0dcd73fc107d73
+.git/objects/07/ebb0fdf50a5cf8edc18567d93db706cd14c4e7
+.git/objects/07/fe382c1953391c46f70099ae1c298624883383
+.git/objects/08/1ca790d052c248986b1827abc4be9f91c3d5c8
+.git/objects/08/1fd07cd2f33f29de1481a801b4b06b65a99b8d
+.git/objects/08/47276679f36bc8ad80664597304594c50594ae
+.git/objects/08/5fba53c7d41b5d6457c6eb2fcb875c001c27ff
+.git/objects/08/62b06f3e825a3a26fd9f1b8339365b6f5168e0
+.git/objects/08/65635dfb6781cd8a4d326a2167492df5cd075e
+.git/objects/08/759eaef8a0ab0044a8a5c1c36189a746453bcd
+.git/objects/08/7725085eb4695122342429e95f405bb97e65ee
+.git/objects/08/8246e817ea4320ea3de213074232a20f25bc7d
+.git/objects/08/84ec285c7ad76f81b54d5d2db05840710badd5
+.git/objects/08/888b62deecb3e62c7c42917bf82723ad7e94f9
+.git/objects/08/8a75876dbfdd2a4437f934afc84eaeff1105da
+.git/objects/08/8b53eb14a0ccef3b979add231dbfdb0f418b45
+.git/objects/08/94432db906b1e9e308f3f8d7704da0388ac230
+.git/objects/08/c5cc704bc1d2c64ea5df10c1fa9ff2b4b5cc36
+.git/objects/08/c78f66f582edada23ab81856302d57b1453aff
+.git/objects/08/d372cb0584ead6ec88a2f443a36ac7e9e9bc54
+.git/objects/08/e241b4f5f06cfa54ce159fef3cf754f8410077
+.git/objects/08/e40744e0635c80edb0369ebc4bf87f9daa2754
+.git/objects/08/f3db7d541fbf050e57e150eef812bf9a096c22
+.git/objects/08/f6d35523726a2acfaae13ce744bb9236b547b4
+.git/objects/09/0885d911f432bbd2e06e5a2e10929536d28c0d
+.git/objects/09/27776e2ff62c359586ed2f73d27e6319806e7a
+.git/objects/09/370ffdb9314fa11c256e84ca06a188b2d9ffc4
+.git/objects/09/46e44b90d4311bc35740e7c20388f0a8e99baa
+.git/objects/09/71d216d2d927279c66e845a0008e88da370a8a
+.git/objects/09/7ddb0ac7c4c97a5aaab0adeb8518ad2a0e335b
+.git/objects/09/84f11c19e892352559dd3d05011f3ccbda55d8
+.git/objects/09/911af2242473f3f2df0ce9d41264eb41be7eda
+.git/objects/09/985249fb92c63116adf9f93dc341879bfbf317
+.git/objects/09/98586727601a0660cc50d1869bafb11f015e95
+.git/objects/09/99e6fdf942b14d157a2f614221c667edccc6da
+.git/objects/09/a0c36a2be0e9a4f376a8e2d86bb0b17be75bcb
+.git/objects/09/a2808cf99f9a85ead4481d51866f7964a172c9
+.git/objects/09/bcbe6432efa798401ccc615ab848892f919df5
+.git/objects/09/e77bb88cab4771cead7d987a80cb56e7bbaf0a
+.git/objects/09/ed8c36b5b35421781933085b1aaad24a377692
+.git/objects/09/f047a6501d6c60447cad9044df0c7746295f21
+.git/objects/0a/128392f0f60d06daa37002db39ca0f83e5511c
+.git/objects/0a/16e66fc7bb7f61e79604032f471f19fd339868
+.git/objects/0a/1da6578274b3e6325cbc297461d8a1dbce4d6a
+.git/objects/0a/322a7ad46bf747d9bae9f461f820e7821458b6
+.git/objects/0a/52123e9e71e726a6623ad9acc6286f5c27244d
+.git/objects/0a/6209679282cd4cc7d00877d1f16a5d9ad0fbbc
+.git/objects/0a/6231ffab2ce0dd351b936b935642306f0d519e
+.git/objects/0a/67c99ca62320648de8759c93e48ca3ef586aca
+.git/objects/0a/6ada2ada26c6723d9df33e5521c4c953fdacaf
+.git/objects/0a/7049be7fb09335d4fc21afaa716c66b21d8568
+.git/objects/0a/849cba07ab6c260039bee8f41091b5a7da04a0
+.git/objects/0a/96b4ab1b3444503903dfba32e91eda6b68d8d6
+.git/objects/0a/ad3c8897d381c9deac9b3a9abe2b7618fb32c4
+.git/objects/0a/b2bf9ee13087c366fe2f10fd3fa16bb9f9aae8
+.git/objects/0a/c65625f401f78993baf5af2fc0639e5f8a2ed1
+.git/objects/0a/c6aaf2c6af27703f25d0461972cca786ffef46
+.git/objects/0a/cc53ad1ebdffdb7f4e464bfa463fade130c438
+.git/objects/0a/d84fd061e82f31d351f59d4bd0b1e491c4c373
+.git/objects/0a/dc35905de13d8b71204c354bf65325d8a76518
+.git/objects/0b/1365e45283a24b578d619d510b5ae7ad21f3e4
+.git/objects/0b/137437328b87895a123a838fb5d9eb30d69c72
+.git/objects/0b/15dc1a37b45ffa2c66cc175c8473217b3d5394
+
+codex
+The packet already includes the common rules inline, and the separate rule files appear absent from this checkout. I’m treating the pasted v001 text as binding and using the tooling requirement by doing an external OSS/prior-art search rather than relying on the packet alone.
+mcp: meta_core/three_pai_external_web_search started
