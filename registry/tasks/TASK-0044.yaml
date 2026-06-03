@@ -1,0 +1,31 @@
+task_id: TASK-0044
+kind: research
+parent: orchestrator-r5-001
+assignee: researcher-0052
+session_id: ''
+project_id: PROJ-0020
+claim_id: CLAIM-0050
+exp_id: EXP-0054
+status: open
+summary: 'L0: input-length-SJF vs FCFS p99 crossover tau* in a discrete-event VLM-serving
+  queue; sweep Kendall-tau(proxy,true-cost) + load rho; HEADLINE=tau* where SJF p99
+  > FCFS p99; SUPPORTED iff crossover at realistic rho AND realistic-VLM-tau is below
+  tau* w/ large gap (SJF>=1.2x FCFS); anti-circular (GT=true_service_time never visible
+  to scheduler, SJF reads input_token_count only); controls (tau->+1 SJF wins, FCFS
+  tau-invariant); honest-neg if SJF<=FCFS across realistic tau; PERSISTENT-SEEDER
+  loop'
+evidence_delta: ''
+opened_at: '2026-06-03T19:28:45Z'
+updated_at: '2026-06-03T19:28:45Z'
+closed_at: ''
+history:
+- ts: '2026-06-03T19:28:45Z'
+  event: open
+  by: orchestrator-r5-001
+  note: 'L0: input-length-SJF vs FCFS p99 crossover tau* in a discrete-event VLM-serving
+    queue; sweep Kendall-tau(proxy,true-cost) + load rho; HEADLINE=tau* where SJF
+    p99 > FCFS p99; SUPPORTED iff crossover at realistic rho AND realistic-VLM-tau
+    is below tau* w/ large gap (SJF>=1.2x FCFS); anti-circular (GT=true_service_time
+    never visible to scheduler, SJF reads input_token_count only); controls (tau->+1
+    SJF wins, FCFS tau-invariant); honest-neg if SJF<=FCFS across realistic tau; PERSISTENT-SEEDER
+    loop'
