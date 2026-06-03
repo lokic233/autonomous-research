@@ -1192,3 +1192,14 @@ Cycle 1 of 12h watch (06:11→18:25 UTC). Tokens ~70k. Claims 15→18 (+3), verd
       all engine date paths use datetime.timezone.utc (NOW/TODAY L87-98). No local-time leak.
 - VERDICT: v3 IS maturing toward v2-parity and producing real reviewed science on v3-main — committee is
   honestly refuting weak claims (no false greens), schema at near-parity (only cosmetic gaps), integrity solid.
+
+## 2026-06-03 ~09:14 UTC — BUG-83 (no cron flushed v3 state -> push-drift + durability risk) [v3-impl live debug]
+The audit kept flagging "committed-but-unpushed" / uncommitted drift every cycle. Root cause: the 4 crons
+only OBSERVE/NOTIFY; the ONLY thing that ran `ros commit` (commit+push) was the orchestrator's own
+self-check. Between its cycles, durable work accumulated unpushed -> box death = lost work, and the auditor
+re-flagged drift each pass. FIX: the monitor cron (5-min watchdog) now runs `ros commit` at end-of-cycle.
+ros commit is atomic (git add -A snapshot), no-ops when clean, safe to flush in-flight artifacts (next
+cycle catches the rest), and a push of already-committed work is always safe. Validated: dirtied tree +
+1 unpushed commit -> monitor flushed both -> local==remote, 0 uncommitted. v3 persistence is now self-healing
+(every 5 min) instead of bound to orchestrator cadence. Driver invokes scripts fresh each cycle so the fix
+is live without a restart. Engine main 33091f2.
