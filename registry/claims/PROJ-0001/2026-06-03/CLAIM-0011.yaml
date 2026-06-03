@@ -17,7 +17,27 @@ why_it_matters: 'Distinct from the dead efficiency-knob claims: this is an EMPIR
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0016
+  summary: "L1 REAL-BENCHMARK validation of YELLOW L0 (VERDICT-0013); SUPPORTS+strengthens\
+    \ the L0 weaken with real data. GOT REAL DATA: BFCL v4 (Berkeley Function-Calling\
+    \ Leaderboard), official Gorilla repo, fetched live via fwdproxy on devgpu014.\
+    \ The load-bearing unknown (real dependency-detector FNR e) is RESOLVED and NOT\
+    \ safe. M1 real f_indep: BFCL parallel categories definitionally 100pct independent\
+    \ (curated ceiling; vs L0 constructed 0.44-0.71 mixed corpus). M2 THE ANSWER:\
+    \ real e measured on 257 real multi_turn DAGs (668 calls) vs 3 detectors: heuristic\
+    \ data-flow e=0.58, data-flow+state e=0.16, LLM Qwen2.5-1.5B e=0.61 \u2014 ALL\
+    \ >> 0.025 safety threshold and >= L0 assumed 0.05. e dominated by STATEFUL/ORDER\
+    \ deps (FNR 0.27-0.97) not value data-flow (FNR 0.00-0.30) \u2014 real-data refinement\
+    \ L0 could not see. M3 empirical f_wrong 2.4-8.5pct/call validates L0 binomial\
+    \ 1-(1-e)^k (modeled 0.074 vs empirical 0.024-0.085). M4 LLMCompiler (2312.04511):\
+    \ +9pct acc / 3.7x latency vs ReAct because it PLANS explicit DAG (var refs) not\
+    \ post-hoc detection \u2014 sidesteps e wall, explains why detect-then-parallelize\
+    \ fails. VERDICT: HELD/strengthened weaken; free-latency-win refuted on real stateful\
+    \ agentic traces; naive detect-then-parallelize unsafe, plan-time DAG construction\
+    \ required. Caveats: parallel-cat f_indep=1.0 curated ceiling; heuristic data-class\
+    \ recall circular (use LLM 0.70); small 1.5B LLM judge. No detector reached e<=0.025."
+  data_path: experiments/2026-06-03/EXP-0016/
 negative_evidence:
 - exp_id: EXP-0014
   summary: 'PARTIAL verdict -> WEAKEN. Part A (independent-call fraction >30%) HELD
@@ -43,10 +63,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0013=yellow: address required_evidence to advance'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0016; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0016
+active_experiments: []
 created_at: '2026-06-03T01:53:05Z'
-last_updated: '2026-06-03T02:07:16Z'
+last_updated: '2026-06-03T02:22:00Z'
