@@ -1212,3 +1212,18 @@ live debug: v3 had 6 terminal-dead claims but only 3 DEAD entries; the 3 missing
 all committee-KILL verdicts. FIX: cmd_verdict_write buries on --final kill, idempotent (skips if claim
 already has a DEAD entry so exp-complete doesn't double-bury). Validated: kill->buried->re-seed REFUSED
 (hard match 1.0)->2nd kill no double-bury. Backfilled the 3 live unburied kills (DEAD-0004/5/6). Engine e1814f0.
+
+## 2026-06-03 ~09:25 UTC — BUG-85 (gpu poll multi-node dispatch contention -> double GPU dispatch) [v3-impl bugbash]
+`ros gpu poll` (legacy pull scheduler) did a non-atomic check-then-act on the shared runtime/gpu_queue.yaml:
+read queue -> check this node lease-free -> probe -> pick highest-prio cand -> claim lease + drop from queue
++ write. Two STANDBY nodes ticking concurrently both read {queue:[EXP], leases:{}}, both passed the lease
+check, both picked the SAME EXP, both wrote -> last-writer-wins left only ONE node's lease in the queue while
+BOTH printed "🚀 PULLED EXP" and the exp.yaml node_lease was clobbered to the loser. Result: the same exp
+runs on TWO GPUs (wasted compute, and a CRASH RISK on fragile MI350X), with registry showing only one lease.
+Same class as BUG-59 (Channel non-atomic RMW) but on the legacy gpu_queue path. Reproduced 5/5 with two
+H100 nodes + a single queued exp. FIX (minimal): added a tiny `_file_lock` ctx-mgr reusing the exact
+O_EXCL + 30s stale-reclaim discipline from next_id (BUG-52); wrapped the candidate-pick + lease-claim + queue
+write in cmd_gpu_poll under it, RE-READING the queue inside the lock and re-checking the node's lease; the
+slow node probe stays OUTSIDE the lock. Also skip any exp already leased to another node. Validated: 6/6
+concurrent races now single-dispatch (exactly one node leased, queue drained, no double PULL). Backward-
+compatible (no schema/CLI change). Engine main 06a4a97.
