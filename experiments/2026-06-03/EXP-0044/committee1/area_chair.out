@@ -1,0 +1,43 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: red, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS:
+- [evaluation_prosecutor, RED — PARTIALLY REBUTTED] BM25L (Lv & Zhai CIKM 2011) not tested. The recovery arm is length-norm-dominated by the researcher's own admission; BM25L explicitly lower-bounds TF normalization to prevent the over-penalization that drives recovery. If the inverted-U vanishes under BM25L, the phenomenon reduces to "BM25's known length-penalty defect exploited by query-term stuffing" — not a novel corpus-hygiene finding. This is a CPU-trivial L0 test. REBUTTAL: the novelty_killer's search confirms no prior source reports the specific clean-answer-rank inverted-U vs competitor-template-length as an observable, so even if BM25L kills the recovery arm, the L0 contribution would narrow to "this is a BM25(b>0)-specific artifact" — still a useful scoping result, not a total kill. The RED is legitimate as a gap but does not warrant killing the claim outright; it warrants a mandatory remediation experiment.
+- [theory_skeptic, YELLOW — ENDORSED] b-sweep {0, 0.25, 0.5, 0.75, 1.0} is the single cheapest, most decisive mechanistic test and was not run. b=0 MUST abolish the recovery arm if the stated mechanism is correct. This independently corroborates the evaluation_prosecutor's demand and is equally cheap.
+
+REQUIRED_EVIDENCE:
+- [MANDATORY BEFORE L1] b-sweep at L0: run strongest cell (f=1.0, T=2) with b ∈ {0, 0.25, 0.5, 0.75, 1.0}, k1=1.2 fixed. If b=0 kills recovery: confirms length-norm is necessary cause (scopes the phenomenon honestly). If b=0 does NOT kill recovery: a genuine surprise that elevates novelty.
+- [MANDATORY BEFORE L1] BM25L variant (delta=0.5, Lv & Zhai 2011) on same grid. If inverted-U persists under BM25L: phenomenon is robust to the known length-penalty fix → substantially strengthens the claim. If it vanishes: phenomenon is BM25-specific over-penalization artifact → scope claim accordingly, still publishable as a diagnostic but with reduced novelty.
+- [MANDATORY BEFORE L1] Fix citation 2504.21015 — novelty_killer verified this is "Don't Retrieve, Generate" (synthetic training data), NOT document-expansion-hurts. Verify or remove 2604.05087 (future-dated, unverifiable).
+- [MANDATORY BEFORE L1] Rewrite claim text: drop dual-mechanism framing. Recovery along L is length-norm-dominated; IDF-collapse acts only via the SPREAD (frac) axis. The current claim text ("at large L … spreads the query-terms' df so their IDF collapses") is contradicted by the researcher's own qterm_idf table (flat 4.05 across L>0).
+- [RECOMMENDED FOR L1] FDR correction across 9 L × 4 cells (theory_skeptic); report bootstrap CIs for rank distributions clipped at floor.
+- [RECOMMENDED FOR L1] Score-margin metric (evaluation_prosecutor): delta between clean answer and top distractor, not just rank — to assess whether the displacement is reranker-recoverable.
+
+MANDATORY_BASELINES:
+- BM25L (Lv & Zhai, CIKM 2011, 10.1145/2063576.2063731) — at L0 before promotion
+- b-sweep (b ∈ {0, 0.25, 0.5, 0.75, 1.0}) on strongest cell — at L0 before promotion
+- Dense retriever (bge-base / e5-base) — at L1 (already in orchestrator's L1 plan)
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0045", change: "status remains HELD/yellow; add required_before_L1 gate: [b-sweep, BM25L, citation-fix, claim-rewrite]. Do NOT promote to L1 until these four are satisfied. If b-sweep + BM25L both show recovery vanishes, downgrade to HELD-NARROW (BM25-default-specific diagnostic, reduced novelty, still valid L0 result). If recovery persists under BM25L, upgrade to HELD-STRONG and fast-track L1."}
+
+PRIOR_ART_ADEQUATE: no
+- Citation 2504.21015 is WRONG (verified by novelty_killer via WebFetch — it is a synthetic-training-data paper, not document-expansion)
+- Citation 2604.05087 is UNVERIFIABLE (future-dated arXiv ID, rate-limited)
+- MISSING mandatory references: Singhal-Buckley-Mitra 1996 (pivoted length normalization — the exact mechanism driving the recovery arm); Robertson & Walker SIGIR 1994 (BM25 length normalization); Lv & Zhai CIKM 2011 (BM25L, the direct robustness baseline); Zhong et al. EMNLP 2023 (corpus poisoning — same family, must distinguish); Doc2Query-- (Gospodinov et al. 2023, over-expansion-hurts on target doc)
+- The researcher's cited prior-art is honest in spirit (correctly excludes 2503.05037 as static biases, correctly notes the target-vs-competitor distinction) but incomplete in coverage and contains at least one verified error
+
+RATIONALE:
+The committee converges on YELLOW (4Y, 1R). The single RED (evaluation_prosecutor) is legitimate but partially rebutted and addressable:
+
+**What is real:** The inverted-U observable is empirically present and replicated (3/4 cells, 20/20 seeds in strongest). The killed-sibling revival condition was honestly engineered — the researcher correctly identified that CLAIM-0044 died because boilerplate was non-query/on-answer, and flipped both factors. The novelty_killer's targeted search (DuckDuckGo + arXiv/ACL for "term spam + BM25 length normalization + non-monotone") found no source reporting the specific clean-answer-rank inverted-U under competitor-template-length growth. The observable appears unoccupied.
+
+**What is overstated:** The claim's dual-mechanism framing is contradicted by the researcher's own evidence (qterm_idf flat across L>0 — conceded honestly in the results, but not reflected in the claim text). Along the L axis, this is a length-norm-vs-TF-injection crossover, not a length-norm-vs-IDF-collapse crossover. The theory_skeptic correctly notes this is a derivable consequence of textbook BM25 length normalization (Singhal 1996, Robertson & Walker 1994) meeting trivial query-term injection — the novelty is in the specific observable and its framing as a "corpus-hygiene danger zone," not in the mechanism.
+
+**What is missing and cheap to fix:** The b-sweep and BM25L tests (both CPU-trivial at L0) are the decisive discriminators. If recovery vanishes under b=0 AND under BM25L, the phenomenon is honestly scoped as "BM25-default-parameter artifact" — still valid, still unoccupied as an observable, but narrower. If recovery persists under BM25L, that's a genuine surprise that substantially elevates the claim. Either outcome is informative; neither was tested despite being cheap. The citation errors must be fixed regardless.
+
+**Resolution of the RED:** The evaluation_prosecutor's core argument — that standard BM25's length-penalty is a "known defect" and the experiment is a "strawman" — is overstated. A phenomenon composed of known mechanisms can still be a novel observable (cf. emergent properties in complex systems). But the demand for BM25L as a baseline is correct: if the inverted-U is BM25(b>0)-specific, that must be stated, not discovered post-hoc. I resolve the RED as a mandatory gate, not a kill: run the baselines, scope the claim honestly, then reassess.
+
+**Verdict logic:** GREEN is blocked by (a) inadequate prior-art (wrong citations, missing mandatory references), (b) unremediated RED (BM25L not tested), (c) overstated claim text (dual-mechanism framing contradicted by own data). RED/KILL is unwarranted because (a) the observable is empirically real and replicated, (b) no fatal prior-art collision was found by the novelty_killer despite targeted search, (c) the gaps are cheaply addressable at L0, (d) the honest nuance in the results (IDF flatness, weakest cell reported as NS) demonstrates research integrity. YELLOW with a gated path to L1.
+```
