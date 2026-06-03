@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'NEGATIVE on joint-dominance (claim weakened). L0 CPU queueing+prefix-cache
+  sim, 3 policies greedy(SGLang)/VTC/bounded-W with service-time feedback. Sweep K{8,16}
+  skew{1.5,2.0} B{4,16} load{0.7,1.0,1.4} cap{B+1,B+2,2B}fam, M=400, 24 seeds, paired
+  bootstrap + Bonferroni FWER(m=864). RESULT: 0/36 cells where bounded-W jointly Pareto-dominates
+  BOTH greedy AND VTC. Greedy is the recomputed-prefill floor (32/36 cells); bounded-W
+  beats greedy on p99 in 13/36 cells but ALWAYS at positive prefill cost (mean +16093
+  tok) = fairness/prefill TRADE not dominance. PARTIAL: bounded-W strictly dominates
+  VTC in 36/36 cells under FWER (VTC is the weak baseline; greedy mean-dominates VTC
+  in 31/36). Conclusion: bounded-W is a tunable knob ALONG the frontier between greedy
+  and fairness, not a point inside it past both corners; no free lunch over the reuse-maximizer.
+  GPU pass owed: real SGLang+VTC on vLLM/APC, real p99 TTFT, multi-SLO classes.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0007/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T00:18:40Z'
 prompt_version: ''
