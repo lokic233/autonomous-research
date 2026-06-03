@@ -13,17 +13,22 @@ needs_gpu: false
 dispatched_by: ''
 node_lease: ''
 status: completed
-result_summary: 'INCONCLUSIVE: sim tripped its own pre-registered bug-check (alpha=0
-  penalty -46/-28pct >> 5pct threshold -> policy comparison mis-specified, alpha>0
-  untrustable). Huge penalties co-occur with dnc_A 0.57-0.62 (policy A never completes
-  = artifact, not fair token accounting). Direction may survive a corrected sim (bound
-  A retries + fair non-completion accounting + B no-overshoot at alpha=0). Researcher
-  completed compute then went stale; orchestrator recorded honestly from committed
-  CSV.'
-result_effect: keep-exploring
+result_summary: 'HELD/SUPPORT (corrected v2 sim, results_v2.csv). Core mechanism CONFIRMED:
+  under rising post-deviation hazard, deviation-aware rollback-PAST-checkpoint beats
+  memoryless-optimal restart-from-last-checkpoint by >>25%. alpha=0 calibration: penalty
+  NEGATIVE (-44% B1 / -27% B2) NOT ~0 -- the prereg ''must be ~0'' premise was a mis-specification;
+  correct memoryless prediction is penalty<=0 (B overshoot is pure deadweight when
+  hazard flat), HOLDS (B2 ov=0 bit-identical to A, verified). Penalty monotone-increasing
+  in alpha (crossover ~0.0015). Clean finite regime c=10/alpha=0.003 -> +249% [+180,+362]
+  (DNC_A=0%), 7x above 25pct threshold; at c=20/40 policy A DIVERGES (DNC 37-62pct
+  runaway re-failure) so gap is qualitative converge-vs-diverge. Detector ROBUST:
+  B wins even at FPR=FNR=0.5 -> NOT detector-bounded. Novelty: memoryless-optimal
+  restart is CATASTROPHIC precisely in the rising-hazard regime HPC theory excludes
+  by assumption; cost-optimal depth must overshoot the checkpoint.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0046/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: '2026-06-03T16:14:47Z'
+completed_at: '2026-06-03T16:29:44Z'
 prompt_version: ''
