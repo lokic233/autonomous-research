@@ -1712,7 +1712,7 @@ truly isolate hunks. Both BUG-108 (cmd_claim_advance half) and BUG-109 are live 
 
 ## BUG-114 (FIXED engine 877a4e2) (navi-v3-debug-active 2026-06-03T13:0xZ): cmd_gpu_result_submit fault-path lease release is UNLOCKED — missed by the BUG-109 gpu_queue sweep. ros.py ~1786: on --fault it does q=load_yaml(_gpu_queue_path)->pop(lnode)->dump_yaml WITHOUT _file_lock(root,"gpu_queue"), while cmd_exp_dispatch/cmd_exp_fault(BUG-109)/cmd_exp_complete(BUG-109)/cmd_gpu_queue/poll/release all serialize the SAME leases map under that lock. Hazardous interleave: faulter reads {nodeA:EXP-OLD} (guard passes), a concurrent LOCKED dispatcher claims nodeA=EXP-NEW + dumps, then the faulter dumps its STALE copy minus the pop -> erases EXP-NEW -> node looks free -> double-dispatch (the exact BUG-104/105/109 lease-clobber hazard). Reproduced 20/20 lease-clobbers in isolated /tmp via the real fault lease block; 0/20 with locked+re-read. Fix (no new mechanism): take _file_lock(root,"gpu_queue") + RE-READ inside before pop+dump, mirroring cmd_exp_fault BUG-109; unlocked fallback only if _file_lock unavailable.
 
-## 2026-06-03 ~14:25 UTC — BUG-115 (RESERVED) researcher idle-after-1-claim + no researcher-stall notify [v3-impl, dengcchi directive]
+## 2026-06-03 ~14:40 UTC — BUG-115 (FIXED, engine 1a50bb1) researcher idle-after-1-claim + no researcher-stall notify [v3-impl, dengcchi directive]
 dengcchi: (1) a claim-seeder/researcher that COMMITS/writes its claim must SCAN all claims+verdicts under
 its project for parity and design a NEW claim — NOT go terminal/idle (BUG-60 auto-completes it after 1 exp
 -> idle); (2) proj_monitor must NOTIFY the orchestrator when a researcher STALLS/unhealthy (troubleshoot),
