@@ -9,7 +9,7 @@ spec=importlib.util.spec_from_file_location("runmod", os.path.join(os.path.dirna
 # Simpler: re-define minimal here by reading functions. We'll just re-implement via exec of run.py up to MAIN.
 src=open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"run.py")).read()
 src=src.split("# ============ MAIN SWEEP ============")[0]
-g={"__file__": os.path.join(os.path.dirname(os.path.abspath("x")),"run.py")}
+g={"__file__": "/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0050/run.py"}
 exec(src,g)
 run_cell=g["run_cell"]
 import statistics as st, math as m
