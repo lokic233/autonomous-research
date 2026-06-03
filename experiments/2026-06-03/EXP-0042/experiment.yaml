@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL-CONFIRM (conditional). L0 stdlib BM25 sim, 8 seeds, 200 docs/cell,
+  6.3s. recall@k OVER-COUNTS RAG retrieval via gold-span splitting: over-count==split-rate,
+  up to 0.965 (recall=1.00 vs completeness=0.035 at chunk32/ov0/span32); >20% across
+  many STANDARD configs (long span/low overlap), 95% CI excludes 0. Headline recall
+  100% vs true whole-span completeness 3.5-78.5% where splits occur = real score-distortion.
+  LOAD-BEARING overlap-control PASSES EXACTLY: over-count->0 whenever overlap>=span_len
+  (k>=3) => standard overlap kills it for short spans; survives for long spans w/
+  typical overlap. NOT unconditional. Sim caveat: recall=1.0 everywhere (unique gold
+  tokens => fragment always retrievable) inflates absolute gap + makes it k-invariant.
+  Metric-validity result, NOT chunking-optimization, NOT lost-in-the-middle. L1: real
+  NQ/HotpotQA gold spans + LangChain splitter + dense bi-encoder/BM25 + downstream
+  reader EM/F1 (does the over-count COST accuracy?).'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0042/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T14:48:13Z'
 prompt_version: ''
