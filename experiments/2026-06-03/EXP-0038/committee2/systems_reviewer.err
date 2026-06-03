@@ -1,0 +1,1061 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8d69-2c81-7bc1-8681-44259b8006e4
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 — CLAIM-0040 (PROJ-0011), WITH cheap corpus-only GATE (EXP-0037 L0 + EXP-0038 gate)
+## SECOND pass. committee#1 (VERDICT-0038) voted yellow on the HELD-PARTIAL L0 and prescribed a CHEAP CORPUS-ONLY GATE (measure real f_fl + real rho on real tool-result corpora; NO detector/GPU) BEFORE any L1. The gate is in. Cast FINAL votes. Engine enforces real 6/6; GREEN only if truly unanimous green by role — NEVER fabricate. The gate is a clean, well-evidenced KILL — vote honestly.
+
+## GATE FINDINGS (EXP-0038, N=1641 REAL tool-result records, 5 classes — search_rag/web_search/api_json/code_exec_log/db_query; real gpt2 tokenizer; real downstream-dependency labels):
+(1) rho=T_stream/T_step < 1 for ALL real classes: median rho 0.007-0.508; 0-9% clear rho>=1. Real tool results are SHORT (46-225 tok) -> prefill ~instantly vs the next decode step. The lone high-rho class (search_rag, artificial 1274-tok HotpotQA distractor) COLLAPSES to 0% clearing rho>=1 under a realistic reasoning next-step. => essentially NO real tool class where results stream slower than the next step. Nothing to overlap. (kill criterion fired)
+(2) DUMB-TRUNCATION @N=512 fully captures actionable content for 4/5 classes (api/code/db 100%, web 100%) -> a parameter-free truncate-never-redo baseline is already correct everywhere rho is low. The detector/redo apparatus is UNJUSTIFIED. (kill criterion fired)
+(3) ADVERSARIAL (f_fl,rho) bind CONFIRMED (the committee's exact worry): the only high-rho class (search_rag) is also the only NON-end-front-loaded one (5.5% actionable-end <=0.3) AND the only truncation-resistant one (0-14.5%). Everywhere rho pays, f_fl fails -> early-commit would commit WRONG exactly where it has time to.
+(4) INCREMENTAL-PREFILL (real prod baseline, not wait-for-EOF): production streams tokens into KV continuously; the addressable latency for 46-225-tok results is sub-100ms on H100 — largely already overlapped.
+(5) PRIOR-ART cleared: LLMCompiler (call-graph parallel, lossless, captures inter-call latency w/o redo); CALM (own-decode early-exit, not tool-result); spec-decode (lossless, no W penalty). The niche (correctness-safe semantic commit on a partial tool RESULT) is genuinely OPEN but EMPIRICALLY EMPTY — the paying regime doesn't occur in real corpora.
+
+## SYNTHESIS: EXP-0037's favorable break-even was correct MATH over an UNREAL operating point (rho>=2, long slow-streaming front-loaded truncation-resistant results). The cheap gate showed that operating point does not exist in real agent tool traffic, and the cheap baseline (truncate/incremental-prefill) already captures the available latency without correctness risk. KILL. The gate SAVED a wasted GPU L1 — cost-aware gating working exactly as intended.
+
+## CLAIM
+claim: "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning step\
+  \ on the STREAMING PREFIX of a long tool result (once the front-loaded actionable\
+  \ content has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+why_it_matters: "FRESH axis (tool-result streaming early-commit \u2014 untouched by\
+
+## GATE RESULTS (EXP-0038)
+# RESULTS — EXP-0038 / CLAIM-0040 — CHEAP CORPUS-ONLY GATE
+**Streaming-prefix semantic early-commit on agent tool RESULTS.** L0-budget GATE prescribed by
+committee#1 (VERDICT-0038, yellow): measure the load-bearing EMPIRICAL premises (f_fl, rho) on REAL
+tool-result corpora BEFORE any detector/GPU work. No detector training, no GPU inference — real
+distributions + real tokenizer (gpt2 BPE). Honest pipeline; a kill-before-GPU is a WIN.
+Run: cli:devgpu014, venv /home/dengcchi/sglang-env (egress via fwdproxy). N=1641 real records.
+
+## VERDICT: **KILL** (fails the pre-registered gate on TWO independent criteria)
+
+Real tool results are **NOT in the lucrative regime EXP-0037's favorable break-even required.**
+The favorable p* map of EXP-0037 was real math over an UNREAL operating point. On real corpora the
+operating point does not occur: **rho ≪ 1 for every realistic tool class**, and where rho is high
+(one artificial class) the result is **not front-loaded** and **dumb-truncation already wins** — the
+exact adversarial triple-bind the committee feared. Recommend KILL; do not spend an L1 GPU experiment.
+
+---
+
+## CORPORA (real tool-result text, 5 tool classes, N=1641)
+| class | source (HF, live egress) | what the "result" is | N |
+|---|---|---|---|
+| search_rag | hotpotqa/hotpot_qa (distractor) | 10 retrieved passages; actionable = ground-truth supporting passages | 400 |
+| web_search | mandarjoshi/trivia_qa (rc) | ranked web search-result descriptions; actionable = answer-bearing span | 300 |
+| api_json    | THUDM/AgentInstruct (kg, webshop) | API/JSON tool observations; actionable = value next gpt-turn consumes | 600 |
+| code_exec_log | THUDM/AgentInstruct (os) | real bash/OS execution output; actionable = result/error line | 300 |
+| db_query    | THUDM/AgentInstruct (db) | SQL query result rows; actionable = queried field | 41 |
+
+Ground-truth actionable span: for RAG = labeled supporting passages; for AgentInstruct = the exact
+token span the agent's NEXT turn (gpt) quotes/acts on (real downstream dependency, not a guess).
+N_step (next reasoning step length) = REAL tokens of that next gpt turn.
+
+---
+
+## (1) f_fl — REAL front-loading rate  [GATE: actionable content in front ~30%]
+Fractional START position of actionable span (tokens, gpt2 BPE):
+
+| class | n | median f_fl_start | IQR | %start≤0.30 | %END≤0.30 |
+|---|---|---|---|---|---|
+| api_json | 600 | 0.073 | [0.01,0.36] | 68.3% | 61.2% |
+| code_exec_log | 300 | 0.037 | [0.00,0.10] | 79.0% | 79.0% |
+| db_query | 41 | 0.020 | [0.01,0.12] | 97.6% | 92.7% |
+| search_rag | 400 | 0.263 | [0.10,0.44] | 55.0% | **5.5%** |
+| web_search | 300 | 0.154 | [0.04,0.38] | 68.3% | 67.0% |
+| **DOMINANT pooled** | 1600 | **0.120** | — | **67.0%** | — |
+
+**f_fl clears ≥0.3 front-loading for short structured results** (api/code/db/web): the actionable
+span both starts AND ends inside the front 30%. But the ONE long class (search_rag) is the opposite:
+the actionable span STARTS early (0.263) but **only 5.5% have it END in the front 30%** — supporting
+passages are scattered across the list. → f_fl is FINE where results are short, FAILS where they're long.
+
+## (2) rho = T_stream / T_step — REAL latency ratio  [GATE: rho ≥ 1]
+rho = (N_result/r_prefill) / (N_step/r_decode). Realistic H100 vLLM: r_prefill 5k–15k tok/s, r_decode 50–120 tok/s.
+
+| class | medN_result | medN_step | med rho (fav) | med rho (mid) | med rho (adv) | %rho≥1 (mid) |
+|---|---|---|---|---|---|---|
+| api_json | 48 | 48 | 0.022 | 0.007 | 0.003 | 0.0% |
+| code_exec_log | 46 | 48 | 0.023 | 0.008 | 0.003 | 0.0% |
+| db_query | 109 | 143 | 0.017 | 0.006 | 0.002 | 0.0% |
+| web_search | 225 | 11 | 0.508 | 0.169 | 0.071 | 0.0% |
+| search_rag | 1274 | 11 | 2.734 | 0.911 | 0.380 | 36.5% |
+| **DOMINANT pooled** | — | — | **0.197** | **0.066** | **0.027** | **9.1%** |
+
+**rho FAILS catastrophically.** Real tool results are SHORT (46–225 tok) and prefill into context
+~instantly relative to the next decode step. Only search_rag clears rho≥1 — and ONLY because (a) it's
+the artificial 1274-tok HotpotQA distractor set, and (b) I optimistically set its next-step = an
+11-token answer-emit. **Re-tested with a realistic reasoning next-step (N_step∈{64,128,256}),
+search_rag collapses to rho=0.02–0.48, 0% clearing rho≥1 in EVERY rate band.** There is no real
+tool class where results stream slower than the agent's next step. rho≥1 is essentially empty.
+
+## (3) JOINT (f_fl, rho) — adversarial correlation  [committee's worry: long tail = low f_fl AND high rho AND high redo]
+Spearman corr(rho, f_fl_start), positive = adversarial:
+- api_json −0.574, code_exec_log −0.374, db_query −0.253, web_search −0.364 (BENIGN: longer→earlier).
+- search_rag **+0.091** and it's the ONLY high-rho class — and its actionable-END is the worst (5.5%≤0.3).
+**The adversarial bind is real and concentrated exactly where the committee feared:** the single class
+with non-trivial rho (search_rag) is also the single class that is NOT end-front-loaded and where
+truncation breaks (below). Everywhere rho is high enough to matter, f_fl fails; everywhere f_fl is
+good, rho≪1 (nothing to overlap). The two premises are anti-correlated in the regime that pays.
+
+## (4) DUMB-TRUNCATION vs early-commit  [GATE: if truncation matches, apparatus unjustified]
+% of results whose actionable span FULLY fits in first N tokens (keep first N, never redo, no detector):
+
+| class | medN_result | N≤128 | N≤256 | N≤512 |
+|---|---|---|---|---|
+| api_json | 48 | 100% | 100% | 100% |
+| code_exec_log | 46 | 100% | 100% | 100% |
+| db_query | 109 | 100% | 100% | 100% |
+| web_search | 225 | 91.3% | 99.7% | 100% |
+| search_rag | 1274 | 0.0% | 2.8% | 14.5% |
+
+**DUMB-TRUNCATION at N=512 fully captures actionable content for 4/5 classes (100%/100%/100%/100%).**
+For the short structured/code/API/DB/web classes — i.e. everywhere rho is low — a parameter-free
+truncate-and-never-redo baseline is already correct. No detector, no redo, no semantic-commit machinery
+needed. The early-commit apparatus only *could* add value on search_rag (where truncation fails at
+0–14.5%) — but that is precisely the class where (a) actionable content is NOT front-loaded (5.5% end
+≤0.3) so early-commit would commit WRONG, and (b) the gain shown earlier was an artifact that vanishes
+under a realistic next-step. Apparatus is UNJUSTIFIED on the real distribution.
+
+**INCREMENTAL-PREFILL note (the real production baseline):** production agent stacks (vLLM/TGI/SGLang)
+stream tokens into the KV cache via chunked/continuous prefill as they arrive — they do NOT wait for
+EOF. EXP-0037's rho implicitly modeled a wait-for-EOF stall. With incremental prefill the addressable
+latency is only the residual gap between last-token-arrival and next-step-need, which for 46–225-tok
+results is sub-100ms on H100. The thing early-commit overlaps is largely already overlapped in prod.
+
+## (5) PRIOR-ART (live web; distinguish)
+- **LLMCompiler — Kim et al. 2023 (arXiv:2312.04511, ICML 2024).** Overlaps agent latency by planning a
+  DAG of function CALLS and dispatching independent calls in PARALLEL. Operates at the CALL-graph level;
+  does NOT commit on a partial/streaming tool RESULT, and is lossless (no correctness-safety break-even
+  on result prefixes). Orthogonal mechanism — and it already captures the inter-call latency this claim
+  targets, without any redo risk.
+- **CALM — Schuster et al. 2022 (arXiv:2207.07061, NeurIPS 2022).** Confidence-thresholded EARLY-EXIT in
+  the LM's own decode (per-token layer skipping) with sequence-level consistency guarantees. The
+  confidence-gated-commit idea is the conceptual ancestor of this claim's "detector fires on a prefix,"
+  but CALM commits on the MODEL's internal confidence about its OWN generation, not on a partial external
+  tool RESULT. No tool-result semantics.
+- **Leviathan et al. 2023 spec-decoding cost model.** The p*-style break-even (accept-prob × cost) is the
+  algebraic ancestor of EXP-0037's p*; spec-decode is LOSSLESS (verified), so it has no semantic-redo
+  penalty W and no front-loading dependence. Different object entirely.
+- **No prior work does correctness-safe semantic committing on a partial/streaming tool RESULT.** That
+  niche is genuinely open — but this gate shows the niche is empty in practice: the regime where it would
+  pay (long, slow-streaming, front-loaded, truncation-resistant results) does not occur in real corpora.
+
+---
+
+## GATE VERDICT: **KILL** — do NOT proceed to detector-feasibility L1.
+Pre-registered kill rule fired on TWO independent criteria + the joint bind:
+1. **rho < 1 for dominant classes** → FIRED HARD. Median rho 0.007–0.508; 0–9% clear rho≥1; the lone
+   exception (search_rag) collapses to 0% under a realistic next-step. Real tool results stream fast
+   relative to reasoning. **Nothing meaningful to overlap.** (kill criterion #2)
+2. **Dumb-truncation matches early-commit** → FIRED. N≤512 truncation fully captures actionable content
+   for 4/5 classes (100%). The detector/redo apparatus is unjustified everywhere rho is low. (kill #3)
+3. **Adversarial (f_fl, rho) correlation** → CONFIRMED. The only high-rho class is the only non-end-
+   front-loaded one and the only truncation-resistant one. The premises are anti-correlated in the
+   paying regime — early-commit would commit WRONG exactly where it has time to commit at all.
+4. f_fl ALONE clears ≥0.3 for short classes — but f_fl was never the binding constraint; rho is.
+
+EXP-0037's favorable p* break-even was correct math over an operating point (rho≥2, long slow-streaming
+front-loaded results) that **does not exist in real agent tool traffic.** The honest negative is: the
+mechanism is real, but its lucrative regime is empirically empty, and the cheap baseline (truncate /
+incremental-prefill) already captures the available latency without any correctness risk.
+**This gate saved a wasted GPU L1. That is the win.**
+
+## Reproducibility / paths (on cli:devgpu014:/home/dengcchi/ros-EXP-0038/)
+- gate.py — corpus fetch + per-record f_fl/rho/actionable-span extraction (real tokenizer)
+- analyze.py — metrics 1–4 + joint Spearman + incremental-prefill/search_rag interrogation
+- results/records.json (1641), results/per_record.csv, results/counts.json, results/analysis.txt
+- PRE_REG.md committed BEFORE running (HEAD 9e9a788). Corpora + method + kill rule pre-registered.
+
+## committee#1 ref: VERDICT-0038 yellow (prescribed exactly this gate).
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'find . -maxdepth 4 -type d | head -200' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+ succeeded in 0ms:
+.
+./learning
+./learning/roles
+./learning/orchestrator
+./experiments
+./experiments/2026-06-03
+./experiments/2026-06-03/EXP-0034
+./experiments/2026-06-03/EXP-0034/results
+./experiments/2026-06-03/EXP-0034/logs
+./experiments/2026-06-03/EXP-0034/committee2
+./experiments/2026-06-03/EXP-0033
+./experiments/2026-06-03/EXP-0033/committee1
+./experiments/2026-06-03/EXP-0033/results
+./experiments/2026-06-03/EXP-0033/logs
+./experiments/2026-06-03/EXP-0035
+./experiments/2026-06-03/EXP-0035/committee1
+./experiments/2026-06-03/EXP-0035/results
+./experiments/2026-06-03/EXP-0035/logs
+./experiments/2026-06-03/EXP-0017
+./experiments/2026-06-03/EXP-0017/committee1
+./experiments/2026-06-03/EXP-0017/results
+./experiments/2026-06-03/EXP-0017/logs
+./experiments/2026-06-03/EXP-0010
+./experiments/2026-06-03/EXP-0010/committee1
+./experiments/2026-06-03/EXP-0010/results
+./experiments/2026-06-03/EXP-0010/logs
+./experiments/2026-06-03/EXP-0010/scripts
+./experiments/2026-06-03/EXP-0019
+./experiments/2026-06-03/EXP-0019/committee1
+./experiments/2026-06-03/EXP-0019/results
+./experiments/2026-06-03/EXP-0019/logs
+./experiments/2026-06-03/EXP-0021
+./experiments/2026-06-03/EXP-0021/results
+./experiments/2026-06-03/EXP-0021/logs
+./experiments/2026-06-03/EXP-0021/committee2
+./experiments/2026-06-03/EXP-0020
+./experiments/2026-06-03/EXP-0020/committee1
+./experiments/2026-06-03/EXP-0020/results
+./experiments/2026-06-03/EXP-0020/logs
+./experiments/2026-06-03/EXP-0027
+./experiments/2026-06-03/EXP-0027/committee1
+./experiments/2026-06-03/EXP-0027/results
+./experiments/2026-06-03/EXP-0027/logs
+./experiments/2026-06-03/EXP-0018
+./experiments/2026-06-03/EXP-0018/results
+./experiments/2026-06-03/EXP-0018/logs
+./experiments/2026-06-03/EXP-0018/committee2
+./experiments/2026-06-03/EXP-0011
+./experiments/2026-06-03/EXP-0011/committee1
+./experiments/2026-06-03/EXP-0011/results
+./experiments/2026-06-03/EXP-0011/logs
+./experiments/2026-06-03/EXP-0016
+./experiments/2026-06-03/EXP-0016/results
+./experiments/2026-06-03/EXP-0016/logs
+./experiments/2026-06-03/EXP-0016/committee2
+./experiments/2026-06-03/EXP-0029
+./experiments/2026-06-03/EXP-0029/committee1
+./experiments/2026-06-03/EXP-0029/results
+./experiments/2026-06-03/EXP-0029/logs
+./experiments/2026-06-03/EXP-0029/scripts
+./experiments/2026-06-03/EXP-0037
+./experiments/2026-06-03/EXP-0037/committee1
+./experiments/2026-06-03/EXP-0037/results
+./experiments/2026-06-03/EXP-0037/logs
+./experiments/2026-06-03/EXP-0038
+./experiments/2026-06-03/EXP-0038/results
+./experiments/2026-06-03/EXP-0038/logs
+./experiments/2026-06-03/EXP-0038/committee2
+./experiments/2026-06-03/EXP-0007
+./experiments/2026-06-03/EXP-0007/committee1
+./experiments/2026-06-03/EXP-0007/results
+./experiments/2026-06-03/EXP-0007/logs
+./experiments/2026-06-03/EXP-0007/scripts
+./experiments/2026-06-03/EXP-0009
+./experiments/2026-06-03/EXP-0009/committee1
+./experiments/2026-06-03/EXP-0009/results
+./experiments/2026-06-03/EXP-0009/logs
+./experiments/2026-06-03/EXP-0009/scripts
+./experiments/2026-06-03/EXP-0036
+./experiments/2026-06-03/EXP-0036/committee1
+./experiments/2026-06-03/EXP-0036/results
+./experiments/2026-06-03/EXP-0036/logs
+./experiments/2026-06-03/EXP-0013
+./experiments/2026-06-03/EXP-0013/results
+./experiments/2026-06-03/EXP-0013/logs
+./experiments/2026-06-03/EXP-0013/committee2
+./experiments/2026-06-03/EXP-0014
+./experiments/2026-06-03/EXP-0014/committee1
+./experiments/2026-06-03/EXP-0014/results
+./experiments/2026-06-03/EXP-0014/logs
+./experiments/2026-06-03/EXP-0022
+./experiments/2026-06-03/EXP-0022/results
+./experiments/2026-06-03/EXP-0022/logs
+./experiments/2026-06-03/EXP-0022/committee2
+./experiments/2026-06-03/EXP-0023
+./experiments/2026-06-03/EXP-0023/committee1
+./experiments/2026-06-03/EXP-0023/results
+./experiments/2026-06-03/EXP-0023/logs
+./experiments/2026-06-03/EXP-0015
+./experiments/2026-06-03/EXP-0015/committee1
+./experiments/2026-06-03/EXP-0015/results
+./experiments/2026-06-03/EXP-0015/logs
+./experiments/2026-06-03/EXP-0012
+./experiments/2026-06-03/EXP-0012/committee1
+./experiments/2026-06-03/EXP-0012/results
+./experiments/2026-06-03/EXP-0012/logs
+./experiments/2026-06-02
+./experiments/2026-06-02/EXP-0005
+./experiments/2026-06-02/EXP-0005/committee1
+./experiments/2026-06-02/EXP-0005/results
+./experiments/2026-06-02/EXP-0005/logs
+./experiments/2026-06-02/EXP-0005/scripts
+./experiments/2026-06-02/EXP-0002
+./experiments/2026-06-02/EXP-0002/committee1
+./experiments/2026-06-02/EXP-0002/results
+./experiments/2026-06-02/EXP-0002/logs
+./experiments/2026-06-02/EXP-0003
+./experiments/2026-06-02/EXP-0003/results
+./experiments/2026-06-02/EXP-0003/logs
+./experiments/2026-06-02/EXP-0004
+./experiments/2026-06-02/EXP-0004/committee1
+./experiments/2026-06-02/EXP-0004/results
+./experiments/2026-06-02/EXP-0004/logs
+./experiments/2026-06-02/EXP-0001
+./experiments/2026-06-02/EXP-0001/committee1
+./experiments/2026-06-02/EXP-0001/results
+./experiments/2026-06-02/EXP-0001/logs
+./experiments/2026-06-02/EXP-0006
+./experiments/2026-06-02/EXP-0006/committee1
+./experiments/2026-06-02/EXP-0006/results
+./experiments/2026-06-02/EXP-0006/logs
+./experiments/2026-06-02/EXP-0006/scripts
+./projects
+./projects/PROJ-0009
+./projects/PROJ-0007
+./projects/PROJ-0006
+./projects/PROJ-0001
+./projects/PROJ-0008
+./projects/PROJ-0004
+./projects/PROJ-0003
+./projects/PROJ-0002
+./projects/PROJ-0005
+./projects/PROJ-0011
+./projects/PROJ-0010
+./prior_art
+./runtime
+./runtime/locks
+./runtime/agents
+./runtime/escalation
+./runtime/handoffs
+./runtime/orchestrator
+./runtime/cron
+./runtime/cron/.proj_notified
+./runtime/cron/.mon_notified
+./runtime/cron/.coord_notified
+./sessions
+./registry
+./registry/tasks
+./registry/verdicts
+./registry/verdicts/PROJ-0009
+./registry/verdicts/PROJ-0009/2026-06-03
+./registry/verdicts/PROJ-0007
+./registry/verdicts/PROJ-0007/2026-06-03
+./registry/verdicts/PROJ-0006
+./registry/verdicts/PROJ-0006/2026-06-03
+./registry/verdicts/PROJ-0001
+./registry/verdicts/PROJ-0001/2026-06-03
+./registry/verdicts/PROJ-0001/2026-06-02
+./registry/verdicts/PROJ-0008
+./registry/verdicts/PROJ-0008/2026-06-03
+./registry/verdicts/PROJ-0004
+./registry/verdicts/PROJ-0004/2026-06-03
+./registry/verdicts/PROJ-0004/2026-06-02
+./registry/verdicts/PROJ-0003
+./registry/verdicts/PROJ-0003/2026-06-03
+./registry/verdicts/PROJ-0003/2026-06-02
+./registry/verdicts/PROJ-0002
+./registry/verdicts/PROJ-0002/2026-06-03
+./registry/verdicts/PROJ-0002/2026-06-02
+./registry/verdicts/PROJ-0005
+./registry/verdicts/PROJ-0005/2026-06-03
+./registry/verdicts/PROJ-0011
+./registry/verdicts/PROJ-0011/2026-06-03
+./registry/verdicts/PROJ-0010
+./registry/verdicts/PROJ-0010/2026-06-03
+./registry/cemetery
+./registry/cemetery/PROJ-0009
+./registry/cemetery/PROJ-0009/2026-06-03
+./registry/cemetery/PROJ-0007
+./registry/cemetery/PROJ-0007/2026-06-03
+./registry/cemetery/PROJ-0006
+./registry/cemetery/PROJ-0006/2026-06-03
+./registry/cemetery/PROJ-0001
+./registry/cemetery/PROJ-0001/2026-06-02
+./registry/cemetery/PROJ-0003
+./registry/cemetery/PROJ-0003/2026-06-03
+./registry/cemetery/PROJ-0002
+./registry/cemetery/PROJ-0002/2026-06-03
+./registry/cemetery/PROJ-0005
+./registry/cemetery/PROJ-0005/2026-06-03
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 /Users/dengcchi -path '*_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -type f | grep -E 'committee_common|TOOLING' | head -50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 120ms:
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -maxdepth 5 -type f | grep -E 'v001|systems|reviewer|TOOL' | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0035/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0035/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0019/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0019/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0021/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0021/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0020/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0020/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0027/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0027/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0018/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0018/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0011/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0011/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0016/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0016/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0029/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0029/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0037/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0037/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0038/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0038/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0007/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0007/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0009/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0009/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0013/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0013/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0014/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0014/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0022/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0022/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0023/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0023/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0015/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0015/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0012/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0012/committee1/systems_reviewer.err
+./experiments/2026-06-02/EXP-0005/committee1/systems_reviewer.out
+./experiments/2026-06-02/EXP-0005/committee1/systems_reviewer.err
+./experiments/2026-06-02/EXP-0002/committee1/systems_reviewer.out
+./experiments/2026-06-02/EXP-0002/committee1/systems_reviewer.err
+./experiments/2026-06-02/EXP-0004/committee1/systems_reviewer.out
+./experiments/2026-06-02/EXP-0004/committee1/systems_reviewer.err
+./experiments/2026-06-02/EXP-0001/committee1/systems_reviewer.out
+./experiments/2026-06-02/EXP-0001/committee1/systems_reviewer.err
+./experiments/2026-06-02/EXP-0006/committee1/systems_reviewer.out
+./experiments/2026-06-02/EXP-0006/committee1/systems_reviewer.err
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'find .. -maxdepth 4 -type d -name prompts -o -name _shared' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 981ms:
+find: ../Library/Application Support/CallHistoryTransactions: Operation not permitted
+find: ../Library/Application Support/com.apple.sharedfilelist: Operation not permitted
+find: ../Library/Application Support/Knowledge: Operation not permitted
+find: ../Library/Application Support/com.apple.TCC: Operation not permitted
+find: ../Library/Application Support/FileProvider: Operation not permitted
+find: ../Library/Application Support/AddressBook: Operation not permitted
+find: ../Library/Application Support/FaceTime: Operation not permitted
+find: ../Library/Application Support/DifferentialPrivacy: Operation not permitted
+find: ../Library/Application Support/CallHistoryDB: Operation not permitted
+find: ../Library/Assistant/SiriVocabulary: Operation not permitted
+find: ../Library/Daemon Containers: Operation not permitted
+find: ../Library/Autosave Information: Operation not permitted
+find: ../Library/IdentityServices: Operation not permitted
+find: ../Library/Messages: Operation not permitted
+find: ../Library/HomeKit: Operation not permitted
+find: ../Library/Sharing: Operation not permitted
+find: ../Library/com.apple.aiml.instrumentation: Operation not permitted
+find: ../Library/Mail: Operation not permitted
+find: ../Library/Trial: Operation not permitted
+find: ../Library/AppleMediaServices: Operation not permitted
+find: ../Library/DuetExpertCenter: Operation not permitted
+find: ../Library/Accounts: Operation not permitted
+find: ../Library/Safari: Operation not permitted
+find: ../Library/Biome: Operation not permitted
+find: ../Library/IntelligencePlatform: Operation not permitted
+find: ../Library/Shortcuts: Operation not permitted
+find: ../Library/Suggestions: Operation not permitted
+find: ../Library/Weather: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks-news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.photolibraryd.private: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedback: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.telephonyutilities.callservicesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.swtransparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ArchiveUtility.PKSignedContainer: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.accessibility.voicebanking: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.searchpartyuseragent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.referenceResolution: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.usernoted: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.VoiceMemos.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.contacts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.secure-control-center-preferences: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.chronod: Operation not permitted
+find: ../Library/Group Containers/com.apple.MailPersonaStorage: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.private.translation: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.appstoreagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.portrait.BackgroundReplacement: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmfcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.liveactivitiesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.amsondevicestoraged: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.SiriTTS: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes.import: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.calendar: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.userfeedbacklearning: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.gamecenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tips: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.loginwindow.persistent-apps: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.spotlight: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.studentd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ManagedSettings: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.sharingd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.printtool: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.corerepair: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.scopedbookmarkagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.weather: Operation not permitted
+find: ../Library/Group Containers/com.apple.systempreferences.cache: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedbacklogger: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.controlcenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.remembers: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes: Operation not permitted
+find: ../Library/Group Containers/com.apple.stickersd.group: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.UserNotifications: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tipsnext: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.moments: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Safari.SandboxBroker: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.transparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.reminders: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.findmy.findmylocateagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mail: Operation not permitted
+find: ../Library/Group Containers/com.apple.bird: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.DeviceActivity: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Journal: Operation not permitted
+find: ../Library/Group Containers/com.apple.Home.group: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.iCloudDrive: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.energykit: Operation not permitted
+find: ../Library/Group Containers/com.apple.PreviewLegacySignaturesConversion: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.ASR.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.replicatord: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Photos.PhotosFileProvider: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmipcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.AppleSpell: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mlhost: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.PegasusConfiguration: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.shortcuts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.inputmethod.chineseim: Operation not permitted
+find: ../Library/Containers/com.apple.VoiceMemos: Operation not permitted
+find: ../Library/Containers/com.apple.archiveutility: Operation not permitted
+find: ../Library/Containers/com.apple.Home: Operation not permitted
+find: ../Library/Containers/com.apple.Safari: Operation not permitted
+find: ../Library/Containers/com.apple.mail: Operation not permitted
+find: ../Library/Containers/com.apple.MobileSMS: Operation not permitted
+find: ../Library/Containers/com.apple.Notes: Operation not permitted
+find: ../Library/Containers/com.apple.news: Operation not permitted
+find: ../Library/Containers/com.apple.stocks: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.WebApp: Operation not permitted
+find: ../Library/ContainerManager: Operation not permitted
+find: ../Library/PersonalizationPortrait: Operation not permitted
+find: ../Library/Metadata/CoreSpotlight: Operation not permitted
+find: ../Library/Metadata/com.apple.IntelligentSuggestions: Operation not permitted
+find: ../Library/Cookies: Operation not permitted
+find: ../Library/CoreFollowUp: Operation not permitted
+find: ../Library/StatusKit: Operation not permitted
+find: ../Library/DoNotDisturb: Operation not permitted
+find: ../Library/Caches/com.apple.HomeKit: Operation not permitted
+find: ../Library/Caches/CloudKit: Operation not permitted
+find: ../Library/Caches/com.apple.Safari: Operation not permitted
+find: ../Library/Caches/com.apple.containermanagerd: Operation not permitted
+find: ../Library/Caches/com.apple.Safari.SafeBrowsing: Operation not permitted
+find: ../Library/Caches/com.apple.homed: Operation not permitted
+find: ../Library/Caches/com.apple.ap.adprivacyd: Operation not permitted
+find: ../.Trash: Operation not permitted
+../autonomous-research-e2e/.research-os/prompts
+../research-os/prompts
+../research-os/prompts/_shared
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,240p' ../research-os/prompts/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+sed: ../research-os/prompts/_committee_common_v001.md: No such file or directory
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,240p' ../research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,200p' experiments/2026-06-03/EXP-0038/committee2/systems_reviewer.out" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,240p' ../autonomous-research-e2e/.research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+sed: ../autonomous-research-e2e/.research-os/prompts/_shared/TOOLING_v001.md: No such file or directory
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,240p' ../autonomous-research-e2e/.research-os/prompts/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+sed: ../autonomous-research-e2e/.research-os/prompts/_committee_common_v001.md: No such file or directory
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find ../research-os/prompts ../autonomous-research-e2e/.research-os/prompts -maxdepth 2 -type f | sort | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+../autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/area_chair_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/evaluation_prosecutor_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/novelty_killer_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/product_realist_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/systems_reviewer_v001.md
+../autonomous-research-e2e/.research-os/prompts/committee/theory_skeptic_v001.md
+../research-os/prompts/_shared/HEARTBEAT_v001.md
+../research-os/prompts/_shared/TOOLING_v001.md
+../research-os/prompts/committee/_committee_common_v001.md
+../research-os/prompts/committee/area_chair_v001.md
+../research-os/prompts/committee/evaluation_prosecutor_v001.md
+../research-os/prompts/committee/novelty_killer_v001.md
+../research-os/prompts/committee/product_realist_v001.md
+../research-os/prompts/committee/systems_reviewer_v001.md
+../research-os/prompts/committee/theory_skeptic_v001.md
+../research-os/prompts/monitors/committee_monitor_v001.md
+../research-os/prompts/monitors/orchestrator_monitor_v001.md
+../research-os/prompts/orchestrator/v001.md
+../research-os/prompts/researchers/_researcher_common_v001.md
+../research-os/prompts/researchers/researcher_v001.md
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,240p' ../research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,240p' ../research-os/prompts/committee/systems_reviewer_v001.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,240p' ../research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+ succeeded in 0ms:
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ exited 1 in 25930ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+exec
+/bin/zsh -lc "gh search code '\"chunked prefill\" repo:vllm-project/vllm' --limit 10" in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "gh search code '\"chunked prefill\" repo:sgl-project/sglang' --limit 10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code '\"chunked prefill\" repo:NVIDIA/TensorRT-LLM' --limit 10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code '\"partial tool\" \"early commit\"' --limit 10" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 852ms:
+sgl-project/sglang:docs/index.rst: - **Fast Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
+sgl-project/sglang:docs/advanced_features/pipeline_parallelism.md: Chunked prefill with a fixed size can cause bubbles in the pipeline, especially when the pp size is large. The main reason behind this phenomenon is that the model has a non-uniform running time, even though each chunk size is identical (brought by the Transformer structure). The larger the prefix sequence length, the longer the running time of the chunk. And these bubbles will be propagated to the next stage, and will significantly degrade the scale efficiency of larger pp ranks.
+sgl-project/sglang:docs/advanced_features/pipeline_parallelism.md: * **Step 1 \- Iterate to find the optimal fixed chunked prefill size for the targeted PP size**: Different PP sizes for targeted ITL may have different optimal chunked prefill sizes. Therefore, users should iterate to obtain the baseline according to the available resources for scaling.
+sgl-project/sglang:docs/advanced_features/pipeline_parallelism.md: * **Step 2 \- Initial Chunk Size Selection for Dynamic Chunking**: Set the initial size to 2× or 3× the optimal fixed chunked prefill size. This reduces the total number of chunks and prevents "tail chunks" from underutilizing hardware. To maintain efficiency for extremely large Input Token Lengths (ITL), the dynamic predictor automatically ensures subsequent chunks are at least 1/4 of this initial size. In addition, it is recommended to use a larger initial chunk size (e.g., 4× the optimal fixed chunked prefill size) for such cases as well.
+sgl-project/sglang:docs/platforms/tpu.md: | Chunked Prefill | ✅ | Mixed prefill-decode batching |
+sgl-project/sglang:docs/platforms/tpu.md: - Enable chunked prefill: `--chunked-prefill-size=2048`
+sgl-project/sglang:docs/advanced_features/deterministic_inference.md: Building on [Thinking Machines Lab's batch-invariant operators](https://github.com/thinking-machines-lab/batch_invariant_ops), SGLang achieves fully deterministic inference while maintaining compatibility with chunked prefill, CUDA graphs, radix cache, and non-greedy sampling. The development roadmap for deterministic inference features can be found in this [issue](https://github.com/sgl-project/sglang/issues/10278).
+sgl-project/sglang:docs/advanced_features/deterministic_inference.md: | Attention Backend | CUDA Graph | Chunked Prefill | Radix Cache | Non-greedy Sampling (Temp > 0) |
+sgl-project/sglang:docs_new/docs/advanced_features/pipeline_parallelism.mdx: Chunked prefill with a fixed size can cause bubbles in the pipeline, especially when the pp size is large. The main reason behind this phenomenon is that the model has a non-uniform running time, even though each chunk size is identical (brought by the Transformer structure). The larger the prefix sequence length, the longer the running time of the chunk. And these bubbles will be propagated to the next stage, and will significantly degrade the scale efficiency of larger pp ranks.
+sgl-project/sglang:docs_new/docs/advanced_features/pipeline_parallelism.mdx: * **Step 1 \- Iterate to find the optimal fixed chunked prefill size for the targeted PP size**: Different PP sizes for targeted ITL may have different optimal chunked prefill sizes. Therefore, users should iterate to obtain the baseline according to the available resources for scaling.
+sgl-project/sglang:docs_new/docs/advanced_features/pipeline_parallelism.mdx: * **Step 2 \- Initial Chunk Size Selection for Dynamic Chunking**: Set the initial size to 2× or 3× the optimal fixed chunked prefill size. This reduces the total number of chunks and prevents "tail chunks" from underutilizing hardware. To maintain efficiency for extremely large Input Token Lengths (ITL), the dynamic predictor automatically ensures subsequent chunks are at least 1/4 of this initial size. In addition, it is recommended to use a larger initial chunk size (e.g., 4× the optimal fixed chunked prefill size) for such cases as well.
+sgl-project/sglang:python/sglang/srt/mem_cache/chunk_cache.py: """Cache for chunked prefill, used when RadixCache is disabled."""
+sgl-project/sglang:python/sglang/srt/managers/schedule_policy.py: With chunked prefill + overlap scheduler, the peak SWA occupancy is:
+sgl-project/sglang:python/sglang/srt/managers/schedule_policy.py: # Return if chunked prefill not finished
+sgl-project/sglang:python/sglang/srt/environ.py: # PP: skip output send/recv when the entire batch consists of non-final chunked prefill requests,
+sgl-project/sglang:python/sglang/srt/arg_groups/speculative_hook.py: "Mixed chunked prefill is disabled because of using dflash speculative decoding."
+sgl-project/sglang:python/sglang/srt/arg_groups/speculative_hook.py: "Mixed chunked prefill is disabled because of using "
+sgl-project/sglang:docs/advanced_features/server_arguments.md: - If you see out-of-memory errors during prefill for long prompts, try to set a smaller chunked prefill size.
+sgl-project/sglang:docs/advanced_features/server_arguments.md: | `--chunked-prefill-size` | The maximum number of tokens in a chunk for the chunked prefill. Setting this to -1 means disabling chunked prefill. | `None` | Type: int |
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 887ms:
+NVIDIA/TensorRT-LLM:docs/source/_includes/note_sections.rst: This enables chunked prefill, which processes long input sequences in chunks rather than
+NVIDIA/TensorRT-LLM:docs/source/_includes/note_sections.rst: requiring them to fit within a single prefill operation. Note that enabling chunked prefill
+NVIDIA/TensorRT-LLM:docs/source/overview.md: - **[Chunked Prefill](./features/paged-attention-ifb-scheduler.md)**: Efficient handling of long sequences by splitting context into manageable chunks
+NVIDIA/TensorRT-LLM:examples/models/core/phi/phi4-mm.md: * Added support for KV cache reuse and chunked prefill for phi4-mm models
+NVIDIA/TensorRT-LLM:examples/models/core/nemotron/README_nano-v2-vl.md: * Video modality cannot support chunked prefill yet.
+NVIDIA/TensorRT-LLM:docs/source/legacy/reference/multimodal-feature-support-matrix.md: | Model              | CUDA Graph | Encoder IFB         | KV Cache Reuse | Chunked Prefill |
+NVIDIA/TensorRT-LLM:tensorrt_llm/bench/benchmark/utils/general.py: # If chunked prefill is disabled, we need to ensure that the max_num_tokens is at least the max_isl
+NVIDIA/TensorRT-LLM:tensorrt_llm/bench/benchmark/utils/general.py: f"Chunked prefill is disabled, but max_num_tokens ({max_num_tokens}) is less than the max ISL ({dataset_metadata.max_isl}). "
+NVIDIA/TensorRT-LLM:docs/source/models/supported-models.md: | Model Architecture/Feature       | Overlap Scheduler | CUDA Graph | Attention Data Parallelism | Disaggregated Serving | Chunked Prefill | MTP | EAGLE-3 — Linear | EAGLE-3 — Dynamic | DFlash | Torch Sampler | TLLM C++ Sampler | KV Cache Reuse | Sliding Window Attention | Logits Post Processor | Guided Decoding |
+NVIDIA/TensorRT-LLM:docs/source/models/supported-models.md: [^1]: Chunked Prefill for MLA can only be enabled on SM100/SM103.
+NVIDIA/TensorRT-LLM:tensorrt_llm/inputs/multimodal.py: chunk_end_pos: End position of the current chunk for chunked prefill
+NVIDIA/TensorRT-LLM:tensorrt_llm/inputs/multimodal.py: """Raise iff chunked prefill or KV-cache reuse is in effect AND MM data is present without embed cumsum.
+NVIDIA/TensorRT-LLM:cpp/tensorrt_llm/common/attentionOp.h: // optional when compute attention stats (MLA chunked prefill or Helix parallelism)
+NVIDIA/TensorRT-LLM:.claude/skills/trtllm-serve-config-guide/references/knob-heuristics.md: | `max_num_tokens` | Scheduler token budget. When chunked prefill is **disabled** (default): must exceed ISL plus chat template overhead; sweet spot is ISL to 2× ISL. When chunked prefill is **enabled**: acts as the chunk size — see `enable_chunked_prefill` section below. General default is 8192. Tune together with `max_batch_size`. |
+
+ succeeded in 1081ms:
+vllm-project/vllm:docs/usage/v1_guide.md: ### Chunked Prefill
+vllm-project/vllm:docs/usage/v1_guide.md: Chunked prefill is enabled by default whenever possible, unlike in V0 where it was conditionally enabled based on model characteristics.
+vllm-project/vllm:vllm/config/scheduler.py: disable chunked prefill and prefix caching for encoder-decoder models.
+vllm-project/vllm:vllm/config/scheduler.py: """For chunked prefill, the maximum number of sequences that can be
+vllm-project/vllm:README.md: - Continuous batching of incoming requests, chunked prefill, prefix caching
+vllm-project/vllm:docs/configuration/optimization.md: ## Chunked Prefill
+vllm-project/vllm:docs/configuration/optimization.md: Chunked prefill allows vLLM to process large prefills in smaller chunks and batch them together with decode requests. This feature helps improve both throughput and latency by better balancing compute-bound (prefill) and memory-bound (decode) operations.
+vllm-project/vllm:vllm/model_executor/layers/pooler/tokwise/heads.py: # for unfinished chunked prefill
+vllm-project/vllm:vllm/model_executor/layers/pooler/tokwise/heads.py: # for unfinished chunked prefill
+vllm-project/vllm:docs/design/mm_processing.md: To enable various optimizations in vLLM such as [chunked prefill](../configuration/optimization.md#chunked-prefill) and [prefix caching](../features/automatic_prefix_caching.md), we use [BaseMultiModalProcessor][vllm.multimodal.processing.BaseMultiModalProcessor] to provide the correspondence between placeholder feature tokens (e.g. `<image>`) and multi-modal inputs (e.g. the raw input image) based on the outputs of HF processor.
+vllm-project/vllm:vllm/v1/pool/metadata.py: # for chunked prefill with ALL pooling
+vllm-project/vllm:vllm/multimodal/evs.py: This method supports chunked prefill approach where
+vllm-project/vllm:vllm/multimodal/evs.py: # or it can be a part of a single media (due to chunked prefill)
+vllm-project/vllm:docs/features/disagg_prefill.md: - **Controlling tail ITL**. Without disaggregated prefilling, vLLM may insert some prefill jobs during the decoding of one request. This results in higher tail latency. Disaggregated prefilling helps you solve this issue and control tail ITL. Chunked prefill with a proper chunk size also can achieve the same goal, but in practice it's hard to figure out the correct chunk size value. So disaggregated prefilling is a much more reliable way to control tail ITL.
+vllm-project/vllm:benchmarks/disagg_benchmarks/disagg_overhead_benchmark.sh: # compare chunked prefill with disaggregated prefill
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 954ms:

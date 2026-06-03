@@ -1,0 +1,41 @@
+dead_id: DEAD-0009
+original_claim_id: CLAIM-0040
+original_claim: "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning\
+  \ step on the STREAMING PREFIX of a long tool result (once the front-loaded actionable\
+  \ content has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+reason_killed: 'GATE KILL (researcher wrote RESULTS.md but stalled pre-exp-complete;
+  orchestrator finalized). Cheap corpus-only gate (N=1641 real tool-result records,
+  5 classes) on CLAIM-0040: rho<1 for ALL real classes (results short 46-225 tok,
+  prefill ~instant vs next decode step; 0-9% clear rho>=1; lone high-rho search_rag
+  collapses to 0% under realistic next-step) -> nothing to overlap. Dumb-truncation@N512
+  fully captures actionable content for 4/5 classes (100%) -> apparatus unjustified.
+  Adversarial (f_fl,rho) bind confirmed: only high-rho class is the only NON-end-front-loaded
+  + truncation-resistant one. Prior-art cleared (LLMCompiler/CALM/spec-decode distinct;
+  niche open but empirically empty). EXP-0037''s favorable break-even was real math
+  over an operating point that does not exist in real tool traffic. GATE SAVED A WASTED
+  GPU L1.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0038
+duplicate_patterns:
+- "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning step on\
+  \ the STREAMING PREFIX of a long tool result (once the front-loaded actionable content\
+  \ has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+- actionable actually after agent answer arrived because before boilerplate commit
+  committing content cost detectable doing early end exceeds first fraction from front
+  full genuinely has ingestion latency loaded long mattered net next often once pagination
+  partial prefix read real reasoning reduces result results saved serialize step stream
+  streaming streams structure tail then times tool when whenever win wrong
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T12:13:04Z'

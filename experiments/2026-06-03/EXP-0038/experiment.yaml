@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'GATE KILL (researcher wrote RESULTS.md but stalled pre-exp-complete;
+  orchestrator finalized). Cheap corpus-only gate (N=1641 real tool-result records,
+  5 classes) on CLAIM-0040: rho<1 for ALL real classes (results short 46-225 tok,
+  prefill ~instant vs next decode step; 0-9% clear rho>=1; lone high-rho search_rag
+  collapses to 0% under realistic next-step) -> nothing to overlap. Dumb-truncation@N512
+  fully captures actionable content for 4/5 classes (100%) -> apparatus unjustified.
+  Adversarial (f_fl,rho) bind confirmed: only high-rho class is the only NON-end-front-loaded
+  + truncation-resistant one. Prior-art cleared (LLMCompiler/CALM/spec-decode distinct;
+  niche open but empirically empty). EXP-0037''s favorable break-even was real math
+  over an operating point that does not exist in real tool traffic. GATE SAVED A WASTED
+  GPU L1.'
+result_effect: kill
 artifacts_path: experiments/2026-06-03/EXP-0038/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T12:13:04Z'
 prompt_version: ''
