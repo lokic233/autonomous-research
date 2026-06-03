@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'NEGATIVE (RoPE position-shift kill; honest negative = WIN). Part
+  A real: exact-prefix/APC misses 30-38% of schema structure (token-level schema ceiling
+  42-44% vs APC 6-13%; APC breaks at first differing value). Part B fails: position-aware
+  schema reuse collapses to 11-19% (RoPE tax b-c = 0.24-0.32; only 26-42% of ceiling
+  survives). Honest structural win over APC only ~5-6% (c-a), below 10% HELD threshold.
+  Mechanism (diag_where): schema BEFORE first variable value 100% position-stable
+  (=exactly APC prefix) but 85% of schema tokens are POST-first-value, shifted by
+  variable value length, only 14.9% coincidental reuse. Without re-anchor: sub-threshold.
+  With re-anchor R(delta): collapses to published CacheBlend. Prompt Cache already
+  does position-independent modular reuse. Same RoPE wall that killed EXP-0009 CDC
+  dedup. L0 deterministic tokenizer (no transformers on Mac); 8 seeds; serial.'
+result_effect: kill
 artifacts_path: experiments/2026-06-03/EXP-0029/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T09:12:28Z'
 prompt_version: ''
