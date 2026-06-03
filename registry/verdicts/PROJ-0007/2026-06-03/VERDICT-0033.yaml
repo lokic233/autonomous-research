@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0033
+claim_id: CLAIM-0028
+project_id: PROJ-0007
+date: '2026-06-03'
+experiment_ids:
+- EXP-0029
+experiment_paths:
+- experiments/2026-06-03/EXP-0029
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- '''Position-stable WITHOUT re-anchoring'' (the claim''s sole distinctive mechanism)
+  refuted by its OWN L0: 85% of schema tokens are post-first-value, only 14.9% position-reusable
+  (coincidental length alignment), RoPE tax 0.24-0.32 dominates, honest structural
+  win over APC = 5-6% < 10% pre-registered threshold'
+- 'Prior-art pincer closes BOTH forks: WITHOUT re-anchor -> weaker special case of
+  Prompt Cache (Gim MLSys24 arXiv 2311.04934)'
+- WITH re-anchor -> collapses to CacheBlend (Yao EuroSys25 arXiv 2405.16444)
+- EPIC (2410.15332) a 3rd position-independent reuse system. No novelty gap survives
+- "Same RoPE wall that killed EXP-0009 CDC-dedup (0.35-1.46% position-aware) fires\
+  \ here at 5-6% \u2014 more legible structure, identical physics"
+- "(NOTE: the 2 GREEN votes are GREEN ON THE KILL \u2014 endorsing the honest negative\
+  \ as methodologically sound + theoretically predicted \u2014 NOT green on the claim"
+- no reviewer dissents from the kill)
+required_evidence:
+- "None \u2014 claim dead on novelty (Prompt Cache/CacheBlend/EPIC), systems contribution,\
+  \ and product viability"
+- no L1 warranted (would re-confirm the RoPE wall at higher fidelity)
+map_delta_proposals:
+- 'CLAIM-0028 -> DEAD-0003 (kill-converge, same RoPE-position-wall as EXP-0009/DEAD-0002).
+  tag: RoPE-position-wall + prior-art-pincer(PromptCache+CacheBlend+EPIC)'
+- edge CLAIM-0028->DEAD-0002 (same wall). PROJ-0007 converged. Structural-win DESIGN
+  was correct (avoided the Jensen-floor trap
+- APC genuinely misses 30-38% of schema) but the win is unrealizable as raw-KV reuse
+  under RoPE position-shift, and the realizable form is published. Confirms RoPE-WALL
+  as a robust anti-pattern for KV-reuse-of-position-shifted-content. No false green
+baseline_requirements:
+- "Prompt Cache (Gim MLSys24) \u2014 position-independent modular segment reuse (realizes\
+  \ the 42-44% ceiling)"
+- "CacheBlend (Yao EuroSys25) \u2014 R(delta) selective-recompute re-anchor (recovers\
+  \ the RoPE tax)"
+- "EPIC (2410.15332) \u2014 3rd position-independent chunk reuse"
+- "vLLM APC / SGLang RadixAttention \u2014 exact-prefix baseline (correctly characterized,\
+  \ breaks at first value)"
+committee_run_dir: experiments/2026-06-03/EXP-0029/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T09:33:14Z'
