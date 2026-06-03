@@ -1,0 +1,9 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: red
+MANDATORY_BASELINES: [{"name": "BM25L", "why": "BM25L (Lv & Zhai, CIKM 2011) explicitly bounds the term frequency normalization to prevent standard BM25 from over-penalizing very long documents. Since the claim's 'recovery arm' relies entirely on length-norm 'crushing' bloated distractors, BM25L is required to test if this is a novel phenomenon or just a re-derivation of classic BM25's known length-penalty defect.", "repo_or_cite": "10.1145/2063576.2063731"}]
+STRAWMAN_RISKS: ["Using standard BM25 as the sole retriever when its over-penalization of long documents is a well-documented flaw. The evaluation risks manufacturing the 'recovery' arm by exploiting this known defect, treating standard BM25's failure mode as a novel corpus-hygiene phenomenon."]
+MISSING_METRICS: ["Score margin (delta between clean answer and top distractor). Rank hides whether the inverted-U displacement is a narrow score inversion that a downstream reranker would easily correct, or a deep embedding of the answer beneath unrecoverable distractors."]
+KILLER_EXPERIMENT: Re-run EXP-0044 replacing standard BM25 with BM25L. If the inverted-U disappears (i.e., the recovery arm is flattened and rank remains degraded), the phenomenon is falsified as a novel effect and exposed as a trivial restatement of classic BM25's length penalty flaw.
+RATIONALE: The claim hinges on the interaction between query-term injection and length normalization. However, standard BM25's tendency to crush scores of long documents is an established baseline defect, not a novel discovery. Without testing against length-robust baselines like BM25L (or dense retrievers as the orchestrator noted for L1, but BM25L belongs in L0), the evaluation is a strawman. The "emergent crossover" is highly likely just the predictable failure point of classic BM25's normalization curve.
+```
