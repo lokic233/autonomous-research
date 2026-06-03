@@ -274,3 +274,44 @@ with open(os.path.join(RES,"mix_definitions.json"),"w") as f:
 
 print("\nWROTE CSVs to", RES)
 print("DONE")
+
+
+# ============================ METRIC A' (exploitable parallelism) ============================
+def analyze_parallelism(mix, n_steps, seed):
+    rng = random.Random(seed)
+    multicall = 0; tot = 0
+    indep_calls_mc = 0; tot_calls_mc = 0
+    steps_width_ge2 = 0
+    for _ in range(n_steps):
+        tot += 1
+        _n, calls = sample_step(mix, rng)
+        edges = true_edges(calls)
+        indep = independent_calls(calls, edges)
+        if len(calls) > 1:
+            multicall += 1
+            tot_calls_mc += len(calls)
+            indep_calls_mc += len(indep)
+            if len(indep) >= 2:
+                steps_width_ge2 += 1
+    return {
+        "frac_steps_width_ge2": steps_width_ge2/tot,
+        "f_indep_among_multicall": indep_calls_mc/tot_calls_mc if tot_calls_mc else 0.0,
+        "frac_multicall": multicall/tot,
+    }
+
+if __name__ == "__main__":
+    print("\n=== Metric A' : exploitable parallelism ===")
+    rowsAp = []
+    for name, mix in MIXES.items():
+        ps = [analyze_parallelism(mix, N_STEPS, s) for s in SEEDS]
+        agg = {k: statistics.mean(d[k] for d in ps) for k in ps[0]}
+        sd = statistics.pstdev([d["frac_steps_width_ge2"] for d in ps])
+        rowsAp.append({"mix":name,
+            "frac_steps_width_ge2":round(agg["frac_steps_width_ge2"],4),
+            "frac_steps_width_ge2_sd":round(sd,4),
+            "f_indep_among_multicall":round(agg["f_indep_among_multicall"],4),
+            "frac_multicall":round(agg["frac_multicall"],4)})
+        print(f"  {name:24s} steps_w>=2={agg['frac_steps_width_ge2']:.3f}  "
+              f"f_indep|mc={agg['f_indep_among_multicall']:.3f}")
+    write_csv(os.path.join(RES,"metricA2_exploitable_parallelism.csv"), rowsAp)
+    print("wrote metricA2")

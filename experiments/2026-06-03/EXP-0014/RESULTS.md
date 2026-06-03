@@ -1,0 +1,142 @@
+# RESULTS — EXP-0014 (L0, CLAIM-0011, PROJ-0001)
+researcher-0014 | node cli:dengcchi-mac | CPU-only, stdlib-only, SERIAL | compute ~2.2s (budget 15 min)
+Pre-registered & committed BEFORE running (commit a825efe). Honest pipeline. Negatives are WINS.
+
+## VERDICT: **PARTIAL** (Part A HELD, Part B FAILED at the pre-registered bar)
+- **Part A — independent-call fraction > 30%: HELD** (robustly, and mix-conditionally for *exploitable* parallelism).
+- **Part B — parallel dispatch is correctness-SAFE ("free" win): FAILED** the pre-registered threshold.
+  Under a realistic imperfect dependency detector (false-negative rate e=0.05), ~10–12% of parallelized
+  steps would produce a WRONG result — above the pre-registered "low ≤5%". The latency win is NOT FREE;
+  it trades wall-clock for a correctness risk that scales with detector error.
+
+The claim asserted BOTH parts ("a free latency win"). Because Part B fails at a realistic detector error,
+the claim as stated does NOT hold; but Part A (substantial real parallelism exists) is genuinely supported.
+Hence PARTIAL, not HELD and not full-NEGATIVE.
+
+---
+
+## CAVEAT FIRST (load-bearing): this is a CONSTRUCTED corpus, mix-conditional, NOT a population statistic
+No real agent benchmark (tau-bench / AppWorld / BFCL) is installable on this offline CPU-only Mac. The
+corpus is built from ReAct/tool-calling ARCHETYPES (fan-out / sequential / mixed / single) with GROUND-TRUTH
+DAGs by construction. Therefore every number below is reported **as a function of the assumed workload mix**.
+We do NOT claim a universal "X% of real agent tool calls are parallel." We claim "IF the mix is M, THEN
+parallelism is P and correctness-safety is S." A real-trace L1 is required to fix the mix empirically.
+
+---
+
+## METRIC A — independent-call fraction f_indep vs workload mix (5 seeds, 4000 steps/seed)
+Independence criterion (pre-registered): call B depends on prior same-step call A iff B's args reference A's
+result (DATA dep: B.reads ∩ A.writes) OR B must observe A's side effect (ORDER dep: write-write / write-read
+conflict on a shared resource). Independent = no dependency on any prior same-step call.
+
+| mix (fanout/seq/mixed/single)      | f_indep (call-wt) | f_indep (step-avg) | eq-lat speedup |
+|------------------------------------|-------------------|--------------------|----------------|
+| pessimistic_seq_heavy (.05/.55/.15/.25) | 0.492 ± 0.002 | 0.573 | 1.23× |
+| single_heavy (.10/.20/.15/.55)          | 0.660 ± 0.003 | 0.788 | 1.32× |
+| balanced_realistic (.25/.30/.30/.15)    | 0.611 ± 0.002 | 0.637 | 1.72× |
+| fanout_lean (.40/.20/.30/.10)           | 0.661 ± 0.004 | 0.674 | 1.94× |
+| optimistic_fanout (.60/.10/.25/.05)     | 0.717 ± 0.002 | 0.722 | 2.18× |
+
+f_indep > 0.30 across the ENTIRE plausible mix range, including the pessimistic seq-heavy mix (0.49).
+→ Part A HELD. (CSV: results/metricA_findep_vs_mix.csv)
+
+### METRIC A' — exploitable parallelism (HONEST refinement: single-call steps inflate raw f_indep)
+A lone tool call is trivially "100% independent" but offers ZERO parallelism. The decision-relevant
+quantities exclude that inflation:
+- **f_indep among MULTI-call steps** = the real independence when there's something to parallelize.
+- **frac of ALL steps with width≥2** = fraction of steps that actually have ≥2 independent calls
+  dispatchable together (the steps worth parallelizing at all).
+
+| mix                  | f_indep | multi-call steps | frac steps width≥2 (exploitable) |
+|----------------------|---------|------------------|----------------------------------|
+| pessimistic_seq_heavy| 0.442   | 0.745            | 0.193 ± 0.004 |
+| single_heavy         | 0.556   | 0.454            | 0.251 ± 0.006 |
+| balanced_realistic   | 0.594   | 0.849            | 0.550 ± 0.005 |
+| fanout_lean          | 0.652   | 0.900            | 0.702 ± 0.007 |
+| optimistic_fanout    | 0.713   | 0.713            | 0.851 ± 0.004 |
+
+KEY honest nuance: **f_indep|multicall stays >30% (0.44–0.71) at EVERY mix** — when an agent issues several
+calls, a substantial fraction are genuinely order-independent regardless of mix. BUT the fraction of steps
+where parallelism is actually EXPLOITABLE (width≥2) is STRONGLY mix-dependent: 19% (seq-heavy) → 85%
+(fan-out-heavy), 55% at the balanced anchor. So "is there parallelism to exploit?" is conditional on
+composition; "given a multi-call step, how much of it is parallel?" is robustly >30%.
+(CSV: results/metricA2_exploitable_parallelism.csv)
+
+---
+
+## METRIC B — correctness-safety under detector error (THE PART THAT FAILS) (5 seeds, 4000 steps/seed)
+Genuinely independent calls cannot change the answer when reordered (true by the independence definition).
+The real risk is a dependency DETECTOR that MISSES a true dependency edge (false negative rate e) and
+parallelizes two truly-dependent calls → the dependent call consumes a stale/absent result → wrong answer.
+f_wrong = fraction of parallelized (width≥1, >1 call) steps corrupted. Every true edge treated as
+load-bearing (conservative-but-honest: a missed data/order dep CAN corrupt the final answer).
+
+| mix                  | e=0.00 | e=0.01 | e=0.05 | e=0.10 | e=0.20 |
+|----------------------|--------|--------|--------|--------|--------|
+| pessimistic_seq_heavy| 0.000  | 0.020  | 0.103  | 0.204  | 0.372 |
+| balanced_realistic   | 0.000  | 0.024  | 0.117  | 0.227  | 0.409 |
+| optimistic_fanout    | 0.000  | 0.026  | 0.123  | 0.242  | 0.426 |
+
+- At a PERFECT detector (e=0) f_wrong=0 — confirming that genuine independence IS correctness-safe (the
+  claim's logic is internally sound). The threat is entirely in DETECTION error.
+- At a realistic detector error e=0.05, **f_wrong ≈ 10–12%** — ABOVE the pre-registered "low ≤5%" bar.
+- f_wrong scales roughly linearly with e and is HIGHER in parallelism-rich mixes (more edges to miss,
+  more multi-call steps): the more you parallelize, the more a flawed detector can corrupt.
+→ Part B FAILS the pre-registered correctness-safety threshold (honest-negative branch N2).
+(CSV: results/metricB_fwrong_vs_detector_error.csv)
+
+INTERPRETATION: to keep f_wrong ≤5%, the detector needs e ≲ 0.025 (≤2.5% missed true dependencies). Whether
+real LLM-based or static dependency detectors achieve that on real traces is an OPEN, L1 question — NOT
+established here. The "free latency win" framing is therefore not supported: it is a latency win CONTINGENT
+on a near-perfect dependency detector.
+
+---
+
+## METRIC C — latency headroom: equal-latency vs heterogeneous-latency (5 seeds)
+Serial wall-clock = n·t_tool; ideal-parallel = (critical-path depth)·t_tool. Heterogeneous: lognormal tool
+latencies (median 1.0, σ=0.6); parallel wall-clock = Σ over DAG levels of (max latency in that level).
+
+| mix                  | speedup (equal-lat) | speedup (heterogeneous) |
+|----------------------|---------------------|--------------------------|
+| pessimistic_seq_heavy| 1.23×               | 1.14× |
+| single_heavy         | 1.32×               | 1.18× |
+| balanced_realistic   | 1.72×               | 1.42× |
+| fanout_lean          | 1.94×               | 1.56× |
+| optimistic_fanout    | 2.18×               | 1.69× |
+
+Real (heterogeneous) latency materially DISCOUNTS the ideal speedup (the slowest independent call gates the
+batch): ~1.4× at the balanced anchor vs 1.72× ideal. Headroom is real but modest-to-moderate and
+mix-dependent — substantial only in fan-out-heavy workloads. (CSV: results/metricC_latency_headroom.csv)
+
+---
+
+## HONEST VERDICT MAPPING (against pre-registered decision rule)
+- HELD required: f_indep>0.30 AND f_wrong(e≤0.05)≤0.05. → f_indep HELD; f_wrong=0.10–0.12 FAILS. NOT HELD.
+- NEGATIVE required: f_indep≤0.30 across mixes OR not order-independent. → f_indep is NOT ≤0.30. NOT full-NEG.
+- **PARTIAL** (pre-registered): "f_indep>0.30 holds but correctness-safety holds only at unrealistically
+  low detector error." This is exactly the observed outcome. → **PARTIAL.**
+
+## PRIOR ART — distinguished (we do NOT claim the idea)
+Parallel tool calling is PUBLISHED & SHIPPED: LLMCompiler (tool-call DAG + parallel dispatch),
+OpenAI/Anthropic native parallel tool calls, ReWOO (upfront tool planning), AsyncLM (gen/exec overlap).
+Our contribution is the EMPIRICAL CHARACTERIZATION, not the mechanism: (1) parallelism AS A FUNCTION of
+workload composition, and (2) a CORRECTNESS-SAFETY bound f_wrong(e) under an IMPERFECT detector — which,
+to our knowledge, LLMCompiler-style work reports as latency speedups WITHOUT a detection-error correctness
+bound. If a committee finds this subsumed, that's an honest novelty caveat → would push toward weaken.
+
+## WHAT A REAL-TRACE / GPU L1 MUST MEASURE (to turn PARTIAL into a population result)
+1. Replace the constructed corpus with REAL tool-call DAGs from tau-bench / AppWorld / BFCL — fix the
+   workload mix EMPIRICALLY instead of assuming it (removes the mix-conditionality caveat).
+2. REAL dependency extraction (LLM-based and/or static arg/result dataflow) on real traces — and MEASURE
+   its real false-negative rate e on ground-truth edges. THIS is the load-bearing unknown: the whole
+   correctness verdict hinges on whether real detectors hit e≲0.025.
+3. REAL end-to-end correctness under actual parallel dispatch (run the agent both serially and in parallel,
+   compare final-answer exact-match) — confirm f_wrong empirically, not by model.
+4. Real heterogeneous tool latencies for an honest end-to-end wall-clock headroom number.
+
+## REPRODUCIBILITY
+- sim.py (Metrics A/B/C) + inline A' analyzer. SEEDS=[0,1,2,3,4], N_STEPS=4000, E_GRID=[0,.01,.05,.10,.20].
+- All numbers on disk (trust CSVs not stdout): results/metricA_findep_vs_mix.csv,
+  results/metricA2_exploitable_parallelism.csv, results/metricB_fwrong_vs_detector_error.csv,
+  results/metricC_latency_headroom.csv, results/mix_definitions.json.
+- SERIAL only (multiprocessing blocked on this Mac). Python 3.9.6, stdlib only.

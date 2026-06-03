@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL verdict -> WEAKEN. Part A (independent-call fraction >30%)
+  HELD robustly: f_indep|multicall 0.44-0.71 across ALL mixes incl pessimistic seq-heavy;
+  exploitable width>=2 fraction 0.19(seq)-0.85(fanout), 0.55 balanced -> strongly
+  mix-dependent. Part B (correctness-safety, the ''FREE/safe'' qualifier) FAILED pre-registered
+  bar: at realistic dependency-detector false-negative rate e=0.05, ~10-12% of parallelized
+  steps corrupted (>5% threshold); f_wrong scales ~linearly with e, worse in parallelism-rich
+  mixes; f_wrong=0 only at perfect detector e=0. Latency headroom 1.4x(hetero)-1.7x(eqlat)
+  balanced. CONSTRUCTED ReAct-archetype corpus w/ ground-truth DAGs, mix-conditional,
+  NOT a population statistic. 5 seeds, 4000 steps/seed, SERIAL ~2.2s. Claim as stated
+  (''free latency win'') NOT held: the win is CONTINGENT on a near-perfect (e<=0.025)
+  detector, an open L1 question. Prior art LLMCompiler/ReWOO/AsyncLM/parallel-fn-calling
+  distinguished (novelty = empirical parallelism+correctness-safety bound, not the
+  mechanism). WEAKEN: parallelism is real but ''free latency win'' framing refuted
+  at realistic detection error.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0014/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T02:00:18Z'
 prompt_version: ''
