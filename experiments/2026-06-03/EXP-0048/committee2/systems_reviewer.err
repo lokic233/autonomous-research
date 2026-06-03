@@ -1,0 +1,1465 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8e45-5644-7ad0-bf18-1040cfd207ee
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 (FINAL) — CLAIM-0045 (PROJ-0015) — two-pass complete, L0+GPU-L1 in hand
+## This is the FINAL verdict (green/yellow/red). The L1 ecological-validity test is the load-bearing new fact. Vote HONESTLY by role. Do NOT green a claim whose general reading FAILED at L1.
+
+## TWO-PASS TRAIL:
+L0 (EXP-0044) -> committee#1 YELLOW (VERDICT-0043) with a cheap mandatory gate (b-sweep + BM25L) -> remediation EXP-0047 returned HELD-STRONG -> GPU L1 EXP-0048 (committee#1's own decision rule fast-tracked it) -> THIS committee#2.
+
+## L0 RESULT (HELD-STRONG, EXP-0044 + remediation EXP-0047):
+Under BM25 (b>0), a query-term-bearing topical template on DISTRACTOR docs (clean canonical answer stays CLEAN) makes the clean answer's rank trace an INVERTED-U in template length L (worsens to interior peak, recovers to #1). REMEDIATION CONFIRMED: b=0 ABOLISHES the recovery arm (monotone, 0/20) => length-normalization is the necessary cause; BM25L (Lv-Zhai 2011, delta=0.5) PERSISTS the inverted-U (3/4 cells, 20/20 strongest) => robust to the known length-penalty fix, NOT a default-b artifact; score-margin -4.22 at the danger zone (substantial). Mechanism: query-term injection lifts distractors above the clean answer at small L; length-norm crushes the bloated distractors back below it at large L.
+
+## GPU L1 RESULT (EXP-0048, H100, dense bge-base-en-v1.5 + e5-base-v2, 20-seed grid + 15-seed stress probe) — THE LOAD-BEARING NEW FACT:
+REALISTIC query-bearing templates: the inverted-U does NOT TRANSFER. Clean answer holds rank 1.00 (CI +-0.00) at EVERY L for BOTH models = FLAT. Interior-peak test NOT triggered. Score-margin dips slightly (bge +0.234->+0.138@L16->+0.226; e5 +0.098->+0.065@L16->+0.101) then recovers, NEVER negative.
+Only an ADVERSARIAL verbatim-query injection into every distractor (an ATTACK, not corpus-hygiene drift) displaces the clean answer, and then MODEL-DEPENDENTLY: bge -> MONOTONE-WORSE (rank 1->101 @ndist=100, no recovery — confirms the L0 'more vulnerable, no recovery' prediction); e5 -> PARTIAL INVERTED-U (1->13.5@L64->1.00 — recovery EXISTS in a dense model, via a DIFFERENT mechanism: 512-token truncation / mean-pool dilution, NOT BM25 length-norm).
+BOTTOM LINE (researcher's honest synthesis): CLAIM-0045 is a BM25-SPECIFIC LEXICAL ARTIFACT that does NOT threaten dense RAG under normal corpus hygiene. The general reading (a corpus-hygiene risk for retrieval broadly) FAILED ecological validity. The surviving result is BM25-only.
+
+## THE VERDICT QUESTION (decide by role): is the SCOPED finding green-worthy, yellow, or red?
+- GREEN would require: a genuinely novel, robust, ecologically-valid contribution. The general claim FAILED at L1 (dense=flat under realistic templates). The surviving BM25-only inverted-U is real + mechanistically clean (b-sweep + BM25L) but NARROW and the recovery arm is essentially pivoted-length-normalization (Singhal-Buckley-Mitra 1996) made visible via competitor templating.
+- YELLOW: real, mechanistically-sound, honestly-scoped BM25-specific phenomenon + the L1 dense-divergence (bge monotone vs e5 inverted-U) is itself interesting, but it's an ATTACK finding not hygiene, and the hygiene-relevant realistic result is FLAT.
+- RED: the interesting general claim died at L1; the BM25-only survivor restates pivoted-length-norm + the displacement requires query-term-stuffing (adversarial), so the corpus-hygiene framing is unsupported.
+Judge novelty vs: Singhal-Buckley-Mitra 1996 (pivoted length norm = the recovery mechanism), Robertson-Walker 1994, Lv-Zhai 2011 (BM25L), Zhong 2023 corpus-poisoning (the adversarial-injection regime IS their family — distinguish honestly), Gospodinov 2023 Doc2Query--.
+
+## CLAIM (current corrected text)
+claim: 'Under BM25 with length normalization (b>0), when DISTRACTOR documents carry
+  a shared topical template containing some of the query''s terms while the genuine
+  canonical answer doc stays CLEAN, the clean answer''s rank degrades NON-MONOTONICALLY
+  (inverted-U) as template length L grows: an intermediate L maximally displaces the
+  answer, after which further growth RECOVERS its rank toward #1. The recovery along
+  the L axis is LENGTH-NORMALIZATION-DOMINATED (at small L the template injects query
+  terms into distractors raising their scores above the clean answer; at large L BM25
+  length normalization progressively crushes the bloated distractors'' scores back
+  below the clean answer; recovery REQUIRES b>0 and is abolished at b=0 where rank
+  worsens monotonically). The IDF/spread effect acts ONLY via the SPREAD (frac) axis
+  (widening the fraction of templated distractors lowers the curve baseline, qterm_idf
+  4.65->4.05) and NOT via L (qterm_idf is FLAT ~4.05 across all L>0 because a distractor''s
+  df for a query term is fixed once present, regardless of repetition). The phenomenon
+  PERSISTS under the BM25L long-doc over-penalization fix, so it is a property of
+  length-normalized lexical retrieval, NOT a default-b over-penalization artifact.
+  Corpus-statistics-dependent crossover; no closed-form predictor.'
+why_it_matters: 'DISTINCT successor to killed CLAIM-0044/DEAD-0011 in the revival-condition
+
+## L0 RESULTS (EXP-0044)
+# RESULTS — EXP-0044 (CLAIM-0045)
+
+**Researcher:** researcher-0042 | **L0** (CPU, stdlib, SERIAL, ~10s wall) | 20 seeds, N=2000 docs.
+**Outcome: INVERTED-U HELD.** When query-term-bearing topical boilerplate is on the DISTRACTORS
+and the canonical answer doc stays CLEAN, the clean answer's BM25 rank traces a clear inverted-U
+in template length L: worsens to an interior maximum displacement, then RECOVERS to #1. HELD in
+3 of 4 (frac,T_qterms) cells by the pre-registered CI test; 20/20 seeds in the strongest cell.
+This is the regime DEAD-0011 (killed CLAIM-0044) lacked — the predicted crossover is PRESENT here.
+
+## Setup (see PRE_REGISTRATION.md)
+Reuses EXP-0043's verified standard BM25 (k1=1.2, b=0.75; IDF=ln((N-df+0.5)/(df+0.5)+1); hand-calc
+<1e-9 + correct ranking re-logged in results/sanity.txt) and Zipf corpus builder. N=2000 short docs;
+ONE clean answer doc carries ALL 5 query terms; ~30 distractors carry a random SUBSET. A shared
+TEMPLATE = a block of T_qterms query terms repeated to length L, prepended to a fraction `frac` of
+DISTRACTORS ONLY (answer never templated). Anti-circular: GT=clean-answer doc-id (generative); BM25
+reads only token stats.
+
+## CRUX: mean rank(clean answer) per cell across L (lower=better, 1=best; 20 seeds)
+
+| frac | T_q | L=0 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 |
+|------|-----|-----|---|---|----|----|----|-----|-----|-----|
+| 0.5 | 1 | 1.10 | 1.80 | 1.80 | 1.80 | 1.30 | 1.05 | 1.05 | 1.00 | 1.00 |
+| 0.5 | 2 | 1.10 | 2.50 | 3.15 | **3.70** | 3.70 | 2.55 | 1.70 | 1.25 | 1.00 |
+| 1.0 | 1 | 1.10 | **2.30** | 2.30 | 2.20 | 1.50 | 1.10 | 1.00 | 1.00 | 1.00 |
+| 1.0 | 2 | 1.10 | 3.90 | 4.70 | **5.20** | 4.95 | 4.10 | 1.85 | 1.20 | 1.00 |
+
+(bold = interior peak). CI half-widths 0.0–1.2.
+
+## Inverted-U test (pre-registered, rigorous)
+HELD requires interior L* with r(L*)-CI > BOTH r(0)+CI and r(512)+CI.
+- **f=0.5,T=2: HELD** (L*=16, r=3.70±1.02 > both ends).  18/20 seeds within-seed inverted-U.
+- **f=1.0,T=1: HELD** (L*=4,  r=2.30±0.83 > both ends).  13/20 seeds.
+- **f=1.0,T=2: HELD** (L*=16, r=5.20±1.21 > both ends).  **20/20 seeds.**
+- f=0.5,T=1: non-monotone but interior peak NOT significant vs both ends (weakest condition: half-spread, one query term — only 9/20 seeds). Reported honestly; does not falsify the overall claim.
+
+**→ INVERTED-U HELD** (>=1 cell with statistically clear recovery; 3 of 4 cells, monotone in
+template strength: more query terms and/or wider spread => deeper, clearer inverted-U).
+
+## Mechanism decomposition — DID the two forces cross over? YES.
+Worked example f=1.0,T=2 (strongest cell):
+
+| quantity | L=0 | 4 | 16 | 64 | 256 | 512 |
+|----------|-----|---|----|----|-----|-----|
+| **top-distractor score** | 25.8 | 30.9 | **32.9** | 30.9 | 25.4 | 22.8 |
+| clean-answer score | 30.1 | 28.7 | 28.7 | 28.8 | 29.3 | 29.9 |
+| **dist_lennorm** (templated distractors) | 1.00 | 1.06 | 1.24 | 1.93 | 4.51 | 7.56 |
+| qterm_idf (mean IDF of template query terms) | 4.65 | 4.05 | 4.05 | 4.05 | 4.05 | 4.05 |
+
+**The crossover is explicit:**
+1. **Small L (rising arm):** the template injects query terms into distractors -> top-distractor
+
+## L0 REMEDIATION (EXP-0047 — b-sweep + BM25L)
+# RESULTS — EXP-0047 (CLAIM-0045) — Committee#1 L0 REMEDIATION
+
+**Researcher:** researcher-0045 | **L0** (CPU, stdlib, SERIAL, ~23s wall) | 20 seeds, N=2000 docs.
+Reuses EXP-0043's verified BM25 (hand-check <1e-9) + EXP-0044's exact corpus/template. Anti-circular
+inherited: GT = planted-answer doc-id; scorers read token stats only. Sanity (incl. BM25L hand-check)
+PASS — results/sanity.txt.
+
+**HEADLINE: HELD-STRONG.** (1) The b-sweep PROVES the recovery arm is length-normalization-driven:
+b=0 (no length norm) ABOLISHES recovery (monotone worsening 1.10->14.30, 0/20 seeds). (2) The
+inverted-U PERSISTS under BM25L (Lv & Zhai 2011, the known length-penalty fix): strongest cell
+20/20 seeds, 3 of 4 cells HELD — same as default BM25. => robust to the standard fix, not a
+default-b artifact. (3) Displacement is SUBSTANTIAL (margin swings +4.4 -> -4.2 -> +7.1).
+
+## REMEDIATION 1 — b-SWEEP (decisive mechanistic test; strongest cell f=1.0, T_qterms=2, k1=1.2)
+mean rank(clean answer) over 20 seeds (lower=better; 1=best):
+
+| b | L=0 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | inverted-U | per-seed |
+|---|-----|---|---|----|----|----|-----|-----|-----|-----------|----------|
+| **0.00** | 1.10 | 4.05 | 5.45 | 7.65 | 10.60 | 11.50 | 13.00 | 13.80 | **14.30** | **NOT held (MONOTONE)** | 0/20 |
+| 0.25 | 1.10 | 3.95 | 5.10 | 6.90 | 7.45 | 7.05 | 6.65 | 4.10 | 1.85 | HELD L*=32 | 20/20 |
+| 0.50 | 1.10 | 3.90 | 4.80 | 6.25 | 6.65 | 5.25 | 3.05 | 1.70 | 1.10 | HELD L*=32 | 20/20 |
+| 0.75 | 1.10 | 3.90 | 4.70 | 5.20 | 4.95 | 4.10 | 1.85 | 1.20 | 1.00 | HELD L*=16 | 20/20 |
+| 1.00 | 1.10 | 3.70 | 4.10 | 4.70 | 4.10 | 2.90 | 1.30 | 1.00 | 1.00 | HELD L*=16 | 20/20 |
+
+**Did b=0 abolish recovery? YES — DECISIVELY.** With b=0 the BM25 denominator is `f + k1`
+(no `|D|/avgdl` term), so bloating the distractors adds no length penalty: their injected query-term
+score never gets crushed and the clean answer NEVER recovers — rank climbs monotonically to 14.30 at
+L=512 (0/20 inverted-U). The instant b>0 (b=0.25) the recovery arm reappears and 20/20 seeds show the
+inverted-U; recovery sharpens monotonically with b (peak displacement shrinks 7.45@b.25 -> 4.70@b1.0,
+recovery to L=512 deepens 1.85 -> 1.00). **=> length normalization is the NECESSARY cause of the
+recovery arm — the stated mechanism is confirmed (honest scoping, not a surprise).**
+
+## REMEDIATION 2 — BM25L (Lv & Zhai, CIKM 2011, delta=0.5) on the EXP-0044 grid
+**Formula used (verified by hand, sanity.txt):** with B(D)=(1-b+b|D|/avgdl), k1=1.2, b=0.75, delta=0.5,
+c = f/B(D); `score += IDF(t) * (k1+1)*(c+delta)/(k1 + c + delta)`. IDF = same non-negative add-1
+RSJ idf as baseline (ln((N-df+0.5)/(df+0.5)+1)) for a controlled comparison. The +delta term
+lower-bounds normalized tf so long docs are not over-penalized. Hand-check: BM25L(delta=0.5) on a
+len-200 f=1 doc = 0.0891 >= BM25 = 0.0053 (PASS — BM25L does NOT over-penalize the long doc).
+
+mean rank(clean answer), 20 seeds:
+
+## NOTE: L1 RESULTS.md lives on devgpu014 ~/ros-EXP-0048/RESULTS.md (no Mac mount). Key numbers are summarized above + in the queue submission. raw_results.csv = 1280 rows on devgpu014.
+
+## ORCHESTRATOR POSTURE: I am NOT pushing for a green. The L1 negative is honest and important. If the committee judges the scoped BM25-only finding is a legitimate publishable negative-ish/scoped result -> YELLOW (accept + converge, it's a real finding). If the surviving result is too narrow / restates pivoted-length-norm / the hygiene framing is unsupported -> RED. GREEN only if a reviewer genuinely defends a novel robust contribution. Lightweight: either way PROJ-0015 converges after this (CLAIM-0044 dead, CLAIM-0045 terminal). Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 133ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+RESEARCHER_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'find . -maxdepth 3 -type d | head -80' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.
+./learning
+./learning/roles
+./learning/orchestrator
+./experiments
+./experiments/2026-06-03
+./experiments/2026-06-03/EXP-0034
+./experiments/2026-06-03/EXP-0033
+./experiments/2026-06-03/EXP-0035
+./experiments/2026-06-03/EXP-0044
+./experiments/2026-06-03/EXP-0043
+./experiments/2026-06-03/EXP-0017
+./experiments/2026-06-03/EXP-0010
+./experiments/2026-06-03/EXP-0019
+./experiments/2026-06-03/EXP-0021
+./experiments/2026-06-03/EXP-0042
+./experiments/2026-06-03/EXP-0045
+./experiments/2026-06-03/EXP-0020
+./experiments/2026-06-03/EXP-0027
+./experiments/2026-06-03/EXP-0018
+./experiments/2026-06-03/EXP-0011
+./experiments/2026-06-03/EXP-0016
+./experiments/2026-06-03/EXP-0029
+./experiments/2026-06-03/EXP-0037
+./experiments/2026-06-03/EXP-0039
+./experiments/2026-06-03/EXP-0038
+./experiments/2026-06-03/EXP-0007
+./experiments/2026-06-03/EXP-0009
+./experiments/2026-06-03/EXP-0036
+./experiments/2026-06-03/EXP-0013
+./experiments/2026-06-03/EXP-0014
+./experiments/2026-06-03/EXP-0022
+./experiments/2026-06-03/EXP-0040
+./experiments/2026-06-03/EXP-0047
+./experiments/2026-06-03/EXP-0023
+./experiments/2026-06-03/EXP-0015
+./experiments/2026-06-03/EXP-0012
+./experiments/2026-06-03/EXP-0046
+./experiments/2026-06-03/EXP-0041
+./experiments/2026-06-03/EXP-0048
+./experiments/2026-06-02
+./experiments/2026-06-02/EXP-0005
+./experiments/2026-06-02/EXP-0002
+./experiments/2026-06-02/EXP-0003
+./experiments/2026-06-02/EXP-0004
+./experiments/2026-06-02/EXP-0001
+./experiments/2026-06-02/EXP-0006
+./projects
+./projects/PROJ-0009
+./projects/PROJ-0007
+./projects/PROJ-0006
+./projects/PROJ-0001
+./projects/PROJ-0008
+./projects/PROJ-0012
+./projects/PROJ-0015
+./projects/PROJ-0014
+./projects/PROJ-0013
+./projects/PROJ-0004
+./projects/PROJ-0003
+./projects/PROJ-0002
+./projects/PROJ-0005
+./projects/PROJ-0016
+./projects/PROJ-0011
+./projects/PROJ-0010
+./projects/PROJ-0017
+./prior_art
+./runtime
+./runtime/locks
+./runtime/agents
+./runtime/escalation
+./runtime/handoffs
+./runtime/orchestrator
+./runtime/cron
+./runtime/cron/.proj_notified
+./runtime/cron/.mon_notified
+./runtime/cron/.coord_notified
+./sessions
+./registry
+./registry/tasks
+./registry/verdicts
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 579ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi -path '*_committee_common_v001.md' -o -path '*TOOLING_v001.md' 2>/dev/null | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -type f | grep -E 'committee|TOOLING|tooling|shared' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 511ms:
+./learning/roles/committee.md
+./experiments/2026-06-03/EXP-0034/committee2/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0034/committee2/theory_skeptic.out
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0034/committee2/_runner.log
+./experiments/2026-06-03/EXP-0034/committee2/.members.txt
+./experiments/2026-06-03/EXP-0034/committee2/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0034/committee2/theory_skeptic.err
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0034/committee2/.v3_notified.ready
+./experiments/2026-06-03/EXP-0034/committee2/product_realist.out
+./experiments/2026-06-03/EXP-0034/committee2/novelty_killer.out
+./experiments/2026-06-03/EXP-0034/committee2/area_chair.out
+./experiments/2026-06-03/EXP-0034/committee2/area_chair.err
+./experiments/2026-06-03/EXP-0034/committee2/_status.txt
+./experiments/2026-06-03/EXP-0034/committee2/novelty_killer.err
+./experiments/2026-06-03/EXP-0034/committee2/product_realist.err
+./experiments/2026-06-03/EXP-0033/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0033/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0033/committee1/_runner.log
+./experiments/2026-06-03/EXP-0033/committee1/.members.txt
+./experiments/2026-06-03/EXP-0033/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0033/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0033/committee1/.v3_notified.ready
+./experiments/2026-06-03/EXP-0033/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0033/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0033/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0033/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0033/committee1/_status.txt
+./experiments/2026-06-03/EXP-0033/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0033/committee1/product_realist.err
+./experiments/2026-06-03/EXP-0035/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0035/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0035/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0035/committee1/_runner.log
+./experiments/2026-06-03/EXP-0035/committee1/.members.txt
+./experiments/2026-06-03/EXP-0035/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0035/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0035/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0035/committee1/.v3_notified.ready
+./experiments/2026-06-03/EXP-0035/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0035/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0035/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0035/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0035/committee1/_status.txt
+./experiments/2026-06-03/EXP-0035/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0035/committee1/product_realist.err
+./experiments/2026-06-03/EXP-0044/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0044/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0044/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0044/committee1/_runner.log
+./experiments/2026-06-03/EXP-0044/committee1/.members.txt
+./experiments/2026-06-03/EXP-0044/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0044/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0044/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0044/committee1/.v3_notified.ready
+./experiments/2026-06-03/EXP-0044/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0044/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0044/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0044/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0044/committee1/_status.txt
+./experiments/2026-06-03/EXP-0044/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0044/committee1/product_realist.err
+./experiments/2026-06-03/EXP-0017/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0017/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0017/committee1/_runner.log
+./experiments/2026-06-03/EXP-0017/committee1/.members.txt
+./experiments/2026-06-03/EXP-0017/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0017/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0017/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0017/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0017/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0017/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0017/committee1/_status.txt
+./experiments/2026-06-03/EXP-0017/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0017/committee1/product_realist.err
+
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 /Users/dengcchi/.llms /Users/dengcchi/.codex -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 616ms:
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+ succeeded in 32657ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/apache/lucene/main/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/dorianbrown/rank_bm25/master/rank_bm25.py | grep -n \"BM25L\\|class BM25\" -A80" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/README.md | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 243ms:
+100  5696  100  5696    0     0  23365      0 --:--:-- --:--:-- --:--:-- 23440
+<!-- markdownlint-disable MD001 MD041 -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-dark.png">
+    <img alt="vLLM" src="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png" width=55%>
+  </picture>
+</p>
+
+<h3 align="center">
+Easy, fast, and cheap LLM serving for everyone
+</h3>
+
+<p align="center">
+| <a href="https://docs.vllm.ai"><b>Documentation</b></a> | <a href="https://blog.vllm.ai/"><b>Blog</b></a> | <a href="https://arxiv.org/abs/2309.06180"><b>Paper</b></a> | <a href="https://x.com/vllm_project"><b>Twitter/X</b></a> | <a href="https://discuss.vllm.ai"><b>User Forum</b></a> | <a href="https://slack.vllm.ai"><b>Developer Slack</b></a> |
+</p>
+
+🔥 We have built a vLLM website to help you get started with vLLM. Please visit [vllm.ai](https://vllm.ai) to learn more.
+For events, please visit [vllm.ai/events](https://vllm.ai/events) to join us.
+
+---
+
+## About
+
+vLLM is a fast and easy-to-use library for LLM inference and serving.
+
+Originally developed in the [Sky Computing Lab](https://sky.cs.berkeley.edu) at UC Berkeley, vLLM has grown into one of the most active open-source AI projects built and maintained by a diverse community of many dozens of academic institutions and companies from over 2000 contributors.
+
+vLLM is fast with:
+
+- State-of-the-art serving throughput
+- Efficient management of attention key and value memory with [**PagedAttention**](https://blog.vllm.ai/2023/06/20/vllm.html)
+- Continuous batching of incoming requests, chunked prefill, prefix caching
+- Fast and flexible model execution with piecewise and full CUDA/HIP graphs
+- Quantization: FP8, MXFP8/MXFP4, NVFP4, INT8, INT4, GPTQ/AWQ, GGUF, compressed-tensors, ModelOpt, TorchAO, and [more](https://docs.vllm.ai/en/latest/features/quantization/index.html)
+- Optimized attention kernels including FlashAttention, FlashInfer, TRTLLM-GEN, FlashMLA, and Triton
+- Optimized GEMM/MoE kernels for various precisions using CUTLASS, TRTLLM-GEN, CuTeDSL
+- Speculative decoding including n-gram, suffix, EAGLE, DFlash
+- Automatic kernel generation and graph-level transformations using torch.compile
+- Disaggregated prefill, decode, and encode
+
+vLLM is flexible and easy to use with:
+
+- Seamless integration with popular Hugging Face models
+- High-throughput serving with various decoding algorithms, including *parallel sampling*, *beam search*, and more
+- Tensor, pipeline, data, expert, and context parallelism for distributed inference
+- Streaming outputs
+- Generation of structured outputs using xgrammar or guidance
+- Tool calling and reasoning parsers
+- OpenAI-compatible API server, plus Anthropic Messages API and gRPC support
+- Efficient multi-LoRA support for dense and MoE layers
+- Support for NVIDIA GPUs, AMD GPUs, and x86/ARM/PowerPC CPUs. Additionally, diverse hardware plugins such as Google TPUs, Intel Gaudi, IBM Spyre, Huawei Ascend, Rebellions NPU, Apple Silicon, MetaX GPU, and more.
+
+vLLM seamlessly supports 200+ model architectures on Hugging Face, including:
+
+- Decoder-only LLMs (e.g., Llama, Qwen, Gemma)
+- Mixture-of-Expert LLMs (e.g., Mixtral, DeepSeek-V3, Qwen-MoE, GPT-OSS)
+- Hybrid attention and state-space models (e.g., Mamba, Qwen3.5)
+- Multi-modal models (e.g., LLaVA, Qwen-VL, Pixtral)
+- Embedding and retrieval models (e.g., E5-Mistral, GTE, ColBERT)
+- Reward and classification models (e.g., Qwen-Math)
+
+Find the full list of supported models [here](https://docs.vllm.ai/en/latest/models/supported_models.html).
+
+## Getting Started
+
+Install vLLM with [`uv`](https://docs.astral.sh/uv/) (recommended) or `pip`:
+
+```bash
+uv pip install vllm
+```
+
+Or [build from source](https://docs.vllm.ai/en/latest/getting_started/installation/gpu/index.html#build-wheel-from-source) for development.
+
+Visit our [documentation](https://docs.vllm.ai/en/latest/) to learn more.
+
+- [Installation](https://docs.vllm.ai/en/latest/getting_started/installation.html)
+- [Quickstart](https://docs.vllm.ai/en/latest/getting_started/quickstart.html)
+- [List of Supported Models](https://docs.vllm.ai/en/latest/models/supported_models.html)
+
+## Contributing
+
+We welcome and value any contributions and collaborations.
+Please check out [Contributing to vLLM](https://docs.vllm.ai/en/latest/contributing/index.html) for how to get involved.
+
+## Citation
+
+If you use vLLM for your research, please cite our [paper](https://arxiv.org/abs/2309.06180):
+
+```bibtex
+@inproceedings{kwon2023efficient,
+  title={Efficient Memory Management for Large Language Model Serving with PagedAttention},
+  author={Woosuk Kwon and Zhuohan Li and Siyuan Zhuang and Ying Sheng and Lianmin Zheng and Cody Hao Yu and Joseph E. Gonzalez and Hao Zhang and Ion Stoica},
+  booktitle={Proceedings of the ACM SIGOPS 29th Symposium on Operating Systems Principles},
+  year={2023}
+}
+```
+
+## Contact Us
+
+<!-- --8<-- [start:contact-us] -->
+- For technical questions and feature requests, please use GitHub [Issues](https://github.com/vllm-project/vllm/issues)
+- For discussing with fellow users, please use the [vLLM Forum](https://discuss.vllm.ai)
+- For coordinating contributions and development, please use [Slack](https://slack.vllm.ai)
+- For security disclosures, please use GitHub's [Security Advisories](https://github.com/vllm-project/vllm/security/advisories) feature
+- For collaborations and partnerships, please contact us at [collaboration@vllm.ai](mailto:collaboration@vllm.ai)
+<!-- --8<-- [end:contact-us] -->
+
+## Media Kit
+
+- If you wish to use vLLM's logo, please refer to [our media kit repo](https://github.com/vllm-project/media-kit)
+
+ succeeded in 265ms:
+100 13647  100 13647    0     0  47722      0 --:--:-- --:--:-- --:--:-- 47884
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.lucene.search.similarities;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.lucene.search.Explanation;
+import org.apache.lucene.search.FieldStats;
+import org.apache.lucene.search.TermStats;
+import org.apache.lucene.util.ArrayUtil;
+import org.apache.lucene.util.SmallFloat;
+
+/**
+ * BM25 Similarity. Introduced in Stephen E. Robertson, Steve Walker, Susan Jones, Micheline
+ * Hancock-Beaulieu, and Mike Gatford. Okapi at TREC-3. In Proceedings of the Third <b>T</b>ext
+ * <b>RE</b>trieval <b>C</b>onference (TREC 1994). Gaithersburg, USA, November 1994.
+ */
+public class BM25Similarity extends Similarity {
+  private final float k1;
+  private final float b;
+  private final float k3;
+
+  /**
+   * BM25 with the supplied parameter values.
+   *
+   * @param k1 Controls non-linear term frequency normalization (saturation).
+   * @param b Controls to what degree document length normalizes tf values.
+   * @param discountOverlaps True if overlap tokens (tokens with a position of increment of zero)
+   *     are discounted from the document's length.
+   * @param k3 Controls query-side term frequency saturation. When duplicate terms appear in a
+   *     query, their boost is computed as ((k3 + 1) * qtf) / (k3 + qtf) instead of linear summing.
+   *     A negative value disables saturation (linear behavior). Common values are 7 or 8.
+   * @throws IllegalArgumentException if {@code k1} is infinite or negative
+   * @throws IllegalArgumentException if {@code b} is not within the range {@code [0..1]}
+   * @throws IllegalArgumentException if {@code k3} is NaN or infinite
+   */
+  public BM25Similarity(float k1, float b, boolean discountOverlaps, float k3) {
+    super(discountOverlaps);
+    if (Float.isFinite(k1) == false || k1 < 0) {
+      throw new IllegalArgumentException(
+          "illegal k1 value: " + k1 + ", must be a non-negative finite value");
+    }
+    if (Float.isNaN(b) || b < 0 || b > 1) {
+      throw new IllegalArgumentException("illegal b value: " + b + ", must be between 0 and 1");
+    }
+    if (Float.isNaN(k3) || Float.isInfinite(k3)) {
+      throw new IllegalArgumentException(
+          "illegal k3 value: " + k3 + ", must be a finite value (negative to disable)");
+    }
+    this.k1 = k1;
+    this.b = b;
+    this.k3 = k3;
+  }
+
+  /**
+   * BM25 with the supplied parameter values.
+   *
+   * @param k1 Controls non-linear term frequency normalization (saturation).
+   * @param b Controls to what degree document length normalizes tf values.
+   * @param discountOverlaps True if overlap tokens (tokens with a position of increment of zero)
+   *     are discounted from the document's length.
+   * @throws IllegalArgumentException if {@code k1} is infinite or negative, or if {@code b} is not
+   *     within the range {@code [0..1]}
+   */
+  public BM25Similarity(float k1, float b, boolean discountOverlaps) {
+    this(k1, b, discountOverlaps, -1f);
+  }
+
+  /**
+   * BM25 with the supplied parameter values.
+   *
+   * @param k1 Controls non-linear term frequency normalization (saturation).
+   * @param b Controls to what degree document length normalizes tf values.
+   * @throws IllegalArgumentException if {@code k1} is infinite or negative, or if {@code b} is not
+   *     within the range {@code [0..1]}
+   */
+  public BM25Similarity(float k1, float b) {
+    this(k1, b, true, -1f);
+  }
+
+  /**
+   * BM25 with these default values:
+   *
+   * <ul>
+   *   <li>{@code k1 = 1.2}
+   *   <li>{@code b = 0.75}
+   * </ul>
+   *
+   * and the supplied parameter value:
+   *
+   * @param discountOverlaps True if overlap tokens (tokens with a position of increment of zero)
+   *     are discounted from the document's length.
+   */
+  public BM25Similarity(boolean discountOverlaps) {
+    this(1.2f, 0.75f, discountOverlaps, -1f);
+  }
+
+  /**
+   * BM25 with these default values:
+   *
+   * <ul>
+   *   <li>{@code k1 = 1.2}
+   *   <li>{@code b = 0.75}
+   *   <li>{@code discountOverlaps = true}
+   * </ul>
+   */
+  public BM25Similarity() {
+    this(1.2f, 0.75f, true, -1f);
+  }
+
+  /**
+   * Computes the query-term weight using BM25's k3 saturation formula: ((k3 + 1) * qtf) / (k3 +
+   * qtf). When k3 is negative (disabled), falls back to linear weighting where the weight equals
+   * the query term frequency.
+   */
+  @Override
+  public float computeQueryTermWeight(int queryTermFrequency) {
+    if (k3 < 0) {
+      return (float) queryTermFrequency;
+    }
+    return ((k3 + 1f) * queryTermFrequency) / (k3 + queryTermFrequency);
+  }
+
+  /** Implemented as <code>log(1 + (docCount - docFreq + 0.5)/(docFreq + 0.5))</code>. */
+  protected float idf(long docFreq, long docCount) {
+    return (float) Math.log(1 + (docCount - docFreq + 0.5D) / (docFreq + 0.5D));
+  }
+
+  /** The default implementation computes the average as <code>sumTotalTermFreq / docCount</code> */
+  protected float avgFieldLength(FieldStats fieldStats) {
+    return (float) (fieldStats.sumTotalTermFreq() / (double) fieldStats.docCount());
+  }
+
+  /** Cache of decoded bytes. */
+  private static final float[] LENGTH_TABLE = new float[256];
+
+  static {
+    for (int i = 0; i < 256; i++) {
+      LENGTH_TABLE[i] = SmallFloat.byte4ToInt((byte) i);
+    }
+  }
+
+  /**
+   * Computes a score factor for a simple term and returns an explanation for that score factor.
+   *
+   * <p>The default implementation uses:
+   *
+   * <pre><code class="language-java">
+   * idf(docFreq, docCount);
+   * </code></pre>
+   *
+   * Note that {@link FieldStats#docCount()} is used instead of {@link
+   * org.apache.lucene.index.IndexReader#numDocs() IndexReader#numDocs()} because also {@link
+   * TermStats#docFreq()} is used, and when the latter is inaccurate, so is {@link
+   * FieldStats#docCount()}, and in the same direction. In addition, {@link FieldStats#docCount()}
+   * does not skew when fields are sparse.
+   *
+   * @param fieldStats field-level statistics
+   * @param termStats term-level statistics for the term
+   * @return an Explain object that includes both an idf score factor and an explanation for the
+   *     term.
+   */
+  public Explanation idfExplain(FieldStats fieldStats, TermStats termStats) {
+    final long df = termStats.docFreq();
+    final long docCount = fieldStats.docCount();
+    final float idf = idf(df, docCount);
+    return Explanation.match(
+        idf,
+        "idf, computed as log(1 + (N - n + 0.5) / (n + 0.5)) from:",
+        Explanation.match(df, "n, number of documents containing term"),
+        Explanation.match(docCount, "N, total number of documents with field"));
+  }
+
+  /**
+   * Computes a score factor for a phrase.
+   *
+   * <p>The default implementation sums the idf factor for each term in the phrase.
+   *
+   * @param fieldStats field-level statistics
+   * @param termStats term-level statistics for the terms in the phrase
+   * @return an Explain object that includes both an idf score factor for the phrase and an
+   *     explanation for each term.
+   */
+  public Explanation idfExplain(FieldStats fieldStats, TermStats[] termStats) {
+    double idf = 0d; // sum into a double before casting into a float
+    List<Explanation> details = new ArrayList<>();
+    for (final TermStats stat : termStats) {
+      Explanation idfExplain = idfExplain(fieldStats, stat);
+      details.add(idfExplain);
+      idf += idfExplain.getValue().floatValue();
+    }
+    return Explanation.match((float) idf, "idf, sum of:", details);
+  }
+
+  @Override
+  public final SimScorer scorer(float boost, FieldStats fieldStats, TermStats... termStats) {
+    Explanation idf =
+        termStats.length == 1
+            ? idfExplain(fieldStats, termStats[0])
+            : idfExplain(fieldStats, termStats);
+    float avgdl = avgFieldLength(fieldStats);
+
+    float[] cache = new float[256];
+    for (int i = 0; i < cache.length; i++) {
+      cache[i] = 1f / (k1 * ((1 - b) + b * LENGTH_TABLE[i] / avgdl));
+    }
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 288ms:
+100  9429  100  9429    0     0  30805      0 --:--:-- --:--:-- --:--:-- 30813
+15:class BM25:
+16-    def __init__(self, corpus, tokenizer=None):
+17-        self.corpus_size = 0
+18-        self.avgdl = 0
+19-        self.doc_freqs = []
+20-        self.idf = {}
+21-        self.doc_len = []
+22-        self.tokenizer = tokenizer
+23-
+24-        if tokenizer:
+25-            corpus = self._tokenize_corpus(corpus)
+26-
+27-        nd = self._initialize(corpus)
+28-        self._calc_idf(nd)
+29-
+30-    def _initialize(self, corpus):
+31-        nd = {}  # word -> number of documents with word
+32-        num_doc = 0
+33-        for document in corpus:
+34-            self.doc_len.append(len(document))
+35-            num_doc += len(document)
+36-
+37-            frequencies = {}
+38-            for word in document:
+39-                if word not in frequencies:
+40-                    frequencies[word] = 0
+41-                frequencies[word] += 1
+42-            self.doc_freqs.append(frequencies)
+43-
+44-            for word, freq in frequencies.items():
+45-                try:
+46-                    nd[word]+=1
+47-                except KeyError:
+48-                    nd[word] = 1
+49-
+50-            self.corpus_size += 1
+51-
+52-        self.avgdl = num_doc / self.corpus_size
+53-        return nd
+54-
+55-    def _tokenize_corpus(self, corpus):
+56-        pool = Pool(cpu_count())
+57-        tokenized_corpus = pool.map(self.tokenizer, corpus)
+58-        return tokenized_corpus
+59-
+60-    def _calc_idf(self, nd):
+61-        raise NotImplementedError()
+62-
+63-    def get_scores(self, query):
+64-        raise NotImplementedError()
+65-
+66-    def get_batch_scores(self, query, doc_ids):
+67-        raise NotImplementedError()
+68-
+69-    def get_top_n(self, query, documents, n=5):
+70-
+71-        assert self.corpus_size == len(documents), "The documents given don't match the index corpus!"
+72-
+73-        scores = self.get_scores(query)
+74-        top_n = np.argsort(scores)[::-1][:n]
+75-        return [documents[i] for i in top_n]
+76-
+77-
+78:class BM25Okapi(BM25):
+79-    def __init__(self, corpus, tokenizer=None, k1=1.5, b=0.75, epsilon=0.25):
+80-        self.k1 = k1
+81-        self.b = b
+82-        self.epsilon = epsilon
+83-        super().__init__(corpus, tokenizer)
+84-
+85-    def _calc_idf(self, nd):
+86-        """
+87-        Calculates frequencies of terms in documents and in corpus.
+88-        This algorithm sets a floor on the idf values to eps * average_idf
+89-        """
+90-        # collect idf sum to calculate an average idf for epsilon value
+91-        idf_sum = 0
+92-        # collect words with negative idf to set them a special epsilon value.
+93-        # idf can be negative if word is contained in more than half of documents
+94-        negative_idfs = []
+95-        for word, freq in nd.items():
+96-            idf = math.log(self.corpus_size - freq + 0.5) - math.log(freq + 0.5)
+97-            self.idf[word] = idf
+98-            idf_sum += idf
+99-            if idf < 0:
+100-                negative_idfs.append(word)
+101-        self.average_idf = idf_sum / len(self.idf)
+102-
+103-        eps = self.epsilon * self.average_idf
+104-        for word in negative_idfs:
+105-            self.idf[word] = eps
+106-
+107-    def get_scores(self, query):
+108-        """
+109-        The ATIRE BM25 variant uses an idf function which uses a log(idf) score. To prevent negative idf scores,
+110-        this algorithm also adds a floor to the idf value of epsilon.
+111-        See [Trotman, A., X. Jia, M. Crane, Towards an Efficient and Effective Search Engine] for more info
+112-        :param query:
+113-        :return:
+114-        """
+115-        score = np.zeros(self.corpus_size)
+116-        doc_len = np.array(self.doc_len)
+117-        for q in query:
+118-            q_freq = np.array([(doc.get(q) or 0) for doc in self.doc_freqs])
+119-            score += (self.idf.get(q) or 0) * (q_freq * (self.k1 + 1) /
+120-                                               (q_freq + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl)))
+121-        return score
+122-
+123-    def get_batch_scores(self, query, doc_ids):
+124-        """
+125-        Calculate bm25 scores between query and subset of all docs
+126-        """
+127-        assert all(di < len(self.doc_freqs) for di in doc_ids)
+128-        score = np.zeros(len(doc_ids))
+129-        doc_len = np.array(self.doc_len)[doc_ids]
+130-        for q in query:
+131-            q_freq = np.array([(self.doc_freqs[di].get(q) or 0) for di in doc_ids])
+132-            score += (self.idf.get(q) or 0) * (q_freq * (self.k1 + 1) /
+133-                                               (q_freq + self.k1 * (1 - self.b + self.b * doc_len / self.avgdl)))
+134-        return score.tolist()
+135-
+136-
+137:class BM25L(BM25):
+138-    def __init__(self, corpus, tokenizer=None, k1=1.5, b=0.75, delta=0.5):
+139-        # Algorithm specific parameters
+140-        self.k1 = k1
+141-        self.b = b
+142-        self.delta = delta
+143-        super().__init__(corpus, tokenizer)
+144-
+145-    def _calc_idf(self, nd):
+146-        for word, freq in nd.items():
+147-            idf = math.log(self.corpus_size + 1) - math.log(freq + 0.5)
+148-            self.idf[word] = idf
+149-
+150-    def get_scores(self, query):
+151-        score = np.zeros(self.corpus_size)
+152-        doc_len = np.array(self.doc_len)
+153-        for q in query:
+154-            q_freq = np.array([(doc.get(q) or 0) for doc in self.doc_freqs])
+155-            ctd = q_freq / (1 - self.b + self.b * doc_len / self.avgdl)
+156-            score += (self.idf.get(q) or 0) * (self.k1 + 1) * (ctd + self.delta) / \
+157-                     (self.k1 + ctd + self.delta)
+158-        return score
+159-
+160-    def get_batch_scores(self, query, doc_ids):
+161-        """
+162-        Calculate bm25 scores between query and subset of all docs
+163-        """
+164-        assert all(di < len(self.doc_freqs) for di in doc_ids)
+165-        score = np.zeros(len(doc_ids))
+166-        doc_len = np.array(self.doc_len)[doc_ids]
+167-        for q in query:
+168-            q_freq = np.array([(self.doc_freqs[di].get(q) or 0) for di in doc_ids])
+169-            ctd = q_freq / (1 - self.b + self.b * doc_len / self.avgdl)
+170-            score += (self.idf.get(q) or 0) * (self.k1 + 1) * (ctd + self.delta) / \
+171-                     (self.k1 + ctd + self.delta)
+172-        return score.tolist()
+173-
+174-
+175:class BM25Plus(BM25):
+176-    def __init__(self, corpus, tokenizer=None, k1=1.5, b=0.75, delta=1):
+177-        # Algorithm specific parameters
+178-        self.k1 = k1
+179-        self.b = b
+180-        self.delta = delta
+181-        super().__init__(corpus, tokenizer)
+182-
+183-    def _calc_idf(self, nd):
+184-        for word, freq in nd.items():
+185-            idf = math.log(self.corpus_size + 1) - math.log(freq)
+186-            self.idf[word] = idf
+187-
+188-    def get_scores(self, query):
+189-        score = np.zeros(self.corpus_size)
+190-        doc_len = np.array(self.doc_len)
+191-        for q in query:
+192-            q_freq = np.array([(doc.get(q) or 0) for doc in self.doc_freqs])
+193-            score += (self.idf.get(q) or 0) * (self.delta + (q_freq * (self.k1 + 1)) /
+194-                                               (self.k1 * (1 - self.b + self.b * doc_len / self.avgdl) + q_freq))
+195-        return score
+196-
+197-    def get_batch_scores(self, query, doc_ids):
+198-        """
+199-        Calculate bm25 scores between query and subset of all docs
+200-        """
+201-        assert all(di < len(self.doc_freqs) for di in doc_ids)
+202-        score = np.zeros(len(doc_ids))
+203-        doc_len = np.array(self.doc_len)[doc_ids]
+204-        for q in query:
+205-            q_freq = np.array([(self.doc_freqs[di].get(q) or 0) for di in doc_ids])
+206-            score += (self.idf.get(q) or 0) * (self.delta + (q_freq * (self.k1 + 1)) /
+207-                                               (self.k1 * (1 - self.b + self.b * doc_len / self.avgdl) + q_freq))
+208-        return score.tolist()
+209-
+210-
+211-# BM25Adpt and BM25T are a bit more complicated than the previous algorithms here. Here a term-specific k1
+212-# parameter is calculated before scoring is done
+213-
+214:# class BM25Adpt(BM25):
+215-#     def __init__(self, corpus, k1=1.5, b=0.75, delta=1):
+216-#         # Algorithm specific parameters
+217-#         self.k1 = k1
+218-#         self.b = b
+219-#         self.delta = delta
+220-#         super().__init__(corpus)
+221-#
+222-#     def _calc_idf(self, nd):
+223-#         for word, freq in nd.items():
+224-#             idf = math.log((self.corpus_size + 1) / freq)
+225-#             self.idf[word] = idf
+226-#
+227-#     def get_scores(self, query):
+228-#         score = np.zeros(self.corpus_size)
+229-#         doc_len = np.array(self.doc_len)
+230-#         for q in query:
+231-#             q_freq = np.array([(doc.get(q) or 0) for doc in self.doc_freqs])
+232-#             score += (self.idf.get(q) or 0) * (self.delta + (q_freq * (self.k1 + 1)) /
+233-#                                                (self.k1 * (1 - self.b + self.b * doc_len / self.avgdl) + q_freq))
+234-#         return score
+235-#
+236-#
+237:# class BM25T(BM25):
+238-#     def __init__(self, corpus, k1=1.5, b=0.75, delta=1):
+239-#         # Algorithm specific parameters
+240-#         self.k1 = k1
+241-#         self.b = b
+242-#         self.delta = delta
+243-#         super().__init__(corpus)
+244-#
+245-#     def _calc_idf(self, nd):
+246-#         for word, freq in nd.items():
+247-#             idf = math.log((self.corpus_size + 1) / freq)
+248-#             self.idf[word] = idf
+249-#
+250-#     def get_scores(self, query):
+251-#         score = np.zeros(self.corpus_size)
+252-#         doc_len = np.array(self.doc_len)
+253-#         for q in query:
+254-#             q_freq = np.array([(doc.get(q) or 0) for doc in self.doc_freqs])
+255-#             score += (self.idf.get(q) or 0) * (self.delta + (q_freq * (self.k1 + 1)) /
+256-#                                                (self.k1 * (1 - self.b + self.b * doc_len / self.avgdl) + q_freq))
+257-#         return score
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/apache/lucene/main/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java | sed -n '220,360p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 13647  100 13647    0     0   142k      0 --:--:-- --:--:-- --:--:--  143k
+    }
+    return new BM25Scorer(boost, k1, b, idf, avgdl, cache);
+  }
+
+  /** Field statistics for the BM25 model. */
+  private static class BM25Scorer extends SimScorer {
+    /** query boost */
+    private final float boost;
+
+    /** k1 value for scale factor */
+    private final float k1;
+
+    /** b value for length normalization impact */
+    private final float b;
+
+    /** BM25's idf */
+    private final Explanation idf;
+
+    /** The average document length. */
+    private final float avgdl;
+
+    /** precomputed norm[256] with k1 * ((1 - b) + b * dl / avgdl) */
+    private final float[] cache;
+
+    /** weight (idf * boost) */
+    private final float weight;
+
+    BM25Scorer(float boost, float k1, float b, Explanation idf, float avgdl, float[] cache) {
+      this.boost = boost;
+      this.idf = idf;
+      this.avgdl = avgdl;
+      this.k1 = k1;
+      this.b = b;
+      this.cache = cache;
+      this.weight = boost * idf.getValue().floatValue();
+    }
+
+    private float doScore(float freq, float normInverse) {
+      // In order to guarantee monotonicity with both freq and norm without
+      // promoting to doubles, we rewrite freq / (freq + norm) to
+      // 1 - 1 / (1 + freq * 1/norm).
+      // freq * 1/norm is guaranteed to be monotonic for both freq and norm due
+      // to the fact that multiplication and division round to the nearest
+      // float. And then monotonicity is preserved through composition via
+      // x -> 1 + x and x -> 1 - 1/x.
+      // Finally we expand weight * (1 - 1 / (1 + freq * 1/norm)) to
+      // weight - weight / (1 + freq * 1/norm), which runs slightly faster.
+      return weight - weight / (1f + freq * normInverse);
+    }
+
+    @Override
+    public float score(float freq, long encodedNorm) {
+      float normInverse = cache[((byte) encodedNorm) & 0xFF];
+      return doScore(freq, normInverse);
+    }
+
+    @Override
+    public BulkSimScorer asBulkSimScorer() {
+      return new BulkSimScorer() {
+
+        private float[] normInverses = new float[0];
+
+        @Override
+        public void score(int size, float[] freqs, long[] norms, float[] scores) {
+          if (normInverses.length < size) {
+            normInverses = new float[ArrayUtil.oversize(size, Float.BYTES)];
+          }
+          for (int i = 0; i < size; ++i) {
+            normInverses[i] = cache[((byte) norms[i]) & 0xFF];
+          }
+
+          // This loop auto-vectorizes.
+          for (int i = 0; i < size; ++i) {
+            scores[i] = doScore(freqs[i], normInverses[i]);
+          }
+        }
+      };
+    }
+
+    @Override
+    public Explanation explain(Explanation freq, long encodedNorm) {
+      List<Explanation> subs = new ArrayList<>(explainConstantFactors());
+      Explanation tfExpl = explainTF(freq, encodedNorm);
+      subs.add(tfExpl);
+      float normInverse = cache[((byte) encodedNorm) & 0xFF];
+      // not using "product of" since the rewrite that we do in score()
+      // introduces a small rounding error that CheckHits complains about
+      return Explanation.match(
+          weight - weight / (1f + freq.getValue().floatValue() * normInverse),
+          "score(freq=" + freq.getValue() + "), computed as boost * idf * tf from:",
+          subs);
+    }
+
+    private Explanation explainTF(Explanation freq, long norm) {
+      List<Explanation> subs = new ArrayList<>();
+      subs.add(freq);
+      subs.add(Explanation.match(k1, "k1, term saturation parameter"));
+      float doclen = LENGTH_TABLE[((byte) norm) & 0xff];
+      subs.add(Explanation.match(b, "b, length normalization parameter"));
+      if ((norm & 0xFF) > 39) {
+        subs.add(Explanation.match(doclen, "dl, length of field (approximate)"));
+      } else {
+        subs.add(Explanation.match(doclen, "dl, length of field"));
+      }
+      subs.add(Explanation.match(avgdl, "avgdl, average length of field"));
+      float normInverse = 1f / (k1 * ((1 - b) + b * doclen / avgdl));
+      return Explanation.match(
+          1f - 1f / (1 + freq.getValue().floatValue() * normInverse),
+          "tf, computed as freq / (freq + k1 * (1 - b + b * dl / avgdl)) from:",
+          subs);
+    }
+
+    private List<Explanation> explainConstantFactors() {
+      List<Explanation> subs = new ArrayList<>();
+      // query boost
+      if (boost != 1.0f) {
+        subs.add(Explanation.match(boost, "boost"));
+      }
+      // idf
+      subs.add(idf);
+      return subs;
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "BM25(k1=" + k1 + ",b=" + b + (k3 >= 0 ? ",k3=" + k3 : "") + ")";
+  }
+
+  /**
+   * Returns the <code>k1</code> parameter
+   *
+   * @see #BM25Similarity(float, float)
+   */
+  public final float getK1() {
+    return k1;
+  }
+
+  /**
+   * Returns the <code>b</code> parameter
+   *
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/README.md | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/LMCache/LMCache/main/README.md | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 269ms:
+  0 10811    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 10811  100 10811    0     0  36542      0 --:--:-- --:--:-- --:--:-- 36523
+<div align="center" id="sglangtop">
+<img src="https://raw.githubusercontent.com/sgl-project/sglang/main/assets/logo.png" alt="logo" width="400" margin="10px"></img>
+
+[![PyPI](https://img.shields.io/pypi/v/sglang)](https://pypi.org/project/sglang)
+![PyPI - Downloads](https://static.pepy.tech/badge/sglang?period=month)
+[![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE)
+[![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)
+
+</div>
+
+--------------------------------------------------------------------------------
+
+<p align="center">
+<a href="https://lmsys.org/blog/"><b>Blog</b></a> |
+<a href="https://docs.sglang.io/"><b>Documentation</b></a> |
+<a href="https://roadmap.sglang.io/"><b>Roadmap</b></a> |
+<a href="https://slack.sglang.io/"><b>Join Slack</b></a> |
+<a href="https://meet.sglang.io/"><b>Weekly Dev Meeting</b></a> |
+<a href="https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#slides"><b>Slides</b></a>
+</p>
+
+## News
+- [2026/02] 🔥 Unlocking 25x Inference Performance with SGLang on NVIDIA GB300 NVL72 ([blog](https://lmsys.org/blog/2026-02-20-gb300-inferencex/)).
+- [2026/01] 🔥 SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2026-01-16-sglang-diffusion/)).
+- [2025/12] SGLang provides day-0 support for latest open models ([MiMo-V2-Flash](https://lmsys.org/blog/2025-12-16-mimo-v2-flash/), [Nemotron 3 Nano](https://lmsys.org/blog/2025-12-15-run-nvidia-nemotron-3-nano/), [Mistral Large 3](https://github.com/sgl-project/sglang/pull/14213), [LLaDA 2.0 Diffusion LLM](https://lmsys.org/blog/2025-12-19-diffusion-llm/), [MiniMax M2](https://lmsys.org/blog/2025-11-04-miminmax-m2/)).
+- [2025/10] 🔥 SGLang now runs natively on TPU with the SGLang-Jax backend ([blog](https://lmsys.org/blog/2025-10-29-sglang-jax/)).
+- [2025/09] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part II): 3.8x Prefill, 4.8x Decode Throughput ([blog](https://lmsys.org/blog/2025-09-25-gb200-part-2/)).
+- [2025/09] SGLang Day 0 Support for DeepSeek-V3.2 with Sparse Attention ([blog](https://lmsys.org/blog/2025-09-29-deepseek-V32/)).
+- [2025/08] SGLang x AMD SF Meetup on 8/22: Hands-on GPU workshop, tech talks by AMD/xAI/SGLang, and networking ([Roadmap](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_roadmap.pdf), [Large-scale EP](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_ep.pdf), [Highlights](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_highlights.pdf), [AITER/MoRI](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_aiter_mori.pdf), [Wave](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_wave.pdf)).
+
+<details>
+<summary>More</summary>
+
+- [2025/11] SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2025-11-07-sglang-diffusion/)).
+- [2025/10] PyTorch Conference 2025 SGLang Talk ([slide](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/sglang_pytorch_2025.pdf)).
+- [2025/10] SGLang x Nvidia SF Meetup on 10/2 ([recap](https://x.com/lmsysorg/status/1975339501934510231)).
+- [2025/08] SGLang provides day-0 support for OpenAI gpt-oss model ([instructions](https://github.com/sgl-project/sglang/issues/8833))
+- [2025/06] SGLang, the high-performance serving infrastructure powering trillions of tokens daily, has been awarded the third batch of the Open Source AI Grant by a16z ([a16z blog](https://a16z.com/advancing-open-source-ai-through-benchmarks-and-bold-experimentation/)).
+- [2025/05] Deploying DeepSeek with PD Disaggregation and Large-scale Expert Parallelism on 96 H100 GPUs ([blog](https://lmsys.org/blog/2025-05-05-large-scale-ep/)).
+- [2025/06] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part I): 2.7x Higher Decoding Throughput ([blog](https://lmsys.org/blog/2025-06-16-gb200-part-1/)).
+- [2025/03] Supercharge DeepSeek-R1 Inference on AMD Instinct MI300X ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1-Part2/README.html))
+- [2025/03] SGLang Joins PyTorch Ecosystem: Efficient LLM Serving Engine ([PyTorch blog](https://pytorch.org/blog/sglang-joins-pytorch/))
+- [2025/02] Unlock DeepSeek-R1 Inference Performance on AMD Instinct™ MI300X GPU ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1_Perf/README.html))
+- [2025/01] SGLang provides day one support for DeepSeek V3/R1 models on NVIDIA and AMD GPUs with DeepSeek-specific optimizations. ([instructions](https://github.com/sgl-project/sglang/tree/main/benchmark/deepseek_v3), [AMD blog](https://www.amd.com/en/developer/resources/technical-articles/amd-instinct-gpus-power-deepseek-v3-revolutionizing-ai-development-with-sglang.html), [10+ other companies](https://x.com/lmsysorg/status/1887262321636221412))
+- [2024/12] v0.4 Release: Zero-Overhead Batch Scheduler, Cache-Aware Load Balancer, Faster Structured Outputs ([blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/)).
+- [2024/10] The First SGLang Online Meetup ([slides](https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#the-first-sglang-online-meetup)).
+- [2024/09] v0.3 Release: 7x Faster DeepSeek MLA, 1.5x Faster torch.compile, Multi-Image/Video LLaVA-OneVision ([blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/)).
+- [2024/07] v0.2 Release: Faster Llama3 Serving with SGLang Runtime (vs. TensorRT-LLM, vLLM) ([blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/)).
+- [2024/02] SGLang enables **3x faster JSON decoding** with compressed finite state machine ([blog](https://lmsys.org/blog/2024-02-05-compressed-fsm/)).
+- [2024/01] SGLang provides up to **5x faster inference** with RadixAttention ([blog](https://lmsys.org/blog/2024-01-17-sglang/)).
+- [2024/01] SGLang powers the serving of the official **LLaVA v1.6** release demo ([usage](https://github.com/haotian-liu/LLaVA?tab=readme-ov-file#demo)).
+
+</details>
+
+## About
+SGLang is a high-performance serving framework for large language models and multimodal models.
+It is designed to deliver low-latency and high-throughput inference across a wide range of setups, from a single GPU to large distributed clusters.
+Its core features include:
+
+- **Fast Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
+- **Broad Model Support**: Supports a wide range of language models (Llama, Qwen, DeepSeek, Kimi, GLM, GPT, Gemma, Mistral, etc.), embedding models (e5-mistral, gte, mcdse), reward models (Skywork), and diffusion models (WAN, Qwen-Image), with easy extensibility for adding new models. Compatible with most Hugging Face models and OpenAI APIs.
+- **Extensive Hardware Support**: Runs on NVIDIA GPUs (GB200/B300/H100/A100/Spark/5090), AMD GPUs (MI355/MI300), Intel Xeon CPUs, Google TPUs, Ascend NPUs, and more.
+- **Active Community**: SGLang is open-source and supported by a vibrant community with widespread industry adoption, powering over 400,000 GPUs worldwide.
+- **RL & Post-Training Backbone**: SGLang is a proven rollout backend used for training many frontier models, with native RL integrations and adoption by well-known post-training frameworks such as [**AReaL**](https://github.com/inclusionAI/AReaL), [**Miles**](https://github.com/radixark/miles), [**slime**](https://github.com/THUDM/slime), [**Tunix**](https://github.com/google/tunix), [**verl**](https://github.com/volcengine/verl) and more.
+
+## Getting Started
+- [Install SGLang](https://docs.sglang.io/get_started/install.html)
+- [Quick Start](https://docs.sglang.io/basic_usage/send_request.html)
+- [Backend Tutorial](https://docs.sglang.io/basic_usage/openai_api_completions.html)
+- [Frontend Tutorial](https://docs.sglang.io/references/frontend/frontend_tutorial.html)
+- [Contribution Guide](https://docs.sglang.io/developer_guide/contribution_guide.html)
+
+## Benchmark and Performance
+Learn more in the release blogs: [v0.2 blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/), [v0.3 blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/), [v0.4 blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/), [Large-scale expert parallelism](https://lmsys.org/blog/2025-05-05-large-scale-ep/), [GB200 rack-scale parallelism](https://lmsys.org/blog/2025-09-25-gb200-part-2/), [GB300 long context](https://lmsys.org/blog/2026-02-19-gb300-longctx/).
+
+## Adoption and Sponsorship
+SGLang has been deployed at large scale, generating trillions of tokens in production each day. It is trusted and adopted by a wide range of leading enterprises and institutions, including xAI, AMD, NVIDIA, Intel, LinkedIn, Cursor, Oracle Cloud, Google Cloud, Microsoft Azure, AWS, Atlas Cloud, Voltage Park, Nebius, DataCrunch, Novita, InnoMatrix, MIT, UCLA, the University of Washington, Stanford, UC Berkeley, Tsinghua University, Jam & Tea Studios, Baseten, and other major technology organizations.
+As an open-source LLM inference engine, SGLang has become the de facto industry standard, with deployments running on over 400,000 GPUs worldwide.
+SGLang is currently hosted under the non-profit open-source organization [LMSYS](https://lmsys.org/about/).
+
+<img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" alt="logo" width="800" margin="10px"></img>
+
+## Contact Us
+For enterprises interested in adopting or deploying SGLang at scale, including technical consulting, sponsorship opportunities, or partnership inquiries, please contact us at [sglang@lmsys.org](mailto:sglang@lmsys.org).
+
+Long-term active SGLang contributors are eligible for coding agent sponsorship, such as Cursor, Claude Code, or OpenAI Codex. Email [sglang@lmsys.org](mailto:sglang@lmsys.org) with your most important commits or pull requests.
+
+## Acknowledgment
+We learned the design and reused code from the following projects: [Guidance](https://github.com/guidance-ai/guidance), [vLLM](https://github.com/vllm-project/vllm), [LightLLM](https://github.com/ModelTC/lightllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [Outlines](https://github.com/outlines-dev/outlines), and [LMQL](https://github.com/eth-sri/lmql).
+
+hook: PostToolUse Completed
+ succeeded in 262ms:
+100  5022  100  5022    0     0  17318      0 --:--:-- --:--:-- --:--:-- 17317100  5022  100  5022    0     0  17316      0 --:--:-- --:--:-- --:--:-- 17257
+# LMCache core library
+
+## Installation
+
+**Prerequisite:** Python >= 3.10
+
+```bash
+pip install -e .
+```
+
+## Demos
+Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).
+
+## Quickstart: 
+
+**Prerequisites**: To run the quickstart demo, your server should have 1 GPU and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start vLLM + LMCache 
+```bash
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface access token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.6 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example-local.yaml
+```
+Please fill `Huggingface cache dir on your local machine` and `Your huggingface access token` in the above command. 
+
+You can also change the `model` variable to use different models.
+
+The vLLM engine is ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 3:** Run demo application
+
+You can now run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+
+# Start the demo chat application
+python openai_chat_completion_client.py 8000
+```
+
+This demo is a QA application based on a long context (`examples/f.txt`). The TTFT should be drastically reduced since the second round of QA.
+
+
+
+## Use case 1: share prefix KV between different vLLM instance through LMCache
+The following instructions help deploy LMCache backend + multile vLLM instance by docker containers. The architecture of the demo application looks like this:
+
+<img width="817" alt="image" src="https://github.com/LMCache/LMCache/assets/25103655/ab64f84d-26e1-46ce-a503-e7e917b618bc">
+
+
+**Prerequisites**: To run the quickstart demo, your server must have 2 GPUs and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/lmcache-server:0.1.0
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start LMCache backend server 
+```bash
+docker run --name lmcache-server --network host -d apostacyh/lmcache-server:0.1.0 0.0.0.0 65432
+```
+
+**Step 3:** start 2 vLLM instances
+```bash
+# The first vLLM instance listens at port 8000
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Now, open another terminal and start another vLLM instance
+```bash
+# The second vLLM instance listens at port 8001
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=1"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8001:8001 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8001 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Remember to replace the `Huggingface cache dir on your local machine` and `Your huggingface token` in the commandline.
+
+The vLLM engines are ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+
+hook: PostToolUse Completed
+2026-06-03T16:17:04.886458Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc "find prior_art projects/PROJ-0015 experiments/2026-06-03/EXP-0048 -maxdepth 3 -type f | sort | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-03/EXP-0048/COMMITTEE2_PACKET.md
+experiments/2026-06-03/EXP-0048/committee2/.members.txt
+experiments/2026-06-03/EXP-0048/committee2/_runner.log
+experiments/2026-06-03/EXP-0048/committee2/area_chair.err
+experiments/2026-06-03/EXP-0048/committee2/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0048/committee2/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0048/committee2/novelty_killer.err
+experiments/2026-06-03/EXP-0048/committee2/novelty_killer.out
+experiments/2026-06-03/EXP-0048/committee2/product_realist.err
+experiments/2026-06-03/EXP-0048/committee2/product_realist.out
+experiments/2026-06-03/EXP-0048/committee2/systems_reviewer.err
+experiments/2026-06-03/EXP-0048/committee2/systems_reviewer.out
+experiments/2026-06-03/EXP-0048/committee2/theory_skeptic.err
+experiments/2026-06-03/EXP-0048/committee2/theory_skeptic.out
+experiments/2026-06-03/EXP-0048/experiment.yaml
+prior_art/.gitkeep
+projects/PROJ-0015/project_overview.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'find experiments/2026-06-03/EXP-0048 -maxdepth 2 -type f -print' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-03/EXP-0048/COMMITTEE2_PACKET.md
+experiments/2026-06-03/EXP-0048/experiment.yaml
+experiments/2026-06-03/EXP-0048/committee2/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0048/committee2/theory_skeptic.out
+experiments/2026-06-03/EXP-0048/committee2/systems_reviewer.out
+experiments/2026-06-03/EXP-0048/committee2/_runner.log
+experiments/2026-06-03/EXP-0048/committee2/.members.txt
+experiments/2026-06-03/EXP-0048/committee2/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0048/committee2/theory_skeptic.err
+experiments/2026-06-03/EXP-0048/committee2/systems_reviewer.err
+experiments/2026-06-03/EXP-0048/committee2/product_realist.out
+experiments/2026-06-03/EXP-0048/committee2/novelty_killer.out
+experiments/2026-06-03/EXP-0048/committee2/area_chair.err
+experiments/2026-06-03/EXP-0048/committee2/novelty_killer.err
+experiments/2026-06-03/EXP-0048/committee2/product_realist.err
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Apache Lucene BM25Similarity / Elasticsearch / OpenSearch", url: "https://github.com/apache/lucene/blob/main/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java", overlap: "Implements BM25 with k1=1.2, b=0.75 defaults, RSJ IDF, and tf denominator freq + k1*(1-b+b*dl/avgdl); this is the claimed recovery mechanism."},
+  {system: "rank-bm25", url: "https://github.com/dorianbrown/rank_bm25/blob/master/rank_bm25.py", overlap: "Implements BM25Okapi and BM25L with b length normalization and BM25L delta; overlaps the reported L0 and BM25L remediation mechanisms."},
+  {system: "vLLM / SGLang / LMCache / FlashInfer / TensorRT-LLM class systems", url: "https://github.com/vllm-project/vllm ; https://github.com/sgl-project/sglang ; https://github.com/LMCache/LMCache ; https://github.com/flashinfer-ai/flashinfer ; https://github.com/NVIDIA/TensorRT-LLM", overlap: "No substantive lexical-retrieval BM25 mechanism overlap found; these are LLM serving, KV-cache, and kernel/runtime systems, not corpus-ranking systems."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: "Does not hold for the realistic workload in the packet: EXP-0048 reports dense bge-base-en-v1.5 and e5-base-v2 stay rank 1.00 with CI +-0.00 at every L under realistic query-bearing templates. The only dense displacement appears under adversarial verbatim-query injection; bge is monotone-worse and e5 partially recovers via 512-token truncation / mean-pool dilution, not BM25 length normalization. L0 is N=2000 synthetic BM25, so systems-scale relevance is insufficient evidence."
+RATIONALE: "RED because the systems contribution is not a design and not a shipping-systems insight beyond known lexical scoring behavior. The packet’s load-bearing L1 result falsifies the broad corpus-hygiene risk framing: realistic dense retrieval is flat, while the survivor is BM25-only. Existing shipping lexical systems already expose the mechanism: Lucene BM25Similarity documents b as controlling document-length normalization and scores tf as freq/(freq+k1*(1-b+b*dl/avgdl)); rank-bm25 implements both BM25Okapi and BM25L with the same b-normalized denominator plus BM25L delta. The packet’s b=0 abolition and BM25L persistence are good mechanistic checks, but they mainly demonstrate consequences of established length normalization under synthetic query-term stuffing. Reproducibility is partial: L0 artifacts are summarized with sanity checks, but L1 raw_results.csv is reported as remote-only on devgpu014, so independent artifact review is incomplete."
+```
+tokens used
+44,848

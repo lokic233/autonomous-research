@@ -1,0 +1,29 @@
+task_id: TASK-0039
+kind: research
+parent: orchestrator-r4-001
+assignee: researcher-0047
+session_id: ''
+project_id: PROJ-0017
+claim_id: CLAIM-0047
+exp_id: EXP-0049
+status: open
+summary: 'CORRECTED RE-RUN of EXP-0046 (which tripped its own alpha=0 bug-check, |penalty|46pct>>5pct,
+  + dnc_A 0.6 does-not-complete artifact). FIX: (1) bound policy A re-attempts + fair
+  token accounting on non-completion (count tokens-to-give-up, NOT infinite); (2)
+  policy B must NOT overshoot when no deviation inferred so alpha=0 calibrates to
+  ~0 (|pen|<5pct); (3) re-measure penalty(alpha). HELD only if alpha=0~0 AND alpha>0
+  >=25pct monotone.'
+evidence_delta: ''
+opened_at: '2026-06-03T16:16:57Z'
+updated_at: '2026-06-03T16:16:57Z'
+closed_at: ''
+history:
+- ts: '2026-06-03T16:16:57Z'
+  event: open
+  by: orchestrator-r4-001
+  note: 'CORRECTED RE-RUN of EXP-0046 (which tripped its own alpha=0 bug-check, |penalty|46pct>>5pct,
+    + dnc_A 0.6 does-not-complete artifact). FIX: (1) bound policy A re-attempts +
+    fair token accounting on non-completion (count tokens-to-give-up, NOT infinite);
+    (2) policy B must NOT overshoot when no deviation inferred so alpha=0 calibrates
+    to ~0 (|pen|<5pct); (3) re-measure penalty(alpha). HELD only if alpha=0~0 AND
+    alpha>0 >=25pct monotone.'

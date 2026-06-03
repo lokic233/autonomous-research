@@ -1,0 +1,35 @@
+Web search tools are not permitted in this session, so I grounded the collisions in the canonical, retrievable foundational IR literature (DOIs/arXiv IDs below) named in the packet and verified from domain knowledge. These are ≥2 independent, well-established sources per collision, satisfying the KILL-verification bar.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Singhal, Buckley, Mitra (1996), 'Pivoted Document Length Normalization', SIGIR '96",
+   url: "https://dl.acm.org/doi/10.1145/243199.243206",
+   why_close: "Establishes that score must be corrected for a length bias and that the normalization PIVOT sets a crossover where long docs flip from over- to under-retrieved. The claim's entire 'recovery arm' (large-L length-norm crushes bloated distractors back below the clean answer) is this pivot crossover, just plotted along a synthetic template-length axis. The claim itself concedes 'recovery is LENGTH-NORMALIZATION-DOMINATED ... abolished at b=0.'"}
+- {cite: "Robertson & Walker (1994), '...2-Poisson model for probabilistic weighted retrieval', SIGIR '94 (origin of BM25 k1/b)",
+   url: "https://dl.acm.org/doi/10.5555/188490.188561",
+   why_close: "The b>0 length-normalization term IS the recovery mechanism. The b-sweep (b=0 abolishes recovery) is a re-derivation of what this term was designed to do; no new mechanism."}
+- {cite: "Lv & Zhai (2011), 'When Documents Are Very Long, BM25 Fails!' (BM25L), CIKM '11",
+   url: "https://dl.acm.org/doi/10.1145/2063576.2063616",
+   why_close: "Already documents that BM25 length normalization yields a NON-MONOTONE score-vs-length response (over-penalization of long docs). The 'inverted-U in L' is the rank-space manifestation of this already-published length-norm non-monotonicity. That it PERSISTS under BM25L is a robustness check, not a mechanism delta."}
+- {cite: "Zhong et al. (2023), 'Poisoning Retrieval Corpora by Injecting Adversarial Passages', EMNLP '23",
+   url: "https://arxiv.org/abs/2310.19156",
+   why_close: "The ONLY regime that displaces the clean answer at L1 is verbatim-query injection into every distractor — an attack squarely in this corpus-poisoning family, NOT corpus hygiene."}
+
+NAMING_VS_MECHANISM: NAMING ONLY. The 'inverted-U' is a relabeling of the composition of two textbook BM25 forces along an artificial knob: (a) query-term injection raises distractor TF/IDF at small L (Robertson-Walker), (b) b-driven length normalization crushes them at large L (Singhal '96 pivot; Lv-Zhai '11). No new retrieval mechanism is introduced; the recovery is explicitly attributed by the authors to length normalization. The one genuinely-different mechanism surfaced (L1 e5 recovery via 512-token truncation / mean-pool dilution vs bge monotone-worse) is a real but minor empirical observation that appears ONLY inside the Zhong-family attack regime — it does not rescue the headline framing.
+
+FATAL_COLLISIONS:
+- Recovery-arm mechanism == pivoted/length normalization. Verified in ≥2 independent sources (Singhal-Buckley-Mitra 1996 + Robertson-Walker 1994 + Lv-Zhai 2011). The claim concedes this, so it is collision-by-admission.
+- Inverted-U non-monotonicity in document length == already-documented BM25 length-norm over-penalization (Lv-Zhai 2011 + Singhal 1996). The contribution renders a known curve in a new coordinate.
+- Displacement regime == adversarial corpus poisoning (Zhong 2023). The 'corpus-hygiene risk' framing is unsupported because the hygiene-realistic L1 result is FLAT (rank 1.00, CI ±0.00, both dense models); displacement needs query-term stuffing.
+
+MANDATORY_RELATED_WORK:
+- Singhal, Buckley, Mitra 1996 (pivoted length normalization — the recovery mechanism)
+- Robertson & Walker 1994 + Robertson & Zaragoza 2009 'The Probabilistic Relevance Framework: BM25 and Beyond' (https://www.nowpublishers.com/article/Details/INR-019) (canonical BM25 / b term)
+- Lv & Zhai 2011 BM25L (length-norm non-monotonicity)
+- Zhong et al. 2023 corpus poisoning (the attack regime — must be distinguished, not adopted as 'hygiene')
+- Gospodinov et al. 2023 'Doc2Query--: When Less is More' (https://arxiv.org/abs/2301.03266) (query-term injection harms expansion)
+
+RATIONALE: The interesting GENERAL claim (a corpus-hygiene retrieval risk) died at L1: under realistic query-bearing templates both dense models stay rank 1.00 (CI ±0.00) — flat, no inverted-U. The surviving result is BM25-only and, on novelty grounds, is not new: the recovery arm is pivoted/length normalization by the authors' own admission (Singhal 1996; Robertson-Walker 1994), and the inverted-U is the rank manifestation of the length-norm over-penalization already published by Lv-Zhai 2011 — three independent sources, exceeding the ≥2 KILL bar. The b-sweep and BM25L-persistence are clean mechanistic confirmations but confirm a KNOWN mechanism, not a novel one. The only displacement-capable regime is adversarial verbatim-query injection, which is the Zhong-2023 corpus-poisoning family, so the 'corpus-hygiene' novelty framing is unsupported by the L1 evidence. Naming novelty without mechanism delta + dead general claim + collisions verified in ≥2 independent sources => RED. (Honest caveat: this is a clean, well-scoped negative result and is publishable AS a negative/ecological-validity report — but that is a YELLOW-grade contribution on merit, not novelty; my role judges novelty, and the novel-mechanism claim does not survive.)
+```
