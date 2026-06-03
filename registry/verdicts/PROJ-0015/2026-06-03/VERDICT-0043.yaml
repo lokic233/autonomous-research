@@ -1,0 +1,80 @@
+verdict_id: VERDICT-0043
+claim_id: CLAIM-0045
+project_id: PROJ-0015
+date: '2026-06-03'
+experiment_ids:
+- EXP-0044
+experiment_paths:
+- experiments/2026-06-03/EXP-0044
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "evaluation_prosecutor RED (partially rebutted): BM25L (Lv&Zhai CIKM2011) not tested\
+  \ \u2014 the recovery arm is length-norm-dominated (researcher's own admission)\
+  \ and BM25L explicitly lower-bounds TF normalization to prevent the over-penalization\
+  \ that drives recovery. If the inverted-U vanishes under BM25L, the phenomenon reduces\
+  \ to 'BM25's known length-penalty defect exploited by query-term stuffing', not\
+  \ a novel corpus-hygiene finding. CPU-trivial L0 test \u2014 warrants MANDATORY\
+  \ remediation, not outright kill (novelty_killer confirms no prior source reports\
+  \ the specific clean-answer-rank inverted-U vs competitor-template-length)"
+- "theory_skeptic YELLOW endorsed: b-sweep {0,0.25,0.5,0.75,1.0} not run \u2014 b=0\
+  \ MUST abolish the recovery arm if the stated mechanism is correct"
+- cheapest most decisive mechanistic test
+required_evidence:
+- "MANDATORY BEFORE L1 (cheap L0 follow-ups \u2014 gating): (1) b-sweep at L0 on strongest\
+  \ cell f=1.0,T=2, b in {0,0.25,0.5,0.75,1.0}, k1=1.2 fixed \u2014 b=0 must kill\
+  \ recovery if length-norm is the cause"
+- "(2) BM25L variant (delta=0.5, Lv&Zhai 2011) on same grid \u2014 if inverted-U PERSISTS\
+  \ -> robust to the known length-penalty fix -> HELD-STRONG fast-track L1"
+- if VANISHES -> BM25-default-specific artifact -> HELD-NARROW (scope honestly, still
+  publishable diagnostic)
+- "(3) FIX citations: 2504.21015 is WRONG (it's 'Dont Retrieve Generate', synthetic-training-data,\
+  \ NOT doc-expansion), 2604.05087 unverifiable/future-dated \u2014 add Singhal-Buckley-Mitra\
+  \ 1996 pivoted-length-norm (the exact recovery mechanism), Robertson&Walker SIGIR1994,\
+  \ Lv&Zhai CIKM2011, Zhong EMNLP2023 corpus-poisoning (distinguish), Doc2Query--\
+  \ (Gospodinov 2023)"
+- "(4) REWRITE claim text: drop dual-mechanism framing \u2014 recovery along L is\
+  \ length-norm-DOMINATED, IDF-collapse acts ONLY via the SPREAD axis (the 'IDF collapses\
+  \ as L grows' text is contradicted by the flat qterm_idf table). RECOMMENDED L1:\
+  \ FDR across 9L x 4cells"
+- score-margin metric (clean answer vs top distractor, is displacement reranker-recoverable)
+- dense retriever bge/e5.
+map_delta_proposals:
+- "CLAIM-0045 -> HELD/YELLOW (v3 FIRST HELD expansion candidate, retrieval/data-systems\
+  \ empirical phenomenon). Inverted-U clean-answer-rank under query-term-bearing DISTRACTOR\
+  \ template CONFIRMED 3/4 cells, mechanism real, NOT a density/metric-validity issue.\
+  \ GATED required_before_L1: [b-sweep, BM25L, citation-fix, claim-rewrite] \u2014\
+  \ all CHEAP L0. Decision tree: BM25L persists -> HELD-STRONG fast-track L1"
+- "BM25L vanishes -> HELD-NARROW (BM25-default diagnostic). Orchestrator dispatching\
+  \ the b-sweep+BM25L L0 remediation NOW (cost-aware: cheap decisive scoping before\
+  \ any L1). NOT a kill \u2014 a genuine candidate with a sharp scoping gate. No false\
+  \ green."
+baseline_requirements:
+- "BM25L (Lv&Zhai CIKM2011) \u2014 L0 before promotion"
+- "b-sweep b in {0..1.0} strongest cell \u2014 L0 before promotion"
+- Singhal-Buckley-Mitra 1996 pivoted length norm (the recovery mechanism)
+- Robertson&Walker SIGIR1994
+- Zhong EMNLP2023 corpus poisoning (same family, distinguish)
+- Doc2Query-- Gospodinov2023
+- dense retriever bge/e5 at L1
+committee_run_dir: experiments/2026-06-03/EXP-0044/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T15:36:26Z'
