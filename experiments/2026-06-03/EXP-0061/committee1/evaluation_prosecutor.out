@@ -1,0 +1,18 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [
+  {"name": "Lee2021 Connected Components", "why": "The standard baseline being critiqued", "repo_or_cite": "arXiv:2107.06499"},
+  {"name": "SemDeDup", "why": "The proposed non-transitive fix and strongest mitigation arm", "repo_or_cite": "arXiv:2303.09540"}
+]
+STRAWMAN_RISKS: [
+  "Synthetic drift-chains in L0 are a tautological graph topology; real-world near-dup graphs at T=0.8 may be strictly cliquey, reducing the 'large' synthetic effect to a practical zero.",
+  "Assuming 'Jaccard < T' equates to 'valuable/non-redundant training document'. Lexical drift (e.g., SEO template variations, timestamp changes) lowers Jaccard without providing novel semantic value."
+]
+MISSING_METRICS: [
+  "Real-world chain prevalence (% of CC edges participating in drift chains vs cliques in C4/RedPajama)",
+  "Semantic redundancy (e.g., embedding cosine similarity of the 'innocently' removed docs against the kept representative)",
+  "Downstream model perplexity / eval loss (the ultimate currency metric for data pruning)"
+]
+KILLER_EXPERIMENT: Execute the CC pipeline vs SemDeDup on a real 10M+ document slice of C4 or The Stack at standard T=0.8. Measure the actual fraction of 'innocently' deleted docs. Then, train a ~100M-1B parameter LLM on both datasets. If the real-world innocent deletion fraction is negligible, or if downstream validation loss is identical, the synthetic phenomenon is practically irrelevant.
+RATIONALE: The L0 successfully proves a graph-theoretic truism: transitive closures merge chains. However, the evaluation fundamentally lacks the currency metric for ML data systems. The synthetic harness forces the existence of drift chains, proving the mechanism but entirely sidestepping prevalence. Furthermore, even if transitive deletion occurs in reality, deleting docs with Jaccard < T is only harmful if those docs contain novel semantic information, not just lexically shifted boilerplate. Without testing real-world topology and downstream model impact, the claim is isolated to a synthetic artifact.
+```

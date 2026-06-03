@@ -1,0 +1,1171 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8fb1-3a92-7422-b472-bdc14510a3e8
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0054 (PROJ-0024, data-systems-for-ml) — connected-components near-dedup transitively removes NON-duplicate training docs
+## EMPIRICAL-PHENOMENON, effect=support/HELD (structural core L0-SETTLED). NOT metric-validity (causal data-removal: WHICH docs deleted). NO closed-form headline (innocent-removal fraction depends on graph topology, not the LSH S-curve). Anti-circular (GT=true-Jaccard-to-retained-rep, harness-computed, NEVER read by the pipeline's removal decision). Vote HONESTLY by role.
+
+## CLAIM: in the standard connected-components near-dedup pipeline (MinHash-LSH pairs -> similarity graph -> connected components -> keep one doc/component), TRANSITIVE CHAINING removes training docs that are NOT near-dups of ANY retained doc (D's Jaccard to the kept rep + all retained docs < T, deleted only via a chain of pairwise-above-T links). Innocent-removal fraction is LARGE + grows with density, NOT an LSH-FP artifact (persists with EXACT edges), and the non-transitive SemDeDup-style mitigation ELIMINATES it.
+
+## L0 RESULT (5 seeds, ~30s):
+HEADLINE @ realistic operating point (T=0.8, moderate density, EXACT edges): connected-components innocent-removal = 0.724 +-0.003 (72pct of removed docs have max true Jaccard < T to EVERY retained doc — deleted purely via chaining). Non-transitive (SemDeDup) = 0.000. Complete-linkage = 0.000.
+(1) MECHANISM: chains (consec Jaccard ~0.82>T, endpoints ~0.27<<T) -> CC merges -> lowest-id rep kept -> far chain members deleted. Innocent-removal grows w/ density: 0.36(low)->0.72(realistic)->0.88(high)->0.94(extreme); LARGE even at low density.
+(2) ★ MITIGATION ARM (strongest baseline, NOT strawman): non-transitive SemDeDup AND complete-linkage both = 0.000 across every config (<=0.001 MinHash). SAME edge set, zero innocents => the mechanism is the TRANSITIVE-CLOSURE step, not similarity itself.
+(3) ★ REALISTIC-DENSITY GUARD + exact-vs-LSH: at realistic T=0.8 effect is 0.724 and PERSISTS+is LARGER with EXACT Jaccard (0.724 exact vs 0.323 MinHash — MinHash misses marginal chain edges) => NOT an LSH-FP artifact.
+
+## HONEST BOUNDARY (researcher-flagged, handed to L1): the effect COLLAPSES to ~0 at T=0.9 because drift-chains break (consec 0.82 < 0.9 -> graph becomes clique-like). So real-world MAGNITUDE hinges on whether real near-dup graphs at T~0.8 contain DRIFT-CHAINS or are predominantly tight CLIQUES. The harness PROVES the graph-theoretic core (chains => CC deletes innocents; mitigations fix it) but CANNOT settle real-corpus chain PREVALENCE.
+
+## THREE THINGS TO STRESS-TEST: (a) is the connected-components-deletes-sub-threshold-docs result genuinely novel beyond Lee2021 (who USE connected-components + their 200K-doc C4 component IS chaining, presented as DESIRABLE) — i.e. is 'CC over-deletes non-dups' a recognized-but-unquantified fact or a new contribution? (b) the load-bearing real-world question is CHAIN PREVALENCE at T~0.8 — is it plausible real web near-dup graphs have many drift-chains (revision histories, template-drift, paraphrase ladders) vs tight cliques? if cliquey, the effect is ~0 in practice. (c) DOWNSTREAM: does deleting these innocent docs actually HARM training (diversity/eval-loss), or is the lost content redundant enough that it doesn't matter (the currency question)?
+
+## CLAIM YAML
+claim: "In the standard connected-components near-dedup pipeline (MinHash-LSH candidate\
+  \ pairs -> similarity graph -> connected components -> keep one doc per component),\
+  \ TRANSITIVE CHAINING causes the pipeline to remove training documents that are\
+  \ NOT near-duplicates of any RETAINED document \u2014 a doc D is deleted even though\
+  \ its Jaccard similarity to the component's kept representative (and to every retained\
+  \ doc) is far below the dedup threshold T, because D is connected to the representative\
+  \ only through a chain of pairwise-above-T links. The fraction of removed docs that\
+  \ are innocently chained (sim-to-representative < T) is LARGE and grows with corpus\
+  \ density, is NOT an artifact of LSH false positives (persists with exact Jaccard\
+  \ edges), and the standard non-transitive mitigation (SemDeDup-style: delete a doc\
+  \ only if it is DIRECTLY above T to a retained doc) ELIMINATES the effect \u2014\
+  \ proving the mechanism is the transitive-closure step, not similarity itself."
+why_it_matters: "FRESH AREA (data-systems-for-ml: dedup graph-construction). BEST-DESIGNED\
+
+## L0 RESULTS (EXP-0061)
+# RESULTS — EXP-0061 (CLAIM-0054) — researcher-0059
+L0 | CPU-only | stdlib-only | SERIAL | wall ~30s | 5 seeds + 95% CI | honest pipeline
+
+## VERDICT: HELD (structural core), with explicit realistic-density caveat handed to L1.
+
+The transitive-closure (connected-components keep-one) step deletes a LARGE fraction of training
+docs that are NOT near-duplicates of any retained doc, and the non-transitive (SemDeDup-style) +
+complete-linkage mitigations ELIMINATE it. The effect PERSISTS with EXACT-Jaccard edges (it is
+not an LSH false-positive artifact). The one honest caveat the orchestrator demanded — realistic
+density — is satisfied IF drift-chains exist at the operating T; whether such chains are prevalent
+in real corpora at T~0.8 is the load-bearing empirical question for L1.
+
+## HEADLINE — REALISTIC OPERATING POINT (T=0.8, moderate density, EXACT edges)
+| arm                         | innocent-removal fraction |
+|-----------------------------|---------------------------|
+| connected-components (CC)   | **0.724 ± 0.003**         |
+| non-transitive (SemDeDup)   | **0.000**                 |
+| complete-linkage            | **0.000**                 |
+
+72% of docs removed by the standard CC pipeline have max TRUE Jaccard < T to EVERY retained doc —
+they are deleted purely via transitive chaining. Both mitigations drive this to exactly 0.
+
+## (a) MECHANISM — innocent-removal grows with density (T=0.8, EXACT edges, arm=CC)
+| density   | n_chains×len | innocent-removal | mean removed |
+|-----------|--------------|------------------|--------------|
+| low       | 3×6          | 0.361 ± 0.017    | 28           |
+| moderate  | 8×10 (realistic) | **0.724 ± 0.003** | 83       |
+| high      | 20×15        | 0.878 ± 0.000    | 286          |
+| extreme   | 35×25        | 0.940 ± 0.000    | 839          |
+Large even at LOW density (0.36) — not only an extreme-density artifact.
+
+## (b) ★ MITIGATION ARM (the strongest-baseline test) — DROPS TO ~0
+Across EVERY config, non-transitive (SemDeDup) and complete-linkage give innocent-removal = 0.000
+(exact edges; ≤0.001 with MinHash). This PROVES the effect is the transitive-closure step, not
+similarity itself: deleting D only when it is DIRECTLY >T to a RETAINED doc removes zero innocents.
+
+## (c) ★ ROBUSTNESS — persists with EXACT edges (NOT an LSH-FP artifact)
+| operating point      | EXACT (CC) | MinHash (CC) |
+|----------------------|-----------|--------------|
+| realistic T=0.8      | 0.724     | 0.323        |
+| high density T=0.8   | 0.878     | 0.472        |
+| extreme density T=0.8| 0.940     | 0.471        |
+Exact edges give a LARGER effect than MinHash (k=128). MinHash *misses* some true-but-marginal
+chain edges (consec Jaccard ~0.82 near T), breaking some chains and REDUCING innocent-removal.
+=> the phenomenon is graph topology, not LSH false positives. Confirmed.
+
+## (d) ★ REALISTIC-DENSITY / T SWEEP — the honest boundary
+T sweep (moderate density, EXACT, arm=CC):
+| T   | innocent-removal | removed | note |
+|-----|------------------|---------|------|
+| 0.7 | 0.731            | 87      | chains form (consec ~0.82 > 0.7) |
+| 0.8 | 0.724            | 83      | **realistic LLM-dedup point — chains form (0.82 > 0.8)** |
+| 0.9 | 0.000            | 8       | chains BREAK (consec 0.82 < 0.9) → graph clique-like → ~0 |
+
+Drift robustness (T=0.8, EXACT): innocent-removal = 0.70–0.74 across drift 0.06–0.10
+(consec Jaccard 0.82–0.89), and exactly 0.000 at drift 0.12 (consec 0.786 < T → no chain edges).
+
+THE HONEST CAVEAT: the effect is large at the realistic T=0.8 *whenever drift-chains with
+consecutive Jaccard > T actually exist*. At T=0.9 those chains break and the graph is clique-like
+(innocent-removal → 0). So the magnitude in a REAL corpus hinges on whether near-dup graphs at
+T~0.8 contain such drift-chains or are predominantly tight cliques. This harness PROVES the
+structural/graph-theoretic core (chains ⇒ CC deletes innocents; mitigations fix it) but cannot
+settle real-corpus chain PREVALENCE — that is the L1 question.
+
+## ANTI-CIRCULARITY (honored)
+
+## PRE-REG
+# PRE_REGISTRATION — EXP-0061 (CLAIM-0054)
+researcher-0059 | PROJ-0024 | L0 (CPU-only, stdlib-only, SERIAL, <=15min)
+
+## CLAIM
+In the standard connected-components near-dedup pipeline (MinHash-LSH candidate pairs ->
+similarity graph -> connected components -> keep one doc/component), TRANSITIVE CHAINING
+removes training docs that are NOT near-duplicates of any RETAINED doc. Doc D is deleted
+though its Jaccard to the kept representative (and every retained doc) is far below threshold
+T, because D connects to the rep only via a chain of pairwise-above-T links. The
+innocently-chained-removal fraction is LARGE + grows with density, is NOT an LSH false-positive
+artifact (persists with EXACT Jaccard edges), and the NON-TRANSITIVE SemDeDup-style mitigation
+(delete D only if DIRECTLY above T to a retained doc) ELIMINATES it.
+
+## CORPUS / GRAPH MODEL (harness OWNS ground truth)
+- N docs = shingle sets (sets of int token-ids, ~5-gram-like). Vocab V.
+- Geometry the harness controls:
+  (a) CHAINS: sequences doc_0..doc_L where consecutive docs share >= T*|shingles| but DRIFT
+      (each step swaps out a fraction of shingles) so endpoints share < (T - delta). Vary
+      chain length L + drift-per-step.
+  (b) CLIQUES: clusters where all pairs Jaccard > T (genuine dup clusters).
+  (c) SINGLETONS: unrelated docs.
+- Vary chain prevalence + edge density.
+
+## PIPELINE UNDER TEST (reads ONLY shingle sets, NEVER the GT label)
+1. Compute pairwise similarity (EXACT Jaccard OR MinHash estimate) for candidate pairs.
+
+## ORCHESTRATOR NOTE: PRIOR-ART VERIFIED — Lee2021 NearDup (2107.06499, the seminal LLM-dedup, connected-components+keep-one; its 200K-doc C4 component IS chaining evidence but presented as desirable); SemDeDup (2303.09540, non-transitive within-cluster = the mitigation); BigCode dedup blog (production connected-components); MMDS LSH S-curve = PAIRWISE-FN not the graph-topology effect. Novelty = CC transitively deletes sub-threshold NON-dup training docs + non-transitive mitigation fixes it. BEST-DESIGNED claim of the run: structural core L0-SETTLED (graph-theoretic, can't evaporate); strongest-baseline mitigation IS the comparison arm; citations verified; realistic-density operating point reported; residual = real-corpus chain-prevalence (isolated to L1). L1 CONFIRMATORY for the mechanism, EMPIRICAL for magnitude: real google-research/deduplicate-text-datasets NearDup on a C4/RedPajama/Stack slice -> chain-prevalence at T~0.8 (THE load-bearing real-corpus #) + innocent-removal CC-vs-SemDeDup-vs-complete-linkage + downstream small-LM diversity/eval-loss. If you judge CC-over-deletion is known-folklore (Lee implicitly) OR real graphs are plausibly cliquey at T~0.8 (effect ~0) OR the lost content is redundant (no downstream harm), say YELLOW/RED honestly. Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+RESEARCHER_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 1088ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -iname '*committee*' -o -iname '*tooling*' | head -100" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 489ms:
+./learning/roles/committee.md
+./experiments/2026-06-03/EXP-0034/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0034/committee2
+./experiments/2026-06-03/EXP-0033/committee1
+./experiments/2026-06-03/EXP-0033/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0056/committee1
+./experiments/2026-06-03/EXP-0056/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0051/committee2
+./experiments/2026-06-03/EXP-0058/committee1
+./experiments/2026-06-03/EXP-0058/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0035/committee1
+./experiments/2026-06-03/EXP-0035/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0061/committee1
+./experiments/2026-06-03/EXP-0061/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0059/committee1
+./experiments/2026-06-03/EXP-0059/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0050/committee1
+./experiments/2026-06-03/EXP-0050/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0044/committee1
+./experiments/2026-06-03/EXP-0044/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0017/committee1
+./experiments/2026-06-03/EXP-0017/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0010/committee1
+./experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0019/committee1
+./experiments/2026-06-03/EXP-0019/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0021/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0021/committee2
+./experiments/2026-06-03/EXP-0042/committee1
+./experiments/2026-06-03/EXP-0042/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0045/committee1
+./experiments/2026-06-03/EXP-0045/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0020/committee1
+./experiments/2026-06-03/EXP-0020/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0027/committee1
+./experiments/2026-06-03/EXP-0027/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0018/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0018/committee2
+./experiments/2026-06-03/EXP-0011/committee1
+./experiments/2026-06-03/EXP-0011/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0016/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0016/committee2
+./experiments/2026-06-03/EXP-0029/committee1
+./experiments/2026-06-03/EXP-0029/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0037/committee1
+./experiments/2026-06-03/EXP-0037/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0039/committee1
+./experiments/2026-06-03/EXP-0039/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0054/committee1
+./experiments/2026-06-03/EXP-0054/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0038/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0038/committee2
+./experiments/2026-06-03/EXP-0007/committee1
+./experiments/2026-06-03/EXP-0007/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0009/committee1
+./experiments/2026-06-03/EXP-0009/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0036/committee1
+./experiments/2026-06-03/EXP-0036/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0013/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0013/committee2
+./experiments/2026-06-03/EXP-0014/committee1
+./experiments/2026-06-03/EXP-0014/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0022/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0022/committee2
+./experiments/2026-06-03/EXP-0040/committee1
+./experiments/2026-06-03/EXP-0040/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0023/committee1
+./experiments/2026-06-03/EXP-0023/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0015/committee1
+./experiments/2026-06-03/EXP-0015/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0012/committee1
+./experiments/2026-06-03/EXP-0012/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0048/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0048/committee2
+./experiments/2026-06-02/EXP-0005/committee1
+./experiments/2026-06-02/EXP-0005/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0002/committee1
+./experiments/2026-06-02/EXP-0002/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0004/committee1
+./experiments/2026-06-02/EXP-0004/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0001/committee1
+./experiments/2026-06-02/EXP-0001/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0006/committee1
+./experiments/2026-06-02/EXP-0006/COMMITTEE1_PACKET.md
+./runtime/orchestrator/committee_queue.yaml
+./runtime/cron/committee_health.log
+./runtime/cron/committee_health.alive
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -path '*_shared*' -o -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' | head -200" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 210ms:
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2107.06499 | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://huggingface.co/blog/dedup | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://arxiv.org/abs/2303.09540 | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA-NeMo/Curator/main/docs/curate-text/process-data/deduplication/semdedup.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 306ms:
+---
+description: "Remove semantically redundant data using embeddings and clustering to identify meaning-based duplicates in large text datasets"
+categories: ["how-to-guides"]
+tags: ["semantic-dedup", "embeddings", "clustering", "similarity", "meaning-based", "advanced"]
+personas: ["data-scientist-focused", "mle-focused"]
+difficulty: "advanced"
+content_type: "how-to"
+modality: "text-only"
+---
+
+(text-process-data-format-sem-dedup)=
+# Semantic Deduplication
+
+Detect and remove semantically redundant data from your large text datasets using NeMo Curator.
+
+Unlike exact or fuzzy deduplication, which focus on textual similarity, semantic deduplication leverages the meaning of content to identify duplicates. This approach can significantly reduce dataset size while maintaining or even improving model performance.
+
+The technique uses embeddings to identify "semantic duplicates" - content pairs that convey similar meaning despite using different words.
+
+:::{note}
+**GPU Acceleration**: Semantic deduplication requires GPU acceleration for both embedding generation and clustering operations. This method uses cuDF for GPU-accelerated dataframe operations and PyTorch models on GPU for optimal performance.
+:::
+
+## How It Works
+
+Semantic deduplication identifies meaning-based duplicates using embeddings:
+
+1. Generates embeddings for each document using transformer models
+2. Clusters embeddings using K-means
+3. Computes pairwise cosine similarities within clusters
+4. Identifies semantic duplicates based on similarity threshold
+5. Removes duplicates, keeping one representative per group
+
+:::{note}
+Based on [SemDeDup: Data-efficient learning at web-scale through semantic deduplication](https://arxiv.org/pdf/2303.09540) by Abbas et al.
+:::
+
+## Before You Start
+
+**Prerequisites**:
+
+- GPU acceleration (required for embedding generation and clustering)
+- Stable document identifiers for removal (either existing IDs or IDs managed by the workflow and removal stages)
+
+```{note}
+**Running in Docker**: When running semantic deduplication inside the NeMo Curator container, ensure the container is started with `--gpus all` so that CUDA GPUs are available. Without this flag, you will see `RuntimeError: No CUDA GPUs are available`. Also activate the virtual environment with `source /opt/venv/env.sh` after entering the container.
+```
+
+## Quick Start
+
+Get started with semantic deduplication using the following example of identifying duplicates, then remove them in one step:
+
+```python
+from nemo_curator.stages.text.deduplication.semantic import TextSemanticDeduplicationWorkflow
+from nemo_curator.backends.ray_data import RayDataExecutor
+
+workflow = TextSemanticDeduplicationWorkflow(
+    input_path="input_data/",
+    output_path="./results", 
+    cache_path="./sem_cache",
+    model_identifier="sentence-transformers/all-MiniLM-L6-v2",
+    n_clusters=100,
+    eps=0.07,  # Similarity threshold
+    id_field="doc_id",
+    perform_removal=True  # Complete deduplication
+)
+
+executor = RayDataExecutor()
+results = workflow.run(executor)
+# Clean dataset saved to ./results/deduplicated/
+```
+
+## Configuration
+
+Configure semantic deduplication using these key parameters:
+
+:::{dropdown} Step-by-Step Workflow
+:icon: code-square
+
+For fine-grained control, break semantic deduplication into separate stages:
+
+```python
+from nemo_curator.stages.deduplication.id_generator import create_id_generator_actor
+from nemo_curator.stages.text.embedders import EmbeddingCreatorStage
+from nemo_curator.stages.deduplication.semantic import SemanticDeduplicationWorkflow, IdentifyDuplicatesStage
+from nemo_curator.stages.text.deduplication.removal_workflow import TextDuplicatesRemovalWorkflow
+from nemo_curator.pipeline import Pipeline
+from nemo_curator.stages.text.io.reader import ParquetReader
+from nemo_curator.stages.text.io.writer import ParquetWriter
+
+# Step 1: Create ID generator
+create_id_generator_actor()
+
+# Step 2: Generate embeddings separately
+embedding_pipeline = Pipeline(
+    name="embedding_pipeline",
+    stages=[
+        ParquetReader(file_paths=input_path, files_per_partition=1, fields=["text"], _generate_ids=True),
+        EmbeddingCreatorStage(
+            model_identifier="sentence-transformers/all-MiniLM-L6-v2",
+            text_field="text",
+            embedding_pooling="mean_pooling",
+            model_inference_batch_size=256,
+        ),
+        ParquetWriter(path=embedding_output_path, fields=["_curator_dedup_id", "embeddings"]),
+    ],
+)
+embedding_out = embedding_pipeline.run()
+
+# Step 3: Run clustering and pairwise similarity (without duplicate identification)
+semantic_workflow = SemanticDeduplicationWorkflow(
+    input_path=embedding_output_path,
+    output_path=semantic_workflow_path,
+    n_clusters=100,
+    id_field="_curator_dedup_id",
+    embedding_field="embeddings",
+    eps=None,  # Skip duplicate identification for analysis
+)
+semantic_out = semantic_workflow.run()
+
+# Step 4: Analyze similarity distribution to choose eps
+# Step 5: Identify duplicates with chosen eps
+# Step 6: Remove duplicates from original dataset
+```
+
+This approach enables analysis of intermediate results and parameter tuning.
+:::
+
+### Comparison with Other Deduplication Methods
+
+Compare semantic deduplication with other methods:
+
+```{list-table} Deduplication Method Behavior Comparison
+:header-rows: 1
+:widths: 25 25 25 25
+
+* - Method
+  - Return Value Options
+  - perform_removal Parameter
+  - Workflow
+* - ExactDuplicates
+  - Duplicates (ID list only)
+  - ❌ Not supported (must remain `False`; use `TextDuplicatesRemovalWorkflow`)
+  - Two-step (identification + removal workflow)
+* - FuzzyDuplicates
+  - Duplicates (ID list only)  
+  - ❌ Not supported (must remain `False`; use `TextDuplicatesRemovalWorkflow`)
+  - Two-step (identification + removal workflow)
+* - TextSemanticDeduplicationWorkflow
+  - Duplicates or Clean Dataset
+  - ✅ Available
+  - One-step or two-step
+```
+
+### Key Parameters
+
+```{list-table} Key Configuration Parameters
+:header-rows: 1
+:widths: 25 15 20 40
+
+* - Parameter
+  - Type
+  - Default
+  - Description
+* - `model_identifier`
+  - str
+  - "sentence-transformers/all-MiniLM-L6-v2"
+  - Pre-trained model for embedding generation
+* - `embedding_model_inference_batch_size`
+  - int
+  - 256
+  - Number of samples per embedding batch
+* - `n_clusters`
+  - int
+  - 100
+  - Number of clusters for k-means clustering
+* - `kmeans_max_iter`
+  - int
+  - 300
+  - Maximum iterations for clustering
+* - `eps`
+  - float
+  - 0.01
+  - Threshold for deduplication (higher = more aggressive)
+* - `which_to_keep`
+  - str
+  - "hard"
+  - Strategy for keeping duplicates ("hard"/"easy"/"random")
+* - `pairwise_batch_size`
+  - int
+  - 1024
+  - Batch size for similarity computation
+* - `distance_metric`
+  - str
+  - "cosine"
+  - Distance metric for similarity ("cosine" or "l2")
+* - `embedding_pooling`
+  - str
+  - "mean_pooling"
+  - Pooling strategy ("mean_pooling" or "last_token")
+* - `perform_removal`
+  - bool
+  - true
+  - Whether to perform duplicate removal
+* - `text_field`
+  - str
+  - "text"
+  - Name of the text field in input data
+* - `id_field`
+  - str
+  - "_curator_dedup_id"
+  - Name of the ID field in the data
+```
+
+### Similarity Threshold
+
+Control deduplication aggressiveness with `eps`:
+
+- **Lower values** (e.g., 0.001): More strict, less deduplication, higher confidence
+- **Higher values** (e.g., 0.1): Less strict, more aggressive deduplication
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 405ms:
+<!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We’re on a journey to advance and democratize artificial intelligence through open source and open science." />
+
+		<meta property="fb:app_id" content="1321688464574422" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+
+		<meta name="twitter:site" content="@huggingface" />
+
+		<meta name="twitter:image" content="https://huggingface.co/blog/assets/dedup/thumbnail.png" />
+
+		<meta property="og:title" content="Large-scale Near-deduplication Behind BigCode" />
+
+		<meta property="og:description" content="We’re on a journey to advance and democratize artificial intelligence through open source and open science." />
+
+		<meta property="og:type" content="website" />
+
+		<meta property="og:url" content="https://huggingface.co/blog/dedup" />
+
+		<meta property="og:image" content="https://huggingface.co/blog/assets/dedup/thumbnail.png" />
+
+		<link rel="stylesheet" href="/front/build/kube-ccd142a/style.css" />
+
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+
+		<link
+			href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<link
+			href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<link
+			rel="preload"
+			href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css"
+			as="style"
+			onload="
+				this.onload = null;
+				this.rel = 'stylesheet';
+			"
+		/>
+
+		<noscript>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" />
+		</noscript>
+		<script>const guestTheme = document.cookie.match(/theme=(\w+)/)?.[1]; document.documentElement.classList.toggle('dark', guestTheme === 'dark' || ( (!guestTheme || guestTheme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches));</script>
+<link rel="canonical" href="https://huggingface.co/blog/dedup">
+<link rel="alternate" hreflang="zh" href="https://huggingface.co/blog/zh/dedup"> <script type="application/ld+json">{
+  "@context": "https:\/\/schema.org",
+  "@type": "Article",
+  "url": "https:\/\/huggingface.co\/blog\/dedup",
+  "headline": "Large-scale Near-deduplication Behind BigCode",
+  "name": "Large-scale Near-deduplication Behind BigCode",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Chenghao Mou",
+      "url": "https:\/\/huggingface.co\/chenghao"
+    }
+  ],
+  "creator": [
+    {
+      "@type": "Person",
+      "name": "Chenghao Mou",
+      "url": "https:\/\/huggingface.co\/chenghao"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Hugging Face",
+    "url": "https:\/\/huggingface.co",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https:\/\/huggingface.co\/front\/assets\/huggingface_logo-noborder.svg"
+    }
+  },
+  "datePublished": "2023-05-16T00:00:00.219Z",
+  "dateCreated": "2023-05-16T00:00:00.219Z",
+  "image": "https:\/\/huggingface.co\/blog\/assets\/dedup\/thumbnail.png",
+  "keywords": [
+    "bigcode",
+    "deduplication"
+  ]
+}</script> <!--g2q6vf--><link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Hugging Face Blog"/><!---->
+		<title>Large-scale Near-deduplication Behind BigCode</title>
+
+		<script defer src="/js/script.js"></script>
+
+		<script>
+			((window.plausible =
+				window.plausible
+				|| function () {
+					(plausible.q = plausible.q || []).push(arguments);
+				}),
+				(plausible.init =
+					plausible.init
+					|| function (i) {
+						plausible.o = i || {};
+					}));
+			plausible.init({
+				customProperties: {
+					loggedIn: "false",
+				},
+				endpoint: "/api/event",
+			});
+		</script>
+
+		<script>
+			window.hubConfig = {"features":{"signupDisabled":false},"sshGitUrl":"git@hf.co","moonHttpUrl":"https:\/\/huggingface.co","captchaApiKey":"bd5f2066-93dc-4bdd-a64b-a24646ca3859","datasetViewerPublicUrl":"https:\/\/datasets-server.huggingface.co","stripePublicKey":"pk_live_x2tdjFXBCvXo2FFmMybezpeM00J6gPCAAc","environment":"production","userAgent":"HuggingFace (production)","spacesIframeDomain":"hf.space","spacesApiUrl":"https:\/\/api.hf.space","logoDev":{"apiUrl":"https:\/\/img.logo.dev\/","apiKey":"pk_UHS2HZOeRnaSOdDp7jbd5w"}};
+			window.requestId = "Root=1-6a20b090-0d2f1eca7b50fe6a42deb216";
+			window.featureFlags = {"s3Credentials":false};
+		</script>
+		<script type="text/javascript" src="https://de5282c3ca0c.edge.sdk.awswaf.com/de5282c3ca0c/526cf06acb0d/challenge.js" defer></script> 
+	</head>
+	<body class="flex flex-col min-h-dvh bg-white dark:bg-gray-950 text-black BlogPage">
+		<!--[--><div class="flex min-h-dvh flex-col"><div class="SVELTE_HYDRATER contents" data-target="ClientErrorCatcher" data-props="{}"><!----></div> <div class="SVELTE_HYDRATER contents" data-target="DeviceProvider" data-props="{}"><!----></div> <div class="SVELTE_HYDRATER contents" data-target="SystemThemeMonitor" data-props="{&quot;isLoggedIn&quot;:false}"><!----></div> <!--[0--><div class="SVELTE_HYDRATER contents" data-target="MainHeader" data-props="{&quot;classNames&quot;:&quot;&quot;,&quot;isWide&quot;:false,&quot;isZh&quot;:false,&quot;canCreateKernels&quot;:false,&quot;isPro&quot;:false}"><header class="border-b border-gray-100 "><div class="w-full px-4 container flex h-16 items-center"><div class="flex flex-1 items-center"><a class="mr-5 flex flex-none items-center lg:mr-6" href="/"><img alt="Hugging Face's logo" class="w-7 md:mr-2" src="/front/assets/huggingface_logo-noborder.svg"/> <span class="hidden whitespace-nowrap text-lg font-bold md:block">Hugging Face</span></a> <div class="relative flex-1 lg:max-w-sm mr-2 sm:mr-4 md:mr-3 xl:mr-6"><input autocomplete="off" value="" class="w-full dark:bg-gray-950 pl-8 form-input-alt h-9 pr-3 focus:shadow-xl " name="" placeholder="Search models, datasets, users..." spellcheck="false" type="text"/> <!--[0--><svg class="absolute left-2.5 text-gray-400 top-1/2 transform -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M30 28.59L22.45 21A11 11 0 1 0 21 22.45L28.59 30zM5 14a9 9 0 1 1 9 9a9 9 0 0 1-9-9z" fill="currentColor"></path></svg><!--]--> <!--[-1--><!--]--></div><!----> <div class="flex flex-none items-center justify-center p-0.5 place-self-stretch lg:hidden"><button class="relative z-40 flex h-6 w-8 items-center justify-center" type="button"><!--[--><svg width="1em" height="1em" viewBox="0 0 10 10" class="text-xl" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" preserveAspectRatio="xMidYMid meet" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.65039 2.9999C1.65039 2.8066 1.80709 2.6499 2.00039 2.6499H8.00039C8.19369 2.6499 8.35039 2.8066 8.35039 2.9999C8.35039 3.1932 8.19369 3.3499 8.00039 3.3499H2.00039C1.80709 3.3499 1.65039 3.1932 1.65039 2.9999ZM1.65039 4.9999C1.65039 4.8066 1.80709 4.6499 2.00039 4.6499H8.00039C8.19369 4.6499 8.35039 4.8066 8.35039 4.9999C8.35039 5.1932 8.19369 5.3499 8.00039 5.3499H2.00039C1.80709 5.3499 1.65039 5.1932 1.65039 4.9999ZM2.00039 6.6499C1.80709 6.6499 1.65039 6.8066 1.65039 6.9999C1.65039 7.1932 1.80709 7.3499 2.00039 7.3499H8.00039C8.19369 7.3499 8.35039 7.1932 8.35039 6.9999C8.35039 6.8066 8.19369 6.6499 8.00039 6.6499H2.00039Z"></path></svg><!--]--> <!--[-1--><!--]--></button> <!--[-1--><!--]--></div><!----></div> <nav aria-label="Main" class="ml-auto hidden lg:block"><ul class="flex items-center gap-x-1 2xl:gap-x-2"><!--[--><li class="hover:text-indigo-700"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/models"><!--[--><svg class="mr-1.5 text-gray-400 group-hover:text-indigo-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path class="uim-quaternary" d="M20.23 7.24L12 12L3.77 7.24a1.98 1.98 0 0 1 .7-.71L11 2.76c.62-.35 1.38-.35 2 0l6.53 3.77c.29.173.531.418.7.71z" opacity=".25" fill="currentColor"></path><path class="uim-tertiary" d="M12 12v9.5a2.09 2.09 0 0 1-.91-.21L4.5 17.48a2.003 2.003 0 0 1-1-1.73v-7.5a2.06 2.06 0 0 1 .27-1.01L12 12z" opacity=".5" fill="currentColor"></path><path class="uim-primary" d="M20.5 8.25v7.5a2.003 2.003 0 0 1-1 1.73l-6.62 3.82c-.275.13-.576.198-.88.2V12l8.23-4.76c.175.308.268.656.27 1.01z" fill="currentColor"></path></svg><!--]--> Models <!--[-1--><!--]--></a></li><li class="hover:text-red-700"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/datasets"><!--[--><svg class="mr-1.5 text-gray-400 group-hover:text-red-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 25 25"><ellipse cx="12.5" cy="5" fill="currentColor" fill-opacity="0.25" rx="7.5" ry="2"></ellipse><path d="M12.5 15C16.6421 15 20 14.1046 20 13V20C20 21.1046 16.6421 22 12.5 22C8.35786 22 5 21.1046 5 20V13C5 14.1046 8.35786 15 12.5 15Z" fill="currentColor" opacity="0.5"></path><path d="M12.5 7C16.6421 7 20 6.10457 20 5V11.5C20 12.6046 16.6421 13.5 12.5 13.5C8.35786 13.5 5 12.6046 5 11.5V5C5 6.10457 8.35786 7 12.5 7Z" fill="currentColor" opacity="0.5"></path><path d="M5.23628 12C5.08204 12.1598 5 12.8273 5 13C5 14.1046 8.35786 15 12.5 15C16.6421 15 20 14.1046 20 13C20 12.8273 19.918 12.1598 19.7637 12C18.9311 12.8626 15.9947 13.5 12.5 13.5C9.0053 13.5 6.06886 12.8626 5.23628 12Z" fill="currentColor"></path></svg><!--]--> Datasets <!--[-1--><!--]--></a></li><li class="hover:text-blue-700"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/spaces"><!--[--><svg class="mr-1.5 text-gray-400 group-hover:text-blue-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 25 25"><path opacity=".5" d="M6.016 14.674v4.31h4.31v-4.31h-4.31ZM14.674 14.674v4.31h4.31v-4.31h-4.31ZM6.016 6.016v4.31h4.31v-4.31h-4.31Z" fill="currentColor"></path><path opacity=".75" fill-rule="evenodd" clip-rule="evenodd" d="M3 4.914C3 3.857 3.857 3 4.914 3h6.514c.884 0 1.628.6 1.848 1.414a5.171 5.171 0 0 1 7.31 7.31c.815.22 1.414.964 1.414 1.848v6.514A1.914 1.914 0 0 1 20.086 22H4.914A1.914 1.914 0 0 1 3 20.086V4.914Zm3.016 1.102v4.31h4.31v-4.31h-4.31Zm0 12.968v-4.31h4.31v4.31h-4.31Zm8.658 0v-4.31h4.31v4.31h-4.31Zm0-10.813a2.155 2.155 0 1 1 4.31 0 2.155 2.155 0 0 1-4.31 0Z" fill="currentColor"></path><path opacity=".25" d="M16.829 6.016a2.155 2.155 0 1 0 0 4.31 2.155 2.155 0 0 0 0-4.31Z" fill="currentColor"></path></svg><!--]--> Spaces <!--[-1--><!--]--></a></li><li class="hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 max-xl:hidden"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/storage"><!--[--><svg class=" mr-1.5 text-gray-400 text-blue-600! dark:text-blue-500! svelte-11u2e10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48" fill="none"><!--[-1--><!--]--><path opacity="0.25" d="M36 4H12C7.58172 4 4 7.58172 4 12V36C4 40.4183 7.58172 44 12 44H36C40.4183 44 44 40.4183 44 36V12C44 7.58172 40.4183 4 36 4Z" fill="currentColor" class="svelte-11u2e10"></path><path opacity="0.5" d="M31 11H17C13.6863 11 11 13.6863 11 17V31C11 34.3137 13.6863 37 17 37H31C34.3137 37 37 34.3137 37 31V17C37 13.6863 34.3137 11 31 11Z" fill="currentColor" class="svelte-11u2e10"></path><path d="M27 18H21C19.3431 18 18 19.3431 18 21V27C18 28.6569 19.3431 30 21 30H27C28.6569 30 30 28.6569 30 27V21C30 19.3431 28.6569 18 27 18Z" fill="currentColor" class="svelte-11u2e10"></path></svg><!--]--> Buckets <!--[0--><span class="ml-1.5 translate-y-px rounded bg-blue-600/15 px-1 py-px text-[.65rem] font-bold uppercase leading-tight text-blue-600 dark:bg-blue-500/20 dark:text-blue-300">new</span><!--]--></a></li><li class="hover:text-yellow-700"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/docs"><!--[--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="mr-1.5 text-gray-400 group-hover:text-yellow-500" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path d="m2.28 3.7-.3.16a.67.67 0 0 0-.34.58v8.73l.01.04.02.07.01.04.03.06.02.04.02.03.04.06.05.05.04.04.06.04.06.04.08.04.08.02h.05l.07.02h.11l.04-.01.07-.02.03-.01.07-.03.22-.12a5.33 5.33 0 0 1 5.15.1.67.67 0 0 0 .66 0 5.33 5.33 0 0 1 5.33 0 .67.67 0 0 0 1-.58V4.36a.67.67 0 0 0-.34-.5l-.3-.17v7.78a.63.63 0 0 1-.87.59 4.9 4.9 0 0 0-4.35.35l-.65.39a.29.29 0 0 1-.15.04.29.29 0 0 1-.16-.04l-.65-.4a4.9 4.9 0 0 0-4.34-.34.63.63 0 0 1-.87-.59V3.7Z" fill="currentColor" class="dark:opacity-40"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M8 3.1a5.99 5.99 0 0 0-5.3-.43.66.66 0 0 0-.42.62v8.18c0 .45.46.76.87.59a4.9 4.9 0 0 1 4.34.35l.65.39c.05.03.1.04.16.04.05 0 .1-.01.15-.04l.65-.4a4.9 4.9 0 0 1 4.35-.34.63.63 0 0 0 .86-.59V3.3a.67.67 0 0 0-.41-.62 5.99 5.99 0 0 0-5.3.43l-.3.17L8 3.1Zm.73 1.87a.43.43 0 1 0-.86 0v5.48a.43.43 0 0 0 .86 0V4.97Z" fill="currentColor" class="opacity-40 dark:opacity-100"></path><path d="M8.73 4.97a.43.43 0 1 0-.86 0v5.48a.43.43 0 1 0 .86 0V4.96Z" fill="currentColor" class="dark:opacity-40"></path></svg><!--]--> Docs <!--[-1--><!--]--></a></li><li class="hover:text-black dark:hover:text-white max-2xl:hidden"><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/enterprise"><!--[--><svg class="mr-1.5 text-gray-400 group-hover:text-black dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 12 12"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.9 1.35a3.16 3.16 0 0 0-2.8 2.07L.37 8.58C0 9.71.7 10.65 1.86 10.65H7.3a3.2 3.2 0 0 0 2.84-2.07l1.67-5.16c.36-1.13-.3-2.07-1.46-2.07H4.91Zm.4 2.07L3.57 8.47h3.57l.36-1.12H5.4l.28-.91h1.75l.4-1.1H6.07l.3-.83h2l.36-1.1H5.27h.04Z" fill="currentColor"></path></svg><!--]--> Enterprise <!--[-1--><!--]--></a></li><!--]--> <li><a class="group flex items-center px-2 py-0.5 dark:text-gray-300 dark:hover:text-gray-100" href="/pricing">Pricing</a></li> <li><div class="relative group"><button class="px-2 py-0.5 hover:text-gray-500 dark:hover:text-gray-600 flex items-center " type="button"><!--[-1--><!--[0--><!--[--><svg class=" text-gray-500 w-5 group-hover:text-gray-400 dark:text-gray-300 dark:group-hover:text-gray-100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 32 18" preserveAspectRatio="xMidYMid meet"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.4504 3.30221C14.4504 2.836 14.8284 2.45807 15.2946 2.45807H28.4933C28.9595 2.45807 29.3374 2.836 29.3374 3.30221C29.3374 3.76842 28.9595 4.14635 28.4933 4.14635H15.2946C14.8284 4.14635 14.4504 3.76842 14.4504 3.30221Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14.4504 9.00002C14.4504 8.53382 14.8284 8.15588 15.2946 8.15588H28.4933C28.9595 8.15588 29.3374 8.53382 29.3374 9.00002C29.3374 9.46623 28.9595 9.84417 28.4933 9.84417H15.2946C14.8284 9.84417 14.4504 9.46623 14.4504 9.00002Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14.4504 14.6978C14.4504 14.2316 14.8284 13.8537 15.2946 13.8537H28.4933C28.9595 13.8537 29.3374 14.2316 29.3374 14.6978C29.3374 15.164 28.9595 15.542 28.4933 15.542H15.2946C14.8284 15.542 14.4504 15.164 14.4504 14.6978Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1.94549 6.87377C2.27514 6.54411 2.80962 6.54411 3.13928 6.87377L6.23458 9.96907L9.32988 6.87377C9.65954 6.54411 10.194 6.54411 10.5237 6.87377C10.8533 7.20343 10.8533 7.73791 10.5237 8.06756L6.23458 12.3567L1.94549 8.06756C1.61583 7.73791 1.61583 7.20343 1.94549 6.87377Z" fill="currentColor"></path></svg><!--]--><!--]--> <!--]--> <!--[-1--><!--]--></button> <!--[0--><nav class="sr-only"><!--[-1--><!--]--> <ul><!--[0--><!--[--><!--[--><li><div class="bg-linear-to-r col-span-full flex items-center justify-between whitespace-nowrap to-white font-semibold dark:to-gray-925 px-4 py-0.5 text-blue-800 from-blue-50 dark:text-blue-100 dark:from-blue-900"><!--[--><!---->Website<!--]--></div><!----> <ul><!--[--><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/tasks"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path class="uim-tertiary" d="M15.273 18.728A6.728 6.728 0 1 1 22 11.999V12a6.735 6.735 0 0 1-6.727 6.728z" opacity=".5" fill="currentColor"></path><path class="uim-primary" d="M8.727 18.728A6.728 6.728 0 1 1 15.455 12a6.735 6.735 0 0 1-6.728 6.728z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Tasks</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/chat"><!--[-1--><!--[0--><!--[--><svg width=".8em" height=".8em" class="mr-1.5 flex-none text-gray-400 dark:invert" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 12a6 6 0 1 1 5.374-3.33.976.976 0 0 0-.081.692l.36 1.337a.78.78 0 0 1-.955.954l-1.336-.36a.977.977 0 0 0-.69.081 6.001 6.001 0 0 1-2.673.63V12Z" fill="#000"></path><path d="M2 6a.675.675 0 1 1 1.35 0 2.476 2.476 0 0 0 4.952 0 .675.675 0 1 1 1.35 0A3.826 3.826 0 1 1 2 6Z" fill="#fff"></path></svg><!--]--><!--]--> <span class="truncate">HuggingChat</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/collections"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" width="1em" height="1em" aria-hidden="true" focusable="false" role="img" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><rect x="2" y="2.49902" width="8" height="3.76425" rx="1.16774" fill="currentColor" fill-opacity="0.4"></rect><rect x="6.21875" y="6.7334" width="3.78055" height="3.76425" rx="1.16774" fill="currentColor" fill-opacity="0.7"></rect><rect x="2" y="6.73438" width="3.78055" height="3.76425" rx="1.16774" fill="currentColor" fill-opacity="0.5"></rect></svg><!--]--><!--]--> <span class="truncate">Collections</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/languages"><!--[-1--><!--[0--><!--[--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="mr-1.5 flex-none text-gray-400" preserveAspectRatio="xMidYMid meet" width="1em" height="1em" viewBox="0 0 10 10"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.625 5C0.625 6.16032 1.08594 7.27312 1.90641 8.09359C2.72688 8.91406 3.83968 9.375 5 9.375C6.16032 9.375 7.27312 8.91406 8.09359 8.09359C8.91406 7.27312 9.375 6.16032 9.375 5C9.375 3.83968 8.91406 2.72688 8.09359 1.90641C7.27312 1.08594 6.16032 0.625 5 0.625C3.83968 0.625 2.72688 1.08594 1.90641 1.90641C1.08594 2.72688 0.625 3.83968 0.625 5ZM7.64365 7.48027C7.61734 7.50832 7.59054 7.53598 7.56326 7.56326C7.13828 7.98824 6.61864 8.2968 6.0539 8.46842C6.29802 8.11949 6.49498 7.64804 6.63475 7.09483C7.00845 7.18834 7.35014 7.3187 7.64365 7.48027ZM8.10076 6.87776C8.37677 6.42196 8.55005 5.90894 8.60556 5.37499H6.86808C6.85542 5.71597 6.82551 6.04557 6.77971 6.35841C7.25309 6.47355 7.68808 6.6414 8.062 6.85549C8.07497 6.86283 8.08789 6.87025 8.10076 6.87776ZM6.03795 6.22536C6.07708 5.95737 6.1044 5.67232 6.11705 5.37499H3.88295C3.89666 5.69742 3.92764 6.00542 3.9722 6.29287C4.37075 6.21726 4.79213 6.17749 5.224 6.17749C5.50054 6.17749 5.77294 6.19376 6.03795 6.22536ZM4.1261 7.02673C4.34894 7.84835 4.68681 8.375 5 8.375C5.32122 8.375 5.66839 7.82101 5.8908 6.963C5.67389 6.93928 5.45082 6.92699 5.224 6.92699C4.84316 6.92699 4.47332 6.96176 4.1261 7.02673ZM3.39783 7.21853C3.53498 7.71842 3.72038 8.14579 3.9461 8.46842C3.42141 8.30898 2.93566 8.03132 2.52857 7.65192C2.77253 7.48017 3.06711 7.33382 3.39783 7.21853ZM3.23916 6.48077C3.18263 6.13193 3.14625 5.76074 3.13192 5.37499H1.39444C1.4585 5.99112 1.67936 6.57938 2.03393 7.08403C2.3706 6.83531 2.78055 6.63162 3.23916 6.48077ZM1.39444 4.62499H3.13192C3.14615 4.24204 3.18211 3.87344 3.23794 3.52681C2.77814 3.37545 2.36731 3.17096 2.03024 2.92123C1.67783 3.42469 1.45828 4.011 1.39444 4.62499ZM2.5237 2.35262C2.76812 2.52552 3.06373 2.67281 3.39584 2.78875C3.53318 2.28573 3.71928 1.85578 3.9461 1.53158C3.41932 1.69166 2.93178 1.97089 2.5237 2.35262ZM3.97101 3.71489C3.92709 4.00012 3.89654 4.30547 3.88295 4.62499H6.11705C6.10453 4.33057 6.07761 4.04818 6.03909 3.78248C5.77372 3.81417 5.50093 3.83049 5.224 3.83049C4.79169 3.83049 4.3699 3.79065 3.97101 3.71489ZM5.8928 3.04476C5.67527 3.06863 5.45151 3.08099 5.224 3.08099C4.84241 3.08099 4.47186 3.04609 4.12405 2.98086C4.34686 2.1549 4.68584 1.625 5 1.625C5.32218 1.625 5.67048 2.18233 5.8928 3.04476ZM6.78083 3.6493C6.826 3.95984 6.85552 4.28682 6.86808 4.62499H8.60556C8.55029 4.09337 8.37827 3.58251 8.10436 3.1282C8.0903 3.1364 8.07618 3.14449 8.062 3.15249C7.68838 3.36641 7.25378 3.53417 6.78083 3.6493ZM7.64858 2.52499C7.35446 2.68754 7.0117 2.81868 6.63664 2.91268C6.49676 2.35623 6.29913 1.88209 6.0539 1.53158C6.61864 1.7032 7.13828 2.01176 7.56326 2.43674C7.59224 2.46572 7.62068 2.49514 7.64858 2.52499Z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Languages</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/organizations"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path class="uim-tertiary" d="M12 18a3.5 3.5 0 1 1 3.5-3.5A3.504 3.504 0 0 1 12 18z" opacity=".5" fill="currentColor"></path><path class="uim-primary" d="M14.64 16.772a3.452 3.452 0 0 1-5.28 0A4.988 4.988 0 0 0 7 21a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1a4.988 4.988 0 0 0-2.36-4.228z" fill="currentColor"></path><path class="uim-tertiary" d="M21 12a.996.996 0 0 1-.664-.252L12 4.338l-8.336 7.41a1 1 0 0 1-1.328-1.496l9-8a.999.999 0 0 1 1.328 0l9 8A1 1 0 0 1 21 12z" opacity=".5" fill="currentColor"></path><path class="uim-quaternary" d="M12 4.338l-8 7.111V21a1 1 0 0 0 1 1h3a1 1 0 0 1-1-1a4.988 4.988 0 0 1 2.36-4.228A3.469 3.469 0 0 1 8.5 14.5a3.5 3.5 0 0 1 7 0a3.469 3.469 0 0 1-.86 2.272A4.988 4.988 0 0 1 17 21a1 1 0 0 1-1 1h3a1 1 0 0 0 1-1v-9.551z" opacity=".25" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Organizations</span><!--]--><!----></a><!----> <!--[--><!--]--></li><!--]--></ul></li> <li><div class="bg-linear-to-r col-span-full flex items-center justify-between whitespace-nowrap to-white font-semibold dark:to-gray-925 px-4 py-0.5 text-yellow-800 from-yellow-50 dark:text-yellow-100 dark:from-yellow-900"><!--[--><!---->Community<!--]--></div><!----> <ul><!--[--><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/blog"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 15 15"><path fill="currentColor" d="M3.417 12.75c-.32 0-.596-.114-.824-.342a1.126 1.126 0 0 1-.343-.825V3.417c0-.321.114-.597.343-.824.23-.228.503-.343.824-.343h8.166c.321 0 .596.114.825.343.228.229.342.503.342.824v8.166c0 .32-.114.596-.342.825a1.12 1.12 0 0 1-.825.342zm1.166-2.333h4.084V9.25H4.583v1.167m0-2.334h5.834V6.917H4.583v1.166m0-2.333h5.834V4.583H4.583V5.75"></path></svg><!--]--><!--]--> <span class="truncate">Blog</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/posts"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet"><path fill="currentColor" fill-rule="evenodd" d="M3.73 2.4A4.25 4.25 0 1 1 6 10.26H2.17l-.13-.02a.43.43 0 0 1-.3-.43l.01-.06a.43.43 0 0 1 .12-.22l.84-.84A4.26 4.26 0 0 1 3.73 2.4Z" clip-rule="evenodd"></path></svg><!--]--><!--]--> <span class="truncate">Posts</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/papers"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet" fill="none"><path fill="currentColor" fill-rule="evenodd" d="M8.007 1.814a1.176 1.176 0 0 0-.732-.266H3.088c-.64 0-1.153.512-1.153 1.152v6.803c0 .64.513 1.152 1.153 1.152h5.54c.632 0 1.144-.511 1.144-1.152V3.816c0-.338-.137-.658-.412-.887L8.007 1.814Zm-1.875 1.81c0 .695.55 1.253 1.244 1.253h.983a.567.567 0 0 1 .553.585v4.041c0 .165-.119.302-.283.302h-5.55c-.156 0-.275-.137-.275-.302V2.7a.284.284 0 0 1 .284-.301h2.468a.574.574 0 0 1 .434.19.567.567 0 0 1 .142.395v.64Z" clip-rule="evenodd" fill-opacity=".8"></path><path fill="currentColor" fill-opacity=".2" fill-rule="evenodd" d="M6.132 3.624c0 .695.55 1.253 1.244 1.253h.97a.567.567 0 0 1 .566.585v4.041c0 .165-.119.302-.283.302h-5.55c-.156 0-.275-.137-.275-.302V2.7a.284.284 0 0 1 .284-.301h2.468a.567.567 0 0 1 .576.585v.64Z" clip-rule="evenodd"></path></svg><!--]--><!--]--> <span class="truncate">Daily Papers</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/learn"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 32 32"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.44971 14.5964L5.44977 19.5221L5.44971 19.5321L5.44977 19.5422V19.6062H5.4533C5.59676 21.0844 10.0242 22.2706 15.465 22.2706C20.9057 22.2706 25.3332 21.0844 25.4767 19.6062H25.4803L25.4802 14.8524L15.7373 17.5754L5.44971 14.5964Z" fill="currentColor" fill-opacity="0.8"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1.16846 11.7412L15.7374 15.9487L30.832 11.7412V13.3494H30.8069L30.832 13.3566L15.7374 17.5754L1.16846 13.3566L1.1927 13.3494H1.16846V11.7412ZM1.16846 11.7412V11.7412L1.16849 11.7412L1.16846 11.7412ZM1.16846 11.7412V11.6674H1.41519L1.16846 11.7412ZM30.5764 11.6674H30.832V11.7412L30.5764 11.6674Z" fill="currentColor" fill-opacity="0.5"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3.02827 18.7976C3.398 17.0129 4.40214 15.3593 5.21357 14.3777L5.68497 14.7674C4.91639 15.6971 3.97099 17.2621 3.62717 18.9216C3.28615 20.5676 3.53867 22.2742 5.1103 23.5887C5.88204 24.2342 6.92784 24.5392 8.1691 24.6236C9.40985 24.7079 10.8132 24.5697 12.2706 24.3583C12.9462 24.2603 13.6292 24.1473 14.3104 24.0346C14.3626 24.0259 14.4148 24.0173 14.467 24.0087C15.1987 23.8877 15.9275 23.7684 16.6346 23.6714C18.0439 23.4782 19.3924 23.3696 20.5369 23.5201L20.4572 24.1265C19.3982 23.9872 18.1177 24.0854 16.7176 24.2774C16.0201 24.373 15.2991 24.491 14.5667 24.6121C14.5143 24.6208 14.4618 24.6295 14.4093 24.6382C13.7292 24.7507 13.0404 24.8647 12.3583 24.9636C10.8913 25.1764 9.43547 25.3227 8.12763 25.2338C6.8203 25.145 5.62813 24.8191 4.71791 24.0579C2.92563 22.5589 2.65573 20.5957 3.02827 18.7976Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M20.4304 24.1128L20.5291 23.5358L28.0463 24.2759L27.9888 24.8599L27.966 24.8577L27.8807 25.3377L27.8992 25.3422L27.7593 25.9121L20.4304 24.1128Z" fill="currentColor" fill-opacity="0.25"></path><path d="M15.7374 15.9487L1.16846 11.7412L15.7374 7.38605L30.832 11.7412L15.7374 15.9487Z" fill="currentColor" fill-opacity="0.25"></path></svg><!--]--><!--]--> <span class="truncate">Learn</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/join/discord" target="_blank"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet"><path d="M25.6933 7.10665C23.92 6.27998 22 5.67998 20 5.33331C19.9825 5.33275 19.965 5.33604 19.9489 5.34295C19.9328 5.34987 19.9183 5.36023 19.9067 5.37331C19.6667 5.81331 19.3867 6.38665 19.2 6.82665C17.0787 6.50665 14.9213 6.50665 12.8 6.82665C12.6133 6.37331 12.3333 5.81331 12.08 5.37331C12.0667 5.34665 12.0267 5.33331 11.9867 5.33331C9.98666 5.67998 8.07999 6.27998 6.29333 7.10665C6.27999 7.10665 6.26666 7.11998 6.25333 7.13331C2.62666 12.56 1.62666 17.84 2.11999 23.0666C2.11999 23.0933 2.13333 23.12 2.15999 23.1333C4.55999 24.8933 6.86666 25.96 9.14666 26.6666C9.18666 26.68 9.22666 26.6666 9.23999 26.64C9.77333 25.9066 10.2533 25.1333 10.6667 24.32C10.6933 24.2666 10.6667 24.2133 10.6133 24.2C9.85333 23.9066 9.13333 23.56 8.42666 23.16C8.37333 23.1333 8.37333 23.0533 8.41333 23.0133C8.55999 22.9066 8.70666 22.7866 8.85333 22.68C8.87999 22.6533 8.91999 22.6533 8.94666 22.6666C13.5333 24.76 18.48 24.76 23.0133 22.6666C23.04 22.6533 23.08 22.6533 23.1067 22.68C23.2533 22.8 23.4 22.9066 23.5467 23.0266C23.6 23.0666 23.6 23.1466 23.5333 23.1733C22.84 23.5866 22.1067 23.92 21.3467 24.2133C21.2933 24.2266 21.28 24.2933 21.2933 24.3333C21.72 25.1466 22.2 25.92 22.72 26.6533C22.76 26.6666 22.8 26.68 22.84 26.6666C25.1333 25.96 27.44 24.8933 29.84 23.1333C29.8667 23.12 29.88 23.0933 29.88 23.0666C30.4667 17.0266 28.9067 11.7866 25.7467 7.13331C25.7333 7.11998 25.72 7.10665 25.6933 7.10665V7.10665ZM11.36 19.88C9.98666 19.88 8.83999 18.6133 8.83999 17.0533C8.83999 15.4933 9.95999 14.2266 11.36 14.2266C12.7733 14.2266 13.8933 15.5066 13.88 17.0533C13.88 18.6133 12.76 19.88 11.36 19.88ZM20.6533 19.88C19.28 19.88 18.1333 18.6133 18.1333 17.0533C18.1333 15.4933 19.2533 14.2266 20.6533 14.2266C22.0667 14.2266 23.1867 15.5066 23.1733 17.0533C23.1733 18.6133 22.0667 19.88 20.6533 19.88Z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Discord</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="https://discuss.huggingface.co/" target="_blank"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" focusable="false" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M12.077 3C7.149 3 3 6.96 3 11.843V21l9.075-.01c4.928 0 8.925-4.11 8.925-8.993C21 7.113 17 3 12.077 3zm3.92 12.859a5.568 5.568 0 0 1-6.102 1.043l-3.595.805l1.001-3.192a5.435 5.435 0 0 1 .11-5.415a5.55 5.55 0 0 1 4.753-2.678v.001h.006a5.533 5.533 0 0 1 5.131 3.438a5.442 5.442 0 0 1-1.304 5.998z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Forum</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="https://github.com/huggingface" target="_blank"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400 text-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1.03em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 250"><path d="M128.001 0C57.317 0 0 57.307 0 128.001c0 56.554 36.676 104.535 87.535 121.46c6.397 1.185 8.746-2.777 8.746-6.158c0-3.052-.12-13.135-.174-23.83c-35.61 7.742-43.124-15.103-43.124-15.103c-5.823-14.795-14.213-18.73-14.213-18.73c-11.613-7.944.876-7.78.876-7.78c12.853.902 19.621 13.19 19.621 13.19c11.417 19.568 29.945 13.911 37.249 10.64c1.149-8.272 4.466-13.92 8.127-17.116c-28.431-3.236-58.318-14.212-58.318-63.258c0-13.975 5-25.394 13.188-34.358c-1.329-3.224-5.71-16.242 1.24-33.874c0 0 10.749-3.44 35.21 13.121c10.21-2.836 21.16-4.258 32.038-4.307c10.878.049 21.837 1.47 32.066 4.307c24.431-16.56 35.165-13.12 35.165-13.12c6.967 17.63 2.584 30.65 1.255 33.873c8.207 8.964 13.173 20.383 13.173 34.358c0 49.163-29.944 59.988-58.447 63.157c4.591 3.972 8.682 11.762 8.682 23.704c0 17.126-.148 30.91-.148 35.126c0 3.407 2.304 7.398 8.792 6.14C219.37 232.5 256 184.537 256 128.002C256 57.307 198.691 0 128.001 0zm-80.06 182.34c-.282.636-1.283.827-2.194.39c-.929-.417-1.45-1.284-1.15-1.922c.276-.655 1.279-.838 2.205-.399c.93.418 1.46 1.293 1.139 1.931zm6.296 5.618c-.61.566-1.804.303-2.614-.591c-.837-.892-.994-2.086-.375-2.66c.63-.566 1.787-.301 2.626.591c.838.903 1 2.088.363 2.66zm4.32 7.188c-.785.545-2.067.034-2.86-1.104c-.784-1.138-.784-2.503.017-3.05c.795-.547 2.058-.055 2.861 1.075c.782 1.157.782 2.522-.019 3.08zm7.304 8.325c-.701.774-2.196.566-3.29-.49c-1.119-1.032-1.43-2.496-.726-3.27c.71-.776 2.213-.558 3.315.49c1.11 1.03 1.45 2.505.701 3.27zm9.442 2.81c-.31 1.003-1.75 1.459-3.199 1.033c-1.448-.439-2.395-1.613-2.103-2.626c.301-1.01 1.747-1.484 3.207-1.028c1.446.436 2.396 1.602 2.095 2.622zm10.744 1.193c.036 1.055-1.193 1.93-2.715 1.95c-1.53.034-2.769-.82-2.786-1.86c0-1.065 1.202-1.932 2.733-1.958c1.522-.03 2.768.818 2.768 1.868zm10.555-.405c.182 1.03-.875 2.088-2.387 2.37c-1.485.271-2.861-.365-3.05-1.386c-.184-1.056.893-2.114 2.376-2.387c1.514-.263 2.868.356 3.061 1.403z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">GitHub</span><!--]--><!----></a><!----> <!--[--><!--]--></li><!--]--></ul></li> <li><div class="bg-linear-to-r col-span-full flex items-center justify-between whitespace-nowrap to-white font-semibold dark:to-gray-925 px-4 py-0.5 text-pink-800 from-pink-50 dark:text-gray-200 dark:from-pink-900"><!--[--><!---->Solutions<!--]--></div><!----> <ul><!--[--><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/enterprise"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 12 12"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.9 1.35a3.16 3.16 0 0 0-2.8 2.07L.37 8.58C0 9.71.7 10.65 1.86 10.65H7.3a3.2 3.2 0 0 0 2.84-2.07l1.67-5.16c.36-1.13-.3-2.07-1.46-2.07H4.91Zm.4 2.07L3.57 8.47h3.57l.36-1.12H5.4l.28-.91h1.75l.4-1.1H6.07l.3-.83h2l.36-1.1H5.27h.04Z" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Team &amp; Enterprise</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/pro"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" viewBox="0 0 12 12" fill="none"><path d="M6.48 1.26c0 1.55.67 2.58 1.5 3.24.86.68 1.9 1 2.58 1.07v.86A5.3 5.3 0 0 0 7.99 7.5a3.95 3.95 0 0 0-1.51 3.24h-.96c0-1.55-.67-2.58-1.5-3.24a5.3 5.3 0 0 0-2.58-1.07v-.86A5.3 5.3 0 0 0 4.01 4.5a3.95 3.95 0 0 0 1.51-3.24h.96Z" fill="url(#pro-sparkle-gradient)"></path><defs><linearGradient id="pro-sparkle-gradient" x1="3.37" y1="3.43" x2="8.14" y2="8.9" gradientUnits="userSpaceOnUse"><stop stop-color="#FF0789"></stop><stop offset=".63" stop-color="#21DE75"></stop><stop offset="1" stop-color="#FF8D00"></stop></linearGradient></defs></svg><!--]--><!--]--> <span class="truncate">Hugging Face PRO</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/support"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 25 24"><path d="M12.6213 22.4475C12.7096 22.4825 12.8038 22.5003 12.8988 22.5C13.068 22.4991 13.2318 22.4409 13.3638 22.335L17.1138 19.335C17.2022 19.2652 17.2737 19.1763 17.323 19.0751C17.3724 18.9738 17.3983 18.8627 17.3988 18.75V13.0575L20.2338 10.23C21.0025 9.46567 21.6117 8.5563 22.0263 7.55467C22.4409 6.55304 22.6524 5.47907 22.6488 4.39505V3.00005C22.6488 2.60222 22.4908 2.22069 22.2095 1.93939C21.9281 1.65808 21.5466 1.50005 21.1488 1.50005H19.7538C18.6698 1.49639 17.5958 1.70798 16.5942 2.12254C15.5925 2.5371 14.6832 3.14638 13.9188 3.91505L11.0913 6.75005H5.39879C5.28552 6.75146 5.17405 6.77851 5.07273 6.82917C4.97141 6.87983 4.88288 6.95278 4.81379 7.04255L1.81379 10.7925C1.73008 10.8963 1.67553 11.0205 1.65576 11.1523C1.63599 11.2841 1.6517 11.4188 1.70129 11.5425C1.75027 11.6654 1.83088 11.7732 1.93494 11.8548C2.03899 11.9365 2.1628 11.9892 2.29379 12.0075L7.54379 12.7575L11.4063 16.605L12.1563 21.855C12.1747 21.986 12.2274 22.1098 12.309 22.2139C12.3907 22.318 12.4984 22.3986 12.6213 22.4475Z" opacity=".5" fill="currentColor"></path><path d="M11.0837 10.9416L5.08569 16.9396L7.20363 19.0576L13.2017 13.0595L11.0837 10.9416Z" opacity="1" fill="currentColor"></path></svg><!--]--><!--]--> <span class="truncate">Enterprise Support</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/inference/models"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 12 12"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.587 8.498a.613.613 0 0 0 .812-.915l-.004-.004a.61.61 0 0 0-.27-.157l-.538 1.076Zm.935-1.871a.612.612 0 0 0 .211.037h.006a.613.613 0 0 0 .33-1.13l-.547 1.093Zm.057-2.531a.613.613 0 0 0-1.046-.444l-.005.005a.61.61 0 0 0-.178.402h.969a.93.93 0 0 1 .26.037ZM3.57 5.518l-.549 1.097a.613.613 0 0 1 .24-1.177h.007a.61.61 0 0 1 .302.08Zm.921-1.842L3.979 4.7a.61.61 0 0 1-.373-.177l-.004-.004a.613.613 0 0 1 .866-.867l.005.005a.619.619 0 0 1 .018.019Zm-1.067 4.29c.112.049.237.077.37.077h.857a.61.61 0 0 1-.178.403l-.005.004a.613.613 0 0 1-1.044-.484ZM8.121 6.06V6.05c0-.204.099-.384.252-.496l-.252.505ZM3.849 7.43h.381a.615.615 0 0 0-.381 0Zm4.305-2.758H7.77c.124.041.26.041.384 0ZM3.162 2.346a.613.613 0 0 0-.867.866l.002.002a.613.613 0 1 0 .867-.866l-.002-.002ZM5.777 4.96a.613.613 0 0 0-1.029.578.612.612 0 0 0 0 1.024.612.612 0 0 0 1.03.578l.004-.004a.613.613 0 0 0-.094-.944.617.617 0 0 0 0-.284.613.613 0 0 0 .094-.944l-.005-.004Zm.536 1.232a.613.613 0 0 0-.094.944l.005.004a.613.613 0 0 0 1.029-.578.612.612 0 0 0 0-1.024.613.613 0 0 0-1.03-.578l-.003.004a.613.613 0 0 0 .093.944.615.615 0 0 0 0 .284Zm3.391 2.695a.613.613 0 0 0-.867.867l.003.002a.613.613 0 0 0 .866-.867l-.002-.002Zm-8.263-3.45a.613.613 0 0 0 0 1.226h.003a.613.613 0 1 0 0-1.226h-.003Zm9.116 0a.613.613 0 1 0 0 1.226h.003a.613.613 0 1 0 0-1.226h-.003Zm-.85-3.092c.239.239.239.627 0 .866l-.003.002a.613.613 0 0 1-.867-.866l.003-.002c.239-.24.627-.24.866 0ZM3.163 8.888c.24.24.24.627 0 .867l-.002.002a.613.613 0 0 1-.867-.867l.002-.002c.24-.24.627-.24.867 0Z" fill="currentColor" class="text-gray-400 dark:text-gray-500"></path><path d="M5.597 7.736a.306.306 0 0 0-.306-.306H3.795a.306.306 0 0 1-.274-.444l2.415-4.83c.145-.289.58-.186.58.137v2.073c0 .169.138.306.307.306h1.496c.228 0 .376.24.274.444l-2.415 4.83c-.145.289-.58.186-.58-.137V7.736Z" fill="currentColor" class="text-yellow-500"></path></svg><!--]--><!--]--> <span class="truncate">Inference Providers</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/inference-endpoints" target="_blank"><!--[-1--><!--[0--><!--[--><svg class="mr-1.5 flex-none text-gray-400" width="1em" height="1em" viewBox="-5 -5 46 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.4784 6.09734C23.2951 4.15041 21.8652 2 19.7539 2L11.2073 2C9.0127 2 7.05415 3.3771 6.31163 5.44223L3.35017 13.6788C2.47741 16.1062 2.47741 18.7617 3.35017 21.1891L6.31163 29.4257C7.05415 31.4908 9.0127 32.8679 11.2073 32.8679H19.7539C21.8652 32.8679 23.2951 30.7175 22.4784 28.7706L19.5239 21.7271C18.3719 18.9809 18.3719 15.887 19.5239 13.1408L22.4784 6.09734Z" fill="currentColor" fill-opacity="0.6" stroke="currentColor" stroke-width="5" stroke-linejoin="round"></path><circle cx="26.821" cy="17.4339" r="8.4146" fill="currentColor" fill-opacity="0.4" stroke="currentColor" stroke-width="5" stroke-linejoin="round"></circle></svg><!--]--><!--]--> <span class="truncate">Inference Endpoints</span><!--]--><!----></a><!----> <!--[--><!--]--></li><li><!----><a class="flex w-full cursor-pointer items-center whitespace-nowrap px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800  hover:underline leading-tight " href="/storage"><!--[-1--><!--[0--><!--[--><svg class=" mr-1.5 flex-none text-gray-400 svelte-11u2e10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48" fill="none"><!--[-1--><!--]--><path opacity="0.25" d="M36 4H12C7.58172 4 4 7.58172 4 12V36C4 40.4183 7.58172 44 12 44H36C40.4183 44 44 40.4183 44 36V12C44 7.58172 40.4183 4 36 4Z" fill="currentColor" class="svelte-11u2e10"></path><path opacity="0.5" d="M31 11H17C13.6863 11 11 13.6863 11 17V31C11 34.3137 13.6863 37 17 37H31C34.3137 37 37 34.3137 37 31V17C37 13.6863 34.3137 11 31 11Z" fill="currentColor" class="svelte-11u2e10"></path><path d="M27 18H21C19.3431 18 18 19.3431 18 21V27C18 28.6569 19.3431 30 21 30H27C28.6569 30 30 28.6569 30 27V21C30 19.3431 28.6569 18 27 18Z" fill="currentColor" class="svelte-11u2e10"></path></svg><!--]--><!--]--> <span class="truncate">Storage Buckets</span><!--]--><!----></a><!----> <!--[--><!--]--></li><!--]--></ul></li><!--]--><!--]--><!--]--></ul></nav><!--]-->  <!--[-1--><!--]--></div><!----></li> <li><hr class="h-5 w-0.5 border-none bg-gray-100 dark:bg-gray-800"/></li> <!--[-1--><li><a class="block cursor-pointer whitespace-nowrap px-2 py-0.5 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-100" href="/login">Log In</a></li> <!--[0--><li><a class="whitespace-nowrap rounded-full border border-transparent bg-gray-900 px-3 py-1 leading-none text-white hover:border-black hover:bg-white hover:text-black" href="/join">Sign Up</a></li><!--]--><!--]--></ul></nav><!----></div></header><!----></div><!--]--> <!--[-1--><!--]--> <!--[2--><!--[-1--><!--]--><!--]--><!----> <!--[-1--><!--]--><!----> <!--[0--><div class="SVELTE_HYDRATER contents" data-target="SSOBanner" data-props="{}"><!--[-1--><!--]--><!----></div><!--]--> <!--[-1--><!--]--><!----> <main class="flex flex-1 flex-col"><!--[--><div class="container relative flex flex-row justify-center gap-4"><div class="max-w-full pb-16 pt-6 lg:max-w-3xl lg:flex-1 lg:pt-16 2xl:max-w-4xl"><div class="max-lg:overflow-hidden"><div class="blog-content copiable-code-container [&amp;_h1]:mr-0! prose mx-auto mb-8 lg:prose-lg 2xl:prose-lg prose-h1:mb-3 lg:px-8"><div class="SVELTE_HYDRATER contents" data-target="RepoCodeCopy" data-props="{}"><div></div><!----></div> <div class="mb-4"><a href="/blog" class="text-gray-500! no-underline! hover:underline! flex items-center font-sans"><svg class="mr-2 h-3 w-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16l10 10z" fill="currentColor"></path></svg><!----> Back to Articles</a></div> <h1 class="group relative flex items-center"><!---->
+	<a id="large-scale-near-deduplication-behind-bigcode" class="block pr-1.5 text-lg md:absolute md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:right-full" href="#large-scale-near-deduplication-behind-bigcode" rel="nofollow">
+		<span class="header-link"><svg class="text-gray-500 hover:text-black dark:hover:text-gray-200 w-4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path d="M167.594 88.393a8.001 8.001 0 0 1 0 11.314l-67.882 67.882a8 8 0 1 1-11.314-11.315l67.882-67.881a8.003 8.003 0 0 1 11.314 0zm-28.287 84.86l-28.284 28.284a40 40 0 0 1-56.567-56.567l28.284-28.284a8 8 0 0 0-11.315-11.315l-28.284 28.284a56 56 0 0 0 79.196 79.197l28.285-28.285a8 8 0 1 0-11.315-11.314zM212.852 43.14a56.002 56.002 0 0 0-79.196 0l-28.284 28.284a8 8 0 1 0 11.314 11.314l28.284-28.284a40 40 0 0 1 56.568 56.567l-28.285 28.285a8 8 0 0 0 11.315 11.314l28.284-28.284a56.065 56.065 0 0 0 0-79.196z" fill="currentColor"></path></svg></span>
+	</a>
+	<span>
+		Large-scale Near-deduplication Behind BigCode
+	</span>
+<!----></h1> <div><div class="mb-6 flex items-center gap-x-4 text-base"><!--[-1--><!--]--> <!--[0--><span class="text-sm sm:text-base">Published
+				May 16, 2023</span><!--]--></div> <!--[0--><a target="_blank" class="btn mb-5 font-sans text-sm no-underline" href="https://github.com/huggingface/blog/blob/main/dedup.md">Update on GitHub</a><!--]--></div><!----> <div class="not-prose mb-6 font-sans lg:hidden"><div class="SVELTE_HYDRATER contents" data-target="UpvoteControl" data-props="{&quot;modalClassNames&quot;:&quot;not-prose&quot;,&quot;maxShown&quot;:6,&quot;apiUrlPrefix&quot;:&quot;/api/blog/dedup&quot;,&quot;postLoginRedirectUrl&quot;:&quot;/blog/dedup&quot;,&quot;size&quot;:&quot;sm&quot;,&quot;style&quot;:&quot;horizontal&quot;,&quot;color&quot;:&quot;gray&quot;,&quot;upvotedColor&quot;:&quot;orange&quot;,&quot;upvoted&quot;:false,&quot;upvoters&quot;:[{&quot;_id&quot;:&quot;604714a0c82d59b7347b55ae&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/604714a0c82d59b7347b55ae/WZFKDDUPi8JS0BK8t7mIv.jpeg&quot;,&quot;isPro&quot;:true,&quot;fullname&quot;:&quot;YangWang92&quot;,&quot;user&quot;:&quot;yangwang92&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;60538e733efc404ddc7c0c0d&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/1623743055212-60538e733efc404ddc7c0c0d.jpeg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Marc Pàmies&quot;,&quot;user&quot;:&quot;mapama247&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;60d43aa6f98ed732dee9e464&quot;,&quot;avatarUrl&quot;:&quot;/avatars/ab246b77f71b6fb78380ccd05f039863.svg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;AlphaSue&quot;,&quot;user&quot;:&quot;AlphaSue&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;6214e4ee1e35c843d42d1f88&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/6214e4ee1e35c843d42d1f88/fj-9wuIdPhvogh3BrcXTB.jpeg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Longxu Dou&quot;,&quot;user&quot;:&quot;dreamerdeo&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;624567459dc26c59bae6310f&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/624567459dc26c59bae6310f/Iw0iq3rrLrGfdYHU_iiYJ.png&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;dinhanhx&quot;,&quot;user&quot;:&quot;dinhanhx&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;626237d9bbcbd1c34f1bb231&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/626237d9bbcbd1c34f1bb231/EJrOjvAL-68qMCYdnvOrq.png&quot;,&quot;isPro&quot;:true,&quot;fullname&quot;:&quot;Ali El Filali&quot;,&quot;user&quot;:&quot;alielfilali01&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;626f5a9ce7914f0d5eaeb4f4&quot;,&quot;avatarUrl&quot;:&quot;/avatars/3eb79227ac4b78f347f3bc705203665a.svg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Elizabeth&quot;,&quot;user&quot;:&quot;digitaljay&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;62bd03e743ff43655c93155d&quot;,&quot;avatarUrl&quot;:&quot;/avatars/32c205488006372ffb6e84a42b144456.svg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;zhengchen&quot;,&quot;user&quot;:&quot;wilczek&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;63107b18e87051f3e3e0f598&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/63107b18e87051f3e3e0f598/R9onir4Y0MZuq1jEWCZ2-.jpeg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Unchun Yang&quot;,&quot;user&quot;:&quot;ucyang&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;6340f5e47158d417a0fe38f8&quot;,&quot;avatarUrl&quot;:&quot;/avatars/7cd11e2b8e18e9121a4eeade3198eeda.svg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Peng&quot;,&quot;user&quot;:&quot;Zhencan&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;63484fab1df68daaa0112eea&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/63484fab1df68daaa0112eea/0OS2cqUjIdKN6yr1E4cLm.jpeg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Vasily Kostyumov&quot;,&quot;user&quot;:&quot;vaskos97&quot;,&quot;type&quot;:&quot;user&quot;},{&quot;_id&quot;:&quot;634ff41ff32062e9eb7b06a3&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/1677141720071-634ff41ff32062e9eb7b06a3.jpeg&quot;,&quot;isPro&quot;:true,&quot;fullname&quot;:&quot;David Berenstein&quot;,&quot;user&quot;:&quot;davidberenstein1957&quot;,&quot;type&quot;:&quot;user&quot;}],&quot;upvotes&quot;:37}"><div class="flex flex-wrap items-center gap-2.5 pt-1  z-1 lg:sticky lg:top-8"><!--[0--><a href="/login?next=%2Fblog%2Fdedup" class="self-start"><!--[0--><!----><div class="shadow-alternate group flex h-9 cursor-pointer select-none items-center gap-2 rounded-lg border pl-3 pr-3.5 border-gray-300 bg-white dark:bg-gray-850 "><input disabled="" type="checkbox" class="peer hidden"/> <svg class="text-xs text-gray-500 peer-checked:text-gray-500 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 12 12"><path fill="currentColor" d="M5.19 2.67a.94.94 0 0 1 1.62 0l3.31 5.72a.94.94 0 0 1-.82 1.4H2.7a.94.94 0 0 1-.82-1.4l3.31-5.7v-.02Z"></path></svg><!----> Upvote <div class="font-semibold text-orange-500">37</div><!----></div><!----><!--]--> <!--[-1--><!--]--><!----></a><!--]--> <!--[0--><!--[0--><ul class="flex items-center text-gray-600  flex-row  text-base   "><!--[--><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="yangwang92" style="content-visibility:auto;"><!--[0--><a href="/yangwang92" title="yangwang92"><img class="overflow-hidden rounded-full" alt="" src="https://cdn-avatars.huggingface.co/v1/production/uploads/604714a0c82d59b7347b55ae/WZFKDDUPi8JS0BK8t7mIv.jpeg" loading="lazy"/></a><!--]--></li><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="mapama247" style="content-visibility:auto;"><!--[0--><a href="/mapama247" title="mapama247"><img class="overflow-hidden rounded-full" alt="" src="https://cdn-avatars.huggingface.co/v1/production/uploads/1623743055212-60538e733efc404ddc7c0c0d.jpeg" loading="lazy"/></a><!--]--></li><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="AlphaSue" style="content-visibility:auto;"><!--[0--><a href="/AlphaSue" title="AlphaSue"><img class="overflow-hidden rounded-full" alt="" src="/avatars/ab246b77f71b6fb78380ccd05f039863.svg" loading="lazy"/></a><!--]--></li><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="dreamerdeo" style="content-visibility:auto;"><!--[0--><a href="/dreamerdeo" title="dreamerdeo"><img class="overflow-hidden rounded-full" alt="" src="https://cdn-avatars.huggingface.co/v1/production/uploads/6214e4ee1e35c843d42d1f88/fj-9wuIdPhvogh3BrcXTB.jpeg" loading="lazy"/></a><!--]--></li><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="dinhanhx" style="content-visibility:auto;"><!--[0--><a href="/dinhanhx" title="dinhanhx"><img class="overflow-hidden rounded-full" alt="" src="https://cdn-avatars.huggingface.co/v1/production/uploads/624567459dc26c59bae6310f/Iw0iq3rrLrGfdYHU_iiYJ.png" loading="lazy"/></a><!--]--></li><li class="  -mr-2 h-5 w-5 md:h-6 md:w-6   bg-linear-to-br block flex-none rounded-full border-2 border-white from-gray-300 to-gray-100 dark:border-gray-900 dark:from-gray-600 dark:to-gray-800 " title="alielfilali01" style="content-visibility:auto;"><!--[0--><a href="/alielfilali01" title="alielfilali01"><img class="overflow-hidden rounded-full" alt="" src="https://cdn-avatars.huggingface.co/v1/production/uploads/626237d9bbcbd1c34f1bb231/EJrOjvAL-68qMCYdnvOrq.png" loading="lazy"/></a><!--]--></li><!--]--> <!--[0--><li class="text-xs hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 order-last ml-3"><!--[--><!--[0--><button class="btn bg-linear-to-br -ml-3 translate-x-px rounded-full border-2 border-white px-1.5 py-0.5 text-xs">+31</button><!--]--><!--]--></li><!--]--></ul><!--]--><!--]--></div> <!--[-1--><!--]--> <dialog class="shadow-alternate z-40 mx-4 my-auto h-fit select-text overflow-hidden rounded-xl bg-white max-sm:max-w-[calc(100dvw-2rem)] sm:mx-auto lg:mt-26 md:portrait:mt-30 xl:mt-30 2xl:mt-32 w-full sm:w-96 max-w-[calc(100%-4rem)] text-base not-prose "><div tabindex="-1" class="outline-none focus:ring-0 focus-visible:ring-0"><!--[-1--><!--]--></div></dialog><!----><!----></div></div> <div class="not-prose"><div class="SVELTE_HYDRATER contents" data-target="BlogAuthorsByline" data-props="{&quot;authors&quot;:[{&quot;author&quot;:{&quot;_id&quot;:&quot;607a5b44489fc71534e91c0e&quot;,&quot;avatarUrl&quot;:&quot;https://cdn-avatars.huggingface.co/v1/production/uploads/1638743128077-607a5b44489fc71534e91c0e.jpeg&quot;,&quot;fullname&quot;:&quot;Chenghao Mou&quot;,&quot;name&quot;:&quot;chenghao&quot;,&quot;type&quot;:&quot;user&quot;,&quot;isPro&quot;:false,&quot;isHf&quot;:false,&quot;isHfAdmin&quot;:false,&quot;isMod&quot;:false,&quot;followerCount&quot;:32,&quot;isUserFollowing&quot;:false}}],&quot;translators&quot;:[],&quot;proofreaders&quot;:[],&quot;lang&quot;:&quot;en&quot;}"><div class="not-prose"><div class="mb-12 flex flex-wrap items-center gap-x-5 gap-y-3.5"><!--[--><div class="flex items-center font-sans leading-tight"><span class="inline-block "><span class="contents"><a href="/chenghao"><img class="rounded-full! m-0 mr-2.5 size-9 sm:mr-3 sm:size-12" alt="Chenghao Mou's avatar" src="https://cdn-avatars.huggingface.co/v1/production/uploads/1638743128077-607a5b44489fc71534e91c0e.jpeg"/></a><!----><!----></span> <!--[-1--><!--]--></span><!----> <div class="text-gray-900 dark:text-gray-300"><a href="/chenghao"><span class="fullname font-sans font-semibold max-sm:text-sm">Chenghao Mou</span> <div class="my-0.5 flex items-center gap-x-2"><span class="inline-block "><span class="contents"><span class="leading-tight! block font-mono text-xs underline">chenghao</span><!----><!----></span> <!--[-1--><!--]--></span><!---->  <div><!--[0--><div class="relative flex items-center gap-1.5  "><!--[0--><button class="flex items-center justify-center rounded-full border-[1.5px] transition-colors duration-200   w-18 h-[20px] text-xs  border-transparent bg-black text-white dark:bg-white dark:text-black" type="button"><div class="flex h-full flex-1 items-center justify-center rounded-full"><!--[-1-->Follow<!--]--></div></button><!--]--> <!--[-1--><!--]--></div><!--]--><!----></div></div></a> <div class="flex items-center pt-0.5"><!--[-1--><!--]--></div></div></div><!--]--></div> <!--[-1--><!--]--></div><!----></div></div><!----> <!--[-1--><!--]--> <!---->
+<h2 class="relative group flex items-baseline"><!--[--><!--[0--><div class="absolute -left-12 bottom-0 top-0 z-10 not-prose hidden lg:block"><div class="sticky top-4 flex"><div class="h-7 pt-[0.175rem]"><span class="peer" tabindex="0"><button class="select-none text-gray-400 hover:cursor-pointer hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-400"><svg width="1em" height="1em" viewBox="0 0 10 10" class="text-lg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" preserveAspectRatio="xMidYMid meet" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.65039 2.9999C1.65039 2.8066 1.80709 2.6499 2.00039 2.6499H8.00039C8.19369 2.6499 8.35039 2.8066 8.35039 2.9999C8.35039 3.1932 8.19369 3.3499 8.00039 3.3499H2.00039C1.80709 3.3499 1.65039 3.1932 1.65039 2.9999ZM1.65039 4.9999C1.65039 4.8066 1.80709 4.6499 2.00039 4.6499H8.00039C8.19369 4.6499 8.35039 4.8066 8.35039 4.9999C8.35039 5.1932 8.19369 5.3499 8.00039 5.3499H2.00039C1.80709 5.3499 1.65039 5.1932 1.65039 4.9999ZM2.00039 6.6499C1.80709 6.6499 1.65039 6.8066 1.65039 6.9999C1.65039 7.1932 1.80709 7.3499 2.00039 7.3499H8.00039C8.19369 7.3499 8.35039 7.1932 8.35039 6.9999C8.35039 6.8066 8.19369 6.6499 8.00039 6.6499H2.00039Z"></path></svg><!----></button></span> <div class="invisible w-0 -translate-x-8 -translate-y-6 overflow-hidden rounded-xl border bg-white transition-transform hover:visible hover:w-52 hover:translate-x-0 peer-focus-within:visible peer-focus-within:w-52 peer-focus-within:translate-x-0"><nav aria-label="Secondary" class="max-h-[550px] overflow-y-auto p-3"><ul><!--[--><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#intended-audience" title="Intended Audience"><!---->Intended Audience<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#motivations" title="Motivations"><!---->Motivations<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#from-bigscience-to-bigcode" title="From BigScience to BigCode"><!---->From BigScience to BigCode<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#minhash-walkthrough" title="MinHash Walkthrough"><!---->MinHash Walkthrough<!----></a> <ul class="pl-1"><!--[--><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#shingles" title="Shingles"><!---->Shingles<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#fingerprint-computation" title="Fingerprint Computation"><!---->Fingerprint Computation<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#locality-sensitive-hashing" title="Locality Sensitive Hashing"><!---->Locality Sensitive Hashing<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#beyond-duplicate-pairs" title="Beyond Duplicate Pairs"><!---->Beyond Duplicate Pairs<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#quality-matters" title="Quality Matters"><!---->Quality Matters<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#scaling" title="Scaling"><!---->Scaling<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#proceed-with-caution" title="Proceed with Caution"><!---->Proceed with Caution<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#future-directions" title="Future Directions"><!---->Future Directions<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#credits" title="Credits"><!---->Credits<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#supporting-resources" title="Supporting Resources"><!---->Supporting Resources<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#references" title="References"><!---->References<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><!--]--></ul></nav></div></div></div></div><!--]--><!--]-->
+	<a id="intended-audience" class="block pr-1.5 text-lg md:absolute md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:right-full" href="#intended-audience" rel="nofollow">
+		<span class="header-link"><svg class="text-gray-500 hover:text-black dark:hover:text-gray-200 w-4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path d="M167.594 88.393a8.001 8.001 0 0 1 0 11.314l-67.882 67.882a8 8 0 1 1-11.314-11.315l67.882-67.881a8.003 8.003 0 0 1 11.314 0zm-28.287 84.86l-28.284 28.284a40 40 0 0 1-56.567-56.567l28.284-28.284a8 8 0 0 0-11.315-11.315l-28.284 28.284a56 56 0 0 0 79.196 79.197l28.285-28.285a8 8 0 1 0-11.315-11.314zM212.852 43.14a56.002 56.002 0 0 0-79.196 0l-28.284 28.284a8 8 0 1 0 11.314 11.314l28.284-28.284a40 40 0 0 1 56.568 56.567l-28.285 28.285a8 8 0 0 0 11.315 11.314l28.284-28.284a56.065 56.065 0 0 0 0-79.196z" fill="currentColor"></path></svg></span>
+	</a>
+	<span>
+		Intended Audience
+	</span>
+</h2>
+<p>People who are interested in document-level near-deduplication at a large scale, and have some understanding of hashing, graph and text processing.</p>
+<h2 class="relative group flex items-baseline">
+	<a id="motivations" class="block pr-1.5 text-lg md:absolute md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:right-full" href="#motivations" rel="nofollow">
+		<span class="header-link"><svg class="text-gray-500 hover:text-black dark:hover:text-gray-200 w-4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path d="M167.594 88.393a8.001 8.001 0 0 1 0 11.314l-67.882 67.882a8 8 0 1 1-11.314-11.315l67.882-67.881a8.003 8.003 0 0 1 11.314 0zm-28.287 84.86l-28.284 28.284a40 40 0 0 1-56.567-56.567l28.284-28.284a8 8 0 0 0-11.315-11.315l-28.284 28.284a56 56 0 0 0 79.196 79.197l28.285-28.285a8 8 0 1 0-11.315-11.314zM212.852 43.14a56.002 56.002 0 0 0-79.196 0l-28.284 28.284a8 8 0 1 0 11.314 11.314l28.284-28.284a40 40 0 0 1 56.568 56.567l-28.285 28.285a8 8 0 0 0 11.315 11.314l28.284-28.284a56.065 56.065 0 0 0 0-79.196z" fill="currentColor"></path></svg></span>
+	</a>
+	<span>
+		Motivations
+	</span>
+</h2>
+<p>It is important to take care of our data before feeding it to the model, at least Large Language Model in our case, as the old saying goes, garbage in, garbage out. Even though it's increasingly difficult to do so with headline-grabbing models (or should we say APIs) creating an illusion that data quality matters less.</p>
+<p>One of the problems we face in both BigScience and BigCode for data quality is duplication, including possible benchmark contamination. It has been shown that models tend to output training data verbatim when there are many duplicates<a href="#1" rel="nofollow">[1]</a> (though it is less clear in some other domains<a href="#2" rel="nofollow">[2]</a>), and it also makes the model vulnerable to privacy attacks<a href="#1" rel="nofollow">[1]</a>. Additionally, some typical advantages of deduplication also include:</p>
+<ol>
+<li>Efficient training: You can achieve the same, and sometimes better, performance with less training steps<a href="#3" rel="nofollow">[3]</a> <a href="#4" rel="nofollow">[4]</a>.</li>
+<li>Prevent possible data leakage and benchmark contamination: Non-zero duplicates discredit your evaluations and potentially make so-called improvement a false claim.</li>
+<li>Accessibility. Most of us cannot afford to download or transfer thousands of gigabytes of text repeatedly, not to mention training a model with it. Deduplication, for a fix-sized dataset, makes it easier to study, transfer and collaborate with.</li>
+</ol>
+<h2 class="relative group flex items-baseline">
+	<a id="from-bigscience-to-bigcode" class="block pr-1.5 text-lg md:absolute md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:right-full" href="#from-bigscience-to-bigcode" rel="nofollow">
+		<span class="header-link"><svg class="text-gray-500 hover:text-black dark:hover:text-gray-200 w-4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path d="M167.594 88.393a8.001 8.001 0 0 1 0 11.314l-67.882 67.882a8 8 0 1 1-11.314-11.315l67.882-67.881a8.003 8.003 0 0 1 11.314 0zm-28.287 84.86l-28.284 28.284a40 40 0 0 1-56.567-56.567l28.284-28.284a8 8 0 0 0-11.315-11.315l-28.284 28.284a56 56 0 0 0 79.196 79.197l28.285-28.285a8 8 0 1 0-11.315-11.314zM212.852 43.14a56.002 56.002 0 0 0-79.196 0l-28.284 28.284a8 8 0 1 0 11.314 11.314l28.284-28.284a40 40 0 0 1 56.568 56.567l-28.285 28.285a8 8 0 0 0 11.315 11.314l28.284-28.284a56.065 56.065 0 0 0 0-79.196z" fill="currentColor"></path></svg></span>
+	</a>
+	<span>
+		From BigScience to BigCode
+	</span>
+</h2>
+<p>Allow me to share a story first on how I jumped on this near-deduplication quest, how the results have progressed, and what lessons I have learned along the way.</p>
+<p>It all started with a conversation on LinkedIn when <a href="https://bigscience.huggingface.co/" rel="nofollow">BigScience</a> had already started for a couple of months. Huu Nguyen approached me when he noticed my pet project on GitHub, asking me if I were interested in working on deduplication for BigScience. Of course, my answer was a yes, completely ignorant of just how much effort will be required alone due to the sheer mount of the data.</p>
+<p>It was fun and challenging at the same time. It is challenging in a sense that I didn't really have much research experience with that sheer scale of data, and everyone was still welcoming and trusting you with thousands of dollars of cloud compute budget. Yes, I had to wake up from my sleep to double-check that I had turned off those machines several times. As a result, I had to learn on the job through all the trials and errors, which in the end opened me to a new perspective that I don't think I would ever have if it weren't for BigScience.</p>
+<p>Moving forward, one year later, I am putting what I have learned back into <a href="https://www.bigcode-project.org/" rel="nofollow">BigCode</a>, working on even bigger datasets. In addition to LLMs that are trained for English<a href="#3" rel="nofollow">[3]</a>, we have confirmed that deduplication improves code models too<a href="#4" rel="nofollow">[4]</a>, while using a much smaller dataset. And now, I am sharing what I have learned with you, my dear reader, and hopefully, you can also get a sense of what is happening behind the scene of BigCode through the lens of deduplication.</p>
+<p>In case you are interested, here is an updated version of the deduplication comparison that we started in BigScience:</p>
+<div class="max-w-full overflow-auto">
+	<table>
+		<thead><tr>
+<th>Dataset</th>
+<th>Input Size</th>
+<th>Output Size or Deduction</th>
+<th>Level</th>
+<th>Method</th>
+<th>Parameters</th>
+<th>Language</th>
+<th>Time</th>
+</tr>
+
+		</thead><tbody><tr>
+<td>OpenWebText2<a href="#5" rel="nofollow">[5]</a></td>
+<td>After URL dedup: 193.89 GB (69M)</td>
+<td>After MinHashLSH: 65.86 GB (17M)</td>
+<td>URL + Document</td>
+<td>URL(Exact) + Document(MinHash LSH)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>10</mn><mo separator="true">,</mo><mn>0.5</mn><mo separator="true">,</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mo stretchy="false">?</mo><mo stretchy="false">)</mo></mrow> (10, 0.5, ?, ?, ?) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">10</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?)</span></span></span></span></td>
+<td>English</td>
+<td></td>
+</tr>
+<tr>
+<td>Pile-CC<a href="#5" rel="nofollow">[5]</a></td>
+<td><em>~306 GB</em></td>
+<td><em>227.12 GiB (~55M)</em></td>
+<td>Document</td>
+<td>Document(MinHash LSH)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>10</mn><mo separator="true">,</mo><mn>0.5</mn><mo separator="true">,</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mo stretchy="false">?</mo><mo stretchy="false">)</mo></mrow> (10, 0.5, ?, ?, ?) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">10</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?)</span></span></span></span></td>
+<td>English</td>
+<td>"several days"</td>
+</tr>
+<tr>
+<td>BNE5<a href="#6" rel="nofollow">[6]</a></td>
+<td>2TB</td>
+<td>570 GB</td>
+<td>Document</td>
+<td>Onion</td>
+<td>5-gram</td>
+<td>Spanish</td>
+<td></td>
+</tr>
+<tr>
+<td>MassiveText<a href="#7" rel="nofollow">[7]</a></td>
+<td></td>
+<td>0.001 TB ~ 2.1 TB</td>
+<td>Document</td>
+<td>Document(Exact + MinHash LSH)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mn>0.8</mn><mo separator="true">,</mo><mn>13</mn><mo separator="true">,</mo><mo stretchy="false">?</mo><mo separator="true">,</mo><mo stretchy="false">?</mo><mo stretchy="false">)</mo></mrow> (?, 0.8, 13, ?, ?) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.8</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">13</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">?)</span></span></span></span></td>
+
+ succeeded in 438ms:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>  <title>[2107.06499] Deduplicating Training Data Makes Language Models Better</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/browse/0.3.4/images/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/browse/0.3.4/images/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/browse/0.3.4/images/icons/favicon-16x16.png">
+  <link rel="manifest" href="/static/browse/0.3.4/images/icons/site.webmanifest">
+  <link rel="mask-icon" href="/static/browse/0.3.4/images/icons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/browse/0.3.4/css/arXiv.css?v=20260318" />
+  <link rel="stylesheet" type="text/css" media="print" href="/static/browse/0.3.4/css/arXiv-print.css?v=20200611" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/browse/0.3.4/css/browse_search.css" />
+  <script language="javascript" src="/static/browse/0.3.4/js/accordion.js" ></script>
+  <script language="javascript" src="/static/browse/0.3.4/js/optin-modal.js?v=20250819"></script>
+  
+  <link rel="canonical" href="https://arxiv.org/abs/2107.06499"/>
+  <meta name="description" content="Abstract page for arXiv paper 2107.06499: Deduplicating Training Data Makes Language Models Better"><meta property="og:type" content="website" />
+<meta property="og:site_name" content="arXiv.org" />
+<meta property="og:title" content="Deduplicating Training Data Makes Language Models Better" />
+<meta property="og:url" content="https://arxiv.org/abs/2107.06499v2" />
+<meta property="og:image" content="/static/browse/0.3.4/images/arxiv-logo-fb.png" />
+<meta property="og:image:secure_url" content="/static/browse/0.3.4/images/arxiv-logo-fb.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="700" />
+<meta property="og:image:alt" content="arXiv logo"/>
+<meta property="og:description" content="We find that existing language modeling datasets contain many near-duplicate examples and long repetitive substrings. As a result, over 1% of the unprompted output of language models trained on these datasets is copied verbatim from the training data. We develop two tools that allow us to deduplicate training datasets -- for example removing from C4 a single 61 word English sentence that is repeated over 60,000 times. Deduplication allows us to train models that emit memorized text ten times less frequently and require fewer train steps to achieve the same or better accuracy. We can also reduce train-test overlap, which affects over 4% of the validation set of standard datasets, thus allowing for more accurate evaluation. We release code for reproducing our work and performing dataset deduplication at https://github.com/google-research/deduplicate-text-datasets."/>
+<meta name="twitter:site" content="@arxiv"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deduplicating Training Data Makes Language Models Better"/>
+<meta name="twitter:description" content="We find that existing language modeling datasets contain many near-duplicate examples and long repetitive substrings. As a result, over 1% of the unprompted output of language models trained on..."/>
+<meta name="twitter:image" content="https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png"/>
+<meta name="twitter:image:alt" content="arXiv logo"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="/static/browse/0.3.4/css/tooltip.css"/><link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>  <script src="/static/browse/0.3.4/js/mathjaxToggle.min.js" type="text/javascript"></script>  <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
+  <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
+  <script src="/static/browse/0.3.4/js/toggle-labs.js?20241022" type="text/javascript"></script>
+  <script src="/static/browse/0.3.4/js/cite.js" type="text/javascript"></script><meta name="citation_title" content="Deduplicating Training Data Makes Language Models Better" /><meta name="citation_author" content="Lee, Katherine" /><meta name="citation_author" content="Ippolito, Daphne" /><meta name="citation_author" content="Nystrom, Andrew" /><meta name="citation_author" content="Zhang, Chiyuan" /><meta name="citation_author" content="Eck, Douglas" /><meta name="citation_author" content="Callison-Burch, Chris" /><meta name="citation_author" content="Carlini, Nicholas" /><meta name="citation_date" content="2021/07/14" /><meta name="citation_online_date" content="2022/03/24" /><meta name="citation_pdf_url" content="https://arxiv.org/pdf/2107.06499" /><meta name="citation_arxiv_id" content="2107.06499" /><meta name="citation_abstract" content="We find that existing language modeling datasets contain many near-duplicate examples and long repetitive substrings. As a result, over 1% of the unprompted output of language models trained on these datasets is copied verbatim from the training data. We develop two tools that allow us to deduplicate training datasets -- for example removing from C4 a single 61 word English sentence that is repeated over 60,000 times. Deduplication allows us to train models that emit memorized text ten times less frequently and require fewer train steps to achieve the same or better accuracy. We can also reduce train-test overlap, which affects over 4% of the validation set of standard datasets, thus allowing for more accurate evaluation. We release code for reproducing our work and performing dataset deduplication at https://github.com/google-research/deduplicate-text-datasets." />
+</head>
+
+<body  class="with-cu-identity">
+  
+  
+  <div class="flex-wrap-footer">
+    <header>
+      <a href="#content" class="is-sr-only">Skip to main content</a>
+      <!-- start desktop header -->
+      <div class="columns is-vcentered is-hidden-mobile" id="cu-identity">
+        <div class="column" id="cu-logo">
+          <a href="https://www.cornell.edu/"><img src="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" /></a>
+        </div><!-- /from April 7 at 1:00 AM to May 29 at 21:40 --><!-- /from May 2 at 1:00 AM to May 5 at 9:45 AM --><div class="column banner-minimal">
+            <a href="https://tech.cornell.edu/arxiv/" target="_blank">Learn about arXiv becoming an independent nonprofit.</a>
+        </div><div class="column" id="support-ack">
+          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors.</span>
+          <a href="https://info.arxiv.org/about/donate.html" class="btn-header-donate">Donate</a>
+        </div>
+      </div>
+
+      <div id="header" class="is-hidden-mobile">
+<a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
+  <div class="header-breadcrumbs is-hidden-mobile">
+    <a href="/"><img src="/static/browse/0.3.4/images/arxiv-logo-one-color-white.svg" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="/list/cs/recent">cs</a> <span>&gt;</span> arXiv:2107.06499
+  </div>
+
+        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
+        </div>
+
+          <div class="search-block level-right">
+    <form class="level-item mini-search" method="GET" action="https://arxiv.org/search">
+      <div class="field has-addons">
+        <div class="control">
+          <input class="input is-small" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+          <p class="help"><a href="https://info.arxiv.org/help">Help</a> | <a href="https://arxiv.org/search/advanced">Advanced Search</a></p>
+        </div>
+        <div class="control">
+          <div class="select is-small">
+            <select name="searchtype" aria-label="Field to search">
+              <option value="all" selected="selected">All fields</option>
+              <option value="title">Title</option>
+              <option value="author">Author</option>
+              <option value="abstract">Abstract</option>
+              <option value="comments">Comments</option>
+              <option value="journal_ref">Journal reference</option>
+              <option value="acm_class">ACM classification</option>
+              <option value="msc_class">MSC classification</option>
+              <option value="report_num">Report number</option>
+              <option value="paper_id">arXiv identifier</option>
+              <option value="doi">DOI</option>
+              <option value="orcid">ORCID</option>
+              <option value="author_id">arXiv author ID</option>
+              <option value="help">Help pages</option>
+              <option value="full_text">Full text</option>
+            </select>
+          </div>
+        </div>
+        <input type="hidden" name="source" value="header">
+        <button class="button is-small is-cul-darker">Search</button>
+      </div>
+    </form>
+  </div>
+     </div><!-- /end desktop header -->
+
+      <div class="mobile-header">
+        <div class="columns is-mobile">
+          <div class="column logo-arxiv"><a href="https://arxiv.org/"><img src="/static/browse/0.3.4/images/arxiv-logomark-small-white.svg" alt="arXiv logo" style="height:60px;" /></a></div>
+          <div class="column logo-cornell"><a href="https://www.cornell.edu/">
+            <picture>
+              <source media="(min-width: 501px)"
+                srcset="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg  400w"
+                sizes="400w" />
+              <source srcset="/static/browse/0.3.4/images/icons/cu/cornell_seal_simple_black.svg 2x" />
+              <img src="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University Logo" />
+            </picture>
+          </a></div>
+          <div class="column nav" id="toggle-container" role="menubar">
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white"><title>open search</title><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <form class="mobile-search-form" method="GET" action="https://arxiv.org/search">
+                <div class="field has-addons">
+                  <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+                  <input type="hidden" name="source" value="header">
+                  <input type="hidden" name="searchtype" value="all">
+                  <button class="button">GO</button>
+                </div>
+              </form>
+            </div>
+
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="menu"><title>open navigation menu</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
+                <h2 id="mobilemenulabel">quick links</h2>
+                <ul>
+                    <li><a href="https://arxiv.org/login">Login</a></li>
+                    <li><a href="https://info.arxiv.org/help">Help Pages</a></li>
+                    <li><a href="https://info.arxiv.org/about">About</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div><!-- /end mobile-header -->
+    </header>
+
+    <main>
+      <div id="content">
+<!--
+rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+    <rdf:Description
+        rdf:about="/abs/2107.06499"
+        dc:identifier="/abs/2107.06499"
+        dc:title="Deduplicating Training Data Makes Language Models Better"
+        trackback:ping="/trackback/2107.06499" />
+    </rdf:RDF>
+--><div id="abs-outer">
+
+  <div class="leftcolumn">
+
+ succeeded in 438ms:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>  <title>[2303.09540] SemDeDup: Data-efficient learning at web-scale through semantic deduplication</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/browse/0.3.4/images/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/browse/0.3.4/images/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/browse/0.3.4/images/icons/favicon-16x16.png">
+  <link rel="manifest" href="/static/browse/0.3.4/images/icons/site.webmanifest">
+  <link rel="mask-icon" href="/static/browse/0.3.4/images/icons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/browse/0.3.4/css/arXiv.css?v=20260318" />
+  <link rel="stylesheet" type="text/css" media="print" href="/static/browse/0.3.4/css/arXiv-print.css?v=20200611" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/browse/0.3.4/css/browse_search.css" />
+  <script language="javascript" src="/static/browse/0.3.4/js/accordion.js" ></script>
+  <script language="javascript" src="/static/browse/0.3.4/js/optin-modal.js?v=20250819"></script>
+  
+  <link rel="canonical" href="https://arxiv.org/abs/2303.09540"/>
+  <meta name="description" content="Abstract page for arXiv paper 2303.09540: SemDeDup: Data-efficient learning at web-scale through semantic deduplication"><meta property="og:type" content="website" />
+<meta property="og:site_name" content="arXiv.org" />
+<meta property="og:title" content="SemDeDup: Data-efficient learning at web-scale through semantic deduplication" />
+<meta property="og:url" content="https://arxiv.org/abs/2303.09540v3" />
+<meta property="og:image" content="/static/browse/0.3.4/images/arxiv-logo-fb.png" />
+<meta property="og:image:secure_url" content="/static/browse/0.3.4/images/arxiv-logo-fb.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="700" />
+<meta property="og:image:alt" content="arXiv logo"/>
+<meta property="og:description" content="Progress in machine learning has been driven in large part by massive increases in data. However, large web-scale datasets such as LAION are largely uncurated beyond searches for exact duplicates, potentially leaving much redundancy. Here, we introduce SemDeDup, a method which leverages embeddings from pre-trained models to identify and remove semantic duplicates: data pairs which are semantically similar, but not exactly identical. Removing semantic duplicates preserves performance and speeds up learning. Analyzing a subset of LAION, we show that SemDeDup can remove 50% of the data with minimal performance loss, effectively halving training time. Moreover, performance increases out of distribution. Also, analyzing language models trained on C4, a partially curated dataset, we show that SemDeDup improves over prior approaches while providing efficiency gains. SemDeDup provides an example of how simple ways of leveraging quality embeddings can be used to make models learn faster with less data."/>
+<meta name="twitter:site" content="@arxiv"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SemDeDup: Data-efficient learning at web-scale through semantic..."/>
+<meta name="twitter:description" content="Progress in machine learning has been driven in large part by massive increases in data. However, large web-scale datasets such as LAION are largely uncurated beyond searches for exact duplicates,..."/>
+<meta name="twitter:image" content="https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png"/>
+<meta name="twitter:image:alt" content="arXiv logo"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="/static/browse/0.3.4/css/tooltip.css"/><link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>  <script src="/static/browse/0.3.4/js/mathjaxToggle.min.js" type="text/javascript"></script>  <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
+  <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
+  <script src="/static/browse/0.3.4/js/toggle-labs.js?20241022" type="text/javascript"></script>
+  <script src="/static/browse/0.3.4/js/cite.js" type="text/javascript"></script><meta name="citation_title" content="SemDeDup: Data-efficient learning at web-scale through semantic deduplication" /><meta name="citation_author" content="Abbas, Amro" /><meta name="citation_author" content="Tirumala, Kushal" /><meta name="citation_author" content="Simig, Dániel" /><meta name="citation_author" content="Ganguli, Surya" /><meta name="citation_author" content="Morcos, Ari S." /><meta name="citation_date" content="2023/03/16" /><meta name="citation_online_date" content="2023/03/22" /><meta name="citation_pdf_url" content="https://arxiv.org/pdf/2303.09540" /><meta name="citation_arxiv_id" content="2303.09540" /><meta name="citation_abstract" content="Progress in machine learning has been driven in large part by massive increases in data. However, large web-scale datasets such as LAION are largely uncurated beyond searches for exact duplicates, potentially leaving much redundancy. Here, we introduce SemDeDup, a method which leverages embeddings from pre-trained models to identify and remove semantic duplicates: data pairs which are semantically similar, but not exactly identical. Removing semantic duplicates preserves performance and speeds up learning. Analyzing a subset of LAION, we show that SemDeDup can remove 50% of the data with minimal performance loss, effectively halving training time. Moreover, performance increases out of distribution. Also, analyzing language models trained on C4, a partially curated dataset, we show that SemDeDup improves over prior approaches while providing efficiency gains. SemDeDup provides an example of how simple ways of leveraging quality embeddings can be used to make models learn faster with less data." />
+</head>
+
+<body  class="with-cu-identity">
+  
+  
+  <div class="flex-wrap-footer">
+    <header>
+      <a href="#content" class="is-sr-only">Skip to main content</a>
+      <!-- start desktop header -->
+      <div class="columns is-vcentered is-hidden-mobile" id="cu-identity">
+        <div class="column" id="cu-logo">
+          <a href="https://www.cornell.edu/"><img src="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" /></a>
+        </div><!-- /from April 7 at 1:00 AM to May 29 at 21:40 --><!-- /from May 2 at 1:00 AM to May 5 at 9:45 AM --><div class="column banner-minimal">
+            <a href="https://tech.cornell.edu/arxiv/" target="_blank">Learn about arXiv becoming an independent nonprofit.</a>
+        </div><div class="column" id="support-ack">
+          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors.</span>
+          <a href="https://info.arxiv.org/about/donate.html" class="btn-header-donate">Donate</a>
+        </div>
+      </div>
+
+      <div id="header" class="is-hidden-mobile">
+<a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
+  <div class="header-breadcrumbs is-hidden-mobile">
+    <a href="/"><img src="/static/browse/0.3.4/images/arxiv-logo-one-color-white.svg" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="/list/cs/recent">cs</a> <span>&gt;</span> arXiv:2303.09540
+  </div>
+
+        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
+        </div>
+
+          <div class="search-block level-right">
+    <form class="level-item mini-search" method="GET" action="https://arxiv.org/search">
+      <div class="field has-addons">
+        <div class="control">
+          <input class="input is-small" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+          <p class="help"><a href="https://info.arxiv.org/help">Help</a> | <a href="https://arxiv.org/search/advanced">Advanced Search</a></p>
+        </div>
+        <div class="control">
+          <div class="select is-small">
+            <select name="searchtype" aria-label="Field to search">
+              <option value="all" selected="selected">All fields</option>
+              <option value="title">Title</option>
+              <option value="author">Author</option>
+              <option value="abstract">Abstract</option>
+              <option value="comments">Comments</option>
+              <option value="journal_ref">Journal reference</option>
+              <option value="acm_class">ACM classification</option>
+              <option value="msc_class">MSC classification</option>
+              <option value="report_num">Report number</option>
+              <option value="paper_id">arXiv identifier</option>
+              <option value="doi">DOI</option>
+              <option value="orcid">ORCID</option>
+              <option value="author_id">arXiv author ID</option>
+              <option value="help">Help pages</option>
+              <option value="full_text">Full text</option>
+            </select>
+          </div>
+        </div>
+        <input type="hidden" name="source" value="header">
+        <button class="button is-small is-cul-darker">Search</button>
+      </div>
+    </form>
+  </div>
+     </div><!-- /end desktop header -->
+
+      <div class="mobile-header">
+        <div class="columns is-mobile">
+          <div class="column logo-arxiv"><a href="https://arxiv.org/"><img src="/static/browse/0.3.4/images/arxiv-logomark-small-white.svg" alt="arXiv logo" style="height:60px;" /></a></div>
+          <div class="column logo-cornell"><a href="https://www.cornell.edu/">
+            <picture>
+              <source media="(min-width: 501px)"
+                srcset="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg  400w"
+                sizes="400w" />
+              <source srcset="/static/browse/0.3.4/images/icons/cu/cornell_seal_simple_black.svg 2x" />
+              <img src="/static/browse/0.3.4/images/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University Logo" />
+            </picture>
+          </a></div>
+          <div class="column nav" id="toggle-container" role="menubar">
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white"><title>open search</title><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <form class="mobile-search-form" method="GET" action="https://arxiv.org/search">
+                <div class="field has-addons">
+                  <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+                  <input type="hidden" name="source" value="header">
+                  <input type="hidden" name="searchtype" value="all">
+                  <button class="button">GO</button>
+                </div>
+              </form>
+            </div>
+
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="menu"><title>open navigation menu</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
+                <h2 id="mobilemenulabel">quick links</h2>
+                <ul>
+                    <li><a href="https://arxiv.org/login">Login</a></li>
+                    <li><a href="https://info.arxiv.org/help">Help Pages</a></li>
+                    <li><a href="https://info.arxiv.org/about">About</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div><!-- /end mobile-header -->
+    </header>
+
+    <main>
+      <div id="content">
+<!--
+rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+    <rdf:Description
+        rdf:about="/abs/2303.09540"
+        dc:identifier="/abs/2303.09540"
+        dc:title="SemDeDup: Data-efficient learning at web-scale through semantic deduplication"
+        trackback:ping="/trackback/2303.09540" />
+    </rdf:RDF>
+--><div id="abs-outer">
+
+  <div class="leftcolumn">
+
+exec
+/bin/zsh -lc 'tmp=$(mktemp); curl -L --max-time 20 -s https://huggingface.co/blog/dedup > $tmp; grep -i -n -E '"'connected|component|union|deduplication pipeline|beyond duplicate|keep|threshold|MinHash|LSH' "'$tmp | head -60; rm $tmp' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 258ms:
+134:<h2 class="relative group flex items-baseline"><!--[--><!--[0--><div class="absolute -left-12 bottom-0 top-0 z-10 not-prose hidden lg:block"><div class="sticky top-4 flex"><div class="h-7 pt-[0.175rem]"><span class="peer" tabindex="0"><button class="select-none text-gray-400 hover:cursor-pointer hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-400"><svg width="1em" height="1em" viewBox="0 0 10 10" class="text-lg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" role="img" preserveAspectRatio="xMidYMid meet" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.65039 2.9999C1.65039 2.8066 1.80709 2.6499 2.00039 2.6499H8.00039C8.19369 2.6499 8.35039 2.8066 8.35039 2.9999C8.35039 3.1932 8.19369 3.3499 8.00039 3.3499H2.00039C1.80709 3.3499 1.65039 3.1932 1.65039 2.9999ZM1.65039 4.9999C1.65039 4.8066 1.80709 4.6499 2.00039 4.6499H8.00039C8.19369 4.6499 8.35039 4.8066 8.35039 4.9999C8.35039 5.1932 8.19369 5.3499 8.00039 5.3499H2.00039C1.80709 5.3499 1.65039 5.1932 1.65039 4.9999ZM2.00039 6.6499C1.80709 6.6499 1.65039 6.8066 1.65039 6.9999C1.65039 7.1932 1.80709 7.3499 2.00039 7.3499H8.00039C8.19369 7.3499 8.35039 7.1932 8.35039 6.9999C8.35039 6.8066 8.19369 6.6499 8.00039 6.6499H2.00039Z"></path></svg><!----></button></span> <div class="invisible w-0 -translate-x-8 -translate-y-6 overflow-hidden rounded-xl border bg-white transition-transform hover:visible hover:w-52 hover:translate-x-0 peer-focus-within:visible peer-focus-within:w-52 peer-focus-within:translate-x-0"><nav aria-label="Secondary" class="max-h-[550px] overflow-y-auto p-3"><ul><!--[--><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#intended-audience" title="Intended Audience"><!---->Intended Audience<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#motivations" title="Motivations"><!---->Motivations<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#from-bigscience-to-bigcode" title="From BigScience to BigCode"><!---->From BigScience to BigCode<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#minhash-walkthrough" title="MinHash Walkthrough"><!---->MinHash Walkthrough<!----></a> <ul class="pl-1"><!--[--><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#shingles" title="Shingles"><!---->Shingles<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#fingerprint-computation" title="Fingerprint Computation"><!---->Fingerprint Computation<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#locality-sensitive-hashing" title="Locality Sensitive Hashing"><!---->Locality Sensitive Hashing<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><li><a class="mb-0.5 block break-words hover:underline active:text-gray-700 dark:active:text-gray-300 text-gray-500" href="#beyond-duplicate-pairs" title="Beyond Duplicate Pairs"><!---->Beyond Duplicate Pairs<!----></a> <ul class="pl-2"><!--[--><!--]--></ul></li><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#quality-matters" title="Quality Matters"><!---->Quality Matters<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#scaling" title="Scaling"><!---->Scaling<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#proceed-with-caution" title="Proceed with Caution"><!---->Proceed with Caution<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#future-directions" title="Future Directions"><!---->Future Directions<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#credits" title="Credits"><!---->Credits<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#supporting-resources" title="Supporting Resources"><!---->Supporting Resources<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><li class="mb-3 text-sm last:mb-0"><a class="mb-1 block break-words font-semibold text-gray-700 *:break-words hover:underline active:text-gray-900 dark:active:text-gray-200" href="#references" title="References"><!---->References<!----></a> <ul class="pl-1"><!--[--><!--]--></ul></li><!--]--></ul></nav></div></div></div></div><!--]--><!--]-->
+187:<td>After MinHashLSH: 65.86 GB (17M)</td>
+189:<td>URL(Exact) + Document(MinHash LSH)</td>
+199:<td>Document(MinHash LSH)</td>
+219:<td>Document(Exact + MinHash LSH)</td>
+239:<td>Substring(Suffix Array) or Document(MinHash)</td>
+240:<td>Suffix Array: 50-token, MinHash: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>9000</mn><mo separator="true">,</mo><mn>0.8</mn><mo separator="true">,</mo><mn>5</mn><mo separator="true">,</mo><mn>20</mn><mo separator="true">,</mo><mn>450</mn><mo stretchy="false">)</mo></mrow> (9000, 0.8, 5, 20, 450) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">9000</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.8</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">20</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">450</span><span class="mclose">)</span></span></span></span></td>
+329:<td>MinHash + LSH</td>
+335:<td>MinHash + LSH</td>
+342:<p>MinHash + LSH parameters <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>T</mi><mo separator="true">,</mo><mi>K</mi><mo separator="true">,</mo><mi>B</mi><mo separator="true">,</mo><mi>R</mi><mo stretchy="false">)</mo></mrow> (P, T, K, B, R) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mclose">)</span></span></span></span>:</p>
+345:<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>T</mi></mrow> T </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> Jaccard similarity threshold</li>
+350:<p>To get a sense of how those parameters might impact your results, here is a simple demo to illustrate the computation mathematically: <a href="https://huggingface.co/spaces/bigcode/near-deduplication">MinHash Math Demo</a>.</p>
+352:	<a id="minhash-walkthrough" class="block pr-1.5 text-lg md:absolute md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:right-full" href="#minhash-walkthrough" rel="nofollow">
+356:		MinHash Walkthrough
+359:<p>In this section, we will cover each step of MinHash, the one used in BigCode, and potential scaling issues and solutions. We will demonstrate the workflow via one example of three documents in English:</p>
+382:<p>The typical workflow of MinHash is as follows:</p>
+384:<li>Shingling (tokenization) and fingerprinting (MinHashing), where we map each document into a set of hashes.</li>
+385:<li>Locality-sensitive hashing (LSH). This step is to reduce the number of comparisons by grouping documents with similar bands together.</li>
+386:<li>Duplicate removal. This step is where we decide which duplicated documents to keep or remove.</li>
+428:<p>In MinHash, each shingle will typically either be 1) hashed multiple times with different hash functions, or 2) permuted multiple times using one hash function. Here, we choose to permute each hash 5 times. More variants of MinHash can be found in <a href="https://en.wikipedia.org/wiki/MinHash?useskin=vector" rel="nofollow">MinHash - Wikipedia</a>.</p>
+451:<p>Taking the minimum value of each column within each document — the "Min" part of the "MinHash", we arrive at the final MinHash for this document:</p>
+456:<th>minhash</th>
+513:<p>After the fingerprint calculation, one particular document is mapped to one array of integer values. To figure out what documents are similar to each other, we need to group them based on such fingerprints. Entering the stage, <strong>Locality Sensitive Hashing (LSH)</strong>.</p>
+522:<p>LSH breaks the fingerprint array into bands, each band containing the same number of rows. If there is any hash values left, it will be ignored. Let's use <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow> b=2 </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> bands and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>r</mi><mo>=</mo><mn>2</mn></mrow> r=2 </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> rows to group those documents:</p>
+527:<th>minhash</th>
+592:		Beyond Duplicate Pairs
+597:<li>Double-check their actual Jaccard similarities by calculating their shingle overlap, due to the estimation nature of MinHash. The Jaccard Similarity of two sets is defined as the size of the intersection divided by the size of the union. And now it becomes much more doable than computing all-pair similarities, because we can focus only for documents within a cluster. This is also what we initially did for BigCode, which worked reasonably well.</li>
+600:<p>From such pairs, whether they are validated or not, we can now construct a graph with those pairs as edges, and duplicates will be clustered into communities or connected components. In terms of implementation, unfortunately, this is where <code>datasets</code> couldn't help much because now we need something like a <code>groupby</code> where we can cluster documents based on their <em>band offset</em> and <em>band values</em>. Here are some options we have tried:</p>
+601:<p><strong>Option 1: Iterate the datasets the old-fashioned way and collect edges. Then use a graph library to do community detection or connected component detection.</strong></p>
+605:<p><strong>Option 3: Iterate the dataset, but use a union find data structure to cluster documents.</strong></p>
+613:            uf.union(x, idx)
+616:<p>We already know that steps up to the LSH part can be parallelized, which is also achievable in Spark. In addition to that, Spark supports distributed <code>groupBy</code> out of the box, and it is also straightforward to implement algorithms like <a href="#18" rel="nofollow">[18]</a> for connected component detection. If you are wondering why we didn't use Spark's implementation of MinHash, the answer is that all our experiments so far stemmed from <a href="https://github.com/ekzhu/datasketch" rel="nofollow">Datasketch</a>, which uses an entirely different implementation than Spark, and we want to ensure that we carry on the lessons and insights learned from that without going into another rabbit hole of ablation experiments.</p>
+634:<p>A simple connected component algorithm based on <a href="#18" rel="nofollow">[18]</a> implemented in Spark.</p>
+639:    changes = a.subtract(b).union(b.subtract(a)).collect()
+659:<li>Lower the similarity threshold</li>
+668:Image: Two graphs showing the impact of similarity threshold and shingle size, the first one is using unigram and the second one 5-gram. The red dash line shows the similarity cutoff: any documents below would be considered as false positives — their similarities with other documents within a cluster are lower than the threshold.
+671:<p>These graphs can help us understand why it was necessary to double-check the false positives for CodeParrot and early version of the Stack: using unigram creates many false positives; They also demonstrate that by increasing the shingle size to 5-gram, the percentage of false positives decreases significantly. A smaller threshold is desired if we want to keep the deduplication aggressiveness.</p>
+672:<p>Additional experiments also showed that lowering the threshold removes more documents that have high similarity pairs, meaning an increased recall in the segment we actually would like to remove the most.</p>
+687:<p>This isn't the most rigorous scaling proof you can find, but the deduplication time, given a fixed computation budget, looks practically linear to the physical size of the dataset. When you take a closer look at the cluster resource usage when processing JSON dataset, the largest subset in the Stack, you can see the MinHash + LSH (stage 2) dominated the total real computation time (stage 2 + 3), which from our previous analysis is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>M</mi><mo stretchy="false">)</mo></mrow> \mathcal{O}(NM) </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">NM</span><span class="mclose">)</span></span></span></span> — linear to the dataset physical volume.</p>
+766:<li><a id="18" rel="nofollow">[18]</a> : Raimondas Kiveris, Silvio Lattanzi, et al., <a href="https://doi.org/10.1145/2670979.2670997" rel="nofollow">Connected Components in MapReduce and Beyond</a>, 2014</li>
+769:<li><a id="21" rel="nofollow">[21]</a>: Edith Cohen, <a href="http://www.cohenwang.com/edith/Surveys/minhash.pdf" rel="nofollow">MinHash Sketches : A Brief Survey</a>, 2016</li>
+
