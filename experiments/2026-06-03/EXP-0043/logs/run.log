@@ -1,0 +1,30 @@
+=== BM25 sanity unit check (k1=1.20 b=0.75) ===
+docs=[['a', 'b', 'c'], ['a', 'a', 'd'], ['e', 'f', 'g', 'a']]
+N=3 avgdl=3.333333 doclens=[3, 3, 4] df['a']=3
+idf('a') = ln((3-3+0.5)/(3+0.5)+1) = 0.133531393
+doc0: hand=0.139227044443 impl=0.139227044443 diff=0.00e+00
+doc1: hand=0.188919012073 impl=0.188919012073 diff=0.00e+00
+doc2: hand=0.123432379737 impl=0.123432379737 diff=0.00e+00
+rank order by score: [1, 0, 2] (expect doc1 first)
+SANITY PASS: impl matches hand calc to <1e-9 and ranking correct.
+seed 0 done @ 0.4s
+seed 1 done @ 0.8s
+seed 2 done @ 1.2s
+seed 3 done @ 1.5s
+seed 4 done @ 1.9s
+seed 5 done @ 2.4s
+seed 6 done @ 2.7s
+seed 7 done @ 3.1s
+seed 8 done @ 3.5s
+seed 9 done @ 3.9s
+seed 10 done @ 4.3s
+seed 11 done @ 4.7s
+seed 12 done @ 5.1s
+seed 13 done @ 5.4s
+seed 14 done @ 5.8s
+seed 15 done @ 6.4s
+seed 16 done @ 6.8s
+seed 17 done @ 7.2s
+seed 18 done @ 7.6s
+seed 19 done @ 7.9s
+RAW written: /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0043/results/raw_results.csv  (elapsed 7.9s)
