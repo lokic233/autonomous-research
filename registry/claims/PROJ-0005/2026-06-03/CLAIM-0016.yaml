@@ -1,0 +1,40 @@
+claim_id: CLAIM-0016
+project_id: PROJ-0005
+stage: seed
+status: seed
+claim: "In multi-agent LLM systems, an EXTRACTIVE inter-agent message compressor that\
+  \ keeps only the spans the RECEIVING agent will actually act on (predicted from\
+  \ the receiver's role+task, NOT the full message) cuts total multi-agent token cost\
+  \ by a non-trivial fraction at matched task-success, AND beats BOTH (a) recency/length\
+  \ truncation and (b) a generic role-agnostic prompt compressor (LLMLingua-style)\
+  \ at matched compression ratio \u2014 because inter-agent messages carry role-irrelevant\
+  \ verbosity that a receiver-role-conditioned filter can drop but a generic compressor\
+  \ cannot."
+why_it_matters: "NEW axis (multi-agent inter-agent comms compression \u2014 untouched\
+  \ by the 15 prior claims). Two falsifiable parts: (1) is there role-irrelevant verbosity\
+  \ in inter-agent messages (does receiver-role-conditioning help)? (2) does the role-conditioned\
+  \ extractor beat truncation AND generic LLMLingua at matched ratio + matched task-success?\
+  \ L0: model multi-agent message traffic + role-conditioned vs generic vs truncation\
+  \ compressors on the (tokens-saved, task-success) Pareto; anti-circular (the predictor\
+  \ reads receiver role+task, NOT a redundancy oracle); honest-negative if role-conditioning\
+  \ doesn't beat generic at matched ratio. Topic: agentic-systems + inference-optimization.\
+  \ Distinguish from LLMLingua/prompt-compression (role-agnostic) + the dead CLAIM-0008/0013\
+  \ (single-agent context compression) \u2014 novelty is the RECEIVER-ROLE-CONDITIONED\
+  \ inter-agent filter."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r3-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0023 result, then ros exp complete --exp EXP-0023 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0023
+created_at: '2026-06-03T07:12:37Z'
+last_updated: '2026-06-03T07:13:11Z'
