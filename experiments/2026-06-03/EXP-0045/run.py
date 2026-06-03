@@ -10,7 +10,7 @@ os.makedirs(RES, exist_ok=True)
 
 # ---- locked params ----
 N = 4000; D = 12; K_CLUST = 8; Q = 500; K = 10
-M = 16; EF_C = 32; EF_S = 32
+M = 16; EF_C = 32; EF_S = 10  # AMENDMENT 1: ef_search=k (minimal honest width)
 SIGMAS = [0.3, 0.5, 0.8, 1.2, 1.8, 2.5, 3.5, 5.0]
 DATA_SEED = 12345; QUERY_SEED = 999
 BUILD_SEEDS = [7, 11, 13, 17, 19]   # [0]=main

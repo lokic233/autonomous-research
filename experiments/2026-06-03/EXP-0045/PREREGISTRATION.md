@@ -84,3 +84,17 @@ Does reverse-kNN in-degree predict per-item FN rate AFTER partialling out local 
 
 ## SIGNIFICANCE
 - Bootstrap 1000 resamples over items; 95% percentile CIs. Significant = CI excludes 0.
+
+## AMENDMENT 1 (before main run, after dry-run validity check) — locked
+DRY-RUN FINDING: with ef_search=32, greedy search achieves ~100% recall on this corpus
+(N<=600..2500) -> ZERO per-item FN variance -> the phenomenon does not exist to be predicted
+-> the experiment cannot test the claim (degenerate, no outcome variance). This is a design
+validity bug, NOT a tuning opportunity.
+FIX (principled, NOT a tuned-knob): set ef_search = k = 10, the MINIMAL HONEST search width
+(return exactly k candidates, NO over-fetch slack). This is the natural hardest-but-fair
+setting that exposes graph-traversal false negatives; it is a fixed principled choice (ef=k),
+not swept to manufacture a positive. ef_construction stays 32, M stays 16. With ef_search=10,
+recall ~0.70 -> real, structurally-determined FN variance exists.
+All other design elements (corpus, oracle, predictor, control, partial-corr test, stability,
+outcome definitions, anti-circularity) are UNCHANGED.
+This amendment is committed BEFORE the main run.
