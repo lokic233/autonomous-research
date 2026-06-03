@@ -1,7 +1,7 @@
 claim_id: CLAIM-0049
 project_id: PROJ-0019
 stage: seed
-status: seed
+status: weakened
 claim: "When near-duplicate clusters in a training corpus contain members differing\
   \ in a quality-correlated observable (e.g. text length/completeness), the standard\
   \ fuzzy-dedup convention of keeping the FIRST-encountered cluster member induces\
@@ -53,16 +53,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0052
+  summary: "CLAIM-0049 retention-policy quality skew: phenomenon REAL+clean (sign-flip\
+    \ Df=-Dl, monotone in rho, zero at rho=0, monotone in within-cluster variance)\
+    \ and AUDIT-INVISIBLE (3 policies remove identical cluster set, identical removal\
+    \ 2548/2548/2548, identical FP) \u2014 BUT MAGNITUDE NEGLIGIBLE at realistic rho:\
+    \ |Df|=0.0125 SD at rho=0.2 (below pre-reg 0.05 threshold), only 0.064 SD even\
+    \ at adversarial rho=1.0. Guard A FAILED, Guard B passed. Verdict NEAR-TAUTOLOGY:\
+    \ keep-first/arbitrary default (BigCode/datatrove/NeMo) VINDICATED; representative-selection\
+    \ is not a meaningful corpus-quality lever at realistic crawl-order correlation."
+  data_path: experiments/2026-06-03/EXP-0052/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0052 result, then ros exp complete --exp EXP-0052 --effect
-  ...
+lifecycle_state: done
+next_action: "terminal: NEAR-TAUTOLOGY/weaken \u2014 mechanism real + audit-invisible\
+  \ but skew at realistic rho=0.2 is 0.0125 SD (4x below matters-threshold), 0.064\
+  \ SD even at adversarial rho=1; keep-first/arbitrary default VINDICATED. Guard A\
+  \ fired."
 blocking_on: ''
-active_experiments:
-- EXP-0052
+active_experiments: []
 created_at: '2026-06-03T17:51:09Z'
-last_updated: '2026-06-03T17:51:59Z'
+last_updated: '2026-06-03T18:15:00Z'

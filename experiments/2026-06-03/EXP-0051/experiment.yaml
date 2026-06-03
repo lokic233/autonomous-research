@@ -13,26 +13,24 @@ needs_gpu: false
 dispatched_by: ''
 node_lease: ''
 status: completed
-result_summary: "L1 REAL-DATA (GSM8K 1319 + MATH-500). STAGE-A GATE PASS: high-recall\
-  \ numeric/Minerva-sympy grader empirical precision q=1.0000 on BOTH datasets (0\
-  \ over-merges of distinct golds; 0 adversarial gold-vs-near-miss merges) \u2014\
-  \ well above L0 q<=0.6 death-zone, so the effect is NOT washed out by real graders.\
-  \ Real phi asymmetry EXISTS but is DATASET-STRUCTURED: MATH-500 strongly phi<<0\
-  \ (median ~ -1.0, 86-90% of problems; correct CONCENTRATED / errors FRAGMENTED =\
-  \ the recall-HURTS regime); GSM8K phi~0 (symmetric, integer answers). STAGE-B (gated\
-  \ through, real vLLM on H100): Qwen2.5-0.5B vs 7B, 150 GSM8K, k=16 temp0.8 \u2014\
-  \ maj@k 0.5B={exact .480/num .487} vs 7B={.780/.780}; ranking INVERSION = HONEST\
-  \ NULL (7B wins under both graders). The null is PREDICTED by phi~0 on GSM8K and\
-  \ CONFIRMS the phi-governs-sign mechanism rather than refuting it. Ecological foothold\
-  \ = REAL but confined to symbolic-answer evals (MATH); integer-QA leaderboards are\
-  \ safe. In-the-wild inversion demo needs a MATH-answer extractor + symbolic benchmark\
-  \ (L2 spec in RESULTS). FLAG: L0 inversion construction exploratory; Stage-A answer-frequencies\
-  \ are flagged proxy (q + dataset H_C/H_W structure anchored in real gold strings;\
-  \ Stage-B fully real samples)."
+result_summary: "L1 REAL-DATA, cost-aware staged. STAGE-A GATE PASSED: real numeric/sympy\
+  \ grader precision q=1.000 on GSM8K+MATH-500 (zero false-merges even adversarial,\
+  \ >> q=0.6 wash-out); MATH-500 shows the strong phi<<0 asymmetry the recall-HURTS\
+  \ regime needs (median ~-1.0, 86-90pct of problems), GSM8K phi~0 (symmetric, integer\
+  \ answers). So the L0 sign-flip HAS an ecological foothold but is DATASET-SPECIFIC\
+  \ to rich-symbolic-answer evals (MATH), not integer QA. STAGE-B real-model maj@k\
+  \ on 150 GSM8K problems x k=16 (H100): RANKING-INVERSION = HONEST NULL \u2014 grader\
+  \ swap does not flip 0.5B-vs-7B ranking, BECAUSE GSM8K is phi~0 (the predicted null,\
+  \ CONFIRMS phi-governs-sign rather than contradicting). The in-the-wild inversion\
+  \ DEMONSTRATION was NOT achieved (GSM8K is the wrong regime; needs a symbolic MATH\
+  \ benchmark + real extractor + larger k = L2). phi uses real gold strings but proxy\
+  \ answer-FREQUENCIES (real-model-sample phi on MATH = remaining gap). L0 inversion\
+  \ flagged EXPLORATORY. Disposition keep-exploring: lean-support on ecology (precision+MATH-phi\
+  \ real), NULL on the live inversion demo."
 result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0051/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: '2026-06-03T18:11:29Z'
+completed_at: '2026-06-03T18:13:15Z'
 prompt_version: ''

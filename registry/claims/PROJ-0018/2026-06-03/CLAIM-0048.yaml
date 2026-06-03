@@ -84,6 +84,22 @@ supporting_evidence:
     \ exploratory; Stage-A answer-frequencies are flagged proxy (q + dataset H_C/H_W\
     \ structure anchored in real gold strings; Stage-B fully real samples)."
   data_path: experiments/2026-06-03/EXP-0051/
+- exp_id: EXP-0051
+  summary: "L1 REAL-DATA, cost-aware staged. STAGE-A GATE PASSED: real numeric/sympy\
+    \ grader precision q=1.000 on GSM8K+MATH-500 (zero false-merges even adversarial,\
+    \ >> q=0.6 wash-out); MATH-500 shows the strong phi<<0 asymmetry the recall-HURTS\
+    \ regime needs (median ~-1.0, 86-90pct of problems), GSM8K phi~0 (symmetric, integer\
+    \ answers). So the L0 sign-flip HAS an ecological foothold but is DATASET-SPECIFIC\
+    \ to rich-symbolic-answer evals (MATH), not integer QA. STAGE-B real-model maj@k\
+    \ on 150 GSM8K problems x k=16 (H100): RANKING-INVERSION = HONEST NULL \u2014\
+    \ grader swap does not flip 0.5B-vs-7B ranking, BECAUSE GSM8K is phi~0 (the predicted\
+    \ null, CONFIRMS phi-governs-sign rather than contradicting). The in-the-wild\
+    \ inversion DEMONSTRATION was NOT achieved (GSM8K is the wrong regime; needs a\
+    \ symbolic MATH benchmark + real extractor + larger k = L2). phi uses real gold\
+    \ strings but proxy answer-FREQUENCIES (real-model-sample phi on MATH = remaining\
+    \ gap). L0 inversion flagged EXPLORATORY. Disposition keep-exploring: lean-support\
+    \ on ecology (precision+MATH-phi real), NULL on the live inversion demo."
+  data_path: experiments/2026-06-03/EXP-0051/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0046
@@ -97,4 +113,4 @@ next_action: review evidence from EXP-0051; convene committee if candidate-grade
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T16:35:08Z'
-last_updated: '2026-06-03T18:11:29Z'
+last_updated: '2026-06-03T18:13:15Z'
