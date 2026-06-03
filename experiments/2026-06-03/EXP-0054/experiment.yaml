@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORTED. Input-length-SJF p99 is 1.4-5.8x WORSE than FCFS at the
+  realistic VLM anti-correlation band (tau~0.14-0.34) at moderate+ load, all >=1.2x,
+  growing with load. Crossover tau* high (+0.43..+0.8) >> realistic VLM tau(~0) so
+  realistic mixes are firmly harmful (anti-pattern-#6 defense HOLDS: large at realistic
+  params, adversarial extreme is benign). Control C1: oracle/perfect-proxy SJF BEATS
+  FCFS (ratio 0.72-0.96) = decisive distinction from textbook SJF-starvation (harm
+  is from proxy WRONG-BY-CLASS not SJF being bad). Control C2: FCFS tau-invariant
+  (corr~0), SJF p99 anti-corr with tau (-0.7..-0.94) = effect is the PROXY not workload.
+  Anti-circular (scheduler reads only input_tok; GT true_svc never visible). Researcher
+  errored pre-writeup; orchestrator recorded from committed sweep.csv+control_C1_oracle.csv
+  (verified). L1: real vLLM/SGLang VLM trace, measure actual Kendall-tau(input-tokens,decode-len).'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0054/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T20:19:15Z'
 prompt_version: ''

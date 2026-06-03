@@ -1,7 +1,7 @@
 claim_id: CLAIM-0048
 project_id: PROJ-0018
 stage: seed
-status: seed
+status: weakened
 claim: "Increasing an answer-equivalence canonicalizer's RECALL (how aggressively\
   \ it merges truly-equivalent free-form answers before a self-consistency majority\
   \ vote) does NOT monotonically improve maj@k accuracy: its sign is governed by the\
@@ -100,7 +100,29 @@ supporting_evidence:
     \ gap). L0 inversion flagged EXPLORATORY. Disposition keep-exploring: lean-support\
     \ on ecology (precision+MATH-phi real), NULL on the live inversion demo."
   data_path: experiments/2026-06-03/EXP-0051/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0053
+  summary: "L2 REAL-MODEL (MATH-500, 300 problems x k=32 x 3 models Qwen2.5-0.5B/7B\
+    \ + Llama-3-8B, H100). THE LOAD-BEARING FINDING retires committee#2 Concern-2\
+    \ DECISIVELY: real-model-sample phi on MATH is NOT <<0 \u2014 it is NEAR-ZERO\
+    \ and SYMMETRIC (mean phi: qwen05 -0.041, qwen7b +0.037, llama3 +0.024 \u2014\
+    \ two of three POSITIVE; only 9-12pct of problems have >1 surface form in the\
+    \ correct cluster; H_C~H_W~0). Real models emit boxed answers in a CANONICAL surface\
+    \ form regardless of correctness, so there is NO fragmentation asymmetry to exploit.\
+    \ CONSEQUENCES: (B) NO ranking inversion in any model pair (CIs include 0); recall\
+    \ HELPS all models monotonically (slope +0.03/+0.083/+0.063 = the phi>0 direction);\
+    \ the one Borda 'inversion' is a +0.003 noise tie. (A) the L0/L1 MATH phi<<0 was\
+    \ a PROXY/support-size artifact (|correct|=1 vs |wrong|>=3), NOT real LLM behavior\
+    \ \u2014 committee#2's near-tautology concern CONFIRMED. So the L0 canonicalizer-recall\
+    \ sign-flip mechanism has NO ECOLOGICAL FOOTHOLD on real models. Per the pre-registered\
+    \ decision rule (real-model phi~0 => near-tautology => weaken/kill) this WEAKENS\
+    \ the claim: the inversion is a simulation artifact of a proxy answer-distribution,\
+    \ not a real eval hazard. Honest WIN \u2014 the two-pass + L2 ecological gate\
+    \ did exactly its job. Methodology sound (phi from real output frequencies not\
+    \ proxy; grader-relative maj@k; bootstrap CIs; spoiler-immune Borda; clean GPU\
+    \ os._exit). Self-corrected RESULTS.md model-identity (m3=Llama-3-8B not Qwen-Math,\
+    \ doesn't change numbers). Raw on devgpu014 ~/exp0053/."
+  data_path: experiments/2026-06-03/EXP-0053/
 verdict_history:
 - verdict_id: VERDICT-0046
   date: '2026-06-03'
@@ -111,12 +133,14 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: "L2 EXP-0053 (GT-0002) dispatched to H100; researcher-0051 \u2014 real-MATH\
-  \ inversion + real-model-sample phi + Borda baseline (the committee#2 gate, first-green\
-  \ track)"
+lifecycle_state: done
+next_action: "terminal: WEAKENED at L2 (real-model phi~0 on MATH \u2014 the L0/L1\
+  \ phi<<0 was a proxy/support-size artifact; no ranking inversion on real models;\
+  \ headline mechanism has no ecological foothold). committee#2 near-tautology concern\
+  \ confirmed. The ECOLOGICAL FINDING (real graders q=1.0 high-precision; real models\
+  \ emit canonical boxed surface forms so self-consistency is robust to canonicalizer\
+  \ recall on MATH) is the recorded contribution."
 blocking_on: ''
-active_experiments:
-- EXP-0053
+active_experiments: []
 created_at: '2026-06-03T16:35:08Z'
-last_updated: '2026-06-03T18:34:40Z'
+last_updated: '2026-06-03T20:18:17Z'
