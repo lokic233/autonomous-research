@@ -1112,3 +1112,17 @@ configured with an explicit valid green_rule AND >= canon members.
 a legit 6/6 green still passes. Live v3 + v2 configs are valid 6-member unanimous → UNAFFECTED (floor only
 triggers on degraded configs).
 **v2-parity:** v2 shares this engine and was equally exposed; both now enforce the floor.
+
+## 2026-06-03 ~07:56 UTC — BUG-79 (committee_health blind on v3 + churn) [v3-impl live debug]
+THE most impactful find of the watch after BUG-78. committee_health.sh (the 1-min gate cron) scanned ONLY
+runtime/committee_run_<CLAIM>-* (v2 layout). v3's orchestrator stages committees under
+experiments/<date>/<EXP>/committeeN/ -> the cron ran + stamped .alive (GREEN on ros cron-health) but saw
+ZERO committees + NEVER fired COMMITTEE_READY for the whole cutover. Silently dead gate; science only flowed
+because the orchestrator's own self-check tallied as a fallback. This is exactly the "looks healthy, actually
+blind" class — a stamped .alive is necessary but not sufficient; the cron's WORK must be verified, not just
+its liveness. FIX (a): scan BOTH layouts; resolve CLAIM via experiment.yaml for the experiments path (dir
+name there = EXP not CLAIM). FIX (b)/BUG-79b: skip committees whose claim verdict is already written (mtime
+>= committee _status.txt) so it doesn't nag the orchestrator to re-tally done claims (make-work churn).
+Two-pass safe. Validated live (fires only for un-tallied; silent on re-run). Engine HEAD 8346476.
+LESSON: cron-health (.alive) proves a cron RAN, not that it found its targets. Future: a cron that scans a
+path should assert the path convention matches the instance, or self-report "scanned N dirs".
