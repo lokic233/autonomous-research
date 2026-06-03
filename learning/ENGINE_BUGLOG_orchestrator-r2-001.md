@@ -1432,3 +1432,23 @@ returns `[]` (skip does NOT fire) while os.walk sees all 2 dotfiles. **Fix (mini
 the glob with `os.walk` so the "ANY artifacts" check sees dotfiles too — matching the BUG-24 intent. Fails SAFE
 (any file present -> skip). Patched repro: dotfile-only exp now SKIPPED; truly-empty exp still correctly gc-able
 (no over-correction). AST-validated; live `ros exp gc` dry-run clean.
+
+## BUG-96 — reaper orphans leftover tasks + emits spurious TASK_ORPHANED on a CLEAN converged retire
+**Surface:** `reap()` task loop (~181), engine/supervise.py. **Commit:** dc19d6e (research-os main).
+**Found:** v3 ACTIVE-DEBUG bugbash (reap unknown-role / task-ledger-orphan surface, isolated /tmp). **Class:** missing-case on a clean-retire path (converged projects must emit no supervision signal — BUG-28 principle).
+
+reap() reaps a past-grace agent as one of: `superseded` (fresher same-(project,role) live successor),
+`retired` (converged/no-project + no successor — CLEAN, deliberately NO AGENT_DOWN), or `dead` (ACTIVE project,
+no successor — real coverage gap, AGENT_DOWN). The task-loop only special-cased `superseded` (reassign open
+tasks to the successor); EVERYTHING ELSE (`retired` AND `dead`) fell into the same branch -> flip the open task
+to `orphaned` AND emit a `TASK_ORPHANED` notification. For `dead` that's correct. For `retired` it's wrong: a
+CONVERGED project has no work to respawn/reseed, so the orphaned task + actionable TASK_ORPHANED is pure noise
+that contradicts the deliberate clean-retire-no-notify intent — and leaves a dangling orphaned task on a done
+project (task-ledger pollution). Same anti-pattern BUG-28 already fixed for submonitors (converged projects must
+generate no supervision signal).
+
+**Repro (isolated /tmp):** stale researcher on PROJ-0008 (in converged_pids), no successor, one open task ->
+reaped `retired` (clean, no AGENT_DOWN) BUT task flipped `orphaned` + TASK_ORPHANED emitted. **Fix (minimal, no
+new mechanism):** add a `retired` branch that marks the leftover task `dropped` (no notify). `dead` path
+untouched. Patched repro: converged retire -> task `dropped`, 0 notifs; DEAD-on-active control -> task still
+`orphaned` + AGENT_DOWN + TASK_ORPHANED (real gaps still surface loudly — no over-correction). AST-validated.
