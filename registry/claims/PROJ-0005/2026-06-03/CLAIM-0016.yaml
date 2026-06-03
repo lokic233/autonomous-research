@@ -1,7 +1,7 @@
 claim_id: CLAIM-0016
 project_id: PROJ-0005
 stage: seed
-status: seed
+status: weakened
 claim: "In multi-agent LLM systems, an EXTRACTIVE inter-agent message compressor that\
   \ keeps only the spans the RECEIVING agent will actually act on (predicted from\
   \ the receiver's role+task, NOT the full message) cuts total multi-agent token cost\
@@ -25,16 +25,28 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0023
+  summary: 'PARTIAL/CONDITIONAL (weaken). L0 CPU sim, matched-ratio control passed.
+    Role-conditioned inter-agent compressor beats GENERIC LLMLingua-style at matched
+    ratio ONLY in low-verbosity/high-AUC(>=0.65) regime (21/36 cells, bootstrap CI_lo>0);
+    GENERIC WINS in high-verbosity/low-AUC regime (12/36 CI_hi<0) -- including verb_frac=0.8
+    where the claim''s narrative predicted the biggest role-conditioning win. So claim
+    B is NOT general and its stated mechanism is CONTRADICTED: because act-on content
+    is itself high-salience, generic salience captures it; role-conditioning only
+    adds value when the realizable role signal is strong AND verbosity modest. Both
+    beat truncation strawman 36/36. Anti-circularity HOLDS: rolecond strictly below
+    oracle 36/36 (mean gap 0.278), AUC 0.585-0.815. L1: measure real act-on<->salience
+    coupling + real role-AUC on AutoGen/CrewAI/LangGraph traces vs real LLMLingua,
+    real end-to-end task-success.'
+  data_path: experiments/2026-06-03/EXP-0023/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0023 result, then ros exp complete --exp EXP-0023 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0023; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0023
+active_experiments: []
 created_at: '2026-06-03T07:12:37Z'
-last_updated: '2026-06-03T07:13:11Z'
+last_updated: '2026-06-03T07:24:07Z'

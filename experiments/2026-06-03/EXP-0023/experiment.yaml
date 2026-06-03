@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL/CONDITIONAL (weaken). L0 CPU sim, matched-ratio control passed.
+  Role-conditioned inter-agent compressor beats GENERIC LLMLingua-style at matched
+  ratio ONLY in low-verbosity/high-AUC(>=0.65) regime (21/36 cells, bootstrap CI_lo>0);
+  GENERIC WINS in high-verbosity/low-AUC regime (12/36 CI_hi<0) -- including verb_frac=0.8
+  where the claim''s narrative predicted the biggest role-conditioning win. So claim
+  B is NOT general and its stated mechanism is CONTRADICTED: because act-on content
+  is itself high-salience, generic salience captures it; role-conditioning only adds
+  value when the realizable role signal is strong AND verbosity modest. Both beat
+  truncation strawman 36/36. Anti-circularity HOLDS: rolecond strictly below oracle
+  36/36 (mean gap 0.278), AUC 0.585-0.815. L1: measure real act-on<->salience coupling
+  + real role-AUC on AutoGen/CrewAI/LangGraph traces vs real LLMLingua, real end-to-end
+  task-success.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0023/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T07:24:07Z'
 prompt_version: ''
