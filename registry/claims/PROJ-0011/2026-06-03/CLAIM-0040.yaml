@@ -1,0 +1,40 @@
+claim_id: CLAIM-0040
+project_id: PROJ-0011
+stage: seed
+status: seed
+claim: "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning step\
+  \ on the STREAMING PREFIX of a long tool result (once the front-loaded actionable\
+  \ content has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+why_it_matters: "FRESH axis (tool-result streaming early-commit \u2014 untouched by\
+  \ 24 prior claims). SYSTEMS/structural-overlap shape, screened vs all 3 failure\
+  \ modes (not tuned-knob, not KV-reuse, not predictor-vs-logprob). Falsifiable: (1)\
+  \ measurable front-loading rate in real tool results; (2) correctness-safety break-even\
+  \ (the EXP-0004 lesson: wasted/wrong work when the tail mattered \u2014 model wrong-early-commit\
+  \ cost). L0: model tool-result content distribution (front-loaded vs uniform vs\
+  \ tail-heavy) + early-commit-on-prefix vs serialize-then-read latency w/ wrong-commit\
+  \ penalty + break-even on front-load-fraction x detectability. Honest-negative if\
+  \ front-loading rare OR tails matter too often OR break-even needs implausible detectability.\
+  \ Topic: agentic-systems. Distinguish from speculative-decoding (token-level, lossless)\
+  \ + the dead CLAIM-0003 spec-tool-call-prefetch (that prefetched the CALL; this\
+  \ commits on the partial RESULT) \u2014 novelty is streaming-result-prefix early-commit\
+  \ + the front-loading characterization."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-03T11:28:58Z'
+last_updated: '2026-06-03T11:28:58Z'

@@ -1,0 +1,27 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: green, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS:
+  - The sole novel mechanism delta ("schema-overlap adds predictive signal beyond agent self-logprob") is empirically falsified: delta-AUC ≤0 in 11/12 cells, strictly <0 (schema HURTS) in 7/12. CI excludes 0 in the majority of cells. This is the load-bearing claim and it is dead.
+  - The descriptive phenomenon ("semantically overlapping tool descriptions cause selection errors") collides with ≥2 independent published sources: MetaTool (2310.03128, similar-tool subset) and BFCL multiple-function category. Post-subtraction of the failed mechanism delta, only naming remains.
+  - Schema-overlap representation collides with tool-retrieval embedding machinery in Gorilla (2305.15334) and ToolLLM (2307.16789) — 2 independent sources, collision verified.
+REQUIRED_EVIDENCE: []
+MANDATORY_BASELINES: []
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0038", change: "DEAD-0007 (relabeling). Kill confirmed by committee. Same failure shape as CLAIM-0015/0037: schema-geometry confusability is a noisier re-expression of signals already carried by generic difficulty and agent self-logprob. No surviving novel mechanism post prior-art subtraction."}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+  Three RED votes (novelty_killer, systems_reviewer, product_realist) identify fatal, unrebutted objections. Two GREEN votes (evaluation_prosecutor, theory_skeptic) endorse the QUALITY of the negative result — the experiment was well-designed, anti-circular construction held (oracle gap ~0.2 AUC confirms no label leakage), bootstrap is adequate (5 seeds × 12 cells × N=4000, B=400), and the pre-committed kill conditions were met honestly. I agree: the EXPERIMENT is exemplary L0 work. But the GREEN votes assess execution quality, not claim viability. The claim itself is dead on three independent axes:
+
+  (1) NOVELTY: The descriptive phenomenon (tool-description overlap → selection error) is already named and benchmarked in MetaTool similar-tool subset (2310.03128) and BFCL multiple-function (gorilla.cs.berkeley.edu/leaderboard). The representation (pairwise cosine of tool metadata) is standard tool-retrieval machinery (Gorilla 2305.15334, ToolLLM 2307.16789). The ONLY novel claim was the mechanism delta: "schema-overlap adds beyond self-logprob." EXP-0035 kills this delta empirically. Post-subtraction novelty = naming. Novelty_killer's RED is unrebutted by any reviewer.
+
+  (2) MECHANISM: Theory_skeptic (GREEN) independently confirms the kill is theoretically over-determined: a noisy single-factor lexical proxy CANNOT dominate a sufficient statistic (self-logprob) that integrates both latent factors (c, d). The kill is not a fluke of lexical limitations — it follows from measurement-error theory. The ENV CAVEAT (lexical vs. neural embedding) does not save the claim: even with perfect recovery of latent confusability c, the agent's logprob ALSO sees c, so the "adds beyond logprob" bar remains unfalsified only in the artificial high-σ regime where logprob is degraded by construction. The packet itself concedes: "a better schema feature is unlikely to add beyond it."
+
+  (3) PRODUCT: Product_realist's RED is unrebutted. No production user exists who has schema geometry but lacks the model's logprob — the forward pass that produces the tool choice already produces the logprob. The signal is strictly dominated (delta ≤0), fails at realistic scale (AUC ~0.50 at K≥6), and adds engineering overhead for negative value.
+
+  RESOLVING THE 3-2 SPLIT: The two GREEN reviewers do not dispute any fatal objection — they endorse the negative result's cleanliness, not the claim's viability. Evaluation_prosecutor explicitly says "I vote green to accept this clean negative result," which is a vote on disposition of the EXPERIMENT, not survival of the CLAIM. Theory_skeptic says "exactly the disposition the hostile committee should reward" — again, rewarding honest execution. Both are correct: the pipeline worked. But per area-chair rules, I do not emit GREEN when any RED is unrebutted by evidence. All three REDs stand unrebutted. The claim is DEAD.
+
+  L1 PROGNOSIS: Even with real sentence-embeddings on BFCL/ToolBench (the L1 plan), the load-bearing delta — adds beyond calibrated self-logprob — faces the same theoretical barrier: logprob is a joint readout of (c,d) and a better c-proxy still cannot add beyond it unless it captures confusability the model's own forward pass misses. Evaluation_prosecutor correctly notes that uncalibrated logprobs could leave room, but this is a narrow edge case, not a research program. No L1 is recommended for CLAIM-0038.
+
+  VERDICT: KILL. CLAIM-0038 joins CLAIM-0015 and CLAIM-0037 as DEAD (relabeling). The anti-relabeling screen worked exactly as designed — it caught the collapse cheaply at L0. This is a pipeline success and an honest negative result.
+```

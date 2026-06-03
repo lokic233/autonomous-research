@@ -1999,3 +1999,149 @@ hook: PostToolUse Completed
 hook: PostToolUse Completed
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,80p' experiments/2026-06-03/EXP-0035/results/bootstrap.csv && sed -n '1,20p' experiments/2026-06-03/EXP-0035/results/cells.csv" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+K,rho,sigma_lp,N,auc_schema_max,auc_diff,auc_logprob,auc_combo,auc_oracle,delta_combo_minus_logprob,ci_lo,ci_hi,delta_schema_minus_diff,ci_lo2,ci_hi2
+3,0.0,0.5,4000,0.5561,0.6084,0.6239,0.6223,0.6902,-0.0016,-0.0157,0.0142,-0.0523,-0.0830,-0.0228
+3,0.0,1.5,4000,0.5404,0.6059,0.5341,0.5462,0.7044,0.0121,-0.0014,0.0270,-0.0655,-0.0967,-0.0354
+3,0.5,0.5,4000,0.5270,0.6696,0.6539,0.6238,0.7300,-0.0301,-0.0434,-0.0170,-0.1426,-0.1683,-0.1171
+3,0.5,1.5,4000,0.5170,0.6695,0.5600,0.5543,0.7195,-0.0057,-0.0228,0.0086,-0.1525,-0.1758,-0.1237
+6,0.0,0.5,4000,0.4978,0.6051,0.6238,0.5842,0.7012,-0.0396,-0.0572,-0.0237,-0.1073,-0.1335,-0.0773
+6,0.0,1.5,4000,0.5141,0.5965,0.5257,0.5247,0.6891,-0.0010,-0.0170,0.0129,-0.0823,-0.1106,-0.0544
+6,0.5,0.5,4000,0.5136,0.6793,0.6402,0.6048,0.7227,-0.0354,-0.0505,-0.0188,-0.1656,-0.1928,-0.1391
+6,0.5,1.5,4000,0.4781,0.6802,0.5599,0.5267,0.7331,-0.0331,-0.0480,-0.0140,-0.2021,-0.2297,-0.1735
+12,0.0,0.5,4000,0.5161,0.5902,0.6221,0.5958,0.6889,-0.0263,-0.0394,-0.0106,-0.0741,-0.0996,-0.0477
+12,0.0,1.5,4000,0.4999,0.5967,0.5523,0.5353,0.6849,-0.0170,-0.0332,-0.0022,-0.0968,-0.1224,-0.0683
+12,0.5,0.5,4000,0.5008,0.6596,0.6407,0.5977,0.7090,-0.0430,-0.0586,-0.0281,-0.1588,-0.1841,-0.1292
+12,0.5,1.5,4000,0.5027,0.6806,0.5550,0.5404,0.7226,-0.0145,-0.0302,0.0036,-0.1779,-0.2072,-0.1497
+K,rho,sigma_lp,seed,N,pos_rate,auc_random,auc_diff,auc_logprob,auc_schema_max,auc_schema_mean,auc_oracle,auc_logprob_only,auc_combo,delta_auc_combo_minus_logprob,delta_schema_minus_diff
+3,0.0,0.5,1,4000,0.2702,0.5051,0.6006,0.6289,0.5571,0.5547,0.6943,0.6289,0.6216,-0.0073,-0.0435
+3,0.0,0.5,2,4000,0.2570,0.4931,0.6131,0.6326,0.5536,0.5542,0.6889,0.6326,0.6247,-0.0079,-0.0596
+3,0.0,0.5,3,4000,0.2727,0.4874,0.5770,0.6329,0.5392,0.5440,0.6920,0.6329,0.6184,-0.0145,-0.0378
+3,0.0,0.5,4,4000,0.2705,0.4996,0.6086,0.6164,0.5596,0.5612,0.6822,0.6164,0.6152,-0.0012,-0.0490
+3,0.0,0.5,5,4000,0.2755,0.4961,0.6077,0.6341,0.5639,0.5630,0.6894,0.6341,0.6308,-0.0034,-0.0438
+3,0.0,1.5,1,4000,0.2542,0.4930,0.6094,0.5482,0.5411,0.5437,0.6989,0.5482,0.5545,0.0063,-0.0683
+3,0.0,1.5,2,4000,0.2762,0.4920,0.6103,0.5384,0.5464,0.5487,0.6841,0.5384,0.5641,0.0257,-0.0639
+3,0.0,1.5,3,4000,0.2617,0.5047,0.6095,0.5484,0.5381,0.5421,0.6935,0.5484,0.5574,0.0090,-0.0714
+3,0.0,1.5,4,4000,0.2595,0.4958,0.5884,0.5376,0.5437,0.5443,0.6920,0.5376,0.5573,0.0198,-0.0447
+3,0.0,1.5,5,4000,0.2437,0.4987,0.6102,0.5449,0.5476,0.5477,0.6910,0.5449,0.5582,0.0133,-0.0626
+3,0.5,0.5,1,4000,0.2587,0.5036,0.6697,0.6434,0.5222,0.5230,0.7098,0.6434,0.6149,-0.0285,-0.1476
+3,0.5,0.5,2,4000,0.2695,0.5086,0.6807,0.6490,0.5217,0.5225,0.7263,0.6490,0.6173,-0.0318,-0.1590
+3,0.5,0.5,3,4000,0.2740,0.4971,0.6679,0.6350,0.5260,0.5273,0.7176,0.6350,0.6100,-0.0250,-0.1419
+3,0.5,0.5,4,4000,0.2642,0.4788,0.6633,0.6443,0.5306,0.5323,0.7311,0.6443,0.6179,-0.0264,-0.1327
+3,0.5,0.5,5,4000,0.2725,0.5006,0.6864,0.6551,0.5090,0.5097,0.7302,0.6551,0.6102,-0.0449,-0.1775
+3,0.5,1.5,1,4000,0.2627,0.4836,0.6731,0.5588,0.5267,0.5271,0.7217,0.5588,0.5656,0.0068,-0.1465
+3,0.5,1.5,2,4000,0.2730,0.5019,0.6754,0.5513,0.5240,0.5281,0.7109,0.5513,0.5511,-0.0002,-0.1514
+3,0.5,1.5,3,4000,0.2627,0.5069,0.6707,0.5577,0.5145,0.5152,0.7156,0.5577,0.5524,-0.0053,-0.1562
+3,0.5,1.5,4,4000,0.2637,0.4936,0.6762,0.5575,0.5271,0.5329,0.7360,0.5575,0.5598,0.0023,-0.1491
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' experiments/2026-06-03/EXP-0035/RESULTS.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# RESULTS — EXP-0035 / CLAIM-0038
+researcher-0035 | L0 CPU-only stdlib-only SERIAL | honest pipeline. Verdict: **NEGATIVE (relabeling collapse).**
+
+## TL;DR
+The pre-call schema-overlap signal is a WEAK predictor of wrong-tool-selection (AUC ~0.48–0.56,
+barely above chance), it is DOMINATED by a generic prompt-difficulty predictor, and it ADDS NOTHING
+beyond the agent's own self-logprob — in most cells it HURTS. **The claim COLLAPSES to relabeling**:
+the schema-geometry "confusability" signal is just a noisier, weaker re-expression of information the
+generic difficulty predictor and the agent's own confidence already carry better. This is exactly the
+CLAIM-0015/0037 failure mode the claim was designed to avoid — and it failed the bar. Reported honestly.
+
+## What was measured (anti-circular by construction)
+Label y (wrong-tool-selection) generated from LATENT confusability c + intrinsic difficulty d, NEVER
+from schema tokens. The schema predictor reads ONLY observable lexical schema overlap (bag-cosine of
+name+desc+param tokens) — a NOISY proxy of c. Generic-difficulty predictor reads a noisy readout of d
+only. Agent self-logprob is a separate noisy readout of BOTH c and d (its felt confidence) + noise.
+Oracle reads true latent c (ceiling). Sweep: K∈{3,6,12}, coupling rho∈{0,0.5}, logprob-noise
+σ∈{0.5,1.5}, 5 seeds/cell, N=4000/seed, bootstrap B=400 on the two key deltas.
+ENV CAVEAT: no numpy/transformers on this Mac → schema overlap is LEXICAL/HASHED, not a neural
+embedding. L1 must redo with real schema embeddings. (Stated, per pre-reg.)
+
+## (A) Schema-predictability answer
+- **AUC(schema_max) ≈ 0.48–0.56** across all cells (cells.csv). On the cleanest cells (rho=0, low σ):
+  K=3 ≈0.55, K=6 ≈0.50, K=12 ≈0.50. At K≥6 it is at or BELOW chance.
+- **Oracle AUC(true c) ≈ 0.68–0.73.** So there IS latent confusability signal — but the lexical schema
+  proxy recovers almost none of it. **Oracle gap is huge (~0.18–0.23 AUC):** the pre-call lexical
+  schema geometry is a very lossy readout of true confusability.
+- Decision-rule threshold (AUC_schema_max > 0.55 on rho=0 cells) is met ONLY at K=3, FAILS at K=6/12.
+  => Even part (A) is, at best, marginal-and-fragile, and fails for realistic toolset sizes.
+
+## (B) Beats random + difficulty? Adds beyond self-logprob? (bootstrap.csv, 95% CIs)
+- **vs RANDOM:** schema ~0.50–0.56 vs random ~0.50. Marginal at best; not at K≥6.
+- **vs GENERIC DIFFICULTY: FAILS in EVERY cell.** delta(schema − difficulty) is NEGATIVE everywhere,
+  CI entirely below 0 (e.g. K=6,rho=0.5,σ=1.5: −0.202 [−0.230,−0.174]; K=3,rho=0,σ=0.5: −0.052
+  [−0.083,−0.023]). A generic difficulty predictor beats schema-overlap decisively, always.
+- **ADDS BEYOND SELF-LOGPROB: NO.** delta-AUC (combo[−logprob+schema] − logprob-only) is ≤0 in 11/12
+  pooled cells; CI upper bound < 0 (schema strictly HURTS) in 7/12 cells (e.g. K=12,rho=0.5,σ=0.5:
+  −0.043 [−0.059,−0.028]; K=6,rho=0,σ=0.5: −0.040 [−0.057,−0.024]). The ONLY cells where the CI
+  even touches 0 are the high-logprob-noise (σ=1.5, rho=0) cells where the agent's own confidence is
+  artificially degraded — and even there the point estimate is ~+0.01 with CI straddling 0. Under any
+  realistic (calibrated) self-logprob, schema-overlap adds NOTHING.
+
+## Verdict (pre-committed rule) → NEGATIVE
+ALL three HELD conditions fail: schema AUC only marginal/sub-chance at K≥6; it does NOT beat generic
+difficulty (CI<0 everywhere); it does NOT add beyond self-logprob (CI≤0, often strictly <0).
+This is **relabeling**: the cheap schema-geometry signal is dominated by both a generic difficulty
+predictor and the agent's own logprob. The load-bearing anti-relabeling bar (CLAIM-0015/0037 lesson)
+is FAILED. NEGATIVE is the honest finding — and a WIN for the pipeline.
+
+## Why (mechanism, not just numbers)
+Lexical schema overlap is a lossy readout of latent confusability (oracle gap ~0.2 AUC), AND
+confusability is only one of two error drivers; intrinsic difficulty d drives error at least as
+strongly (bd=1.8 vs bc=2.6 but d is recovered cleanly by the difficulty predictor while c is recovered
+poorly by lexical overlap). The agent's self-logprob already integrates BOTH c and d, so it strictly
+dominates the noisy single-factor schema proxy. Even with a real embedding (L1), the agent's own
+logprob would still see confusability the schema sees — the bar is whether schema sees it the agent
+CANNOT, which this analytic model says it does not under realistic calibration.
+
+## What a real L1 should measure
+Real tool-calling benchmark — BFCL-multiple / ToolBench / Gorilla-API: (1) real schema embeddings
+(sentence-transformers / model embeddings of name+desc+params), (2) real wrong-tool-selection labels
+from ground-truth tool, (3) the agent's REAL tool-choice logprob/confidence. Then the exact same three
+tests: AUC(schema_max) vs random vs generic-difficulty-predictor (e.g. prompt-length/perplexity), AND
+delta-AUC of schema added to a logprob model. The L0 prediction is that schema-overlap will NOT add
+beyond the agent's own logprob on calibrated models — L1 should try to falsify that.
+
+## Prior-art caveat
+Tool RETRIEVAL (ToolLLM, Gorilla, ToolBench) retrieves relevant tools; confusable-tool /
+tool-disambiguation work and LLM-as-judge exist; tool-selection-error is published. The intended
+novelty was the PRE-CALL SCHEMA-GEOMETRY confusability signal as a selection-ERROR predictor that adds
+beyond self-logprob. The L0 result is that this incremental-over-logprob novelty does NOT hold
+(relabeling). Tool selection itself is not novel and we never claimed it.
+
+## Artifacts
+- PRE_REGISTRATION.md (committed before run)
+- run_exp.py (generative model + per-cell AUCs)   -> results/cells.csv (60 rows: 12 cells x 5 seeds)
+- boot.py (pooled bootstrap CIs)                   -> results/bootstrap.csv (12 cells)
+- logs/run.log, logs/boot.log
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: red
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM tool calling", url: "https://docs.vllm.ai/en/latest/features/tool_calling/", overlap: "Ships tool_choice auto/required/none, named function calling, parsers, and schema-constrained decoding modes; no schema-overlap error predictor. Adjacent serving mechanism only."},
+  {system: "SGLang tool parser", url: "https://docs.sglang.io/docs/advanced_features/tool_parser", overlap: "Ships tool-call parsing/execution plumbing; no evidence of pre-call schema-geometry risk scoring."},
+  {system: "LlamaIndex retrieval-augmented agents", url: "https://developers.llamaindex.ai/python/examples/agent/openai_agent_retrieval/", overlap: "Uses ObjectIndex/VectorStoreIndex over Tool objects and retrieves relevant tools at query time; semantic tool-metadata retrieval overlaps with schema similarity, but goal is selection-context reduction, not wrong-tool error prediction."},
+  {system: "ToolBench / ToolLLM", url: "https://github.com/OpenBMB/ToolBench", overlap: "Large-scale tool-use benchmark with 16,464 APIs and a trained API retriever; overlaps strongly with tool-selection/retrieval baselines, not with incremental error prediction beyond logprob."},
+  {system: "Gorilla / BFCL", url: "https://github.com/ShishirPatil/gorilla", overlap: "API/tool invocation training and evaluation, APIBench/BFCL; relevant benchmark and prior work for real tool-selection labels, not same schema-overlap predictor."},
+  {system: "LMCache / FlashInfer / TensorRT-LLM", url: "https://github.com/LMCache/LMCache", overlap: "Inference/cache/kernel systems searched; no direct tool schema selection or error-prediction overlap found from available docs/search results."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Does not hold as a positive systems claim. Evidence is L0 synthetic, lexical/hashed bag-cosine only, K<=12, no real BFCL/ToolBench/Gorilla labels, no real embedding schema geometry, and no measured production tool-choice logprobs. Reproducibility is adequate for L0 because PRE_REGISTRATION.md, run_exp.py, boot.py, cells.csv, bootstrap.csv, and logs are present, but the artifact is not a realistic-scale systems artifact.
+RATIONALE: Prompt version v001. The exact claimed mechanism was not found as a shipping OSS system, but adjacent shipped/research systems already cover tool retrieval/tool calling at scale: LlamaIndex indexes arbitrary Tool objects with VectorStoreIndex and retrieves tools during query time; ToolBench reports 16,464 RapidAPI APIs and an API retriever; Gorilla reports APIBench/BFCL and retrieval-augmented API invocation. Against that backdrop, the packet’s own results kill the positive claim: schema AUC is ~0.48-0.56, at or below chance for K>=6; schema loses to generic difficulty in all 12 cells with CI<0; schema adds <=0 delta-AUC beyond self-logprob in 11/12 cells and strictly hurts in 7/12. This is a clean negative characterization, not a deployable systems design or mechanism.
+tokens used
+120,219
