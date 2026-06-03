@@ -1,0 +1,29 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS:
+  - "CDC-for-KV-dedup is LBFS (2001) Rabin chunking pointed at a new object — naming, not mechanism. Cited by novelty_killer with retrievable source (Muthitacharoen et al., SOSP 2001). Unrebutted."
+  - "The single hard sub-problem (position-shifted KV reuse despite RoPE) is independently and directly solved by ≥3 prior works: Prompt Cache (Gim et al., MLSys 2024, arXiv:2311.04934 — position-id remapping for recurring segments at different offsets), CacheBlend (Yao et al., EuroSys 2025, arXiv:2405.16444 — selective partial recompute for non-prefix KV reuse), EPIC (arXiv:2410.15332 — position-independent context caching). Three independent citations exceed the ≥2-source kill bar. Unrebutted."
+  - "The named revival path (cheap R(Δ) re-rope transform on cached K-blocks) is mechanistically identical to CacheBlend's selective recompute / positional recovery. Revival = re-deriving CacheBlend with no stated differentiation. Unrebutted."
+  - "L0 baseline is exact-prefix only (vLLM APC). The true SOTA baseline for non-prefix KV reuse is CacheBlend/LMCache/Prompt Cache. The 4–7% token-level beyond-prefix headline is measured against an obsolete comparator; the beyond-SOTA delta is unestablished and likely ~0. Cited by novelty_killer, systems_reviewer, evaluation_prosecutor. Unrebutted."
+REQUIRED_EVIDENCE:
+  - "None that would rescue the CLAIM's novelty. The experiment is a clean negative and needs no further evidence to sustain its NEGATIVE verdict. The revival path would need to demonstrate a mechanism delta vs CacheBlend/Prompt Cache/EPIC, not merely reproduce their approach with CDC boundaries."
+MANDATORY_BASELINES: [CacheBlend (Yao et al. 2025), Prompt Cache (Gim et al. 2024), EPIC (2024/25), LMCache (deployed, open-source)]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0007", change: "status → NEGATIVE-CONFIRMED, novelty → KILLED (mechanism = naming-only over LBFS + revival path = CacheBlend re-derivation), close claim, no L1 escalation"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE:
+  The L0 experiment is methodologically sound and the NEGATIVE verdict on raw-KV CDC dedup is correct — theory_skeptic rightly notes the position-dependence result is the textbook RoPE prediction (Su et al. 2021), the pre-registration was committed before runs, decision rule fires cleanly, and the researcher honestly reported both token-level (optimistic) and position-aware (honest) numbers. I credit the experimental integrity.
+
+  However, a clean negative on a well-known problem is not sufficient for GREEN when prior-art search was explicitly not performed and the novelty assessment is fatal. Three of five reviewers vote RED, and none of those REDs is rebutted by evidence in the packet:
+
+  (1) **Mechanism novelty is absent.** The CDC contribution is purely a discovery/chunking method — Rabin fingerprinting for offset-shifted duplicate detection, a technique from 2001 (LBFS). Applying it to KV blocks is repackaging. The genuinely hard part (making offset-shifted KV reusable despite RoPE) is untouched by the claim and is exactly what Prompt Cache, CacheBlend, and EPIC already solve via position-id remapping, selective recompute, and position-independent caching respectively.
+
+  (2) **Revival path collapses to prior art.** The researcher's identified revival ("cheap re-rope R(Δ) transform on cached K-blocks, CacheBlend-adjacent") is not CacheBlend-*adjacent* — it IS CacheBlend's mechanism. No differentiation is stated or implied. Escalating to L1 to implement this revival would be re-deriving published work.
+
+  (3) **Baseline is obsolete.** Measuring CDC vs exact-prefix-only (vLLM APC) omits the actual deployed SOTA for non-prefix reuse (CacheBlend/LMCache). The token-level 4–7% "beyond prefix" headline — the only positive signal — is measured against a strawman baseline that the field moved past in 2024–2025.
+
+  (4) **Prior-art search was not performed.** The packet explicitly states "A literature sweep is owed before any HELD/PARTIAL claim." The novelty_killer was egress-blocked but identified fatal collisions from training knowledge, and critically, the experiment's own prior-art caveat already names the colliding works. Per area-chair rules: no GREEN without adequate prior-art search, and any unrebutted RED yields RED.
+
+  Theory_skeptic's GREEN is specifically about experimental rigor of the negative result, which I endorse — the L0 is a well-executed falsification. But experimental rigor of a negative does not rescue a claim whose mechanism is naming-only and whose revival path is prior art. The claim is NEGATIVE on effect AND killed on novelty. No L1 escalation is warranted.
+```
