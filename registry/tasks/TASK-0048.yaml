@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0022
 claim_id: CLAIM-0052
 exp_id: EXP-0058
-status: open
+status: done
 summary: 'L0: two-stage tool-routing editorial-coverage reachability ceiling. Flat
   vs two-stage(top-m) vs +rerank vs +STRONGER-stage1-representation (the #4-boundary
   test, PRIMARY falsification); reachable-recall@k vs coverage c + registry S; HELD
@@ -15,8 +15,8 @@ summary: 'L0: two-stage tool-routing editorial-coverage reachability ceiling. Fl
   (GT=query target tool, never exposed); PERSISTENT-SEEDER loop'
 evidence_delta: ''
 opened_at: '2026-06-03T21:37:09Z'
-updated_at: '2026-06-03T21:37:09Z'
-closed_at: ''
+updated_at: '2026-06-03T21:44:28Z'
+closed_at: '2026-06-03T21:44:28Z'
 history:
 - ts: '2026-06-03T21:37:09Z'
   event: open
@@ -27,3 +27,7 @@ history:
     if gap survives top-m+rerank+stronger-encoder & scales w/ (1-c),S; KILL/weaken
     if a stronger stage-1 representation closes it (=recoverable vocab-mismatch);
     anti-circular (GT=query target tool, never exposed); PERSISTENT-SEEDER loop'
+- ts: '2026-06-03T21:44:28Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0056 completed EXP EXP-0058 (support)
