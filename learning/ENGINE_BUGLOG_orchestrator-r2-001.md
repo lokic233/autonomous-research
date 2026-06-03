@@ -1598,3 +1598,26 @@ the agent-child re-parent invariant.
 **Lesson:** when one `if` reassigns a field and an `elif` reassigns a DIFFERENT field on the same object,
 an object matching the first condition can never reach the second — audit for entities that legitimately
 need BOTH (here: a supervisor's own task is both assignee and parent).
+
+## 2026-06-03 ~11:36 UTC — BUG-104 (cmd_exp_dispatch lease RMW on gpu_queue.yaml was UNLOCKED -> double GPU dispatch) [v3-impl live debug]
+CONCURRENCY bug. `cmd_exp_dispatch` recorded the node lease in the shared `runtime/gpu_queue.yaml` leases
+map (BUG-54) via an UNLOCKED `load -> check held -> set lease -> dump`. But `cmd_gpu_poll` (BUG-85) claims a
+lease + removes the pulled item from the SAME file UNDER `_file_lock(root,'gpu_queue')`, and BUG-100 later
+hardened the *enqueue* (`cmd_gpu_queue`) and *release* (`cmd_gpu_release`) RMW under that same lock — but it
+MISSED `cmd_exp_dispatch`. So an orchestrator dispatch concurrent with a poller pull reads a STALE no-lease
+snapshot, then dumps it LAST: the poller's just-written lease is WIPED **and** the leased exp REAPPEARS in
+the queue -> a second poller re-pulls it = **DOUBLE GPU DISPATCH** — the exact BUG-85/BUG-100 hazard, reopened
+on the third writer (the dispatch path). Critical on the fragile MI350X (the postmortem'd node).
+
+**Reproduced** 10/10 lost-poller-lease / re-queued in isolated /tmp (dispatch unlocked vs poller locked, 5ms stagger).
+**Fix (no new mechanism):** wrap the lease check+write in the SAME `_file_lock(root,'gpu_queue', stale_s=30)`
+and RE-READ the queue inside it (direct mirror of BUG-100). The `exp.yaml` status=running flip + node_lease
+dump moves INSIDE the lock so the lease claim and the running-flip land atomically (no partial state if the
+double-book guard `sys.exit`s — the in-memory exp dict is set before the lock but only persisted inside it).
+0/12 clobbered after. AST-validated; `ros status` + dispatch still load on the live v3 instance.
+**Engine commit:** a61641b (research-os main).
+
+**Lesson:** when a shared runtime file gets a per-file lock for ONE writer (BUG-85 poller), every OTHER writer
+of that file must adopt the SAME lock — BUG-100 fixed two of three writers (enqueue, release) and the third
+(`cmd_exp_dispatch`) was left unlocked, silently reopening the very double-dispatch race the lock exists to
+prevent. Audit ALL writers of a lock-protected file when hardening any one of them.
