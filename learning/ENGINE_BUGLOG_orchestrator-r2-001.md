@@ -1535,7 +1535,7 @@ new exp correctly enqueued). AST-validated.
 **Commit:** research-os main f112e6a.
 **Note:** shared engine → fix protects v2 (golden ref) and v3.
 
-## 2026-06-03 ~11:03 UTC — BUG-102 (orchestrator self-check job hardcoded a stale agent-id -> design stall) [renumbered from BUG-101: collided w/ retire-lock fix 4b3773a; that engine commit keeps 101] [v3-impl live debug]
+## 2026-06-03 ~11:03 UTC — BUG-103 (orchestrator self-check job hardcoded a stale agent-id -> design stall) [renumbered 101->102->103 to dodge two engine-commit collisions: retire-lock 4b3773a took 101, reaper-dual-role 5b0f1c9 took 102; this doc-only self-check fix = 103] [v3-impl live debug]
 OPERATIONAL/config bug (not engine code). The orchestrator self-check schedule job (af9235ca) hardcoded
 `ros heartbeat --agent orchestrator-r2-001` in its message. Across the r2->r3->r4 handoffs the id was never
 updated, so r4 (the live orchestrator) read "you are orchestrator-r2-001" and heartbeat as r2 — which is
