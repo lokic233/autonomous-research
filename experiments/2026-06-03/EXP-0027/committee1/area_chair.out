@@ -1,0 +1,24 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: green, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS:
+- [novelty_killer, systems_reviewer] Mechanism collision verified ≥2 independent sources: SpecDec++ (arXiv:2405.19715) and Dynamic-Speculation-Lookahead/DISCO (arXiv:2405.04304) both adapt draft length from a runtime signal at PER-STEP granularity — strictly finer than the proposed coarse 3-phase session policy. SGLang ships adaptive speculative decoding in production. The proposed method is a degenerate (coarser) special case of published and deployed methods.
+- [all 5 reviewers] The ONLY potential differentiator — beating best-tuned-fixed on agentic session-phase drift — does not hold. Packet's own L0 sweep (3,024 configs): tuned-fixed captures 92.7% median of adaptive gain; adaptive loses −2.22% mean net tok/s at the realistic operating point (p_err>0, s>0). All 3 pre-registered negative triggers fired.
+- [orchestrator note, all reviewers concur] Third Jensen-floor death on the adaptive-knob-vs-tuned-baseline axis (EXP-0006 grammar-region, EXP-0011 early-exit, EXP-0027 session-phase). The pattern is structural: throughput-vs-k is a broad concave plateau; session-weighted k* lands inside every phase's near-optimum. An L1 re-confirms a tautology.
+REQUIRED_EVIDENCE: []
+MANDATORY_BASELINES: [best-tuned-fixed k (included, correctly sank claim), SpecDec++ per-step adaptive (arXiv:2405.19715), Dynamic-Speculation-Lookahead/DISCO (arXiv:2405.04304)]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0026", change: "status → DEAD/does-not-hold. Terminal. Tag: Jensen-floor-v3. Cross-ref EXP-0006, EXP-0011, EXP-0027 as the completed trilogy on adaptive-knob-vs-tuned-baseline. No L1 warranted. Archive with clean-negative honor."}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+Aggregation note: The 3 RED and 2 GREEN votes are not in disagreement. The two GREEN votes (evaluation_prosecutor, theory_skeptic) endorse the QUALITY of the negative result — the methodology is sound, pre-registered, uses the correct baseline, and the Jensen-floor mechanism is theoretically well-grounded. The three RED votes (novelty_killer, systems_reviewer, product_realist) independently confirm that no contribution survives: the mechanism is published in ≥4 works and shipped in SGLang, the only differentiator failed, and no production use case exists. All five reviewers agree the claim is dead; they differ only on whether to praise the methodology (GREEN) or flag the absence of surviving contribution (RED). Evidence resolves this unambiguously toward KILL.
+
+The claim had two legs: (A) drift exists, (B) adaptive beats best-tuned-fixed. Leg (A) is confirmed but is not novel — SpecDec++ (arXiv:2405.19715) and DISCO (arXiv:2405.04304) already exploit acceptance variation at finer granularity than session-phase. Leg (B) is falsified by the packet's own pre-registered L0 (tuned-fixed captures ~93% median; adaptive −2.2% net with overhead). The Jensen-floor mechanism (broad overlapping plateaus of the (E[accepted]+1)/(k·r+1) curve) is the same geometry that killed EXP-0006 and EXP-0011, making this the third independent confirmation of a structural negative on the adaptive-knob-vs-tuned-baseline axis.
+
+An L1 GPU pass is not warranted: the L0 analytic ceiling (≤~9% ideal, negative with overhead) bounds the real-hardware result from above, and the mechanism explanation (concave plateau overlap) is independent of hardware substrate. The question is closed.
+
+The anti-hallucination rule was honored: novelty_killer cited 4 works with retrievable arXiv URLs, collision verified in ≥2 independent sources (SpecDec++, DISCO). Systems_reviewer independently found SGLang's shipping implementation. No reviewer used "novel/promising/significant" without a cited metric or named prior work.
+
+VERDICT: KILL. CLAIM-0026 is terminal. This is a clean honest negative — the research pipeline worked correctly. The pre-registration, the best-tuned-fixed baseline discipline (learned from EXP-0006), and the honest reporting are exemplary. The claim is dead; the methodology is sound; the Jensen-floor pattern on this axis is now robustly established across three independent experiments.
+PROMPT_VERSION: v001
+```

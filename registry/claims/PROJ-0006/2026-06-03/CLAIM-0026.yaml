@@ -1,7 +1,7 @@
 claim_id: CLAIM-0026
 project_id: PROJ-0006
 stage: seed
-status: weakened
+status: dead
 claim: "In long multi-turn agentic sessions, speculative-decoding draft-model acceptance\
   \ rate DRIFTS materially as the running context grows (the token distribution shifts\
   \ from early conversational prose to deep tool-call/JSON/structured context), such\
@@ -39,13 +39,17 @@ negative_evidence:
     does draft-length adaptation; the session-phase-drift novelty fails to beat tuned-fixed.
     3024 configs x5 seeds.'
   data_path: experiments/2026-06-03/EXP-0027/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0028
+  date: '2026-06-03'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0027; convene committee if candidate-grade
+lifecycle_state: done
+next_action: 'terminal: VERDICT-0028 kill (Jensen-floor-v3; mechanism published SpecDec++/DISCO/SGLang;
+  differentiator failed)'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T08:20:51Z'
-last_updated: '2026-06-03T08:28:18Z'
+last_updated: '2026-06-03T08:49:55Z'

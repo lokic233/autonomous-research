@@ -1,0 +1,67 @@
+verdict_id: VERDICT-0028
+claim_id: CLAIM-0026
+project_id: PROJ-0006
+date: '2026-06-03'
+experiment_ids:
+- EXP-0027
+experiment_paths:
+- experiments/2026-06-03/EXP-0027
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- 'Mechanism collision verified >=2 sources: SpecDec++ (arXiv 2405.19715) + Dynamic-Speculation-Lookahead/DISCO
+  (2405.04304) adapt draft length from a runtime signal at PER-STEP granularity (strictly
+  finer than the proposed coarse 3-phase session policy)'
+- "SGLang ships adaptive spec-decode in production \u2014 the proposed method is a\
+  \ degenerate coarser special case"
+- 'The only differentiator (beating best-tuned-fixed on session-phase drift) does
+  NOT hold: L0''s own 3024-config sweep shows tuned-fixed captures 92.7% median of
+  the adaptive gain'
+- adaptive LOSES -2.22% mean net tok/s at the realistic operating point (p_err>0,
+  switching>0)
+- all 3 pre-registered negative triggers fired
+- "THIRD Jensen-floor death on the adaptive-knob-vs-tuned-baseline axis (EXP-0006\
+  \ grammar-region, EXP-0011 early-exit, EXP-0027 session-phase) \u2014 structural:\
+  \ throughput-vs-k is a broad concave plateau, session-weighted k* sits inside every\
+  \ phase's near-optimum"
+- an L1 re-confirms a tautology
+required_evidence:
+- "None \u2014 no contribution survives (mechanism published in >=4 works + shipped\
+  \ in SGLang"
+- differentiator failed). No L1 warranted. The 2 GREEN votes endorse the negative-result
+  METHODOLOGY (sound, pre-registered, correct baseline), not a surviving claim
+- "the 3 RED confirm absence of contribution \u2014 unanimous that the claim is dead"
+map_delta_proposals:
+- "CLAIM-0026 -> KILL/DEAD (does-not-hold). Tag: JENSEN-FLOOR-V3. Cross-ref EXP-0006\
+  \ + EXP-0011 + EXP-0027 = the completed TRILOGY on adaptive-knob-vs-best-tuned-fixed:\
+  \ when throughput-vs-knob is a broad overlapping concave plateau, a single tuned\
+  \ setting captures ~85-93% of any adaptive gain and adaptive loses once detection/switching\
+  \ overhead is real. FUTURE CLAIMS MUST AVOID THIS SHAPE \u2014 pick axes where the\
+  \ baseline structurally CANNOT capture the gain. Clean-negative honor"
+- no L1
+baseline_requirements:
+- "best-tuned-fixed k (included \u2014 correctly sank the claim)"
+- SpecDec++ per-step adaptive (2405.19715)
+- Dynamic-Speculation-Lookahead/DISCO (2405.04304)
+- SGLang production adaptive spec-decode
+committee_run_dir: experiments/2026-06-03/EXP-0027/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T08:49:22Z'
