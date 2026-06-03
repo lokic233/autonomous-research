@@ -1,0 +1,17 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES:
+- {name: "Reactive Fetch-on-Demand (vLLM Block Swap)", why: "The L0 compares proactive prefetch against evict-and-recompute. However, the standard alternative is offloading to CPU and fetching reactively on resume. Reactive fetching exposes latency but guarantees zero wasted PCIe bandwidth if the session does not resume (p_rr < 1). Proactive must be evaluated against reactive to prove the bandwidth-waste vs latency-hiding tradeoff.", repo_or_cite: "vLLM CPU block swap"}
+- {name: "Recompute with Prefix Caching (RadixAttention)", why: "The recompute baseline assumes full FLOP recomputation of the entire prefix. In agentic workloads, massive shared system prompts and previous turns remain in the KV cache or are shared across instances. Prefix caching drastically lowers the recompute TTFT, directly attacking the 'recompute is slow' premise.", repo_or_cite: "SGLang RadixAttention / vLLM APC"}
+STRAWMAN_RISKS:
+- "Comparing against full O(N) recompute without prefix caching creates a strawman that artificially inflates the TTFT of the baseline."
+- "Omitting a reactive fetch-on-demand baseline falsely presents proactive prefetch and recompute as the only two points on the Pareto frontier."
+MISSING_METRICS:
+- "Wasted PCIe Bandwidth (GB/s) consumed by aborted prefetches when p_rr < 1."
+- "P99 TTFT on resume (the tail latency is critical because concurrent PCIe bursts will cause catastrophic queueing delays)."
+KILLER_EXPERIMENT:
+Compare Proactive Prefetch vs. Reactive Fetch-on-Demand vs. Prefix-Cached Recompute on real hardware (e.g., L40S or H100 with PCIe 4.0/5.0) running a live agent trace. Inject a realistic re-reference probability (p_rr = 0.6) and measure P99 TTFT and effective system throughput. If reactive fetch or cached-recompute dominates due to PCIe contention or fast partial-recompute, the proactive policy's win-region vanishes.
+RATIONALE:
+While the L0 admirably discovers the PCIe-contention kill-corner, the evaluation rests on a weak baseline. It pits proactive prefetching against naive, full-prefix recompute, ignoring the industry-standard reactive CPU offload and prefix caching. The claim's "strictly better Pareto" is highly vulnerable once the baseline is upgraded to modern caching and on-demand swapping.
+```

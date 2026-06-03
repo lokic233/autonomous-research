@@ -1,0 +1,29 @@
+Both external web-search tools are permission-blocked in this session, so the live retrievable sweep is egress-blocked. Per the committee role brain, an egress-blocked sweep is an honest YELLOW with a scoping fix — I will not fabricate a verified-URL kill, but I can flag high-confidence collisions from prior knowledge that the packet omitted.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Gao et al., 'Cost-Effective Attention Reuse across Multi-turn Conversations in LLM Serving' (AttentionStore / CachedAttention), USENIX ATC 2024",
+   url: "https://www.usenix.org/conference/atc24/presentation/gao-bin-cost  (NOT live-verified — egress blocked this session)",
+   why_close: "Hierarchical KV-cache system that SAVES a conversation's KV to cost-effective host/disk tier BETWEEN turns and RELOADS it on the NEXT turn, with explicit layer-wise PRE-LOADING + asynchronous saving OVERLAPPED with scheduling/compute. This is mechanistically the SAME loop as the claim's 'proactively demote cold prefix to host, prefetch back on next turn, overlap with the idle gap.' This is the single closest prior art and it is NOT in the packet's concession list."}
+- {cite: "Pensieve: stateful multi-turn LLM serving with cross-turn KV-cache retention/tiering",
+   url: "(arXiv — NOT live-verified, egress blocked)",
+   why_close: "Retains/tiers conversation KV across GPU-CPU between dialogue turns and restores on resume — same demote-between-turns / restore-on-resume structure, also omitted from the packet."}
+- {cite: "vLLM CPU swap, LMCache, FlexGen, InfiniGen, layer-wise offload (the 5 the packet DOES concede)",
+   url: "(packet-cited)",
+   why_close: "Establish that offload + speculative/important-token prefetch + cross-request reuse are all prior art; reactive-on-preemption (vLLM) and within-generation speculative (InfiniGen) are the correct contrast points the researcher draws."}
+
+NAMING_VS_MECHANISM: Largely NAMING, not mechanism. The packet's claimed delta is 'AGENT-inter-turn-gap-timed' proactive demote+prefetch vs 'reactive-on-preemption' / 'speculative-token' / 'cross-request reuse'. But AttentionStore/CachedAttention and Pensieve ALREADY time KV save/restore to the CONVERSATION-turn gap with overlap. An agent tool-call inter-turn gap is mechanistically a conversation-turn gap (idle wall-time between a session's consecutive turns). 'Agent' vs 'chat' is a domain re-skin of the same demote-on-turn-end / prefetch-on-turn-start / overlap-with-idle loop. The genuine mechanism residue — if any — is (a) using the KNOWN/predictable agent-gap DISTRIBUTION (tool-latency tail) to schedule/admit prefetch under PCIe contention, and (b) the contention-aware win/kill boundary C/p_rr*bytes > B_total*gap. (b) is a measurement contribution, not a new mechanism; (a) is a plausible-but-unproven delta over AttentionStore's overlap scheduling.
+
+FATAL_COLLISIONS:
+- AttentionStore/CachedAttention (ATC'24): collides directly with the narrow novelty (turn-gap-timed KV demote+prefetch+overlap). Cannot certify as a VERIFIED kill because the ≥2-source live retrieval was egress-blocked this session — hence YELLOW not RED — but this is high-confidence recall and, if it stands on live check, the standalone novelty is dead.
+- Pensieve: second independent collision on cross-turn KV tiering/restore.
+
+MANDATORY_RELATED_WORK:
+- AttentionStore / CachedAttention (Gao et al., USENIX ATC 2024) — MUST cite + explicit mechanism-delta table vs it; this is the load-bearing omission.
+- Pensieve (stateful multi-turn serving) — MUST cite.
+- vLLM CPU-swap, LMCache, FlexGen, InfiniGen, layer-wise offload — already conceded, keep.
+
+RATIONALE: The MANDATE is to kill weak novelty, and this novelty IS weak: the closest two works (AttentionStore/CachedAttention ATC'24, Pensieve) already do turn-gap-timed proactive KV demote+prefetch with overlap, and BOTH are absent from the packet's otherwise-careful prior-art concession — the researcher contrasted against the FARTHER works (reactive vLLM, speculative InfiniGen, reuse-oriented LMCache) but not the NEAREST (conversation-turn-timed save/restore). I do not cast RED because the role rules require a KILL collision be verified in ≥2 independent RETRIEVABLE sources and this session's external-search egress is blocked (per committee role brain: egress-blocked sweep = honest YELLOW + scoping fix, never a fabricated verdict). The L0 itself is honest and valuable AS A MEASUREMENT study (the PCIe-contention kill-corner is a real, well-characterized result and survives), so the contribution is not zero — but the NOVELTY framing must be demoted: the publishable delta, if it exists, is the contention-aware admission policy keyed to the measured agent-gap distribution, NOT 'first to demote+prefetch across the inter-turn gap.' REQUIRED before any green: (1) live retrievable ≥2-source sweep against AttentionStore/CachedAttention + Pensieve; (2) a concrete mechanism-delta vs AttentionStore's layer-wise pre-load/overlap scheduling — show what the agent-gap-timed policy does that conversation-turn-timed pre-loading does not; absent (2), the novelty collapses to naming.
+```
