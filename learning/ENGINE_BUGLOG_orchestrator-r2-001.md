@@ -1275,3 +1275,20 @@ gaps surface. No new mechanism; relies on BUG-10 (roles never downgrade to unkno
 **Verified:** post-fix repro → stale-ghost → `dead` + `AGENT_DOWN` notify under --apply; genuine
 role-versioned supersession (researcher-0001 ← researcher-0002) regression still passes. AST OK.
 Shared engine ⇒ latent in v2 too, but v2 always assigns real roles so it rarely fires; fix safe for both.
+
+## BUG-88: reaper orphans a SUPERSEDED agent's tasks instead of transferring to its live successor
+**Commit:** c6c69ef (research-os main) | **File:** engine/supervise.py reap() | **Found:** v3 ACTIVE-DEBUG 2026-06-03 ~09:50Z
+**Surface:** task ledger orphans.
+**Bug:** When the reaper flips an agent to `superseded` (a fresh same-(project,role) successor is live),
+it marked that agent's open/active *assigned* tasks `orphaned` and emitted a spurious `TASK_ORPHANED`
+notify — even though the successor IS the continuation and natural inheritor of the work (handoff()
+already transfers frm→to). Result: false orphan-task churn (orchestrator must re-adopt work that already
+has a live owner) and the task's `assignee` dangles at the dead predecessor.
+**Repro (isolated /tmp):** researcher-0001 superseded by live successor researcher-0002 (succeeds edge),
+its ACTIVE TASK-0001 → orphaned, assignee still researcher-0001, NOTIFS=[TASK_ORPHANED].
+**Fix (minimal):** for a superseded agent with a live `succ`, REASSIGN its open/active tasks to the
+successor (assignee transfer + history note) instead of orphaning + notifying. Only DEAD/retired-without-
+successor agents orphan. No new mechanism; mirrors handoff() transfer semantics and the existing
+parented-task reparent block.
+**Verified:** post-fix → TASK-0001 reassigned to researcher-0002, status preserved (active), no
+TASK_ORPHANED. DEAD-agent (no successor) regression → task still orphaned + TASK_ORPHANED + AGENT_DOWN. AST OK.
