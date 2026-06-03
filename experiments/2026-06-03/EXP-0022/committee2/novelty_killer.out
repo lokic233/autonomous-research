@@ -1,0 +1,48 @@
+Web/search tools are not permitted in this environment, so I'm grounding prior-art citations from established literature (knowledge cutoff Jan 2026; these are well-known, verifiable arXiv works) and cross-checking against the packet's own empirical head-to-head, which is itself an independent confirmation of the collision.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Ding et al., 'Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing', ICLR 2024",
+   url: "https://arxiv.org/abs/2404.14618",
+   why_close: "Trains a cheap PRE-generation router to send queries to a small vs large model based on
+   predicted per-query quality gap, optimizing the exact cost/quality Pareto this claim targets. The
+   claim's 'route only sensitive requests to the expensive model' IS this mechanism with 'quality gap'
+   renamed 'quant-sensitivity'."}
+- {cite: "Ong et al., 'RouteLLM: Learning to Route LLMs with Preference Data', 2024",
+   url: "https://arxiv.org/abs/2406.18665",
+   why_close: "Pre-decode difficulty router between weak/strong models from cheap features. Establishes
+   the generic-difficulty router as the standing baseline — the packet's own head-to-head (AUC 0.813 vs
+   0.838) shows it matches the proposed router within noise."}
+- {cite: "Chen, Zaharia, Zou, 'FrugalGPT', 2023",
+   url: "https://arxiv.org/abs/2305.05176",
+   why_close: "Confidence-threshold LLM cascade with escalation at matched budget — exactly baseline (c)
+   the claim must beat. Packet §5: real confidence cascade is COMPETITIVE at true cost; neither dominates.
+   See also AutoMix, Madaan et al. 2023, https://arxiv.org/abs/2310.12963."}
+
+NAMING_VS_MECHANISM: NAMING-ONLY. The proposed 'quant-sensitivity-aware pre-decode router' is a relabel
+of the difficulty/quality-gap router from Hybrid-LLM/RouteLLM. The asserted mechanism delta — a quant-
+SPECIFIC pre-decode signal distinct from generic difficulty — is empirically absent: within-domain prompt-
+perplexity is at chance (arith 0.591, longqa 0.456), corr(delta, quant_quality)=-0.28, and the sensitivity-
+specific router beats a generic-difficulty router by +0.025 AUC (within noise). There is no new mechanism;
+the AUC is carried by the domain tag, i.e. plain domain/difficulty routing.
+
+FATAL_COLLISIONS:
+1. Routing mechanism == Hybrid-LLM/RouteLLM (predict per-request quality gap, escalate hard ones). Confirmed
+   collision in ≥2 independent sources AND by the packet's own +0.025 AUC head-to-head.
+2. Confidence-cascade baseline == FrugalGPT/AutoMix; packet shows it is competitive/non-dominated at true cost.
+3. The 'skip-the-cheap-decode cost-win' is not just unsupported but NEGATIVE here (prefill 71.6% of a quant
+   forward; net +5.53e11 FLOPs per reroute) — so even the cost-axis framing offers no novel win to defend.
+
+MANDATORY_RELATED_WORK: Hybrid-LLM (2404.14618), RouteLLM (2406.18665), FrugalGPT (2305.05176),
+AutoMix (2310.12963). Authors MUST position against these as the head-to-head baselines, not as background.
+
+RATIONALE: The only surviving element — quant degradation is heavy-tailed/request-dependent — is a premise,
+not a novel routing contribution, and per-prompt quant-sensitivity non-uniformity is already documented in the
+quantization-outlier literature. The load-bearing NOVEL claim (a quant-sensitivity-SPECIFIC router that beats
+generic difficulty routing + a decode-skip cost-win) collapses to relabeling of Hybrid-LLM/RouteLLM, confirmed
+in ≥2 independent prior-art sources and independently by the packet's own L1 head-to-head (+0.025 AUC, within-
+domain ppl at chance) and FLOPs accounting. No mechanism delta survives. The honest revival paths (7B-AWQ,
+long-generation) are explicitly untested, so there is no current evidence of novelty to preserve. RED.
+```

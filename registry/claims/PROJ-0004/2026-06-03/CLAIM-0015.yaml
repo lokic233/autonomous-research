@@ -40,6 +40,14 @@ negative_evidence:
     cheap decode) not quality. Prior art (FrugalGPT/RouteLLM/hybrid-precision serving)
     published; only candidate novelty = quant-sensitivity-specific pre-decode prediction.'
   data_path: experiments/2026-06-03/EXP-0020/
+- exp_id: EXP-0022
+  summary: 'researcher-gpu-0022 completed all compute + RESULTS.md but stalled before
+    exp-complete; orchestrator finalized from on-node results. RELABELING/weaken:
+    real quant-degradation IS heavy-tailed (survives) BUT predictive signal is DOMAIN/generic-difficulty
+    not quant-specific (within-domain ppl at chance); generic difficulty router matches
+    it (+0.025 AUC); skip-cheap-decode cost-win negative (prefill dominates); confidence
+    cascade competitive. Novelty collapses to relabeling.'
+  data_path: experiments/2026-06-03/EXP-0022/
 verdict_history:
 - verdict_id: VERDICT-0019
   date: '2026-06-03'
@@ -47,10 +55,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0019=yellow: address required_evidence to advance'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0022; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0022
+active_experiments: []
 created_at: '2026-06-03T05:58:07Z'
-last_updated: '2026-06-03T06:19:43Z'
+last_updated: '2026-06-03T08:05:42Z'

@@ -12,13 +12,18 @@ resource_budget:
 needs_gpu: false
 dispatched_by: orchestrator-r3-001
 node_lease: devgpu014:EXP-0022
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'researcher-gpu-0022 completed all compute + RESULTS.md but stalled
+  before exp-complete; orchestrator finalized from on-node results. RELABELING/weaken:
+  real quant-degradation IS heavy-tailed (survives) BUT predictive signal is DOMAIN/generic-difficulty
+  not quant-specific (within-domain ppl at chance); generic difficulty router matches
+  it (+0.025 AUC); skip-cheap-decode cost-win negative (prefill dominates); confidence
+  cascade competitive. Novelty collapses to relabeling.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0022/
 reproducibility: ''
 linked_verdicts: []
 started_at: '2026-06-03T06:54:02Z'
-completed_at: ''
+completed_at: '2026-06-03T08:05:42Z'
 prompt_version: ''
 committee_approved: VERDICT-0019

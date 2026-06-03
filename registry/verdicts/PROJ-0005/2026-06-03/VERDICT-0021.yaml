@@ -1,0 +1,70 @@
+verdict_id: VERDICT-0021
+claim_id: CLAIM-0016
+project_id: PROJ-0005
+date: '2026-06-03'
+experiment_ids:
+- EXP-0023
+experiment_paths:
+- experiments/2026-06-03/EXP-0023
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- "NOVELTY OCCUPIED: RCR-Router (arXiv 2508.04903, 14 cites) self-claims 'first' role+task-stage-conditioned\
+  \ per-agent context selection under token budget to cut MAS token cost \u2014 the\
+  \ claim's headline mechanism (verified from primary abstract)"
+- residual delta (span vs memory-item granularity) is incremental
+- "PREMISE FALSIFIED: the claim's 'generic role-agnostic vs role-conditioned' contrast\
+  \ ignores the published task/receiver-need-aware compression line (TACO-RL, LOOC,\
+  \ QASPC, LLMLingua-2 question-aware) that ALREADY conditions retention on receiver\
+  \ need \u2014 >=2 independent sources"
+- the strawman framing is refuted
+- 'MECHANISM REFUTED IN ITS OWN PREDICTED REGIME: at verb_frac=0.8 (where the narrative
+  says role-conditioning should win MOST) generic WINS +0.053 (CI excludes 0)'
+- "ANALYTICALLY TRIVIAL: the 36-cell pattern is just 'the higher-AUC ranker wins at\
+  \ matched budget k' \u2014 elementary ranking theory, no multi-agent physics"
+- same result in any single-doc compression with two rankers of differing AUC
+- "LOAD-BEARING act-on<->salience coupling stipulated at ONE value (0.55) and never\
+  \ swept, yet the win's SIGN flips with it \u2014 the conditional-win boundary is\
+  \ a modeling artifact"
+required_evidence:
+- "None \u2014 L1 NOT warranted: novelty occupied by RCR-Router + task-aware-compression\
+  \ line"
+- "an L1 would at best establish an incremental-granularity variant of published work.\
+  \ (If continued: a CHEAP pre-L1 feasibility check \u2014 estimate act-on<->salience\
+  \ correlation from real AutoGen/LangGraph trace dumps with an LLM-judge act-on labeler\
+  \ \u2014 BEFORE any GPU"
+- but novelty is already occupied)
+map_delta_proposals:
+- 'CLAIM-0016 -> KILL: novelty occupied (RCR-Router 2508.04903 + task-aware-compression
+  line)'
+- mechanism refuted in its own predicted regime (generic wins at high verbosity)
+- 'L0 analytically trivial (higher-AUC-ranker-wins-at-matched-k). PROJ-0005 frontier
+  exhausted at first claim. Salvage (different claim, not this one): act-on<->salience
+  coupling as a standalone empirical measurement'
+baseline_requirements:
+- "RCR-Router (2508.04903) \u2014 direct mechanism collision"
+- "LLMLingua-2 question-aware / TACO-RL \u2014 task/receiver-need-conditioned compression\
+  \ (not role-agnostic-only)"
+- "AutoGen TransformChatHistory / built-in MAS summarization \u2014 the real production\
+  \ floor (not truncation)"
+committee_run_dir: ''
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T07:52:45Z'

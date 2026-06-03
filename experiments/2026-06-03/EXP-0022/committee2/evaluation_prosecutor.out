@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [{"name": "Generic Difficulty Router / RouteLLM", "why": "To isolate whether the router learns a quant-specific signal or just generic task difficulty.", "repo_or_cite": "RouteLLM (LMSYS)"}, {"name": "Post-decode confidence cascade", "why": "The standard baseline for multi-model serving and model escalation.", "repo_or_cite": "FrugalGPT / Cascade literature"}]
+STRAWMAN_RISKS: ["Assuming pre-decode routing is 'free' by ignoring the FLOPs cost of the prefill pass", "Comparing only to random routing instead of a generic difficulty router", "Assuming uniform quantization degradation across requests"]
+MISSING_METRICS: ["True FLOPs cost under decode-heavy regimes (long-generation tasks)"]
+KILLER_EXPERIMENT: Evaluate on long-generation workloads (e.g., long-form coding or summarization) where decode length far exceeds prompt length, using a 7B AWQ/GPTQ model, to test if the FLOPs math flips and a true quant-specific signal emerges.
+RATIONALE: The L1 evaluation was rigorous and successfully falsified the claim as stated. By introducing true FLOP accounting and the relabeling test against a generic difficulty router, the evidence proves the pre-decode router is not cheap (due to prefill costs dominating) and its signal collapses entirely to domain/generic difficulty. The novel claim is refuted.
+```

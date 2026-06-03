@@ -3,3 +3,60 @@ MetaCode at Meta (https://fburl.com/metacode)
 [0m
 > build · avocado-code-latest
 [0m
+[0m✗ [0mread failed
+[91m[1mError: [0mFile not found: /Users/dengcchi/autonomous-research-v3/_committee_common_v001.md
+[0m✗ [0mread failed
+[91m[1mError: [0mFile not found: /Users/dengcchi/autonomous-research-v3/_shared
+[0m→ [0mRead .
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001\\.md"}
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/TOOLING_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/*.md"[90m 0 matches[0m
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*.md" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/HANDOFF_r1_to_r2.md
+/Users/dengcchi/autonomous-research-v3/learning/roles/orchestrator.md
+/Users/dengcchi/autonomous-research-v3/learning/roles/researcher.md
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/learning/orchestrator/2026-06-03.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/RESULTS.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/PRE_REGISTRATION.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/RESULTS.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/PRE_REGISTRATION.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/RESULTS.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/PRE_REGISTRATION.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/RESULTS.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/PRE_REGISTRATION.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/RESULTS.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/PREREG.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/COMMITTEE1_PACKET.md
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "_committee_common_v001.md" 2>/dev/null
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "TOOLING_v001.md" 2>/dev/null
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/ | head -30
+total 48
+drwxr-xr-x  16 dengcchi  staff   512 Jun  2 23:35 .
+drwxr-x---+ 91 dengcchi  staff  2912 Jun  3 00:27 ..
+drwxr-xr-x  15 dengcchi  staff   480 Jun  3 00:27 .git
+-rw-r--r--   1 dengcchi  staff    56 Jun  2 11:39 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:01 experiments
+-rw-r--r--   1 dengcchi  staff  2699 Jun  2 17:24 HANDOFF_r1_to_r2.md
+-rw-r--r--   1 dengcchi  staff  2516 Jun  2 23:21 HANDOFF_r2_to_r3.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:24 learning
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 00:15 ORCHESTRATOR_CHARTER.md
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x   8 dengcchi  staff   256 Jun  3 00:12 projects
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3553 Jun  2 11:39 research-os.config.yaml
+drwxr-xr-x   9 dengcchi  staff   288 Jun  2 23:54 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+[0m
+[0m→ [0mRead prior_art
+[0m→ [0mRead experiments/2026-06-03/EXP-0023

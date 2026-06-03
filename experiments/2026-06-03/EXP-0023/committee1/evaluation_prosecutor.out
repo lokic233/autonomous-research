@@ -1,0 +1,18 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: [
+  {"name": "LLMLingua-2", "why": "SOTA task-agnostic prompt compression trained specifically to preserve key instruction/content over just perplexity. Must be the primary generic baseline.", "repo_or_cite": "Pan et al., 2024 (https://arxiv.org/abs/2403.12968)"},
+  {"name": "Built-in MAS summarization", "why": "Standard multi-agent frameworks (e.g., AutoGen's TransformChatHistory/MessageHistory) already implement message summarizers. Truncation is an absolute strawman.", "repo_or_cite": "AutoGen / AgentChat"}
+]
+STRAWMAN_RISKS: [
+  "Truncation is mathematically guaranteed to drop relevant info if uniformly distributed; beating it proves nothing.",
+  "Simulated generic compression via 'salience proxy' in L0 assumes a fixed, tunable coupling. Real compressors like LLMLingua-2 are explicitly trained to retain 'act-on' items (directives, instructions), which inherently possess high semantic salience."
+]
+MISSING_METRICS: [
+  "End-to-End Task Success (E2E): Retaining 'act-on' tokens is a proxy. A span might be retained but stripped of necessary surrounding context, causing the agent to fail.",
+  "Compression Overhead Cost: If the role-conditioned filter uses an LLM or classifier, its inference latency and token cost MUST be subtracted from the 'saved' tokens to calculate true net multi-agent token cost."
+]
+KILLER_EXPERIMENT: <Run real multi-agent coding/reasoning traces (e.g., SWE-bench or WebArena via AutoGen). Apply LLMLingua-2 vs. Role-Conditioned Filter at identical target compression ratios. Measure E2E task completion rate AND total system token cost (Generation + Compression Overhead). The claim is falsified if LLMLingua-2 achieves parity in task success, or if the role-filter's compute overhead negates the token savings.>
+RATIONALE: The L0 simulation correctly identifies its own fatal flaw: if action items are inherently high-salience, a generic compressor easily retains them. Real-world directives are almost always high-salience. Furthermore, evaluating on a token-retention proxy ignores the real-world cost of executing the role-conditioned filter itself. An L1 must use real LLMLingua-2, measure E2E task success, and account for the filter's own operational cost.
+```

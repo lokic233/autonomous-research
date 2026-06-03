@@ -1,7 +1,7 @@
 claim_id: CLAIM-0016
 project_id: PROJ-0005
 stage: seed
-status: weakened
+status: dead
 claim: "In multi-agent LLM systems, an EXTRACTIVE inter-agent message compressor that\
   \ keeps only the spans the RECEIVING agent will actually act on (predicted from\
   \ the receiver's role+task, NOT the full message) cuts total multi-agent token cost\
@@ -40,13 +40,17 @@ negative_evidence:
     coupling + real role-AUC on AutoGen/CrewAI/LangGraph traces vs real LLMLingua,
     real end-to-end task-success.'
   data_path: experiments/2026-06-03/EXP-0023/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0021
+  date: '2026-06-03'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0023; convene committee if candidate-grade
+lifecycle_state: done
+next_action: 'terminal: VERDICT-0021 kill (novelty occupied by RCR-Router 2508.04903;
+  mechanism refuted in own regime; analytically trivial)'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T07:12:37Z'
-last_updated: '2026-06-03T07:24:07Z'
+last_updated: '2026-06-03T07:53:28Z'

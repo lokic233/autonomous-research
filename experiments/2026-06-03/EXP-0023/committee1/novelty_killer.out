@@ -1,0 +1,29 @@
+I have enough verified prior art from ≥2 independent sources. Writing my vote.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "RCR-Router: Efficient Role-Aware Context Routing for Multi-Agent LLM Systems with Structured Memory (2025)",
+   url: "arxiv.org/abs/2508.04903",
+   why_close: "DIRECT MECHANISM COLLISION. Self-describes as 'the first routing approach that dynamically selects semantically relevant memory subsets for each agent based on its role and task stage, while adhering to a strict token budget.' That IS the claim's mechanism: condition what each receiver gets on its role+task, at matched token budget, to cut multi-agent token cost. Reports up to 30% token reduction at maintained answer quality on HotPotQA/MuSiQue/2WikiMultihop. Verified abstract retrieved."}
+- {cite: "Role-Aware Context Compression in Agentic AI Pipelines for Question Answering (2026)",
+   url: "semanticscholar.org/paper/4e2ce4817caa115d430c74435a0e0af9ea71c8d7",
+   why_close: "Title-level collision on the exact framing ('role-aware context compression' in multi-agent agentic pipelines). Abstract not fully retrievable (S2 429), so treated as corroborating, not load-bearing."}
+- {cite: "TACO-RL: Task Aware Prompt Compression Optimization with RL (2024, 19 cites)",
+   url: "semanticscholar.org/paper/70b49c248edee60d0ad5c53b5010f480f0a3828b", why_close: "Compression already conditioned on the downstream need."}
+- {cite: "LOOC / Response-Aware Prompt Compression (2026)",
+   url: "semanticscholar.org/paper/1bb6703e03c66fc8591d05cf1d2797a0b01757b7",
+   why_close: "Leave-one-out, keeps only segments that influence the response — receiver-need-conditioned extractive compression, not role-agnostic. Verified abstract."}
+- Also: QASPC (Question-Aware Sentence-Level), DAC (2025, 7 cites) — same family.
+
+NAMING_VS_MECHANISM: Mostly NAMING. The claim frames its novelty against "generic role-agnostic LLMLingua-style" compression, but that strawman ignores the published query-/task-/response-aware compression line (TACO-RL, LOOC, QASPC) that already conditions retention on the receiver's need — "role+task" is one such conditioning signal, not a new mechanism. The genuine mechanism delta vs RCR-Router is only granularity: span-level extraction WITHIN a message vs item-level routing of memory subsets. That is incremental, not a new axis. The packet's "NEW axis (multi-agent inter-agent comms compression — untouched)" assertion is FALSE: RCR-Router occupies exactly that axis and claims priority on it.
+
+FATAL_COLLISIONS:
+- RCR-Router (2508.04903): role+task-stage-conditioned per-agent context selection under a strict token budget to cut MAS token cost — the claim's headline novelty, explicitly claimed "first." Verified in primary abstract.
+- The "generic compression is role-agnostic only" premise is refuted by TACO-RL + LOOC + QASPC (≥2 independent, verified) — receiver-need-conditioned compression is published.
+
+MANDATORY_RELATED_WORK: RCR-Router (2508.04903); Role-Aware Context Compression in Agentic AI Pipelines (2026); ACON: Optimizing Context Compression for Long-horizon LLM Agents (2025, 45 cites); TACO-RL (2024); LOOC/Response-Aware Compression (2026); QASPC; DAC (2025). Any L1 must position against RCR-Router directly and re-baseline its "generic vs role-conditioned" contrast against a QUERY/TASK-AWARE compressor (LongLLMLingua's question-aware mode or TACO-RL), not only role-agnostic LLMLingua — otherwise the comparison is again a strawman.
+
+RATIONALE: Live ≥2-source sweep (Semantic Scholar; arXiv abstract for RCR-Router retrieved, 2508.04903) shows the narrow novelty — receiver-role-conditioned inter-agent selection at matched token budget to reduce MAS cost — is already published and self-claimed as "first" by RCR-Router (14 cites, 30% token cut at maintained quality). The residual delta is span-level vs memory-item granularity. Independently, the claim's load-bearing premise (only a role filter can drop content a generic compressor cannot) is contradicted by the verified task-/response-aware compression line. Combined with the L0's own finding that the role-conditioned advantage is CONDITIONAL and REVERSES at high verbosity, the novelty is both occupied and conditional. RED: an L1 GPU pass is not warranted on novelty grounds; if pursued, it must cite RCR-Router and use a query/task-aware (not role-agnostic) strong baseline.
+```

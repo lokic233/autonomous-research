@@ -1,0 +1,24 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: red, product_realist: yellow}
+FATAL_OBJECTIONS: [
+  "NOVELTY OCCUPIED: RCR-Router (arxiv 2508.04903, 14 cites) self-claims 'first' role+task-stage-conditioned per-agent context selection under strict token budget to cut MAS token cost — the claim's headline mechanism, verified from primary abstract by novelty_killer. Residual delta (span-level extraction vs memory-item routing) is incremental granularity, not a new axis.",
+  "PREMISE FALSIFIED BY PRIOR ART: The claim's load-bearing contrast ('generic role-agnostic LLMLingua-style vs receiver-role-conditioned') ignores the published task/response-aware compression line (TACO-RL, LOOC, QASPC, LLMLingua-2 question-aware mode) that already conditions retention on receiver need — verified ≥2 independent sources. The claim's strawman framing is refuted.",
+  "MECHANISM REFUTED IN ITS OWN PREDICTED REGIME: At verb_frac=0.8 (the regime the claim's narrative says should favor role-conditioning MOST), generic wins +0.053 with CI excluding 0. The stated mechanism ('verbose messages carry role-irrelevant content only a role filter can drop') is contradicted by the sim's own evidence.",
+  "RESULT IS ANALYTICALLY TRIVIAL: theory_skeptic correctly identifies the L0 as a restatement of 'the ranker with higher AUC against the target wins at matched budget k' — elementary ranking theory predicts the full 36-cell pattern before running any simulation. No inter-agent or multi-agent physics is demonstrated; same outcome arises in any single-document compression with two rankers of differing AUC.",
+  "LOAD-BEARING ASSUMPTION UNSWEPT: The act-on↔salience coupling (55% of verbose spans also contentful) is stipulated at one value. The researcher admits the sign of the win flips with this single number, yet never sweeps it — making the 'conditional win' regime boundary an artifact of one modeling choice, not a discovered property."
+]
+REQUIRED_EVIDENCE: [
+  "None recommended — an L1 is not warranted. Even if the real act-on↔salience coupling favored role-conditioning in some regime, the novelty is already occupied by RCR-Router and the task-aware compression line. A GPU pass would at best establish an incremental granularity variant of published work.",
+  "If the researcher disagrees: at minimum, a pre-L1 feasibility check — estimate act-on↔salience correlation from existing AutoGen/LangGraph trace dumps with an LLM-judge act-on labeler (as theory_skeptic suggests) — is cheaper and would determine if a full L1 could even produce a positive result, BEFORE committing GPU."
+]
+MANDATORY_BASELINES: [
+  "RCR-Router (2508.04903) — direct mechanism collision, must be cited and compared if any continuation",
+  "LLMLingua-2 question-aware / TACO-RL — task/receiver-need-conditioned compression, not role-agnostic-only",
+  "AutoGen TransformChatHistory / built-in MAS message summarization — the actual production floor, not truncation"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0016", change: "KILL — novelty occupied (RCR-Router 2508.04903), mechanism refuted in predicted regime, L0 result analytically trivial. Close PROJ-0005 or pivot to measuring act-on↔salience coupling as a standalone empirical contribution (different claim)."}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE: Three independent REDs, zero unrebutted. The novelty_killer's sweep is the fatal blow: RCR-Router (2508.04903) occupies the exact niche — receiver-role+task-conditioned context selection under token budget for multi-agent token cost reduction — and explicitly claims priority. The claim's framing of its novelty as a "NEW axis" is falsified. Independently, the task/response-aware compression line (TACO-RL, LOOC, QASPC) refutes the claim's load-bearing premise that only role-agnostic compression exists as a baseline. The theory_skeptic's observation that the 36-cell grid is analytically predicted by AUC-vs-AUC ranking math — before any simulation runs — downgrades the L0 from "empirical finding" to "worked example of a known theorem." The evaluation_prosecutor's YELLOW correctly notes strawman baselines and proxy metrics, but these are moot given the novelty and theory failures. The product_realist's YELLOW identifies the narrow conditional win regime, but again moot — even in the favorable quadrant, the contribution is incremental over RCR-Router. The researcher's honesty about the conditional result and the act-on↔salience unknown is commendable, but honesty about limitations does not create novelty where prior art has closed the gap. KILL: no L1 warranted. If the research direction continues, the only viable pivot is a standalone empirical study of act-on↔salience coupling in real multi-agent traces — a measurement contribution under a NEW claim, not a continuation of CLAIM-0016.
+```

@@ -1,0 +1,30 @@
+```
+ROLE: theory_skeptic  VOTE: red
+MUNDANE_EXPLANATIONS: [
+  "The 'win' regime is mechanically predicted by basic information theory: at matched budget k, ranking-quality monotone in AUC of the ranker vs the target — rolecond's AUC over latent act-on (0.585–0.815) only beats generic's AUC (~0.57–0.69) when the role signal is high (low noise). Result is a tautology of AUC-vs-AUC, not evidence of a new mechanism.",
+  "The verbosity-flip is fully explained by the sim's stipulated act-on↔salience coupling (act-on 'always contentful', 55% of verbose also contentful). At verb=0.8 generic salience trivially concentrates on act-on tokens by construction; no 'mechanism' beyond the generative assumption.",
+  "Pareto crossovers at matched ratio reduce to: ranker with higher AUC against the target wins. No 'inter-agent' physics is being demonstrated — same outcome would arise in any single-document compression with two rankers of differing AUC.",
+  "Truncation dominance (36/36) is a known floor in compression literature; offers no incremental support for the claim."
+]
+CONFOUNDS: [
+  "Role-match feature is generated FROM the same latent need vector n_r that defines act-on (noisy projection). This couples 'predictor AUC' and 'verbosity regime' through a single hyperparameter (latent_noise), so the 36-cell grid is not 36 independent tests of the mechanism — it's a 2-D sweep of (AUC, verb_frac) where outcome is analytically determined.",
+  "Generic salience proxy is a sim construct, not LLMLingua; its AUC (~0.57–0.69) is a modeling choice. Tuning the salience generator's correlation with act-on trivially moves the win/lose boundary — no external calibration anchors it.",
+  "task-success = act-on token-mass retained is mechanistically identical to 'AUC@k of the ranker vs act-on labels'. The DV is the ranker quality metric; claim and measurement collapse.",
+  "Span-length distribution (LogNormal) interacts with matched-ratio enforcement: at fixed token budget, longer act-on spans bias both rankers — interaction not reported."
+]
+ASSUMPTIONS_UNTESTED: [
+  "Latent need n_r per role is fixed and shared across messages — real receiver intent is task-conditional and drifts; sim cannot speak to time-varying act-on.",
+  "Independence of span topics t within a message — real messages have discourse structure (coreference, ordering) where dropping a span breaks others.",
+  "VERB_FRAC sweep [.2,.4,.6,.8] assumed uniform across roles — no sensitivity to role-asymmetric verbosity.",
+  "Logistic threshold 0.5 + Normal noise for act-on label — no sensitivity to alternative label-generating processes (heavy-tailed, multi-modal).",
+  "55% of verbose ALSO contentful is asserted, not justified; the win/lose boundary is a smooth function of this single number and it is never swept."
+]
+STATISTICAL_GAPS: [
+  "8 seeds × 400 msgs per cell with bootstrap CI on per-message delta is fine for point estimates, but no multiple-comparison correction across 36 cells (expected ~1.8 false positives at α=0.05); 21/36 'wins' uncorrected.",
+  "No reported variance across seeds vs across messages — bootstrap on per-message data underestimates between-seed variance (the relevant generalization scale).",
+  "No power analysis for the 'tie' cells (3/36) — null result not distinguished from underpowered.",
+  "No sensitivity analysis on the load-bearing hyperparameter (act-on↔salience coupling = 55%); the researcher admits the sign flips with this single number yet ran one value.",
+  "Pareto frontier reported at 3 hand-picked cells; no global frontier-dominance test (e.g., area-under-Pareto across the full grid)."
+]
+RATIONALE: This L0 is an analytic restatement of "the ranker with higher AUC against the target wins at matched budget k" — exactly what one would predict from elementary ranking theory before running any sim. The mechanism the claim posits ("role-irrelevant verbosity a generic compressor cannot drop") is contradicted by the sim's own high-verbosity regime (generic wins +0.053), and the researcher honestly notes the sign flips with a single unmeasured real-world quantity (act-on↔salience coupling, fixed at 55% with no sensitivity sweep). Cited prior art (LLMLingua/LongLLMLingua/LLMLingua-2, "communication-efficient MAS", CodeAct) already covers role-agnostic salience compression and context-conditioned MAS comms; the residual novelty (receiver-role-conditioned inter-agent span filter) is narrow, and its L0 advantage is conditional on a quadrant whose existence in real traffic is unknown. An L1 would burn GPU to measure a single coupling constant; cheaper to estimate the coupling from existing AutoGen/LangGraph trace dumps + a small LLM-judge act-on labeler BEFORE committing to a full L1. RED on theory grounds: the result is predicted by basic ranking math, the load-bearing assumption is unswept, and the claimed mechanism is refuted in its own predicted regime.
+```

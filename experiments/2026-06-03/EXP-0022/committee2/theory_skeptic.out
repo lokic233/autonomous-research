@@ -1,0 +1,29 @@
+ROLE: theory_skeptic  VOTE: red
+MUNDANE_EXPLANATIONS: [
+  "Heavy-tailed quant degradation is the EXPECTED behavior of low-bit weight quantization on small reasoning models — NF4 weight quant injects ~uniform per-weight noise, and tasks with sharp argmax bottlenecks (exact-digit GSM8K arithmetic) collapse while smooth open-ended generation absorbs the noise. Skew=+0.39 / excess kurt=+3.28 is unremarkable for a mixture of (arith, longqa, general) — it is the mixture, not an emergent quant property.",
+  "Domain-tag AUC=0.838 with within-domain ppl at chance (arith 0.591, longqa 0.456) is the textbook signature of Simpson's-style aggregation: the 'router' is just a 3-bin domain lookup table dressed up as ML. Single-feature ppl AUC=0.824 is explained entirely by ppl being a domain proxy, as the report admits.",
+  "Sensitivity-router vs generic-difficulty-router gap of +0.025 AUC is well inside 5-fold CV noise for n=120 (binomial SE on AUC at n~120 with prevalence ~0.2 is ~0.04–0.05). The two routers are statistically indistinguishable — exactly what a relabeling-only effect predicts.",
+  "corr(delta, quant_quality) = -0.28 with n=120 is weak but ALSO trivially expected: when quant quality is low and full is ~1 on objective-ref tasks, delta is mechanically anti-correlated with quant_quality (delta = q_full - q_quant, and q_full has lower variance on these refs). This is not evidence of a quant-specific latent factor.",
+  "The 'cost-win' is arithmetically precluded by the chosen prompt:decode ratio (178:71): prefill dominates by ~2.5×, so any router that requires a quant prefill cannot save FLOPs by skipping decode. This is basic transformer FLOP accounting (2·P·tok), not a measurement surprise."
+]
+CONFOUNDS: [
+  "Domain tag is fully confounded with feature distribution (ppl, arith-marker count, long-ctx flag are deterministic functions of domain in this dataset) — the headline AUC cannot separate 'quant-specific signal' from 'I told you which of 3 buckets the prompt is in'.",
+  "'General' domain delta=0.39 conflates divergence with quality loss; even after exclusion from the headline, it inflated earlier framing and shows the quality metric (token-F1 vs FULL output) is itself a confound where FULL is the reference.",
+  "NF4 double-quant with fp16 compute is a SPECIFIC noise model; GPTQ/AWQ have different per-channel error structure. Generalizing 'quant-sensitivity' from NF4 is a category confound the report itself flags.",
+  "Quant-prefill log-ppl is computed under the SAME quant that degrades the output → the predictor and the thing predicted share a noise source; any residual within-domain signal would be partly self-referential, not a clean pre-decode feature.",
+  "Confidence-cascade comparison uses post-decode quant logprob (strictly more information than pre-decode features) yet only ties — strong evidence the pre-decode features carry no quant-specific information beyond domain."
+]
+ASSUMPTIONS_UNTESTED: [
+  "That a 1.5B NF4 result generalizes to 7B AWQ/GPTQ — explicitly untested, and the only named revival path.",
+  "That long-generation (decode>>prefill) workloads would flip the FLOP accounting — asserted, never measured, and the cost claim is load-bearing for the novelty.",
+  "That 'domain tag' is freely available at serving time without its own classifier cost — if a real router must INFER domain from the prompt, that classifier itself competes with the cascade.",
+  "That 5-fold CV at n=120 with prevalence ~0.2 (≈24 positives) yields stable AUC estimates — no confidence intervals on the 0.838 vs 0.813 comparison; the headline 'negligible gap' is correct but the absolute AUCs are themselves wide-CI."
+]
+STATISTICAL_GAPS: [
+  "No CIs / bootstrap SEs on the headline AUCs (0.838, 0.813, 0.824) or on the +0.025 gap. Without a DeLong test or paired bootstrap, 'within noise' is asserted not shown.",
+  "Within-domain AUCs (arith 0.591, longqa 0.456) are reported on n≈60 per domain with positive-class counts likely <15 — these are underpowered, but the *direction* (longqa<0.5) is itself evidence ppl is anti-informative within domain.",
+  "No seed/run variance: single 160-prompt run, single quant/full pass. Heavy-tailed stats (kurt +3.28, Gini 0.833) are sensitive to a handful of outliers; no bootstrap on the tail mass (15%/12.5%/4%).",
+  "Cost accounting uses a single point (avg 178 prompt / 71 decode); no distribution of prompt:decode ratios shown, no sensitivity curve over decode-length — the 'cost-win fails' conclusion is correct for THIS workload but not parameterized.",
+  "No calibration analysis on the confidence cascade (ECE, reliability) — claiming it 'ties' the pre-decode router at true cost needs paired Pareto-dominance test, not just overlapping fronts by eye."
+]
+RATIONALE: The L1 evidence (RESULTS.md §2–5) is internally consistent and the negative is clean: within-domain ppl AUC=0.591/0.456 + sensitivity-vs-generic gap +0.025 AUC + prefill=71.6% of a full quant forward = the novel mechanism (quant-SPECIFIC pre-decode signal + skip-decode cost-win) is unsupported and largely PREDICTED by basic theory (mixture-induced heavy tails, ppl-as-domain-proxy, transformer FLOP accounting 2·P·tok with P=178>>71). The surviving premise (heavy-tailed degradation) is not in dispute and is the mundane expectation for NF4 on a 1.5B reasoning model. Residual revival paths (7B AWQ, long-generation) are speculation untested here. Vote red on the novel claim; the negative result itself is valuable and should be recorded as such.
