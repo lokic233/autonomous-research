@@ -1452,3 +1452,21 @@ reaped `retired` (clean, no AGENT_DOWN) BUT task flipped `orphaned` + TASK_ORPHA
 new mechanism):** add a `retired` branch that marks the leftover task `dropped` (no notify). `dead` path
 untouched. Patched repro: converged retire -> task `dropped`, 0 notifs; DEAD-on-active control -> task still
 `orphaned` + AGENT_DOWN + TASK_ORPHANED (real gaps still surface loudly — no over-correction). AST-validated.
+
+---
+
+## BUG-97 — per-agent inbox ack bypassed the channel lock (lost-message race)
+
+**Surface:** channel ack/resubmit races (orchestrator inbox).
+**Symptom:** `cmd_inbox_ack` only used the locked `Channel.ack` for `--all`. The per-agent path
+(filter by the `agent` field) fell back to a raw `load_yaml -> modify -> dump_yaml` OUTSIDE the
+per-channel lock, because `Channel.ack` keyed only on item-id / mirror_key (not an arbitrary field).
+A concurrent inbox `submit` landing during a per-agent ack was clobbered = silently lost message —
+the exact BUG-59 read-modify-write race class, but for the inbox instead of the committee queue.
+**Repro (isolated /tmp):** unlocked per-agent ack racing a locked submit -> 8/8 trials lost the
+concurrent submit.
+**Fix (minimal, no new mechanism):** add `(match_field, match_val)` to `Channel.ack` so a field-filtered
+ack (e.g. `agent==A`) runs INSIDE the existing `_FileLock`; route `cmd_inbox_ack`'s per-agent path through
+it. No-Channel fallback loop kept. AST-validated.
+**Verify:** post-fix 0/8 lost submits; per-agent ack still correctly acks the matching item.
+**Commit:** accb57f (research-os main).
