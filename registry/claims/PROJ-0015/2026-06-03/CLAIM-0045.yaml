@@ -2,68 +2,85 @@ claim_id: CLAIM-0045
 project_id: PROJ-0015
 stage: seed
 status: seed
-claim: "When DISTRACTOR documents carry a shared TOPICAL BOILERPLATE template containing\
-  \ some of the query's terms (navigation/header/SEO block) while the genuine canonical\
-  \ answer document stays CLEAN, the clean answer's rank under standard BM25 (k1=1.2,b=0.75)\
-  \ degrades NON-MONOTONICALLY (inverted-U) as template length L grows: an intermediate\
-  \ L maximally displaces the clean answer, after which further growth RECOVERS its\
-  \ rank toward #1 \u2014 because (i) at small L the template injects query terms\
-  \ into distractors (raising their scores) and (ii) at large L the long template\
-  \ both triggers BM25 length-normalization crushing the bloated distractors AND spreads\
-  \ the query-terms' df so their IDF collapses (deflating the added signal) \u2014\
-  \ corpus-statistics-dependent crossover, no closed-form predictor."
-why_it_matters: 'DISTINCT successor to killed CLAIM-0044/DEAD-0011 in the revival-condition
-  regime (query-term-bearing template on DISTRACTORS, not answer; length now moves
-  query-term IDF). Pilot inverted-U confirmed 1.17->4.83->1.00. EMERGENT, no closed
-  form. Screened vs 3 anti-patterns. Anti-circular: GT=clean-answer doc-id; signal=BM25
-  rank from token stats. Honest-negative: monotone/flat both FALSIFY = clean facts.
-  Realistic: SEO/template-spam crowding out the canonical clean answer. Prior-art:
-  2503.05037 STATIC biases; 2604.05087/2504.21015 add DISTINCT text to TARGET (here
-  template on COMPETITORS, query-term-bearing, non-monotone signature); 2605.03824/2110.06918
-  query semantics orthogonal. Topic: data-systems-for-ml corpus-hygiene x retrieval.'
-novelty_hypothesis: ''
-mandatory_baselines: []
+claim: 'Under BM25 with length normalization (b>0), when DISTRACTOR documents carry a shared topical template
+  containing some of the query''s terms while the genuine canonical answer doc stays CLEAN, the clean
+  answer''s rank degrades NON-MONOTONICALLY (inverted-U) as template length L grows: an intermediate L
+  maximally displaces the answer, after which further growth RECOVERS its rank toward #1. The recovery
+  along the L axis is LENGTH-NORMALIZATION-DOMINATED (at small L the template injects query terms into
+  distractors raising their scores above the clean answer; at large L BM25 length normalization progressively
+  crushes the bloated distractors'' scores back below the clean answer; recovery REQUIRES b>0 and is abolished
+  at b=0 where rank worsens monotonically). The IDF/spread effect acts ONLY via the SPREAD (frac) axis
+  (widening the fraction of templated distractors lowers the curve baseline, qterm_idf 4.65->4.05) and
+  NOT via L (qterm_idf is FLAT ~4.05 across all L>0 because a distractor''s df for a query term is fixed
+  once present, regardless of repetition). The phenomenon PERSISTS under the BM25L long-doc over-penalization
+  fix, so it is a property of length-normalized lexical retrieval, NOT a default-b over-penalization artifact.
+  Corpus-statistics-dependent crossover; no closed-form predictor.'
+why_it_matters: 'DISTINCT successor to killed CLAIM-0044/DEAD-0011 in the revival-condition regime (query-term-bearing
+  template on DISTRACTORS, not answer; length now moves query-term IDF). Pilot inverted-U confirmed 1.17->4.83->1.00.
+  EMERGENT, no closed form. Screened vs 3 anti-patterns. Anti-circular: GT=clean-answer doc-id; signal=BM25
+  rank from token stats. Honest-negative: monotone/flat both FALSIFY = clean facts. Realistic: SEO/template-spam
+  crowding out the canonical clean answer. Prior-art: 2503.05037 STATIC biases; 2604.05087/2504.21015
+  add DISTINCT text to TARGET (here template on COMPETITORS, query-term-bearing, non-monotone signature);
+  2605.03824/2110.06918 query semantics orthogonal. Topic: data-systems-for-ml corpus-hygiene x retrieval.'
+novelty_hypothesis: 'First report of a clean-canonical-answer rank inverted-U induced by query-term-bearing
+  shared template on COMPETITOR docs under length-normalized lexical retrieval; recovery is length-norm-dominated
+  (b>0 necessary, robust to BM25L). Distinct from: Singhal-Buckley-Mitra SIGIR1996 (pivoted length norm
+  — the recovery mechanism, b=pivot slope); Robertson-Walker SIGIR1994 (BM25 length norm); Lv-Zhai CIKM2011
+  (BM25L — robustness baseline, phenomenon survives it); Zhong EMNLP2023 corpus-poisoning (crafted adversarial
+  passages vs our BENIGN templates displacing a clean answer non-monotonically); Gospodinov2023 Doc2Query--
+  (over-expansion hurts the TARGET doc; ours is on competitors); 2503.05037 STATIC biases (not a non-monotone
+  preprocessing response). DROPPED mis-cites: 2504.21015 (synthetic-data, not doc-expansion), 2604.05087
+  (unverifiable).'
+mandatory_baselines:
+- BM25 b-sweep b in {0,0.25,0.5,0.75,1.0} (b=0 abolishes recovery — DONE EXP-0047)
+- BM25L Lv-Zhai CIKM2011 delta=0.5 (inverted-U PERSISTS — DONE EXP-0047)
+- dense retriever bge/e5 (L1 — does recovery arm dampen/vanish without explicit length penalty?)
 academic_map_nodes: []
 supporting_evidence:
 - exp_id: EXP-0044
-  summary: 'INVERTED-U HELD. When query-term-bearing topical boilerplate is on the
-    DISTRACTORS and the canonical answer doc stays CLEAN, the clean answer''s BM25
-    rank traces a clear inverted-U in template length L: worsens to an interior maximum
-    then RECOVERS to #1. HELD in 3/4 (frac,T_qterms) cells by the pre-registered CI
-    test (interior CI excludes both endpoint means); 20/20 seeds within-seed inverted-U
-    in the strongest cell (frac=1.0,T=2: rank 1.10->peak 5.20@L16->1.00@L512), 18/20
-    (0.5,2), 13/20 (1.0,1); weakest cell (0.5,1) non-monotone-NS only. MECHANISM CROSSOVER
-    EXPLICIT: top-distractor score jumps 25.8->32.9@L16 (query-term injection overtakes
-    flat ~29 answer score => rank worsens), then dist length-norm (1.0->7.6) crushes
-    bloated distractors back to 22.8 (=> recovery). This is the crossover DEAD-0011
-    lacked (there boilerplate was non-query on the ANSWER => monotone). Honest nuance:
-    qterm_idf flat across L>0 (df fixed once present), so the L-driven recovery is
-    length-norm-dominated while IDF-collapse modulates depth via the SPREAD axis.
-    Distinct, complementary to DEAD-0011. stdlib BM25 k1=1.2 b=0.75 verified <1e-9.'
+  summary: 'INVERTED-U HELD. When query-term-bearing topical boilerplate is on the DISTRACTORS and the
+    canonical answer doc stays CLEAN, the clean answer''s BM25 rank traces a clear inverted-U in template
+    length L: worsens to an interior maximum then RECOVERS to #1. HELD in 3/4 (frac,T_qterms) cells by
+    the pre-registered CI test (interior CI excludes both endpoint means); 20/20 seeds within-seed inverted-U
+    in the strongest cell (frac=1.0,T=2: rank 1.10->peak 5.20@L16->1.00@L512), 18/20 (0.5,2), 13/20 (1.0,1);
+    weakest cell (0.5,1) non-monotone-NS only. MECHANISM CROSSOVER EXPLICIT: top-distractor score jumps
+    25.8->32.9@L16 (query-term injection overtakes flat ~29 answer score => rank worsens), then dist length-norm
+    (1.0->7.6) crushes bloated distractors back to 22.8 (=> recovery). This is the crossover DEAD-0011
+    lacked (there boilerplate was non-query on the ANSWER => monotone). Honest nuance: qterm_idf flat
+    across L>0 (df fixed once present), so the L-driven recovery is length-norm-dominated while IDF-collapse
+    modulates depth via the SPREAD axis. Distinct, complementary to DEAD-0011. stdlib BM25 k1=1.2 b=0.75
+    verified <1e-9.'
   data_path: experiments/2026-06-03/EXP-0044/
+- exp_id: EXP-0047
+  summary: 'HELD-STRONG. b-sweep: b=0 abolishes recovery (monotone 1.10->14.30, 0/20), recovery sharpens
+    monotonically with b -> length-norm is the NECESSARY cause of the recovery arm (mechanism confirmed).
+    BM25L (Lv&Zhai delta=0.5, hand-verified): inverted-U PERSISTS (3/4 cells HELD, strongest 20/20) ->
+    robust to the known length-penalty fix, NOT a default-b artifact. Score-margin substantial (+4.4 ->
+    -4.2 peak -> +7.1). Claim rewritten: recovery is length-norm-dominated along L; IDF-collapse acts
+    only via SPREAD axis (qterm_idf flat ~4.05 across L). Citations fixed (drop 2504.21015/2604.05087;
+    add Singhal-Buckley-Mitra 1996, Robertson-Walker 1994, Lv-Zhai 2011, Zhong 2023, Doc2Query-- 2023).
+    Recommend fast-track L1: dense-retriever test (predict recovery arm dampened/absent without b>0 length
+    penalty).'
+  data_path: experiments/2026-06-03/EXP-0047/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0043
   date: '2026-06-03'
   result: yellow
-revival_conditions: 'REVIVED from DEAD-0011 with new evidence: NEW REGIME + NEW PILOT
-  EVIDENCE distinguishing from DEAD-0011: DEAD-0011 placed NON-query low-IDF boilerplate
-  on the ANSWER doc and found MONOTONE worsening because (a) bp_idf was FLAT in L
-  and (b) boilerplate terms were non-query so never entered the score. This claim
-  changes BOTH load-bearing factors: the template is on the DISTRACTORS (answer stays
-  clean) AND the template CONTAINS QUERY TERMS, so length L now moves query-term df
-  (the IDF axis DEAD-0011''s revival condition explicitly named). 12-seed pilot CONFIRMS
-  the inverted-U DEAD-0011 lacked: mean rank 1.17 (L=0) -> peak 4.83 (L=16) -> recovers
-  to 1.00 (L=512). The crossover IS present here (length-norm crushes bloated distractors
-  + query-term IDF collapse) whereas it was structurally absent in DEAD-0011. This
-  is the revival-condition regime, with evidence.'
+revival_conditions: 'REVIVED from DEAD-0011 with new evidence: NEW REGIME + NEW PILOT EVIDENCE distinguishing
+  from DEAD-0011: DEAD-0011 placed NON-query low-IDF boilerplate on the ANSWER doc and found MONOTONE
+  worsening because (a) bp_idf was FLAT in L and (b) boilerplate terms were non-query so never entered
+  the score. This claim changes BOTH load-bearing factors: the template is on the DISTRACTORS (answer
+  stays clean) AND the template CONTAINS QUERY TERMS, so length L now moves query-term df (the IDF axis
+  DEAD-0011''s revival condition explicitly named). 12-seed pilot CONFIRMS the inverted-U DEAD-0011 lacked:
+  mean rank 1.17 (L=0) -> peak 4.83 (L=16) -> recovers to 1.00 (L=512). The crossover IS present here
+  (length-norm crushes bloated distractors + query-term IDF collapse) whereas it was structurally absent
+  in DEAD-0011. This is the revival-condition regime, with evidence.'
 owner: researcher-0042
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: L0 remediation EXP-0047 dispatched (b-sweep+BM25L+score-margin+citation-fix+claim-rewrite)
-  per VERDICT-0043 gate
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0047; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0047
+active_experiments: []
 created_at: '2026-06-03T15:17:41Z'
-last_updated: '2026-06-03T15:37:25Z'
+last_updated: '2026-06-03T15:46:26Z'
