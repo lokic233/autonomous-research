@@ -1316,3 +1316,27 @@ never the `time` module (no `import time as _t` in that scope), so it is harmles
 **Verified:** AST OK; `ros status` smoke OK; full `ros exp gc --apply` in an isolated /tmp instance →
 orphan pending EXP-0001 correctly identified as stale (the `_t.time()` staleness check works, proving
 no shadow), retired, and its owner's open TASK-0001 → done via the renamed `_tk` loop.
+
+---
+
+## BUG-90 — `gpu-task submit` double-dispatches an already-running exp onto a SECOND GPU
+**Found:** 2026-06-03 v3 ACTIVE-DEBUG (Navi lead-debugger), bugbash surface = channel ack/resubmit race + multi-GPU dispatch contention. **Engine commit:** 18524e9 (research-os main). Shared engine — fixes v2 and v3.
+**Surface:** `engine/ros.py::cmd_gpu_task_submit` + `engine/channeling/channel.py::Channel.submit`.
+**Bug:** The gpu TASK channel de-dups submits with `dedup_keys=["exp_id"]`, but `Channel.submit`
+only de-dups against **UN-acked** envelopes (`if it.get("acked"): continue`). Lifecycle: orchestrator
+submits GT-task for EXP-X → a gpu_coordinator pulls + `ack`s it → exp goes `status=running`. A second
+`ros gpu-task submit --exp EXP-X` (orchestrator retry, restart, or a second scheduler action) then
+slips past dedup (the only matching envelope is acked) and creates a NEW GT envelope. A second
+coordinator pulls it and runs the **same experiment on a second GPU concurrently** → GPU-lease
+contention, double GPU burn, and two racing `gpu-result submit` calls for one exp.
+**Why dedup-only-unacked is otherwise correct:** the legit fault-retry path *needs* acked tasks to be
+re-submittable — a faulted run is set `status=faulted` (lease released, BUG-55) before re-dispatch, and
+`cmd_exp_dispatch` only accepts `pending|faulted`. Blanket-deduping acked tasks would break fault retry.
+**Repro (isolated /tmp):** `Channel.submit(p, dedup_keys=["exp_id"])`; ack GT-0001; resubmit same payload
+→ NEW GT-0002 created (no dup flag), confirming a second runnable task for the same exp.
+**Fix (minimal, no new mechanism):** in `cmd_gpu_task_submit`, after the committee/window gate, refuse a
+fresh submit when `exp.status == "running"` (already in-flight on a GPU) unless `--force`. Error message
+points at `ros exp fault <exp>` to release a genuinely-dead lease (mirrors the BUG-55 fault flow). Only a
+truly in-flight `running` exp is blocked; `pending|faulted|failed|approved` re-dispatch is untouched.
+**Verified:** AST OK. Isolated /tmp instance: submit-while-`running` → REFUSED with remedy msg; flip exp
+to `faulted` → submit ALLOWED (GT-0001 created); `--force` → overrides the guard. Fault-retry preserved.
