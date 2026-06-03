@@ -1,7 +1,7 @@
 claim_id: CLAIM-0039
 project_id: PROJ-0010
 stage: seed
-status: killed
+status: dead
 claim: "In multi-agent LLM serving where agents alternate short decode bursts with\
   \ long external tool-waits, the GPU 'step bubbles' (idle during an agent's tool-wait)\
   \ represent a MEASURABLE aggregate-throughput loss that vanilla continuous batching\
@@ -41,13 +41,17 @@ negative_evidence:
     paired arrival tapes; M<B byte-identical). L1: real vLLM/SGLang + real agent tool-wait
     traces + KV-cache admission (the abstracted-away bottleneck).'
   data_path: experiments/2026-06-03/EXP-0036/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0037
+  date: '2026-06-03'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
 lifecycle_state: done
-next_action: killed -> cemetery; no further action
+next_action: 'terminal: VERDICT-0037 kill (DEAD-0008; continuous batching captures
+  it; 4th dead scheduling claim)'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T11:18:35Z'
-last_updated: '2026-06-03T11:29:28Z'
+last_updated: '2026-06-03T11:42:24Z'

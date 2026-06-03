@@ -1,0 +1,64 @@
+verdict_id: VERDICT-0037
+claim_id: CLAIM-0039
+project_id: PROJ-0010
+date: '2026-06-03'
+experiment_ids:
+- EXP-0036
+experiment_paths:
+- experiments/2026-06-03/EXP-0036
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- "Vanilla CONTINUOUS BATCHING already captures it: residual_idle = (ready-work ceiling\
+  \ - CB decode-util) = 0.000000 across ALL 288 configs \u2014 CB (Orca/vLLM, work-conserving)\
+  \ hits the ready-work ceiling EXACTLY"
+- "nothing for any policy to reclaim. The idle that exists is STRUCTURAL (agents simultaneously\
+  \ off-GPU in tool-wait, #ready<B) \u2014 undecodable by any scheduler"
+- "CLAIM's CENTRAL HYPOTHESIS REFUTED: correlation does NOT create unfillable aligned\
+  \ bubbles CB misses \u2014 ceiling RISES with rho (0.472->0.483->0.489)"
+- 'step-aware vs REAL CB at matched p99: median 0.00%, 0/288 non-trivial wins'
+- 66/288 'gain' only by sacrificing p99 (2.06x worse)
+- "joins dead scheduling claims CLAIM-0004/0006/0012 \u2014 continuous batching is\
+  \ the incumbent that captures cross-request/agent bubbles"
+- '(3 greens are GREEN-ON-THE-KILL: clean rigorous negative, methodology bug caught+fixed
+  v2, NOT green on the claim)'
+required_evidence:
+- "None \u2014 CB is provably work-conserving in the occupancy regime"
+- "the slot-occupancy claim is dead. (Honest L1 pointer if ever revisited: any residual\
+  \ is likely KV-BOUND not slot-bound \u2014 real vLLM/SGLang KV-cache admission under\
+  \ correlated bursts"
+- but the claim AS STATED is refuted.)
+map_delta_proposals:
+- CLAIM-0039 -> KILL (DEAD-0008). Continuous batching already work-conserving
+- no residual agent-step-bubble beyond CB
+- "correlation hypothesis refuted. 4TH scheduling claim killed by the continuous-batching\
+  \ incumbent (0004/0006/0012/0039) \u2014 REINFORCES: agent-serving SCHEDULING-throughput\
+  \ claims vs continuous batching are a dead vein in this topic-bias (add to the screen).\
+  \ PROJ-0010 converged. Methodology integrity noted (policy-dependent-RNG bug caught+fixed).\
+  \ No false green"
+baseline_requirements:
+- "REAL continuous batching (Orca OSDI22 / vLLM PagedAttention SOSP23) \u2014 the\
+  \ work-conserving incumbent, captures it all"
+- serial per-agent (strawman floor, CB dominates 1.50x median/7.99x max)
+- achievable ready-work ceiling (CB == ceiling everywhere)
+committee_run_dir: experiments/2026-06-03/EXP-0036/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T11:41:53Z'
