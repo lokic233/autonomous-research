@@ -1,0 +1,71 @@
+verdict_id: VERDICT-0006
+claim_id: CLAIM-0004
+project_id: PROJ-0003
+date: '2026-06-02'
+experiment_ids:
+- EXP-0005
+experiment_paths:
+- experiments/2026-06-02/EXP-0005
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "novelty_killer RED (unrebutted, load-bearing): core mechanism (prefix-family-aware\
+  \ admission co-scheduling shared-prefix requests to maximize reuse before eviction)\
+  \ is VERBATIM SGLang RadixAttention cache-aware scheduling (Zheng NeurIPS24, arXiv\
+  \ 2312.07104) \u2014 canonical shipping system"
+- corroborated by vLLM APC, Preble (2407.00023), llm-d
+- researcher's own packet concedes the overlap
+- "Residual novelty (bounded-W reorder + p99 cap) is a thin composition of cache-aware\
+  \ admission (known) + starvation-bounded scheduling (VTC, Sheng OSDI24 arXiv 2401.00588\
+  \ \u2014 the LLM-serving instance)"
+- L0 never compares vs SGLang scheduler or VTC, only vs naive FCFS (strawman, flagged
+  by evaluation_prosecutor)
+- 'theory_skeptic: 15/92 ''clean CI<0 wins'' have NO FWER/FDR correction (~4-5 expected
+  false positives at nominal 95%) + n=6 seeds < ~20 rule-of-thumb for bootstrap stability'
+required_evidence:
+- "REFRAME claim (prerequisite to any GPU): narrow from 'prefix-family admission beats\
+  \ FCFS' to 'fairness-bounded cache-aware admission (bounded-W) achieves a better\
+  \ fairness/prefill PARETO point than unbounded-greedy cache-aware scheduling (SGLang-style)'\
+  \ \u2014 measured vs SGLang + VTC, NOT FCFS. Re-enter at L0/seed"
+- 'Head-to-head vs SGLang''s ACTUAL cache-aware scheduler (not FCFS) on real vLLM/SGLang+APC:
+  wall-clock p50/p99 TTFT, throughput, KV eviction, fairness under bursty agentic
+  traffic, heavy-tailed family skew (Zipf s>=1.5)'
+- Explicit comparison vs VTC fairness-bounded scheduling (establish bounded-W not
+  subsumed)
+- Seeds >=20 + multiple-comparison-corrected CI (Bonferroni/BH) on win cells
+- per-cell fairness-ratio distribution
+- Cache-size-vs-K sensitivity curve (continuous, not 3 points) + PREFIX_LEN/block_size
+- "Realistic service-time feedback (prefill cost scales with missed tokens) \u2014\
+  \ constant-service-time removes the loop determining whether matched-fairness survives\
+  \ on HW"
+map_delta_proposals:
+- CLAIM-0004 -> RED
+- 'reframe required: ''prefix-family admission beats FCFS'' -> ''fairness-bounded
+  cache-aware admission better fairness/prefill Pareto than unbounded-greedy (SGLang-style)'',
+  measured vs SGLang + VTC not FCFS'
+- prior_art_collision [SGLang-RadixAttention, vLLM-APC, Preble, VTC]
+- L0 retains value as competent fairness-controlled re-measurement IF reframed
+- CONVERGED-at-L0 red, no GPU under current claim
+baseline_requirements:
+- "SGLang RadixAttention cache-aware scheduler (Zheng NeurIPS24) \u2014 the direct\
+  \ mechanism collision"
+- vLLM with APC enabled, default scheduler
+- "VTC / fairness-bounded LLM scheduling (Sheng OSDI24) \u2014 the fairness-mechanism\
+  \ collision"
+- Preble prefix-aware scheduling (2024)
+created_at: '2026-06-02T23:59:52Z'

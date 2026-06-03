@@ -1,0 +1,55 @@
+Both egress paths (MCP external search and WebSearch) are permission-blocked — the "no egress at L0" condition the packet flagged still holds, so I cannot perform a *live* ≥2-source sweep. I will vote from established prior-art knowledge (cutoff Jan 2026) and flag the live-verification caveat explicitly per the mandate.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Zheng et al., SGLang: Efficient Execution of Structured Language Model Programs, NeurIPS 2024",
+   url: "https://arxiv.org/abs/2312.07104",
+   why_close: "RadixAttention + CACHE-AWARE SCHEDULING. SGLang's scheduler reorders the waiting queue to
+   maximize shared-prefix cache reuse (sort/group by longest matched prefix). This IS 'prefix-family-aware
+   admission co-scheduling requests that share a long prefix to maximize reuse before eviction' — the
+   verbatim mechanism of CLAIM-0004. Direct, headline collision."}
+- {cite: "vLLM Automatic Prefix Caching (APC) + prefix-aware scheduling (vLLM v1 scheduler RFCs/PRs)",
+   url: "https://docs.vllm.ai/en/latest/features/automatic_prefix_caching.html",
+   why_close: "APC + scheduler hooks that prioritize requests hitting resident prefix blocks. The packet's
+   own caveat names this. Independent implementation of the same cache-hit-aware admission idea."}
+- {cite: "Srivatsa et al., Preble: Efficient Distributed Prompt Scheduling for LLM Serving, 2024",
+   url: "https://arxiv.org/abs/2407.00023",
+   why_close: "Explicit prefix-aware request scheduling/load-balancing on shared prompt prefixes; treats
+   prefix-sharing groups ('families') as the scheduling unit. Third independent source for the core idea."}
+- {cite: "Sheng et al., Fairness in Serving Large Language Models (VTC), OSDI 2024",
+   url: "https://arxiv.org/abs/2401.00588",
+   why_close: "Canonical fairness-bounded LLM scheduler (Virtual Token Counter w/ bounded service
+   divergence). The 'matched-fairness / bounded reorder window with p99 cap' framing — the researcher's
+   ONLY claimed residual novelty — overlaps VTC's fairness-bounded reordering. Must be reconciled."}
+
+NAMING_VS_MECHANISM: The headline ("prefix-family-aware batch admission") is RENAMING of an already-published
+mechanism (SGLang cache-aware scheduling). The only candidate MECHANISM delta is the bounded reorder window
+(W) with an explicit p99 fairness cap — and that is a thin composition of two known ideas: cache-aware
+admission (SGLang/vLLM/Preble) + classic aging/starvation-bound scheduling, of which VTC is the LLM-serving
+instance. Not a new mechanism; a fairness-controlled RE-MEASUREMENT of a known one.
+
+FATAL_COLLISIONS:
+- SGLang cache-aware scheduling == the claim's core admission mechanism (kills "achieves higher hit rate
+  than FCFS by co-scheduling a prefix family" as novel).
+- The "unbounded-W greedy" variant the researcher reports (+17% @ 1.29-1.34x p99) is essentially SGLang's
+  default greedy cache-aware sort — i.e. the paper's own baseline is prior art, not a new policy.
+
+MANDATORY_RELATED_WORK: SGLang/RadixAttention (2312.07104); vLLM APC; Preble (2407.00023); VTC/Fairness in
+Serving (2401.00588). Strongly recommended: chunked-prefill scheduling (Sarathi-Serve, OSDI'24, 2403.02310)
+since the GPU-pass ask explicitly touches it.
+
+RATIONALE: The claim as written collides head-on with SGLang cache-aware scheduling (NeurIPS'24) and is
+independently anticipated by vLLM APC and Preble — ≥2 independent published sources for the core mechanism.
+The researcher already concedes this and narrows the contribution to the matched-fairness control; but that
+residual is incremental (cache-aware admission + bounded aging) and overlaps VTC's fairness-bounded
+scheduling. RED on novelty-as-claimed: the L0 is a competent, honest re-measurement with a fairness control,
+NOT a new mechanism, and it cannot proceed to a novelty claim without (a) reframing the contribution to ONLY
+the fairness-bounded comparison and (b) a head-to-head against SGLang's actual cache-aware scheduler (not a
+hand-rolled FCFS baseline) showing the bounded-W p99 cap buys something VTC+SGLang does not.
+CAVEAT (mandate compliance): egress was blocked at L0; the four citations above are from reviewer prior-art
+knowledge, not a live retrieval. They are well-established (SGLang/VTC are canonical), so the collision burden
+flips to the authors, but a live ≥2-source confirmation of the SGLang + Preble scheduling specifics remains
+OWED before this verdict is treated as fully audited.
+```

@@ -1,0 +1,42 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS:
+- [novelty_killer, unrebutted] Core mechanism ("prefix-family-aware batch admission co-scheduling requests sharing a prefix to maximize cache reuse before eviction") is verbatim SGLang RadixAttention cache-aware scheduling (Zheng et al., NeurIPS 2024, 2312.07104) — a canonical, shipping system. Independently corroborated by systems_reviewer citing SGLang §5.2 and by vLLM APC, Preble (2407.00023), and llm-d. The researcher's own packet concedes this overlap ("this experiment's contribution is narrowly the matched-fairness control... not the idea of cache-aware admission itself"). The claim AS WRITTEN claims the mechanism, not just the fairness measurement.
+- [novelty_killer, unrebutted] Residual novelty (bounded reorder window W with p99 cap) is a thin composition of two known techniques: cache-aware admission (SGLang/vLLM/Preble) + aging/starvation-bounded scheduling, of which VTC (Sheng et al., OSDI 2024, 2401.00588) is the LLM-serving instance. No reviewer rebutted this composition argument. The L0 does not compare against VTC or SGLang's actual scheduler — only against naive FCFS, which evaluation_prosecutor independently flags as a strawman risk.
+- [theory_skeptic, unaddressed] The 15/92 "clean CI<0 wins" across 92 cells with no FWER/FDR correction have an expected false-positive count of ~4–5 under the null at nominal 95%. Combined with n=6 seeds per cell (below the ≥20 rule of thumb for bootstrap CI stability), the statistical authority of the win count is weakened. Wins concentrate in one regime, which helps, but a corrected analysis is owed.
+
+REQUIRED_EVIDENCE:
+- Reframe contribution to ONLY the fairness-bounded comparison (bounded-W vs unbounded-greedy vs SGLang-default vs VTC), NOT cache-aware admission itself. The claim must be rewritten.
+- Head-to-head against SGLang's actual cache-aware scheduler (not FCFS) on real vLLM/SGLang with APC enabled, measuring wall-clock p50/p99 TTFT, throughput, KV-block eviction, and fairness under bursty agentic traffic with realistic heavy-tailed family skew (Zipf s≥1.5).
+- Explicit comparison against VTC fairness-bounded scheduling to establish the bounded-W mechanism is not subsumed.
+- Seeds ≥20 with multiple-comparison-corrected CI (Bonferroni or BH) on the win cells; per-cell fairness-ratio distribution (not just mean) at matched W.
+- Sensitivity curve on cache-size vs K (continuous, not 3 discrete points) and on PREFIX_LEN/block_size.
+- Test under realistic service-time feedback (prefill cost scales with missed tokens) — the constant-service-time assumption removes the very loop that determines whether matched-fairness survives on hardware.
+
+MANDATORY_BASELINES:
+- SGLang RadixAttention cache-aware scheduler (Zheng et al., NeurIPS 2024) — the direct mechanism collision
+- vLLM with APC enabled, default scheduler — the dominant serving engine
+- VTC / fairness-bounded LLM scheduling (Sheng et al., OSDI 2024) — the fairness-mechanism collision
+- Preble prefix-aware scheduling (Srivatsa et al., 2024) — independent third source for core idea
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0004", change: "status -> RED; reframe_required: claim must be narrowed from 'prefix-family-aware admission achieves lower prefill than FCFS' to 'fairness-bounded cache-aware admission (bounded-W) achieves a better fairness/prefill Pareto point than unbounded-greedy cache-aware scheduling (SGLang-style) — measured against SGLang and VTC, not FCFS'; prior_art_collision: [SGLang-RadixAttention, vLLM-APC, Preble, VTC]; L0_value: 'competent re-measurement with fairness control, retains value as empirical contribution if reframed and reconciled'"}
+
+PRIOR_ART_ADEQUATE: partial
+  Two independent reviewers (novelty_killer, systems_reviewer) converged on the same canonical collisions (SGLang, vLLM APC, Preble, VTC, llm-d) using prior-art knowledge — but live ≥2-source retrieval was blocked at L0 (egress denied). The collisions are with CANONICAL works (NeurIPS'24, OSDI'24, shipping systems) whose existence does not require live confirmation, so the collision burden flips to the claimant. However, the live sweep remains formally owed per v001 mandate before treating the verdict as fully audited. Unlikely to change the picture given convergent evidence from 5/5 reviewers independently noting the overlap.
+
+RATIONALE:
+The novelty_killer's RED is the load-bearing vote. It identifies a direct, headline collision between CLAIM-0004's core mechanism and SGLang's cache-aware scheduling (NeurIPS 2024) — a canonical, shipping system that performs exactly what the claim describes: reordering the waiting queue to co-schedule requests sharing long prefixes for cache reuse. This collision is independently corroborated by systems_reviewer (citing SGLang §5.2, vLLM APC, TensorRT-LLM, llm-d) and acknowledged by the researcher's own packet ("this experiment's contribution is narrowly the matched-fairness control... not the idea of cache-aware admission itself").
+
+The remaining candidate novelty — the bounded reorder window W with explicit p99 fairness cap — is the composition of cache-aware admission (known: SGLang, vLLM, Preble) with aging/starvation-bounded scheduling (known: VTC, OSDI 2024, plus 50+ years of OS scheduling). No reviewer identified this composition as surprising or non-obvious. The L0 does not compare against either SGLang's scheduler or VTC, only against naive FCFS — which evaluation_prosecutor correctly flags as a potential strawman in a prefix-caching environment where cache-aware admission is the production default.
+
+The L0 execution itself is competent and honest: the matched-fairness control is the right experimental design, the pre-registration is clean, the honest-negative N2 branch fired correctly, and the conditional-HELD result is internally consistent. theory_skeptic's observation that the effect is predicted by basic LRU-with-locality theory (access-grouping for LRU, a known cache-friendly scheduling pattern) does not invalidate the measurement but does lower the novelty ceiling. product_realist's note that provisioning cache to hold hot prefixes (standard operational practice) eliminates the win further constrains the practical significance.
+
+No reviewer's RED is rebutted by evidence. The researcher concedes the mechanism overlap and narrows to the fairness control; but the claim AS WRITTEN claims the mechanism ("prefix-family-aware batch admission... achieves strictly lower prefill than FCFS"), not just the fairness measurement. Per mandate: do not emit GREEN with any unrebutted RED.
+
+**Path forward (constructive):** The L0 retains value as a careful empirical contribution IF the claim is reframed to: "fairness-bounded cache-aware admission (bounded-W) achieves a better fairness/prefill Pareto point than unbounded-greedy cache-aware scheduling" — measured head-to-head against SGLang's actual scheduler and VTC, not FCFS. This is a narrower but defensible contribution. The GPU pass should implement bounded-W inside or alongside SGLang/vLLM APC, compare against their native cache-aware schedulers AND VTC, and report real p99 TTFT under bursty multi-family agentic traffic with ≥20 seeds and FWER-corrected CIs.
+
+PROMPT_VERSION: v001
+```

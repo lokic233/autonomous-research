@@ -6,15 +6,15 @@ session_id: ''
 project_id: PROJ-0001
 claim_id: CLAIM-0002
 exp_id: EXP-0003
-status: open
+status: done
 summary: 'GPU L1 on devgpu014/H100: real vLLM enable_prefix_caching, two-typed agentic
   trace; scan-resistant + TRT-LLM-config + Belady baselines; committed:transient ratio
   sweep; misclassification curve; TTFT+throughput. Addresses VERDICT-0002 required_evidence
   1-8.'
 evidence_delta: ''
 opened_at: '2026-06-02T23:03:12Z'
-updated_at: '2026-06-02T23:03:12Z'
-closed_at: ''
+updated_at: '2026-06-02T23:53:03Z'
+closed_at: '2026-06-02T23:53:03Z'
 history:
 - ts: '2026-06-02T23:03:12Z'
   event: open
@@ -23,3 +23,7 @@ history:
     trace; scan-resistant + TRT-LLM-config + Belady baselines; committed:transient
     ratio sweep; misclassification curve; TTFT+throughput. Addresses VERDICT-0002
     required_evidence 1-8.'
+- ts: '2026-06-02T23:53:03Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-gpu-0003 completed EXP EXP-0003 (kill)

@@ -1,0 +1,37 @@
+dead_id: DEAD-0001
+original_claim_id: CLAIM-0002
+original_claim: "For multi-turn agentic LLM serving under cache pressure, an adaptive\
+  \ 3-class KV/prefix retention policy that distinguishes COMMITTED-conversation scratch\
+  \ (appended to running context, reused by later turns) from TRANSIENT scratch (one-shot\
+  \ tool payloads never re-referenced) and protects a hot-prefix FLOOR, achieves a\
+  \ strictly better hit-rate/recompute Pareto frontier than (a) plain LRU and (b)\
+  \ a pin-shared-prefix-only baseline across the full cache-capacity sweep AND across\
+  \ shared_prefix_frac in {0.25,0.5,0.75,0.9} \u2014 i.e. the win does NOT collapse\
+  \ to trivial shared-prefix pinning and does NOT invert with cache headroom."
+reason_killed: 'Real-system GPU L1 REFUTES adaptive3: under real prefix-chained KV
+  caching + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU
+  (max +0.33pp in unrealistic flat regime; -19pp at tight cap due to prefix-chain
+  breakage). LRU==Belady (recency optimal on monotonic agentic transcripts). Scan-resistant
+  baseline confirms classifier empty. L0 win was flat-cache+oracle artifact. Honest-negative
+  branch triggered. Closest prior art Continuum(2511.02230).'
+killing_verdict: ''
+killing_experiments:
+- EXP-0003
+duplicate_patterns:
+- "For multi-turn agentic LLM serving under cache pressure, an adaptive 3-class KV/prefix\
+  \ retention policy that distinguishes COMMITTED-conversation scratch (appended to\
+  \ running context, reused by later turns) from TRANSIENT scratch (one-shot tool\
+  \ payloads never re-referenced) and protects a hot-prefix FLOOR, achieves a strictly\
+  \ better hit-rate/recompute Pareto frontier than (a) plain LRU and (b) a pin-shared-prefix-only\
+  \ baseline across the full cache-capacity sweep AND across shared_prefix_frac in\
+  \ {0.25,0.5,0.75,0.9} \u2014 i.e. the win does NOT collapse to trivial shared-prefix\
+  \ pinning and does NOT invert with cache headroom."
+- achieves across adaptive agentic appended baseline better cache capacity class collapse
+  committed context conversation distinguishes does floor frac from frontier full
+  headroom hit hot invert later llm lru multi never not one only pareto payloads pin
+  pinning plain policy prefix pressure protects rate recompute referenced retention
+  reused running scratch serving shared shot strictly sweep than tool transient trivial
+  turn turns under win
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-02T23:53:03Z'

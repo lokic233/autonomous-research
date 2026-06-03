@@ -12,13 +12,18 @@ resource_budget:
 needs_gpu: true
 dispatched_by: orchestrator-r1-001
 node_lease: devgpu014:EXP-0003
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'Real-system GPU L1 REFUTES adaptive3: under real prefix-chained KV
+  caching + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU
+  (max +0.33pp in unrealistic flat regime; -19pp at tight cap due to prefix-chain
+  breakage). LRU==Belady (recency optimal on monotonic agentic transcripts). Scan-resistant
+  baseline confirms classifier empty. L0 win was flat-cache+oracle artifact. Honest-negative
+  branch triggered. Closest prior art Continuum(2511.02230).'
+result_effect: kill
 artifacts_path: experiments/2026-06-02/EXP-0003/
 reproducibility: ''
 linked_verdicts: []
 started_at: '2026-06-02T23:02:57Z'
-completed_at: ''
+completed_at: '2026-06-02T23:53:03Z'
 prompt_version: ''
 committee_approved: VERDICT-0002

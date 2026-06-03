@@ -1,7 +1,7 @@
 claim_id: CLAIM-0002
 project_id: PROJ-0001
 stage: seed
-status: seed
+status: killed
 claim: "For multi-turn agentic LLM serving under cache pressure, an adaptive 3-class\
   \ KV/prefix retention policy that distinguishes COMMITTED-conversation scratch (appended\
   \ to running context, reused by later turns) from TRANSIENT scratch (one-shot tool\
@@ -40,7 +40,15 @@ supporting_evidence:
     sweep vs SGLang/RadixAttention, Prompt Cache (Gim MLSys24), CachedAttention (Gao
     ATC24), TensorRT-LLM token-range retention (no egress at L0). Artifacts: experiments/2026-06-02/EXP-0002/{sim.py,RESULTS.md,PRE_REGISTRATION.md,results/results.csv,results/summary.json}.'
   data_path: experiments/2026-06-02/EXP-0002/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0003
+  summary: 'Real-system GPU L1 REFUTES adaptive3: under real prefix-chained KV caching
+    + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU (max
+    +0.33pp in unrealistic flat regime; -19pp at tight cap due to prefix-chain breakage).
+    LRU==Belady (recency optimal on monotonic agentic transcripts). Scan-resistant
+    baseline confirms classifier empty. L0 win was flat-cache+oracle artifact. Honest-negative
+    branch triggered. Closest prior art Continuum(2511.02230).'
+  data_path: experiments/2026-06-02/EXP-0003/
 verdict_history:
 - verdict_id: VERDICT-0002
   date: '2026-06-02'
@@ -48,10 +56,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0002=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0003
+active_experiments: []
 created_at: '2026-06-02T22:32:47Z'
-last_updated: '2026-06-02T23:02:15Z'
+last_updated: '2026-06-02T23:53:03Z'
