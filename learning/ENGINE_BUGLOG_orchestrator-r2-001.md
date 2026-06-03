@@ -1227,3 +1227,34 @@ write in cmd_gpu_poll under it, RE-READING the queue inside the lock and re-chec
 slow node probe stays OUTSIDE the lock. Also skip any exp already leased to another node. Validated: 6/6
 concurrent races now single-dispatch (exactly one node leased, queue drained, no double PULL). Backward-
 compatible (no schema/CLI change). Engine main 06a4a97.
+
+---
+
+## BUG-86 — `ros exp gc` leaves orphan-task ledger entries open forever (symmetric gap with BUG-60b)
+
+DISCOVERED: v3 ACTIVE-DEBUG pass, 2026-06-03 ~09:35Z. Bugbash surface: "task ledger orphans".
+
+SYMPTOM: `ros exp gc --apply` retires a stale orphan PENDING experiment (researcher died/never
+completed) and clears the claim's active_experiments back-link — but does NOTHING to the task ledger.
+The owning researcher's task stays `status: open` (or `active`) forever -> orphan-task accumulation.
+
+ROOT CAUSE: asymmetry between the two terminal paths. `exp complete` (BUG-60b) closes the owner's
+open tasks when an exp reaches terminal state. The reaper (supervise.reap) orphans the open tasks of
+an agent it flags DEAD. But `cmd_exp_gc` is a THIRD terminal path (clean gc of a stale pending exp)
+that bypassed both: it retired the experiment without ever touching the task ledger. So a researcher
+that died quietly (exp never completed, agent already reaped/superseded by the time gc runs) leaves a
+permanently-open task.
+
+REPRO (isolated /tmp inst): orphan pending EXP-T01 owned by researcher-T + open TASK-T01 assigned to
+researcher-T. `ros exp gc --apply --stale-min 30` -> EXP-T01 retired, TASK-T01 STILL `open`. BUG.
+
+FIX (minimal, mirrors BUG-60b exactly): in cmd_exp_gc's --apply branch, after retiring the experiment,
+read the owner (ran_by | dispatched_by) and close any of that owner's open/active tasks via
+supervise.task_update(status="done", by="exp-gc", _internal=True). Best-effort + non-fatal (try/except
+pass), no schema/CLI change. No-owner / no-matching-task cases are no-ops (verified, no crash).
+
+VERIFIED: after fix, gc prints "closed orphan task TASK-T01 (assignee researcher-T, exp gc-retired)"
+and TASK-T01 -> status: done, by: exp-gc. No-task instance: clean, no crash.
+
+Engine main 8826d4f. v2 is the bar; engine is shared, so this latent gap existed for v2 too (v2 just
+hasn't tripped it because its mature researchers complete cleanly).
