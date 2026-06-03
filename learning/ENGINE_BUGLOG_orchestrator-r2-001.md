@@ -1151,3 +1151,17 @@ diff against the golden reference on VALUES, not just key presence.
 - **Fix:** scan `committee*` dirs across ALL cited exps, return the globally-newest by mtime (= the final pass that produced the recorded votes). Minimal; pure read. v2 names committee dirs explicitly per-run so was never exposed — this is a v3 two-pass-inference-specific divergence from the v2 bar.
 - **Validation:** AST OK; functional check resolves VERDICT-0024 → `experiments/2026-06-03/EXP-0022/committee2` (was committee1).
 - **Commit:** research-os main `bbd6138`. Shared engine — benefits both instances.
+
+## 2026-06-03 ~08:28 UTC — BUG-81 (lanes emits no DESIGN signal below investing target) [v3-impl live debug]
+The recurring "orchestrator looks idle" root cause, final form. When ALL projects converge (into honest
+yellow/red dead-ends), investing drops to 0/target-4, but `ros lanes` iterates only ACTIVE projects -> 0
+active -> prints "✅ idle is healthy" exit 0. The refill directive ("design N new projects") existed ONLY
+in `ros projects`, which NO cron polls. So the orchestrator received no actionable signal and idled below
+target. Same class as BUG-73 (frontier-exhausted single project) escalated to the all-projects level.
+FIX: ros lanes emits 🌱 DESIGN? (actionable, exit 3) when len(active)<concurrent_invest_target; proj_monitor
+routes DESIGN -> orchestrator inbox (notify-once per deficit count, clears at target). Validated isolated
+(below->DESIGN?/exit3/notify, at-target->silent) + matches the live 0/4-investing state that triggered it.
+Pattern note: the 0-greens-21-verdicts state is HONEST hostile review (best claim got 2/6 green; greens
+blocked by legit measurement-only-novelty + egress-denied prior-art sweeps, same constraint as v2's 1st green)
+— NOT a broken gate. The risk is convergence into all-yellow dead-ends with no new frontier; BUG-81 ensures
+the orchestrator is always told to open a new frontier when below target.
