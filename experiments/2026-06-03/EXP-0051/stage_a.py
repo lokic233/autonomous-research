@@ -132,3 +132,68 @@ measure_recall(gsm, gsm_surface_forms, "GSM8K")
 measure_recall(math500, math_surface_forms, "MATH-500")
 
 print("\n=== Stage A precision/recall done ===", flush=True)
+
+# ============================================================
+#  ADVERSARIAL PRECISION: does the normalizer over-merge a GOLD with a
+#  surface-close WRONG answer? (e.g. 1/3 vs 0.33, 18 vs 18.5, sqrt(13) vs 13)
+#  This is the precision test that actually stresses recall-vs-precision tradeoff.
+# ============================================================
+def adversarial_precision(golds, surface_fn, wrong_fn, label):
+    merged=0; true_eq=0; false_merge=[]
+    for g in golds:
+        gk=gt_value(g)
+        gforms=surface_fn(g)
+        wrongs=wrong_fn(g)   # list of (wrong_string, wrong_gt_key) truly DISTINCT from gold
+        for gf in gforms:
+            gkey=canon_numeric(gf)
+            for ws,wk in wrongs:
+                if canon_numeric(ws)==gkey:
+                    merged+=1
+                    if wk==gk: true_eq+=1
+                    elif len(false_merge)<10: false_merge.append((gf,ws))
+    # also count the legit merges among gold surface forms as true merges (baseline precision)
+    q = (true_eq/merged) if merged else float('nan')
+    print(f"\n[adv-q] {label}: gold-vs-wrong merges={merged} false(over)merges={merged-true_eq}", flush=True)
+    if false_merge: print("   FALSE MERGES (gold~wrong collapsed):", false_merge[:6], flush=True)
+    else: print("   ZERO false merges of gold with surface-close wrong answers.", flush=True)
+    return merged-true_eq
+
+def gsm_wrongs(g):
+    n=int(g); out=[]
+    # realistic arithmetic-slip wrong values: off-by-one, doubled, halved, +/- small, digit-swap
+    cands=set()
+    for d in (1,-1,2,-2,10,-10): cands.add(n+d)
+    cands.add(n*2); cands.add(n//2 if n%2==0 else n)
+    cands.discard(n)
+    for w in cands:
+        out.append((str(w), gt_value(str(w))))
+        out.append((f"${w}", gt_value(str(w))))
+        out.append((f"{w}.0", gt_value(str(w))))
+    return out
+
+def math_wrongs(a):
+    out=[]; v=canon._to_value(a)
+    if v is None: return out
+    if v.is_rational and not v.is_integer:
+        p,q=v.p,v.q
+        # surface-close wrongs: truncated decimal, swapped num/den, off-by-one numerator
+        cands=set()
+        cands.add((p+1,q)); cands.add((p,q+1)); cands.add((q,p)) if p!=q else None
+        for (pp,qq) in cands:
+            if qq==0: continue
+            ws=f"\\frac{{{pp}}}{{{qq}}}"; wk=gt_value(f"{pp}/{qq}")
+            out.append((ws,wk)); out.append((f"{pp}/{qq}",wk))
+        # truncated decimal of the gold (a WRONG distinct value): 1/3 -> 0.33
+        dec=float(v)
+        trunc=f"{dec:.2f}"
+        if canon._to_value(trunc)!=v:
+            out.append((trunc, gt_value(trunc)))
+    if v.is_integer:
+        n=int(v)
+        for d in (1,-1,2):
+            out.append((str(n+d), gt_value(str(n+d))))
+    return out
+
+adversarial_precision(gsm, gsm_surface_forms, gsm_wrongs, "GSM8K gold-vs-surface-close-wrong")
+adversarial_precision(math500, math_surface_forms, math_wrongs, "MATH-500 gold-vs-surface-close-wrong")
+print("\n=== adversarial precision done ===", flush=True)
