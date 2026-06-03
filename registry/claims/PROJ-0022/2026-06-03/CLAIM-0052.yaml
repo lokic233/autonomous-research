@@ -1,7 +1,7 @@
 claim_id: CLAIM-0052
 project_id: PROJ-0022
 stage: seed
-status: seed
+status: weakened
 claim: "In two-stage (route-to-server-then-select-tool) agentic tool retrieval, a\
   \ correct tool is structurally UNREACHABLE whenever its server's editorial AGGREGATE\
   \ description fails to cover the tool's distinctive capability tokens \u2014 and\
@@ -64,7 +64,32 @@ supporting_evidence:
     c .5->.9; and UNBOUNDED in S: .324(S5)->.467(S40) at m=1. c=1.0 and m=S both =>gap
     0 (boundary controls). SUPPORT.'
   data_path: experiments/2026-06-03/EXP-0058/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0060
+  summary: "WEAKEN (killer #4 has real force). Dense stage-1 (BGE-base + e5-base,\
+    \ real GPU encoders) over realistic NL MCP-style registry (8 domains grounded\
+    \ in 398 LIVE-harvested Glama editorial descs; harness-held GT). #4 RESOLUTION:\
+    \ dense PARTIALLY RECOVERS the coverage gap the L0 lexical arm could not \u2014\
+    \ TOST REJECTS equivalence vs lexical (BGE-lex paired delta +0.173, 90%CI[+0.050,+0.296];\
+    \ e5 +0.165[+0.041,+0.289]) at coverage-gap items; at S=10 dense gap-recall 0.58-0.67\
+    \ vs lexical 0.18-0.24 (semantic neighbors via shared-domain boilerplate = the\
+    \ Xiao2018 mechanism). The L0 lexical stronger-stage-1 was a STRAWMAN (recovery\
+    \ algebraically forced ~0). CONFOUND AUDIT (decisive): the editorial coverage\
+    \ gap explains only ~0.002-0.033 of dense reachable-recall loss; the dominant\
+    \ routing loss (0.21->0.72 as S 10->40) is generic SAME-DOMAIN confusability present\
+    \ even at c=1.0 (no gap) and largely closed by raising top-m (BGE ed_m3@S40 0.60-0.66\
+    \ vs m1 0.22). Recovery collapses with S (dense gap-recall 0.62@S10 -> 0.04@S40)\
+    \ so the ceiling re-emerges only asymptotically, entangled with ordinary routing\
+    \ collapse \u2014 not cleanly attributable to editorial coverage. Mechanism: only\
+    \ ~41% of dense two-stage misses are coverage-gap items vs 100% in L0. POOLED-MEMBER\
+    \ (ReDDE big-doc) helps (gap-recall 0.78@S10) but does NOT drive c->1 at scale\
+    \ (0.24@S40) -> no ecological-kill. NET: NOT a clean SUPPORT, NOT a clean KILL;\
+    \ the claim's load-bearing differentiator ('coverage gap NOT closed by a stronger\
+    \ stage-1 representation') is FALSE at realistic scales with a real encoder. Artifacts:\
+    \ experiments/2026-06-03/EXP-0060/ (PRE_REGISTRATION committed pre-run 9a93d12,\
+    \ harness.py, results.json 36cellsx12seeds, tables.txt, real_mcp_descs.json);\
+    \ raw on devgpu014:~/exp0060/."
+  data_path: experiments/2026-06-03/EXP-0060/
 verdict_history:
 - verdict_id: VERDICT-0050
   date: '2026-06-03'
@@ -72,11 +97,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0060 result, then ros exp complete --exp EXP-0060 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0060; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0060
+active_experiments: []
 created_at: '2026-06-03T21:36:48Z'
-last_updated: '2026-06-03T22:24:47Z'
+last_updated: '2026-06-03T22:50:33Z'

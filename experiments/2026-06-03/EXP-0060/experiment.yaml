@@ -12,12 +12,33 @@ resource_budget:
 needs_gpu: true
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "WEAKEN (killer #4 has real force). Dense stage-1 (BGE-base + e5-base,\
+  \ real GPU encoders) over realistic NL MCP-style registry (8 domains grounded in\
+  \ 398 LIVE-harvested Glama editorial descs; harness-held GT). #4 RESOLUTION: dense\
+  \ PARTIALLY RECOVERS the coverage gap the L0 lexical arm could not \u2014 TOST REJECTS\
+  \ equivalence vs lexical (BGE-lex paired delta +0.173, 90%CI[+0.050,+0.296]; e5\
+  \ +0.165[+0.041,+0.289]) at coverage-gap items; at S=10 dense gap-recall 0.58-0.67\
+  \ vs lexical 0.18-0.24 (semantic neighbors via shared-domain boilerplate = the Xiao2018\
+  \ mechanism). The L0 lexical stronger-stage-1 was a STRAWMAN (recovery algebraically\
+  \ forced ~0). CONFOUND AUDIT (decisive): the editorial coverage gap explains only\
+  \ ~0.002-0.033 of dense reachable-recall loss; the dominant routing loss (0.21->0.72\
+  \ as S 10->40) is generic SAME-DOMAIN confusability present even at c=1.0 (no gap)\
+  \ and largely closed by raising top-m (BGE ed_m3@S40 0.60-0.66 vs m1 0.22). Recovery\
+  \ collapses with S (dense gap-recall 0.62@S10 -> 0.04@S40) so the ceiling re-emerges\
+  \ only asymptotically, entangled with ordinary routing collapse \u2014 not cleanly\
+  \ attributable to editorial coverage. Mechanism: only ~41% of dense two-stage misses\
+  \ are coverage-gap items vs 100% in L0. POOLED-MEMBER (ReDDE big-doc) helps (gap-recall\
+  \ 0.78@S10) but does NOT drive c->1 at scale (0.24@S40) -> no ecological-kill. NET:\
+  \ NOT a clean SUPPORT, NOT a clean KILL; the claim's load-bearing differentiator\
+  \ ('coverage gap NOT closed by a stronger stage-1 representation') is FALSE at realistic\
+  \ scales with a real encoder. Artifacts: experiments/2026-06-03/EXP-0060/ (PRE_REGISTRATION\
+  \ committed pre-run 9a93d12, harness.py, results.json 36cellsx12seeds, tables.txt,\
+  \ real_mcp_descs.json); raw on devgpu014:~/exp0060/."
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0060/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T22:50:33Z'
 prompt_version: ''
