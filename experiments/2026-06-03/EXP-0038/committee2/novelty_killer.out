@@ -1,0 +1,61 @@
+Live web search isn't permitted in this session, so I verified the cited prior art against my own knowledge of these canonical works (all real, well-known, with the arXiv IDs the packet cites). My findings:
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Kim et al., An LLM Compiler for Parallel Function Calling (LLMCompiler), ICML 2024",
+   url: "arxiv.org/abs/2312.04511",
+   why_close: "Targets the SAME object — agent inter-call/tool latency — and already
+   captures it LOSSLESSLY by planning a call DAG and dispatching independent calls in
+   parallel. No redo/correctness penalty. It addresses the latency this claim chases
+   without any front-loading dependence or wrong-commit cost."}
+- {cite: "Chunked/continuous (incremental) prefill — vLLM / SGLang / TGI production stacks",
+   url: "arxiv.org/abs/2308.16369 (Sarathi, chunked prefill) + vLLM/SGLang docs",
+   why_close: "Production already streams result tokens into the KV cache as they arrive
+   rather than waiting for EOF. For 46–225-tok real results the addressable stall is
+   sub-100ms and largely already overlapped — losslessly. This is the real baseline the
+   claim must beat, and it removes most of the latency the claim assumes is available."}
+- {cite: "Schuster et al., CALM: Confident Adaptive Language Modeling, NeurIPS 2022",
+   url: "arxiv.org/abs/2207.07061",
+   why_close: "Conceptual ancestor of 'detector fires on a prefix → commit early,' but on
+   the model's OWN decode confidence, not an external tool result. Closest mechanism for
+   confidence-gated early commit."}
+- {cite: "Leviathan et al., Fast Inference via Speculative Decoding, ICML 2023",
+   url: "arxiv.org/abs/2211.17192",
+   why_close: "Algebraic ancestor of EXP-0037's p* (accept-prob × cost break-even), but
+   LOSSLESS/verified — no semantic-redo penalty W, no front-loading premise."}
+
+NAMING_VS_MECHANISM: This is a GENUINE mechanism delta, not renaming. No prior work does
+correctness-safe semantic early-commit on a partial/streaming external tool RESULT — that
+niche is honestly open (packet metric 5, corroborated). BUT the novelty is real-yet-DOMINATED:
+the latency it targets is already captured LOSSLESSLY by ≥2 independent prior methods
+(LLMCompiler at the call-graph level + incremental prefill at the token level). The claim's
+only differentiating property is a LOSSY commit-before-tail, which prior art deliberately
+avoids — and EXP-0038 shows the one regime where that lossy trade could pay (long, slow-
+streaming, front-loaded, truncation-resistant results: rho>=1 AND f_fl good) is empirically
+empty (rho ≪ 1 for every real class; 0% clearing rho>=1 under a realistic next-step). A novel
+mechanism whose unique regime does not occur, and whose realizable latency is already taken
+losslessly by existing methods, is weak novelty with no defensible contribution.
+
+FATAL_COLLISIONS:
+- VALUE collision (verified ≥2 sources): the targeted inter-call/result latency is already
+  captured losslessly by LLMCompiler (2312.04511) AND incremental/chunked prefill (Sarathi
+  2308.16369 + production vLLM/SGLang). The lossy early-commit offers no headroom over these.
+- The p* novelty is subsumed by Leviathan spec-decode's break-even (2211.17192), minus this
+  claim's added W (redo) penalty — i.e. a strictly worse cost structure than the ancestor.
+
+MANDATORY_RELATED_WORK: LLMCompiler (2312.04511); CALM (2207.07061); Speculative decoding
+(Leviathan 2211.17192); Sarathi/chunked-prefill (2308.16369) as the real production latency
+baseline. Any future revival MUST position against lossless incremental prefill, not a
+wait-for-EOF strawman.
+
+RATIONALE: On my axis the claim is not killed by a NAMING collision — the mechanism is
+genuinely distinct. It is killed because the novelty is hollow: (a) the latency it monetizes
+is already captured losslessly by two independent, deployed prior methods (LLMCompiler;
+incremental prefill), and (b) its sole differentiated regime is empirically empty in 1641
+real tool-result records. A lossy mechanism that is strictly dominated by lossless prior art
+everywhere it could apply, and unique only in a non-occurring regime, is exactly the "weak
+novelty" the mandate says to kill. Concurs with the unanimous empirical KILL — the gate
+correctly distinguished an open-but-empty niche from a contribution. RED.
+```

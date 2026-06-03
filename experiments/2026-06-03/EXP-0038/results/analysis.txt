@@ -1,0 +1,86 @@
+======================================================================
+METRIC 1 — f_fl (fractional START position of actionable span, in tokens)
+GATE: 'front-loaded' = actionable START within front 30% (f_fl_start<=0.30)
+======================================================================
+class              n  median            IQR  %<=0.30  %end<=.3
+api_json         600   0.073 [0.01,0.36]        68.3%     61.2%
+code_exec_log    300   0.037 [0.00,0.10]        79.0%     79.0%
+db_query          41   0.020 [0.01,0.12]        97.6%     92.7%
+search_rag       400   0.263 [0.10,0.44]        55.0%      5.5%
+web_search       300   0.154 [0.04,0.38]        68.3%     67.0%
+
+DOMINANT (search/web/api/code) n=1600: median f_fl_start=0.120, %<=0.30=67.0%
+
+======================================================================
+METRIC 2 — rho = T_stream / T_step  (real token counts)
+rho = (N_result/r_prefill) / (N_step/r_decode)
+Realistic H100 vLLM band: r_prefill in {5000,15000} tok/s; r_decode in {50,120} tok/s
+GATE: rho>=1 means result streams slower than next step -> overlap helps
+======================================================================
+
+-- favorable(prefill=5000,decode=120) --
+class          medN_res medN_step  med_rho  %rho>=1
+api_json             48        48    0.022     0.0%
+code_exec_log        46        48    0.023     0.0%
+db_query            109       143    0.017     0.0%
+search_rag         1274        11    2.734    99.0%
+web_search          225        11    0.508     0.3%
+  DOMINANT med_rho=0.197  %rho>=1=24.8%
+
+-- midband(prefill=10000,decode=80) --
+class          medN_res medN_step  med_rho  %rho>=1
+api_json             48        48    0.007     0.0%
+code_exec_log        46        48    0.008     0.0%
+db_query            109       143    0.006     0.0%
+search_rag         1274        11    0.911    36.5%
+web_search          225        11    0.169     0.0%
+  DOMINANT med_rho=0.066  %rho>=1=9.1%
+
+-- adversarial(prefill=15000,decode=50) --
+class          medN_res medN_step  med_rho  %rho>=1
+api_json             48        48    0.003     0.0%
+code_exec_log        46        48    0.003     0.0%
+db_query            109       143    0.002     0.0%
+search_rag         1274        11    0.380     0.0%
+web_search          225        11    0.071     0.0%
+  DOMINANT med_rho=0.027  %rho>=1=0.0%
+
+======================================================================
+METRIC 3 — JOINT (f_fl_start, rho) adversarial correlation
+committee worry: long results (high rho) ALSO tail-loaded (high f_fl_start)
+Spearman corr; POSITIVE = adversarial (long+tail co-occur)
+======================================================================
+api_json       spearman(rho,f_fl_start)=-0.574
+code_exec_log  spearman(rho,f_fl_start)=-0.374
+db_query       spearman(rho,f_fl_start)=-0.253
+search_rag     spearman(rho,f_fl_start)=+0.091
+web_search     spearman(rho,f_fl_start)=-0.364
+DOMINANT pooled spearman(rho,f_fl_start)=+0.064
+
+======================================================================
+METRIC 4 — DUMB-TRUNCATION baseline (keep first N tokens, never redo)
+Fraction of results whose actionable span FULLY fits in first N tokens
+If high -> early-commit/detector/redo apparatus UNJUSTIFIED
+======================================================================
+class          medN_res   N<=128   N<=256   N<=512
+api_json             48   100.0%   100.0%   100.0%
+code_exec_log        46   100.0%   100.0%   100.0%
+db_query            109   100.0%   100.0%   100.0%
+search_rag         1274     0.0%     2.8%    14.5%
+web_search          225    91.3%    99.7%   100.0%
+  DOMINANT N<=128: 73.4% of actionable spans fit
+  DOMINANT N<=256: 75.6% of actionable spans fit
+  DOMINANT N<=512: 78.6% of actionable spans fit
+  DOMINANT: 31.3% of results are LONGER than 512 tok (where truncation could matter at all)
+
+======================================================================
+SUPPLEMENTARY — incremental-prefill reality + search_rag interrogation
+======================================================================
+search_rag rho with REALISTIC reasoning next-step (not 1-line answer):
+ N_step   rp=5k/rd=120   rp=10k/rd=80   rp=15k/rd=50
+     64    0.48(0%>=1)    0.16(0%>=1)    0.07(0%>=1)
+    128    0.24(0%>=1)    0.08(0%>=1)    0.03(0%>=1)
+    256    0.12(0%>=1)    0.04(0%>=1)    0.02(0%>=1)
+
+Note: search_rag N_result median=1274 is HotpotQA's artificial 10-passage distractor
+set. Real RAG top-k is typically k=3-5 (~300-600 tok). At k=5 (~600 tok) rho falls ~2x.

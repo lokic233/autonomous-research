@@ -1,0 +1,32 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS:
+  - rho < 1 for ALL realistic tool classes (median 0.007–0.508; 0–9% clearing rho>=1; search_rag collapses to 0% under realistic N_step). The lucrative regime (rho>=2) does not exist in real agent tool traffic. Nothing meaningful to overlap.
+  - Dumb-truncation @N=512 captures 100% actionable content for 4/5 real classes. The detector/redo apparatus is unjustified everywhere rho is low.
+  - Adversarial (f_fl, rho) bind CONFIRMED: the only high-rho class (search_rag) is also the only non-end-front-loaded (5.5% actionable-end <=0.3) AND the only truncation-resistant (0–14.5%). Early-commit would commit WRONG exactly where it has time to commit.
+  - Production incremental-prefill (vLLM/SGLang/TGI) already overlaps the addressable latency losslessly for 46–225-tok results (sub-100ms on H100). The wait-for-EOF stall the claim monetizes is a strawman baseline.
+  - LLMCompiler (arXiv:2312.04511, ICML 2024) captures inter-call latency via call-graph DAG parallelism — lossless, no redo risk — independently covering the latency this claim targets.
+REQUIRED_EVIDENCE: []
+MANDATORY_BASELINES: [Incremental-prefill (vLLM/SGLang chunked prefill), Dumb-truncation @N=512, LLMCompiler call-graph parallelism]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0040", change: "stage: DEAD-0009, verdict: KILL, reason: empirically empty regime — rho<<1 for all real tool classes, dumb-truncation matches 4/5, adversarial (f_fl,rho) bind confirmed, lossless baselines already capture available latency. Gate saved a GPU L1."}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+
+**Vote aggregation.** 4 RED (novelty_killer, systems_reviewer, evaluation_prosecutor, product_realist), 1 GREEN (theory_skeptic). The single GREEN is NOT a dissent — the theory_skeptic explicitly endorses the kill as "the correct, theory-grounded call" and votes green because the gate's methodology is theoretically clean and the negative result is honest. All five reviewers converge on the same conclusion: the mechanism is real but its lucrative regime is empirically empty, and the kill is warranted. No reviewer presents evidence that the claim should survive.
+
+**Resolving the GREEN.** The theory_skeptic's green reflects that on the pure-theory axis there is no flaw in the mechanism's algebra — EXP-0037's p* break-even is correct math. The skeptic's green is a methodological endorsement of the gate, not a defense of the claim's viability. The skeptic explicitly states: "the mechanism is real but its lucrative regime is empirically empty — exactly the kind of clean negative the theory-skeptic role exists to reward. KILL is the correct call." I weight this as directionally aligned with the other four REDs. The theory is not wrong; it is irrelevant — the operating point it requires does not occur.
+
+**No unrebutted RED.** Each RED is independently supported by the gate data:
+1. **novelty_killer (RED):** Novel mechanism, but "hollow novelty" — the latency it targets is already captured losslessly by LLMCompiler (call-graph level) and incremental prefill (token level). The claim's sole differentiator (lossy commit-before-tail) is strictly dominated. Verified against arXiv:2312.04511, 2308.16369, 2207.07061, 2211.17192 — all real, canonical works. No rebuttal possible: the gate confirms the regime where lossy could beat lossless does not exist.
+2. **systems_reviewer (RED):** Shipping chunked-prefill systems (vLLM, SGLang, TensorRT-LLM) already absorb prefill latency for short results. No systems contribution demonstrated. Reproducibility acceptable for a kill gate.
+3. **evaluation_prosecutor (RED):** The proposal compares against a wait-for-EOF strawman; incremental prefill is the real baseline. Dumb-truncation @512 solves 4/5 classes. The killer experiment (A/B: SGLang incremental-prefill + truncation vs. early-commit on H100) would show <100ms delta — confirming apparatus is dead weight. But we need not run it: the gate's rho<<1 finding makes it moot.
+4. **product_realist (RED):** No real user benefits. The operating point does not occur in practice. Production baselines already win. The negative is actionable: rely on truncation + incremental prefill.
+
+**Prior-art adequacy.** The packet cites and distinguishes LLMCompiler (2312.04511), CALM (2207.07061), Leviathan spec-decode (2211.17192), and Sarathi/chunked-prefill (2308.16369). The novelty_killer verified all four as real, canonical works with the stated arXiv IDs. The open niche (correctness-safe semantic commit on a partial streaming tool RESULT) is honestly acknowledged as genuinely open — but empirically empty. Prior-art search is adequate for a kill verdict.
+
+**Anti-hallucination rule.** All cited prior works verified by the novelty_killer against known publications. Gate data comes from pre-registered EXP-0038 (HEAD 9e9a788) with real corpora (N=1641), real tokenizer (gpt2 BPE), and real downstream-dependency labels. No fabricated metrics detected.
+
+**Verdict rationale.** EXP-0037's favorable break-even was correct math over an operating point that does not exist in real agent tool traffic. The cheap corpus-only gate (EXP-0038) proved this definitively: rho<<1 for every real tool class (median 0.007–0.508), dumb-truncation captures actionable content for 4/5 classes, and the adversarial (f_fl, rho) anti-correlation binds exactly where the committee feared. The mechanism is real but empirically empty; the lossless baselines (incremental prefill, LLMCompiler, truncation) already capture the available latency without correctness risk. The gate saved a wasted GPU L1 — cost-aware gating working as designed. KILL is unanimous in substance across all five reviewers. CLAIM-0040 → DEAD-0009.
+```

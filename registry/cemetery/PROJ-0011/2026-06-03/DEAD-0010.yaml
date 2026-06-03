@@ -1,0 +1,50 @@
+dead_id: DEAD-0010
+original_claim_id: CLAIM-0040
+original_claim: "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning\
+  \ step on the STREAMING PREFIX of a long tool result (once the front-loaded actionable\
+  \ content has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+reason_killed: 'GATE FAILED -> KILL. Measured real tool-result distributions (N=1641,
+  HotpotQA+TriviaQA+AgentInstruct os/db/kg/webshop, real gpt2 tokenizer). (1) f_fl:
+  clears >=0.3 front-loading for SHORT classes (api/code/db/web 68-98% start<=0.3)
+  BUT the only long class search_rag has actionable-END front-loaded only 5.5%. (2)
+  rho=T_stream/T_step FAILS HARD: median rho 0.007-0.508 (midband), 0-9% clear rho>=1;
+  only search_rag clears, and ONLY due to (a) artificial 1274-tok HotpotQA distractor
+  + (b) optimistic 11-tok next-step. Under a realistic reasoning next-step (>=64 tok)
+  search_rag collapses to 0% rho>=1. Real tool results stream fast vs reasoning ->
+  nothing to overlap. (3) JOINT adversarial bind CONFIRMED: the only high-rho class
+  (search_rag) is also the only NOT-end-front-loaded and only truncation-resistant
+  one; premises anti-correlated in the paying regime. (4) DUMB-TRUNCATION N<=512 fully
+  captures actionable content for 4/5 classes (100%) -> detector/redo apparatus UNJUSTIFIED.
+  Plus incremental-prefill is the real prod baseline (results enter KV continuously;
+  no wait-for-EOF stall). (5) Prior-art: LLMCompiler(call-DAG parallel, lossless),
+  CALM(early-exit on model''s OWN confidence), Leviathan spec-decode(lossless) ->
+  NONE do correctness-safe semantic commit on a partial/streaming tool RESULT; niche
+  open but empirically empty. EXP-0037''s favorable p* was correct math over an operating
+  point (rho>=2, long slow front-loaded results) that does NOT occur in real agent
+  traffic. Kill rule fired on TWO independent criteria (rho<1 + dumb-trunc-matches).
+  Saved a wasted GPU L1.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0038
+duplicate_patterns:
+- "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning step on\
+  \ the STREAMING PREFIX of a long tool result (once the front-loaded actionable content\
+  \ has arrived, before the full result streams in) reduces end-to-end agent-step\
+  \ latency vs serialize-then-read, with a NET win whenever the fraction of results\
+  \ that are genuinely front-loaded times the latency saved exceeds the wrong-early-commit\
+  \ cost (re-doing the step when the tail actually mattered) \u2014 because real tool\
+  \ results are often front-loaded (answer first, boilerplate/pagination after) and\
+  \ that structure is detectable from the partial stream."
+- actionable actually after agent answer arrived because before boilerplate commit
+  committing content cost detectable doing early end exceeds first fraction from front
+  full genuinely has ingestion latency loaded long mattered net next often once pagination
+  partial prefix read real reasoning reduces result results saved serialize step stream
+  streaming streams structure tail then times tool when whenever win wrong
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T12:20:21Z'
