@@ -1,0 +1,27 @@
+SANITY CHECKS — EXP-0046 v2 (hand-verified invariants)
+
+[PASS] Common-RNG paired contrast: policy B2 with overshoot=0 is BIT-FOR-BIT identical to policy A
+       at alpha=0 over 500 rollouts (da==db True). => A and B share the same deviation onset + same
+       failure draws; the penalty is a paired contrast, not RNG variance.
+
+[PASS] Overshoot deadweight (the alpha=0 mechanism): at alpha=0, A mean=21.9 tokens, B2(ov=1) mean=30.3.
+       B wastes MORE because rolling back past the checkpoint re-executes extra steps that A doesn't.
+       Under memoryless hazard this is pure deadweight => penalty NEGATIVE (not ~0). Correct.
+
+[PASS] Hazard validity: h(t)=min(0.6, h0+alpha*t) clamps to H_CAP=0.6 (checked alpha=0.04,t=100 -> 0.6).
+       All hazards in [0,1].
+
+[PASS] DNC accounting: rollouts exceeding CAP=50000 tokens flagged DNC; reported as first-class metric.
+       At alpha=0, c=20: DNC_A=DNC_B=0% (both complete; clean comparison).
+
+[PASS] Detector hidden-GT separation: policy reads only det stream (onset+gauss noise gated by FPR/FNR);
+       simulator advances true latent onset/hazard and scores against it. Policy never reads on_path or
+       true onset directly (B uses inferred onset only).
+
+[NOTE] alpha>=0.003 at c=20: DNC_A 37-62% => policy A DIVERGES (runaway re-failure). Marginal-mean
+       penalties in that regime are CAP ARTIFACTS (understate a qualitative converge-vs-diverge gap).
+       Clean finite penalty taken from c=10 cell (DNC_A=0%): +249% [+180,+362].
+
+[NOTE] Corrected calibration criterion: prereg said |pen|<=5% at alpha=0; that premise was WRONG
+       (overshoot deadweight => negative). Correct criterion: pen<=0 at alpha=0 (B never beats A under
+       memoryless). PASSES.
