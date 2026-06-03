@@ -1,0 +1,3109 @@
+[
+{
+"name": "Grimoire",
+"slug": "grimoire-ue5",
+"desc": "Read-only MCP server that gives Claude live access to your UE5 project state \u2014 Blueprints, interfaces, variables, functions, event graphs, materials, structs, and Data Assets.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "fw-context-mcp",
+"slug": "fw-context-mcp",
+"desc": "Exposes tools for AI assistants to query a persistent SQLite+FTS5 index of C/C++ symbols parsed from real build commands, enabling sub-millisecond lookup, full-text search, and natural-language explanation without hallucination.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-serper",
+"slug": "mcp-serper",
+"desc": "Enables Google Search, News, and Places queries via the Serper API, integrated with the Pipeworx MCP gateway.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-firecrawl",
+"slug": "mcp-firecrawl",
+"desc": "Web scraping and search MCP server that wraps Firecrawl API for URL discovery and web search with optional content retrieval.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-jina-reader",
+"slug": "mcp-jina-reader",
+"desc": "Jina AI Reader/Search MCP that turns any URL into clean LLM-ready markdown and provides web search.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Ecological Provisioning MCP Server",
+"slug": "ecological-provisioning-agent",
+"desc": "A local-first MCP server stub that exposes provisioning tools for converting ecological intent into work packets, proof plans, receipts, and validation workflows.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-geoapify",
+"slug": "mcp-geoapify",
+"desc": "Wraps the Geoapify Location Platform to enable geolocation and map data access through natural language queries via the Pipeworx MCP gateway.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-nyt",
+"slug": "mcp-nyt",
+"desc": "Wraps The New York Times Developer APIs, enabling natural language querying of NYT data through the Pipeworx MCP gateway.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "accelo-mcp",
+"slug": "accelo-mcp",
+"desc": "MCP server exposing Accelo quote tools (list, get, create, update) with per-user OAuth authentication for natural language interaction.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Minecraft MCP Server",
+"slug": "minecraft-mcp",
+"desc": "Enables querying Minecraft Java server status via the Model Context Protocol, deployable on Cloudflare Workers without authentication.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-grafana",
+"slug": "mcp-grafana",
+"desc": "In-cluster MCP server for read-only diagnostics of Grafana, Prometheus, Alertmanager, and Loki, enabling metric queries, alert listings, and log queries through Grafana datasource proxies with Kubernetes RBAC authentication.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "sonic-mcp",
+"slug": "sonic-mcp",
+"desc": "MCP server that connects Claude Code to Sonic Pi for AI-assisted beat making, enabling live code execution and pattern management.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Polymarket MCP",
+"slug": "Falcon-Polymarket-MCP",
+"desc": "Enables MCP hosts like Claude and Cursor to query Polymarket data via Falcon AI's external API, including market listings, order books, and trader stats.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "getdebug MCP",
+"slug": "mcp",
+"desc": "Lets MCP-compatible AI clients read your getdebug projects, findings, and proposed fixes using your existing bearer token.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Seshat MCP Server",
+"slug": "seshat-mcp",
+"desc": "Enables querying 10,000 years of historical social-complexity data from the Seshat Global History Databank through 9 tools, allowing counterfactual analysis and comparison of polities in natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "yahoo-finance-mcp-server",
+"slug": "yahoo-finance-mcp-server",
+"desc": "An MCP server that exposes comprehensive Yahoo Finance data (quotes, financials, options, news, and more) to AI agents via the yfinance library, requiring no API key.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Remote MCP Server with GitHub OAuth",
+"slug": "mcp_connector",
+"desc": "Enables remote MCP connections with GitHub OAuth authentication, providing tools like add, userInfoOctokit, and image generation (restricted) deployed on Cloudflare Workers.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "WEATHGARDS",
+"slug": "WEATHGARDS",
+"desc": "Exposes MCP tools that enable remote LLMs to query local Docker containers, OS processes, and system services in real time.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "jlcpcb-mcp",
+"slug": "jlcpcb-mcp",
+"desc": "MCP server for JLCPCB/LCSC component search, live stock and pricing, datasheets, and PCB/3D printing ordering via authenticated API.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp_inventory",
+"slug": "mcp_inventory",
+"desc": "A Python-based MCP server that manages a product inventory using SQLite, allowing CRUD operations and analytic queries such as total value, out-of-stock products, and most expensive product.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "arcmap-mcp",
+"slug": "arcmap-mcp",
+"desc": "MCP server that allows AI agents to control a live ArcMap session via arcpy, including listing layers, zooming, exporting maps, and viewing the canvas, specifically for legacy ArcMap 10.4-10.8.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "ical-mcp",
+"slug": "ical-mcp",
+"desc": "MCP server for Apple Calendar and CalDAV providers. Enables listing, creating, updating, deleting events, and checking free/busy status with per-calendar write protection.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "ekursy-mcp-py",
+"slug": "ekursy-mcp-server",
+"desc": "Enables AI tools to access student profiles, course lists, grades, page contents, and course materials from the eKursy platform via the Model Context Protocol.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "decroche-mcp",
+"slug": "decroche-mcp",
+"desc": "Deterministic MCP server for job-landing pipeline that parses CVs into validated JSON Resume, detects sections, scores parse confidence, and exposes FR/US market profiles to help beat ATS and LLM screeners honestly.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "delego",
+"slug": "delego",
+"desc": "A policy and audit firewall for agent actions that sits between an agent and a credential broker, ensuring actions are authorized and bound to the original human intent.",
+"attributes": [
+"author:official",
+"hosting:local-only"
+]
+},
+{
+"name": "x402-commodity-mcp",
+"slug": "x402-commodity-mcp",
+"desc": "An MCP server providing global soft-commodity data (cocoa, coffee, sugar, cotton, cashew) with per-call billing in USDC, offering tools for farmgate prices, ICE futures, CFTC COT positioning, and historical series.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Studio Catharsis Universal Project Coordinator MCP",
+"slug": "project_com_mcp",
+"desc": "A cross-platform coordination layer that connects MCP-compatible tools to a shared project state, enabling task management, blocker tracking, decision logging, and SOP automation.",
+"attributes": [
+"author:official",
+"hosting:local-only"
+]
+},
+{
+"name": "x402-md-mcp",
+"slug": "x402-md-mcp",
+"desc": "Enables extracting clean Markdown from any webpage by paying $0.005 USDC per call via the x402 protocol, with automatic wallet-based payment settlement.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Constructora Colombia MCP Server",
+"slug": "constructora-mcp",
+"desc": "Provides intelligent construction quotation and cost lookup for Colombia, enabling natural language queries for activities, categories, and detailed pricing from an Excel database.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-stateless-starter",
+"slug": "mcp-stateless-starter",
+"desc": "Starter kit for building stateless MCP servers using the 2026 spec, enabling horizontal scaling without session affinity.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "claude-ai-mcp-demo",
+"slug": "claude-ai-mcp-demo",
+"desc": "MCP server that enables Claude to dynamically rebrand and restock a themeable micro-storefront, including content and look-and-feel control via MCP tools.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "ffd-mcp",
+"slug": "ffd-mcp",
+"desc": "Parses SEC EDGAR Exhibit 107 XBRL fee disclosures from registration statements and returns structured fee data through the Model Context Protocol. No API keys required.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP Notes Server",
+"slug": "MCP-Server-Test",
+"desc": "A server for managing notes with full CRUD operations, tagging, and search, compatible with Claude Desktop.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Apple MCP",
+"slug": "apple-mcp",
+"desc": "Integrates with Apple apps on macOS to enable AI-powered automation of Messages, Notes, Contacts, Mail, Reminders, Calendar, and Maps.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Hermtica",
+"slug": "hermtica",
+"desc": "AI social network and marketplace for agentic tools and services.  With 6 MCP tools available at launch.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "PineForge-Codegen",
+"slug": "pineforge-codegen-mcp",
+"desc": "Backtest PineScript v6 strategies locally from your AI agent: transpiles Pine to C++ and runs it on the deterministic, TradingView-validated PineForge engine via Docker. Tools for single backtests, parameter-grid sweeps, and Binance OHLCV fetch \u2014 no API key, data never leaves your machine.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "real-estate-ai",
+"slug": "real-estate-ai",
+"desc": "Enables AI-powered real estate analysis with built-in EU AI Act compliance, providing a production-ready MCP server for property insights and governance.",
+"attributes": []
+},
+{
+"name": "tecton-mcp",
+"slug": "tecton-mcp",
+"desc": "Enables interaction with Tecton clusters through MCP, allowing management of feature stores, execution of Tecton CLI commands, and retrieval of feature store configurations via natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "wafle MCP server",
+"slug": "wafle-mcp",
+"desc": "The first MCP server for the wafle commerce platform. It enables Claude, agents, and MCP-compatible clients to manage stores, products, orders, pricing, gateways, and more through natural language.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "RapidInvoice MCP Server",
+"slug": "rapidinvoice-mcp-server",
+"desc": "Generates professional invoices from Claude Desktop using RapidInvoice and stores them in Supabase, with support for multi-currency, public share links, and user-specific billing limits.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Chronicle Beta",
+"slug": "chronicle_beta",
+"desc": "A local-first personal RAG memory system that turns AI conversation history into a searchable, retrievable knowledge base via MCP, enabling LLMs to semantically search past conversations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "infinihash-kyt-mcp",
+"slug": "infinihash-kyt-mcp",
+"desc": "MCP server for Infinihash KYT providing real-time blockchain transaction monitoring, sanctions screening, and SAR generation. It enables MCP-compatible agents to screen wallets against OFAC SDN and generate compliance cases.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "bitbucket-mcp-server",
+"slug": "bitbucket-mcp-server",
+"desc": "MCP server for Bitbucket Cloud that enables AI agents to manage repositories, branches, pull requests, and deployments via typed tools.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-excel",
+"slug": "mcp-excel",
+"desc": "Enables querying Excel and CSV files using SQL via natural language, allowing AI assistants to analyze data without manual SQL writing.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Code Box",
+"slug": "CodeBoxMCP",
+"desc": "A self-hosted MCP server providing stateful code execution (Python/JavaScript) with SQL query support, file I/O, and artifact management, replacing Azure Code Interpreter.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-server-go-quality",
+"slug": "mcp-server-go-quality",
+"desc": "One MCP server for golangci-lint, govulncheck, and nilaway \u2014 a unified Diagnostic\\[] array with consistent file:line:column navigation, parallel execution, and zero-config auto-install - for golang development.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "macos-mcp",
+"slug": "MacOS-MCP",
+"desc": "A lightweight MCP server that bridges AI agents and macOS, enabling automation of file navigation, application control, UI interaction, browser automation, and system operations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Verodat MCP Server",
+"slug": "verodat-mcp-server",
+"desc": "Enables AI systems to manage Verodat accounts, workspaces, and datasets, including creating datasets, querying data, and executing AI-powered queries through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Puppeteer+ MarTech",
+"slug": "puppeteer-plus-martech-mcp",
+"desc": "Extends Puppeteer to enable digital marketing and SEO analysis, including detection of analytics tools, advertising pixels, tag managers, and SEO audits.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "obsidian-mcp-server",
+"slug": "obsidian-mcp-server",
+"desc": "Connects Claude.ai to your local Obsidian vault for full CRUD access, search, and daily note creation via the Model Context Protocol.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Bitrefill MCP Server",
+"slug": "bitrefill-mcp-server",
+"desc": "Enables AI assistants to search for and purchase gift cards, mobile topups, and digital products via Bitrefill, with tools for managing invoices, orders, and account balance.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Simple MCP Server with Streamable HTTP Example",
+"slug": "mcp-server-with-streamable-http-example",
+"desc": "Demonstrates how to create a simple MCP server with streamable HTTP transport, featuring tools, prompts, and resources.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "rhino-mcp",
+"slug": "rhino-mcp",
+"desc": "Enables Claude to drive Rhino 8 and Grasshopper for geometry creation, manipulation, and analysis via natural language.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "patchright-mcp",
+"slug": "patchright-mcp",
+"desc": "Provides browser automation capabilities using Patchright, enabling LLMs to interact with web pages through structured accessibility snapshots without needing vision models.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "mcp-github-server",
+"slug": "mcp-github-server",
+"desc": "An MCP server that enables managing GitHub repositories, pull requests, issues, and more through natural language in Cursor or Claude Desktop.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Corpo MCP Server",
+"slug": "corpo-mcp",
+"desc": "Enables AI agents to explore and prototype Wyoming DAO LLC formation workflows in a sandbox environment.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "FreeAgent MCP Server",
+"slug": "freeagent-mcp-server",
+"desc": "Enables Claude to manage FreeAgent accounting tasks such as listing bank transactions, explaining and approving them with receipts, creating expenses, and logging mileage.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "exchangerate",
+"slug": "mcp-exchangerate",
+"desc": "Provides real-time exchange rates for any currency pair using open.er-api.com, simplifying currency conversion with a single tool.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Azure AI Vision Face API MCP Server",
+"slug": "azure-ai-vision-face-api-mcp-server",
+"desc": "Enables face detection and recognition in Agentic AI workflows using Azure Face API, supporting attribute detection, image comparison, and face recognition.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "translation-ai-mcp",
+"slug": "translation-ai-mcp",
+"desc": "AI-powered translation MCP server with EU AI Act compliance, enabling automated translation workflows via the MCP protocol.",
+"attributes": []
+},
+{
+"name": "MCP Server",
+"slug": "mcp",
+"desc": "AI-powered command execution and tool plugin framework with secure Python evaluation, knowledge management, and web dashboards.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "CIA Diagnose",
+"slug": "cia-diagnose",
+"desc": "Expert business diagnosis engine that analyzes companies across 11 dimensions and returns a Revenue Leak Score with prioritized, triple-option recommendations.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "gemini-deep-research-mcp",
+"slug": "gemini-deep-research-mcp",
+"desc": "An MCP server that exposes Gemini's Deep Research Agent for comprehensive web research.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "TaskSync",
+"slug": "tasksync-mcp",
+"desc": "Human-in-the-loop feedback for AI coding agents. Pause your agent mid-task, give it new directions, attach screenshots, and keep it on track \u2014 without restarting the conversation.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "PyPI Query MCP Server",
+"slug": "pypi-query-mcp-server",
+"desc": "A Model Context Protocol server for querying PyPI package information, dependencies, and compatibility checking. Supports advanced dependency analysis, download statistics, and trending analysis.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Http-tools Universal MCP Server",
+"slug": "http-tools",
+"desc": "Provides a standardized MCP interface for interacting with HTTP tools and services, enabling unified API access and management.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "PixelForge MCP",
+"slug": "pixelforge-mcp",
+"desc": "An MCP server for AI-powered image generation, editing, analysis, and transformation using Google's Gemini and Imagen 4 models.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "sortie-mcp",
+"slug": "sortie-mcp",
+"desc": "Campaign orchestration MCP server for AI agents \u2014 dependency DAGs, parallel fan-out, failure policies, and embedded notes.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "@yawlabs/tailscale-mcp",
+"slug": "tailscale-mcp",
+"desc": "Manage your Tailscale tailnet - devices, ACLs, DNS, keys, and more - through natural language queries.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Odoo 19 MCP Server",
+"slug": "claude-odoo-api",
+"desc": "Provides tools to interact with Odoo 19's External JSON-2 API, enabling CRUD operations and complex queries on Odoo databases with multi-company support.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "@cynco/mcp",
+"slug": "cynco-mcp",
+"desc": "Enables AI agents to read and write Cynco accounting data, including querying books, creating invoices, reconciling transactions, and generating financial reports.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "mcp-server-osascript",
+"slug": "mcp-server-osascript",
+"desc": "Secure AppleScript execution for AI applications via Model Context Protocol with configurable security profiles and automatic TCC permission handling.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Docmost MCP Server",
+"slug": "docmost-mcp",
+"desc": "Enables AI agents to search, create, modify, and organize documentation pages and spaces in Docmost.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Tilastokeskus StatFin MCP Server",
+"slug": "statfin-mcp",
+"desc": "Production-grade MCP server for Statistics Finland's StatFin database. Enables AI assistants like Claude to browse, search, and query Finnish statistical data.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "HomeClaw",
+"slug": "HomeClaw",
+"desc": "Enables AI assistants to control Apple HomeKit smart home accessories, scenes, and automations via MCP tools.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "arch-viewer",
+"slug": "arch-viewer",
+"desc": "Provides AI-powered architecture analysis and visualization of codebases, exposing 17 MCP tools for querying components, dependencies, and generating interactive diagrams.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Agent Scraper MCP",
+"slug": "scrape-agent-mcp",
+"desc": "Service name: Scrape Agent\nService base URL: https://scrapeagent.xyz\nWebsite URL: https://scrapeagent.xyz\nEmail: your email\nCategory: Data\nDescription: Pay-per-use web scraping API built on x402. Extract clean text, links or HTML from any URL for $0.01 USDC on Base. No API key, no subscription needed. Perfect for AI agents that need web data on demand.\nEndpoint paths:\n/api/scrape/x402",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Metis",
+"slug": "Metis_PH",
+"desc": "Metis \u2014 an open-source (AGPL-3.0), local-first MCP server / research  companion. It answers from the user's own indexed PDF library with page-level citations (and flags what it can't find rather than inventing), keeps all data on the user's machine, and routes requests to 34 specialist agents.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "CricketStudio MCP",
+"slug": "cricketstudio-mcp",
+"desc": "29 MCP tools for IPL 2026, IPL historical (18 seasons), and Major League Cricket. Free, no API key.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "@yocoolab/mcp-server",
+"slug": "mcp-server",
+"desc": "Exposes Yocoolab design feedback threads, selections, and activity events as tools for AI coding assistants like Claude Code.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP Demo Project",
+"slug": "MCP_servers",
+"desc": "A collection of MCP servers demonstrating math operations, weather data, and LangGraph workflows.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "DrissionPage-MCP-Server",
+"slug": "DrissionPage-MCP-Server",
+"desc": "\u57fa\u4e8e DrissionPage \u7684\u6a21\u578b\u4e0a\u4e0b\u6587\u534f\u8bae (MCP) \u670d\u52a1\uff0c\u4e3a AI \u52a9\u624b\u63d0\u4f9b\u5f3a\u5927\u7684\u6d4f\u89c8\u5668\u81ea\u52a8\u5316\u80fd\u529b\u3002",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "IcePanel MCP Server",
+"slug": "mcp-server",
+"desc": "Enables interaction with IcePanel for architectural diagram management via MCP clients, such as Claude Desktop, Cursor, and Windsurf. Deprecated in favor of a remote MCP server.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "figma-mcp-write-server",
+"slug": "figma-mcp-write-server",
+"desc": "An MCP server that provides write access to Figma through the Plugin API, enabling AI agents to create, modify, and manage Figma designs programmatically.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "docs-mcp-server",
+"slug": "docs-mcp-server",
+"desc": "A multi-tenant MCP server that indexes documentation from websites, git repositories, and local folders, and exposes them to AI clients via search and fetch tools.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "managed-agent-control-mcp",
+"slug": "managed-agent-control-mcp",
+"desc": "Start, observe, and interact with Claude Managed Agents from any MCP client \u2014 launch an agent, watch its events, reply, approve the tools it wants to run, and stop it. Runs over stdio, HTTP, or AWS Lambda with pluggable auth.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Android Project MCP Server",
+"slug": "androidbuild-ShenghaiWang",
+"desc": "Enables building, running unit tests, and instrumented tests for Android projects through the MCP protocol.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Simple MCP Server",
+"slug": "mcp-server",
+"desc": "A Python-based MCP server demonstrating tools for math calculations, time retrieval, and echo messages, along with resources and prompt templates.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "AnalyticDB PostgreSQL MCP Server",
+"slug": "alibabacloud-adbpg-mcp-server",
+"desc": "Serves as a universal interface between AI Agents and AnalyticDB PostgreSQL databases, enabling metadata retrieval and SQL execution, with additional capabilities for knowledge graph and LLM memory management.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Klever MCP Server",
+"slug": "mcp-klever-vm",
+"desc": "An MCP server for Klever blockchain smart contract development, providing contextual knowledge including code patterns, best practices, and runtime behavior.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "Indian Stock Exchange MCP",
+"slug": "Indian-Stock-Exchange-MCP",
+"desc": "Provides comprehensive financial data and insights for stocks listed on BSE and NSE, including stock details, historical data, news, IPOs, and mutual funds.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "persistent-kb-mcp",
+"slug": "persistent-kb-mcp",
+"desc": "A local-first MCP server providing persistent, searchable knowledge base via SQLite, enabling AI agents to save and recall facts across sessions without cloud dependencies.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "bitbucket-mcp",
+"slug": "bitbucket-mcp",
+"desc": "Enables AI assistants to manage Bitbucket Cloud repositories, pull requests, pipelines, and code review tasks through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Cloudflare MCP Server",
+"slug": "mcp",
+"desc": "A token-efficient MCP server that provides access to the entire Cloudflare API (2500+ endpoints) using a code execution pattern, enabling natural language management of Cloudflare services.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "paystack-mcp-server",
+"slug": "paystack-mcp-server",
+"desc": "Enables interaction with Paystack via MCP tools to get total transactions, create checkout links, and verify transactions.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "inventree-mcp",
+"slug": "inventree-mcp",
+"desc": "Enables interaction with InvenTree inventory management system, providing tools for parts, stock, orders, companies, barcodes, labels, reports, attachments, and system administration.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Bullet MCP",
+"slug": "bullet-mcp",
+"desc": "MCP server for the Bullet API, enabling management of tasks, notes, and events through natural language across various MCP clients.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-server-paystack",
+"slug": "mcp-server-paystack",
+"desc": "Enables AI assistants to accept payments, verify transactions, and manage customers via Paystack API through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "recall-mcp",
+"slug": "recall-mcp",
+"desc": "Local semantic search MCP server for markdown docs and Granola meeting transcripts that runs entirely on your machine with no API keys, no cloud, and no cost.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "V\u00c6R",
+"slug": "vaer",
+"desc": "Provides LLM-friendly weather tools and Norwegian place name resolution via MCP, enabling weather forecasts, air quality, marine conditions, and activity planning.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Bricolage",
+"slug": "bricolage",
+"desc": "An agentic system that turns free-tier cloud resources into working outcomes. It orchestrates six specialist agents to plan, acquire, and assemble free services into deployable applications.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "RunAutomation MCP Server",
+"slug": "runautomation-mcpserver",
+"desc": "Enables AI assistants to execute browser automation, perform QA tasks, and generate test code through natural language commands using Playwright.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Pexels MCP Server",
+"slug": "chatgpt-apps-sdk-examples",
+"desc": "Enables searching and displaying high-quality, royalty-free photos from Pexels directly in ChatGPT conversations via an interactive gallery widget.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "yandex-mail-mcp",
+"slug": "yandex-mail-mcp",
+"desc": "MCP server for Yandex Mail that enables reading, searching, sending, and managing emails via IMAP and SMTP.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "cloudflare-search",
+"slug": "cloudflare-search",
+"desc": "Aggregated search API service that provides real-time web search capabilities for AI assistants via MCP.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "NornWeave",
+"slug": "nornweave",
+"desc": "Open-source, self-hosted Inbox-as-a-Service API for AI agents. It enables agents to manage email inboxes, send/receive emails, search messages, and wait for replies via REST or MCP.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Smartschool MCP Server",
+"slug": "Smartschool-MCP",
+"desc": "Connect Claude and other MCP clients to your Smartschool account to ask about grades, assignments, messages, and your schedule in plain language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "apex-mcp",
+"slug": "apex-mcp",
+"desc": "Enables AI assistants to build, inspect, and modify Oracle APEX 24.2 applications via natural language, providing 86 tools across 15 categories.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "GNNPCSAFT MCP Server",
+"slug": "gnnepcsaft_mcp_server",
+"desc": "Enables estimation of PC-SAFT pure-component parameters and prediction of properties like density and vapor pressure for any molecule or mixture using Graph Neural Networks.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "terminal-mcp",
+"slug": "terminal-mcp-agent",
+"desc": "An agent-capable MCP server with terminal access, filesystem control, and persistent memory. It includes sandboxing, access control, activity logging, and a file-backed memory store for context across conversations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "react-native-toolkit",
+"slug": "mcp-react-native-toolkit",
+"desc": "Provides AI agents with accurate, version-aware documentation for React Native, Expo, React Navigation, and Ignite by automatically detecting project dependencies and fetching matching documentation.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-ynab",
+"slug": "mcp-ynab",
+"desc": "FastMCP server that exposes the YNAB API for budget management, enabling interaction with YNAB data through MCP tools.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-notifications",
+"slug": "mcp-notifications",
+"desc": "Enables sending real-time and webhook notifications when AI agents complete tasks, with support for Discord, Slack, Teams, Feishu, Ntfy, and custom webhooks.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "KG Memory",
+"slug": "kg_mem",
+"desc": "An MCP server that implements a heavily typed knowledge graph memory system with AI-powered entity and relation extraction, enabling structured knowledge storage and retrieval from unstructured text using predefined or custom ontologies.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Hamibot MCP Server",
+"slug": "hamibot-mcp-server",
+"desc": "Enables management and control of Hamibot devices and scripts, including device listing, script execution, and custom JavaScript code execution.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "read-no-evil-mcp",
+"slug": "read-no-evil-mcp",
+"desc": "A secure email gateway MCP server that protects AI agents from prompt injection attacks by scanning emails for malicious instructions before they reach the agent.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "WhatsApp Business MCP Server",
+"slug": "whatsapp-business",
+"desc": "Enables interaction with WhatsApp Business tools and services through a unified API.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-deadmansnitch",
+"slug": "mcp-deadmansnitch",
+"desc": "An MCP server for Dead Man's Snitch that enables AI assistants to manage monitoring snitches, including creating, updating, checking in, and pausing monitors for scheduled tasks and cron jobs.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "GreenboneMCP",
+"slug": "GreenboneMCP",
+"desc": "An MCP server connecting AI clients to Greenbone/OpenVAS for vulnerability scanning workflows, enabling scan creation, monitoring, report retrieval, and delta comparisons.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "git-quick-stats MCP server",
+"slug": "mcp-server",
+"desc": "Exposes git-quick-stats commands as MCP tools to analyze git repositories via natural language.",
+"attributes": [
+"author:official",
+"hosting:local-only"
+]
+},
+{
+"name": "Foreman MCP Server",
+"slug": "foreman-mcp-server",
+"desc": "MCP server for managing Foreman hosts and infrastructure. Enables listing, searching, and getting detailed information about hosts, organizations, locations, subnets, domains, and more via natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "md-feedback",
+"slug": "md-feedback",
+"desc": "An MCP server for reviewing markdown plans before AI agents implement them. Enables annotation of plans with Fix, Question, and Highlight, which AI agents can read directly through MCP.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "NexMem MCP",
+"slug": "nexmem-mcp",
+"desc": "A plug-and-play MCP memory server with pluggable database backends that gives AI coding agents a persistent, shared knowledge graph for teams.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "cctx",
+"slug": "cctx",
+"desc": "Enables Claude Code to reduce token usage by 70-90% using a local LLM for codebase indexing, tool output compression, and turn summarization.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "FastAPI-MCP",
+"slug": "fastapi_mcp",
+"desc": "Exposes your FastAPI endpoints as Model Context Protocol tools with authentication, preserving schemas and documentation.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "1c-formsserver",
+"slug": "1c-formsserver",
+"desc": "MCP server for generating, validating, converting, and searching managed 1C:Enterprise forms in three formats: Configurator, Managed, and EDT.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "chain-signer",
+"slug": "chain-signer",
+"desc": "Non-custodial agent wallet with a transaction preflight that decodes an unsigned EVM tx and flags drain patterns (unlimited/large approval, approve-all, token & NFT transferFrom, proxy upgrade, on-chain permit, approvals hidden in multicall) before signing.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "leakferret",
+"slug": "leakferret",
+"desc": "Context-aware secret scanner that lets an AI agent scan code, verify which leaked keys are actually live by calling the provider, and rewrite them to env-var lookups before committing. Exposes                   scan/verify/rewrite tools plus secret-type and verifier resources over MCP.",
+"attributes": [
+"author:official",
+"hosting:local-only"
+]
+},
+{
+"name": "ShotAPI",
+"slug": "shotapi-mcp",
+"desc": "Screenshot & Render API for AI Agents. MCP Server lets Claude, Cursor capture webpages and render HTML. Direct access, no VPN needed.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Seaworthy Insurance",
+"slug": "seaworthy-mcp",
+"desc": "Disability insurance quote intake and coverage guidance for high-income professionals. Provides a quote_request action that files a lead with a licensed brokerage, plus read-only tools for specialty guidance, carrier comparison, benefit-cap math, and rider definitions.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Depureco Industrial Vacuum Explorer",
+"slug": "industrial-vacuum-explorer-mcp",
+"desc": "Remote MCP Server for industrial vacuum cleaner configuration. Query 150+ products across 24 industrial sectors with full ATEX certification data, technical specs, and accessory compatibility. No authentication required.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Deskbrid",
+"slug": "deskbrid",
+"desc": "Linux desktop HAL for AI agents. One daemon, one socket, every desktop action. GNOME, KDE, Hyprland, X11. Ships in one command.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "four-leaf-mcp",
+"slug": "clover-public",
+"desc": "Job search assistant and interview prep inside any ai tool via MCP or public skill. Every tool you'll need for your job search in one product.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Pathmode",
+"slug": "mcp-server",
+"desc": "Socratic AI that turns vague problems into structured intent specs \u2014 objective, outcomes, edge cases, constraints. Zero-config locally, or team mode for evidence, dependency graphs, and governance. Ships 7 auto-triggering Claude Code skills. Build the right thing.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "modelforge",
+"slug": "modelforge",
+"desc": "Financial model factory MCP server: turns a spec into a live-formula Excel workbook. 14 templates (LBO, DCF, M\\&A, IPO, restructuring, project finance, NPL, structured credit, 3-statement) with every cell formulated and every number source-traced to its document page.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Tallyfy",
+"slug": "mcp-public",
+"desc": "Run your Tallyfy workflows from any AI assistant in plain English. 107 tools across processes, tasks, templates, form fields, automation rules, users, and search, each scoped to the signed-in user's Tallyfy permissions.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "intelica-mcp",
+"slug": "intelica-mcp",
+"desc": "Competitive intelligence for AI agents \u2014 analyze any URL or company description and get structured JSON with positioning, pain points, competitors, and unique market angles. Payments via x402 protocol ($0.05 USDC on Base mainnet), no accounts required.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "HeadlessTracker",
+"slug": "HeadlessTracker",
+"desc": "Local-first crypto portfolio aggregation across exchanges (Bybit, Binance), EVM and Solana wallets, and Polymarket. Read-only credentials, runs as a local MCP server. Data aggregation only, not financial advice.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "DialectOS",
+"slug": "DialectOS",
+"desc": "Spanish dialect localization MCP server and CLI. It translates and QA-checks content across 25 regional variants with register control, structure preservation, and adversarial quality gates.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "LADU ADU Tools",
+"slug": "ladu-mcp",
+"desc": "LA County ADU buildability checks, zoning rules, permit trends, and cost estimates \u2014 free, no auth.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "WpfPilot MCP",
+"slug": "wpfpilot-mcp",
+"desc": "MCP server for AI agents to automate Windows WPF apps with semantic UI Automation selectors, screenshots, recording, and FlaUI test generation.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "resume-mcp-server",
+"slug": "resume-mcp-server",
+"desc": "MCP server for browsing and searching your local resume and job application documents",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "audit event mcp",
+"slug": "audit-event-mcp",
+"desc": "Hash-chained audit log for AI agents \u2014 MCP-native, Cloudflare Durable Objects + SQLite",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "AirTreks MCP",
+"slug": "airtreks-mcp",
+"desc": "Around the World and Complex Must-Stop Airfare and routing MCP",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "FlightDB",
+"slug": "FlightDB-MCP",
+"desc": "FlightDB aggregates flight data from ADS-B Exchange, one of the largest unfiltered ADS-B data sources, combined with official aircraft registry records. Unlike FlightRadar24, FlightAware, or Planefinder, FlightDB gives you unfiltered access to full flight histories with deep per-aircraft analytics you won't find elsewhere.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Memclaw",
+"slug": "caura-memclaw",
+"desc": "Governed shared memory platform for AI agents and agent fleets. Provides persistent memory, cross-agent knowledge sharing, permissions, audit trails, and multi-tenant isolation through a Model Context Protocol (MCP) server.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "AI SEO Magic Button",
+"slug": "ai-seo-magic-button",
+"desc": "Point it at your site, get a whole-site AEO/GEO audit plus a ready-to-run plan your agent can execute. Orchestrates the ai-seo and citation-intelligence MCPs. Ships as a Claude skill, Claude plugin, and MCP server. No API keys required.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Indotender MCP",
+"slug": "indotender-mcp",
+"desc": "Search LPSE tenders, procurement realisasi, company profiles, inaproc data, and government agency directories.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Budget Governor",
+"slug": "gvnr",
+"desc": "Budget & cost control for AI agents: hard per-agent spend caps, rate limits,\nidempotency, and human-in-the-loop approval \u2014 enforced before each LLM call, not\nafter the invoice. One hosted MCP endpoint (no proxy or self-hosting), settled\nvia x402 (USDC on Base).",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Falling Tree Risk MCP Server",
+"slug": "fallingtreerisk-mcp",
+"desc": "Provides falling tree risk intelligence for any US property address.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Epoch",
+"slug": "Epoch",
+"desc": "Time estimation MCP server for AI agents. It provides PERT, COCOMO II, Monte Carlo simulation, sprint forecasting, token-to-time and cost mapping, and schedule-risk tools.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "qveris-agent-toolkit",
+"slug": "qveris-agent-toolkit",
+"desc": "Capability routing network for AI agents to discover, inspect, and call 10,000+ real-world financial capabilities through one unified MCP protocol.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "jobd",
+"slug": "jobd",
+"desc": "jobd is a self-hostable, GPU-aware job broker that queues and routes shell commands across your own machines \u2014 picking workers by available VRAM and tool tags, streaming logs back, and surviving across sessions. It ships native MCP integration, so agents can submit, monitor, and control long-running or GPU jobs as tools.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "scherlok",
+"slug": "scherlok",
+"desc": "Zero-config data quality monitoring as MCP tools. Profiles a warehouse (Postgres, BigQuery, Snowflake, MySQL, DuckDB), detects anomalies, and gates CI \u2014 read-only with the connection resolved server-side, never via the model.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "DocGraph",
+"slug": "DocGraph",
+"desc": "MCP server that indexes Markdown, Word, HTML, and PDF documents into a SQLite knowledge graph with CJK+Latin full-text search and cross-document reference tracking. Runs drift audits to surface stale policies, conflicting research claims, superseded ADRs, and undocumented code exports.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Beever Atlas",
+"slug": "beever-atlas",
+"desc": "Turns team chat (Slack, Discord, MS Teams, Mattermost) into a living knowledge base - a typed knowledge graph plus auto-generated wiki - exposed to AI agents through a 28-tool MCP server with semantic search, expert finding, and decision tracing.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Instagram MCP Server",
+"slug": "instagram-mcp",
+"desc": "user can control instagram account with claude web",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "checkyourself",
+"slug": "checkyourself",
+"desc": "Local-first production-readiness MCP server for AI-built apps. It runs read-only checks, produces an evidence-based readiness score, and guides fixes before launch.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "brewpage-mcp",
+"slug": "brewpage-openapi",
+"desc": "MCP server for BrewPage, a free no-signup hosting service. Lets AI agents publish HTML, Markdown, JSON, files, or a full multi-file static site and get a public URL instantly via a REST API.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Metatron",
+"slug": "metatron",
+"desc": "Metatron is a self-hosted system that captures a codebase's real implementation decisions \u2014 preferred patterns, rejected approaches, edge cases, internal conventions \u2014 as structured priors, and serves them to coding agents over MCP",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Steam MCP",
+"slug": "steam-mcp",
+"desc": "A read-only Model Context Protocol server for Valve's public Steam Web API and storefront. Ask about your friends and games, playtime and achievements, plus account-independent things like sales, reviews, live player counts, Steam Deck compatibility, discovery, and recommendations \u2014 bring your own free Steam API key.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "agent-memory",
+"slug": "agent-memory",
+"desc": "Local, searchable project memory for AI coding agents. Markdown source of truth, MCP interface, safe structured updates",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Fresh Jots MCP Server",
+"slug": "freshjots-mcp",
+"desc": "This server connects Fresh Jots notes with clients",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "AEP MCP Server",
+"slug": "aep-mcp-server",
+"desc": "The first full-featured MCP server for Adobe Experience Platform: 29 tools across schemas, datasets, profiles, segments, query service, and GDPR/CCPA privacy operations. Extends Adobe's read-only beta with production-grade write operations.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "keycae-mcp",
+"slug": "keycae-mcp",
+"desc": "Argentine electronic invoicing (facturaci\u00f3n electr\u00f3nica) MCP Server for ARCA/AFIP. Emit invoices, manage credentials, check delegations, and look up taxpayers. 10 tools.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "akka-finance-mcp-server",
+"slug": "akka-mcp-server",
+"desc": "MCP server for the AKKA Finance DEX aggregator \u2014 swap quotes, routes, and execution across EVM chains.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "GetMyCert",
+"slug": "getmycert-mcp",
+"desc": "13,000+ IT certification practice questions for AI agents (AWS, Azure, GCP, CompTIA, CISSP, PMP, Kubernetes, Terraform, Cisco, Salesforce). Pay-per-call via x402 USDC on Base, or a prepaid API key. Tools: get_cert_questions, list_certifications.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MalwareBazaar_MCP",
+"slug": "MalwareBazaar_MCP",
+"desc": "An AI-driven MCP server that autonomously interfaces with Malware Bazaar, delivering real-time threat intel and sample metadata for authorized cybersecurity research workflows.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Automox MCP Server",
+"slug": "automox-mcp",
+"desc": "Enables AI assistants to manage and monitor Automox environments via natural language, including devices, compliance, policies, patches, and more.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Obsidian MCP Server",
+"slug": "obsidian-mcp-server",
+"desc": "Enables external applications to interact with an Obsidian vault through MCP tools, including semantic search and file operations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-bitbucket",
+"slug": "mcp-bitbucket",
+"desc": "Enables AI systems to securely interact with self-hosted Bitbucket repositories, pull requests, projects, and code through the Model Context Protocol.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "SD-WAN MCP Server",
+"slug": "SDWAN-MCP-SERVER",
+"desc": "Enables monitoring and management of SD-WAN devices through REST API endpoints, with tools for device health, statistics, BFD sessions, and network analytics. Integrates with Cursor IDE for natural language queries.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "debug-test-mcp",
+"slug": "debug-test-mcp",
+"desc": "MCP server for debugging MCP host/client custom header implementation, with a tool to inspect request headers.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Sentinel Core Agent",
+"slug": "Sentinel-Core-Agent",
+"desc": "Enables file system operations, web scraping, and AI-powered search through MCP tools for use by LLM agents.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "remote-mcp-server",
+"slug": "remote-mcp-server",
+"desc": "Enables running an MCP server on Cloudflare Workers with OAuth authentication, providing tools like math and xkcd.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "temporal-invoice-mcp",
+"slug": "temporal-invoice-mcp",
+"desc": "Enables managing invoice workflows using Temporal, allowing submission, approval, rejection, and status checking of invoices through MCP tools.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Tracelink MCP Server",
+"slug": "mcp-server",
+"desc": "MCP server that enables Claude and GitHub Copilot to interact with the Tracelink API for managing company data, orders, objects, and journal entries.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "packet-tracer-mcp",
+"slug": "packet-tracer-mcp",
+"desc": "Enables control of Cisco Packet Tracer 9.0 via natural language, allowing creation of network topologies, device configuration, and simulation launches through an MCP interface.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "elasticsearch-mcp",
+"slug": "elasticsearch-mcp",
+"desc": "Enables AI assistants to search, analyze, and interact with Elasticsearch through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "PostgreSQL SSH MCP Server",
+"slug": "postgresql-ssh-mcp",
+"desc": "A secure PostgreSQL MCP server with built-in SSH tunneling that enables AI assistants to connect to databases through bastion hosts automatically, supporting both STDIO and Streamable HTTP transports.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "source-coop-mcp",
+"slug": "source-coop-mcp",
+"desc": "Enables AI agents to discover and access 800TB+ of public geospatial data from Source Cooperative, with tools for listing organizations, products, files, and fuzzy search.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "chuk-mcp-runtime",
+"slug": "chuk-mcp-runtime",
+"desc": "A robust runtime for the official Model Context Protocol (MCP) that adds proxying, session management, JWT auth, persistent user storage with scopes, and progress notifications.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "Whoop MCP Server",
+"slug": "whoop-mcp-server",
+"desc": "Enables Claude to access and analyze Whoop health data including recovery, sleep, strain, and workouts through a custom MCP connector.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "gst-mcp",
+"slug": "gst-mcp",
+"desc": "MCP server for GStreamer introspection and pipeline development. Enables LLMs to understand GStreamer elements, caps, and construct pipelines through natural language queries.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Graft",
+"slug": "graft",
+"desc": "Local-first codebase context engine that parses code into a ranked dependency graph and serves it to AI tools via MCP for deep structural understanding.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "fiware-orion-mcp",
+"slug": "fiware-orion-mcp",
+"desc": "MCP server for FIWARE Orion Context Broker enabling LLMs to manage NGSI-v2 context entities like IoT devices, sensors, and vehicles.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP GitHub Dashboard",
+"slug": "mcp-github-dashboard",
+"desc": "A comprehensive GitHub project dashboard for MCP that monitors multiple repositories, pull requests, issues, deployments, and health status through AI assistants.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "reddit-trends-mcp",
+"slug": "reddit-trends-mcp",
+"desc": "Provides Reddit discussion volume trends, growth rates, and top trending topics for any keyword, accessible via MCP tools and Python client.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Boostcamp MCP Server",
+"slug": "boostcamp-mcp",
+"desc": "Integrates with the Boostcamp fitness platform to provide access to training history, workout programs, custom exercises, and analytics through Claude.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "pretext-pdf-mcp",
+"slug": "pretext-pdf-mcp",
+"desc": "MCP server for generating professional PDFs from structured JSON in AI agents like Claude or Cursor, using pure Node.js with embedded fonts and precision text layout.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "mcp-simple-voicevox",
+"slug": "mcp-simple-voicevox",
+"desc": "Provides VOICEVOX text-to-speech as an MCP tool. Requires a running VOICEVOX engine on localhost.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "semrush-mcp",
+"slug": "semrush-mcp",
+"desc": "MCP server providing tools to access Semrush API data for domain analytics, keyword research, backlink analysis, and traffic analytics.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "outlook-classic-mcp",
+"slug": "Outlook-Classic-MCP",
+"desc": "Enables MCP-aware agents to interact with the classic Outlook desktop client for mail, calendar, contacts, tasks, and Out-of-Office settings via the COM API, without Azure or OAuth.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "PostgreSQL MCP Server",
+"slug": "postgres-mcp",
+"desc": "Enables LLMs to interact deeply with PostgreSQL databases\u2014query data, manage schema, analyze performance, and administer the database.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Posthog Universal MCP Server",
+"slug": "posthog",
+"desc": "Enables interaction with Posthog through a standardized MCP interface, providing access to Posthog's tools and services for analytics and product management.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "yahoo-finance-mcp",
+"slug": "yahoo-finance-mcp",
+"desc": "Enables retrieval of comprehensive financial data from Yahoo Finance, including stock prices, company info, financial statements, options, and news, for stock analysis and market research.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Pubtator MCP Server",
+"slug": "mcp-server-pubtator3",
+"desc": "Provides an async Python server for interacting with the PubTator3 API, exposing multiple biomedical text-mining tools compatible with the MCP agent protocol.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "imugi",
+"slug": "imugi",
+"desc": "Enables AI to capture, compare, and automatically patch frontend code against reference designs, achieving pixel-perfect fidelity without manual CSS tweaking.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "gitea-mcp",
+"slug": "gitea_mcp",
+"desc": "MCP server for managing Gitea repositories via the Gitea API, enabling operations on issues, comments, labels, milestones, and repository info.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "pptx-mcp-server",
+"slug": "pptx-mcp-server",
+"desc": "MCP server for creating, reading, and editing PowerPoint (.pptx) presentations.",
+"attributes": []
+},
+{
+"name": "SPICEBridge",
+"slug": "spicebridge",
+"desc": "AI-powered circuit design through simulation \u2014 an MCP server that gives language models direct access to SPICE circuit simulation via ngspice, enabling natural language circuit description and automated netlist generation, simulation, measurement, and spec verification.",
+"attributes": []
+},
+{
+"name": "Google Docs + Gmail MCP Server",
+"slug": "MCP-server",
+"desc": "Enables appending content to Google Docs and creating Gmail drafts with human-in-the-loop approval, integrating structured AI tool interfaces via MCP-style endpoints.",
+"attributes": []
+},
+{
+"name": "spaceship-mcp",
+"slug": "spaceship-mcp",
+"desc": "MCP server for the Spaceship API that enables AI-driven management of domains, DNS records, contacts, and marketplace listings.",
+"attributes": []
+},
+{
+"name": "nas-mcp-server",
+"slug": "nas-mcp-server",
+"desc": "MCP server for managing a media server stack (Plex, Radarr, Overseerr, Bazarr, Prowlarr, Trakt.tv) using natural language to browse, request, and discover content.",
+"attributes": []
+},
+{
+"name": "renef-mcp",
+"slug": "renef-mcp",
+"desc": "MCP server for Renef, providing dynamic instrumentation and reverse engineering capabilities for Android ARM64, including native hooking, Java interception, and memory manipulation.",
+"attributes": []
+},
+{
+"name": "0-mcp",
+"slug": "0-mcp",
+"desc": "Turns Django models into MCP tools and a REST API from a single class, and can generate a Django project from a MySQL or Postgres schema.",
+"attributes": []
+},
+{
+"name": "Notes MCP Server",
+"slug": "lesson16",
+"desc": "A minimal MCP server for persistent note-taking, enabling create, update, delete, and search of notes with tags, plus resource-based retrieval of all notes or by title.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp_servers",
+"slug": "mcp_servers",
+"desc": "\u63d0\u4f9bA\u80a1\u884c\u60c5\u6570\u636e\u670d\u52a1\uff0c\u652f\u6301\u83b7\u53d6\u5b9e\u65f6\u884c\u60c5\u3001K\u7ebf\u6570\u636e\u3001\u80a1\u7968\u5217\u8868\u3001\u641c\u7d22\u3001\u5e02\u573a\u6307\u6570\u548c\u70ed\u95e8\u80a1\u7968\u7b49\u529f\u80fd\u3002",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "aws-s3-universal-mcp-server",
+"slug": "aws-s3",
+"desc": "A standardized interface for interacting with AWS S3 tools and services through a unified API, following the MCP specification.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Tableau MCP Server",
+"slug": "tableau-mcp-server",
+"desc": "Enables reading and writing to Tableau Server or Tableau Cloud via the REST API, supporting operations on sites, projects, workbooks, views, and data sources.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "metabase-mcp-navi",
+"slug": "metabase-mcp-navi",
+"desc": "A MCP server for Metabase that gives AI assistants direct access to dashboards, cards, and query execution.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-solana-ico",
+"slug": "mcp-solana-ico",
+"desc": "Simplified MCP server for managing Solana ICOs with multiple bonding curves, token pricing, and buy/sell functionality.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Spec Kit Memory Hub",
+"slug": "spec-kit-memory-hub",
+"desc": "Repository-native, Git-reviewable memory extension for AI coding assistants to persist project context across features, using SQLite caching for up to 10x token reduction.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "AI Repo Adventures MCP",
+"slug": "ai-repo-adventures",
+"desc": "Transforms code repositories into interactive, themed adventures for exploration and learning through a Model Context Protocol server.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Search MCP",
+"slug": "search_mcp_demo",
+"desc": "Enables LLM-powered search with Elasticsearch, including query planning, expansion, and intelligent filtering for e-commerce.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "AI Context Manager",
+"slug": "mcp-standard-ai",
+"desc": "Manages .ai/ workspace folder, syncs assets with a cloud service, and generates environment-specific bootstrap files for AI context management.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "mcp-server-ascom",
+"slug": "mcp-server-ascom",
+"desc": "Control telescopes, cameras, and focusers with AI through natural language, using any ASCOM Alpaca device.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "PowerPoint MCP Server",
+"slug": "powerpoint-mcp",
+"desc": "Enables PowerPoint automation on Windows, including template-based creation, real-time editing, LaTeX equations, animations, and multimodal slide analysis, all via natural language.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "K-MFDS FoodDB MCP Server",
+"slug": "k-mfds-fooddb-mcp-server",
+"desc": "Provides tools to search Korean food nutrition data from the Ministry of Food and Drug Safety (MFDS) database, enabling natural language queries for food composition details.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mindkeeper-mcp",
+"slug": "mindkeeper-mcp",
+"desc": "Captures ideas from conversations and organizes them into a persistent, hierarchical mindmap. Supports search, deduplication, export, import, and cloud sync.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "RobotMCP Server",
+"slug": "robotmcp_server",
+"desc": "A modular MCP server with automatic submodule integration, OAuth 2.1, Supabase user management, and Cloudflare tunnel support, enabling secure and extensible tool connectivity for AI assistants like ChatGPT and Claude.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Elasticsearch MCP Server",
+"slug": "es_mcp_server",
+"desc": "Provides tools to query Elasticsearch indices, retrieve mappings, execute searches, and get cluster health stats.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Cloudglue MCP Server",
+"slug": "cloudglue-mcp-server",
+"desc": "Connects AI assistants to Cloudglue for video analysis, enabling video description, entity extraction, chapter segmentation, and metadata retrieval from various sources like YouTube and cloud storage.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "AKShare MCP Server",
+"slug": "akshare-mcp-server",
+"desc": "Enables AI assistants to access comprehensive Chinese financial market data including stocks, funds, futures, and economic indicators via AKShare.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "genart-mcp",
+"slug": "mcp-server",
+"desc": "MCP server for creating and manipulating generative art with p5.js, Three.js, GLSL, Canvas2D, and SVG, featuring workspace management, parameter control, and screenshot capture.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "forgejo-mcp",
+"slug": "forgejo-mcp",
+"desc": "A Model Context Protocol (MCP) server for Forgejo and Gitea instances, enabling AI assistants to interact with repositories, issues, pull requests, and more.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "thebuyside-x402-agent",
+"slug": "thebuyside-x402-agent",
+"desc": "The MCP gateway that lets any AI agent discover and pay metered APIs on Base or Solana \u2014 without the user wiring payments themselves.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Runtime Copilot MCP Server",
+"slug": "data-engineering-runtime-lab",
+"desc": "Provides an MCP-native operational interface for diagnostics, explainability, regression checks, and operational memory on data-system internals like PostgreSQL and Databricks toy engines.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Plutocalc Designer MCP Server",
+"slug": "plutocalcdesigner-mcp",
+"desc": "Enables water and wastewater treatment system design by accessing Plutocalc Designer calculation models, templates, and computations through the MCP protocol.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP Memory Server",
+"slug": "mcp-memory-server",
+"desc": "An MCP server that gives Claude persistent memory by storing conversation context, entities, and enabling semantic search across sessions.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Xray MCP",
+"slug": "mcp-xray",
+"desc": "An MCP server that integrates Cursor IDE with Xray Test Management for Jira, enabling management of tests, test executions, test plans, and import/export operations.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "ssh-client-mcp",
+"slug": "ssh-client-mcp",
+"desc": "SSH/SFTP server enabling remote command execution and secure file transfers, with integration for Claude AI.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "steamforecast-mcp",
+"slug": "steamforecast-mcp",
+"desc": "Model Context Protocol server for Steam Launch Forecaster, exposing calibrated revenue cones (P10\u2013P90) and other tools to AI agents for Steam game revenue forecasting and analysis.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "pyslang-mcp",
+"slug": "pyslang-mcp",
+"desc": "Provides AI agents with compiler-backed, read-only context for Verilog and SystemVerilog projects using pyslang.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Blogger MCP Server",
+"slug": "blogger-mcp-server",
+"desc": "Enables AI models to interact with Google Blogger blogs, manage posts, labels, and retrieve blog information via API key or OAuth2.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-upbank",
+"slug": "mcp-upbank",
+"desc": "Enables querying Up Bank account transactions and spending habits through natural language, using the Up Bank API in read-only mode.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Plausible MCP",
+"slug": "plausible-mcp",
+"desc": "Enables natural language interaction with Plausible Analytics data to query traffic, visitors, engagement, and more using conversational questions.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "AlphaVantage MCP Server",
+"slug": "remote-mcp-azure-function",
+"desc": "Enables AI agents to access financial data and perform analysis by exposing AlphaVantage API endpoints as MCP tools, including company overview, income statement, balance sheet, cash flow, and earnings reports.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP GitHub Reader",
+"slug": "mcp-github-reader-prod",
+"desc": "A lightweight MCP server for bringing GitHub repositories into context for large language models, enabling repository analysis, file access, and search without local cloning.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "ghidra-api-mcp",
+"slug": "ghidra-api-mcp",
+"desc": "Helps LLMs write correct Ghidra scripts by providing API call-flows extracted from Ghidra's source code.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Tapetide MCP Server",
+"slug": "nse-bse-indian-stock-market-data-mcp",
+"desc": "Connects AI assistants to real-time Indian stock market data with 34 tools for search, screening, analysis, portfolio tracking, and market insights across all NSE and BSE stocks.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "congatudo_mcp",
+"slug": "congatudo_mcp",
+"desc": "Enables AI agents to control a Cecotec Conga robot vacuum via 26 tools for state, cleaning modes, settings, timers, and system info.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "baidu-pan-mcp-server",
+"slug": "baidu-pan-mcp-server",
+"desc": "A development guide and reference implementation for building a custom Baidu Netdisk MCP server, enabling AI assistants to manage files and shares on Baidu Pan.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "YCombinator Tweet Search MCP Server",
+"slug": "tweet-mcp",
+"desc": "Provides a tool for searching through YCombinator tweets using natural language queries.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Podcast Commerce Intelligence MCP",
+"slug": "podcast-commerce-mcp",
+"desc": "Extract product mentions, sponsors, and trends from podcast transcripts to generate affiliate revenue, with F1=100% on eval suite and a free tier of 200 calls/day.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Shopify Universal MCP Server",
+"slug": "shopify",
+"desc": "Provides a standardized MCP interface for interacting with Shopify tools and services, enabling unified API access and compatibility with MCP-compliant clients.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "timedoctor-mcp",
+"slug": "timedoctor-mcp",
+"desc": "MCP Server for extracting Time Doctor time tracking data via AI assistants.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "AOL Mail MCP Server",
+"slug": "aol-mcp-server",
+"desc": "Enables reading, searching, sending, and managing AOL Mail emails and folders via natural language, compatible with VS Code Copilot and Claude Desktop.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "QRzap MCP Server",
+"slug": "qrzap",
+"desc": "Enables AI agents to generate QR codes for URLs, WiFi, contacts, and more with structured parameters.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Tiller Money MCP Server",
+"slug": "tiller-mcp-server",
+"desc": "Provides read-only access to Tiller Money financial data in Google Sheets, enabling natural language queries for accounts, transactions, categories, and budgets through Claude Desktop.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "qdrant-loader-mcp-server",
+"slug": "qdrant-loader",
+"desc": "Enables AI development tools to perform semantic search and document relationship analysis on vectorized content stored in Qdrant databases.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "@dormon/salesforce-mcp",
+"slug": "Salesforce-MCP",
+"desc": "Enhanced MCP server for interacting with Salesforce orgs, featuring concurrency safety, error recovery guidance, structured output, smart schema caching, and MCP Resources for AI agents.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "omni-rag-mcp",
+"slug": "codebase-rag-mcp",
+"desc": "Enables token-efficient semantic search and analysis over any directory of files through hybrid search, directory overview, structural analysis, and dependency graphs.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Salesforce MCP Server (Extended)",
+"slug": "mcp-server-salesforce",
+"desc": "Enables natural language interactions with Salesforce data, metadata, and reports, including report creation, discovery, and schema inspection.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "starwars",
+"slug": "mcp-starwars",
+"desc": "Provides access to the SWAPI Star Wars API, enabling users to query characters, planets, films, species, vehicles, and starships with automatic pagination and caching.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "updsts",
+"slug": "updsts",
+"desc": "Automatically update AWS credential files with temporary STS tokens and retrieve credential info, enabling secure credential management via Agent tools.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "MCP Password Generator",
+"slug": "mcp-pwd-generator",
+"desc": "Generates random passwords with configurable character sets (all, alpha, numbers, letters) via the Model Context Protocol.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "streamlinear",
+"slug": "streamlinear",
+"desc": "A lightweight MCP server that enables Claude to interact with Linear via a single tool with seven actions: search, get, update, comment, create, graphql, and help.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "io.github.iridite/bing-search-free",
+"slug": "bing-search-mcp",
+"desc": "Provides free Bing search capabilities without an API key, with smart language detection and customizable result counts.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Web Search MCP",
+"slug": "web-search-mcp",
+"desc": "Provides LLMs with real-time web search and content extraction capabilities, including text/news search, full-text URL reading, and targeted technical documentation search.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp",
+"slug": "mcp",
+"desc": "Provides MCP servers for GitHub API operations and SQL database queries, enabling users to interact with GitHub repositories and databases through natural language.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "openpgx",
+"slug": "openpgx",
+"desc": "Enables AI-driven pharmacogenomic analysis by querying structured genetic variant, drug response, and disease risk data. Supports natural language questions about medications, traits, and health risks based on user genome data, with privacy-first local execution.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "0g-chain-mcp",
+"slug": "0g-chain-mcp",
+"desc": "Production-ready MCP server for 0G Chain blockchain operations, enabling wallet creation, balance checks, token transfers, staking, and validator discovery through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "a-share-mcp",
+"slug": "a-share-mcp",
+"desc": "\u63d0\u4f9bA\u80a1\u5b9e\u65f6\u884c\u60c5\u3001\u5386\u53f2K\u7ebf\u3001\u8d22\u52a1\u62a5\u8868\u3001\u6280\u672f\u6307\u6807\u7b49\u5168\u65b9\u4f4d\u6570\u636e\u67e5\u8be2\u7684MCP\u670d\u52a1\u5668\uff0c\u652f\u6301\u76d8\u4e2d\u5373\u65f6\u66f4\u65b0\u53ca\u6279\u91cf\u67e5\u8be2\u3002",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "NIST MCP Server",
+"slug": "nist-mcp-server",
+"desc": "Provides comprehensive access to NIST cybersecurity frameworks and controls, enabling AI assistants and applications to query, analyze, and manage NIST security controls through a standardized interface.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "ClawPay",
+"slug": "clawpay",
+"desc": "Connects AI agents to payment processors (Lithic, Stripe, PayPal) for automated shopping with single-use virtual cards and transaction management.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Coreshub MCP Server",
+"slug": "mcp-server-coreshub",
+"desc": "Enables interaction with the CoreHub cloud platform to manage containers, EPFS filesystems, distributed training, and inference services through MCP tools.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "local-skills-mcp",
+"slug": "local-skills-mcp",
+"desc": "A universal MCP server that enables any LLM or AI agent to access expert skills from your local filesystem.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "OScribe",
+"slug": "oscribe",
+"desc": "Vision-based desktop automation MCP server that controls any application via screenshot and AI vision, enabling UI automation through natural language commands.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "OpenRemote MCP Server",
+"slug": "service-mcp-server",
+"desc": "Enables interaction with an OpenRemote instance through its service API, allowing management of assets, users, and other resources via natural language.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "StepFunMCP",
+"slug": "StepFunMCP",
+"desc": "Integrates StepFun API to enable calling text, vision, image generation, and speech models through MCP.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "confluence-mcp-server",
+"slug": "confluence-mcp-server",
+"desc": "MCP server for Confluence Cloud/Server/Data Center, enabling page search, CQL queries, page CRUD, attachment upload, and user identity lookup.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Sefaria MCP Server",
+"slug": "sefaria-mcp",
+"desc": "Enables LLMs to access and search Jewish texts from the Sefaria library through 15 MCP tools, including text retrieval, search, and manuscript access.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "MCP-Coinglass",
+"slug": "mcp-coinglass",
+"desc": "Provides futures market analytics (Open Interest, Liquidations, Long/Short Ratio, Funding Rates) via the CoinGlass API v4, enabling natural language queries for crypto derivatives data.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Ubidots MCP Server",
+"slug": "ubidots-mcp-server",
+"desc": "Enables MCP clients to interact with the Ubidots IoT platform for managing IoT devices, data, and automation through natural language.",
+"attributes": [
+"author:official",
+"hosting:local-only"
+]
+},
+{
+"name": "collectives-mcp",
+"slug": "nc_collectives-mcp",
+"desc": "MCP server for Nextcloud Collectives that exposes collectives, pages, tags, attachments, page history, and trash to Claude and MCP-compatible clients via OCS API and WebDAV.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "imagine-mcp",
+"slug": "imagine-mcp",
+"desc": "Production-grade MCP server for image and video understanding and generation across Gemini, OpenAI, and Grok.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "onepassword-mcp-server",
+"slug": "onepassword-mcp-server",
+"desc": "Enables secure retrieval of credentials from 1Password vaults for use by AI agents, supporting integration with browser automation for automated login.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Umbraco CMS MCP Server",
+"slug": "Umbraco-CMS-MCP-Dev",
+"desc": "Enables AI agents to manage Umbraco CMS content through natural language, including documents, media, document types, and data types via the Umbraco Management API.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "CyberMem",
+"slug": "cybermem",
+"desc": "Enables AI tools like Claude and Cursor to share persistent memory across sessions.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "MCP Server for CAP",
+"slug": "MCP-Server",
+"desc": "Enables Claude to interact with a document processing backend, providing tools for listing, retrieving, uploading, and processing documents, as well as resources for pending documents and statistics.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "React Native MCP Server",
+"slug": "react-native-mcp",
+"desc": "Enables automation and monitoring of React Native apps by providing tools to tap, swipe, screenshot, inspect component state, profile renders, and mock network requests via MCP.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "SiYuan MCP Server",
+"slug": "siyuan-mcp-server-en",
+"desc": "MCP server for SiYuan Note, enabling AI integration and smart knowledge management with note, block, search, template, export, asset, SQL, and file operations.",
+"attributes": []
+},
+{
+"name": "oak-mcp",
+"slug": "oak-mcp",
+"desc": "Enables AI agents to interact with ontologies through the Ontology Access Kit, providing ontology querying and management capabilities.",
+"attributes": []
+},
+{
+"name": "Paragraph MCP",
+"slug": "paragraph-mcp",
+"desc": "MCP server that connects AI agents to your Paragraph publication, enabling post management, subscriber analytics, and search across posts and publications.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "Mica Crypto MCP",
+"slug": "mica-crypto-mcp",
+"desc": "EU MiCA compliance MCP for crypto-asset issuers, exchanges, and CASPs.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "MaaMCP_CC",
+"slug": "MaaMCP_CC",
+"desc": "Enables Claude Code to directly control Android emulators or Windows windows for MaaFramework pipeline development, with features like screenshot with grid, template cropping, and real-time recognition testing.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Infoway MCP Server",
+"slug": "infoway-mcp-server",
+"desc": "Gives AI assistants access to real-time financial data including stock prices, crypto, forex, market sentiment, sector analysis, and company fundamentals via the Infoway API.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "RedTrack MCP Server",
+"slug": "redtrack_mcp",
+"desc": "A stateless MCP server that exposes RedTrack attribution data via two endpoints (GET /manifest and POST /run) and can be deployed with one click on Railway.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "telecom-ai",
+"slug": "telecom-ai",
+"desc": "MCP server for telecom AI with built-in EU AI Act compliance, part of the MEOK AI Labs ecosystem.",
+"attributes": []
+},
+{
+"name": "Pandas-MCP Server",
+"slug": "pandas-mcp-server",
+"desc": "Enables LLMs to safely execute pandas code for data analysis and generate interactive visualizations through the Model Context Protocol.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "PokeAPI MCP Server",
+"slug": "MCP_Pokemon",
+"desc": "Empowers AI assistants to fetch and explore comprehensive Pok\u00e9mon data from PokeAPI via 47 tools covering Pok\u00e9mon, moves, items, game mechanics, and more.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Tiger GitHub MCP Server",
+"slug": "tiger-gh-mcp-server",
+"desc": "Enables LLMs to interact with GitHub via the Model Context Protocol, providing tools for repository management and other GitHub operations.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "kube-mcp-operator",
+"slug": "kube-mcp-operator",
+"desc": "Exposes Kubernetes microservice APIs as MCP services by injecting a sidecar into annotated deployments.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "pubmed-mcp-server",
+"slug": "pubmed-mcp-server",
+"desc": "This server enables searching PubMed articles, fetching metadata, and downloading PMC PDFs.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-sqlite-tools",
+"slug": "mcp-sqlite-tools",
+"desc": "Provides comprehensive SQLite database operations for LLMs with security features, transaction support, and separation of read-only and destructive operations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Tomba.io MCP Server",
+"slug": "tomba-mcp-server",
+"desc": "Integrates with the Tomba.io API to provide email discovery, verification, enrichment, phone lookup, and company research capabilities through standardized MCP tools, resources, and prompts.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "chess-support-mcp",
+"slug": "chess-support-mcp",
+"desc": "Manages the state of a chess game for LLMs/agents without suggesting moves, providing tools to create/reset game, add moves, get status, and check legality.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "video-sum-mcp",
+"slug": "video-sum-mcp",
+"desc": "Extracts content from Douyin, Bilibili, Xiaohongshu, and Zhihu, and generates intelligent knowledge graphs.",
+"attributes": []
+},
+{
+"name": "Server MCP",
+"slug": "Server_mcp",
+"desc": "Provides math and weather tools accessible via LangGraph agent using MCP protocol with stdio and streamable HTTP transports.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Enterprise Architect MCP Server",
+"slug": "ea_mcp",
+"desc": "Enables creating and managing UML diagrams in Sparx Systems Enterprise Architect via COM interface, supporting sequence, class, use case, and activity diagrams.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "RSS MCP Server",
+"slug": "rss-mcp-server",
+"desc": "Enables RSS feed management using the Fever API, supporting retrieval of feeds, groups, and items with read/save actions.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Claude Synergy",
+"slug": "claude-synergy",
+"desc": "Provides a local, queryable mirror of changelogs from Anthropic and related AI dev tools, enabling agents to discover cross-product workflows and sync updates via MCP.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "nodebench-mcp",
+"slug": "nodebench-ai",
+"desc": "NodeBench MCP server provides public research memory and tool access for entity intelligence, enabling agents to perform deep research, generate reports, and track entities without requiring signup.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "linkedin-mcp-server",
+"slug": "linkedin-mcp-server",
+"desc": "Enables Claude Desktop to manage your LinkedIn profile and company pages, including posting, reading posts, and fetching profile information.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "pg-mcp",
+"slug": "pg-mcp",
+"desc": "A Model Context Protocol server for PostgreSQL that enables database operations like querying, schema inspection, performance analysis, and administration through a JSON-RPC 2.0 interface.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Simple MCP MySQL Server",
+"slug": "mcp-mysql-server",
+"desc": "Enables AI assistants to securely interact with MySQL databases, including listing tables, viewing schemas, and executing read-only SQL queries through natural language.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "SBB Open Data MCP Server",
+"slug": "sbb-opendata-mcp",
+"desc": "An MCP server for Swiss Federal Railways (SBB) open data, enabling AI models to query real-time disruptions, passenger frequencies, station details, and more without an API key.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "IAM MCP Server",
+"slug": "iam-mcp-server",
+"desc": "Processes and manages applicant resumes, facilitates job searches, generates job-specific resumes, and creates tailored cover letters.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "Tech Debt MCP Server",
+"slug": "TechDebtMCP",
+"desc": "A server for analyzing technical debt across multiple programming languages, integrating with MCP-compatible tools to detect code quality issues and provide prioritized recommendations.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "concept-rag",
+"slug": "concept-rag",
+"desc": "Enables LLMs to perform conceptual search over local PDF/EPUB documents using a RAG pipeline with corpus-driven concept extraction and WordNet enrichment.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Pine Script MCP Server",
+"slug": "pine-mcp",
+"desc": "Enables AI assistants to look up any Pine Script function, search TradingView documentation, and find code examples in real time.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "ArcRift MCP Server",
+"slug": "ArcRift",
+"desc": "Persistent memory for AI coding tools that captures conversations, builds a searchable knowledge graph, and automatically injects relevant context into new prompts.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "files-mcp-ts",
+"slug": "files-mcp-ts",
+"desc": "A lightweight MCP server for basic file operations, enabling reading, writing, and listing files securely via the Model Context Protocol.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "@mealmastery/mcp-server",
+"slug": "mcp-server",
+"desc": "MCP server for MealMastery AI meal planning that enables users to manage meal plans, recipes, and grocery lists through natural language conversation with AI agents like Claude.",
+"attributes": []
+},
+{
+"name": "leave-management",
+"slug": "MCP1_LEAVE_MANAGER",
+"desc": "Enables employees to check leave balance, apply for leave, and view leave history through natural language using Claude Desktop.",
+"attributes": []
+},
+{
+"name": "Clio Manage MCP",
+"slug": "clio-manage-mcp",
+"desc": "MCP server that connects Clio Manage to Claude via OAuth, enabling law firm management tasks like matter lookup, time tracking, billing, calendar, and document retrieval through natural language.",
+"attributes": []
+},
+{
+"name": "Web Search MCP Server",
+"slug": "MCP-Tavily-Web-Search-Server",
+"desc": "Provides web search capabilities using the Tavily API, enabling AI models to search the internet and retrieve up-to-date information.",
+"attributes": []
+},
+{
+"name": "Arda Vector Database MCP Server",
+"slug": "mcp-ardaglobal-code",
+"desc": "Enables semantic code search across multi-language codebases using natural language queries, integrated with Qdrant vector database for fast, cached retrieval.",
+"attributes": []
+},
+{
+"name": "YouTube MCP Server",
+"slug": "youtube-mcp-server",
+"desc": "This MCP server fetches and extracts transcripts from YouTube videos, enabling AI language models to access and analyze video content.",
+"attributes": []
+},
+{
+"name": "fraud-prevention-mcp-server",
+"slug": "fraud-prevention-mcp-server",
+"desc": "An open-source MCP server for AI-powered fraud prevention that detects fraudulent IPs, emails, URLs, and phone numbers using free APIs and provides actionable risk scores.",
+"attributes": []
+},
+{
+"name": "MobAI MCP Server",
+"slug": "mobai-mcp",
+"desc": "Enables AI assistants to automate mobile devices (Android and iOS) through a single DSL interface, supporting actions like tap, type, swipe, and assertions.",
+"attributes": []
+},
+{
+"name": "Nautex",
+"slug": "nautex",
+"desc": "Integrates Nautex AI's specification and planning tool with coding agents to manage requirements, tasks, and code generation in small, testable steps.",
+"attributes": []
+},
+{
+"name": "mcp-run-isolated-python",
+"slug": "mcp-run-isolated-python",
+"desc": "Enables LLMs to execute Python code securely in a sandboxed environment. Supports configurable restrictions like no network access and returns results including files.",
+"attributes": []
+},
+{
+"name": "clickhouse",
+"slug": "clickhouse",
+"desc": "Enables AI assistants to query and manage ClickHouse databases, supporting SELECT queries, DDL/DML statements, and metadata listing.",
+"attributes": []
+},
+{
+"name": "MCP JustWatch Server",
+"slug": "mcp-justwatch",
+"desc": "Enables searching for movies and TV shows and retrieving streaming availability data across multiple platforms and countries.",
+"attributes": []
+},
+{
+"name": "mcp-server-kicad",
+"slug": "mcp-server-kicad",
+"desc": "MCP servers for KiCad schematic, PCB, symbol, footprint, and project automation, enabling AI-assisted electronic design via tools for read/write, analysis, and exports.",
+"attributes": []
+},
+{
+"name": "bluedart-mcp-server",
+"slug": "bluedart-mcp-server",
+"desc": "MCP server for BlueDart (DHL eCommerce India) shipping API enabling waybill creation, tracking, pickup scheduling, and transit time lookup via MCP tools.",
+"attributes": []
+},
+{
+"name": "spark-mcp",
+"slug": "spark-mcp",
+"desc": "Enables users to access, search, and analyze Spark Desktop meeting transcripts and emails through natural language via the Model Context Protocol.",
+"attributes": []
+},
+{
+"name": "MCPacer",
+"slug": "mcpacer",
+"desc": "An AI-powered running coach that connects Claude to your Strava data, providing personalized training plans, progress tracking, and coaching feedback through a web dashboard.",
+"attributes": []
+},
+{
+"name": "cross-review",
+"slug": "cross-review",
+"desc": "MCP server orchestrating API-first cross-review between Claude, ChatGPT Codex, Gemini, DeepSeek, Grok, and Perplexity with unanimous convergence gates.",
+"attributes": []
+},
+{
+"name": "Odoo MCP Server",
+"slug": "mcp-server-odoo",
+"desc": "Enables AI assistants to interact with Odoo ERP systems, allowing operations like searching employees, managing holidays, and executing custom methods on Odoo models via XML-RPC.",
+"attributes": []
+},
+{
+"name": "pgsql-mcp-server",
+"slug": "pgsql-mcp-server",
+"desc": "Enables interaction with PostgreSQL databases through MCP, supporting queries, DDL, DML, and schema inspection.",
+"attributes": []
+},
+{
+"name": "clinicaltrials-mcp",
+"slug": "clinicaltrials-mcp",
+"desc": "Enables conversational access to 400,000+ clinical trials on ClinicalTrials.gov, allowing users to search, compare, and retrieve trial details using plain English through MCP-compatible clients like Cursor and Claude Desktop.",
+"attributes": []
+},
+{
+"name": "outlook-mcp",
+"slug": "outlook-mcp",
+"desc": "MCP server that provides 62 tools to manage Outlook mail, calendar, contacts, and tasks for personal Microsoft accounts via Microsoft Graph API.",
+"attributes": []
+},
+{
+"name": "odoo-mcp",
+"slug": "odoo-mcp",
+"desc": "Connects AI assistants to Odoo 19.0, enabling full CRUD operations and method calls on any Odoo model via API key or username/password authentication.",
+"attributes": []
+},
+{
+"name": "sf-graph",
+"slug": "sf-graph",
+"desc": "Maps Salesforce metadata into a Neo4j graph database, enabling AI agents to reason about schema and generate accurate SOQL queries.",
+"attributes": []
+},
+{
+"name": "Grounding Enforcer",
+"slug": "mcp-grounding-enforcer",
+"desc": "A standalone MCP server that validates model output against retrieved sources. It flags any claim, statistic, attribution, quote, or URL that cannot be traced back to a real source.",
+"attributes": []
+},
+{
+"name": "Writing Assistant Ai MCP",
+"slug": "writing-assistant-ai-mcp",
+"desc": "Content writing toolkit for headline generation, readability scoring, tone analysis, outline building, and plagiarism similarity checking.",
+"attributes": []
+},
+{
+"name": "wigolo",
+"slug": "wigolo",
+"desc": "Provides local-first web intelligence over MCP with tools for search, fetch, crawl, extract, cache, find-similar, research, and autonomous agent loops, requiring no API keys.",
+"attributes": []
+},
+{
+"name": "Peliqan MCP Server",
+"slug": "mcp-server-peliqan",
+"desc": "Enables AI assistants to interact with the Peliqan platform, providing access to hundreds of data connectors for reading and writing data in business applications.",
+"attributes": []
+},
+{
+"name": "Typst MCP Server",
+"slug": "typst-mcp",
+"desc": "Enables AI models to interact with the Typst typesetting system, including LaTeX-to-Typst conversion, syntax validation, and rendering Typst code to images.",
+"attributes": []
+},
+{
+"name": "base-batch-send-mcp",
+"slug": "base-batch-send-mcp",
+"desc": "Enables AI agents to batch-send ETH or ERC-20 tokens to multiple recipients in one transaction on Base, drastically reducing gas costs.",
+"attributes": []
+},
+{
+"name": "mcp-screenshot",
+"slug": "mcp-screenshot",
+"desc": "MCP server for taking Linux / Wayland screenshots via grim and slurp.",
+"attributes": []
+},
+{
+"name": "re-mcp",
+"slug": "re-mcp",
+"desc": "A multi-backend MCP server that exposes binary analysis capabilities from IDA Pro and Ghidra, allowing LLMs to directly drive reverse-engineering tools via natural language.",
+"attributes": []
+},
+{
+"name": "content-research-mcp",
+"slug": "content-research-mcp",
+"desc": "Combines Naver DataLab trends, blog/news search, translation, and Unsplash images into a single research pipeline for content creators. Generates comprehensive research reports from a single query.",
+"attributes": []
+},
+{
+"name": "mcp-ssh-tool",
+"slug": "mcp-ssh-tool",
+"desc": "A Model Context Protocol (MCP) SSH client server that provides autonomous SSH operations for GitHub Copilot and VS Code. Enable natural language SSH automation without manual prompts or GUI interactions.",
+"attributes": []
+},
+{
+"name": "Microsoft Entra MCP Server",
+"slug": "azure-entra-mcp",
+"desc": "A FastMCP server that provides AI assistants with access to Microsoft Entra (Azure AD) directory services. It enables LLMs to search for users, groups, and check memberships using the Microsoft Graph API.",
+"attributes": []
+},
+{
+"name": "bangla-news-mcp",
+"slug": "bangla-news-mcp",
+"desc": "A Model Context Protocol server that retrieves Bangla news headlines and allows querying news by topic for integration with LLMs.",
+"attributes": []
+},
+{
+"name": "MCP Server Starter",
+"slug": "mcp-server-starter",
+"desc": "A minimal MCP server with calculator and memory store tools, ready to use with Claude Desktop and Claude Code.",
+"attributes": []
+},
+{
+"name": "ERP-File MCP Server",
+"slug": "mcp-server",
+"desc": "Enables querying ERP data via an external API with adaptive caching, and accessing data from Google Sheets or local Excel/CSV files through dual MCP endpoints.",
+"attributes": []
+},
+{
+"name": "ContextFS",
+"slug": "ContextFS",
+"desc": "MCP server for OpenCode that manages context with structured injection, progressive retrieval, and layered storage to keep Agent stable and traceable.",
+"attributes": []
+},
+{
+"name": "mcp-korean-spell",
+"slug": "mcp-korean-spell",
+"desc": "Provides Korean spell checking and grammar correction via a single tool. It integrates into MCP clients like Cursor or Claude Desktop.",
+"attributes": []
+},
+{
+"name": "OPNsense MCP Server",
+"slug": "opnsense-mcp-server",
+"desc": "Enables natural language management of OPNsense firewalls through AI clients, providing tools for firewall rules, system health, VPN monitoring, and more.",
+"attributes": []
+},
+{
+"name": "Klaviyo API MCP Server",
+"slug": "Klaviyo-MCP-Server-4-15",
+"desc": "Provides comprehensive tools and resources for managing Klaviyo marketing automation, including profiles, lists, campaigns, flows, and more through natural language.",
+"attributes": []
+},
+{
+"name": "@spec2tools/stdio-mcp",
+"slug": "spec2tools",
+"desc": "Exposes any OpenAPI spec endpoints as AI agent tools via stdio, requiring no code generation or maintenance.",
+"attributes": []
+},
+{
+"name": "BioMCP",
+"slug": "biomcp-ts",
+"desc": "A high-performance MCP server that gives LLMs access to 25 biomedical tools federated across 50+ upstream APIs for genes, variants, drugs, diseases, literature, clinical trials, and structural biology.",
+"attributes": []
+},
+{
+"name": "Hueflow SketchUp MCP",
+"slug": "hueflow-sketchup-mcp",
+"desc": "Connects Claude AI to SketchUp, allowing you to create and modify 3D models via natural language commands.",
+"attributes": []
+},
+{
+"name": "codesight",
+"slug": "codesight",
+"desc": "Provides 13 MCP tools for codebase analysis, wiki generation, and knowledge mapping, enabling AI assistants to understand project structure and context efficiently.",
+"attributes": []
+},
+{
+"name": "RunAPI MCP Server",
+"slug": "mcp",
+"desc": "Connects MCP-compatible coding tools to RunAPI for AI image, video, music, text-to-speech, and LLM generation using 130+ models from leading providers.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Smithsonian MCP Server",
+"slug": "smithsonian-mcp-server",
+"desc": "Enables searching and exploring millions of items from the Smithsonian Institution's collections including artifacts, artworks, specimens, photographs, and more, using the Smithsonian Open Access API.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Telegram MCP Server",
+"slug": "mcp-telegram",
+"desc": "An MCP server for interacting with Telegram bots and channels using the Telegraf library. It allows AI agents to send messages, manage channels, forward content, and intelligently respond to Telegram conversations.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Ultrahuman MCP Server",
+"slug": "Ultrahuman-MCP-Server",
+"desc": "Provides access to Ultrahuman health and fitness data through standardized MCP tools, enabling AI assistants to retrieve metrics like sleep, movement, heart rate, and glucose.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Perplexity Universal MCP Server",
+"slug": "perplexity",
+"desc": "Provides a standardized interface for interacting with Perplexity's tools and services through a unified API, following the MCP specification.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "n2n-nexus",
+"slug": "n2n-nexus",
+"desc": "A local digital asset hub for multi-AI assistant collaboration, offering real-time meeting rooms and structured project vaults with zero-configuration setup.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Myelin",
+"slug": "myelin",
+"desc": "Myelin provides persistent, brain-inspired memory for AI agents, enabling cross-session and cross-tool context retention with local, private storage.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "AL MCP Server",
+"slug": "AL-Dependency-MCP-Server",
+"desc": "Provides AI assistants with complete visibility into AL dependencies and symbols by exposing compiled .app files through the Model Context Protocol, enabling smart object discovery, deep code analysis, and reference tracking for Business Central development.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "kobiton",
+"slug": "automate",
+"desc": "Enables mobile device management, app upload, automation session execution, and test result viewing through the Kobiton platform, integrated with AI coding assistants.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "Sablier MCP Server",
+"slug": "sablier-mcp",
+"desc": "An MCP server that lets AI assistants analyze portfolios, stress-test scenarios, generate synthetic market paths, and scan SEC filings \u2014 in under 2 minutes.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "Bike MCP Server",
+"slug": "bike-mcp-server",
+"desc": "Enables reading, writing, and manipulation of Bike outlines on macOS through natural language, using AppleScript for local document management.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Markdown Notes MCP",
+"slug": "markdown-notes-mcp",
+"desc": "Enables managing and searching markdown notes with semantic search, question answering, and note generation, and provides an MCP server for GitHub Copilot integration.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-feedback-enhanced",
+"slug": "mcp-feedback-enhanced",
+"desc": "MCP server providing feedback-oriented development workflows with a Web UI and desktop application for interactive user confirmation, session tracking, and smart prompt management.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "KakaoCloud OpenAPI MCP Server",
+"slug": "kakaocloud-openapi-mcp",
+"desc": "Enables AI assistants to discover and invoke KakaoCloud OpenAPI endpoints for managing cloud resources like VMs, VPCs, load balancers, and databases.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Better Finder MCP",
+"slug": "better-finder-mcp",
+"desc": "Enables intelligent file search with Git-like staging and indexing, offering semantic and hybrid search for documents, and integrates with Claude Desktop via MCP.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "codescan-mcp-server",
+"slug": "codescan-mcp-server",
+"desc": "MCP server enabling AI models to interact with Codescan's API for listing projects, retrieving metrics, and querying issues with advanced filtering.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "joinly",
+"slug": "joinly",
+"desc": "Enables AI agents to join and actively participate in video calls, providing real-time interaction and meeting tools through an MCP server.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "farshid-mcp-imageProcessing",
+"slug": "farshid-mcp-imageProcessing",
+"desc": "A comprehensive OpenCV image-processing MCP server offering ~40 tools for webcam capture, image I/O, transforms, color manipulation, filtering, edge detection, object detection, and more.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "OdooSurface MCP",
+"slug": "odoo-surface-mcp",
+"desc": "Enables AI agents to interact with Odoo ERP as the authenticated user, with tools for discovery, planning, and mutations bounded by user permissions.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Mnemonic",
+"slug": "claude-memory-architecture",
+"desc": "Persistent memory management for AI assistants like Claude, enabling creation, search, and retrieval of memories with tagging and triggers.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "JIRA MCP Server",
+"slug": "jira-mcp-server",
+"desc": "An MCP server that provides tools to interact with JIRA for sprint management, issue tracking, and attachment handling.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "google-ads-mcp",
+"slug": "google-ads-mcp",
+"desc": "MCP server that provides tools and resources for interacting with Google Ads API, enabling search, metadata retrieval, and account management through natural language.",
+"attributes": [
+"author:official",
+"hosting:hybrid"
+]
+},
+{
+"name": "EVE-NG MCP Server",
+"slug": "eveng-mcp-server",
+"desc": "An MCP server that gives Claude and other LLM agents programmatic access to EVE-NG network labs, enabling creation, configuration, and management of virtual network topologies through natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "GNS3 MCP Server",
+"slug": "gns3-mcp",
+"desc": "Enables control of GNS3 network lab automation, including projects, nodes, consoles, and SSH, through Claude Desktop or any MCP-compatible client.",
+"attributes": [
+"hosting:hybrid"
+]
+},
+{
+"name": "report-needs",
+"slug": "report-needs",
+"desc": "Enables AI agents to report and vote on infrastructure needs, providing developers with ranked demand signals to prioritize what to build next.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Validator Ai MCP",
+"slug": "validator-ai-mcp",
+"desc": "An MCP server for validating JSON against schemas, checking email deliverability, verifying URLs, assessing data quality, and validating API responses using RFC-compliant checks and heuristic analysis.",
+"attributes": []
+},
+{
+"name": "mcp-server-unity",
+"slug": "mcp-server-unity",
+"desc": "Enables AI assistants like Claude to interact with Unity projects programmatically, supporting project management, asset creation, and build automation.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-server",
+"slug": "mcp-server",
+"desc": "Production-ready TypeScript MCP server exposing utility, GitHub, and Microsoft Teams tools over stdio.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "telegram-api-mcp",
+"slug": "telegram-api-mcp",
+"desc": "Ultimate MCP server for Telegram Bot API \u2014 169 methods, full v9.6 coverage, meta-mode, rate limiting, and circuit breaker, enabling AI to control Telegram bots with natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "mcp-document-converter",
+"slug": "mcp-document-converter",
+"desc": "Converts documents between multiple formats (Markdown, HTML, DOCX, PDF, Text) enabling AI agents to easily transform documents.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "mcp-jira-python",
+"slug": "mcp-jira-python",
+"desc": "MCP server for JIRA integration enabling issue management, search, comments, and linking via natural language.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "dejared-mcp",
+"slug": "dejared-mcp",
+"desc": "A Model Context Protocol (MCP) server for exploring, analyzing, and decompiling Java JAR files.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Office-Word-MCP",
+"slug": "Office-Word-MCP",
+"desc": "A Model Context Protocol server for enterprise-grade document automation, enabling AI assistants to create, read, manipulate, and analyze Microsoft Word documents programmatically.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "AWS Health MCP Server",
+"slug": "sample-health-mcp-server",
+"desc": "MCP server that exposes AWS Health API as tools for checking service health, events, and scheduled maintenance at account or organization level.",
+"attributes": [
+"author:official",
+"hosting:remote-capable"
+]
+},
+{
+"name": "pycti-mcp",
+"slug": "pycti-mcp",
+"desc": "MCP server that provides condensed and normalized data from OpenCTI to LLMs, enabling lookup of observables, adversaries, and reports with enriched context.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Ghost CMS MCP",
+"slug": "ghost-mcp",
+"desc": "Unofficial MCP server for Ghost CMS that enables managing posts, pages, tags, and images through any MCP-compatible client.",
+"attributes": [
+"hosting:remote-capable"
+]
+},
+{
+"name": "Trellis MCP",
+"slug": "trellis-mcp",
+"desc": "A file-backed MCP server for hierarchical project management that enables AI assistants to create, claim, and complete tasks within a project\u2192epic\u2192feature\u2192task structure, with dependency management and Markdown-based storage.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "Figma Dash MCP Server",
+"slug": "figma-dash-mcp",
+"desc": "Connects IDE to Figma Desktop App, enabling AI assistants to generate and manipulate layouts, shapes, and designs directly inside the Figma canvas.",
+"attributes": [
+"hosting:local-only"
+]
+},
+{
+"name": "MCP \u2192 Local MSSQL Server",
+"slug": "mcp",
+"desc": "Exposes SQL Server stored procedures as tools for LLM clients (Claude Desktop, VS Code, Cursor, etc.) enabling direct database interaction through natural language.",
+"attributes": [
+"hosting:local-only"
+]
+}
+]
