@@ -19,17 +19,30 @@ why_it_matters: "Agent transcripts blow up by appending verbose tool outputs; mo
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0010
+  summary: 'HELD (L0 sim). Causal extractive tool-result compression strictly dominates
+    recency-truncation on the (context,success) Pareto: EC-RT mean +0.290 success,
+    bootstrap CI[+0.275,+0.307], 633/648 paired cells, wins at every budget. CRUX/make-or-break:
+    oracle-vs-causal gap is small overall (EO-EC +0.027) and EXACTLY ZERO in the claim-favorable
+    sparse+predictable regime -> the realizable causal predictor (past salience+repeat+recency,
+    NO future knowledge) does NOT need oracle knowledge to win; honest-negative N3
+    REFUTED. Partial oracle gap (+0.119) only in hostile dense+low-predictability
+    regime, where EC still beats RT (+0.135). Primary metric: EC reaches 95%-of-NC
+    task-success at <=0.37 token budget (100% of cells) vs RT 23%. stdlib-only, SERIAL,
+    2592 rows, ~10s. CAVEAT: trace simulation, synthetic salience proxy; real-attention/citation
+    predictor + real tool-agent task-accuracy + prior-art isolation (LLMLingua/H2O/SnapKV/StreamingLLM)
+    OWED before L1+. Artifacts: PRE_REGISTRATION.md, RESULTS.md, scripts/{sim,sweep,analyze}.py,
+    results/sweep_all.csv in experiments/2026-06-03/EXP-0010/.'
+  data_path: experiments/2026-06-03/EXP-0010/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0010 result, then ros exp complete --exp EXP-0010 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0010; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0010
+active_experiments: []
 created_at: '2026-06-03T00:12:03Z'
-last_updated: '2026-06-03T00:12:20Z'
+last_updated: '2026-06-03T00:20:59Z'
