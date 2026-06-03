@@ -1412,3 +1412,23 @@ any non-CLI write path (manual edit / migration / restore) can — and the crash
 mechanism):** int()-coerce all three on-disk reads with `except (TypeError, ValueError): floor = 0`, matching
 the established defensive idiom at ~1520/~1479. Fails SAFE: un-coercible -> 0 -> fragile gate REFUSES. Patched
 repro: `"32"`->dispatch@32, `"high"`/None/missing/negative -> safe REFUSE. AST-validated; live `ros gpu status` clean.
+
+## BUG-95 — exp gc artifacts-skip glob('**/*') misses dotfiles -> dotfile-only mid-staging exp wrongly retired
+**Surface:** `cmd_exp_gc` BUG-24 artifacts-skip (~1180), engine/ros.py. **Commit:** b190b99 (research-os main).
+**Found:** v3 ACTIVE-DEBUG bugbash (exp gc stale-pending surface, isolated /tmp). **Class:** glob dotfile-blindness on a SAFETY skip.
+
+The BUG-24 SAFETY guarantee — "never retire a pending exp that has ANY artifacts (active researcher mid-run)" —
+detected artifacts with `glob.glob(os.path.join(d,"**","*"),recursive=True)`. Python glob does NOT match
+dotfiles unless the pattern's basename starts with a dot. But committee packet staging writes ONLY dotfile
+markers FIRST — `.members.txt` (run_committee.sh ~26), `.v3_notified.ready`, pre-registration `.ready` — before
+any regular file (the per-role `.out`/`.err`, RESULTS.md) lands. A pending exp staged this way has zero
+*regular* artifacts, so `if arts: skip` never fires. If that exp's experiment.yaml mtime is ALSO older than the
+stale window (committee staged, yaml not re-touched), `ros exp gc --apply` WRONGLY retires an active mid-staging
+experiment: marks it retired, clears the claim's `active_experiments` back-link, and (BUG-86/92 path) closes the
+owner's task. Silent corruption of live committee work — the exact failure BUG-24 was written to prevent.
+
+**Repro (isolated /tmp):** an exp dir with ONLY `.members.txt` + `committee2/.v3_notified.ready` -> old glob
+returns `[]` (skip does NOT fire) while os.walk sees all 2 dotfiles. **Fix (minimal, no new mechanism):** replace
+the glob with `os.walk` so the "ANY artifacts" check sees dotfiles too — matching the BUG-24 intent. Fails SAFE
+(any file present -> skip). Patched repro: dotfile-only exp now SKIPPED; truly-empty exp still correctly gc-able
+(no over-correction). AST-validated; live `ros exp gc` dry-run clean.
