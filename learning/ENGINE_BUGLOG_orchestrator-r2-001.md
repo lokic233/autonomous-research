@@ -1721,3 +1721,13 @@ claims vs verdicts + live researchers, returns SEED-NEXT (frontier open, design 
 (committee/exp in flight) / CONVERGE (all adjudicated, mark converged). Researcher loop calls it post-commit.
 proj_monitor: add RESEARCHER_STALL notify when a live researcher's hb is past-grace mid-experiment (no
 result, not terminal) -> orchestrator troubleshoots. Engine fix next.
+
+## 2026-06-03 ~15:35 UTC — BUG-116 (RESERVED) seeder-next ignores lightweight posture -> over-mines a project [v3-impl]
+dengcchi "without that much claim" + DECISION_expand_lightweight = on a claim's death, CONVERGE the project
++ move to a FRESH area; do NOT seed another claim in the same project. But BUG-115 seeder-next returns
+SEED-NEXT (design next claim in SAME project) whenever a slot is free — conflicts with lightweight, so
+PROJ-0015 got a 2nd claim (CLAIM-0044 killed -> CLAIM-0045) instead of converging. ALSO no hard cap on
+concurrent ACTIVE projects (3 active vs target 2). FIX: add config globals.max_claims_per_project (default
+large = deep-mine; set 1 = lightweight). seeder-next: if project's TOTAL claims >= max_claims_per_project,
+return CONVERGE (not SEED-NEXT) -> researcher converges + orchestrator opens a fresh project instead. Set
+max_claims_per_project: 1 in the v3 config for the current lightweight test. Engine fix next.
