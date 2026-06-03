@@ -6,14 +6,14 @@ session_id: ''
 project_id: PROJ-0003
 claim_id: CLAIM-0014
 exp_id: EXP-0019
-status: open
+status: done
 summary: 'L0: agent inter-turn gap vs host<->GPU KV fetch latency + proactive demote/prefetch
   vs evict/recompute on effective-batch/TTFT Pareto; honest-negative if gaps too short
   / PCIe-bound / re-ref prob low'
 evidence_delta: ''
 opened_at: '2026-06-03T05:58:56Z'
-updated_at: '2026-06-03T05:58:56Z'
-closed_at: ''
+updated_at: '2026-06-03T06:04:11Z'
+closed_at: '2026-06-03T06:04:11Z'
 history:
 - ts: '2026-06-03T05:58:56Z'
   event: open
@@ -21,3 +21,7 @@ history:
   note: 'L0: agent inter-turn gap vs host<->GPU KV fetch latency + proactive demote/prefetch
     vs evict/recompute on effective-batch/TTFT Pareto; honest-negative if gaps too
     short / PCIe-bound / re-ref prob low'
+- ts: '2026-06-03T06:04:11Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0019 completed EXP EXP-0019 (keep-exploring)

@@ -22,17 +22,30 @@ why_it_matters: "NEW axis (KV-offload tiering across the agent inter-turn gap \u
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0019
+  summary: 'PARTIAL/lean-positive. L0 analytic+MC sim (CPU/stdlib/serial, results/sweep_*.csv).
+    A(gap-vs-fetch): inter-turn gap hides host<->GPU KV fetch in 89.7% of 630 cells;
+    fails only at 448MiB prefix + 8GB/s + C>=16 + gap<=1s. B(Pareto): agent-gap-timed
+    demote+prefetch beats evict-recompute on resume-TTFT in 93.5% of 7560 cells (up
+    to 488-3413x lower for large prefixes since recompute scales w/ prefix while hidden
+    fetch ~0); LOSES in 6.5%, of which 70% are PCIe-BW-BOUND (C/p_rr*bytes > BW*gap)
+    -- the pre-registered make-or-break risk, materialized exactly as modeled. Worst
+    loss ~13-50x worse (512blk,8GB/s,C=32,prr=0.5,gap=0.2s). Win-region: prefix<=256blk,
+    BW>=16GB/s, C<=8, gap>=1s, p_rr>=0.7 (1 loss/7560 in sane box). Claim NOT universally
+    strict-better -> SCOPE it. Mechanism overlaps vLLM-swap(reactive)/LMCache(cross-req)/FlexGen/InfiniGen;
+    novelty=gap-timing only, NOT the DMA path. Next: real GPU L1 (measure real concurrent
+    PCIe BW, real vLLM/LMCache offload TTFT, real agent gap distribution + re-reference
+    prob).'
+  data_path: experiments/2026-06-03/EXP-0019/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0019 result, then ros exp complete --exp EXP-0019 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0019; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0019
+active_experiments: []
 created_at: '2026-06-03T05:57:39Z'
-last_updated: '2026-06-03T05:58:32Z'
+last_updated: '2026-06-03T06:04:11Z'

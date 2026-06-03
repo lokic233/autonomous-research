@@ -12,12 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL/lean-positive. L0 analytic+MC sim (CPU/stdlib/serial, results/sweep_*.csv).
+  A(gap-vs-fetch): inter-turn gap hides host<->GPU KV fetch in 89.7% of 630 cells;
+  fails only at 448MiB prefix + 8GB/s + C>=16 + gap<=1s. B(Pareto): agent-gap-timed
+  demote+prefetch beats evict-recompute on resume-TTFT in 93.5% of 7560 cells (up
+  to 488-3413x lower for large prefixes since recompute scales w/ prefix while hidden
+  fetch ~0); LOSES in 6.5%, of which 70% are PCIe-BW-BOUND (C/p_rr*bytes > BW*gap)
+  -- the pre-registered make-or-break risk, materialized exactly as modeled. Worst
+  loss ~13-50x worse (512blk,8GB/s,C=32,prr=0.5,gap=0.2s). Win-region: prefix<=256blk,
+  BW>=16GB/s, C<=8, gap>=1s, p_rr>=0.7 (1 loss/7560 in sane box). Claim NOT universally
+  strict-better -> SCOPE it. Mechanism overlaps vLLM-swap(reactive)/LMCache(cross-req)/FlexGen/InfiniGen;
+  novelty=gap-timing only, NOT the DMA path. Next: real GPU L1 (measure real concurrent
+  PCIe BW, real vLLM/LMCache offload TTFT, real agent gap distribution + re-reference
+  prob).'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0019/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T06:04:11Z'
 prompt_version: ''
