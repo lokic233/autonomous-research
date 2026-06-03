@@ -12,12 +12,27 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "PARTIAL/keep-exploring: (A) write-amplification >25% is CONDITIONAL\
+  \ \u2014 it tracks the re-store rate; with a non-saturated fact universe amplification=0.20\
+  \ (BELOW 25%) at restore=0.2, 0.40 at 0.4, 0.60 at 0.6. >25% needs restore>=0.25\
+  \ OR universe saturation. Not universally true. (B) pre-write LEXICAL dedup beats\
+  \ SIZE-CAP at matched cap ONLY with a tuned threshold>=0.5: dedup-minus-sizecap\
+  \ recall delta +0.103 [boot CI +0.076,+0.130] at thr0.5, +0.113 [+0.084,+0.144]\
+  \ at thr0.7; but thr0.3 delta CI [-0.048,+0.072] INCLUDES 0 and dedup LOSES in short-horizon\
+  \ (false-dedup collapses distinct facts; gate precision only 0.37 at thr0.3). dedup\
+  \ loses to size-cap in 18/108 configs (loose gate / short-horizon / high-paraphrase).\
+  \ Gate precision 0.75 / recall 0.84 overall; oracle(reads fact_id)-minus-dedup recall\
+  \ gap mean +0.12 (max +0.80) = large content-signal headroom, lexical never reaches\
+  \ oracle. NET: content-dedup CAN beat age-eviction at matched size but only knob-tuned\
+  \ + horizon-dependent, not a robust free win; size-cap is a stronger baseline than\
+  \ the claim assumed. The threshold IS a knob (prereg screened against tuned-knob).\
+  \ L1 needs real MemGPT/Letta traces + real embedding gate to test if real amplification\
+  \ clears 25% and if embeddings close the oracle gap."
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0039/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T14:13:53Z'
 prompt_version: ''
