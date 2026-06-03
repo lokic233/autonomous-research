@@ -12,12 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "PARTIAL-split (L0 analytic). Part B (the novelty) NEGATIVE: structure-aware\
+  \ per-class early-exit threshold beats BEST-TUNED global by only +0.46pp FLOPs at\
+  \ matched quality at realistic f=0.2-0.3 (median +0.42, max +1.17); 0/90 swept configs\
+  \ clear pre-registered 5pp bar (max anywhere 1.52pp at f=0.5). Trips honest-negative\
+  \ N1. Per-class>=global is definitional (Jensen); MEASURED magnitude is not meaningful\
+  \ \u2014 a well-tuned single global tau already captures the structural benefit.\
+  \ EXP-0006 lesson honored (best-tuned-global is the control). Part A HELD: agentic\
+  \ best-tuned-global saves +3.6/+5.5pp MORE than reasoning at f=0.2/0.3 (monotone\
+  \ in f) \u2014 but that win is delivered by the GLOBAL policy, not by conditioning.\
+  \ 5 seeds, sd<=0.7pp. GPU/real-model pass owed: real layer-wise intermediate-head\
+  \ confidence by token class on agent traces, real boilerplate fraction f, wall-clock\
+  \ with early-exit overhead. Prior art: CALM, LayerSkip, SkipDecode, Depth-Adaptive\
+  \ Transformer."
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0011/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T00:21:22Z'
 prompt_version: ''
