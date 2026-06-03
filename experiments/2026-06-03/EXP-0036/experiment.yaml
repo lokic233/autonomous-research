@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'NEGATIVE (continuous batching already captures it) -> KILL CLAIM-0039.
+  Residual fillable GPU decode-idle beyond vanilla continuous batching = 0.000000
+  across all 288 configs (cb_util == ready-work ceiling everywhere; CB provably work-conserving).
+  All idle is STRUCTURAL (#ready<B, agents off-GPU in tool-wait) which no policy can
+  fill. Correlation does NOT create unfillable aligned bubbles: mean ceiling RISES
+  with rho (0.472->0.489), opposite the claim. Agent-step-aware (SJF) does NOT beat
+  CB at matched p99: median (c)-(b) tput delta=0.00%, only 7/288 trivial wins (max
+  +3.3%, not concentrated at high rho), 66/288 ''gains'' only by sacrificing p99 (median
+  2.06x worse). PAIRED bootstrap CI; serial floor confirmed (CB 1.5x median over serial).
+  v1 RNG-per-policy artifact found+fixed (pre-sampled paired arrival tapes; M<B byte-identical).
+  L1: real vLLM/SGLang + real agent tool-wait traces + KV-cache admission (the abstracted-away
+  bottleneck).'
+result_effect: kill
 artifacts_path: experiments/2026-06-03/EXP-0036/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T11:29:28Z'
 prompt_version: ''
