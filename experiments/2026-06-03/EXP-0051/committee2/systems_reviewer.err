@@ -1,0 +1,410 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8eb4-4a2d-7f00-b721-b892d4875683
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 (FINAL) — CLAIM-0048 (PROJ-0018, eval-and-safety) — two-pass complete, L0+REAL-DATA-L1 in hand
+## FINAL verdict (green/yellow/red). The L1 ecological result is the load-bearing new evidence. Vote HONESTLY by role. This is the strongest candidate of the v3 expansion — but do NOT green it if the in-the-wild inversion being undemonstrated is disqualifying; do NOT red a genuinely real+novel ecological finding just because the live demo needs an L2.
+
+## TWO-PASS TRAIL: L0(EXP-0050) HELD both parts in SIM -> committee#1 VERDICT-0046 YELLOW (5/5, NO fatal/RED: mechanism real but = spoiler-effect/Duverger vote-splitting applied to eval-canonicalization; gated on a REAL-DATA L1) -> L1(EXP-0051, cost-aware staged) -> THIS committee#2.
+
+## L0 (EXP-0050, simulation): canonicalizer RECALL has a SIGN-FLIPPING effect on maj@k self-consistency accuracy, governed by correct-vs-incorrect FRAGMENTATION ASYMMETRY phi. Sign-flip at FIXED precision z=-19.8 (phi<<0, recall HURTS) / +41.6 (phi>>0, recall helps) = PURE RECALL (precision-control passed z=-28.2). Ranking inversion CONSTRUCTED (two fixed models, |z|=48/53) — FLAGGED EXPLORATORY (post-hoc retune 0.42/0.46->0.50/0.28).
+
+## L1 (EXP-0051, REAL DATA — the load-bearing new evidence):
+STAGE-A GATE PASSED (the cost-aware ecological gate):
+  - (b) THE MAKE-OR-BREAK NUMBER: real numeric/sympy (Minerva-style) grader PRECISION q = 1.0000 on BOTH GSM8K + MATH-500 (239881+4983 merged pairs all TRUE; ZERO adversarial false-merges: 18 != 18.5, 1/3 != 0.33, frac14/3 != frac15/3). Real numeric normalizers map to EXACT Rational/sympy values => genuinely high-precision. This RETIRES committee#1's biggest worry — the L0 q<=0.6 wash-out death-zone does NOT apply to real graders.
+  - (a) real phi-asymmetry: MATH-500 strong phi<<0 (median ~-1.0 to -1.2, 86-90pct problems |phi|>0.2, almost all negative = correct CONCENTRATED H_C~1.15 / errors FRAGMENTED H_W~2.0) = EXACTLY the recall-HURTS regime. GSM8K phi~0 (symmetric, integer answers). So the foothold is REGIME-SPECIFIC to rich-symbolic-answer evals.
+STAGE-B (real-model maj@k, Qwen2.5-0.5B vs 7B, 150 real GSM8K, k=16, temp0.8, H100): RANKING-INVERSION = HONEST NULL (no flip; 7B wins under both graders; numeric grader barely moves acc 0.480->0.487 / 0.780->0.780, collapses ~6-8pct buckets). This null is PREDICTED by Stage A (GSM8K phi~0 => no asymmetry => recall swap CANNOT flip rankings) and CONFIRMS the phi-governs-the-sign mechanism rather than refuting it. BUT: the in-the-wild ranking-inversion DEMONSTRATION remains UNACHIEVED — GSM8K was the wrong regime; a real inversion needs an L2 (MATH oxed{} extractor + symbolic benchmark + 2 models of differing answer-surface concentration + larger k).
+
+## RESIDUAL GAPS (weigh honestly): (1) Stage-A phi uses REAL gold strings but MODELED answer-FREQUENCIES (real-model-sample phi on MATH is the open item; Stage-B gave real frequencies only on GSM8K=wrong-regime). (2) the headline leaderboard-INVERSION is shown only in SIM (L0, exploratory) + predicted-but-not-demonstrated on real data. (3) mechanism = spoiler-effect/Duverger applied to eval (novel DOMAIN-APPLICATION, committee#1 already established not-a-new-mechanism).
+
+## THE VERDICT QUESTION (decide by role):
+(a) GREEN: a validated novel domain-application — canonicalizer-recall is a REAL, high-precision-grader-relevant, phi-governed sign-flipping lever on symbolic-answer self-consistency evals; q=1.0 + MATH phi<<0 are real and decisive; the GSM8K null is confirmatory. (Risk: the in-the-wild INVERSION is undemonstrated + phi-frequencies proxy.)
+(b) YELLOW: real + ecologically-founded but the headline leaderboard-inversion is undemonstrated in-the-wild AND phi-frequencies are still proxy -> needs an L2 (real MATH inversion) before validation.
+(c) RED: too incremental over spoiler-effect/Wang2022/Bulian2022 given the live inversion isn't shown.
+MANDATORY BASELINES (committee#1): spoiler-effect/Duverger, Bulian2022-BEM, Kuhn2023/Farquhar2024-semantic-entropy, Biderman2024.
+
+## CLAIM YAML
+claim: "Increasing an answer-equivalence canonicalizer's RECALL (how aggressively\
+  \ it merges truly-equivalent free-form answers before a self-consistency majority\
+  \ vote) does NOT monotonically improve maj@k accuracy: its sign is governed by the\
+  \ correct-vs-incorrect FRAGMENTATION ASYMMETRY of the model's answer distribution.\
+  \ When incorrect mass is concentrated on one dominant wrong attractor while correct\
+  \ mass is fragmented across equivalent surface forms, raising canonicalizer recall\
+  \ RAISES accuracy; but when the asymmetry is reversed (correct near-canonical, errors\
+  \ fragmented), raising recall LOWERS maj@k accuracy and can INVERT the maj@k ranking\
+  \ of two models that a lower-recall canonicalizer ranked the other way \u2014 a\
+  \ harness-induced ranking hazard with the model and samples held fixed."
+why_it_matters: "FRESH AREA (eval-and-safety: self-consistency x answer-extraction\
+
+## L1 RESULTS (EXP-0051)
+# RESULTS — EXP-0051 (L1, REAL DATA) / CLAIM-0048
+**Researcher:** researcher-0049. **Node:** cli:dengcchi-mac (Stage A, CPU). Stage B (if run) cli:devgpu014 (H100).
+**Mandate:** establish ECOLOGICAL plausibility of the L0 sign-flip (EXP-0050) on REAL benchmark data.
+**Convention (matches L0):** phi = H_C − H_W. phi≪0 = correct CONCENTRATED / errors FRAGMENTED ⇒ raising recall HURTS. phi≫0 ⇒ recall HELPS.
+**GT:** gold-anchored — two answer strings are truly-equivalent iff both parse to the same gold value. Canonicalizers read ONLY strings; q measured vs this GT.
+
+## DATA SOURCE (REAL)
+- **GSM8K test** — 1319 real problems (openai/grade-school-math test.jsonl). Gold = integer final answers parsed from `#### N`.
+- **MATH-500** — 500 real problems (HuggingFaceH4/MATH-500 test.jsonl). Gold = `\boxed{}` answers: integers, fractions (`\frac{14}{3}`), radicals (`3\sqrt{13}`), `\pi`, etc. (404 of 500 parse to a numeric value; the rest are symbolic/text and excluded from phi).
+- **FLAGGED proxy element:** Stage A has no real model-sample *frequencies*, so per-problem answer *distributions* are generated from REAL surface-form formats (the documented $/comma/decimal/`\frac`/`/`-fraction variety) over the REAL gold values plus realistic distinct wrong values. Stage B replaces these with real model samples. The two LOAD-BEARING quantities (q, and the H_C vs H_W structure) are anchored in real gold strings.
+
+## REAL CANONICALIZER PAIR (canon.py)
+- **EXACT-MATCH** (low recall): byte-equal after strip.
+- **LEXICAL** (intermediate): lowercase, strip `$`,`,`, units, whitespace, trailing `.0`.
+- **NUMERIC / Minerva-style** (HIGH recall): strip `$`/commas/units/`^\circ`/`\text{}`; parse ints, decimals→exact `Rational`, `a/b`, `\frac{a}{b}`, `\sqrt{n}`, `k\sqrt{n}`, `\pi` multiples via **sympy**; merge iff identical canonical value. Verified: `$18`=`18 dollars`=`18.0`=`18`; `\frac{14}{3}`=`14/3`; `\frac{1}{2}`=`0.5`=`0.50`=`1/2`; `90^\circ`=`90`; `3\sqrt{13}`→`3*sqrt(13)`.
+
+---
+
+## STAGE A — THE DECISIVE ECOLOGICAL GATE
+
+### (b) EMPIRICAL PRECISION q of the high-recall normalizer — THE MAKE-OR-BREAK NUMBER (results/precision_recall.csv)
+| dataset | empirical q | merged pairs | over-merges | recall: exact / lexical / numeric |
+|---|---|---|---|---|
+| GSM8K   | **1.0000** | 239,881 | **0** | 0.000 / 1.000 / 1.000 |
+| MATH-500| **1.0000** | 4,983   | **0** | 0.000 / 0.485 / 1.000 |
+
+- **q = 1.0000 on BOTH real datasets** — the numeric normalizer NEVER collapses two *distinct real gold values* into one bucket. Far above the L0 wash-out threshold (effect dies at q≤0.6).
+- **Adversarial precision** (gold vs surface-CLOSE wrong values: `18` vs `18.5`/`19`, `1/3` vs `0.33`, `\frac{14}{3}` vs `\frac{15}{3}`): **ZERO false merges** on both datasets. Real numeric normalizers are genuinely high-precision because they map to exact `Rational`/sympy values, not lossy decimals.
+- **Recall genuinely differs:** exact-match merges 0.000 of true-equivalent surface pairs (misses ALL of `$18`/`18 dollars`/`18.0`); numeric merges 1.000. On MATH the lexical normalizer only reaches 0.485 — so we have a REAL low→high recall pair, both high-precision. ⇒ **q-side of the gate PASSES decisively.**
+
+### (a) EMPIRICAL PHI — is the fragmentation asymmetry real? (results/phi.csv; symmetric surface treatment: correct & wrong values use the SAME surface generator, so phi is NOT baked in)
+| dataset | error regime | mean phi | median phi | H_C | H_W | frac \|phi\|>.2 | dir |
+|---|---|---|---|---|---|---|---|
+| GSM8K    | errors-fragmented (3–8 wrong vals) | +0.257 | +0.209 | 2.30 | 2.04 | 0.51 | mild + |
+| GSM8K    | errors-concentrated (1–2)          | +0.031 | +0.021 | 2.29 | 2.26 | 0.07 | ~0 (symmetric) |
+| GSM8K    | mixed (1–6)                        | +0.152 | +0.088 | 2.29 | 2.14 | 0.30 | mild + |
+| MATH-500 | errors-fragmented (3–8)            | **−0.843** | **−0.986** | 1.16 | 2.00 | **0.93** | **strong −** |
+| MATH-500 | errors-concentrated (1–2)          | **−1.033** | **−1.227** | 1.15 | 2.19 | **0.96** | **strong −** |
+| MATH-500 | mixed (1–6)                        | **−0.925** | **−1.128** | 1.15 | 2.07 | **0.94** | **strong −** |
+
+**Finding — the asymmetry is REAL but DATASET-STRUCTURED (not universal):**
+- **MATH-500: strong, robust phi ≪ 0** (median ≈ −1.0 to −1.2; 86–90% of problems phi<−0.2). Correct answers are CONCENTRATED (a simple value with few surface forms, H_C≈1.15) while the wrong-answer mass FRAGMENTS across many distinct fractional/symbolic values (H_W≈2.0). Per the L0 prediction, **this is exactly the phi≪0 regime where raising canonicalizer recall HURTS maj@k** (z=−19.8/−28.2 in L0). The foothold EXISTS in real symbolic-answer math.
+- **GSM8K: phi ≈ 0 (symmetric).** Integer answers carry uniform rich surface variety, so H_C≈H_W and the sign-flip has little foothold; raising recall is near-neutral/mildly helpful. No HURTS regime.
+
+**Honest caveat:** the *magnitude/sign* of phi is sensitive to surface-form modeling (GSM8K mean phi moved +0.86→+0.26 when correct & wrong got symmetric surface treatment). phi here is **structural/proxy** — it reflects how the canonicalizer clusters real gold values into surface forms, NOT measured model-sample frequencies. That is precisely the residual risk Stage B is designed to retire.
+
+### DOM_FRAC SENSITIVITY
+Across error-spread regimes (1–2, 1–6, 3–8 distinct wrong values per problem) the MATH-500 phi≪0 conclusion is STABLE (median −0.99 → −1.23). GSM8K stays ≈0→mildly-positive. The direction is set by dataset answer-space structure, not by the error-spread hyperparameter.
+
+## STAGE-A GATE DECISION: **PASS**
+Pre-committed gate = (phi-asymmetry real) AND (high-recall q > 0.6, with margin q≥0.80).
+- q = **1.0000** on both real datasets, 0 adversarial false merges ⇒ q-condition met with maximal margin.
+- phi-asymmetry is **real and substantial on MATH-500** (median phi≈−1.0, 86–90% asymmetric, in the recall-HURTS direction) ⇒ phi-condition met on real symbolic-math QA.
+**The L0 sign-flip HAS an ecological foothold:** real numeric graders are high-precision (so the effect is NOT washed out by over-merge), AND real symbolic-answer benchmarks (MATH) exhibit the correct-concentrated/errors-fragmented asymmetry the negative-slope regime requires. On integer-only QA (GSM8K) the asymmetry is weak (symmetric), so the hazard is dataset-specific — concentrated in rich-symbolic-answer-space evals.
+
+---
+
+## STAGE B — REAL model-pair maj@k ranking inversion (GATED THROUGH; run on devgpu014 H100)
+Stage A passed the gate, so we ran the expensive stage. **REAL models, REAL samples, FIXED.**
+- **Models:** Qwen2.5-0.5B-Instruct vs Qwen2.5-7B-Instruct (both genuine vLLM 0.22 inference on H100, bf16, gpu_mem 0.55, sequential, os._exit). 0.5B weights fetched via fwdproxy; 7B from cache.
+- **Benchmark:** 150 random REAL GSM8K test problems, k=16 samples/problem at temp=0.8, top_p=0.95, seed=0. Final answers extracted from `#### N`. (2 of 2400 / 4 of 2400 empty extractions — negligible.)
+- **Graders:** EXACT-MATCH vs the same high-recall NUMERIC/Minerva normalizer (canon.py). maj@k = does the plurality-voted *value bucket* equal the gold value.
+
+| model | maj@k EXACT | maj@k NUMERIC | distinct buckets (exact→numeric collapse) |
+|---|---|---|---|
+| Qwen2.5-0.5B | 0.480 | 0.487 | 1427 → 1338 (89) |
+| Qwen2.5-7B   | 0.780 | 0.780 | 522 → 479 (43) |
+
+- **EXACT grader:** 7B beats 0.5B by +0.300. **NUMERIC grader:** 7B beats 0.5B by +0.293.
+- **RANKING INVERSION: NO — HONEST NULL.** The grader swap does NOT flip the model ranking; 7B wins decisively under both.
+
+### Why the null (and why it's consistent with Stage A, NOT a refutation):
+The numeric grader barely moves accuracy (0.480→0.487 for 0.5B; 0.780→0.780 for 7B) and collapses only ~6%/8% of surface buckets. **GSM8K's integer-answer regime produces almost no fragmentation asymmetry** — exactly Stage A's finding (GSM8K **phi ≈ 0**). With no asymmetry to exploit, raising canonicalizer recall is near-neutral and CANNOT flip rankings. The L0 sign-flip's foothold is the **phi≪0 symbolic-answer regime (MATH, where Stage A found median phi ≈ −1.0)** — which integer GSM8K does not provide. The null is therefore the PREDICTED outcome on this benchmark, and it CONFIRMS rather than contradicts the phi-governs-the-sign mechanism. A positive Stage-B inversion would require a symbolic-answer benchmark (MATH/competition) with a robust answer-extractor + larger k — specified below for L2.
+
+### WHAT AN L2 / STAGE-B+ NEEDS for a real inversion demonstration:
+1. A **symbolic-answer benchmark** (MATH, MATH-500, or competition math) where the high-recall numeric grader genuinely recovers many true equivalences exact-match misses (`\frac{14}{3}`=`14/3`, `0.5`=`1/2`, `3\sqrt{13}`) — i.e. the phi≪0 regime Stage A measured on real MATH answers.
+2. A robust **`\boxed{}` answer extractor** + the numeric/sympy grader applied to free-form model output.
+3. **Two models with different answer-surface concentration** (e.g. one verbose/varied-format, one terse/canonical) so the grader swap differentially helps one — the in-the-wild spoiler analogue.
+4. Larger k (32–64) and ≥300 problems for tight maj@k CIs.
+
+## ARTIFACTS
+- PRE_REGISTRATION.md (committed BEFORE running)
+- canon.py — real EXACT / LEXICAL / NUMERIC(Minerva,sympy) canonicalizers
+- stage_a.py, stage_a_phi.py — Stage-A precision/recall + phi measurement
+- stage_b.py — real model-pair maj@k inversion runner (vLLM, H100)
+- results/precision_recall.csv, results/phi.csv, results/stage_b_summary.json
+
+## DISPOSITION
+**KEEP-EXPLORING (lean SUPPORT on ecology, NULL on the in-the-wild inversion demonstration).**
+- The L0 sign-flip HAS a real ecological foothold: real numeric graders are **high-precision (q=1.0, 0 adversarial over-merges)** — they do NOT wash out the effect (the L0 q≤0.6 death-zone does not apply to real numeric normalizers); AND real **symbolic-answer math (MATH-500) exhibits the phi≪0 correct-concentrated/errors-fragmented asymmetry** (median ≈ −1.0, 86–90% of problems) that the recall-HURTS regime requires.
+- BUT the hazard is **dataset-specific**: integer-answer QA (GSM8K) is phi≈0 (symmetric), so the effect has little foothold there — confirmed by the Stage-B real-model NULL (no ranking inversion on GSM8K).
+- The in-the-wild ranking-inversion DEMONSTRATION was NOT achieved (GSM8K is the wrong regime); it requires a symbolic-answer benchmark with a real extractor (L2 spec above). The phi-measurement uses real gold strings but proxy answer-*frequencies*; real model-sample phi on MATH is the remaining gap.
+- **FLAGS:** L0 inversion construction = EXPLORATORY (post-hoc retune). Stage-A wrong-answer *surface multiplicity* is a flagged proxy; q and the H_C-vs-H_W dataset structure are anchored in real gold strings; Stage-B uses fully real model samples.
+
+## CITATIONS
+- Spoiler effect / Duverger's Law (vote-splitting) — mechanism analogue.
+- Bulian et al. 2022, "Tomayto Tomahto..." (BEM / answer-equivalence beyond exact match).
+- Kuhn et al. 2023; Farquhar et al. 2024 — semantic entropy (answer-meaning clustering).
+- Biderman et al. 2024 (arXiv:2405.14782) — evaluation reproducibility / scoring sensitivity.
+
+## ORCHESTRATOR POSTURE: NOT pushing for green. The L1 is honest: the ecological FOOTHOLD is real (q=1.0 + MATH phi<<0) but the in-the-wild INVERSION is undemonstrated (Stage-B null on the wrong regime). My read = this is most defensibly a YELLOW gated on an L2 (real MATH inversion) — but if the committee judges q=1.0 + real-MATH-phi<<0 + the confirmatory-null is ALREADY a validated domain-application contribution, GREEN is defensible; if it judges the undemonstrated live inversion + proxy-frequencies make it too incremental over spoiler-effect, RED. Real 6/6 by role. Lightweight: whatever the verdict, PROJ-0018 then converges (this is the single claim).
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "pwd && rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+/Users/dengcchi/autonomous-research-v3
+zsh:1: command not found: rg
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "rg -n \"canonical|majority|self-consistency|grader|equivalence|normalize|normalizer|answer\" . -g '*.md' -g '*.py' -g '*.yaml'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "grep -RInE \"canonical|majority|self-consistency|grader|equivalence|normalize|normalizer|answer\" --include='*.md' --include='*.py' --include='*.yaml' . 2>/dev/null | head -80" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+./learning/roles/orchestrator.md:106:CLAIM-0042 (doc-vs-passage contamination granularity, RED VERDICT-0041) and CLAIM-0043 (recall@k over-counts RAG retrieval when chunking splits answer spans, RED VERDICT-0042) BOTH died 5/6 RED on the SAME THREE objections:
+./learning/roles/orchestrator.md:109:  (c) BASELINE NOT ACTUALLY UNIVERSAL — the 'standard practice' being beaten isn't the real standard (doc-Jaccard is corpus-dedup not contamination-detection; '>=1 token overlap=hit' isn't universal — DPR/NQ already use full-answer-containment).
+./learning/roles/orchestrator.md:114:CLAIM-0044 (shared-boilerplate -> inverted-U answer-rank under BM25) came back INVERTED-U FALSIFIED at L0 (monotone worsening, 20/20 seeds) via the researcher's PRE-REGISTERED rigorous test — killed via `ros exp complete --effect kill`, verdict_history=[] (NO committee, NO fake verdict). This is the IDEAL cheap kill: a genuinely falsifiable empirical claim falsified at the cheapest tier (8s CPU). WHY it failed (structural, informative): the hypothesized IDF-decay-vs-lengthnorm CROSSOVER needs the boilerplate to become corpus-FREQUENT (low IDF) — but when boilerplate is shared answer-only/partial, its IDF stays HIGH (disjoint vocab, few docs) so there's NO opposing force to length-norm -> pure monotone penalty. The recovery arm only exists if spread->all-docs, and even then it's monotone-flatter not inverted-U. LESSON: when a claim's mechanism has 'two opposing forces cross over', CHECK AT DESIGN whether BOTH forces are actually ACTIVE in the proposed regime — here one arm (IDF-decay) was structurally absent unless an UNTESTED secondary variable (spread) was at its extreme. The scout should have caught that the crossover requires corpus-wide spread, making LENGTH the wrong controllable variable (the researcher's own L1 reframe: use overlap-FRACTION not length).
+./learning/roles/orchestrator.md:118:researcher-0042 (first persistent-seeder, PROJ-0015) ran CLAIM-0044 (kill, monotone) then designed a sharp SUCCESSOR CLAIM-0045 from the kill's OWN revival condition (query-term-bearing template on DISTRACTORS not the answer) -> INVERTED-U HELD/support (3/4 cells, 20/20 seeds strongest). EXCELLENT seeder behavior. BUT it then touched projects/PROJ-0015/.converged and retired with the HELD claim STRANDED at seed/evidence_ready — a support result that HELD never went to committee. ORCHESTRATOR FIX: on every self-check, scan for claims with result_effect=support|held|keep-exploring that are NOT yet in committee/verdicted — those are CANDIDATES that must be forwarded to committee#1, NOT left to be silently converged. A researcher's seeder-next->CONVERGE does NOT mean 'discard a HELD claim'; convergence frees the SEEDING slot, but adjudication of an already-produced HELD result is the ORCHESTRATOR's job. I re-opened PROJ-0015 (rm .converged) + forwarded CLAIM-0045 to committee (Q-0037). LESSON FOR FUTURE RESEARCHER SPAWNS: tell the researcher that a HELD/support result must be SUBMITTED TO COMMITTEE (ros queue submit) before it converges the project, OR leave the claim at evidence_ready and NOT touch .converged so the orchestrator forwards it. A clean kill can self-converge; a HELD result cannot.
+./learning/roles/orchestrator.md:138:EXPANSION (post-quiescence, EXPAND/LIGHTWEIGHT): seeded fresh topic-bias (training-eff/multimodal/eval-safety/data-systems/retrieval-memory/agentic). Outcome: PROJ-0012..0018 (7 fresh projects), claims CLAIM-0041..0048. ZERO FALSE GREENS maintained throughout. Terminal tally: CLAIM-0041 RED (agent-memory dedup occupied Mem0/A-MEM/Redis); 0042 RED (contamination granularity — strawman baseline + tautology + Lee2021); 0043 RED (recall@k overcount — Chroma/Sufficient-Context occupied + tautology); 0044 KILL-at-L0 (boilerplate inverted-U falsified monotone); 0045 RED-committee#2 (clean-answer inverted-U — HELD-STRONG L0 but FAILED L1 ecological validity, dense FLAT; surviving=pivoted-length-norm); 0046 RED (graph-ANN in-degree — anti-hubs Radovanovic2010 foundational collision); 0047 weaken (rollback-depth — wrong-currency, reliability not tokens); 0048 YELLOW alive (canonicalizer-recall sign-flip — REAL mechanism but = spoiler-effect/Duverger applied to eval; gated on REAL-DATA L1).
+./learning/roles/orchestrator.md:146:HANDOFF TO r5: CLAIM-0048 is the live candidate — drive its REAL-DATA L1 (real graders on GSM8K/MATH/GPQA, measured phi, real model-pair inversion, precision-q, DOM_FRAC sweep; add the mandatory citations; flag inversion exploratory) -> committee#2 -> verdict. Refill to 2/2 (1 more fresh seed via scout w/ the 8-failure-mode briefing). Keep GPU coords (coord-h100/coord-mi350x) warm ~15m. devgpu014=H100 not fragile; devgpu499=MI350X fragile NEVER experiment + host_mem_floor never waived. Cron driver feeds inbox; ack stale flags. Real 6/6 by role for any green; COMMITTEE_INCOMPLETE never counts.
+./learning/roles/orchestrator.md:149:r4-001 FINAL distill (full detail in learning/roles/orchestrator.md). v3 EXPANSION (EXPAND/LIGHTWEIGHT, fresh topic-bias): PROJ-0012..0018, CLAIM-0041..0048, ZERO FALSE GREENS throughout. Terminal: 0041 RED(occupied Mem0/A-MEM), 0042 RED(strawman-baseline+tautology), 0043 RED(occupied Chroma/Sufficient-Context+tautology), 0044 KILL-L0(falsified monotone), 0045 RED-c2(HELD-STRONG L0 but FAILED L1 ecological validity, dense FLAT, =pivoted-length-norm), 0046 RED(anti-hubs Radovanovic2010 foundational collision), 0047 weaken(wrong-currency reliability-not-tokens), 0048 YELLOW-ALIVE(canonicalizer-recall sign-flip, real mechanism = spoiler-effect/Duverger applied to eval, gated on real-data L1). 5-ANTI-PATTERN LIBRARY: (1) metric-validity over/under-count = dead vein; (2) foundational-incumbent-miss (scouts miss the seminal paper defining the quantity — REQUIRE seminal search); (3) known-mechanism-in-a-costume (HELD-STRONG clean mechanism can be textbook on a new axis); (4) wrong-currency (real mechanism wrong metric, check bound-independence); (5) L1 ecological-validity gate essential+non-skippable. PROCESS WINS: web-scout-delegated design w/ prior-art front-loaded; corrected-rerun discipline (dont rubber-stamp a result tripping its own bug-check); finish-agent recovers crashed sessions; HELD->committee never self-converge. HANDOFF: CLAIM-0048 is the live candidate, drive its real-data L1->committee#2; refill to 2/2; keep GPU coords warm; devgpu499 MI350X fragile NEVER experiment + host_mem_floor never waived; real 6/6 by role for green.
+./learning/orchestrator/2026-06-03.md:80:r4-001 FINAL distill (full detail in learning/roles/orchestrator.md). v3 EXPANSION (EXPAND/LIGHTWEIGHT, fresh topic-bias): PROJ-0012..0018, CLAIM-0041..0048, ZERO FALSE GREENS throughout. Terminal: 0041 RED(occupied Mem0/A-MEM), 0042 RED(strawman-baseline+tautology), 0043 RED(occupied Chroma/Sufficient-Context+tautology), 0044 KILL-L0(falsified monotone), 0045 RED-c2(HELD-STRONG L0 but FAILED L1 ecological validity, dense FLAT, =pivoted-length-norm), 0046 RED(anti-hubs Radovanovic2010 foundational collision), 0047 weaken(wrong-currency reliability-not-tokens), 0048 YELLOW-ALIVE(canonicalizer-recall sign-flip, real mechanism = spoiler-effect/Duverger applied to eval, gated on real-data L1). 5-ANTI-PATTERN LIBRARY: (1) metric-validity over/under-count = dead vein; (2) foundational-incumbent-miss (scouts miss the seminal paper defining the quantity — REQUIRE seminal search); (3) known-mechanism-in-a-costume (HELD-STRONG clean mechanism can be textbook on a new axis); (4) wrong-currency (real mechanism wrong metric, check bound-independence); (5) L1 ecological-validity gate essential+non-skippable. PROCESS WINS: web-scout-delegated design w/ prior-art front-loaded; corrected-rerun discipline (dont rubber-stamp a result tripping its own bug-check); finish-agent recovers crashed sessions; HELD->committee never self-converge. HANDOFF: CLAIM-0048 is the live candidate, drive its real-data L1->committee#2; refill to 2/2; keep GPU coords warm; devgpu499 MI350X fragile NEVER experiment + host_mem_floor never waived; real 6/6 by role for green.
+./experiments/2026-06-03/EXP-0034/COMMITTEE2_PACKET.md:67:  models show **minimal variation in confidence between right and wrong answers**" → AUROC ≈ 0.5.
+./experiments/2026-06-03/EXP-0034/RESULTS.md:46:  models show **minimal variation in confidence between right and wrong answers**" → AUROC ≈ 0.5.
+./experiments/2026-06-03/EXP-0051/canon.py:1:"""Real answer-equivalence canonicalizers for EXP-0051 Stage A.
+./experiments/2026-06-03/EXP-0051/canon.py:2:GT = gold-anchored true equivalence. Canonicalizers read ONLY strings."""
+./experiments/2026-06-03/EXP-0051/canon.py:16:# -------- (iii) LEXICAL normalizer (intermediate recall) --------
+./experiments/2026-06-03/EXP-0051/canon.py:44:    """Return a sympy value (numeric/exact) for a single scalar answer string, or None if can't."""
+./experiments/2026-06-03/EXP-0051/canon.py:51:    # normalize \dfrac/\tfrac -> \frac
+./experiments/2026-06-03/EXP-0051/canon.py:97:    """High-recall: map to canonical numeric/exact key. Falls back to lexical if unparseable
+./experiments/2026-06-03/EXP-0051/canon.py:103:        # canonical string for the sympy value
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:4:## TWO-PASS TRAIL: L0(EXP-0050) HELD both parts in SIM -> committee#1 VERDICT-0046 YELLOW (5/5, NO fatal/RED: mechanism real but = spoiler-effect/Duverger vote-splitting applied to eval-canonicalization; gated on a REAL-DATA L1) -> L1(EXP-0051, cost-aware staged) -> THIS committee#2.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:6:## L0 (EXP-0050, simulation): canonicalizer RECALL has a SIGN-FLIPPING effect on maj@k self-consistency accuracy, governed by correct-vs-incorrect FRAGMENTATION ASYMMETRY phi. Sign-flip at FIXED precision z=-19.8 (phi<<0, recall HURTS) / +41.6 (phi>>0, recall helps) = PURE RECALL (precision-control passed z=-28.2). Ranking inversion CONSTRUCTED (two fixed models, |z|=48/53) — FLAGGED EXPLORATORY (post-hoc retune 0.42/0.46->0.50/0.28).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:10:  - (b) THE MAKE-OR-BREAK NUMBER: real numeric/sympy (Minerva-style) grader PRECISION q = 1.0000 on BOTH GSM8K + MATH-500 (239881+4983 merged pairs all TRUE; ZERO adversarial false-merges: 18 != 18.5, 1/3 != 0.33, frac14/3 != frac15/3). Real numeric normalizers map to EXACT Rational/sympy values => genuinely high-precision. This RETIRES committee#1's biggest worry — the L0 q<=0.6 wash-out death-zone does NOT apply to real graders.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:11:  - (a) real phi-asymmetry: MATH-500 strong phi<<0 (median ~-1.0 to -1.2, 86-90pct problems |phi|>0.2, almost all negative = correct CONCENTRATED H_C~1.15 / errors FRAGMENTED H_W~2.0) = EXACTLY the recall-HURTS regime. GSM8K phi~0 (symmetric, integer answers). So the foothold is REGIME-SPECIFIC to rich-symbolic-answer evals.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:12:STAGE-B (real-model maj@k, Qwen2.5-0.5B vs 7B, 150 real GSM8K, k=16, temp0.8, H100): RANKING-INVERSION = HONEST NULL (no flip; 7B wins under both graders; numeric grader barely moves acc 0.480->0.487 / 0.780->0.780, collapses ~6-8pct buckets). This null is PREDICTED by Stage A (GSM8K phi~0 => no asymmetry => recall swap CANNOT flip rankings) and CONFIRMS the phi-governs-the-sign mechanism rather than refuting it. BUT: the in-the-wild ranking-inversion DEMONSTRATION remains UNACHIEVED — GSM8K was the wrong regime; a real inversion needs an L2 (MATH oxed{} extractor + symbolic benchmark + 2 models of differing answer-surface concentration + larger k).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:14:## RESIDUAL GAPS (weigh honestly): (1) Stage-A phi uses REAL gold strings but MODELED answer-FREQUENCIES (real-model-sample phi on MATH is the open item; Stage-B gave real frequencies only on GSM8K=wrong-regime). (2) the headline leaderboard-INVERSION is shown only in SIM (L0, exploratory) + predicted-but-not-demonstrated on real data. (3) mechanism = spoiler-effect/Duverger applied to eval (novel DOMAIN-APPLICATION, committee#1 already established not-a-new-mechanism).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:17:(a) GREEN: a validated novel domain-application — canonicalizer-recall is a REAL, high-precision-grader-relevant, phi-governed sign-flipping lever on symbolic-answer self-consistency evals; q=1.0 + MATH phi<<0 are real and decisive; the GSM8K null is confirmatory. (Risk: the in-the-wild INVERSION is undemonstrated + phi-frequencies proxy.)
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:23:claim: "Increasing an answer-equivalence canonicalizer's RECALL (how aggressively\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:24:  \ it merges truly-equivalent free-form answers before a self-consistency majority\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:26:  \ correct-vs-incorrect FRAGMENTATION ASYMMETRY of the model's answer distribution.\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:28:  \ mass is fragmented across equivalent surface forms, raising canonicalizer recall\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:29:  \ RAISES accuracy; but when the asymmetry is reversed (correct near-canonical, errors\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:31:  \ of two models that a lower-recall canonicalizer ranked the other way \u2014 a\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:33:why_it_matters: "FRESH AREA (eval-and-safety: self-consistency x answer-extraction\
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:40:**GT:** gold-anchored — two answer strings are truly-equivalent iff both parse to the same gold value. Canonicalizers read ONLY strings; q measured vs this GT.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:43:- **GSM8K test** — 1319 real problems (openai/grade-school-math test.jsonl). Gold = integer final answers parsed from `#### N`.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:44:- **MATH-500** — 500 real problems (HuggingFaceH4/MATH-500 test.jsonl). Gold = `\boxed{}` answers: integers, fractions (`\frac{14}{3}`), radicals (`3\sqrt{13}`), `\pi`, etc. (404 of 500 parse to a numeric value; the rest are symbolic/text and excluded from phi).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:45:- **FLAGGED proxy element:** Stage A has no real model-sample *frequencies*, so per-problem answer *distributions* are generated from REAL surface-form formats (the documented $/comma/decimal/`\frac`/`/`-fraction variety) over the REAL gold values plus realistic distinct wrong values. Stage B replaces these with real model samples. The two LOAD-BEARING quantities (q, and the H_C vs H_W structure) are anchored in real gold strings.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:50:- **NUMERIC / Minerva-style** (HIGH recall): strip `$`/commas/units/`^\circ`/`\text{}`; parse ints, decimals→exact `Rational`, `a/b`, `\frac{a}{b}`, `\sqrt{n}`, `k\sqrt{n}`, `\pi` multiples via **sympy**; merge iff identical canonical value. Verified: `$18`=`18 dollars`=`18.0`=`18`; `\frac{14}{3}`=`14/3`; `\frac{1}{2}`=`0.5`=`0.50`=`1/2`; `90^\circ`=`90`; `3\sqrt{13}`→`3*sqrt(13)`.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:56:### (b) EMPIRICAL PRECISION q of the high-recall normalizer — THE MAKE-OR-BREAK NUMBER (results/precision_recall.csv)
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:62:- **q = 1.0000 on BOTH real datasets** — the numeric normalizer NEVER collapses two *distinct real gold values* into one bucket. Far above the L0 wash-out threshold (effect dies at q≤0.6).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:63:- **Adversarial precision** (gold vs surface-CLOSE wrong values: `18` vs `18.5`/`19`, `1/3` vs `0.33`, `\frac{14}{3}` vs `\frac{15}{3}`): **ZERO false merges** on both datasets. Real numeric normalizers are genuinely high-precision because they map to exact `Rational`/sympy values, not lossy decimals.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:64:- **Recall genuinely differs:** exact-match merges 0.000 of true-equivalent surface pairs (misses ALL of `$18`/`18 dollars`/`18.0`); numeric merges 1.000. On MATH the lexical normalizer only reaches 0.485 — so we have a REAL low→high recall pair, both high-precision. ⇒ **q-side of the gate PASSES decisively.**
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:77:- **MATH-500: strong, robust phi ≪ 0** (median ≈ −1.0 to −1.2; 86–90% of problems phi<−0.2). Correct answers are CONCENTRATED (a simple value with few surface forms, H_C≈1.15) while the wrong-answer mass FRAGMENTS across many distinct fractional/symbolic values (H_W≈2.0). Per the L0 prediction, **this is exactly the phi≪0 regime where raising canonicalizer recall HURTS maj@k** (z=−19.8/−28.2 in L0). The foothold EXISTS in real symbolic-answer math.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:78:- **GSM8K: phi ≈ 0 (symmetric).** Integer answers carry uniform rich surface variety, so H_C≈H_W and the sign-flip has little foothold; raising recall is near-neutral/mildly helpful. No HURTS regime.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:80:**Honest caveat:** the *magnitude/sign* of phi is sensitive to surface-form modeling (GSM8K mean phi moved +0.86→+0.26 when correct & wrong got symmetric surface treatment). phi here is **structural/proxy** — it reflects how the canonicalizer clusters real gold values into surface forms, NOT measured model-sample frequencies. That is precisely the residual risk Stage B is designed to retire.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:83:Across error-spread regimes (1–2, 1–6, 3–8 distinct wrong values per problem) the MATH-500 phi≪0 conclusion is STABLE (median −0.99 → −1.23). GSM8K stays ≈0→mildly-positive. The direction is set by dataset answer-space structure, not by the error-spread hyperparameter.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:89:**The L0 sign-flip HAS an ecological foothold:** real numeric graders are high-precision (so the effect is NOT washed out by over-merge), AND real symbolic-answer benchmarks (MATH) exhibit the correct-concentrated/errors-fragmented asymmetry the negative-slope regime requires. On integer-only QA (GSM8K) the asymmetry is weak (symmetric), so the hazard is dataset-specific — concentrated in rich-symbolic-answer-space evals.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:96:- **Benchmark:** 150 random REAL GSM8K test problems, k=16 samples/problem at temp=0.8, top_p=0.95, seed=0. Final answers extracted from `#### N`. (2 of 2400 / 4 of 2400 empty extractions — negligible.)
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:97:- **Graders:** EXACT-MATCH vs the same high-recall NUMERIC/Minerva normalizer (canon.py). maj@k = does the plurality-voted *value bucket* equal the gold value.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:104:- **EXACT grader:** 7B beats 0.5B by +0.300. **NUMERIC grader:** 7B beats 0.5B by +0.293.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:105:- **RANKING INVERSION: NO — HONEST NULL.** The grader swap does NOT flip the model ranking; 7B wins decisively under both.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:108:The numeric grader barely moves accuracy (0.480→0.487 for 0.5B; 0.780→0.780 for 7B) and collapses only ~6%/8% of surface buckets. **GSM8K's integer-answer regime produces almost no fragmentation asymmetry** — exactly Stage A's finding (GSM8K **phi ≈ 0**). With no asymmetry to exploit, raising canonicalizer recall is near-neutral and CANNOT flip rankings. The L0 sign-flip's foothold is the **phi≪0 symbolic-answer regime (MATH, where Stage A found median phi ≈ −1.0)** — which integer GSM8K does not provide. The null is therefore the PREDICTED outcome on this benchmark, and it CONFIRMS rather than contradicts the phi-governs-the-sign mechanism. A positive Stage-B inversion would require a symbolic-answer benchmark (MATH/competition) with a robust answer-extractor + larger k — specified below for L2.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:111:1. A **symbolic-answer benchmark** (MATH, MATH-500, or competition math) where the high-recall numeric grader genuinely recovers many true equivalences exact-match misses (`\frac{14}{3}`=`14/3`, `0.5`=`1/2`, `3\sqrt{13}`) — i.e. the phi≪0 regime Stage A measured on real MATH answers.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:112:2. A robust **`\boxed{}` answer extractor** + the numeric/sympy grader applied to free-form model output.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:113:3. **Two models with different answer-surface concentration** (e.g. one verbose/varied-format, one terse/canonical) so the grader swap differentially helps one — the in-the-wild spoiler analogue.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:118:- canon.py — real EXACT / LEXICAL / NUMERIC(Minerva,sympy) canonicalizers
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:125:- The L0 sign-flip HAS a real ecological foothold: real numeric graders are **high-precision (q=1.0, 0 adversarial over-merges)** — they do NOT wash out the effect (the L0 q≤0.6 death-zone does not apply to real numeric normalizers); AND real **symbolic-answer math (MATH-500) exhibits the phi≪0 correct-concentrated/errors-fragmented asymmetry** (median ≈ −1.0, 86–90% of problems) that the recall-HURTS regime requires.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:126:- BUT the hazard is **dataset-specific**: integer-answer QA (GSM8K) is phi≈0 (symmetric), so the effect has little foothold there — confirmed by the Stage-B real-model NULL (no ranking inversion on GSM8K).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:127:- The in-the-wild ranking-inversion DEMONSTRATION was NOT achieved (GSM8K is the wrong regime); it requires a symbolic-answer benchmark with a real extractor (L2 spec above). The phi-measurement uses real gold strings but proxy answer-*frequencies*; real model-sample phi on MATH is the remaining gap.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:128:- **FLAGS:** L0 inversion construction = EXPLORATORY (post-hoc retune). Stage-A wrong-answer *surface multiplicity* is a flagged proxy; q and the H_C-vs-H_W dataset structure are anchored in real gold strings; Stage-B uses fully real model samples.
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:132:- Bulian et al. 2022, "Tomayto Tomahto..." (BEM / answer-equivalence beyond exact match).
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md:133:- Kuhn et al. 2023; Farquhar et al. 2024 — semantic entropy (answer-meaning clustering).
+./experiments/2026-06-03/EXP-0051/stage_a.py:3:high-recall numeric canonicalizer, on REAL GSM8K + MATH-500 answers.
+./experiments/2026-06-03/EXP-0051/stage_a.py:4:GT = gold-anchored true equivalence (two strings equiv iff same gold-parsed value)."""
+./experiments/2026-06-03/EXP-0051/stage_a.py:19:        m=re.search(r'####\s*(.+)\s*$', d['answer'].strip())
+./experiments/2026-06-03/EXP-0051/stage_a.py:24:    return [json.loads(l)['answer'] for l in open('math500.jsonl')]
+./experiments/2026-06-03/EXP-0051/stage_a.py:32:    """Canonical TRUE value of a gold answer string (used ONLY for GT, never by canonicalizer logic
+./experiments/2026-06-03/EXP-0051/stage_a.py:73:#  (b)  EMPIRICAL PRECISION q  of the HIGH-RECALL numeric normalizer
+./experiments/2026-06-03/EXP-0051/stage_a.py:75:#       surface forms. For every PAIR the normalizer MERGES, q = frac truly
+./experiments/2026-06-03/EXP-0051/stage_a.py:85:    # group by normalizer key
+./experiments/2026-06-03/EXP-0051/stage_a.py:95:        # all C(n,2) pairs are "merged" by the normalizer
+./experiments/2026-06-03/EXP-0051/stage_a.py:109:        print("   NO over-merges across distinct real golds (numeric normalizer is exact-precision here).", flush=True)
+./experiments/2026-06-03/EXP-0051/stage_a.py:112:q_gsm = measure_precision_q(gsm, gsm_surface_forms, "GSM8K integer answers")
+./experiments/2026-06-03/EXP-0051/stage_a.py:113:q_math = measure_precision_q(math500, math_surface_forms, "MATH-500 answers")
+./experiments/2026-06-03/EXP-0051/stage_a.py:137:#  ADVERSARIAL PRECISION: does the normalizer over-merge a GOLD with a
+./experiments/2026-06-03/EXP-0051/stage_a.py:138:#  surface-close WRONG answer? (e.g. 1/3 vs 0.33, 18 vs 18.5, sqrt(13) vs 13)
+./experiments/2026-06-03/EXP-0051/stage_a.py:158:    else: print("   ZERO false merges of gold with surface-close wrong answers.", flush=True)
+./experiments/2026-06-03/EXP-0051/experiment.yaml:17:  \ grader precision q=1.000 on GSM8K+MATH-500 (zero false-merges even adversarial,\
+./experiments/2026-06-03/EXP-0051/experiment.yaml:20:  \ answers). So the L0 sign-flip HAS an ecological foothold but is DATASET-SPECIFIC\
+./experiments/2026-06-03/EXP-0051/experiment.yaml:21:  \ to rich-symbolic-answer evals (MATH), not integer QA. STAGE-B real-model maj@k\
+./experiments/2026-06-03/EXP-0051/experiment.yaml:22:  \ on 150 GSM8K problems x k=16 (H100): RANKING-INVERSION = HONEST NULL \u2014 grader\
+./experiments/2026-06-03/EXP-0051/experiment.yaml:27:  \ answer-FREQUENCIES (real-model-sample phi on MATH = remaining gap). L0 inversion\
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "find . \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' -o -name '*TOOLING*' -o -name '*committee*' \\) -print" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 214ms:
+./learning/roles/committee.md
+./experiments/2026-06-03/EXP-0034/committee2
+./experiments/2026-06-03/EXP-0033/committee1
+./experiments/2026-06-03/EXP-0051/committee2
+./experiments/2026-06-03/EXP-0035/committee1
+./experiments/2026-06-03/EXP-0050/committee1
+./experiments/2026-06-03/EXP-0044/committee1
+./experiments/2026-06-03/EXP-0017/committee1
+./experiments/2026-06-03/EXP-0010/committee1
+./experiments/2026-06-03/EXP-0019/committee1
+./experiments/2026-06-03/EXP-0021/committee2
+./experiments/2026-06-03/EXP-0042/committee1
+./experiments/2026-06-03/EXP-0045/committee1
+./experiments/2026-06-03/EXP-0020/committee1
+./experiments/2026-06-03/EXP-0027/committee1
+./experiments/2026-06-03/EXP-0018/committee2
+./experiments/2026-06-03/EXP-0011/committee1
+./experiments/2026-06-03/EXP-0016/committee2
+./experiments/2026-06-03/EXP-0029/committee1
+./experiments/2026-06-03/EXP-0037/committee1
+./experiments/2026-06-03/EXP-0039/committee1
+./experiments/2026-06-03/EXP-0038/committee2
+./experiments/2026-06-03/EXP-0007/committee1
+./experiments/2026-06-03/EXP-0009/committee1
+./experiments/2026-06-03/EXP-0036/committee1
+./experiments/2026-06-03/EXP-0013/committee2
+./experiments/2026-06-03/EXP-0014/committee1
+./experiments/2026-06-03/EXP-0022/committee2
+./experiments/2026-06-03/EXP-0040/committee1
+./experiments/2026-06-03/EXP-0023/committee1
+./experiments/2026-06-03/EXP-0015/committee1
+./experiments/2026-06-03/EXP-0012/committee1
+./experiments/2026-06-03/EXP-0048/committee2
+./experiments/2026-06-02/EXP-0005/committee1
+./experiments/2026-06-02/EXP-0002/committee1
+./experiments/2026-06-02/EXP-0004/committee1
+./experiments/2026-06-02/EXP-0001/committee1
+./experiments/2026-06-02/EXP-0006/committee1
+./runtime/orchestrator/committee_queue.yaml
+./runtime/cron/committee_health.log
+./runtime/cron/committee_health.alive
+
+exec
+/bin/zsh -lc "find . -path '*_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md' -print" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -type f | grep -E '(_committee_common_v001.md|TOOLING_v001.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 365ms:
+ exited 1 in 358ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -type f -name '*v001.md' -print | head -100" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 228ms:
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request, urllib.parse, json
+queries=[
+ 'vLLM math verify answer equivalence sympy majority self consistency',
+ 'SGLang answer verifier sympy math evaluation self consistency majority',
+ 'LMCache self consistency answer canonicalization',
+ 'TensorRT-LLM math benchmark answer extraction sympy canonicalizer',
+ 'FlashInfer self consistency answer canonicalization'
+]
+for q in queries:
+    url='https://api.github.com/search/code?'+urllib.parse.urlencode({'q':q, 'per_page':5})
+    req=urllib.request.Request(url,headers={'Accept':'application/vnd.github+json','User-Agent':'codex-review'})
+    try:
+        with urllib.request.urlopen(req,timeout=15) as r:
+            print('QUERY',q); print(r.read().decode()[:2000])
+    except Exception as e:
+        print('ERR',q,type(e).__name__,e)
+PY" in /Users/dengcchi/autonomous-research-v3
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 1117ms:
+ERR vLLM math verify answer equivalence sympy majority self consistency HTTPError HTTP Error 403: rate limit exceeded
+ERR SGLang answer verifier sympy math evaluation self consistency majority HTTPError HTTP Error 403: rate limit exceeded
+ERR LMCache self consistency answer canonicalization HTTPError HTTP Error 403: rate limit exceeded
+ERR TensorRT-LLM math benchmark answer extraction sympy canonicalizer HTTPError HTTP Error 403: rate limit exceeded
+ERR FlashInfer self consistency answer canonicalization HTTPError HTTP Error 403: rate limit exceeded
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started

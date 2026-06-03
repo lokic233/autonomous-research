@@ -1,0 +1,15 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: 
+  - name: "Alternative Voting Rules (e.g., Borda/Ranked-Choice)"
+    why: "The hazard relies entirely on majority/plurality vote-splitting (Duverger). Must baseline against voting rules immune to the spoiler effect to prove this is fundamentally a canonicalizer-recall problem, rather than just a naive plurality voting problem."
+    repo_or_cite: "Duverger's Law / Social Choice Theory"
+  - name: "Semantic Entropy (Kuhn et al. 2023)"
+    why: "To contrast rule-based numeric canonicalization with LLM-based semantic clustering for handling the fragmentation asymmetry."
+    repo_or_cite: "Kuhn2023/Farquhar2024"
+STRAWMAN_RISKS: ["Demonstrating hazard viability using proxy surface-form frequencies rather than real LLM emission frequencies.", "Running the only real-model test on a benchmark (GSM8K) known beforehand to be inert for this mechanism."]
+MISSING_METRICS: ["Real-model $\\phi$ (H_C vs H_W) distributions on MATH-500", "Statistical significance of the (currently missing) ranking inversion"]
+KILLER_EXPERIMENT: "L2 execution: Real-model Stage B on MATH-500 demonstrating a statistically significant leaderboard inversion between two real models when switching from EXACT to NUMERIC canonicalization."
+RATIONALE: "[v001] The evaluation evidence is structurally incomplete. The claim posits a 'harness-induced ranking hazard', yet the only real-world, real-model trial (Stage B) produced a null result. The existence of the hazard currently rests on L0's artificial construction and Stage A's use of proxy frequency distributions. Real models may not distribute errors in the fragmented $\\phi \\ll 0$ manner that the surface-form proxy assumes. Without the killer experiment (L2 on MATH-500), the hazard is merely an ecologically plausible hypothesis, not a validated evaluation finding. A clean YELLOW gated on the MATH L2."
+```
