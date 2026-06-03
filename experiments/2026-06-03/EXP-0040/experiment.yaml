@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL-HELD. L0 lexical (no sentence-transformers): doc-level=whole-doc
+  Jaccard near-dup, passage=item-8gram-in-doc. MISS GAP ~1.0 (>>20pct) for VERBATIM
+  short embedded spans (span_ratio<=0.1), threshold-robust (doc-level recall 0 even
+  @Jaccard>=0.3 b/c union normalization dilutes a short span). Materially changes
+  reported contamination: doc-level reports 0pct on a truly 20pct-contaminated corpus,
+  passage recovers 20pct. Precision control is REAL (partial-quote confound: passage
+  over-flags innocent ~90pct quotes, prec~0.55, at low span_thresh) and PASSES at
+  span_thresh~0.95 (prec 1.0, recall 1.0). HONEST NEGATIVE BOUNDARY: gap collapses
+  under paraphrase>=0.2 (8-grams don''t survive edits, passage ALSO misses) -> advantage
+  is verbatim-specific. 7 seeds, max std 0.019. Prior art: n-gram checks published
+  (GPT-3/PaLM/Lee2021); novelty=measured granularity gap+rate effect+precision boundary.
+  See RESULTS.md.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0040/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T14:34:42Z'
 prompt_version: ''
