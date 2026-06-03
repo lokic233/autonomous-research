@@ -1,0 +1,52 @@
+claim_id: CLAIM-0044
+project_id: PROJ-0015
+stage: seed
+status: seed
+claim: "When a planted answer document and its distractors in a corpus share an identical\
+  \ boilerplate block, the answer document's rank under standard BM25 (k1=1.2,b=0.75)\
+  \ degrades NON-MONOTONICALLY (inverted-U) as boilerplate length grows: there exists\
+  \ an intermediate boilerplate length that maximally displaces the answer doc out\
+  \ of top-k, after which further boilerplate growth PARTIALLY RECOVERS its rank \u2014\
+  \ because IDF-decay of now-corpus-frequent boilerplate terms and BM25 document-length\
+  \ normalization (penalizing the answer doc carrying the genuine content) are opposing\
+  \ forces that cross over at a corpus-statistics-dependent point with no closed-form\
+  \ predictor."
+why_it_matters: "FRESH AREA (data-systems-for-ml: corpus hygiene x retrieval). ARCHETYPE\
+  \ PIVOT off the dead metric-validity vein -> an EMERGENT empirical phenomenon with\
+  \ NO closed form (the inverted-U turning point depends on the empirical TF distribution\
+  \ + BM25 b/k1 saturation regime; no algebraic shortcut; can come back monotone =\
+  \ falsified). Screened vs all 3 anti-patterns (NOT tuned-knob, NOT KV-reuse, NOT\
+  \ relabeling-vs-logprob \u2014 property of a FIXED standard BM25 retriever under\
+  \ a VARIED data condition). Falsifiable: sweep shared-boilerplate length L in {0,8,16,32,64,128,256,512,1024}\
+  \ tok prepended identically to the answer doc + a controlled fraction of distractors;\
+  \ record rank(answer|L). HELD = statistically clear inverted-U (worsens then recovers),\
+  \ turning point NOT predictable from a naive monotone model, replicated across >=20\
+  \ corpus seeds. Honest-negative (informative either way): monotone degradation OR\
+  \ flat (IDF fully absorbs) FALSIFIES the inverted-U and is itself a clean corpus-hygiene\
+  \ fact. Anti-circular: GT = planted-answer doc-id (generative); tested signal =\
+  \ BM25 score/rank from token stats, never reads GT. PRIOR-ART (front-loaded, precise):\
+  \ 'Collapse of Dense Retrievers' 2503.05037 = STATIC biases not non-monotone preprocessing\
+  \ response; doc-expansion-hurts 2604.05087/2504.21015 adds DISTINCT text (opposite\
+  \ regime, boilerplate is low-IDF non-discriminative); set-compositional 2605.03824\
+  \ / salient-phrase 2110.06918 = query semantics (orthogonal). Novelty = shared-boilerplate\
+  \ -> answer-rank inverted-U + crossover. Topic: data-systems-for-ml. L1: real boilerplate-heavy\
+  \ corpus (SEC EDGAR/legal) + dense retriever (bge/e5) AND BM25 + QA set, strip-vs-retain-vs-lengthen\
+  \ boilerplate, measure answer-rank + downstream RAG accuracy vs boilerplate-overlap\
+  \ fraction."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0043 result, then ros exp complete --exp EXP-0043 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0043
+created_at: '2026-06-03T15:06:45Z'
+last_updated: '2026-06-03T15:07:00Z'
