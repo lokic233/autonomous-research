@@ -1,0 +1,42 @@
+dead_id: DEAD-0007
+original_claim_id: CLAIM-0038
+original_claim: "In multi-tool LLM agents, wrong-tool-selection errors are PREDICTABLE\
+  \ from the SCHEMA GEOMETRY of the available tool set alone (pairwise semantic overlap\
+  \ of tool name+description+params, computed BEFORE the call, NO model rollout) \u2014\
+  \ specifically, selection-error rate rises with the max pairwise tool-description\
+  \ cosine similarity in the active toolset \u2014 AND this cheap schema-overlap signal\
+  \ predicts which toolsets/calls are error-prone strictly better than (a) random\
+  \ and (b) a generic prompt-difficulty predictor, AND adds signal BEYOND the agent's\
+  \ own tool-choice logprob/confidence \u2014 because confusability is a structural\
+  \ property of the toolset distinct from task difficulty and from the agent's self-reported\
+  \ uncertainty."
+reason_killed: 'NEGATIVE/relabeling. Pre-call schema-overlap geometry is a WEAK wrong-tool-selection
+  predictor (AUC 0.48-0.56, sub-chance at K>=6; oracle gap ~0.2 vs true confusability
+  AUC ~0.70). DOMINATED by generic difficulty predictor (delta(schema-diff) CI<0 in
+  ALL 12 cells, e.g. -0.20[-0.23,-0.17]). Adds NOTHING beyond agent self-logprob:
+  delta-AUC(combo-logprob) CI<=0, strictly <0 in 7/12 cells (e.g. -0.043[-0.059,-0.028]);
+  only touches 0 when logprob artificially noised. Anti-relabeling bar (CLAIM-0015/0037
+  lesson) FAILED. L0 stdlib analytic sim, 12 cells x5 seeds, bootstrap B=400.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0035
+duplicate_patterns:
+- "In multi-tool LLM agents, wrong-tool-selection errors are PREDICTABLE from the\
+  \ SCHEMA GEOMETRY of the available tool set alone (pairwise semantic overlap of\
+  \ tool name+description+params, computed BEFORE the call, NO model rollout) \u2014\
+  \ specifically, selection-error rate rises with the max pairwise tool-description\
+  \ cosine similarity in the active toolset \u2014 AND this cheap schema-overlap signal\
+  \ predicts which toolsets/calls are error-prone strictly better than (a) random\
+  \ and (b) a generic prompt-difficulty predictor, AND adds signal BEYOND the agent's\
+  \ own tool-choice logprob/confidence \u2014 because confusability is a structural\
+  \ property of the toolset distinct from task difficulty and from the agent's self-reported\
+  \ uncertainty."
+- active adds agent agents alone available because before better beyond call calls
+  cheap choice computed confidence confusability cosine description difficulty distinct
+  error errors from generic geometry llm logprob max model multi name overlap own
+  pairwise params predictable predictor predicts prompt prone property random rate
+  reported rises rollout schema selection self semantic set signal similarity specifically
+  strictly structural task than tool toolset toolsets uncertainty which wrong
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T11:15:15Z'

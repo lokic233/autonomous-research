@@ -1,0 +1,39 @@
+claim_id: CLAIM-0039
+project_id: PROJ-0010
+stage: seed
+status: seed
+claim: "In multi-agent LLM serving where agents alternate short decode bursts with\
+  \ long external tool-waits, the GPU 'step bubbles' (idle during an agent's tool-wait)\
+  \ represent a MEASURABLE aggregate-throughput loss that vanilla continuous batching\
+  \ does NOT fully recover (because tool-waits are long + bursty + correlated, leaving\
+  \ residual idle), AND an agent-step-aware admission/interleaving policy reclaims\
+  \ a non-trivial fraction of that residual idle at matched per-agent latency \u2014\
+  \ beating REAL continuous batching (vLLM-style), not a serial strawman."
+why_it_matters: "FRESH axis (cross-agent step-bubble throughput \u2014 untouched by\
+  \ 23 prior claims). Screened against ALL THREE failure shapes: not a Jensen-floor\
+  \ tuned-knob, not a RoPE-wall KV-reuse, not a predictor-vs-own-logprob relabeling\
+  \ (the new 3rd anti-pattern). It's a SYSTEMS/structural-occupancy claim. THE load-bearing\
+  \ test (pre-baked): does VANILLA CONTINUOUS BATCHING already fill the bubbles? If\
+  \ yes -> honest negative (no residual win). Falsifiable: (1) is there residual GPU\
+  \ idle under continuous batching given realistic bursty/correlated tool-wait distributions?\
+  \ (2) does step-aware interleaving reclaim it at matched latency vs REAL continuous\
+  \ batching? L0: queueing/occupancy sim w/ agent step-bubble arrival model, continuous-batching\
+  \ baseline (NOT serial), residual-idle + throughput at matched p99. Honest-negative\
+  \ if continuous batching already captures it. Topic: llm-serving + agent-infra.\
+  \ Distinguish from continuous batching (Orca/vLLM) + the dead CLAIM-0004/0006/0012\
+  \ scheduling claims \u2014 novelty is the AGENT-STEP-BUBBLE structure + residual-beyond-continuous-batching."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-03T11:18:35Z'
+last_updated: '2026-06-03T11:18:35Z'
