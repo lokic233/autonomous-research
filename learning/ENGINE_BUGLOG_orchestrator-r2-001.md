@@ -1340,3 +1340,26 @@ points at `ros exp fault <exp>` to release a genuinely-dead lease (mirrors the B
 truly in-flight `running` exp is blocked; `pending|faulted|failed|approved` re-dispatch is untouched.
 **Verified:** AST OK. Isolated /tmp instance: submit-while-`running` → REFUSED with remedy msg; flip exp
 to `faulted` → submit ALLOWED (GT-0001 created); `--force` → overrides the guard. Fault-retry preserved.
+
+---
+
+## BUG-91 — committee_health verdict-staleness suppression uses an UNANCHORED substring grep (latent silent-stall)
+**Found:** 2026-06-03 v3 ACTIVE-DEBUG (Navi lead-debugger), bugbash surface = two-pass committee timing + committee packet staging. **Engine commit:** 863862a. Shared engine — fixes v2 and v3.
+**Surface:** `engine/crons/committee_health.sh` (BUG-79b staleness-suppression block).
+**Bug:** BUG-79b suppresses a `COMMITTEE_READY` notification when a verdict newer than the committee's
+`_status.txt` already exists for the claim:
+`for vf in $(grep -rl "claim_id: $claim" "$INST/registry/verdicts"); do ...`
+That `grep` is a **substring** match. For an un-padded id (`CLAIM-3`) or once claim ids overflow the
+4-digit zero-pad (`CLAIM-10000+`, i.e. a verdict carrying `claim_id: CLAIM-00037`), the query
+`claim_id: CLAIM-3` also matches `claim_id: CLAIM-37` / `CLAIM-3-..`. A **foreign** claim's newer
+verdict then falsely satisfies the staleness check → the cron **never fires `COMMITTEE_READY` for THIS
+claim** → a genuinely-ready committee stalls silently and the orchestrator never tallies it. Same
+blind-gate failure class BUG-79 closed (cron stamps `.alive`, looks healthy, fires nothing).
+**Repro (isolated /tmp):** query `CLAIM-0003` against a verdict file with `claim_id: CLAIM-00037`:
+OLD `grep -rl "claim_id: CLAIM-0003"` **matches** it (would false-suppress); NEW anchored does not.
+**Why latent not live:** the 4-digit zero-pad masks the common case today (`CLAIM-0003` vs `CLAIM-0037`
+do not substring-overlap), so v3's current 19 claims are unaffected. It bites at 5-digit overflow or the
+moment any verdict carries an unpadded id. Fixed proactively — it is a fragile invariant to rely on.
+**Fix (minimal, no new mechanism):** anchor to the full field value:
+`grep -rlE "^claim_id:[[:space:]]+${claim}[[:space:]]*$"`. Same suppression semantics, exact-token match.
+**Verified:** `bash -n` OK; isolated /tmp shows OLD substring false-matches CLAIM-00037, NEW anchored does not.
