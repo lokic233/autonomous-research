@@ -1,0 +1,95 @@
+verdict_id: VERDICT-0050
+claim_id: CLAIM-0052
+project_id: PROJ-0022
+date: '2026-06-03'
+experiment_ids:
+- EXP-0058
+experiment_paths:
+- experiments/2026-06-03/EXP-0058
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED \u2014 L0 unusually clean: honest prereg, boundary\
+  \ controls c=1.0->gap=0/m=S->gap=0, 100pct mechanism attribution, killer-#4 TESTED\
+  \ not deferred -> no reviewer voted RED). GREEN blocked on 3 convergent grounds:\
+  \ (1) THE LEXICAL-ONLY #4 ARM IS A STRAWMAN (all 5 reviewers): the claim's differentiator\
+  \ from Xiao1806.10869 (recoverable vocab-mismatch) is 'NOT closed by a stronger\
+  \ stage-1 representation', but L0 tested only LEXICAL (idf+query-expansion) stronger-stage-1\
+  \ \u2014 a lexical matcher failing to recover a literally-ABSENT token is ALGEBRAICALLY\
+  \ FORCED (a tautology of the test design), NOT evidence about representational power"
+- Xiao2018's whole result is that NEURAL representations recover recall lexical misses
+  via SEMANTIC NEIGHBORS. The differentiator is ASSERTED not EARNED until a DENSE
+  encoder is tested and STILL fails
+- '(2) ECOLOGICAL COVERAGE UNMEASURED: if real MCP/ToolBench registries route on POOLED
+  MEMBER SCHEMAS (c~1, the ReDDE big-document regime) not short editorial blurbs,
+  the ceiling doesn''t bite in deployment -> synthetic curiosity'
+- "(3) PRIOR-ART INADEQUATE: the load-bearing collection-selection collision (Kulkarni&Callan\
+  \ selective-search, Si&Callan ReDDE, Callan&Connell query-based-sampling) could\
+  \ NOT be >=2-source verified (egress blocked) \u2014 the 'editorial-aggregate coverage\
+  \ gap != lossy/sampled shard-representation incompleteness' distinction is asserted\
+  \ not confirmed."
+required_evidence:
+- "L1 (gated, the dense-encoder arm is THE load-bearing test): (1) DENSE-ENCODER stronger-stage-1\
+  \ arm (BGE/Instructor/text-embedding-3) on a real/realistic registry \u2014 does\
+  \ a DENSE encoder ALSO fail to close the coverage gap (=> structural ceiling EARNED,\
+  \ distinct from Xiao2018) or does it recover via semantic neighbors (=> recoverable\
+  \ vocab-mismatch, killer #4 wins)? THE single most important requirement, all 5\
+  \ reviewers"
+- "(2) ECOLOGICAL coverage audit on real MCP/ToolBench registries: empirical distribution\
+  \ of c (editorial-desc-vs-member coverage) \u2014 if c~1 (member-pooled schemas\
+  \ standard) the ceiling doesn't bite"
+- '(3) formal positioning vs collection-selection theory (Kulkarni&Callan, Si&Callan
+  ReDDE big-document, Callan&Connell QBS): show the editorial-aggregate gap is STRUCTURALLY
+  distinct from lossy/sampled shard-representation incompleteness, not renamed (>=2-source)'
+- (4) TOST/equivalence-test on the STRONG_S1-vs-2STG null (failure-to-reject != equivalence
+- 'report equivalence bound + power). MANDATORY BASELINES: dense embedding stage-1
+  router'
+- POOLED-member-schema stage-1 router (ReDDE big-document) vs editorial-blurb vs flat
+- real MCP/ToolBench registry with as-written editorial descriptions.
+map_delta_proposals:
+- CLAIM-0052 -> HELD/YELLOW conditional-on-L1 (committee#1, 5/5 unanimous no-RED).
+  L0 unusually clean (mechanism 100pct attributed, boundary controls, killer-#4 tested-in-L0)
+- 'STRONGEST-standing candidate of the v3 expansion. But GREEN blocked: the L0 #4
+  arm was LEXICAL-ONLY = a STRAWMAN (a lexical matcher missing an absent token is
+  algebraically forced)'
+- "the real #4 test is a DENSE encoder (Xiao2018 = neural recovers lexical-miss via\
+  \ semantic neighbors) \u2014 the differentiator is ASSERTED until a dense arm STILL\
+  \ fails. + ecological coverage unmeasured (real routing may be member-pooled c~1)\
+  \ + collection-selection prior-art unverified (egress blocked). retain L0 as valid-synthetic-support.\
+  \ risk_tags: lexical-strawman-#4-arm, ecological-coverage-unmeasured, collection-selection-positioning.\
+  \ ORCHESTRATOR LESSON: I let a LEXICAL stronger-stage-1 stand as the killer-#4 test\
+  \ \u2014 but for a 'not recoverable by better representation' claim, the representation\
+  \ arm MUST be the strong (dense/neural) one, else the test is a tautology. Future\
+  \ 'structural not recoverable-by-representation' claims: the L0 #4 arm must use\
+  \ the STRONGEST available representation, not lexical. Alive toward L1 (dense-encoder\
+  \ resolution)."
+baseline_requirements:
+- "Dense embedding stage-1 router (BGE/Instructor/text-embedding-3) \u2014 THE killer-#4\
+  \ resolution"
+- Pooled-member-schema stage-1 router (ReDDE big-document) vs editorial-blurb vs flat
+- real MCP/ToolBench registry as-written editorial descs
+- "collection-selection theory (Kulkarni&Callan selective-search, Si&Callan ReDDE,\
+  \ Callan&Connell QBS) \u2014 the foundational collision to formally distinguish"
+- Xiao1806.10869 (the neural-recovers-lexical-miss result the claim must beat with
+  a dense arm)
+committee_run_dir: experiments/2026-06-03/EXP-0058/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T22:12:45Z'

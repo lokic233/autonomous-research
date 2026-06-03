@@ -65,13 +65,16 @@ supporting_evidence:
     0 (boundary controls). SUPPORT.'
   data_path: experiments/2026-06-03/EXP-0058/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0050
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0058; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0050=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T21:36:48Z'
-last_updated: '2026-06-03T21:44:28Z'
+last_updated: '2026-06-03T22:12:45Z'
