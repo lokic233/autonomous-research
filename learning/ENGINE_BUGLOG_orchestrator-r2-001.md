@@ -1126,3 +1126,19 @@ name there = EXP not CLAIM). FIX (b)/BUG-79b: skip committees whose claim verdic
 Two-pass safe. Validated live (fires only for un-tallied; silent on re-run). Engine HEAD 8346476.
 LESSON: cron-health (.alive) proves a cron RAN, not that it found its targets. Future: a cron that scans a
 path should assert the path convention matches the instance, or self-report "scanned N dirs".
+
+## 2026-06-03 ~08:05 UTC — BUG-80 (v3 verdicts never populate committee_run_dir) [v3-impl live debug]
+v2-parity DIFF find. Every mature v2 verdict carries committee_run_dir (e.g.
+runtime/committee_run_CLAIM-0026-2026-06-02); EVERY v3 verdict (VERDICT-0014..0021) had it EMPTY. The
+engine field exists (BUG-76) but is only set when the caller passes --committee-dir, and the v3
+verdict-recording flow never does. Effect: the verdict can't be traced back to its committee .out evidence
+programmatically — this very integrity check (votes-match-.out) had to GUESS the path
+(<exp>/committeeN). Not a fabrication (votes verified correct against .out), a TRACEABILITY gap that is a
+real v3-vs-v2 divergence. FIX (minimal, defensive): cmd_verdict_write now falls back to
+_infer_committee_dir(root, exp_paths) — the newest <exp_path>/committee* subdir of the first cited
+experiment — when --committee-dir is absent. Explicit flag still wins; pure read (glob+mtime), creates
+nothing, empty only when no committee dir exists yet. Validated: AST clean; against live v3 EXP-0023 ->
+experiments/2026-06-03/EXP-0023/committee1, EXP-0022 -> .../committee2, missing/empty -> ''. Engine HEAD
+c04e1de. Both v2 + v3 share the engine; future verdicts on both get traceability for free, existing
+verdicts unchanged. LESSON: a schema field that exists but is never populated is a silent maturity gap —
+diff against the golden reference on VALUES, not just key presence.
