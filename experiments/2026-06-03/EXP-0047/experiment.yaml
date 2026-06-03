@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HELD-STRONG. b-sweep: b=0 abolishes recovery (monotone 1.10->14.30,
+  0/20), recovery sharpens monotonically with b -> length-norm is the NECESSARY cause
+  of the recovery arm (mechanism confirmed). BM25L (Lv&Zhai delta=0.5, hand-verified):
+  inverted-U PERSISTS (3/4 cells HELD, strongest 20/20) -> robust to the known length-penalty
+  fix, NOT a default-b artifact. Score-margin substantial (+4.4 -> -4.2 peak -> +7.1).
+  Claim rewritten: recovery is length-norm-dominated along L; IDF-collapse acts only
+  via SPREAD axis (qterm_idf flat ~4.05 across L). Citations fixed (drop 2504.21015/2604.05087;
+  add Singhal-Buckley-Mitra 1996, Robertson-Walker 1994, Lv-Zhai 2011, Zhong 2023,
+  Doc2Query-- 2023). Recommend fast-track L1: dense-retriever test (predict recovery
+  arm dampened/absent without b>0 length penalty).'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0047/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T15:46:26Z'
 prompt_version: ''
