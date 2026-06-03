@@ -1,0 +1,93 @@
+verdict_id: VERDICT-0047
+claim_id: CLAIM-0048
+project_id: PROJ-0018
+date: '2026-06-03'
+experiment_ids:
+- EXP-0050
+- EXP-0051
+experiment_paths:
+- experiments/2026-06-03/EXP-0050
+- experiments/2026-06-03/EXP-0051
+committee_version: v002
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED no GREEN \u2014 genuinely intermediate). GREEN\
+  \ BLOCKED for 4 reasons: (1) the headline claim (canonicalizer recall can INVERT\
+  \ model rankings) exists ONLY in L0 SIMULATION (flagged post-hoc-retuned exploratory)"
+- "the single real-model test (Stage-B) was a NULL on the wrong regime (GSM8K phi~0)\
+  \ \u2014 a claim whose headline consequence is shown only in sim cannot be GREEN"
+- "(2) THEORY-SKEPTIC structural concern: MATH phi<<0 may be NEAR-TAUTOLOGICAL \u2014\
+  \ |correct_support|=1 vs |wrong_support|>=3 makes H_C<H_W follow from support-size\
+  \ asymmetry, not an empirical discovery about LLM behavior"
+- the +0.86->+0.26 GSM8K phi shift under symmetric surface treatment shows generator-tunability
+- without REAL-MODEL-SAMPLE phi the load-bearing quantity is a property of the proxy
+  DGP not LLMs
+- (3) PRIOR-ART search DENIED this session (no live web) -> cannot verify the >=2-source
+  novelty bar
+- semantic-entropy (Kuhn2023/Farquhar2024) flagged uncomfortably close + not crisply
+  distinguished
+- '(4) MISSING mandatory baseline: spoiler-immune voting rules (Borda/ranked-choice)
+  to prove this is a CANONICALIZER-RECALL problem not just a PLURALITY-voting problem.'
+required_evidence:
+- "L2 (gate before validation): (1) real-model maj@k ranking INVERSION on a SYMBOLIC\
+  \ benchmark (MATH/MATH-500) w/ boxed extractor + numeric/sympy grader, >=2 model\
+  \ pairs of differing answer-surface concentration, k>=32, >=300 problems, multi-seed\
+  \ bootstrap CIs \u2014 the headline demo on the RIGHT regime"
+- "(2) REAL-MODEL-SAMPLE phi (H_C vs H_W) on MATH from actual LLM output frequencies\
+  \ (NOT proxy surface generators) \u2014 the single unmeasured load-bearing quantity,\
+  \ retires the near-tautology concern"
+- (3) monotone phi-keyed slope across >=3 recall levels (EXACT/LEXICAL/NUMERIC) to
+  validate the governing-law framing beyond a 2-point comparison
+- (4) crisp written distinction from Kuhn2023/Farquhar2024 semantic-entropy (meaning-clustering-for-uncertainty
+  vs sign-flip-on-plurality-accuracy)
+- "(5) add the spoiler-immune voting baseline (Borda/ranked-choice) \u2014 does the\
+  \ effect persist under non-plurality aggregation? (if not, it's a plurality problem\
+  \ not a canonicalizer problem)."
+map_delta_proposals:
+- 'CLAIM-0048 -> YELLOW-gated-L2 (committee#2 FINAL, 5/5 unanimous no-RED-no-GREEN).
+  VALIDATED: ecological foothold REAL (real grader q=1.0 retires the wash-out worry'
+- MATH phi<<0 = recall-HURTS regime
+- GSM8K null confirmatory
+- 'dataset-specific guidance = symbolic-answer evals at-risk / integer-answer safe
+  = actionable contribution even w/o L2). NOT validated -> GREEN blocked: headline
+  INVERSION only-in-sim'
+- MATH-phi may be near-tautological from support-size (need REAL-MODEL-SAMPLE phi)
+- prior-art search denied (no live web, can't verify >=2-source bar)
+- missing spoiler-immune-voting baseline. evidence_level=L1-ecological-foothold-validated
+- "gate=L2-real-MATH-inversion. risk_tags: proxy-phi-frequencies, near-tautological-phi-geometry.\
+  \ This is the STRONGEST + furthest-advanced candidate of the v3 expansion \u2014\
+  \ alive toward L2, NOT a kill. ZERO FALSE GREENS held: the committee correctly refused\
+  \ to green a sim-only headline w/ a proxy load-bearing quantity + denied prior-art\
+  \ search."
+baseline_requirements:
+- "Wang2022 Self-Consistency (the monotonicity assumption this negates \u2014 direct\
+  \ parent)"
+- "Kuhn2023/Farquhar2024 Semantic Entropy (nearest mechanism neighbor \u2014 must\
+  \ distinguish clustering-for-uncertainty from sign-flip-on-accuracy)"
+- "Bulian2022 BEM/Tomayto-Tomahto (answer-equivalence beyond exact-match \u2014 foundational\
+  \ premise)"
+- "Biderman2024 eval-reproducibility (unconditional rank-sensitivity \u2014 must distinguish\
+  \ from phi-conditioned law)"
+- Borda/ranked-choice spoiler-immune voting (prove canonicalizer-recall not plurality
+  is the culprit)
+committee_run_dir: experiments/2026-06-03/EXP-0051/committee2
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T18:23:06Z'
