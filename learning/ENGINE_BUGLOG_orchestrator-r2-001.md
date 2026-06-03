@@ -1071,3 +1071,11 @@ RESULT: full e2e GREEN, ledger consistent (VERDICT-0001 yellow -> 0002 green -> 
 all crons stamp .alive, cron-health fresh. Real v3 standby instance untouched + clean. No new bugs found
 in the e2e (rounds 1-3 hardening held). KNOWN-COSMETIC (not fixed, shared w/ frozen v2, no cron depends on
 it): project-tree prints "sub-monitor NONE (orchestrator must spawn)" — v2 vocabulary; v3 has no sub-monitors.
+
+## 2026-06-03 ~06:50 UTC — BUG-76 (v2-parity, found via v2-as-comparison-line) [v3-impl session]
+Diffed v3 against the hardened v2 instance (golden ref). v2 verdict schema has 4 fields v3 dropped:
+committee_run_dir (verdict->committee-evidence audit link, the important one — v3 integrity checks had
+to GUESS the path), disposition, key_structural_finding, verbatim_votes_summary. Added all 4 as optional
+--flags on ros verdict write (orchestrator already generates this content). Also: v2 has operational/
+(per-project metrics.jsonl) + README/CONTRIBUTING that v3 lacks — operational metrics noted as a future
+nicety, not blocking. Engine HEAD post-commit. BUG tally now BUG-67..76 (10 via live debug+bugbash+v2-diff).
