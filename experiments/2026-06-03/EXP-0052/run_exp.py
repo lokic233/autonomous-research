@@ -211,9 +211,10 @@ if __name__=="__main__":
 
     # ===== within-cluster variance sweep (at realistic rho) =====
     sig_rows=[]
+    SIG_SEEDS=10
     for sw in SIGMA_SWEEP:
         dfs=[];dls=[]
-        for s in range(NSEEDS):
+        for s in range(SIG_SEEDS):
             docs,nclust = gen_docs(12345+s, sigma_within=sw)
             detected,_ = detect_clusters(docs)
             pos = assign_positions(docs, 12345+s, REALISTIC_RHO)
@@ -221,7 +222,7 @@ if __name__=="__main__":
             dfs.append(m["df"]);dls.append(m["dl"])
         mdf,cdf=ci95(dfs);mdl,cdl=ci95(dls)
         sig_rows.append({"sigma_within":sw,"rho":REALISTIC_RHO,"delta_first":mdf,"ci_first":cdf,
-                         "delta_last":mdl,"ci_last":cdl,"nseeds":NSEEDS})
+                         "delta_last":mdl,"ci_last":cdl,"nseeds":SIG_SEEDS})
         print("sigma_within=%.1f (rho=%.1f) Df=%+.4f±%.4f Dl=%+.4f±%.4f [%.0fs]"%(
             sw,REALISTIC_RHO,mdf,cdf,mdl,cdl,time.time()-t0),flush=True)
     with open(os.path.join(RESDIR,"sigma_sweep.csv"),"w",newline="") as f:

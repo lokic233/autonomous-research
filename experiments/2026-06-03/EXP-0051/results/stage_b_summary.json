@@ -1,0 +1,13 @@
+{
+  "n": 150,
+  "k": 16,
+  "models": ["Qwen2.5-0.5B-Instruct", "Qwen2.5-7B-Instruct"],
+  "benchmark": "GSM8K (150 random test problems)",
+  "temperature": 0.8,
+  "acc": {"qwen05": [0.480, 0.487], "qwen7b": [0.780, 0.780]},
+  "grader_acc_format": "[exact_match, numeric_minerva]",
+  "inversion": false,
+  "exact_gap_05_minus_7b": -0.300,
+  "numeric_gap_05_minus_7b": -0.293,
+  "surface_collapse": {"qwen05": "1427->1338 (89)", "qwen7b": "522->479 (43)"}
+}
