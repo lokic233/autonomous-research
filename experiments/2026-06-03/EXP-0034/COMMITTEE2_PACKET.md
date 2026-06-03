@@ -1,0 +1,237 @@
+# COMMITTEE#2 — CLAIM-0037 (PROJ-0008), WITH cheap-L0 follow-up (EXP-0033 L0 + EXP-0034 sigma_conf-sweep+prior-art)
+## SECOND pass. committee#1 (VERDICT-0034) voted yellow and required (cheap, L0-budget, BEFORE any GPU L1): a sigma_conf flip-point sweep + a live prior-art check vs PRM/AgentBoard/online-LLM-as-Judge. EXP-0034 did BOTH. Cast FINAL votes. Engine enforces real 6/6; GREEN only if truly unanimous green by role — NEVER fabricate. The follow-up recommends RED/relabeling — vote honestly.
+
+## EXP-0034 KEY FINDINGS (the 2 committee#1 blockers, resolved):
+(1) sigma_conf FLIP-POINT: the monitor's AUC (0.743) is INDEPENDENT of sigma_conf (never reads confidence); only the self-confidence baseline degrades. Flip-point sigma_conf ~= 0.50 — the monitor starts winning once the agent's self-confidence failure-detection AUROC drops below ~0.72. On the VERBALIZED-confidence axis this IS within realistic LLM miscalibration (verbalized confidence AUROC ~0.5-0.70 on hard agentic tasks — Agentic Overconfidence arXiv 2602.06948 [22%-success agents predict 77%]; clinical bench AUROC~0.5; Confidence Dichotomy 2601.07264; Mind the Confidence Gap 2502.11028). On THIS axis alone the claim looked L1-worthy.
+(2) PRIOR-ART (LIVE-verified, egress available) — the OVERTURN: Mavi et al. 2511.07364 'Self-Evaluating LLMs for Multi-Step Tasks: Stepwise Confidence Estimation for Failure Detection' (Nov 2025) ALREADY does online stepwise failure detection on multi-step agent trajectories at AUC-ROC ~0.9 (stepwise beats holistic +15% rel). Vasudev et al. 2602.03338: LLM critic predicting agent failure at AUROC 0.94. AgentBoard progress-rate (Ma NeurIPS24) = post-hoc subgoal eval (partial). PRMs/Lets-Verify (Lightman 2023) = online step scoring (partial). => the online-stepwise-failure-detection space is OCCUPIED, and at the strong calibration those systems achieve (~0.9), CLAIM-0037's OWN model says the monitor LOSES.
+
+## SYNTHESIS: the monitor only beats NAIVE verbalized confidence — not the online stepwise self-eval the prior art already deploys at ~0.9 AUC. The lead-time novelty is unsupported even at L0 (only 42% of failures flagged >=1 step early, < the pre-registered 0.5 bar). The one robust positive (+0.095 vs static difficulty) is the LEAST-novel half (implicit in any PRM/progress-rate work). Strong claim = RELABELING of online stepwise failure detection dressed in an unsupported lead-time framing. The pre-registered decision rule's ELSE branch fired (flip realistic on verbalized axis BUT a published online lead-time-capable scorer EXISTS). Recommend RED. Do NOT spend a GPU L1 — the cheap L0 correctly avoided that waste.
+
+## CLAIM
+claim: "In multi-step LLM agent trajectories that ultimately FAIL, the failure is\
+  \ foreshadowed by a CAUSAL, online-observable signature (e.g. rising tool-error/retry\
+  \ rate, repeated near-identical actions = looping, declining new-information-per-step)\
+  \ that a cheap monitor can detect to flag the trajectory as doomed STRICTLY EARLIER\
+  \ (>=N steps before) than the agent's own termination/error \u2014 AND this early-warning\
+  \ signal beats BOTH (a) the agent's own self-reported confidence and (b) a generic\
+  \ per-trajectory difficulty predictor, because impending agentic failure has a structural\
+  \ progression signature distinct from intrinsic task difficulty."
+why_it_matters: "FRESH axis (agentic failure-attribution / early-warning \u2014 untouched\
+
+## EXP-0034 (follow-up) RESULTS
+# RESULTS — EXP-0034 (CLAIM-0037) — CHEAP L0 follow-up to EXP-0033
+
+**Researcher:** researcher-0034 | L0 CPU-only, stdlib-only, SERIAL | wall-clock **7.9s** (budget 15min)
+**Pre-registered** in PRE_REGISTRATION.md (committed BEFORE running, HEAD c5998f9).
+Reuses EXP-0033's model UNCHANGED (imports `exp.py`). Two blockers Committee#1 demanded.
+
+## VERDICT: CONVERGE → recommend RED/weaken. The claim is, in its strong load-bearing form, RELABELING.
+
+Two independent reasons, either of which is sufficient:
+1. **Flip-point analysis is favorable but NOT decisive for L1** — and is dominated by reason 2.
+2. **Prior-art kill:** published systems already do online stepwise failure detection on multi-step
+   tasks, AND the surviving "lead-time" novelty is not actually demonstrated by this L0 (lead-time
+   coverage already failed in EXP-0033 at 42% < 0.5).
+
+---
+
+## BLOCKER 1 — sigma_conf FLIP-POINT SWEEP (results/sweep_sigma_conf.csv)
+
+Monitor AUC is **independent** of sigma_conf (0.7427, never reads confidence); only the confidence
+baseline degrades as its readout noise grows. **Reproducibility check passed:** the sigma_conf=0.35
+row exactly reproduces EXP-0033 (d_mon_conf = −0.006, CI [−0.0105, −0.0013]).
+
+| sigma_conf | AUC(conf) | d=AUC(mon)−AUC(conf) | 95% CI | monitor verdict |
+|---|---|---|---|---|
+| 0.10 | 0.822 | −0.079 | [−0.083,−0.075] | confidence wins (robust) |
+| 0.20 | 0.797 | −0.055 | [−0.059,−0.051] | confidence wins (robust) |
+| **0.35 (EXP-0033 ref)** | **0.749** | **−0.006** | **[−0.011,−0.001]** | confidence wins (robust) |
+| **0.50** | **0.696** | **+0.046** | **[+0.042,+0.051]** | **MONITOR wins (robust)** ← FLIP |
+| 0.70 | 0.635 | +0.108 | [+0.102,+0.113] | monitor wins |
+| 0.90 | 0.587 | +0.156 | [+0.149,+0.161] | monitor wins |
+| 1.20 | 0.537 | +0.206 | [+0.199,+0.213] | monitor wins |
+| 1.60 | 0.495 | +0.248 | [+0.240,+0.256] | monitor wins |
+| 2.00 | 0.469 | +0.274 | [+0.266,+0.282] | monitor wins |
+
+**FLIP-POINT: sigma_conf ≈ 0.50** (equal==beat: the loss flips straight to a robust win between
+0.35 and 0.50). The flip corresponds to the confidence baseline's discrimination dropping from
+AUC 0.749 → **0.696**. So the monitor wins once the agent's own self-confidence has failure-detection
+**AUROC below ~0.72**.
+
+### Is that flip-point within realistic published LLM self-confidence miscalibration? → YES (directionally).
+Verbalized/self-reported LLM confidence on hard multi-step/agentic tasks is repeatedly reported with
+WEAK failure discrimination, frequently in the AUROC ~0.5–0.70 band:
+- **Agentic Uncertainty Reveals Agentic Overconfidence** (arXiv 2602.06948): agents that succeed 22%
+  of the time predict 77% — severe overconfidence, weak success/failure discrimination.
+- **Benchmarking LLM Confidence in Clinical Questions** (PubMed 40378406): "even the most accurate
+  models show **minimal variation in confidence between right and wrong answers**" → AUROC ≈ 0.5.
+- **The Confidence Dichotomy** (arXiv 2601.07264): tool-use agents show **severe verbalized
+  overconfidence**, esp. with evidence/search tools.
+- **Mind the Confidence Gap** (arXiv 2502.11028): large overconfidence / high ECE documented broadly.
+So a confidence-AUC of ~0.70 (the level at which the monitor begins to win) is well within — even
+optimistic relative to — commonly reported *verbalized* confidence discrimination. **On this axis the
+claim looks L1-worthy.** BUT this is a coarse sim mapping (sigma_conf is a stand-in for readout noise,
+not measured LLM logprobs), and it is OVERTURNED by the prior-art finding below — and by a competing
+strong-confidence regime: when confidence is taken from *step-by-step self-evaluation / logprob
+probes* rather than naive verbalized scores, reported AUC is **0.9+** (see Blocker 2), i.e.
+sigma_conf well below the flip-point, where the monitor LOSES.
+
+---
+
+## BLOCKER 2 — LIVE ≥2-SOURCE PRIOR-ART CHECK (egress available; arxiv reachable, verified live)
+
+The surviving weak-form novelty was: *"an EARLY ONLINE causal failure signature with measured
+LEAD TIME, distinct from difficulty."* Live check of the three named systems + adjacent 2025–26 work:
+
+1. **Step-level PRMs / Let's Verify Step by Step** (Lightman et al. 2023, arXiv 2305.20050) — VERIFIED.
+   Step-level scoring IS online/causal (scores step ≤ t). It does NOT measure lead-time-before-failure
+   and is trained on reasoning correctness, not agent-trajectory failure. Partial overlap (online
+   step scoring) but not lead-time framing. NOT a full relabel by itself.
+
+2. **AgentBoard progress-rate** (Ma et al., NeurIPS 2024, OpenReview 09Y7J22N9c) — VERIFIED.
+   "Progress rate" = max fraction of annotated subgoals achieved along a trajectory. It is an
+   **analytical EVALUATION metric requiring ground-truth subgoal annotations**, reported over
+   completed/truncated rollouts (post-hoc), NOT an online causal failure predictor on live unseen
+   trajectories and NOT lead-time-measured. So AgentBoard alone does NOT fully relabel the online
+   lead-time claim — but it occupies the "online progression score" conceptual territory.
+
+3. **Online LLM-as-Judge / stepwise self-evaluation** — VERIFIED, and this is the KILL:
+   - **Self-Evaluating LLMs for Multi-Step Tasks: Stepwise Confidence Estimation for Failure
+     Detection** (Mavi et al., arXiv 2511.07364, Nov 2025). Does **step-by-step (online-capable)
+     confidence scoring for FAILURE DETECTION on multi-step tasks**, AUC-ROC up to ~0.9, stepwise
+     beats holistic by up to +15% rel. This is precisely "online stepwise scoring of impending
+     failure on multi-step agent trajectories." It IS the self-confidence baseline done online and
+     done well (AUC ~0.9, i.e. sigma_conf far below our flip-point → monitor would LOSE).
+   - **Accurate Failure Prediction in Agents...** (Vasudev et al., arXiv 2602.03338, Feb 2026):
+     a binary LLM **critic** with offline **AUROC 0.94** predicting agent failure — and shows the
+     deeper problem that accurate prediction does not imply effective prevention.
+
+### Prior-art verdict
+The conceptual space — **online/stepwise scoring of impending failure on multi-step LLM-agent
+trajectories** — is OCCUPIED (2511.07364 directly; PRMs and AgentBoard adjacent). The ONLY sliver
+left for CLAIM-0037 is the *specific framing* "an EXTERNAL causal-observable signature (tool-error +
+looping − info-gain) with MEASURED LEAD TIME that beats BOTH self-confidence AND difficulty." But:
+- EXP-0033 already showed it **does not beat self-confidence** at realistic-strong calibration, and
+  the published online self-evaluators hit AUC ~0.9 (strong calibration → our model says monitor loses).
+- The **lead-time** half was already weak in EXP-0033 (only 42% of failures flagged ≥1 step early,
+  below the pre-registered 0.5 bar). The novelty hinges on a property the L0 itself failed.
+- "Distinct from difficulty" (the one robust win, +0.095) is real but is the **weakest, least novel**
+  half — process-vs-difficulty separation is implicit in any step-level PRM / progress-rate work.
+
+The claim's distinctive contribution is therefore **relabeling** of online stepwise failure
+detection, dressed in a lead-time framing the L0 cannot support.
+
+---
+
+## DECISION RULE (PRE-REGISTERED) → outcome
+> IF flip-point within realistic miscalibration AND no published online lead-time scorer -> L1-worthy.
+> ELSE -> converge.
+
+- Flip-point within realistic *verbalized*-confidence range? **YES.**
+- No published online lead-time trajectory failure scorer? **FALSE** — 2511.07364 does online stepwise
+  failure detection (AUC ~0.9); PRMs/AgentBoard occupy the progression-score territory.
+
+Because the AND fails on the prior-art conjunct, the pre-registered rule fires the ELSE branch:
+**CONVERGE.** Additionally, even the flip-point favorability is fragile: the published online
+self-evaluators achieve AUC ~0.9 (sigma_conf ≪ flip), the regime where our own model says the monitor
+LOSES. The monitor only wins against *naive verbalized* confidence, not against the *online stepwise
+self-evaluation* that the prior art already deploys.
+
+## RECOMMENDATION: RED / weaken-to-relabeling.
+Do NOT spend a GPU L1. The strong claim ("cheap external online monitor beats the agent's own signal
+AND difficulty, with lead time") is (a) dominated by published online stepwise self-evaluation
+(AUC ~0.9), and (b) its surviving lead-time novelty is unsupported even at L0 (42% coverage). The only
+robust positive — "progression signal is distinct from static difficulty" — is real but is the
+least-novel half and is implicit in existing PRM/progress-rate work. This cheap L0 did its job:
+it AVOIDED a wasted GPU L1.
+
+## ARTIFACTS
+- PRE_REGISTRATION.md (committed before run, HEAD c5998f9)
+- sweep.py (imports EXP-0033/exp.py unchanged)
+- results/sweep_sigma_conf.csv, results/flip_summary.csv
+- logs/sweep.log
+
+## EXP-0033 (original L0) RESULTS
+# RESULTS — EXP-0033 (CLAIM-0037)
+
+**Researcher:** researcher-0033 | **L0** CPU-only, stdlib-only, SERIAL | wall-clock ~2.6s (budget 15min)
+**Design:** pre-registered in PRE_REGISTRATION.md (committed BEFORE running). Sim/trace L0 modeling study.
+**Sweep:** 12 cells (frac_foreshadowed × sigma × rho) × 8 seeds = 96 rows; 400 trajectories/row.
+Raw: `results/raw_results.csv` · per-cell: `results/agg_by_cell.csv` · global: `results/global_summary.csv`
+
+## VERDICT: PARTIAL → effectively NEGATIVE on the load-bearing test
+
+The online causal monitor passes **2 of 3** required gates but FAILS the one that matters most for the
+claim as written (it must beat BOTH baselines).
+
+| Gate | Result | Pass? |
+|---|---|---|
+| (A) Lead time exists (>=1 step before agent termination) | median lead **+2.32 steps**; but only **42%** of failures flagged >=1 step early at 30% flag-rate (pre-reg bar was >0.5) | PARTIAL |
+| (B1) Beats GENERIC DIFFICULTY (anti-relabeling, the CLAIM-0015 death) | AUC(mon)-AUC(diff) = **+0.095**, 95% CI **[+0.087, +0.103]** (excludes 0); 96/96 rows positive | **YES** |
+| (B2) Beats AGENT SELF-CONFIDENCE | AUC(mon)-AUC(conf) = **-0.006**, 95% CI **[-0.011, -0.001]** (below 0) | **NO** |
+| Anti-circularity: monitor < latent-health ORACLE | mon 0.743 < oracle 0.858 (gap 0.115) | YES |
+
+**Bottom line:** The progression signature is REAL and is NOT merely a relabeling of intrinsic
+difficulty — it decisively beats a generic difficulty predictor with tight CIs, and it carries genuine
+lead time (~2.3 steps median). BUT it does NOT beat the agent's own self-confidence. In this model the
+agent's confidence is a (noisy) readout of the same latent health the failure is generated from, so it is
+structurally privileged: an online observer reconstructing health from indirect noisy proxies cannot do
+better than a direct (noisy) readout of that health. The claim requires beating BOTH (a) and (b); it
+beats (b) but ties/loses to (a). **Per the pre-registered honest-negative branch, this is reported as a
+(partial) NEGATIVE.**
+
+## (A) LEAD-TIME DISTRIBUTION
+- Online monitor median lead = **+2.32 steps** before the agent's own termination (pooled across cells).
+- It is even slightly EARLIER than self-confidence's first-fire (~1.6 steps) at matched 30% flag-rate.
+- HOWEVER, coverage is the catch: only **42.4%** of failed trajectories are flagged >=1 step early
+  (the rest are flagged late or never within budget) — below the pre-registered >0.5 bar.
+- Trend with foreshadowing: as frac_foreshadowed rises 0.2 -> 0.8, frac-early climbs 0.37 -> 0.48 and
+  AUC climbs 0.69 -> 0.80, confirming the signature tracks foreshadowed (not abrupt) failure. When abrupt
+  failures dominate (frac=0.2) the monitor's edge shrinks toward the noise floor, exactly as pre-registered.
+
+## (B) HEAD-TO-HEAD AT MATCHED FLAG-RATE (the anti-relabeling test)
+- vs generic difficulty: **WIN, robust.** d=+0.095, CI [+0.087,+0.103], all 96 rows positive. The online
+  progression signal contains information the static difficulty predictor does not. This is the test
+  CLAIM-0015 failed; here the monitor clears it cleanly.
+- vs self-confidence: **LOSS/TIE, robust.** d=-0.006, CI [-0.011,-0.001]. Small but consistently negative.
+  Self-confidence (direct noisy health readout) >= reconstructed-from-observables monitor.
+
+## ORACLE GAP (anti-circularity, the CLAIM-0008/0013 lesson)
+Monitor AUC 0.743 sits well below the latent-health oracle 0.858 (gap 0.115). The monitor is NOT secretly
+reading the label — it operates on emitted noisy observables only and pays the reconstruction penalty.
+Confidence (0.749) also sits below the oracle. Anti-circularity holds.
+
+## HONEST INTERPRETATION
+The model is built so the agent's OWN confidence is a privileged direct (noisy) view of latent health,
+while the monitor must reconstruct health from indirect proxies (tool-error/loop/info-gain). Under that
+(arguably realistic) assumption, the online monitor cannot beat self-confidence — it can only beat the
+difficulty baseline. The claim's strong form ("beats BOTH") is therefore FALSIFIED in this regime.
+A weaker, still-interesting form survives: **the online progression signature beats a generic difficulty
+baseline and has real lead time** — i.e., impending failure has a structural progression signature
+distinct from intrinsic difficulty (the anti-relabeling claim holds). But it is dominated by the agent's
+own self-report, which undercuts the practical "cheap external monitor beats the agent" pitch.
+
+This conclusion is sensitive to ONE modeling assumption: how good is real-agent self-confidence? Published
+work suggests LLM self-confidence/verbalized-uncertainty is often POORLY calibrated and weakly predictive
+of failure — if real self-confidence is noisier than modeled here (larger sigma_conf, or biased), the
+monitor could flip to beating it. That is the key L1 question, not resolvable at L0.
+
+## WHAT A REAL L1 SHOULD MEASURE
+- Real agent FAILURE trajectories: tau-bench, AppWorld, SWE-agent rollouts (success + failure).
+- Real online features: actual tool-error/retry events, action n-gram self-similarity (true looping),
+  new-entity/new-token info-gain per step, step index — extracted causally (no peeking past step t).
+- Real lead time vs the agent's ACTUAL termination/error step (not a simulated death threshold).
+- Real self-confidence baseline: the agent's verbalized confidence / logprob-derived uncertainty,
+  with its TRUE (mis)calibration — this is the load-bearing comparison and the one L0 cannot settle.
+- Real difficulty baseline: a per-task difficulty predictor trained on task features only (no trajectory).
+- Then re-run (B): does the online monitor beat self-confidence AND difficulty at matched flag-rate with
+  real lead time? L0 says it beats difficulty but not (modeled) confidence.
+
+## PRIOR-ART CAVEAT
+Agent-failure attribution, LLM-as-judge post-hoc trajectory analysis, AgentBoard, and trajectory-eval are
+PUBLISHED — but they are POST-HOC (analyze a finished trajectory). The novelty would be the EARLY ONLINE
+CAUSAL signature with MEASURED lead time beating self-confidence AND difficulty. L0 supports the
+"distinct-from-difficulty + has lead time" half but NOT the "beats the agent's own signal" half. Failure
+analysis itself is well-trodden; honest framing required.
+
+## committee#1 reference: VERDICT-0034 yellow (required exactly this sweep + prior-art check).
