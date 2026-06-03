@@ -1169,3 +1169,307 @@ hook: PostToolUse Completed
 766:<li><a id="18" rel="nofollow">[18]</a> : Raimondas Kiveris, Silvio Lattanzi, et al., <a href="https://doi.org/10.1145/2670979.2670997" rel="nofollow">Connected Components in MapReduce and Beyond</a>, 2014</li>
 769:<li><a id="21" rel="nofollow">[21]</a>: Edith Cohen, <a href="http://www.cohenwang.com/edith/Surveys/minhash.pdf" rel="nofollow">MinHash Sketches : A Brief Survey</a>, 2016</li>
 
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/datatrove/main/examples/minhash_deduplication.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/pipeline/dedup/minhash.py | grep -n -i -E 'connected|component|union|cluster|duplicate|keep|discard|threshold' | head -120" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.nvidia.com/nemo-framework/user-guide/25.02/datacuration/gpudeduplication.html | grep -i -n -E 'connected|component|MinHash|fuzzy|Jaccard|remove|duplicates' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 217ms:
+from datatrove.executor.slurm import SlurmPipelineExecutor
+from datatrove.pipeline.dedup import MinhashDedupSignature
+from datatrove.pipeline.dedup.minhash import (
+    MinhashConfig,
+    MinhashDedupBuckets,
+    MinhashDedupCluster,
+    MinhashDedupFilter,
+)
+from datatrove.pipeline.readers import JsonlReader
+from datatrove.pipeline.tokens import TokensCounter
+from datatrove.pipeline.writers.jsonl import JsonlWriter
+from datatrove.utils.hashing import HashConfig
+from datatrove.utils.typeshelper import Languages
+
+
+# you can also change ngrams or the number of buckets and their size here
+minhash_config = MinhashConfig(
+    hash_config=HashConfig(precision=64),
+    num_buckets=14,
+    hashes_per_bucket=8,
+)  # better precision -> fewer false positives (collisions)
+
+S3_MINHASH_BASE_PATH = "s3://mybucket/minhash/"
+
+S3_LOGS_FOLDER = "s3://mybucket/my_minhash_logs_path/"
+LOCAL_LOGS_FOLDER = "my_local_folder_for_slurm_logs/"
+
+TOTAL_TASKS = 1000
+
+# this is the original data that we want to deduplicate
+INPUT_READER = JsonlReader("s3://mybucket/base_processing/output/")
+
+# stage 1 computes minhash signatures for each task (each task gets a set of files)
+stage1 = SlurmPipelineExecutor(
+    job_name="mh1",
+    pipeline=[
+        INPUT_READER,
+        MinhashDedupSignature(
+            output_folder=f"{S3_MINHASH_BASE_PATH}/signatures", config=minhash_config, language=Languages.english
+        ),
+    ],
+    tasks=TOTAL_TASKS,
+    time="5:00:00",
+    partition="hopper-cpu",
+    logging_dir=f"{S3_LOGS_FOLDER}/signatures",
+    slurm_logs_folder=f"{LOCAL_LOGS_FOLDER}/signatures/slurm_logs",
+    qos="high",
+)
+
+# stage 2 finds matches between signatures in each bucket
+stage2 = SlurmPipelineExecutor(
+    job_name="mh2",
+    pipeline=[
+        MinhashDedupBuckets(
+            input_folder=f"{S3_MINHASH_BASE_PATH}/signatures",
+            output_folder=f"{S3_MINHASH_BASE_PATH}/buckets",
+            config=minhash_config,
+        ),
+    ],
+    tasks=minhash_config.num_buckets,
+    time="90:00:00",
+    partition="hopper-prod",
+    logging_dir=f"{S3_LOGS_FOLDER}/buckets",
+    depends=stage1,
+    slurm_logs_folder=f"{LOCAL_LOGS_FOLDER}/buckets/slurm_logs",
+    qos="high",
+)
+
+# stage 3 creates clusters of duplicates using the results from all buckets
+stage3 = SlurmPipelineExecutor(
+    job_name="mh3",
+    pipeline=[
+        MinhashDedupCluster(
+            input_folder=f"{S3_MINHASH_BASE_PATH}/buckets",
+            output_folder=f"{S3_MINHASH_BASE_PATH}/remove_ids",
+            config=minhash_config,
+        ),
+    ],
+    tasks=1,
+    time="90:00:00",
+    partition="hopper-prod",
+    logging_dir=f"{S3_LOGS_FOLDER}/clusters",
+    mem_per_cpu_gb=70,
+    cpus_per_task=2,
+    depends=stage2,
+    slurm_logs_folder=f"{LOCAL_LOGS_FOLDER}/clusters/slurm_logs",
+)
+
+# stage 4 reads the original input data and removes all but 1 sample per duplicate cluster
+# the data must match exactly stage 1, so number of tasks and the input source must be the same
+stage4 = SlurmPipelineExecutor(
+    job_name="mh4",
+    pipeline=[
+        INPUT_READER,
+        TokensCounter(),  # nice way to see how many tokens we had before and after deduplication
+        MinhashDedupFilter(
+            input_folder=f"{S3_MINHASH_BASE_PATH}/remove_ids",
+            exclusion_writer=JsonlWriter(f"{S3_MINHASH_BASE_PATH}/removed"),
+        ),
+        JsonlWriter(output_folder=f"{S3_MINHASH_BASE_PATH}/deduplicated_output"),
+    ],
+    tasks=TOTAL_TASKS,
+    time="50:00:00",
+    partition="hopper-cpu",
+    logging_dir=f"{S3_LOGS_FOLDER}/filter",
+    depends=stage3,
+    slurm_logs_folder=f"{LOCAL_LOGS_FOLDER}/filter/slurm_logs",
+)
+
+
+stage4.run()
+
+ succeeded in 242ms:
+32:threshold is (1/14)^(1/8)~0.72
+33:threshold is real minhash similarity cutoff for high probability inclusion by LSH minhash
+327:        Find duplicate pairs from the signatures and possibly an index. Can also save an index with the new signatures.
+331:        output_folder: output folder where results (document duplicate pairs) will be saved
+334:        only_dedup_in_index: only deduplicate versus index (ignore any matches between 2 documents in our input dataset)
+500:class MinhashDedupCluster(PipelineStep):
+503:    Cluster the documents using the previously found duplicate pairs. If A-B and B-C are duplicate pairs, then we will have the A-B-C cluster. Only one document per cluster will be kept after filtering
+514:        save_cluster_id: bool = False,
+515:        save_cluster_size: bool = False,
+523:        self.save_cluster_id = save_cluster_id
+524:        self.save_cluster_size = save_cluster_size
+533:        assert world_size == 1, "World size must be 1 for clustering"
+534:        union_set = {}
+538:            if x not in union_set or union_set[x] == x:
+539:                union_set[x] = x
+542:            union_set[x] = parent(union_set[x])
+543:            return union_set[x]
+545:        def union(v_a, v_b):
+550:                # Union by size
+556:                union_set[root_b] = root_a  # make the smallest one join the biggest one to keep sets shallow
+569:                        union(a, b)
+573:            cluster_ids = {}
+575:                for node in sorted(union_set):
+576:                    self.stat_update("duplicates")
+584:                    if self.save_cluster_id:
+585:                        if p not in cluster_ids:
+586:                            cluster_ids[p] = ci
+588:                            self.stat_update("clusters")
+589:                        output_mg.write(f"{file:06d}.clusters", struct.pack("<I", doc))
+590:                        output_mg.write(f"{file:06d}.clusters", struct.pack("<I", cluster_ids[p]))
+592:                        # only run once per cluster
+593:                        self.stat_update("cluster_size", value=set_size[p], unit="cluster")
+594:                    if self.save_cluster_size:
+602:    Filter the documents based on the minhash clusters to keep only one per cluster
+612:        load_cluster_ids: bool = False,
+613:        load_cluster_sizes: bool = False,
+619:        self.load_cluster_ids = load_cluster_ids
+620:        self.load_cluster_sizes = load_cluster_sizes
+632:        # cluster ids
+633:        if self.load_cluster_ids and not self.data_folder.exists(f"{rank:06d}.clusters"):
+634:            logger.warning(f"No .clusters file for {rank=}.")
+636:        # cluster sizes
+637:        if self.load_cluster_sizes and not self.data_folder.exists(f"{rank:06d}.sizes"):
+653:                if self.load_cluster_ids:
+654:                    cluster_loader = metadata_loader(f"{rank:06d}.clusters")
+655:                    next_cluster = next(cluster_loader, None)
+657:                if self.load_cluster_sizes:
+665:                        if self.load_cluster_ids:
+666:                            if next_cluster and idx == next_cluster[0]:
+667:                                doc.metadata["minhash_cluster_id"] = next_cluster[1]
+668:                                next_cluster = next(cluster_loader, None)
+670:                                doc.metadata["minhash_cluster_id"] = -1
+672:                        if self.load_cluster_sizes:
+674:                                doc.metadata["minhash_cluster_size"] = next_size[1]
+677:                                doc.metadata["minhash_cluster_size"] = 1
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 707ms:
+12:    <title>GPU Accelerated Exact and Fuzzy Deduplication &#8212; NVIDIA NeMo Framework User Guide</title>
+504:<li class="toctree-l4"><a class="reference internal" href="../nemotoolkit/core/adapters/components.html">Adapter Components</a></li>
+661:<li class="toctree-l3 current active"><a class="current reference internal" href="#">GPU Accelerated Exact and Fuzzy Deduplication</a></li>
+715:<li class="toctree-l1"><a class="reference internal" href="../softwarecomponentversions.html">Software Component Versions</a></li>
+758:    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">GPU Accelerated Exact and Fuzzy Deduplication</span></li>
+792:<section id="gpu-accelerated-exact-and-fuzzy-deduplication">
+793:<span id="data-curator-gpu-deduplication"></span><h1>GPU Accelerated Exact and Fuzzy Deduplication<a class="headerlink" href="#gpu-accelerated-exact-and-fuzzy-deduplication" title="Link to this heading">#</a></h1>
+796:<p>The exact and fuzzy document-level deduplication modules in NeMo Curator aim to reduce the occurrence of duplicate and
+804:<p>As exact deduplication requires significantly less compute, we typically will run exact deduplication before fuzzy deduplication.
+805:Also, from our experience in deduplicating Common Crawl snapshots, a significant portion (as high as ~40%) of the duplicates can be exact duplicates.</p>
+830:<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nemo_curator</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactDuplicates</span>
+834:<span class="n">exact_duplicates</span> <span class="o">=</span> <span class="n">ExactDuplicates</span><span class="p">(</span>
+846:<span class="n">duplicate_docs</span> <span class="o">=</span> <span class="n">exact_duplicates</span><span class="o">.</span><span class="n">identify_duplicates</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+858:<span class="n">deduplicated_dataset</span> <span class="o">=</span> <span class="n">exact_duplicates</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">duplicate_docs</span><span class="p">)</span>
+861:<span class="c1"># deduplicated_dataset = exact_duplicates(dataset)</span>
+871:<p>Assuming that a unique ID has been added to each document, users can proceed with finding exact duplicates
+875:<dt>Find Exact Duplicates</dt><dd><ol class="arabic simple">
+877:<li><p>Output: <code class="docutils literal notranslate"><span class="pre">_exact_duplicates.parquet</span></code>. List of exact duplicates and the document hash.</p></li>
+883:<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># same as `python nemo_curator/scripts/find_exact_duplicates.py`</span>
+902:<section id="fuzzy-deduplication">
+903:<h2>Fuzzy Deduplication<a class="headerlink" href="#fuzzy-deduplication" title="Link to this heading">#</a></h2>
+904:<p>When removing near-duplicates within the corpus, we perform fuzzy deduplication at the document level in order to remove documents with
+905:high Jaccard similarity scores. Our approach closely resembles the approach described in <a class="reference external" href="https://arxiv.org/abs/2201.11990">Smith et al., 2020</a>.</p>
+910:<li><p><strong>Compute Minhashes</strong>: The first stage involves computing <a class="reference external" href="https://en.wikipedia.org/wiki/MinHash">MinHash</a> Signatures on documents.
+911:NeMo Curator currently only supports character-based n-grams for MinHashing. An approximate metric of ~4.5 characters per word can be used to determine the n-gram size for users familiar with word-based ngrams.</p></li>
+913:to find candidate duplicates.</p></li>
+914:<li><p><strong>Buckets to Edgelist</strong>: If not using the false positive check, we directly convert the LSH buckets to edges for the connected components computation.</p></li>
+917:<li><p><strong>False Positive Check</strong> <em>(optional alternative to Buckets to Edgelist)</em>: Due to the approximate nature of the bucketing via MinHash + LSH
+919:process each of the buckets by computing some pairwise Jaccard similarity scores between documents in each bucket and filter out false positives that might have been hashed into the same bucket.</p></li>
+923:<li><p><strong>Jaccard Map Buckets:</strong> Since buckets generated by LSH can have high cardinality, we map multiple LSH buckets to larger batches for
+925:for pairwise Jaccard similarity computations within that bucket.</p></li>
+926:<li><p><strong>Jaccard Shuffle</strong>: Store documents from the original dataset into new directories and files such that all documents in the same batch (bucket)
+927:are stored together. This allows parallelizing pairwise Jaccard similarity computations across different buckets.</p></li>
+928:<li><p><strong>Jaccard Compute</strong>: Compute Jaccard similarity scores between all pairs of documents in each bucket to the candidate anchor docs.</p></li>
+932:<li><p><strong>Connected Components</strong>: Due to the approximate nature of LSH, documents that are near duplicates may be assigned into different buckets with a few overlapping documents
+933:between these buckets. We use a GPU accelerated connected components algorithm to find all connected components in the graph formed by the edges between documents in the same bucket.</p></li>
+935:<p>The result from the connected components step is a list of document IDs and the group they belong to.
+936:All documents in the same group are considered near duplicates.
+937:These results can be used to remove the near duplicates from the corpus.</p>
+941:<section id="fuzzydup-pyapi">
+942:<span id="id3"></span><h4>Python API<a class="headerlink" href="#fuzzydup-pyapi" title="Link to this heading">#</a></h4>
+945:<p>Before running fuzzy deduplication, you need to ensure that the dataset contains a unique ID for each document.
+964:<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nemo_curator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuzzyDuplicatesConfig</span>
+966:<span class="n">config</span> <span class="o">=</span> <span class="n">FuzzyDuplicatesConfig</span><span class="p">(</span>
+970:    <span class="n">perform_removal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># dictates if deduplicated dataset or IDs of duplicates are returned</span>
+997:<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nemo_curator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuzzyDuplicatesConfig</span>
+999:<span class="n">config</span> <span class="o">=</span> <span class="n">FuzzyDuplicatesConfig</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s2">&quot;/path/to/config.yaml&quot;</span><span class="p">)</span>
+1006:<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nemo_curator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuzzyDuplicates</span>
+1010:<span class="n">fuzzy_duplicates</span> <span class="o">=</span> <span class="n">FuzzyDuplicates</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">)</span>
+1014:    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;cudf&quot;</span><span class="p">,</span> <span class="c1"># FuzzyDuplicates only supports datasets with the cuDF backend.</span>
+1018:<span class="n">duplicate_docs</span> <span class="o">=</span> <span class="n">fuzzy_duplicates</span><span class="o">.</span><span class="n">identify_duplicates</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+1029:<span class="n">deduplicated_dataset</span> <span class="o">=</span> <span class="n">fuzzy_duplicates</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">duplicate_docs</span><span class="p">)</span>
+1032:<span class="c1"># deduplicated_dataset = fuzzy_duplicates(dataset)</span>
+1038:<li><p>A comprehensive example can be found in <a class="reference external" href="https://github.com/NVIDIA/NeMo-Curator/blob/main/examples/fuzzy_deduplication.py">examples/fuzzy_deduplication.py</a>.</p></li>
+1039:<li><p>The default values of <code class="docutils literal notranslate"><span class="pre">num_buckets</span></code> and <code class="docutils literal notranslate"><span class="pre">hashes_per_bucket</span></code> are set to find documents with an approximately Jaccard similarity of 0.8 or above.</p></li>
+1050:<p>Fuzzy deduplication CLI scripts only work with the specific ID format generated by the <code class="code docutils literal notranslate"><span class="pre">add_id</span></code> script. If the
+1062:<p>Once a unique ID has been added to each document, users can proceed with fuzzy deduplication, which roughly require the following
+1063:steps (all scripts are included in the <a class="reference external" href="https://github.com/NVIDIA/NeMo-Curator/blob/main/nemo_curator/scripts/fuzzy_deduplication">nemo_curator/scripts/fuzzy_deduplication</a> subdirectory):</p>
+1065:<li><p>Compute Minhashes</p></li>
+1070:<li><p>Output: <code class="docutils literal notranslate"><span class="pre">minhashes.parquet</span></code> for each data directory</p></li>
+1073:<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># same as `python compute_minhashes.py`</span>
+1074:gpu_compute_minhashes<span class="w"> </span><span class="se">\</span>
+1076:<span class="w">  </span>--output-minhash-dir<span class="w"> </span>/path/to/output_minhashes<span class="w"> </span><span class="se">\</span>
+1079:<span class="w">  </span>--minhash-length<span class="w"> </span>number_of_hashes<span class="w"> </span><span class="se">\</span>
+1091:<ol class="arabic simple" id="fuzzydup-lsh" start="2">
+1092:<li><p>Buckets (Minhash Buckets)</p></li>
+1096:<li><p>Input: Minhash directories</p></li>
+1100:<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># same as `python minhash_lsh.py`</span>
+1101:minhash_buckets<span class="w"> </span><span class="se">\</span>
+1102:<span class="w">  </span>--input-data-dirs<span class="w"> </span>/path/to/output_minhashes/dir1<span class="w"> </span>/path/to/output_minhashes/dir2<span class="w"> </span><span class="se">\</span>
+1104:<span class="w">  </span>--input-minhash-field<span class="w"> </span>_minhash_signature<span class="w"> </span><span class="se">\</span>
+1106:<span class="w">  </span>--minhash-length<span class="w"> </span>number_of_hashes<span class="w"> </span><span class="se">\</span>
+1119:<li><p>False Positive Check (optional): If skipping this step, proceed to the <a class="reference internal" href="#fuzzydup-nofp"><span class="std std-ref">skip fp check section</span></a>.</p></li>
+1123:<li><p>Jaccard Map Buckets</p></li>
+1132:jaccard_map_buckets<span class="w"> </span><span class="se">\</span>
+1146:<li><p>Jaccard Shuffle</p></li>
+1154:<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># same as `python jaccard_shuffle.py`</span>
+1155:jaccard_shuffle<span class="w"> </span><span class="se">\</span>
+1169:<li><p>Jaccard Compute</p></li>
+1174:<li><p>Output: <code class="docutils literal notranslate"><span class="pre">jaccard_similarity_results.parquet</span></code></p></li>
+
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Google Research deduplicate-text-datasets / Lee et al. 2021", url: "https://arxiv.org/abs/2107.06499", overlap: "Uses released near-dedup tooling for LM datasets; packet says standard MinHash-LSH -> connected-components -> keep-one pipeline and cites a 200K-doc C4 component, but source evidence does not show they measure sub-threshold-to-retained innocent removals."},
+  {system: "BigCode / Hugging Face near-dedup", url: "https://huggingface.co/blog/dedup", overlap: "Shipping-scale MinHash-LSH dedup explicitly constructs a graph from candidate pairs, clusters duplicates into connected components / union-find, and removes all but one per duplicate cluster; same transitive mechanism, no shown guard against chain-induced sub-threshold removals."},
+  {system: "Hugging Face datatrove MinhashDedupCluster", url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/pipeline/dedup/minhash.py", overlap: "OSS code states: if A-B and B-C are duplicate pairs, then A-B-C cluster, only one kept after filtering; this is direct implementation of the claimed transitive CC behavior."},
+  {system: "NVIDIA NeMo Curator fuzzy deduplication", url: "https://docs.nvidia.com/nemo-framework/user-guide/25.02/datacuration/gpudeduplication.html", overlap: "GPU fuzzy dedup converts LSH buckets/Jaccard edges into connected components and treats all documents in a component as near duplicates; default parameters target Jaccard about 0.8."},
+  {system: "NVIDIA NeMo Curator semantic dedup / SemDeDup", url: "https://docs.nvidia.com/nemo-framework/user-guide/24.09/datacuration/semdedup.html", overlap: "Implements embedding clustering plus within-cluster pairwise similarity and duplicate removal; overlaps with the mitigation family, but not an explicit Jaccard-CC chain-overdelete diagnosis."},
+  {system: "vLLM / SGLang / LMCache / FlashInfer / TensorRT-LLM", url: "https://github.com/vllm-project/vllm ; https://github.com/sgl-project/sglang ; https://github.com/LMCache/LMCache", overlap: "Inference/KV-cache/kernel/runtime systems; no material overlap with training-corpus MinHash/CC dedup found from targeted search."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: The graph mechanism itself holds: the packet reports exact-edge CC innocent-removal 0.724 +/- 0.003 at T=0.8 moderate density, versus 0.000 for non-transitive and complete-linkage arms. But realistic workload magnitude is insufficient evidence: the packet admits the effect collapses to 0 at T=0.9 and depends on real-corpus drift-chain prevalence at T about 0.8. Existing shipping systems do run the vulnerable CC pattern at scale, but this artifact is synthetic L0 and does not yet measure C4/RedPajama/Stack component topology or downstream training harm.
+RATIONALE: This is not integration-only glue because the contribution is a falsifiable diagnosis of a graph-topology failure mode in already-shipping MinHash/CC dedup systems, plus a mitigation comparison using the same edge set. It is also not green: BigCode/datatrove and NeMo already ship the core connected-components mechanism, SemDeDup-style workflows already ship a non-transitive-ish alternative, and the packet has not established real-corpus chain prevalence or model-quality cost. Reproducibility looks acceptable for L0 because it is CPU-only/stdlib/serial with 5 seeds and exact-edge controls, but systems acceptance needs an L1 run on a real corpus slice using the actual Google/Datatrove/NeMo pipeline and reporting component topology, innocent-removal fraction, wall-clock/resource costs, and downstream loss/diversity impact.
+tokens used
+70,479
