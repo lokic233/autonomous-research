@@ -1,0 +1,38 @@
+claim_id: CLAIM-0014
+project_id: PROJ-0003
+stage: seed
+status: seed
+claim: For agentic LLM serving with bursty per-session KV pressure, a tiered KV-offload
+  policy that proactively demotes a session's COLD prefix blocks to CPU/host memory
+  (and prefetches them back on the session's next turn, overlapping fetch with the
+  inter-turn idle gap) achieves a strictly better effective-batch-size / TTFT Pareto
+  than evict-and-recompute, because agent inter-turn gaps are long enough to hide
+  PCIe fetch latency AND the demoted blocks are re-referenced with high probability
+  on resume.
+why_it_matters: "NEW axis (KV-offload tiering across the agent inter-turn gap \u2014\
+  \ untouched by the 14 prior claims, which covered eviction/dedup/admission/spec-decode/parallelism/RAG).\
+  \ Two falsifiable parts: (1) is the inter-turn idle gap long enough to hide host<->GPU\
+  \ KV fetch? (2) does proactive demote+prefetch beat evict-and-recompute on the effective-batch/TTFT\
+  \ Pareto, accounting for PCIe bandwidth + wrong-prefetch waste? L0: analytic+trace\
+  \ model of gap distribution vs fetch latency + a demote/prefetch vs evict/recompute\
+  \ sim; honest-negative if gaps too short OR PCIe-bound OR re-reference prob too\
+  \ low. Topic: llm-serving + kv-cache + agent-infra. Distinguish from LMCache/offload-KV\
+  \ (which is reactive/cross-instance) \u2014 novelty is the AGENT-INTER-TURN-GAP-timed\
+  \ proactive demote+prefetch."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r2-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0019 result, then ros exp complete --exp EXP-0019 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0019
+created_at: '2026-06-03T05:57:39Z'
+last_updated: '2026-06-03T05:58:32Z'

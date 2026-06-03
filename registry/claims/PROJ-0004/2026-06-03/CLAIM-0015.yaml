@@ -1,0 +1,41 @@
+claim_id: CLAIM-0015
+project_id: PROJ-0004
+stage: seed
+status: seed
+claim: "In a mixed-precision serving fleet (a cheap low-bit-quantized model + an expensive\
+  \ full-precision model), a cheap PRE-GENERATION router that predicts per-request\
+  \ whether low-bit quantization will materially degrade THIS request's output (from\
+  \ features available before decode: prompt perplexity, domain/topic, presence of\
+  \ exact-arithmetic or long-context-reasoning markers) can route only the quant-sensitive\
+  \ requests to the expensive model \u2014 achieving a strictly better cost/quality\
+  \ Pareto than (a) all-quant, (b) all-full, and (c) random/confidence-threshold routing\
+  \ at matched escalation budget, because quantization error is request-dependent\
+  \ and predictable from cheap pre-decode signals."
+why_it_matters: "NEW axis (quantization-error-aware request ROUTING \u2014 untouched\
+  \ by the 14 prior claims). Two falsifiable parts: (1) is per-request quant-degradation\
+  \ predictable from cheap PRE-decode features (not post-hoc)? (2) does the router\
+  \ beat all-quant/all-full AND a confidence-threshold baseline at matched escalation\
+  \ budget? L0: model quant-error as request-dependent + a cheap pre-decode predictor's\
+  \ AUC + the cost/quality Pareto vs the RIGHT baselines (not just all-quant); anti-circular\
+  \ (predictor features != the quant-error generative cause); honest-negative if quant-error\
+  \ is ~uniform OR not pre-decode-predictable OR router can't beat confidence-threshold.\
+  \ Topic: inference-optimization. Distinguish from speculative-decoding (lossless)\
+  \ + cascade/routing work (LLM-router/RouteLLM gate on difficulty, NOT quant-sensitivity\
+  \ specifically) \u2014 novelty is the QUANT-SENSITIVITY-specific pre-decode router."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r2-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0020 result, then ros exp complete --exp EXP-0020 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0020
+created_at: '2026-06-03T05:58:07Z'
+last_updated: '2026-06-03T05:58:33Z'
