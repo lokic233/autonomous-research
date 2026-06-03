@@ -52,13 +52,17 @@ supporting_evidence:
     \ the oracle gap."
   data_path: experiments/2026-06-03/EXP-0039/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0040
+  date: '2026-06-03'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0039; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal: VERDICT-0040 red (novelty occupied \u2014 Mem0/A-MEM/Redis\
+  \ ship write-path dedup; Part A tautological, Part B textbook)"
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T14:03:44Z'
-last_updated: '2026-06-03T14:13:53Z'
+last_updated: '2026-06-03T14:34:28Z'

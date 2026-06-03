@@ -1,0 +1,76 @@
+verdict_id: VERDICT-0040
+claim_id: CLAIM-0041
+project_id: PROJ-0012
+date: '2026-06-03'
+experiment_ids:
+- EXP-0039
+experiment_paths:
+- experiments/2026-06-03/EXP-0039
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "NOVELTY OCCUPIED (direct, deployed): Mem0 (arXiv 2504.19413) does write-path dedup/merge\
+  \ of redundant memories and beats full-history AND recency baselines on LOCOMO \u2014\
+  \ the exact positive claim"
+- A-MEM (2502.12110) corroborates write-path consolidation (>=2 independent sources)
+- "Redis Agent Memory Server SHIPS the proposed mechanism as production code \u2014\
+  \ store-time semantic vector-search dedup w/ configurable distance threshold + paraphrase-merge\
+  \ E2E tests. The systems contribution is already deployed open-source"
+- "Part A ('write-amplification >25%') is TAUTOLOGICAL \u2014 the sim's amplification\
+  \ rate recovers the input re-store probability by construction (0.197@0.2/0.399@0.4/0.601@0.6\
+  \ reads back the knob)"
+- the 0.75 headline was a saturation artifact (researcher flagged)
+- "Part B reduces to TEXTBOOK cache-replacement \u2014 content-aware eviction beats\
+  \ recency-only when the query distribution is heavy-tailed over old items (Belady\
+  \ 1966"
+- "ARC Megiddo&Modha 2003) \u2014 re-derived w/o citation"
+- 'the only surviving delta (cheap no-LLM lexical gate) is exactly where L0 FAILS:
+  threshold-tuned (thr>=0.5), loses 18/108, oracle gap +0.12 mean/+0.80 max, precision
+  0.37 @thr0.3'
+required_evidence:
+- "None \u2014 novelty occupied (Mem0/A-MEM/Redis-Agent-Memory ship write-path dedup)\
+  \ + Part A tautological + Part B textbook cache-replacement"
+- 'the cheap-lexical-gate delta underperforms exactly where it''d need to succeed.
+  (If ever revisited: real MemGPT/Letta re-store rates [does amplification organically
+  clear 25%?]'
+- head-to-head vs Mem0's LLM-merge on LOCOMO
+- importance/LRU eviction baselines [the FIFO size-cap was a strawman]
+- embedding gate not lexical Jaccard.)
+map_delta_proposals:
+- CLAIM-0041 -> RED (fresh-area retrieval-and-memory, FIRST expansion claim). Novelty
+  OCCUPIED by deployed prior art (Mem0/A-MEM/Redis)
+- Part A tautological
+- "Part B = textbook content-vs-recency cache replacement. PROJ-0012 converged (lightweight:\
+  \ do NOT deep-mine \u2014 move to next fresh area). Anti-pattern screening worked\
+  \ (caught negative-leaning at L0)"
+- "committee confirmed occupied+textbook. No false green. LESSON: fresh-area claims\
+  \ need a LIVE prior-art sweep at DESIGN time \u2014 agent-memory is a hot, deployed\
+  \ 2025 space"
+baseline_requirements:
+- "Mem0 (2504.19413) write-path dedup/merge \u2014 direct collision, beats recency\
+  \ on LOCOMO"
+- A-MEM (2502.12110) write-path consolidation
+- "Redis Agent Memory Server \u2014 deployed store-time semantic dedup"
+- "recency size-cap (the L0 baseline \u2014 but a STRAWMAN vs importance/LRU)"
+- Belady(1966)/ARC(2003) cache-replacement theory
+committee_run_dir: experiments/2026-06-03/EXP-0039/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T14:33:48Z'
