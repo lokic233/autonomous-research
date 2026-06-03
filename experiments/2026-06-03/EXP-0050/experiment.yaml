@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'Primary sign-flip HELD at FIXED FULL precision (q=1.0): d(maj@k)/d(recall)
+  strongly NEGATIVE at phi<<0 (z=-19.8) and strongly POSITIVE at phi>>0 (z=+41.6),
+  flat at phi=0, all converging to ~0.66 baseline at r=1 (full merge erases asymmetry).
+  Precision-control PASSED: negative slope persists at q=1.0 (z=-28.2) so it is a
+  pure RECALL phenomenon, not over-merge (attenuates as q drops, gone by q=0.6 --
+  expected; high-precision regime is load-bearing). Ranking INVERSION CONSTRUCTED
+  (0048b corrected prior under-saturated params): two fixed models invert maj@k rank
+  purely by swapping canonicalizer recall -- B>A at r=0 (z=-48.4), A>B at r=1 (z=+52.8),
+  30 seeds. L1: test real canonicalizers/benchmarks -- does empirical fragmentation-asymmetry
+  phi predict the recall slope sign in the wild, can phi be estimated without GT-at-inference,
+  find a real model-pair leaderboard flip.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0050/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T17:08:20Z'
 prompt_version: ''
