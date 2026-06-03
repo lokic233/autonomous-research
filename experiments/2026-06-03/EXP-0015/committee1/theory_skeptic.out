@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- Part A waste surface ≈ p_abandon × E[fraction_of_planned_length_consumed_before_abandon]. The "late" column reaching ~43% at p=0.50 is basic arithmetic of the constructed timing distribution, not a discovered phenomenon. The >15% threshold being crossed at p≥0.20+late is a tautology of the trace generator.
+- Part C deprioritize-only reclaiming 0 slots is a queuing-theory identity: bounded slowdown without preemption cannot free slot-time, it only redistributes it across wall-clock. This was knowable without simulation (and is implicit in any work-conserving scheduler analysis).
+- Part C kill-on-flag harm > reclaim at precision~0.5 is the standard precision×remaining-work arithmetic: E[harm] = (1−p)·E[remaining_work_of_good] vs E[reclaim] = p·E[remaining_work_of_doomed]; when good-turn remaining work is larger (which it is by construction — doomed turns die earlier), harm dominates trivially.
+- The observable-vs-oracle AUC gap (~0.05–0.09) is mechanically set by the Gaussian noise SD on the latent→observable map; it is a chosen parameter, not an empirical ceiling.
+
+CONFOUNDS:
+- The "predictor" features (entropy, repetition, malformation_prob, len_so_far, retry_count) are constructed as noisy functions of the same latents that drive the abandonment hazard. Anti-circularity is satisfied at the leakage level (predictor never sees the hazard/label), but the AUC value is a function of (latent strength, observation noise SD, hazard_sharpness) — three knobs, three reported numbers — not an external phenomenon.
+- hazard_sharpness is a free knob with no anchor to any measured real-world abandonment determinism; "predictability is a workload property" is true by construction of the latent generator.
+- The "matched fairness" budget (+5% p99) is arbitrary; the NEGATIVE on Part C might or might not hold at +10/20% — sensitivity unreported.
+
+ASSUMPTIONS_UNTESTED:
+- Real-world relationship between observable partial-decode signal and true abandonment (the binding constraint = real oracle AUC). The whole frontier table assumes a parametric latent→observable→hazard chain that is not validated against any real agent trace.
+- Distribution of abandoned-turn lengths (timing column = early/mid/late/mixed are stipulated, not measured).
+- Cost of re-running a false-positive-killed turn is not modeled at all in C2 — the harm metric undercounts the true cost (if a killed FP turn is retried, it consumes 2× compute, not just "lost user-facing completion").
+- Scheduler model is single-stage token-time RR with B=8, admit_rate=3 — no PD-disaggregation, no continuous batching with prefill/decode interleave, no migration; conclusions about reclaim mechanics may not transfer to realistic stacks (Llumnix-style migration could plausibly reclaim where pure deprioritize cannot).
+
+STATISTICAL_GAPS:
+- 8 seeds total, 4 train / 4 test for AUC — no CI reported on AUC=0.71 (likely ±0.05+ at this n); the "0.71 vs 0.80 gap" may not be statistically distinguishable from a single noise-SD setting.
+- No variance reported on the Part A surface cells; "5.7% vs 11.4%" between columns at p=0.20 could overlap.
+- kill_precision ~0.50–0.57 estimated from small counts (e.g. 786 reclaimed tokens at thr=0.95 implies few-dozen kill events) — wide CI; the monotonicity claim across thr is fragile.
+- No bootstrap / no resampling / no sensitivity sweep on observation-noise SD.
+
+RATIONALE: The negative verdict on Part C (load-bearing system mechanism) is correct and decisive — but it would have been *predicted* by basic queuing/precision arithmetic without the simulation, which the writeup does not acknowledge. The Part A "characterization" and the Part B "frontier" are largely re-expressions of the constructed trace's free parameters, not discoveries; this matters because it means L1 must measure the *only* empirically open quantities (real oracle-AUC ceiling on real traces, real abandoned-turn length distribution, real FP-kill retry cost) and cannot graft the L0 frontier onto a real workload. Anti-circularity design is genuinely good (Wuu et al. design hygiene level), the honest pre-reg + negative result is exemplary, and the prior-art caveat (Llumnix [arxiv 2406.03243], FastServe [arxiv 2305.05920], SLO schedulers) correctly identifies the novelty risk. YELLOW because the negative is sound but the writeup overstates the empirical content of Parts A/B — several findings are model-tautologies, and L1's go/no-go should hinge on the real oracle ceiling, not on reproducing the constructed frontier.
+```

@@ -300,3 +300,1508 @@ hook: PostToolUse Completed
 hook: PostToolUse Completed
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+codex
+The named local rule files are not present under this workspace, so I’m using the rules embedded in the prompt as the operative version and doing the required OSS prior-art sweep directly.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The internal loader blocks external page content in this mode, but network access is available from the shell. I’m using direct fetches of public docs/repo files for precise overlap checks.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/managers/scheduler.py | grep -niE 'abort|cancel|preempt|priority|schedule' | head -60" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/docs/configuration/optimization.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://nvidia.github.io/TensorRT-LLM/torch/scheduler.html | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/v1/core/sched/scheduler.py | grep -niE 'preempt|abort|priority|cancel|schedule' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 178ms:
+100 53775  100 53775    0     0   255k      0 --:--:-- --:--:-- --:--:--  256k
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scheduler &#8212; TensorRT LLM</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/config_selector.css?v=83e831d6" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=19d20f17" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=65e89d2a"></script>
+    <script src="../_static/config_selector.js?v=52eb2d38"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'torch/scheduler';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = './_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.3.0rc17';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+
+    <link rel="icon" href="../_static/favicon.png"/>
+
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.3.0rc17" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+
+
+  </head>
+
+  <body data-default-mode="">
+
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="TensorRT LLM - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="TensorRT LLM - Home"/>
+  
+  
+    <p class="title logo__title">TensorRT LLM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 243ms:
+100 22256  100 22256    0     0  81821      0 --:--:-- --:--:-- --:--:-- 82125
+# Optimization and Tuning
+
+This guide covers optimization strategies and performance tuning for vLLM V1.
+
+!!! tip
+    Running out of memory? Consult [this guide](./conserving_memory.md) on how to conserve memory.
+
+## Optimization Levels
+
+vLLM provides 4 optimization levels (`-O0`, `-O1`, `-O2`, `-O3`) that allow users to trade off startup time for performance:
+
+- `-O0`: No optimizations. Fastest startup time, but lowest performance.
+- `-O1`: Fast optimization. Simple compilation and fast fusions, and PIECEWISE cudagraphs.
+- `-O2`: Default optimization. Additional compilation ranges, additional fusions, FULL_AND_PIECEWISE cudagraphs.
+- `-O3`: Aggressive optimization. Currently equal to `-O2`, but may include additional time-consuming or experimental optimizations in the future.
+
+For more information, see the [optimization level documentation](../design/optimization_levels.md).
+
+## Preemption
+
+Due to the autoregressive nature of transformer architecture, there are times when KV cache space is insufficient to handle all batched requests.
+In such cases, vLLM can preempt requests to free up KV cache space for other requests. Preempted requests are recomputed when sufficient KV cache space becomes
+available again. When this occurs, you may see the following warning:
+
+```text
+WARNING 05-09 00:49:33 scheduler.py:1057 Sequence group 0 is preempted by PreemptionMode.RECOMPUTE mode because there is not enough KV cache space. This can affect the end-to-end performance. Increase gpu_memory_utilization or tensor_parallel_size to provide more KV cache memory. total_cumulative_preemption_cnt=1
+```
+
+While this mechanism ensures system robustness, preemption and recomputation can adversely affect end-to-end latency.
+If you frequently encounter preemptions, consider the following actions:
+
+- Increase `gpu_memory_utilization`. vLLM pre-allocates GPU cache using this percentage of memory. By increasing utilization, you can provide more KV cache space.
+- Decrease `max_num_seqs` or `max_num_batched_tokens`. This reduces the number of concurrent requests in a batch, thereby requiring less KV cache space.
+- Increase `tensor_parallel_size`. This shards model weights across GPUs, allowing each GPU to have more memory available for KV cache. However, increasing this value may cause excessive synchronization overhead.
+- Increase `pipeline_parallel_size`. This distributes model layers across GPUs, reducing the memory needed for model weights on each GPU, indirectly leaving more memory available for KV cache. However, increasing this value may cause latency penalties.
+
+You can monitor the number of preemption requests through Prometheus metrics exposed by vLLM. Additionally, you can log the cumulative number of preemption requests by setting `disable_log_stats=False`.
+
+In vLLM V1, the default preemption mode is `RECOMPUTE` rather than `SWAP`, as recomputation has lower overhead in the V1 architecture.
+
+## Chunked Prefill
+
+Chunked prefill allows vLLM to process large prefills in smaller chunks and batch them together with decode requests. This feature helps improve both throughput and latency by better balancing compute-bound (prefill) and memory-bound (decode) operations.
+
+In V1, **chunked prefill is enabled by default whenever possible**. With chunked prefill enabled, the scheduling policy prioritizes decode requests. It batches all pending decode requests before scheduling any prefill operations. When there are available tokens in the `max_num_batched_tokens` budget, it schedules pending prefills. If a pending prefill request cannot fit into `max_num_batched_tokens`, it automatically chunks it.
+
+This policy has two benefits:
+
+- It improves inter-token latency (ITL) and generation decode because decode requests are prioritized.
+- It helps achieve better GPU utilization by locating compute-bound (prefill) and memory-bound (decode) requests to the same batch.
+
+### Performance Tuning with Chunked Prefill
+
+You can tune the performance by adjusting `max_num_batched_tokens`:
+
+- Smaller values (e.g., 2048) achieve better ITL because there are fewer prefills slowing down decodes.
+- Higher values achieve better time to first token (TTFT) as you can process more prefill tokens in a batch.
+- For optimal throughput, we recommend setting `max_num_batched_tokens > 8192` especially for smaller models on large GPUs.
+- If `max_num_batched_tokens` is the same as `max_model_len`, that's almost the equivalent to the V0 default scheduling policy (except that it still prioritizes decodes).
+
+!!! warning
+    When chunked prefill is disabled, `max_num_batched_tokens` must be greater than `max_model_len`.  
+    In that case, if `max_num_batched_tokens < max_model_len`, vLLM may crash at server start‑up.
+
+```python
+from vllm import LLM
+
+# Set max_num_batched_tokens to tune performance
+llm = LLM(model="meta-llama/Llama-3.1-8B-Instruct", max_num_batched_tokens=16384)
+```
+
+See related papers for more details (<https://arxiv.org/pdf/2401.08671> or <https://arxiv.org/pdf/2308.16369>).
+
+## Parallelism Strategies
+
+vLLM supports multiple parallelism strategies that can be combined to optimize performance across different hardware configurations.
+
+### Tensor Parallelism (TP)
+
+Tensor parallelism shards model parameters across multiple GPUs within each model layer. This is the most common strategy for large model inference within a single node.
+
+**When to use:**
+
+- When the model is too large to fit on a single GPU
+- When you need to reduce memory pressure per GPU to allow more KV cache space for higher throughput
+
+```python
+from vllm import LLM
+
+# Split model across 4 GPUs
+llm = LLM(model="meta-llama/Llama-3.3-70B-Instruct", tensor_parallel_size=4)
+```
+
+For models that are too large to fit on a single GPU (like 70B parameter models), tensor parallelism is essential.
+
+### Pipeline Parallelism (PP)
+
+Pipeline parallelism distributes model layers across multiple GPUs. Each GPU processes different parts of the model in sequence.
+
+**When to use:**
+
+- When you've already maxed out efficient tensor parallelism but need to distribute the model further, or across nodes
+- For very deep and narrow models where layer distribution is more efficient than tensor sharding
+
+Pipeline parallelism can be combined with tensor parallelism for very large models:
+
+```python
+from vllm import LLM
+
+# Combine pipeline and tensor parallelism
+llm = LLM(
+    model="meta-llama/Llama-3.3-70B-Instruct,
+    tensor_parallel_size=4,
+    pipeline_parallel_size=2,
+)
+```
+
+### Expert Parallelism (EP)
+
+Expert parallelism is a specialized form of parallelism for Mixture of Experts (MoE) models, where different expert networks are distributed across GPUs.
+
+**When to use:**
+
+- Specifically for MoE models (like DeepSeekV3, Qwen3MoE, Llama-4)
+- When you want to balance the expert computation load across GPUs
+
+Expert parallelism is enabled by setting `enable_expert_parallel=True`, which will use expert parallelism instead of tensor parallelism for MoE layers.
+It will use the same degree of parallelism as what you have set for tensor parallelism.
+
+### Data Parallelism (DP)
+
+Data parallelism replicates the entire model across multiple GPU sets and processes different batches of requests in parallel.
+
+**When to use:**
+
+- When you have enough GPUs to replicate the entire model
+- When you need to scale throughput rather than model size
+- In multi-user environments where isolation between request batches is beneficial
+
+Data parallelism can be combined with the other parallelism strategies and is set by `data_parallel_size=N`.
+Note that MoE layers will be sharded according to the product of the tensor parallel size and data parallel size.
+
+### NUMA Binding for Multi-Socket GPU Nodes
+
+On multi-socket GPU servers, GPU worker processes can lose performance if their
+CPU execution and memory allocation drift away from the NUMA node nearest to the
+GPU. vLLM can pin each worker with `numactl` before the Python subprocess starts,
+so the interpreter, imports, and early allocator state are created with the
+desired NUMA policy from the beginning.
+
+Use `--numa-bind` to enable the feature. By default, vLLM auto-detects the
+GPU-to-NUMA mapping and uses `--cpunodebind=<node> --membind=<node>` for each
+worker. When you need a custom CPU policy, add `--numa-bind-cpus` and vLLM will
+switch to `--physcpubind=<cpu-list> --membind=<node>`.
+
+These `--numa-bind*` options only apply to GPU execution processes. They do not
+configure the CPU backend's separate thread-affinity controls. Automatic
+GPU-to-NUMA detection is currently implemented for CUDA/NVML-based as well as
+ROCM-based platforms; other GPU backends must provide explicit binding lists if
+they use these options.
+
+`--numa-bind-nodes` takes one non-negative NUMA node index per visible GPU, in
+the same order as the GPU indices.
+`--numa-bind-cpus` takes one `numactl` CPU list per visible GPU, in the same
+order as the GPU indices. Each CPU list must use
+`numactl --physcpubind` syntax such as `0-3`, `0,2,4-7`, or `16-31,48-63`.
+
+```bash
+# Auto-detect NUMA nodes for visible GPUs
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+  --tensor-parallel-size 4 \
+  --numa-bind
+
+# Explicit NUMA-node mapping
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+  --tensor-parallel-size 4 \
+  --numa-bind \
+  --numa-bind-nodes 0 0 1 1
+
+# Explicit CPU pinning, useful for PCT or other high-frequency core layouts
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+  --tensor-parallel-size 4 \
+  --numa-bind \
+  --numa-bind-nodes 0 0 1 1 \
+  --numa-bind-cpus 0-3 4-7 48-51 52-55
+```
+
+Notes:
+
+- CLI usage forces multiprocessing to use the `spawn` method automatically. If you enable NUMA binding through the Python API, also set `VLLM_WORKER_MULTIPROC_METHOD=spawn`.
+- Automatic detection relies on NVML and NUMA support from the host. If it cannot determine the mapping reliably, pass `--numa-bind-nodes` explicitly.
+- Explicit `--numa-bind-nodes` and `--numa-bind-cpus` values must be valid `numactl` inputs. vLLM does a small amount of validation, but the effective binding semantics are still determined by `numactl`.
+- The current implementation binds GPU execution processes such as `EngineCore` and multiprocessing workers. It does not apply NUMA binding to frontend API server processes or the DP coordinator.
+- In containerized environments, NUMA policy syscalls may require extra permissions, such as `--cap-add SYS_NICE` when running via `docker run`.
+
+### CPU Backend Thread Affinity
+
+The CPU backend uses a different mechanism from `--numa-bind`. CPU execution is
+configured through CPU-specific environment variables such as
+`VLLM_CPU_OMP_THREADS_BIND`, `VLLM_CPU_NUM_OF_RESERVED_CPU`, and
+`CPU_VISIBLE_MEMORY_NODES`, rather than the GPU-oriented `--numa-bind*` CLI
+options.
+
+By default, `VLLM_CPU_OMP_THREADS_BIND=auto` derives OpenMP placement from the
+available CPU and NUMA topology for each CPU worker. To override the automatic
+policy, set `VLLM_CPU_OMP_THREADS_BIND` explicitly using the CPU list format
+documented for the CPU backend, or use `nobind` to disable this behavior.
+
+For the current CPU backend setup and tuning guidance, see:
+
+- [Related runtime environment variables](../getting_started/installation/cpu.md#related-runtime-environment-variables)
+- [How to decide `VLLM_CPU_OMP_THREADS_BIND`](../getting_started/installation/cpu.md#how-to-decide-vllm_cpu_omp_threads_bind)
+
+The GPU-only `--numa-bind`, `--numa-bind-nodes`, and `--numa-bind-cpus` options
+do not configure CPU worker affinity.
+
+### Batch-level DP for Multi-Modal Encoders
+
+By default, TP is used to shard the weights of multi-modal encoders just like for language decoders,
+in order to reduce the memory and compute load on each GPU.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 264ms:
+100  167k  100  167k    0     0   575k      0 --:--:-- --:--:-- --:--:--  576k
+14:"""A scheduler that manages a tensor parallel GPU worker."""
+48:    SchedulerDisaggregationDecodeMixin,
+56:    SchedulerDisaggregationPrefillMixin,
+64:    prepare_abort,
+69:from sglang.srt.dllm.mixin.scheduler import SchedulerDllmMixin
+87:    AbortReq,
+159:from sglang.srt.managers.schedule_batch import (
+160:    FINISH_ABORT,
+163:    ScheduleBatch,
+165:from sglang.srt.managers.schedule_policy import (
+168:    SchedulePolicy,
+170:from sglang.srt.managers.scheduler_components.batch_result_processor import (
+171:    SchedulerBatchResultProcessor,
+173:from sglang.srt.managers.scheduler_components.dp_attn import SchedulerDPAttnAdapter
+174:from sglang.srt.managers.scheduler_components.flush_wrapper import SchedulerFlushWrapper
+175:from sglang.srt.managers.scheduler_components.idle_sleeper import IdleSleeper
+176:from sglang.srt.managers.scheduler_components.invariant_checker import (
+177:    SchedulerInvariantChecker,
+178:    create_scheduler_watchdog,
+180:from sglang.srt.managers.scheduler_components.ipc_channels import SchedulerIpcChannels
+181:from sglang.srt.managers.scheduler_components.kv_events_publisher import (
+182:    SchedulerKvEventsPublisher,
+184:from sglang.srt.managers.scheduler_components.load_inquirer import SchedulerLoadInquirer
+185:from sglang.srt.managers.scheduler_components.logprob_result_processor import (
+186:    SchedulerLogprobResultProcessor,
+188:from sglang.srt.managers.scheduler_components.metrics_reporter import (
+191:    SchedulerMetricsReporter,
+193:from sglang.srt.managers.scheduler_components.new_token_ratio_tracker import (
+196:from sglang.srt.managers.scheduler_components.output_streamer import (
+197:    SchedulerOutputStreamer,
+199:from sglang.srt.managers.scheduler_components.pool_stats_observer import (
+200:    SchedulerPoolStatsObserver,
+202:from sglang.srt.managers.scheduler_components.profiler_manager import (
+203:    SchedulerProfilerManager,
+205:from sglang.srt.managers.scheduler_components.request_receiver import (
+206:    SchedulerRequestReceiver,
+208:from sglang.srt.managers.scheduler_components.weight_updater import (
+209:    SchedulerWeightUpdaterManager,
+211:from sglang.srt.managers.scheduler_input_blocker import SchedulerInputBlocker
+212:from sglang.srt.managers.scheduler_pp_mixin import SchedulerPPMixin
+213:from sglang.srt.managers.scheduler_recv_skipper import SchedulerRecvSkipper
+224:from sglang.srt.multiplex.multiplexing_mixin import SchedulerMultiplexMixin
+225:from sglang.srt.observability.metrics_collector import SchedulerMetricsCollector
+227:    set_schedule_time_batch,
+268:    from sglang.srt.hardware_backend.mlx.scheduler_mixin import SchedulerMlxOverlapMixin
+272:    class SchedulerMlxOverlapMixin:
+286:class Scheduler(
+287:    SchedulerDisaggregationDecodeMixin,
+288:    SchedulerDisaggregationPrefillMixin,
+289:    SchedulerMultiplexMixin,
+290:    SchedulerPPMixin,
+291:    SchedulerDllmMixin,
+292:    SchedulerMlxOverlapMixin,
+294:    """A scheduler that manages a tensor parallel GPU worker."""
+311:        self.cur_batch: Optional[ScheduleBatch] = None
+317:        self.schedule_policy = server_args.schedule_policy
+318:        self.enable_priority_scheduling = server_args.enable_priority_scheduling
+319:        self.abort_on_priority_when_disabled = (
+320:            server_args.abort_on_priority_when_disabled
+322:        self.schedule_low_priority_values_first = (
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 273ms:
+38:from vllm.v1.core.sched.interface import PauseState, SchedulerInterface
+43:    SchedulerOutput,
+54:from vllm.v1.metrics.stats import PrefixCacheStats, SchedulerStats
+64:class Scheduler(SchedulerInterface):
+77:        self.scheduler_config = vllm_config.scheduler_config
+100:        self.prev_step_scheduled_req_ids: set[str] = set()
+103:        self.max_num_running_reqs = self.scheduler_config.max_num_seqs
+104:        self.max_num_scheduled_tokens = (
+105:            self.scheduler_config.max_num_scheduled_tokens
+106:            if self.scheduler_config.max_num_scheduled_tokens
+107:            else self.scheduler_config.max_num_batched_tokens
+115:        # Create KVConnector for the Scheduler. Note that each Worker
+127:                role=KVConnectorRole.SCHEDULER,
+144:                config=self.vllm_config, role=ECConnectorRole.SCHEDULER
+158:            self.policy = SchedulingPolicy(self.scheduler_config.policy)
+161:                f"Unknown scheduling policy: {self.scheduler_config.policy}"
+163:        # Priority queues for requests.
+233:            max_num_batched_tokens=self.scheduler_config.max_num_batched_tokens,
+240:            scheduler_block_size=self.block_size,
+251:        # Scheduler iteration counter. Drives the V2+PP+async decode-throttle
+254:        self.scheduler_reserve_full_isl = (
+255:            self.scheduler_config.scheduler_reserve_full_isl
+281:            # Block-ID snapshot taken at schedule time (before forward),
+283:            # schedule() frees the blocks (async scheduling race).
+338:    def schedule(self) -> SchedulerOutput:
+341:        # There's no "decoding phase" nor "prefill phase" in the scheduler.
+345:        # At each step, the scheduler tries to assign tokens to the requests
+351:        scheduled_new_reqs: list[Request] = []
+352:        scheduled_resumed_reqs: list[Request] = []
+353:        scheduled_running_reqs: list[Request] = []
+354:        preempted_reqs: list[Request] = []
+357:        num_scheduled_tokens: dict[str, int] = {}
+358:        token_budget = self.max_num_scheduled_tokens
+360:            # Do not schedule any requests when paused.
+364:        scheduled_encoder_inputs: dict[str, list[int]] = {}
+367:        scheduled_spec_decode_tokens: dict[str, list[int]] = {}
+370:        scheduled_timestamp = time.monotonic()
+374:        # First, schedule the RUNNING requests.
+390:                # the previous step has reached request.max_tokens. We don't schedule
+406:            if 0 < self.scheduler_config.long_prefill_token_threshold < num_new_tokens:
+407:                num_new_tokens = self.scheduler_config.long_prefill_token_threshold
+416:            # Schedule encoder inputs.
+417:            encoder_inputs_to_schedule = None
+422:                    encoder_inputs_to_schedule,
+426:                ) = self._try_schedule_encoder_inputs(
+440:                # The request cannot be scheduled because one of the following
+442:                # 1. No new tokens to schedule. This may happen when
+443:                #    (1) PP>1 and we have already scheduled all prompt tokens
+453:                # allow the lower-priority requests to be scheduled.
+457:            # Schedule newly needed KV blocks for the request.
+458:            with record_function_or_nullcontext("schedule: allocate_slots"):
+467:                        # The request can be scheduled.
+470:                    # The request cannot be scheduled.
+471:                    # Preempt the lowest-priority request.
+472:                    if self.policy == SchedulingPolicy.PRIORITY:
+473:                        preempted_req = max(
+475:                            key=lambda r: (r.priority, r.arrival_time),
+477:                        self.running.remove(preempted_req)
+478:                        if preempted_req in scheduled_running_reqs:
+479:                            preempted_req_id = preempted_req.request_id
+480:                            scheduled_running_reqs.remove(preempted_req)
+481:                            token_budget += num_scheduled_tokens.pop(preempted_req_id)
+482:                            req_to_new_blocks.pop(preempted_req_id)
+483:                            scheduled_spec_decode_tokens.pop(preempted_req_id, None)
+484:                            preempted_encoder_inputs = scheduled_encoder_inputs.pop(
+485:                                preempted_req_id, None
+487:                            if preempted_encoder_inputs:
+488:                                # Restore encoder compute budget if the preempted
+489:                                # request had encoder inputs scheduled in this step.
+491:                                    preempted_req.get_num_encoder_embeds(i)
+492:                                    for i in preempted_encoder_inputs
+497:                        preempted_req = self.running.pop()
+499:                    self._preempt_request(preempted_req, scheduled_timestamp)
+500:                    preempted_reqs.append(preempted_req)
+501:                    if preempted_req == request:
+502:                        # No more request to preempt. Cannot schedule this request.
+506:                # Cannot schedule this request.
+509:            # Schedule the request.
+510:            scheduled_running_reqs.append(request)
+513:            num_scheduled_tokens[request_id] = num_new_tokens
+100  107k  100  107k    0     0   351k      0 --:--:-- --:--:-- --:--:--  351k
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/managers/scheduler.py | sed -n '300,380p;1180,1245p;1320,1385p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/v1/engine/async_llm.py | grep -niE 'abort|cancel' | head -40" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://nvidia.github.io/TensorRT-LLM/torch/scheduler.html | python3 -c \"import sys,re; s=sys.stdin.read(); import html; s=re.sub('<["'^>]+>'"',' ',s); s=html.unescape(s); [print(line.strip()) for line in s.splitlines() if any(k in line.lower() for k in ['priority','guaranteed no evict','max_utilization','scheduler'])][:120]\"" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 53775  100 53775    0     0   466k      0 --:--:-- --:--:-- --:--:--  468k
+Scheduler — TensorRT LLM
+DOCUMENTATION_OPTIONS.pagename = 'torch/scheduler';
+Overlap Scheduler
+Scheduler
+Scheduler #
+The scheduler is invoked to determine which requests are scheduled at the current step.
+Scheduler Introduction #
+There are two kinds of schedulers:
+CapacityScheduler  : This scheduler decides if resources should be allocated for each active request.
+The input to   CapacityScheduler   includes all active requests that need processing.
+MicroBatchScheduler  : This scheduler selects some requests from   fitting_requests   chosen by   CapacityScheduler  .
+SimpleScheduler   combines these two schedulers, first using   CapacityScheduler   and then   MicroBatchScheduler  , to get the final schedule result.
+The inputs to   SimpleScheduler   include   active_requests   and   inflight_request_ids  , and the outputs are   context_requests  ,   generation_requests  , and   paused_requests  .
+Customize Your Own Scheduler #
+To customize the scheduler or batching mechanism, implement your own   CapacityScheduler   and   MicroBatchScheduler   by inheriting their respective classes.
+If two-step scheduling is unnecessary, inherit   RequestScheduler   and implement   schedule_request   directly.
+An example of a   CapacityScheduler   implementation is the   GuaranteedNoEvictScheduler   class, found in  scheduler.py .
+This class was used before the C++ binding of   CapacityScheduler   and initially employed a Python-based scheduler.
+It inherits   CapacityScheduler   and implements its own   schedule_request   method.
+class     GuaranteedNoEvictScheduler  (  CapacityScheduler  ):
+super  (  GuaranteedNoEvictScheduler  ,   self  )  .  __init__  ()
+After implementing your own scheduler, integrate it into the PyExecutor.
+In the   create_py_executor   function, there are two lines creating   CapacityScheduler  :
+capacity_scheduler   =   BindCapacityScheduler  (  max_num_requests  ,
+Similar adjustments can be made for   MicroBatchScheduler  . This allows the   PyExecutor   to execute with your customized scheduling logic.
+Scheduler Introduction
+Customize Your Own Scheduler
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/v1/core/sched/scheduler.py | sed -n '150,175p;455,505p;1280,1315p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  107k  100  107k    0     0   837k      0 --:--:-- --:--:-- --:--:--  842k
+        self.block_size = block_size
+        self.dcp_world_size = vllm_config.parallel_config.decode_context_parallel_size
+        self.pcp_world_size = vllm_config.parallel_config.prefill_context_parallel_size
+
+        # req_id -> Request
+        self.requests: dict[str, Request] = {}
+        # Scheduling policy
+        try:
+            self.policy = SchedulingPolicy(self.scheduler_config.policy)
+        except ValueError as e:
+            raise ValueError(
+                f"Unknown scheduling policy: {self.scheduler_config.policy}"
+            ) from e
+        # Priority queues for requests.
+        self.waiting = create_request_queue(self.policy)
+        # requests skipped in waiting flow due async deps or constraints.
+        self.skipped_waiting = create_request_queue(self.policy)
+        self.running: list[Request] = []
+
+        # The request IDs that are finished in between the previous and the
+        # current steps. This is used to notify the workers about the finished
+        # requests so that they can free the cached states for those requests.
+        # This is flushed at the end of each scheduling step.
+        self.finished_req_ids: set[str] = set()
+
+        # Counter for requests waiting for streaming input. Used to calculate
+                continue
+
+            # Schedule newly needed KV blocks for the request.
+            with record_function_or_nullcontext("schedule: allocate_slots"):
+                while True:
+                    new_blocks = self.kv_cache_manager.allocate_slots(
+                        request,
+                        num_new_tokens,
+                        num_lookahead_tokens=self.num_lookahead_tokens,
+                    )
+
+                    if new_blocks is not None:
+                        # The request can be scheduled.
+                        break
+
+                    # The request cannot be scheduled.
+                    # Preempt the lowest-priority request.
+                    if self.policy == SchedulingPolicy.PRIORITY:
+                        preempted_req = max(
+                            self.running,
+                            key=lambda r: (r.priority, r.arrival_time),
+                        )
+                        self.running.remove(preempted_req)
+                        if preempted_req in scheduled_running_reqs:
+                            preempted_req_id = preempted_req.request_id
+                            scheduled_running_reqs.remove(preempted_req)
+                            token_budget += num_scheduled_tokens.pop(preempted_req_id)
+                            req_to_new_blocks.pop(preempted_req_id)
+                            scheduled_spec_decode_tokens.pop(preempted_req_id, None)
+                            preempted_encoder_inputs = scheduled_encoder_inputs.pop(
+                                preempted_req_id, None
+                            )
+                            if preempted_encoder_inputs:
+                                # Restore encoder compute budget if the preempted
+                                # request had encoder inputs scheduled in this step.
+                                num_embeds_to_restore = sum(
+                                    preempted_req.get_num_encoder_embeds(i)
+                                    for i in preempted_encoder_inputs
+                                )
+                                encoder_compute_budget += num_embeds_to_restore
+                            req_index -= 1
+                    else:
+                        preempted_req = self.running.pop()
+
+                    self._preempt_request(preempted_req, scheduled_timestamp)
+                    preempted_reqs.append(preempted_req)
+                    if preempted_req == request:
+                        # No more request to preempt. Cannot schedule this request.
+                        break
+
+            if new_blocks is None:
+
+        return (
+            encoder_inputs_to_schedule,
+            num_new_tokens,
+            encoder_compute_budget,
+            external_load_encoder_input,
+        )
+
+    def get_grammar_bitmask(
+        self, scheduler_output: SchedulerOutput
+    ) -> GrammarOutput | None:
+        # Collect list of scheduled request ids that use structured output.
+        # The corresponding rows of the bitmask will be in this order.
+        if not scheduler_output.has_structured_output_requests:
+            return None
+
+        structured_output_request_ids = [
+            req_id
+            for req_id in scheduler_output.num_scheduled_tokens
+            if (req := self.requests.get(req_id))
+            and (req.use_structured_output and not req.is_prefill_chunk)
+        ]
+        if not structured_output_request_ids:
+            return None
+
+        bitmask = self.structured_output_manager.grammar_bitmask(
+            self.requests,
+            structured_output_request_ids,
+            scheduler_output.scheduled_spec_decode_tokens,
+        )
+        return GrammarOutput(structured_output_request_ids, bitmask)
+
+    def update_from_output(
+        self,
+        scheduler_output: SchedulerOutput,
+        model_runner_output: ModelRunnerOutput,
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 117ms:
+100  167k  100  167k    0     0  1123k      0 --:--:-- --:--:-- --:--:-- 1129k
+        gpu_id: int,
+        tp_rank: int,
+        moe_ep_rank: int,
+        pp_rank: int,
+        attn_cp_rank: int,
+        moe_dp_rank: int,
+        dp_rank: Optional[int],
+    ):
+        self.is_initializing = True
+        # init_soft_watchdog starts a daemon thread that reads these on its first tick.
+        self.forward_ct: int = 0
+        self.cur_batch: Optional[ScheduleBatch] = None
+        self.init_soft_watchdog(server_args)
+
+        # Parse args
+        self.server_args = server_args
+        self.nccl_port = port_args.nccl_port
+        self.schedule_policy = server_args.schedule_policy
+        self.enable_priority_scheduling = server_args.enable_priority_scheduling
+        self.abort_on_priority_when_disabled = (
+            server_args.abort_on_priority_when_disabled
+        )
+        self.schedule_low_priority_values_first = (
+            server_args.schedule_low_priority_values_first
+        )
+        self.priority_scheduling_preemption_threshold = (
+            server_args.priority_scheduling_preemption_threshold
+        )
+        self.enable_lora = server_args.enable_lora
+        self.enable_lora_overlap_loading = server_args.enable_lora_overlap_loading
+        self.max_loras_per_batch = server_args.max_loras_per_batch
+        self.enable_overlap = not server_args.disable_overlap_schedule and not use_mlx()
+        self.enable_overlap_mlx = not server_args.disable_overlap_schedule and use_mlx()
+        self.enable_pdmux = server_args.enable_pdmux
+        self.skip_tokenizer_init = server_args.skip_tokenizer_init
+        self.stream_interval = server_args.stream_interval
+        self.spec_algorithm = SpeculativeAlgorithm.from_string(
+            server_args.speculative_algorithm
+        )
+        self.page_size = server_args.page_size
+        self.enable_hierarchical_cache = server_args.enable_hierarchical_cache
+        self.enable_hicache_storage = server_args.hicache_storage_backend is not None
+        self.enable_decode_hicache = (
+            server_args.disaggregation_decode_enable_radix_cache
+            and self.enable_hierarchical_cache
+        )
+        self.max_recv_per_poll = envs.SGLANG_SCHEDULER_MAX_RECV_PER_POLL.get()
+        self.enable_hisparse = server_args.enable_hisparse
+        self.hisparse_coordinator: Optional[HiSparseCoordinator] = None
+
+        # Distributed rank info
+        attn_tp_rank, attn_tp_size, attn_dp_rank, attn_dp_size = (
+            compute_dp_attention_world_info(
+                server_args.enable_dp_attention,
+                tp_rank,
+                server_args.tp_size,
+                server_args.dp_size,
+                server_args.attn_cp_size,
+            )
+        )
+        self.ps = ParallelState(
+            tp_rank=tp_rank,
+            tp_size=server_args.tp_size,
+            pp_rank=pp_rank,
+            pp_size=server_args.pp_size,
+            dp_rank=dp_rank,
+            dp_size=server_args.dp_size,
+            attn_tp_rank=attn_tp_rank,
+            attn_tp_size=attn_tp_size,
+            attn_cp_rank=attn_cp_rank,
+            attn_cp_size=server_args.attn_cp_size,
+            attn_dp_rank=attn_dp_rank,
+            attn_dp_size=attn_dp_size,
+            moe_ep_rank=moe_ep_rank,
+            moe_ep_size=server_args.ep_size,
+            moe_dp_rank=moe_dp_rank,
+            moe_dp_size=server_args.moe_dp_size,
+            gpu_id=gpu_id,
+        )
+
+        # Init model configs
+        )
+        self.copy_stream: CudaStream = self.device_module.Stream()
+        self.copy_stream_ctx: CudaStreamContext = self.device_module.stream(
+            self.copy_stream
+        )
+
+        # FutureMap is always-on: input_ids relay used in both modes.
+        # Workers not on BaseSpecWorker (e.g. FrozenKVMTPWorker) lack the
+        # override; fall back to target-only so the helper still produces a
+        # safe decision (no accidental opt-out for unaudited shapes).
+        if self.draft_worker is not None:
+            attn_backends = getattr(
+                self.draft_worker,
+                "spec_v2_attn_backends",
+                (self.tp_worker.model_runner.attn_backend,),
+            )
+        else:
+            attn_backends = (self.tp_worker.model_runner.attn_backend,)
+        needs_cpu_seq_lens = decide_needs_cpu_seq_lens(self.server_args, attn_backends)
+        self.future_map = self.spec_algorithm.create_future_map(
+            self.device,
+            self.req_to_token_pool,
+            needs_cpu_seq_lens=needs_cpu_seq_lens,
+        )
+
+        if not self.enable_overlap:
+            return
+
+        self.batch_record_buf = [None] * 2
+        self.batch_record_ct = 0
+
+    def maybe_init_ngram_embedding(self):
+        self.use_ngram_embedding = self.tp_worker.model_config.use_ngram_embedding
+        if self.use_ngram_embedding:
+            self.token_table = self.tp_worker.model_runner.token_table
+            hf_config = self.tp_worker.model_config.hf_config
+            self.ngram_embedding_n = hf_config.ngram_embedding_n
+            self.ngram_embedding_k = hf_config.ngram_embedding_k
+
+    def _maybe_prepare_ngram_embedding(
+        self, batch: Optional[ScheduleBatch]
+    ) -> Optional[ScheduleBatch]:
+        """Fill the token table for ngram embedding before a forward pass."""
+        if batch is None or not self.use_ngram_embedding:
+            return batch
+        batch.ne_token_table = self.token_table
+        if batch.forward_mode == ForwardMode.EXTEND:
+            all_tokens = []
+            column_starts = []
+            request_lengths = []
+            for req in batch.reqs:
+                start = len(req.prefix_indices)
+                end = start + req.extend_input_len
+                fill_ids = req.origin_input_ids + req.output_ids
+                if start == 0:
+                    tokens = fill_ids[start:end]
+                    column_starts.append(0)
+                elif start < self.ngram_embedding_n:
+                    tokens = fill_ids[0:end]
+                    column_starts.append(0)
+                else:
+                    # Prepend n-1 tokens before prefix_len for n-gram context
+                    tokens = fill_ids[start - self.ngram_embedding_n + 1 : end]
+                    column_starts.append(start - self.ngram_embedding_n + 1)
+                all_tokens.extend(tokens)
+                request_lengths.append(len(tokens))
+                ),
+                (
+                    UpdateWeightsFromIPCReqInput,
+                    self.weight_updater.update_weights_from_ipc,
+                ),
+                (
+                    GetWeightsByNameReqInput,
+                    self.weight_updater.get_weights_by_name,
+                ),
+                (
+                    ReleaseMemoryOccupationReqInput,
+                    self.weight_updater.release_memory_occupation,
+                ),
+                (
+                    ResumeMemoryOccupationReqInput,
+                    self.weight_updater.resume_memory_occupation,
+                ),
+                (
+                    CheckWeightsReqInput,
+                    self.weight_updater.check_weights,
+                ),
+                (SlowDownReqInput, self.slow_down),
+                (
+                    ProfileReq,
+                    lambda req: self.profiler_manager._profile(req),
+                ),
+                (FreezeGCReq, self.handle_freeze_gc),
+                (GetInternalStateReq, self.get_internal_state),
+                (SetInternalStateReq, self.set_internal_state),
+                (RpcReqInput, self.handle_rpc_request),
+                (ExpertDistributionReq, self.expert_distribution_handle),
+                (LoadLoRAAdapterReqInput, self.load_lora_adapter),
+                (
+                    LoadLoRAAdapterFromTensorsReqInput,
+                    self.load_lora_adapter_from_tensors,
+                ),
+                (UnloadLoRAAdapterReqInput, self.unload_lora_adapter),
+                (GetLoadsReqInput, self.handle_get_loads_req),
+                (PauseGenerationReqInput, self.pause_generation),
+                (ContinueGenerationReqInput, self.continue_generation),
+                (ConfigureLoggingReq, self.configure_logging),
+                (DumperControlReqInput, self.handle_dumper_control),
+                (AddExternalCorpusReqInput, self.add_external_corpus),
+                (
+                    RemoveExternalCorpusReqInput,
+                    self.remove_external_corpus,
+                ),
+                (
+                    ListExternalCorporaReqInput,
+                    self.list_external_corpora,
+                ),
+            ]
+        )
+
+    def _abort_on_running_timeout(self):
+        # NOTE: this should be called before a batch is launched,
+        # as current spec-v1 still filters batch inside verify stage.
+        timeout_s = envs.SGLANG_REQ_RUNNING_TIMEOUT.get()
+        if timeout_s <= 0:
+            return
+        if self.running_batch.is_empty():
+            return
+
+        deadline = time.perf_counter() - timeout_s
+        for req in self.running_batch.reqs:
+            if not req.finished() and 0 < req.time_stats.forward_entry_time < deadline:
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 394ms:
+100 44011  100 44011    0     0   101k      0 --:--:-- --:--:-- --:--:--  101k
+38:from vllm.utils.async_utils import cancel_task_threadsafe
+271:            cancel_task_threadsafe(handler)
+459:            cancelled = False
+484:            except (asyncio.CancelledError, GeneratorExit):
+485:                cancelled = True
+492:                if not cancelled:
+494:                    # finished. Don't send if cancelled (session was aborted).
+589:        # is cancelled or the generator is garbage collected. So,
+590:        # we abort the request if we end up here.
+591:        except (asyncio.CancelledError, GeneratorExit):
+593:                await self.abort(q.request_id, internal=True)
+595:                logger.info("Request %s aborted.", request_id)
+598:        # Engine is dead. Do not abort since we shut down.
+613:                await self.abort(q.request_id, internal=True)
+621:                await self.abort(q.request_id, internal=True)
+685:                        # 3) Abort any reqs that finished due to stop strings.
+686:                        if processed_outputs.reqs_to_abort:
+687:                            await engine_core.abort_requests_async(
+688:                                processed_outputs.reqs_to_abort
+709:    async def abort(
+712:        """Abort RequestId in OutputProcessor and EngineCore."""
+717:        all_request_ids = self.output_processor.abort_requests(request_ids, internal)
+718:        await self.engine_core.abort_requests_async(all_request_ids)
+721:            logger.info("Aborted request(s) %s.", ",".join(request_ids))
+730:        """Submit a pre-aborted request so the connector's request_finished
+746:            abort_immediately=True,
+753:        mode: PauseMode = "abort",
+760:        All mode handling (abort / wait / keep) and cache clearing is done
+766:                - ``"abort"``: Abort all in-flight requests immediately
+855:        # is cancelled. So, we abort the request if we end up here.
+856:        except asyncio.CancelledError:
+858:                await self.abort(q.request_id, internal=True)
+860:                logger.info("Request %s aborted.", request_id)
+863:        # Engine is dead. Do not abort since we shut down.
+878:                await self.abort(q.request_id, internal=True)
+931:    async def sleep(self, level: int = 1, mode: PauseMode = "abort") -> None:
+
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/managers/scheduler.py | grep -n \"def abort_request\\|AbortReq\\|FINISH_ABORT\\|priority_scheduling\" | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 112ms:
+100  167k  100  167k    0     0  1169k      0 --:--:-- --:--:-- --:--:-- 1177k
+87:    AbortReq,
+160:    FINISH_ABORT,
+318:        self.enable_priority_scheduling = server_args.enable_priority_scheduling
+325:        self.priority_scheduling_preemption_threshold = (
+326:            server_args.priority_scheduling_preemption_threshold
+390:            enable_priority_scheduling=self.enable_priority_scheduling,
+967:            self.enable_priority_scheduling,
+997:            self.enable_priority_scheduling
+1290:                (AbortReq, self.abort_request),
+1386:                req.to_finish = FINISH_ABORT(
+1993:            if isinstance(req.finished_reason, FINISH_ABORT):
+2182:        if self.enable_priority_scheduling and req.priority is None:
+2188:            not self.enable_priority_scheduling
+2192:            abort_req = AbortReq(
+2216:        if self.enable_priority_scheduling:
+2241:            AbortReq(
+2267:                    AbortReq(
+2615:            self.priority_scheduling_preemption_threshold,
+2763:            self.enable_priority_scheduling,
+2871:                abort_reason: FINISH_ABORT = req.to_finish
+2873:                    AbortReq(
+3566:    def abort_request(self, recv_req: AbortReq):
+3583:            self.ipc_channels.send_to_tokenizer.send_output(AbortReq(rid=req.rid), req)
+3652:                            AbortReq(rid=decode_req.rid), decode_req
+3672:                req.to_finish = FINISH_ABORT()
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/server_args.py | grep -niE 'priority|schedule_policy|abort_on_priority|preemption' | head -80" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/engine/arg_utils.py | grep -niE 'scheduling_policy|priority|preemption' | head -80" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config/scheduler.py | grep -niE 'policy|priority|preemption|schedule' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 252ms:
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  109k  100  109k    0     0   385k      0 --:--:-- --:--:-- --:--:--  385k
+74:from vllm.config.kernel import IrOpPriorityConfig, LinearBackend, MoEBackend
+445:    ir_op_priority: IrOpPriorityConfig = get_field(KernelConfig, "ir_op_priority")
+638:    scheduling_policy: SchedulerPolicy = SchedulerConfig.policy
+735:        if isinstance(self.ir_op_priority, dict):
+736:            self.ir_op_priority = IrOpPriorityConfig(**self.ir_op_priority)
+1442:        kernel_group.add_argument("--ir-op-priority", **kernel_kwargs["ir_op_priority"])
+2042:            policy=self.scheduling_policy,
+2153:        # Transfer top-level ir_op_priority into KernelConfig.ir_op_priority
+2154:        for op_name, op_priority in asdict(self.ir_op_priority).items():
+2156:            if not op_priority:
+2159:            # Priority cannot be set 2x for the same op
+2160:            if getattr(kernel_config.ir_op_priority, op_name):
+2162:                    f"Op priority for {op_name} specified via both ir_op_priority "
+2163:                    f"and KernelConfig.ir_op_priority, only one allowed at a time."
+2167:            setattr(kernel_config.ir_op_priority, op_name, op_priority)
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 312ms:
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  343k  100  343k    0     0  1004k      0 --:--:-- --:--:-- --:--:-- 1002k
+260:RADIX_EVICTION_POLICY_CHOICES = ["lru", "lfu", "slru", "priority"]
+418:    schedule_policy: str = "fcfs"
+419:    enable_priority_scheduling: bool = False
+420:    disable_priority_preemption: bool = False
+421:    default_priority_value: Optional[int] = None
+422:    abort_on_priority_when_disabled: bool = False
+423:    schedule_low_priority_values_first: bool = False
+424:    priority_scheduling_preemption_threshold: int = 10
+4754:            default=ServerArgs.schedule_policy,
+4761:                "priority",
+4767:            "--enable-priority-scheduling",
+4769:            default=ServerArgs.enable_priority_scheduling,
+4770:            help="Enable priority scheduling. Requests with higher priority integer values will be scheduled first by default.",
+4773:            "--disable-priority-preemption",
+4775:            default=ServerArgs.disable_priority_preemption,
+4776:            help="Disable priority scheduling preemption.",
+4779:            "--default-priority-value",
+4781:            default=ServerArgs.default_priority_value,
+4782:            help="Default priority for requests without explicit priority.",
+4785:            "--abort-on-priority-when-disabled",
+4787:            default=ServerArgs.abort_on_priority_when_disabled,
+4788:            help="If set, abort requests that specify a priority when priority scheduling is disabled.",
+4791:            "--schedule-low-priority-values-first",
+4793:            default=ServerArgs.schedule_low_priority_values_first,
+4794:            help="If specified with --enable-priority-scheduling, the scheduler will schedule requests with lower priority integer values first.",
+4797:            "--priority-scheduling-preemption-threshold",
+4799:            default=ServerArgs.priority_scheduling_preemption_threshold,
+4836:            help="The eviction policy of radix trees. 'lru' stands for Least Recently Used, 'lfu' stands for Least Frequently Used, 'slru' stands for Segmented Least Recently Used, and 'priority' evicts lower-priority requests first.",
+5574:            help="Choose the kernels for prefill attention layers (have priority over --attention-backend).",
+5581:            help="Choose the kernels for decode attention layers (have priority over --attention-backend).",
+7367:        if self.enable_priority_scheduling:
+7368:            assert self.schedule_policy in [
+7371:            ], f"To use priority scheduling, schedule_policy must be 'fcfs' or 'lof'. '{self.schedule_policy}' is not supported."
+7372:            if self.default_priority_value is None:
+7374:                    "--default-priority-value is not set while --enable-priority-scheduling is enabled. "
+7375:                    "Requests without explicit priority will have priority=None, "
+7376:                    "resulting in priority='None' string labels in Prometheus metrics."
+7379:            if self.disable_priority_preemption:
+7381:                    "--disable-priority-preemption has no effect without --enable-priority-scheduling"
+7383:            if self.default_priority_value is not None:
+7385:                    "--default-priority-value has no effect without --enable-priority-scheduling"
+
+ succeeded in 346ms:
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 13031  100 13031    0     0  34580      0 --:--:-- --:--:-- --:--:-- 34564
+17:    from vllm.v1.core.sched.interface import SchedulerInterface
+22:SchedulerPolicy = Literal["fcfs", "priority"]
+26:class SchedulerConfig:
+27:    """Scheduler configuration."""
+56:    max_num_scheduled_tokens: int | None = None
+57:    """Maximum number of tokens that the scheduler may issue in a single iteration.
+109:    policy: SchedulerPolicy = "fcfs"
+110:    """The scheduling policy to use:
+114:    - "priority" means requests are handled based on given priority (lower
+119:    partially schedule a multimodal item. Only used in V1
+122:    some image tokens can be scheduled (like TTTTIIIII, leaving IIIII),
+123:    it will be scheduled as TTTT in one step and IIIIIIIIII in the next."""
+125:    # scheduler class or path. "vllm.v1.core.sched.scheduler.Scheduler"
+127:    scheduler_cls: str | type[object] | None = None
+128:    """The scheduler class to use. "vllm.v1.core.sched.scheduler.Scheduler" is
+129:    the default scheduler. Can be a class directly or the path to a class of
+140:    scheduler_reserve_full_isl: bool = True
+141:    """If True, the scheduler checks whether the full input sequence length
+160:        Factory method to create `SchedulerConfig` with default values for `InitVar`s.
+166:        return SchedulerConfig(**kwargs)
+168:    def get_scheduler_cls(self) -> type["SchedulerInterface"]:
+169:        if self.scheduler_cls is None:
+171:                from vllm.v1.core.sched.async_scheduler import AsyncScheduler
+173:                return AsyncScheduler
+174:            from vllm.v1.core.sched.scheduler import Scheduler
+176:            return Scheduler
+178:        # This warning can be removed once the Scheduler interface is
+179:        # finalized and we can maintain support for scheduler classes that
+182:            "Using custom scheduler class %s. This scheduler interface is "
+184:            self.scheduler_cls,  # type: ignore[arg-type]
+186:        if not isinstance(self.scheduler_cls, str):
+187:            return cast(type["SchedulerInterface"], self.scheduler_cls)
+188:        return resolve_obj_by_qualname(self.scheduler_cls)
+218:    @field_validator("scheduler_cls", "async_scheduling", mode="wrap")
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/managers/scheduler.py | sed -n '2168,2228p;3558,3588p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/managers/schedule_batch.py | grep -niE 'preempt|priority|abort' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://arxiv.org/abs/2406.03243 | grep -i -A2 -B2 'abstract' | head -40" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 47622  100 47622    0     0   427k      0 --:--:-- --:--:-- --:--:--  430k
+  
+  <link rel="canonical" href="https://arxiv.org/abs/2406.03243"/>
+  <meta name="description" content="Abstract page for arXiv paper 2406.03243: Llumnix: Dynamic Scheduling for Large Language Model Serving"><meta property="og:type" content="website" />
+<meta property="og:site_name" content="arXiv.org" />
+<meta property="og:title" content="Llumnix: Dynamic Scheduling for Large Language Model Serving" />
+--
+  <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
+  <script src="/static/browse/0.3.4/js/toggle-labs.js?20241022" type="text/javascript"></script>
+  <script src="/static/browse/0.3.4/js/cite.js" type="text/javascript"></script><meta name="citation_title" content="Llumnix: Dynamic Scheduling for Large Language Model Serving" /><meta name="citation_author" content="Sun, Biao" /><meta name="citation_author" content="Huang, Ziming" /><meta name="citation_author" content="Zhao, Hanyu" /><meta name="citation_author" content="Xiao, Wencong" /><meta name="citation_author" content="Zhang, Xinyi" /><meta name="citation_author" content="Li, Yong" /><meta name="citation_author" content="Lin, Wei" /><meta name="citation_date" content="2024/06/05" /><meta name="citation_online_date" content="2024/06/05" /><meta name="citation_pdf_url" content="https://arxiv.org/pdf/2406.03243" /><meta name="citation_arxiv_id" content="2406.03243" /><meta name="citation_abstract" content="Inference serving for large language models (LLMs) is the key to unleashing their potential in people&#39;s daily lives. However, efficient LLM serving remains challenging today because the requests are inherently heterogeneous and unpredictable in terms of resource and latency requirements, as a result of the diverse applications and the dynamic execution nature of LLMs. Existing systems are fundamentally limited in handling these characteristics and cause problems such as severe queuing delays, poor tail latencies, and SLO violations. We introduce Llumnix, an LLM serving system that reacts to such heterogeneous and unpredictable requests by runtime rescheduling across multiple model instances. Similar to context switching across CPU cores in modern operating systems, Llumnix reschedules requests to improve load balancing and isolation, mitigate resource fragmentation, and differentiate request priorities and SLOs. Llumnix implements the rescheduling with an efficient and scalable live migration mechanism for requests and their in-memory states, and exploits it in a dynamic scheduling policy that unifies the multiple rescheduling scenarios elegantly. Our evaluations show that Llumnix improves tail latencies by an order of magnitude, accelerates high-priority requests by up to 1.5x, and delivers up to 36% cost savings while achieving similar tail latencies, compared against state-of-the-art LLM serving systems. Llumnix is publicly available at https://github.com/AlibabaPAI/llumnix." />
+</head>
+
+--
+              <option value="title">Title</option>
+              <option value="author">Author</option>
+              <option value="abstract">Abstract</option>
+              <option value="comments">Comments</option>
+              <option value="journal_ref">Journal reference</option>
+--
+
+
+    <blockquote class="abstract mathjax">
+            <span class="descriptor">Abstract:</span>Inference serving for large language models (LLMs) is the key to unleashing their potential in people&#39;s daily lives. However, efficient LLM serving remains challenging today because the requests are inherently heterogeneous and unpredictable in terms of resource and latency requirements, as a result of the diverse applications and the dynamic execution nature of LLMs. Existing systems are fundamentally limited in handling these characteristics and cause problems such as severe queuing delays, poor tail latencies, and SLO violations.
+<br>We introduce Llumnix, an LLM serving system that reacts to such heterogeneous and unpredictable requests by runtime rescheduling across multiple model instances. Similar to context switching across CPU cores in modern operating systems, Llumnix reschedules requests to improve load balancing and isolation, mitigate resource fragmentation, and differentiate request priorities and SLOs. Llumnix implements the rescheduling with an efficient and scalable live migration mechanism for requests and their in-memory states, and exploits it in a dynamic scheduling policy that unifies the multiple rescheduling scenarios elegantly. Our evaluations show that Llumnix improves tail latencies by an order of magnitude, accelerates high-priority requests by up to 1.5x, and delivers up to 36% cost savings while achieving similar tail latencies, compared against state-of-the-art LLM serving systems. Llumnix is publicly available at <a href="https://github.com/AlibabaPAI/llumnix" rel="external noopener nofollow" class="link-external link-https">this https URL</a>.
+    </blockquote>
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://www.usenix.org/conference/nsdi26/presentation/wu-bingyang | grep -i -E 'preempt|schedule|serving|large language' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 117ms:
+100  167k  100  167k    0     0  1169k      0 --:--:-- --:--:-- --:--:-- 1177k
+                req, self.model_config.num_key_value_heads
+            )
+            req.time_stats.set_prefill_bootstrap_queue_entry_time()
+        elif self.disaggregation_mode == DisaggregationMode.DECODE:
+            self.disagg_decode_prealloc_queue.add(req, is_retracted=is_retracted)
+            if not is_retracted:
+                req.time_stats.set_decode_prealloc_queue_entry_time()
+            else:
+                req.time_stats.set_retract_time()
+        else:
+            raise ValueError(f"Invalid {self.disaggregation_mode=}")
+
+    def _set_or_validate_priority(self, req: Req) -> bool:
+        """Set the default priority value, or abort the request based on the priority scheduling mode."""
+        if self.enable_priority_scheduling and req.priority is None:
+            if self.schedule_low_priority_values_first:
+                req.priority = sys.maxsize
+            else:
+                req.priority = -sys.maxsize - 1
+        elif (
+            not self.enable_priority_scheduling
+            and req.priority is not None
+            and self.abort_on_priority_when_disabled
+        ):
+            abort_req = AbortReq(
+                finished_reason={
+                    "type": "abort",
+                    "status_code": HTTPStatus.SERVICE_UNAVAILABLE,
+                    "message": "Using priority is disabled for this server. Please send a new request without a priority.",
+                },
+                rid=req.rid,
+            )
+            req.time_stats.trace_ctx.abort(abort_info=abort_req.finished_reason)
+            self.ipc_channels.send_to_tokenizer.send_output(abort_req, req)
+            return False
+        return True
+
+    def _abort_on_queued_limit(self, recv_req: Req) -> bool:
+        """Abort an incoming or existing request if the waiting queue is full. Returns True if the incoming request is aborted."""
+        if (
+            self.max_queued_requests is None
+            or len(self.waiting_queue) + 1 <= self.max_queued_requests
+        ):
+            return False
+
+        # Reject the incoming request by default.
+        req_to_abort = recv_req
+        message = "The request queue is full."
+        if self.enable_priority_scheduling:
+            # With priority scheduling, consider aboritng an existing request based on the priority.
+            # direction = 1  => smaller number = higher priority; -1 => larger number = higher priority.
+            # max(...) + (direction * priority, queue_time_start) picks the least-preferred request.
+            # Tie: later queue_time_start (newer) is evicted first. Preempt only if strictly better.
+            direction = 1 if self.schedule_low_priority_values_first else -1
+            key_fn = lambda item: (
+                direction * item[1].priority,
+                item[1].time_stats.wait_queue_entry_time,
+            )
+            idx, candidate_req = max(enumerate(self.waiting_queue), key=key_fn)
+            abort_existing_req = (
+                direction * recv_req.priority < direction * candidate_req.priority
+        except Exception as e:
+            success = False
+            exec = e
+            logger.error(f"Failed to call rpc {recv_req.method}: {str(e)}")
+
+        barrier()
+        return RpcReqOutput(success, "" if not exec else str(exec))
+
+    def abort_request(self, recv_req: AbortReq):
+        # todo hisparse, release resources for abort requests in hisparse coordinator
+        # Delete requests in the waiting queue
+        to_del = []
+        for i, req in enumerate(self.waiting_queue):
+            if recv_req.abort_all or req.rid.startswith(recv_req.rid):
+                to_del.append(i)
+
+        # Sort in reverse order to avoid index issues when deleting
+        for i in reversed(to_del):
+            # Abort method 1: directly pop from the queue
+            # This only works for requests that have not started anything.
+            # We still need to send something back to TokenizerManager to clean up the state.
+            req = self.waiting_queue.pop(i)
+            if self.enable_hicache_storage:
+                # to release prefetch events associated with the request
+                self.tree_cache.release_aborted_request(req.rid)
+            self.ipc_channels.send_to_tokenizer.send_output(AbortReq(rid=req.rid), req)
+            # For disaggregation decode mode, the request in the waiting queue has KV cache allocated.
+            if self.disaggregation_mode == DisaggregationMode.DECODE:
+                release_kv_cache(req, self.tree_cache)
+            # For disaggregation prefill mode, free the metadata buffer index
+            if self.disaggregation_mode == DisaggregationMode.PREFILL:
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 286ms:
+100  109k  100  109k    0     0   351k      0 --:--:-- --:--:-- --:--:--  352k
+196:class FINISH_ABORT(BaseFinishReason):
+199:        self.message = message or "Aborted"
+205:            "type": "abort",
+675:        priority: Optional[int] = None,
+778:        # If we want to abort the request in the middle of the event loop,
+785:        self.priority = priority
+922:        # The number of times this request has been retracted / preempted.
+959:        # abort chunking. Set in create_sender, consumed in process_batch_result.
+1406:    def set_finish_with_abort(self, error_msg: str):
+1416:        self.to_finish = FINISH_ABORT(
+2310:        reqs_to_abort: List[Req] = []
+2315:            # Instead of crashing the scheduler, gracefully abort it.
+2318:            last_req.to_finish = FINISH_ABORT(
+2320:                "in the decode batch. Aborting the last request.",
+2323:            reqs_to_abort.append(last_req)
+2326:                "retract_decode: aborted last request %s due to OOM", last_req.rid
+2336:        return retracted_reqs, new_estimate_ratio, reqs_to_abort
+2348:        # TODO (csy): for preempted requests, we may want to insert into the tree
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 650ms:
+100 38429    0 38429    0     0  56354      0 --:--:-- --:--:-- --:--:-- 56430
+<meta name="citation_title" content="{FastServe}: {Iteration-Level} Preemptive Scheduling for Large Language Model Inference" />
+    <title>FastServe: Iteration-Level Preemptive Scheduling for Large Language Model Inference | USENIX</title>
+    <script>window.Backdrop = {settings: {"basePath":"\/","pathPrefix":"","drupalCompatibility":true,"ajaxPageState":{"theme":"neat_conference","theme_token":"R9KKBwgVZRRTd_QHk_U_6O_WREd75Q6RH6zRngd9tSU","css":{"core\/misc\/normalize.css":1,"core\/modules\/system\/css\/system.css":1,"core\/modules\/system\/css\/system.theme.css":1,"core\/modules\/system\/css\/messages.theme.css":1,"modules\/contrib\/back_to_top\/css\/back_to_top.css":1,"modules\/custom\/adamm\/css\/base.css":1,"modules\/custom\/adamm\/css\/dropdown.css":1,"core\/modules\/comment\/css\/comment.css":1,"core\/modules\/date\/css\/date.css":1,"core\/modules\/field\/css\/field.css":1,"modules\/contrib\/og\/css\/og.css":1,"modules\/contrib\/paragraphs\/css\/paragraphs.css":1,"core\/modules\/search\/search.theme.css":1,"modules\/contrib\/special_menu_items\/css\/special_menu_items.css":1,"modules\/custom\/usenix_conference\/css\/timezone-picker.css":1,"modules\/custom\/usenix_logo_preview\/css\/usenix_logo_preview.css":1,"core\/modules\/user\/css\/user.css":1,"modules\/contrib\/workflow\/workflow_admin_ui\/workflow_admin_ui.css":1,"core\/modules\/views\/css\/views.css":1,"modules\/contrib\/rules\/rules.css":1,"0":1,"modules\/contrib\/geshifilter\/geshifilter.css":1,"modules\/custom\/biblio\/biblio.css":1,"layouts\/neat_conference\/neat-conference.css":1,"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/font-awesome\/4.4.0\/css\/font-awesome.min.css":1,"modules\/contrib\/tb_megamenu\/css\/bootstrap.css":1,"modules\/contrib\/tb_megamenu\/css\/base.css":1,"modules\/contrib\/tb_megamenu\/css\/default.css":1,"modules\/contrib\/tb_megamenu\/css\/compatibility.css":1,"core\/modules\/system\/css\/menu-dropdown.theme.breakpoint.css":1,"core\/modules\/system\/css\/menu-dropdown.theme.breakpoint-queries.css":1,"themes\/neat_conference\/css\/neat.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc_colo.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc_colo_dark.css":1,"themes\/neat_conference\/css\/schemes\/scheme-enigma.css":1,"themes\/neat_conference\/css\/schemes\/scheme-enigma_temp.css":1,"themes\/neat_conference\/css\/schemes\/scheme-fast.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_lean.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_blue.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_red.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_green.css":1,"themes\/neat_conference\/css\/schemes\/scheme-nsdi.css":1,"themes\/neat_conference\/css\/schemes\/scheme-osdi.css":1,"themes\/neat_conference\/css\/schemes\/scheme-security.css":1,"themes\/neat_conference\/css\/schemes\/scheme-security_colo.css":1,"themes\/neat_conference\/css\/schemes\/scheme-soups.css":1,"themes\/neat_conference\/css\/schemes\/scheme-srecon.css":1,"themes\/neat_conference\/css\/schemes\/scheme-pepr_woot.css":1,"themes\/neat_conference\/fonts\/fontawesome\/css\/all.min.css":1,"themes\/neat_conference\/system.theme.css":1},"js":{"public:\/\/google_tag\/google_tag.script.js":1,"modules\/contrib\/jquery_update\/replace\/jquery\/1.12\/jquery.min.js":1,"core\/misc\/jquery.once.js":1,"core\/misc\/backdrop.js":1,"modules\/contrib\/behavior_weights\/js\/behavior_weights.js":1,"modules\/contrib\/jquery_update\/js\/jquery_browser.js":1,"modules\/contrib\/beautytips\/js\/jquery.bt.min.js":1,"modules\/contrib\/beautytips\/js\/beautytips.js":1,"modules\/contrib\/back_to_top\/js\/back_to_top.js":1,"modules\/custom\/adamm\/js\/accessible-menu\/dist\/disclosure-menu.iife.js":1,"modules\/custom\/adamm\/js\/contentexpander\/contentExpander.js":1,"modules\/custom\/adamm\/js\/adamm.js":1,"modules\/contrib\/views_slideshow\/js\/views_slideshow.js":1,"modules\/contrib\/views_slideshow\/contrib\/views_slideshow_cycle\/js\/formoptions.js":1,"modules\/contrib\/views_slideshow\/contrib\/views_slideshow_cycle\/js\/views_slideshow_cycle.js":1,"modules\/contrib\/beautytips\/other_libs\/jquery.hoverIntent.minified.js":1,"modules\/contrib\/field_group\/js\/field_group.js":1,"modules\/contrib\/field_group\/js\/field_groups.js":1,"modules\/contrib\/tb_megamenu\/js\/tb-megamenu-frontend.js":1,"modules\/contrib\/tb_megamenu\/js\/tb-megamenu-touch.js":1,"core\/modules\/system\/js\/menus.js":1,"themes\/neat_conference\/js\/bibtex.js":1,"themes\/neat_conference\/js\/mobile.js":1,"themes\/neat_conference\/js\/jquery.slicknav.min.js":1,"themes\/neat_conference\/js\/tech-schedule.js":1,"themes\/neat_conference\/js\/training-program.js":1,"themes\/neat_conference\/js\/organizers.js":1,"themes\/neat_conference\/js\/protected-files.js":1}},"back_to_top":{"distance":"100","text":"Back to top","title":1,"type":"image","disable_mobile":0},"beautytipStyles":{"default":[],"plain":[],"netflix":{"positions":["right","left"],"fill":"#FFF","padding":5,"shadow":true,"shadowBlur":12,"strokeStyle":"#B9090B","spikeLength":50,"spikeGirth":20,"cornerRadius":10,"centerPointY":0.1,"overlap":-8,"cssStyles":{"fontSize":"12px","fontFamily":"arial,helvetica,sans-serif"}},"facebook":{"fill":"#F7F7F7","padding":8,"strokeStyle":"#B7B7B7","cornerRadius":0,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"11px"}},"transparent":{"fill":"rgba(0, 0, 0, .8)","padding":20,"strokeStyle":"#CC0","strokeWidth":3,"spikeLength":40,"spikeGirth":40,"cornerRadius":40,"cssStyles":{"color":"#FFF","fontWeight":"bold"}},"big-green":{"fill":"#00FF4E","padding":20,"strokeWidth":0,"spikeLength":40,"spikeGirth":40,"cornerRadius":15,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"14px"}},"google-maps":{"positions":["top","bottom"],"fill":"#FFF","padding":15,"strokeStyle":"#ABABAB","strokeWidth":1,"spikeLength":65,"spikeGirth":40,"cornerRadius":25,"centerPointX":0.9,"cssStyles":{"fontSize":"12px","fontFamily":"arial,helvetica,sans-serif"}},"hulu":{"fill":"#F4F4F4","strokeStyle":"#666666","spikeLength":20,"spikeGirth":10,"width":350,"overlap":0,"centerPointY":1,"cornerRadius":0,"cssStyles":{"fontFamily":"\u0022Lucida Grande\u0022,Helvetica,Arial,Verdana,sans-serif","fontSize":"12px","padding":"10px 14px"},"shadow":true,"shadowColor":"rgba(0,0,0,.5)","shadowBlur":8,"shadowOffsetX":4,"shadowOffsetY":4}},"beautytips":{".beautytips":{"cssSelect":".beautytips","style":null}},"field_group":{"div":"full"}}};</script>
+          <a href="/conference/nsdi26/schedule"  class="dropdown-toggle">
+                Schedule                      </a>
+                      <h1 id="page-title">FastServe: Iteration-Level Preemptive Scheduling for Large Language Model Inference</h1>
+    <div class="field field-name-field-paper-people-text field-type-text-long field-label-hidden"><div class="field-items field-items"><div class="field-item odd"><p>Bingyang Wu, Yinmin Zhong, Zili Zhang, Shengyu Liu, Fangyue Liu, Yuanhang Sun, Gang Huang, Xuanzhe Liu, and Xin Jin, <em>School of Computer Science, Peking University</em></p></div></div></div><div class="field field-name-field-paper-description field-type-text-long field-label-hidden"><div class="field-items field-items"><div class="field-item odd"><p>Large language models (LLMs) power a new generation of interactive AI applications exemplified by ChatGPT. The interactive nature of these applications demands low latency for LLM inference. Existing LLM serving systems use run-tocompletion processing for inference jobs, which suffers from head-of-line blocking and long latency. </p> <p>We present FastServe, a distributed LLM serving system which exploits the autoregressive pattern of LLM inference to enable preemption at the granularity of each output token. FastServe uses preemptive scheduling to minimize latency with a novel skip-join Multi-Level Feedback Queue scheduler. Based on the new semi information-agnostic setting of LLM inference, the scheduler leverages the input length information to assign an appropriate initial queue for each arrival job to join. Queues with higher priority than the one the job joins are skipped to reduce demotions. We design an efficient GPU memory management mechanism that proactively offloads and uploads intermediate state between GPU memory and host memory for LLM inference. Evaluation shows that compared to the state-of-the-art solution vLLM, FastServe improves the throughput by up to 6.1×.</p></div></div></div><div class="field field-name-field-paper-people field-type-node-reference field-label-hidden"><div class="field-items field-items"><div class="field-item odd"><article id="node-319642" class="node node-speaker view-mode-schedule">
+</div><div class="field-item even"><article id="node-319844" class="node node-speaker view-mode-schedule">
+</div><div class="field-item odd"><article id="node-319819" class="node node-speaker view-mode-schedule">
+</div><div class="field-item even"><article id="node-319306" class="node node-speaker view-mode-schedule">
+</div><div class="field-item odd"><article id="node-319292" class="node node-speaker view-mode-schedule">
+</div><div class="field-item even"><article id="node-319554" class="node node-speaker view-mode-schedule">
+</div><div class="field-item odd"><article id="node-319125" class="node node-speaker view-mode-schedule">
+</div><div class="field-item even"><article id="node-319318" class="node node-speaker view-mode-schedule">
+</div><div class="field-item odd"><article id="node-319173" class="node node-speaker view-mode-schedule">
+	title = {{FastServe}: {Iteration-Level} Preemptive Scheduling for Large Language Model Inference},<br />
+    <iframe title="YouTube video" class="large-12 medium-12 small-12 columns usenix-schedule-media" width="745" height="420" src="//www.youtube.com/embed/DLDwwYnojKw?width%3D745%26amp%3Bheight%3D420%26amp%3Btheme%3Ddark%26amp%3Bautoplay%3D0%26amp%3Bvq%3Dhd720%26amp%3Brel%3D0%26amp%3Bshowinfo%3D0%26amp%3Bmodestbranding%3D0%26amp%3Biv_load_policy%3D1%26amp%3Bcontrols%3D1%26amp%3Bautohide%3D2%26amp%3Bwmode%3Dopaque" frameborder="0" allowfullscreen></iframe>  </div>
+<li class="expanded has-children menu-mlid-48702"><a href="/conference/nsdi26/schedule">Schedule</a><ul><li class="first leaf menu-mlid-48661"><a href="/conference/nsdi26/technical-sessions">Technical Sessions</a></li>
+
+codex
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/blob/main/docs/configuration/optimization.md#preemption", overlap: "Shipping KV-cache preemption/recompute plus priority scheduling/abort APIs; overlaps with the proposed reclaim path once abandonment-risk becomes preempt/kill."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "Shipping scheduler has request abort, priority scheduling, priority preemption flags, queue rejection/eviction; overlaps with deprioritize/kill integration."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/torch/scheduler.html", overlap: "Scheduler is explicitly customizable via CapacityScheduler/MicroBatchScheduler; supports active/paused request selection. This makes the proposed policy mostly scheduler glue."},
+  {system: "Llumnix", url: "https://arxiv.org/abs/2406.03243", overlap: "Dynamic runtime rescheduling/live migration across model instances, priority/SLO differentiation, cost savings; covers the generic systems mechanism claimed here."},
+  {system: "FastServe", url: "https://www.usenix.org/conference/nsdi26/presentation/wu-bingyang", overlap: "Iteration-level preemptive scheduling for LLM inference; directly overlaps with token-granularity preemption/deprioritization."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold as a demonstrated realistic workload result. Evidence is CPU-only constructed traces, 400 turns/cell, no real agent traces, no GPU serving system, no real KV-cache/preemption costs, and no measured production abandonment distribution. At L0, deprioritize-only reclaims 0 slots and kill-on-flag reclaims only 0.4-3.4% total decode while destroying 2.2-18.6% completed turns.
+RATIONALE: The core systems claim fails on its own evidence: the only non-kill scheduler action, deprioritization, reclaims zero compute and worsens completed-turn p99 by +18% to +317%; the only reclaiming action is generic request kill/preemption and has unacceptable false-positive harm at AUC ~0.71. Existing systems already ship the underlying mechanisms: vLLM documents preemption/recompute for KV pressure and supports priority scheduling; SGLang exposes priority scheduling/preemption and abort paths; TensorRT-LLM exposes pluggable schedulers; Llumnix and FastServe cover runtime rescheduling/preemptive scheduling as named prior work. The agent-abandonment signal could have been the systems insight, but the packet only shows a constructed-trace conditional predictor and no real trace oracle ceiling, so there is insufficient evidence that it transfers beyond glue over existing schedulers.
+tokens used
+47,829

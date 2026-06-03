@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: green
+MANDATORY_BASELINES: [{"name": "FastServe / Llumnix", "why": "The proposed kill-on-flag mechanism reduces to generic preemption. Any agent-specific scheduler must beat state-of-the-art preemptive LLM schedulers.", "repo_or_cite": "FastServe (arXiv:2305.05920) / Llumnix (OSDI 2024)"}, {"name": "vLLM / Orca (Continuous Batching)", "why": "Standard baseline to measure the true existing waste fraction without predictive preemption.", "repo_or_cite": "Orca (OSDI 2022) / vLLM (SOSP 2023)"}]
+STRAWMAN_RISKS: ["Comparing against static batching or FIFO schedulers without continuous batching", "Reporting raw token throughput instead of goodput (completed, non-aborted tokens)"]
+MISSING_METRICS: ["Cost of re-running false-positive killed turns (end-to-end latency penalty)", "Real-world oracle AUC ceiling on actual agent traces", "Goodput (completed turns per second)"]
+KILLER_EXPERIMENT: Apply the kill-on-flag mechanism with a real predictor (AUC ~0.71) to a replay of SWE-bench/tau-bench traces on vLLM, measuring end-to-end task completion time including the mandatory cost of re-running false-positive killed turns. If E2E latency increases compared to baseline continuous batching, the claim is definitively falsified.
+RATIONALE: The L0 honestly proved the core system mechanism fails (deprioritization reclaims 0 slots; kill-on-flag harms more completed turns than it reclaims at achievable AUC). The novelty is at risk because it reduces to generic preemption. A green vote is given for a clean, rigorously constructed negative result that prevents further wasted effort on the deprioritization mechanism.
+```
