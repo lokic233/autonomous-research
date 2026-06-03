@@ -1,7 +1,7 @@
 claim_id: CLAIM-0015
 project_id: PROJ-0004
 stage: seed
-status: seed
+status: weakened
 claim: "In a mixed-precision serving fleet (a cheap low-bit-quantized model + an expensive\
   \ full-precision model), a cheap PRE-GENERATION router that predicts per-request\
   \ whether low-bit quantization will materially degrade THIS request's output (from\
@@ -26,16 +26,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0020
+  summary: 'PARTIAL. CLAIM-0015 quant-sensitivity PRE-decode router (L0 sim). (A)
+    Per-request quant-degradation IS predictable from cheap PRE-decode features (ppl/domain/arith/longctx)
+    when degradation is request-dependent/heavy-tailed: AUC 0.77-0.89 at realistic
+    noise, ~0.52 (chance) in uniform-null regime. Anti-circular: predictor never reads
+    latent cause s_i; oracle gap 0.02-0.03 quality. (B) Router DOMINATES all-quant/all-full/random
+    on cost/quality Pareto, but vs STRONG confidence-threshold cascade @matched budget:
+    CI-positive only at sigma>=0.3 (+0.7-2.4% quality), TIES (CI includes 0) at sigma=0.15.
+    Verdict PARTIAL: predictability+weak-baseline dominance HELD, confidence-threshold
+    edge CONDITIONAL on pre-vs-post-decode signal noise. Real edge is COST (skips
+    cheap decode) not quality. Prior art (FrugalGPT/RouteLLM/hybrid-precision serving)
+    published; only candidate novelty = quant-sensitivity-specific pre-decode prediction.'
+  data_path: experiments/2026-06-03/EXP-0020/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0020 result, then ros exp complete --exp EXP-0020 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0020; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0020
+active_experiments: []
 created_at: '2026-06-03T05:58:07Z'
-last_updated: '2026-06-03T05:58:33Z'
+last_updated: '2026-06-03T06:06:23Z'

@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL. CLAIM-0015 quant-sensitivity PRE-decode router (L0 sim).
+  (A) Per-request quant-degradation IS predictable from cheap PRE-decode features
+  (ppl/domain/arith/longctx) when degradation is request-dependent/heavy-tailed: AUC
+  0.77-0.89 at realistic noise, ~0.52 (chance) in uniform-null regime. Anti-circular:
+  predictor never reads latent cause s_i; oracle gap 0.02-0.03 quality. (B) Router
+  DOMINATES all-quant/all-full/random on cost/quality Pareto, but vs STRONG confidence-threshold
+  cascade @matched budget: CI-positive only at sigma>=0.3 (+0.7-2.4% quality), TIES
+  (CI includes 0) at sigma=0.15. Verdict PARTIAL: predictability+weak-baseline dominance
+  HELD, confidence-threshold edge CONDITIONAL on pre-vs-post-decode signal noise.
+  Real edge is COST (skips cheap decode) not quality. Prior art (FrugalGPT/RouteLLM/hybrid-precision
+  serving) published; only candidate novelty = quant-sensitivity-specific pre-decode
+  prediction.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0020/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T06:06:23Z'
 prompt_version: ''
