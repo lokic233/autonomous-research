@@ -1,0 +1,36 @@
+claim_id: CLAIM-0009
+project_id: PROJ-0004
+stage: seed
+status: seed
+claim: "On agentic/tool-calling generation, token-level early-exit (computing fewer\
+  \ transformer layers when the LM head is confident at an intermediate layer) saves\
+  \ strictly MORE FLOPs at matched output quality than on free-form reasoning text,\
+  \ because agentic boilerplate tokens (JSON delimiters, tool-call scaffolding, schema\
+  \ keys) are low-entropy and saturate confidence at shallow layers \u2014 so a structure-aware\
+  \ early-exit threshold (looser inside scaffolding, stricter in argument values/reasoning)\
+  \ beats a single global threshold."
+why_it_matters: "Early-exit saves FLOPs where intermediate confidence is high; agentic\
+  \ output is bimodal (low-entropy scaffolding vs higher-entropy values/reasoning).\
+  \ A structure-aware exit threshold should capture more savings than a global one\
+  \ at matched quality. Topic: inference-optimization. L0: model layer-wise confidence\
+  \ by token class on agent traces; structure-aware vs global threshold FLOP-vs-quality.\
+  \ NOVELTY RISK: early-exit/CALM/depth-adaptive is published \u2014 must isolate\
+  \ the agentic-structure-conditioned threshold + show it beats a tuned global threshold\
+  \ (the EXP-0006 lesson)."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0011 result, then ros exp complete --exp EXP-0011 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0011
+created_at: '2026-06-03T00:12:03Z'
+last_updated: '2026-06-03T00:12:20Z'

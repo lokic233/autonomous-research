@@ -1,0 +1,34 @@
+claim_id: CLAIM-0007
+project_id: PROJ-0001
+stage: seed
+status: seed
+claim: In multi-tenant agentic LLM serving, content-defined chunking (CDC) of KV-cache
+  blocks enables cross-request KV DEDUPLICATION that reclaims significantly more KV
+  memory than exact-prefix sharing alone, because agent fleets run near-identical
+  tool-schema/boilerplate spans embedded at DIFFERENT offsets across different system
+  prompts (which exact-prefix block-hashing misses), and the reclaimed memory translates
+  to higher effective batch size / fewer preemptions.
+why_it_matters: "Exact-prefix caching (vLLM APC, RadixAttention) only shares from\
+  \ position 0; identical tool-schema spans at different offsets across tenants are\
+  \ NOT shared. CDC dedup (Rabin-style) could capture offset-shifted duplicates. Topic:\
+  \ kv-cache + agent-infra. L0: measure duplicate-span rate + dedup-reclaimable bytes\
+  \ on synthetic multi-tenant agent prompts vs exact-prefix; GPU pass real KV bytes.\
+  \ NOVELTY RISK to check: KV dedup is emerging (e.g. KVQuant/cache-dedup work) \u2014\
+  \ cemetery + prior-art critical."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0009 result, then ros exp complete --exp EXP-0009 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0009
+created_at: '2026-06-03T00:11:41Z'
+last_updated: '2026-06-03T00:12:20Z'

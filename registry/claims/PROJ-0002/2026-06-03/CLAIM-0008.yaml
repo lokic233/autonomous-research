@@ -1,0 +1,35 @@
+claim_id: CLAIM-0008
+project_id: PROJ-0002
+stage: seed
+status: seed
+claim: In long-horizon tool-calling agents, extractively COMPRESSING committed tool-result
+  segments in the running transcript (retaining only the spans that later turns actually
+  reference, detected by attention/citation signal) reduces prompt token growth with
+  BOUNDED task-accuracy loss, achieving a strictly better context-length / task-success
+  Pareto than (a) no compression and (b) naive recency-truncation, because tool outputs
+  are verbose but later-referenced content is sparse and predictable.
+why_it_matters: "Agent transcripts blow up by appending verbose tool outputs; most\
+  \ of each output is never re-referenced. If the referenced spans are sparse+predictable,\
+  \ extractive compression cuts context (prefill cost + window pressure) at bounded\
+  \ accuracy loss, beating naive truncation. Topic: agentic-systems + inference-optimization.\
+  \ L0: on synthetic/templated agent traces, measure referenced-span sparsity + compression-vs-accuracy\
+  \ Pareto vs truncation baseline. NOVELTY RISK: context compression (LLMLingua, H2O,\
+  \ snapKV) is crowded \u2014 must isolate the TOOL-RESULT-specific + reference-predicted\
+  \ angle."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r1-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0010 result, then ros exp complete --exp EXP-0010 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0010
+created_at: '2026-06-03T00:12:03Z'
+last_updated: '2026-06-03T00:12:20Z'
