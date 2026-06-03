@@ -1621,3 +1621,16 @@ double-book guard `sys.exit`s — the in-memory exp dict is set before the lock 
 of that file must adopt the SAME lock — BUG-100 fixed two of three writers (enqueue, release) and the third
 (`cmd_exp_dispatch`) was left unlocked, silently reopening the very double-dispatch race the lock exists to
 prevent. Audit ALL writers of a lock-protected file when hardening any one of them.
+
+## 2026-06-03 ~11:40 UTC — BUG-105 (BUG-104 was PARTIAL: same exp double-dispatched across DIFFERENT nodes) [v3-impl live debug]
+Independently re-verifying BUG-104 (a61641b, dispatch lease lock) caught that it only closed the per-NODE
+invariant ("no two exps on one node") — it did NOT prevent the SAME exp dispatching to TWO DIFFERENT nodes.
+Repro: two concurrent `ros exp dispatch --exp EXP-X --node h100a` / `--node h100b` BOTH succeeded ->
+leases={h100a:EXP-X, h100b:EXP-X} = the same experiment double-dispatched across nodes (double GPU burn,
+racing result submits — the exact hazard BUG-85/100/104 were closing, just cross-node). FIX (inside the
+existing BUG-104 _file_lock(gpu_queue), no new mechanism): also refuse dispatch if THIS exp is already
+leased on ANY other node — an experiment holds at most ONE node lease. Repro 10/10 double before -> 0/N
+after (a dispatched, b refused SAFETY, leases has exactly 1 node). Completes the GPU-dispatch race family
+(85 poll / 100 enqueue+release / 104 dispatch per-node / 105 dispatch cross-node). Engine commit next.
+LESSON: a "locked the RMW" fix can still miss the SECOND invariant on the same data — re-test the actual
+double-outcome, not just "is it locked now".
