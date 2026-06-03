@@ -1,0 +1,11 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [
+  {name: "ACON", why: "Closest applied work for real agent tool-output compression; generic H2O is insufficient for an agent-specific claim", repo_or_cite: "ACON (agent-context compression)"},
+  {name: "Scissorhands", why: "Claims token importance is temporally stable; L1 must prove real tool traces explicitly violate this 'persistence of importance' assumption", repo_or_cite: "Liu'23"}
+]
+STRAWMAN_RISKS: ["L0 generative model intentionally engineers 'delayed cold callbacks' to guarantee H2O fails, risking a structural tautology in evaluation", "Comparing against generic attention-eviction without agent-specific baselines like ACON in L1"]
+MISSING_METRICS: ["Empirical frequency of 'cold-then-hot' tool result references in real traces", "End-to-end task accuracy on real multi-step agent benchmarks (e.g., AppWorld, WebArena)", "Inference overhead/latency of the noisy causal predictor vs simple eviction"]
+KILLER_EXPERIMENT: Run a real LLM on a multi-step tool-agent benchmark to empirically measure the temporal attention patterns to committed tool results. If the assumed 'delayed cold callback' (cold-then-hot) structure is rare in real traces, or if ACON catches the necessary context without the causal predictor, the claim is falsified.
+RATIONALE: The L0 simulation honestly bounded its claims and broke the predictor circularity, but engineered the generative structure to explicitly defeat H2O. The evaluation itself guarantees H2O's failure by design. An honest YELLOW requires the L1 to prove this engineered structure actually exists in real agent traces and can beat domain-specific baselines like ACON.
+```

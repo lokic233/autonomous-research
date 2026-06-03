@@ -1,0 +1,48 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE: [
+  "L1 on real multi-step tool-agent benchmark (AppWorld/OfficeBench/tau-bench): measure empirical frequency of delayed-cold-then-hot callback references in real LLM traces — this is the single load-bearing assumption the L0 cannot test",
+  "Real accumulated attention from a real LLM as both H2O signal and predictor input; measure real future-reference AUC on committed tool-result tokens (overall and critical-handle separately)",
+  "End-to-end task accuracy (pass@1) at matched KV budget, not synthetic availability proxies",
+  "Cite and run head-to-head against A2SF (arXiv:2407.20485), ArkVale (NeurIPS 2024), InfiniGen (arXiv:2406.19707), Quest (arXiv:2406.10774) — all uncited, all directly on the 'past-attention misses tokens that come back' + 'predict future importance from cheap proxy' problem space",
+  "Head-to-head against ACON on a real agent benchmark at matched token/KV budget",
+  "Report graded M2 (fraction of callbacks retained) alongside binarized M2 — the all-or-nothing metric inflates the gap when H2O is definitionally 0.000",
+  "Sensitivity analysis on n-gram hit rate (currently calibrated to 0.80 for true handles) and span-boundary error model (currently asserted at 10%)",
+  "Verify whether real LLMs already attend strongly to handle/ID tokens at commit time — if so, H2O catches them and the gap collapses"
+]
+
+MANDATORY_BASELINES: [
+  {name: "A2SF", cite: "arXiv:2407.20485", why: "Same diagnosis: accumulated-attention score is biased and misses tokens whose importance is non-persistent. Uncited. Collision on the core insight."},
+  {name: "ArkVale", cite: "NeurIPS 2024", why: "Explicitly built for the cold-then-hot problem via recall of evicted KV. Same motivating phenomenon. Uncited."},
+  {name: "InfiniGen", cite: "arXiv:2406.19707", why: "Predicts which KV will be important for future steps from a cheap proxy. Same mechanism class. Uncited."},
+  {name: "Quest", cite: "arXiv:2406.10774", why: "Query-aware sparsity predicting future importance from realizable proxy. Same mechanism class. Uncited."},
+  {name: "ACON", cite: "arXiv:2510.00615", why: "Closest applied agent-context compression work. Cited in packet but no head-to-head. Owed."},
+  {name: "Scissorhands", cite: "arXiv:2305.17118", why: "L1 must empirically prove real tool traces violate persistence-of-importance. Currently foil only."},
+  {name: "H2O", cite: "arXiv:2306.14048", why: "Already baselined in L0. Retain in L1 with real attention."},
+  {name: "SnapKV", cite: "arXiv:2404.14469", why: "Already baselined in L0. Retain in L1 with real attention."}
+]
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0010", change: "status -> YELLOW; stage -> L0-PARTIAL-HELD; next -> L1-REQUIRED with expanded prior-art + real-trace validation; narrowed_scope -> 'mechanism demonstration contingent on real-trace structure validation and prior-art differentiation'; add_edges_to -> [A2SF, ArkVale, InfiniGen, Quest] as mandatory_related_work"}
+
+PRIOR_ART_ADEQUATE: no
+
+RATIONALE:
+Unanimous YELLOW from all five reviewers. The L0 genuinely fixes the four defects that RED'd CLAIM-0008/EXP-0010: circularity is broken (theta is grep-auditably latent — C1 fixed), H2O/SnapKV is the right baseline rather than a strawman (C2 fixed), tool-result-specificity is operationalized via delayed-callback spans (C3 fixed), and the Scissorhands counterexample framing is explicit (C4 addressed). These fixes are non-trivial and prevent a RED — the researcher and orchestrator did honest, disciplined work.
+
+However, GREEN is blocked on two axes:
+
+**1. Prior-art is inadequate.** The novelty_killer identified four uncited works — A2SF (same "past-attention is biased, misses non-persistent importance" diagnosis), ArkVale (same cold-then-hot motivation, different mechanism), InfiniGen and Quest (same "predict future KV importance from cheap realizable proxy" mechanism class) — that collectively cover the claim's narrative at the altitude it's stated. The packet cites only H2O/SnapKV/Scissorhands/ACON/LLMLingua and misses the works most threatening to its contribution. The residual novelty, if any, is reduced to a single unproven slice: tool-result-span granularity + lexical handle-recurrence as the predictive signal. That slice may be novel, but the novelty_killer could not verify it live (search was blocked), and the L0 — by its own admission — engineers the win into the generative model. Per standing rules, no GREEN without adequate prior-art search.
+
+**2. The headline result is largely a predicted consequence of the construction, not an empirical discovery.** The theory_skeptic's analysis is well-grounded: spans were engineered to have zero past-attention at eviction time, an all-or-nothing metric was used to score retention of exactly those spans, and the predictor input (n-gram handle recurrence) is correlated-by-construction with the M2 positive class. H2O scoring 0.000 everywhere on M2 is definitional, not empirical. The evaluation_prosecutor concurs: "The evaluation itself guarantees H2O's failure by design." The genuinely informative axis — does a noisy proxy track the structure at realistic AUC? — survives at crit_AUC 0.64–0.78, consistent with PARTIAL-HELD, but the researcher's own disclosed limitations ("the win is ENGINEERED INTO the generative model… it does NOT show real tool traces have this structure") make this a mechanism-possibility demonstration, not evidence of real-world operation.
+
+The product_realist correctly identifies the actionable guidance: the negative result (H2O is as good as CAUSAL on M1, simpler, zero added complexity) is currently more product-relevant than the positive result (CAUSAL wins M2 in a regime that may not exist in production). The systems_reviewer confirms no shipped system does exactly this, but deployment would map scores to existing priority-retention APIs (TensorRT-LLM), bounding the systems contribution.
+
+**Synthesis:** The L0 is the best-constructed experiment in this instance's history — honest, pre-registered, circularity-free, right baselines, self-limiting. It earns candidate-grade YELLOW, meaning: the mechanism is coherent and worth testing on real traces. But the path to GREEN requires (a) citing and beating A2SF/ArkVale/InfiniGen/Quest, not just H2O, (b) empirically measuring whether real tool-agent traces actually have delayed cold callbacks (the entire edge is hypothetical without this), (c) using real LLM attention and real task accuracy, and (d) reporting graded M2 alongside binarized M2 to prevent metric-inflated framing.
+
+PROMPT_VERSION: v001
+```

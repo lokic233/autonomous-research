@@ -37,13 +37,17 @@ supporting_evidence:
     \ accuracy, verify real delayed-callback structure, head-to-head vs H2O/SnapKV/Scissorhands/ACON."
   data_path: experiments/2026-06-03/EXP-0012/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0011
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0012; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0011=yellow: address required_evidence to advance'
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0013
 created_at: '2026-06-03T01:02:45Z'
-last_updated: '2026-06-03T01:11:03Z'
+last_updated: '2026-06-03T01:22:12Z'

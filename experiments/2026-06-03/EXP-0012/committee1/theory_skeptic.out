@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- H2O scoring EXACTLY 0.000 on M2 in every reported cell is not "H2O losing" — it is a definitional artifact. The generative process explicitly constructs delayed-cold-then-hot callback spans (low accumulated past attention at eviction time by design). Any past-attention policy gets 0 on a metric that requires retaining those spans. This is "constructed an adversarial example for H2O, observed H2O fails on it" — basic theory predicts this without running anything.
+- M2 (all-critical-callbacks-retained) is an all-or-nothing binarization. H2O at 0.000 means it misses ≥1 callback per trace — which is guaranteed when callbacks are cold at eviction. A graded metric (fraction of callbacks retained) would almost certainly show H2O > 0 and shrink the gap substantially. The 0.000-vs-0.27–0.55 framing inflates the effect by metric choice.
+- Predictor feature `0.55*ngram_hit + 0.45*decayed_past_attention` includes n-gram_hit, which is constructed from the same handle-recurrence machinery that defines "critical handles." So while theta is hidden (good — C1 is genuinely broken), the predictor input is still correlated-by-construction with the M2 positive class. Not tautological, but not arms-length either.
+
+CONFOUNDS:
+- "critical-handle AUC" labels and the n-gram feature both derive from the engineered handle/callback graph. AUC sweep moves jointly with the difficulty of the very labels being predicted; AUC is not an exogenous knob.
+- Token-budget "matched" — but H2O typically operates at KV-token granularity while the policies here appear to operate at span granularity (eviction unit). Granularity mismatch can disadvantage H2O independently of mechanism.
+- N-gram hit rate calibrated to 0.80 for true handles is a generous tuning that favors CAUSAL; no sensitivity reported on this scalar.
+- Noise model `g(obs) + N(0, sigma)` is additive Gaussian on a score; real signal corruption (false-positive n-gram hits from prose, tokenizer artifacts, multi-tool collisions) is not modeled.
+
+ASSUMPTIONS_UNTESTED:
+- Load-bearing: real tool-agent traces exhibit delayed-cold-then-hot callback structure that violates Scissorhands persistence-of-importance. The researcher correctly flags this as the #1 risk — but until it's measured on real traces, the entire edge is hypothetical. The L0 cannot speak to it.
+- That real-model accumulated attention does NOT spike on handle tokens at commit time. If real LLMs already attend strongly to IDs/handles when emitted (plausible — handles are high-information), H2O catches them and the gap collapses.
+- That handle n-gram recurrence is detectable in real traces at anything like the 0.80 hit rate.
+- 10% adjacent-span score blending as the boundary-error model is asserted, not validated against any segmenter's actual error distribution.
+
+STATISTICAL_GAPS:
+- 25 cells (5 AUCs × 5 budgets) with no multiple-comparisons correction. The borderline cell crit_AUC=0.635, frac=0.6, CI [+0.016, +0.156] is one Bonferroni step from null — and it is the load-bearing "realistic-AUC" point.
+- Paired bootstrap CI on a difference where one arm (H2O) has zero variance (always 0.000 on M2) reduces to a one-sample CI on CAUSAL — the "paired" framing inflates apparent rigor without buying power.
+- 64 seeds is fine for the simulation but no power analysis reported for the realistic-AUC regime where the effect is supposed to live.
+- Headroom-to-oracle is enormous (oracle 1.00 vs CAUSAL 0.27–0.55). The mechanism captures <55% of the achievable signal at best — basic theory says a noisy predictor with critical-AUC 0.82 should do much better than 0.27 at frac=0.3 unless there is a structural ceiling the analysis doesn't surface.
+
+RATIONALE: The circularity fix (C1) is real and grep-auditable — theta is genuinely latent. The H2O baseline (C2) is the right comparator. Those are non-trivial improvements over EXP-0010 and prevent a RED. But the headline result is largely a predicted consequence of the construction: spans were engineered to have zero past-attention at eviction time, then an all-or-nothing metric was used to score retention of exactly those spans. Of course past-attention-eviction scores 0.000 everywhere on M2; of course a policy with a handle-aware feature beats it. The only genuinely informative axis — does a noisy proxy track the engineered structure at realistic AUC? — survives at crit_AUC≈0.64–0.78 with modest CIs and large oracle headroom, which is consistent with the researcher's own PARTIAL-HELD framing. The L0 establishes the mechanism is *possible*, not that it is *operative* in real traces. The single load-bearing empirical question (do real tool-agent traces actually violate persistence-of-importance with delayed cold callbacks?) is untested and acknowledged. An L1 that measures real-attention persistence and real future-reference AUC on a real multi-step agent benchmark (matched-KV-budget vs H2O/SnapKV/Scissorhands/ACON, graded M2 not binarized) is required before any novelty claim. References for required L1 priors: Zhang et al. 2023 H2O (arXiv:2306.14048); Li et al. 2024 SnapKV (arXiv:2404.14469); Liu et al. 2023 Scissorhands (arXiv:2305.17118); Pan et al. 2024/2025 ACON agent-context compression line.
+```

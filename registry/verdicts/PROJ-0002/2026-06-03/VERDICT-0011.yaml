@@ -1,0 +1,73 @@
+verdict_id: VERDICT-0011
+claim_id: CLAIM-0010
+project_id: PROJ-0002
+date: '2026-06-03'
+experiment_ids:
+- EXP-0012
+experiment_paths:
+- experiments/2026-06-03/EXP-0012
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(none \u2014 unanimous yellow, no fatal objections) L0 genuinely FIXED all 4 VERDICT-0009\
+  \ defects (circularity broken/theta grep-auditably latent"
+- H2O/SnapKV right baseline not strawman
+- tool-result-specificity operationalized via delayed-callback spans
+- "Scissorhands counterexample explicit) \u2014 non-trivial honest work, prevents\
+  \ a red"
+- "GREEN blocked on: (1) prior-art INADEQUATE \u2014 4 uncited collision-risk works\
+  \ (A2SF arXiv 2407.20485 same 'accumulated-attention biased/misses non-persistent\
+  \ importance' diagnosis"
+- ArkVale NeurIPS24 same cold-then-hot motivation
+- InfiniGen 2406.19707 + Quest 2406.10774 same 'predict future KV importance from
+  cheap proxy' class)
+- residual novelty reduces to a single unproven slice (tool-result-span granularity
+  + lexical handle-recurrence signal)
+- "(2) L0 ENGINEERS the win into the generative model \u2014 real-trace structure\
+  \ unvalidated"
+required_evidence:
+- "L1 on REAL multi-step tool-agent benchmark (AppWorld/OfficeBench/tau-bench): measure\
+  \ empirical frequency of delayed-cold-then-hot callback references in real LLM traces\
+  \ \u2014 THE single load-bearing assumption (if absent, the edge over H2O vanishes)"
+- Real accumulated attention from a real LLM as both H2O signal AND predictor input
+- measure real future-reference AUC (overall + critical-handle separately)
+- End-to-end task accuracy pass@1 at matched KV budget, not synthetic availability
+  proxy
+- Head-to-head + cite A2SF, ArkVale, InfiniGen, Quest, ACON, Scissorhands, H2O, SnapKV
+- Report GRADED M2 alongside binarized (all-or-nothing inflates the gap when H2O is
+  definitionally 0)
+- Sensitivity on n-gram hit rate (calibrated 0.80) + span-boundary error (asserted
+  10%)
+- "Verify whether real LLMs already attend strongly to handle/ID tokens at commit\
+  \ time \u2014 if so H2O catches them and the gap collapses"
+map_delta_proposals:
+- CLAIM-0010 -> YELLOW, L0-PARTIAL-HELD
+- next L1-REQUIRED w/ expanded prior-art + real-trace validation
+- narrowed scope = 'mechanism demonstration contingent on real-trace structure validation
+  + prior-art differentiation'
+- add mandatory_related_work edges [A2SF, ArkVale, InfiniGen, Quest]
+baseline_requirements:
+- A2SF (2407.20485)
+- ArkVale (NeurIPS24)
+- InfiniGen (2406.19707)
+- Quest (2406.10774)
+- ACON (2510.00615) head-to-head
+- "Scissorhands (2305.17118) \u2014 prove real traces violate persistence-of-importance"
+- H2O (2306.14048) w/ real attention
+- SnapKV (2404.14469) w/ real attention
+created_at: '2026-06-03T01:22:12Z'
