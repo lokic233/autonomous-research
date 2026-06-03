@@ -1,0 +1,70 @@
+verdict_id: VERDICT-0014
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+date: '2026-06-03'
+experiment_ids:
+- EXP-0015
+experiment_paths:
+- experiments/2026-06-03/EXP-0015
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "LOAD-BEARING SYSTEM MECHANISM FALSIFIED (all 5 reviewers confirm, researcher's\
+  \ own data): deprioritize-only reclaims 0 slots (queuing identity \u2014 bounded\
+  \ slowdown w/o preemption frees no slot-time"
+- p99 +18% to +317% vs +5% budget)
+- "kill-on-flag at achievable AUC 0.71/precision 0.50-0.57 destroys 2.2-18.6% of COMPLETED\
+  \ turns vs reclaiming only 0.4-3.4% wasted tokens \u2014 harm dominates at EVERY\
+  \ operating point"
+- "Mechanism REDUCES TO GENERIC PREEMPTION (FastServe arXiv 2305.05920, Llumnix OSDI24\
+  \ 2406.03243) once reclaim is attempted \u2014 agent-specific signal advantage over\
+  \ generic length/priority preemption asserted but NOT demonstrated (5 shipping systems\
+  \ cited)"
+- Part A waste is CONDITIONAL + largely tautological (>15% only at p_abandon>=0.35
+  or >=0.20+late
+- re-expresses constructed-trace free params)
+- "prior-art sweep INADEQUATE (novelty_killer egress-blocked) \u2014 independently\
+  \ blocks green"
+required_evidence:
+- "Real oracle-AUC ceiling on REAL agent traces (tau-bench/SWE-agent/prod logs) \u2014\
+  \ BINDING constraint"
+- if real oracle AUC <=0.60 the prediction angle is moot
+- Demonstrated agent-specific signal advantage over generic length/priority preemption
+  on real traces (else naming-only novelty over FastServe/Llumnix)
+- Cost of re-running false-positive-killed turns in end-to-end latency (C2 undercounts
+  true harm)
+- Live >=2-source novelty sweep for the anti-circular predictor methodology (OWED)
+map_delta_proposals:
+- 'CLAIM-0012 -> RED / NEGATIVE: system-mechanism line CLOSED (deprioritize reclaims
+  nothing'
+- kill harms>reclaims
+- "reduces to generic preemption, no demonstrated agent-specific advantage) \u2014\
+  \ do NOT pursue L1 for the reclaim mechanism. SURVIVING sub-contribution (NOT the\
+  \ claim): the anti-circular predictor DESIGN (observables-only, verified below oracle,\
+  \ oracle-ceiling-as-constraint) is methodologically sound w/ no verified collision\
+  \ but empirically ungrounded \u2014 could seed a NEW measurement-study claim (real\
+  \ oracle-AUC ceiling on real traces vs FastServe/Llumnix/Autellix/Parrot) IF pursued.\
+  \ Clean honest negative."
+baseline_requirements:
+- "FastServe (2305.05920) \u2014 preemptive token-level scheduling the claim reduces\
+  \ to"
+- "Llumnix (2406.03243) \u2014 runtime reschedule/migrate/preempt w/ fairness"
+- "vLLM SOSP23 / Orca OSDI22 \u2014 continuous-batching goodput baseline"
+- "Autellix (2502.13965) \u2014 agent-program-level scheduling, nearest neighbor"
+- "Parrot (2405.19888) \u2014 app/dataflow LLM scheduling"
+created_at: '2026-06-03T02:17:21Z'

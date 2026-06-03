@@ -1,0 +1,30 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: green, theory_skeptic: yellow, product_realist: red}
+FATAL_OBJECTIONS:
+  - "Deprioritize-only reclaims 0 slots (queuing identity: bounded slowdown without preemption cannot free slot-time). Unanimously confirmed across all 5 reviewers; directly supported by C_reclaim_latency.csv (reclaimed_slots=0 for W=1..8, p99 +18% to +317% vs +5% budget)."
+  - "Kill-on-flag at achievable AUC 0.71 / precision 0.50-0.57 destroys more completed turns (2.2-18.6%) than it reclaims wasted tokens (0.4-3.4%) at EVERY operating point (C2_kill_reclaim_vs_harm.csv). Harm dominates reclaim — the load-bearing Part C of the claim FAILS decisively."
+  - "System mechanism reduces to generic preemption (FastServe arXiv:2305.05920, Llumnix OSDI 2024 arXiv:2406.03243) once reclaim is attempted. Agent-specific signal advantage over generic length/priority preemption is asserted but NOT demonstrated. Confirmed by systems_reviewer (5 existing implementations cited with URLs), novelty_killer (structural collision identified), and product_realist (no lift shown)."
+REQUIRED_EVIDENCE:
+  - "Real oracle-AUC ceiling on real agent traces (tau-bench, SWE-agent, production logs) — this is the BINDING constraint per theory_skeptic and the researcher's own analysis; if real oracle AUC ≤0.60 the entire prediction angle is moot."
+  - "Demonstrated agent-specific signal advantage over generic length/priority preemption on real traces — without this, the contribution is naming-only novelty over FastServe/Llumnix (novelty_killer)."
+  - "Cost of re-running false-positive-killed turns in end-to-end latency (evaluation_prosecutor's killer experiment; theory_skeptic notes C2 undercounts true harm)."
+  - "Live ≥2-source novelty sweep for the anti-circular predictor methodology — novelty_killer's search was permission-blocked; this remains OWED."
+MANDATORY_BASELINES:
+  - "FastServe (arXiv:2305.05920) — preemptive token-level scheduling; the mechanism CLAIM-0012 reduces to."
+  - "Llumnix (arXiv:2406.03243) — runtime rescheduling/migration/preemption with fairness; covers the generic reclaim objective."
+  - "vLLM (SOSP 2023) / Orca (OSDI 2022) — continuous batching baseline for measuring true existing waste fraction and goodput."
+  - "Autellix (arXiv:2502.13965) — agent-program-level scheduling; nearest neighbor to the agent-loop-aware angle."
+  - "Parrot (arXiv:2405.19888) — app/dataflow-level LLM scheduling; establishes agent-structure-for-serving as prior art."
+MAP_DELTA_PROPOSAL:
+  node: CLAIM-0012
+  change: "Relabel from PARTIAL/NEGATIVE to NEGATIVE (system mechanism definitively falsified). Close the system-mechanism line of CLAIM-0012 — do NOT pursue L1 for the deprioritize/kill reclaim mechanism. Surviving sub-contributions: (1) waste characterization (Part A) is CONDITIONAL (>15% only at p_abandon≥0.35 or ≥0.20+late) and largely tautological per theory_skeptic — retain as a WORKLOAD-CONDITIONAL measurement, not a discovery; (2) anti-circular predictor methodology (observables-only + oracle-ceiling-as-constraint framing) is methodologically sound with no verified collision, but empirically ungrounded (constructed traces with 3 free knobs) — survives as YELLOW pending live novelty sweep + real-trace oracle-AUC measurement. If real oracle AUC ≤0.60 on production agent traces, close Part B as well. The L1 ask (real traces, real predictor, real GPU serving) is only justified if framed as a MEASUREMENT STUDY of the real oracle ceiling, NOT as a system-mechanism contribution — and must cite FastServe/Llumnix/Autellix/Parrot/length-prediction scheduling as the baseline the agent-specific signal must beat."
+PRIOR_ART_ADEQUATE: no
+RATIONALE: >
+  Two unrebutted REDs (product_realist, systems_reviewer) on the load-bearing system mechanism, confirmed by the researcher's own evidence. The evaluation_prosecutor's GREEN is for the quality of the honest negative result — a valid scientific judgment — but does not rebut the product_realist's finding (no adopter, harm > reclaim at every operating point) or the systems_reviewer's finding (5 existing systems already ship the underlying mechanisms, agent signal adds no demonstrated value). The theory_skeptic's YELLOW correctly identifies that Part C's failure was predictable from basic queuing/precision arithmetic without simulation, and that Parts A/B are largely re-expressions of constructed-trace free parameters (hazard_sharpness, noise SD, latent strength → AUC), not empirical discoveries. The novelty_killer's YELLOW correctly identifies the fatal collision with generic preemptive scheduling but could not live-verify (search blocked) — the ≥2-source sweep remains OWED, which independently blocks GREEN per committee rules.
+
+  WHAT SURVIVES: The anti-circular predictor DESIGN (observables-only, verified to sit below oracle, oracle-ceiling-as-binding-constraint framing) has no verified collision and is praised as "Wuu et al. design hygiene level" by theory_skeptic. This is a methodological contribution, not a systems contribution. It survives as YELLOW, gated on: (a) owed live novelty sweep, (b) real-trace oracle-AUC measurement proving the ceiling is high enough to be worth predicting against, (c) demonstration that agent-specific observables outperform generic length/priority signals on real traces.
+
+  WHAT IS DEAD: The system mechanism claim — "deprioritize to reclaim compute without harming completed-turn latency at matched fairness" — is definitively falsified by the researcher's own rigorous evidence and confirmed by all 5 reviewers. Deprioritization reclaims nothing; kill-on-flag harms more than it reclaims; the mechanism reduces to generic preemption with no demonstrated agent-specific advantage. This is a clean, honest, well-executed negative result. Close this line. (v001)
+```

@@ -1,0 +1,77 @@
+Live external search (both the meta web-search MCP tool and the built-in WebSearch) was permission-blocked in this session, so I could not discharge a fresh ≥2-source sweep. Per committee rules a KILL collision must be **live-verified in ≥2 independent sources**; I cannot do that here, so I will not issue a RED kill on an unverified collision. I ground the vote on prior art I can cite with retrievable identifiers and flag the live sweep as still OWED.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Wu et al., FastServe: Fast Distributed Inference Serving for LLMs (2023)",
+   url: "arxiv.org/abs/2305.05920",
+   why_close: "Preemptive token-level scheduling (skip-join MLFQ) that proactively
+   demotes/preempts requests using a *length prediction*. CLAIM-0012's reclaim step is
+   structurally the same move — predict a request is low-value and preempt it — with
+   'abandonment risk' swapped in for 'remaining length'."}
+- {cite: "Sun et al., Llumnix: Dynamic Scheduling for LLM Serving (OSDI 2024)",
+   url: "arxiv.org/abs/2406.03243",
+   why_close: "Runtime rescheduling/migration/preemption across instances under
+   contention + fairness. Covers the 'free a doomed/low-priority turn's slots at matched
+   fairness' objective generically."}
+- {cite: "Luo et al., Autellix: Efficient Serving Engine for LLM Agents as General Programs (2025)",
+   url: "arxiv.org/abs/2502.13965",
+   why_close: "The agent-specific scheduling work — program-level (multi-turn agent)
+   scheduling with anti-starvation. This is the nearest neighbor to the *agent-loop-aware*
+   angle CLAIM-0012 leans on, and it already exploits agent program structure for
+   scheduling without an abandonment predictor."}
+- {cite: "Parrot: Efficient Serving of LLM-based Applications w/ Semantic Variable (OSDI 2024)",
+   url: "arxiv.org/abs/2405.19888",
+   why_close: "App/dataflow-level scheduling for multi-call LLM apps; establishes that
+   exploiting agent/app structure for serving efficiency is prior art."}
+
+NAMING_VS_MECHANISM:
+The reclaim mechanism (Part C) is NAMING-only novelty: "abandonment-risk deprioritize/
+kill" reduces, by the researcher's own results, to generic predictive preemption
+(FastServe/Llumnix). No mechanism delta survives — kill-on-flag IS preemption, and
+deprioritize-only reclaims 0. The ONLY candidate mechanism delta is an agent-specific
+early signal (tool-malformation / retry / branch-prune observables at 25% decode) that
+out-predicts generic length/priority signals — and the L0 does NOT demonstrate that
+advantage: observable AUC ~0.71, kill precision ~0.50, harm > reclaim at every operating
+point. So the differentiating mechanism is asserted but not shown. The genuinely new-ish
+piece is METHODOLOGICAL, not a systems mechanism: the anti-circular predictor construction
+(observables-only, verified to sit below a latent-reading oracle) and treating the
+ORACLE-AUC ceiling as the binding constraint. I could not find a named prior collision for
+that specific measurement framing — but it is unproven (constructed traces) and is a
+measurement method, not a deployable mechanism.
+
+FATAL_COLLISIONS:
+- System reclaim mechanism (Part C) ↔ predictive preemptive scheduling (FastServe + Llumnix):
+  fatal for novelty of the system claim. NOTE: collision asserted from prior knowledge,
+  NOT live-verified this session (search blocked) — so it does NOT meet the ≥2-source
+  live-verification bar required to escalate to a RED kill. Hence yellow, not red.
+- No verified fatal collision found for the anti-circular-predictor measurement methodology
+  (Parts A/B). Insufficient evidence to kill that piece.
+
+MANDATORY_RELATED_WORK:
+- FastServe (2305.05920) and Llumnix (2406.03243) — the preemption baselines the reclaim
+  mechanism must be distinguished from; currently it reduces to them.
+- Autellix (2502.13965) and Parrot (2405.19888) — agent/app-structure-aware serving; the
+  closest agent-specific scheduling prior art the abandonment angle must beat.
+- Length-prediction / semi-clairvoyant scheduling (e.g. "Don't Stop Me Now" semi-clairvoyant
+  scheduling; S3 / response-length-perception) — the abandonment predictor is the same
+  predict-then-schedule template applied to a different label; must be cited and compared.
+
+RATIONALE:
+The load-bearing system claim's mechanism collides with predictive preemptive scheduling
+(FastServe, Llumnix) and is, by the L0's own Part C numbers, generic preemption with an
+agent-specific signal too weak to reclaim without net harm (harm 2.2–18.6% > reclaim
+0.4–3.4%). The agent-abandonment-specific advantage — the sole novelty candidate — is
+asserted but not demonstrated; the researcher honestly flags "novelty at risk." That alone
+would warrant red, EXCEPT: (1) the result is already an honest NEGATIVE/weaken, so killing
+novelty is largely moot for the system claim; (2) the surviving methodological contribution
+(anti-circular predictor + oracle-ceiling-as-constraint framing) has no verified ≥2-source
+collision, so I cannot kill it; and (3) committee rules forbid a RED kill on a collision I
+could not LIVE-verify this session (web search was permission-blocked). Net: novelty of the
+deployable mechanism is dead-on-collision (consistent with the NEGATIVE), but the
+measurement methodology is not killed — YELLOW. The live ≥2-source novelty sweep remains
+OWED and any L1 must (a) cite FastServe/Llumnix/Autellix/Parrot + length-prediction
+scheduling, and (b) prove the agent-specific signal beats a generic length/priority
+preemption baseline on REAL traces, or the mechanism contribution is void.
+```
