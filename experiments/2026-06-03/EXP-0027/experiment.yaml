@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'NEGATIVE (Jensen-floor, WIN). (A) Acceptance drift across session
+  phases is REAL: per-phase optimal draft length k_opt swings 1..15 as accept drifts
+  (modeled both gap directions). (B) Phase-adaptive does NOT beat BEST-TUNED-FIXED:
+  single tuned k captures ~93% (median) of gain; with realistic detection error +
+  switching tax adaptive LOSES (mean -2.2% net tok/s) at realistic deep-session mix.
+  Only extreme drift (gap +/-0.30, a_tool~0.95) + zero overhead reaches +7-9% ideal,
+  even there tuned-fixed captures 85%. Same Jensen-floor as EXP-0006/EXP-0011: broad
+  concave net-tok/s-vs-k plateau means session-weighted single k sits in every phase
+  near-optimum. Prior art (EAGLE/EAGLE-2/Medusa/SpecDec++/Dyn-Spec-Lookahead) already
+  does draft-length adaptation; the session-phase-drift novelty fails to beat tuned-fixed.
+  3024 configs x5 seeds.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0027/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T08:28:17Z'
 prompt_version: ''
