@@ -1,0 +1,78 @@
+verdict_id: VERDICT-0042
+claim_id: CLAIM-0043
+project_id: PROJ-0014
+date: '2026-06-03'
+experiment_ids:
+- EXP-0042
+experiment_paths:
+- experiments/2026-06-03/EXP-0042
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "MECHANISM OCCUPIED (>=2 independent sources): Chroma Research 'Evaluating Chunking\
+  \ Strategies for Retrieval' (2024) built token-level recall/IoU/Precision_Omega\
+  \ PRECISELY BECAUSE relevant excerpts split across chunks \u2014 the exact mechanism"
+- completeness@k is a thresholded binary special case of their CONTINUOUS token-level
+  recall. Joren et al 'Sufficient Context' (2411.06037, ICLR 2025) formalizes recall-hit
+  != answerable. Collision at KILL bar
+- 'TAUTOLOGICAL IDENTITY not empirical: recall@k pinned at 1.000 in every cell by
+  construction (unique gold tokens -> lexical retriever always ranks fragment top-1)
+  so over-count == split_rate BY DEFINITION'
+- split_rate is closed-form combinatorial P(split)~max(0,(span_len-overlap-1)/(chunk_size-overlap)).
+  The exp re-derives its own definitions under a degenerate retriever
+- the '96.5pt distortion' is the worst case of this artifact
+- "BASELINE NOT UNIVERSAL (partially valid): '>=1 token overlap = hit' is ONE reasonable\
+  \ definition but NOT the universal standard claimed \u2014 open-domain QA eval (DPR\
+  \ Karpukhin 2020, NQ, DrQA) defines a hit as passage CONTAINS the full answer string,\
+  \ i.e. already containment/completeness-flavored for short answers"
+required_evidence:
+- "None terminal \u2014 mechanism occupied (Chroma token-recall/IoU + Sufficient Context)\
+  \ + tautological under the degenerate recall@k=1.0 design + baseline overstated\
+  \ (DPR/NQ already containment-flavored). The ONLY surviving potential contribution\
+  \ = downstream reader EM/F1 under recall@k-vs-completeness@k-selected chunks on\
+  \ a REAL dense retriever (break the recall@k=1.0 degeneracy), positioned as a practitioner\
+  \ diagnostic COMPLEMENTING Chroma's continuous framework \u2014 NOT a novel mechanism.\
+  \ Insufficient to revive under lightweight."
+map_delta_proposals:
+- CLAIM-0043 -> RED (3rd expansion claim). Mechanism OCCUPIED (Chroma token-recall
+  + Sufficient Context)
+- tautological under degenerate recall@k=1.0
+- "baseline overstated. PROJ-0014 converged (lightweight, no deep-mine). No false\
+  \ green. DEAD VEIN: 'metric-validity / X over-or-under-counts vs Y' shape is now\
+  \ 0/2 (CLAIM-0042 contamination-granularity + CLAIM-0043 recall@k-overcount) \u2014\
+  \ BOTH died on the SAME trio: (a) occupied predecessor metric, (b) algebraic/combinatorial\
+  \ tautology that the sim merely re-derives, (c) baseline-not-actually-universal.\
+  \ STOP seeding the metric-validity 'over/under-count' archetype. Pivot to a DIFFERENT\
+  \ claim shape (e.g. an EMPIRICAL phenomenon requiring real measurement that has\
+  \ no closed form, or a mechanism/intervention with a measurable effect \u2014 NOT\
+  \ a metric-definition gap)."
+baseline_requirements:
+- "Chroma 'Evaluating Chunking Strategies' token-level recall/IoU/Precision_Omega\
+  \ \u2014 direct predecessor (completeness@k is its thresholded binary special case)"
+- "Joren et al 'Sufficient Context' (2411.06037 ICLR2025) \u2014 published formalization\
+  \ of recall-hit != answerable"
+- "DPR exact-string-match answer-recall/has-answer (Karpukhin 2020) \u2014 the actual\
+  \ open-domain QA standard, already containment-flavored"
+- "RAGAS context_recall \u2014 deployed RAG metric for claim-level attribution across\
+  \ chunks"
+committee_run_dir: experiments/2026-06-03/EXP-0042/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T15:01:55Z'
