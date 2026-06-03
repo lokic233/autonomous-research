@@ -1,0 +1,68 @@
+claim_id: CLAIM-0049
+project_id: PROJ-0019
+stage: seed
+status: seed
+claim: "When near-duplicate clusters in a training corpus contain members differing\
+  \ in a quality-correlated observable (e.g. text length/completeness), the standard\
+  \ fuzzy-dedup convention of keeping the FIRST-encountered cluster member induces\
+  \ a systematic, predictable SKEW in the surviving corpus's quality distribution\
+  \ whose sign and magnitude are governed by the (independently-controllable) correlation\
+  \ rho between document arrival ORDER and latent QUALITY \u2014 and this skew FLIPS\
+  \ SIGN between keep-first and keep-last conventions while a quality-agnostic keep-random\
+  \ representative is statistically unbiased, EVEN THOUGH all three conventions remove\
+  \ the identical set of clusters."
+why_it_matters: "FRESH AREA (data-systems-for-ml: dedup representative-selection).\
+  \ EMPIRICAL-phenomenon, NO closed form (skew = emergent product of within-cluster\
+  \ quality variance x order-quality rho x cluster-size dist; the LSH S-curve closed\
+  \ form is DELIBERATELY EXCLUDED as headline). Passes all 5 anti-patterns: NOT metric-validity\
+  \ (causal distributional effect on the retained dataset from a pipeline policy);\
+  \ NOT closed-form (honest-negative reachable, requires simulating cluster formation\
+  \ under correlated order); NOT foundational-incumbent-miss (vs Lee2021 seminal LM-dedup\
+  \ 2107.06499 + Broder MinHash/Indyk-Motwani LSH + 2503.07879 unequal-quality \u2014\
+  \ representative-selection axis untouched); NOT known-mechanism-costume (selection-under-ordering\
+  \ of heterogeneous members, NOT chaining/regression-to-mean/Jensen); NOT wrong-currency\
+  \ (measured in surviving-corpus quality distribution, bound-independent, identical\
+  \ clusters). Ecologically plausible (real crawl order correlated; real pipelines\
+  \ keep-first by default; high-dup docs higher-quality 2503.07879). Falsifiable:\
+  \ generate ~200k synth docs w/ latent quality q (GT, harness-owned); plant near-dup\
+  \ clusters where a member's quality-correlated observable (token-set size/completeness)\
+  \ correlates with its q; assign stream positions w/ tunable order-quality correlation\
+  \ rho; run REAL MinHash+LSH (sees only token-sets) -> 3 retention policies keep-first/keep-last/keep-random\
+  \ (read only positions, NEVER q); measure Delta = mean-q(keep-first survivors) -\
+  \ mean-q(keep-random) + keep-last counterpart vs rho. CONFIRM: |Delta| grows monotonically\
+  \ w/ |rho| + within-cluster quality variance; sign(Delta_first)=-sign(Delta_last);\
+  \ keep-random Delta~0; ALL while cluster-removal sets are byte-identical (verified).\
+  \ HONEST-NEGATIVE (reachable): at realistic rho the skew within noise of keep-random\
+  \ / no sign-flip / swamped by detection FP -> keep-arbitrary default vindicated\
+  \ (publishable null). Anti-circular: GT=latent q (generative); policy reads token-sets+positions\
+  \ only. Topic: data-systems-for-ml. PRIOR-ART: Lee2021 (2107.06499 seminal LM-dedup,\
+  \ keeps arbitrary representative, never studies which survives); Broder/Indyk-Motwani\
+  \ (foundational MinHash/LSH detection S-curve, orthogonal); 2503.07879 (high-dup\
+  \ docs higher-quality \u2014 the PREMISE exploited, but studies keep-vs-drop not\
+  \ which-representative); D4 2308.12284 (which CLUSTERS not within-cluster); BigCode/datatrove/NeMo/datasketch\
+  \ (production keep-first default, report only FP loss). Delta = dedup representative-selection\
+  \ as a controllable knob that biases the surviving corpus's quality distribution\
+  \ + the order x heterogeneity mechanism + the keep-first/keep-last sign-flip under\
+  \ identical cluster removal. L0 GUARD: must show the skew is LARGE at REALISTIC\
+  \ rho (not adversarial rho=1) AND INVISIBLE to standard dedup audits (identical\
+  \ cluster removal/FP), else near-tautology. L1: real datatrove/datasketch MinHashLSH\
+  \ over a FineWeb/SlimPajama/Stack slice, keep-first/last/random at identical cluster\
+  \ sets, measure surviving-corpus quality-proxy distribution + (budget permitting)\
+  \ pretrain 160M Pythia-scale LMs on each survivor set for a downstream eval gap."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0052 result, then ros exp complete --exp EXP-0052 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0052
+created_at: '2026-06-03T17:51:09Z'
+last_updated: '2026-06-03T17:51:59Z'
