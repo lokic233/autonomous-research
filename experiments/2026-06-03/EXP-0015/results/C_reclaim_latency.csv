@@ -1,5 +1,6 @@
-W,B,admit_rate,completed_p50,completed_p99,fp_turn_p99,completed_p99_delta_pct,n_completed
-baseline,8,3,119,481,nan,0.0,1023
-1,8,3,133,492,487,2.29,1023
-2,8,3,137,621,732,29.11,1023
-4,8,3,139,903,1220,87.73,1020
+W,B,admit_rate,obs_auc_regime,completed_p50,completed_p99,fp_turn_p99,abandoned_slot_occupancy,reclaimed_slots,reclaim_pct,completed_p99_delta_pct,within_5pct_fairness,n_completed
+baseline,8,3,0.708,119,454,nan,34665,0,0.0,0.0,True,1118
+1,8,3,0.708,133,537,636,34665,0,0.0,18.28,False,1118
+2,8,3,0.708,140,714,953,34665,0,0.0,57.27,False,1118
+4,8,3,0.708,144,1055,1588,34665,0,0.0,132.38,False,1118
+8,8,3,0.708,144,1893,2859,34665,0,0.0,316.96,False,1118
