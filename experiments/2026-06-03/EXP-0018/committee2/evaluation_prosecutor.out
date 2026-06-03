@@ -1,0 +1,9 @@
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [
+  {name: "Semantic Query Cache", why: "Standard deployment optimization for RAG; L1 proves the 'live-window gate' has no delta over this.", repo_or_cite: "GPTCache (github.com/zilliztech/GPTCache)"},
+  {name: "A-RAG Context Tracker", why: "Directly implements the proposed mechanism of tracking in-context residency to skip retrieval.", repo_or_cite: "arXiv:2602.03442"}
+]
+STRAWMAN_RISKS: ["L0 Synthetic Generator: The 0.84-1.00 AUC was a tautology of the text-seeding method, not a real signal.", "Random-skip: Useful only as a floor; the semantic cache is the only fair functional baseline."]
+MISSING_METRICS: []
+KILLER_EXPERIMENT: "Matched-skip-rate task accuracy comparison vs. semantic query cache on real multi-turn traces (CoQA)."
+RATIONALE: The L1 experiment (EXP-0018) decisively falsified the claim's utility. The 'live-window gate' is statistically indistinguishable from a standard semantic query cache at all relevant skip rates (F1 delta +0.0004, CI [-0.0045, +0.0053]). The narrow novelty is also dead, as A-RAG's 'Context Tracker' (2602.03442) already implements this exact residency gating. The L0 findings are rejected as artifacts of a biased generator.
