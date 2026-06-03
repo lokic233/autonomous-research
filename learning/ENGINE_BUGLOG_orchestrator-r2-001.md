@@ -1678,3 +1678,12 @@ regression still passes (kill on promoted still REFUSED).
 LESSON (continues BUG-106): the lost-update audit isn't done at the task ledger — cmd_exp_complete's claim
 propagation was the next bare shared-file RMW. Remaining candidates to audit by OUTCOME: cmd_claim_advance,
 cmd_verdict_write, cmd_exp_fault (each touches a shared mutable record under concurrent writers).
+
+## 2026-06-03 ~12:05 UTC — BUG-108 (RESERVED) claim RMW unlocked in cmd_claim_advance + cmd_verdict_write [v3-impl]
+The two remaining unlocked claim load->mutate->dump sites flagged by the BUG-107 cycle. cmd_claim_advance
+(lifecycle_state/next_action/blocking) and cmd_verdict_write (verdict_history append + status flip) both do
+bare find_obj->load_yaml(cf)->mutate->dump_yaml(cf) on the claim record — they can race each other AND the
+now-locked cmd_exp_complete (BUG-107) on the SAME claim -> last-write-wins lost update (e.g. a verdict's
+verdict_history append erased by a concurrent exp-complete evidence append, or a claim_advance lifecycle
+flip lost). Same family as BUG-106/107. FIX: wrap both under _file_lock(root,f"claim_{cid}")+re-read inside,
+mirroring BUG-107 (no new mechanism). Verify by outcome (concurrent advance+complete -> both persist).
