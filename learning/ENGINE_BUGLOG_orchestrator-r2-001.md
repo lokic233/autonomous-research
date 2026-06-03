@@ -1679,7 +1679,8 @@ LESSON (continues BUG-106): the lost-update audit isn't done at the task ledger 
 propagation was the next bare shared-file RMW. Remaining candidates to audit by OUTCOME: cmd_claim_advance,
 cmd_verdict_write, cmd_exp_fault (each touches a shared mutable record under concurrent writers).
 
-## 2026-06-03 ~12:05 UTC — BUG-108 (RESERVED) claim RMW unlocked in cmd_claim_advance + cmd_verdict_write [v3-impl]
+## 2026-06-03 ~12:15 UTC — BUG-108 (FIXED) claim RMW unlocked in cmd_claim_advance + cmd_verdict_write [v3-impl]
+> LANDED IN TWO PARTS (multi-session sweep): cmd_claim_advance hunk was swept into BUG-109's commit c5eb627 by a concurrent `git commit -- engine/ros.py`; cmd_verdict_write hunk committed cleanly as b32817a. Both now locked under _file_lock(claim_<cid>)+reread. Verified by outcome: concurrent verdict-write + claim-advance -> both persist, 0 lost.
 The two remaining unlocked claim load->mutate->dump sites flagged by the BUG-107 cycle. cmd_claim_advance
 (lifecycle_state/next_action/blocking) and cmd_verdict_write (verdict_history append + status flip) both do
 bare find_obj->load_yaml(cf)->mutate->dump_yaml(cf) on the claim record — they can race each other AND the
