@@ -1687,3 +1687,5 @@ now-locked cmd_exp_complete (BUG-107) on the SAME claim -> last-write-wins lost 
 verdict_history append erased by a concurrent exp-complete evidence append, or a claim_advance lifecycle
 flip lost). Same family as BUG-106/107. FIX: wrap both under _file_lock(root,f"claim_{cid}")+re-read inside,
 mirroring BUG-107 (no new mechanism). Verify by outcome (concurrent advance+complete -> both persist).
+
+## 2026-06-03 ~12:06 UTC — BUG-109 (RESERVED navi-v3-debug-active) gpu_queue LEASE-RELEASE unlocked in cmd_exp_fault + cmd_exp_complete [v3-impl]
