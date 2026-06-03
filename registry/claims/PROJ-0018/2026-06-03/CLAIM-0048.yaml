@@ -67,6 +67,23 @@ supporting_evidence:
     fragmentation-asymmetry phi predict the recall slope sign in the wild, can phi
     be estimated without GT-at-inference, find a real model-pair leaderboard flip.'
   data_path: experiments/2026-06-03/EXP-0050/
+- exp_id: EXP-0051
+  summary: "L1 REAL-DATA (GSM8K 1319 + MATH-500). STAGE-A GATE PASS: high-recall numeric/Minerva-sympy\
+    \ grader empirical precision q=1.0000 on BOTH datasets (0 over-merges of distinct\
+    \ golds; 0 adversarial gold-vs-near-miss merges) \u2014 well above L0 q<=0.6 death-zone,\
+    \ so the effect is NOT washed out by real graders. Real phi asymmetry EXISTS but\
+    \ is DATASET-STRUCTURED: MATH-500 strongly phi<<0 (median ~ -1.0, 86-90% of problems;\
+    \ correct CONCENTRATED / errors FRAGMENTED = the recall-HURTS regime); GSM8K phi~0\
+    \ (symmetric, integer answers). STAGE-B (gated through, real vLLM on H100): Qwen2.5-0.5B\
+    \ vs 7B, 150 GSM8K, k=16 temp0.8 \u2014 maj@k 0.5B={exact .480/num .487} vs 7B={.780/.780};\
+    \ ranking INVERSION = HONEST NULL (7B wins under both graders). The null is PREDICTED\
+    \ by phi~0 on GSM8K and CONFIRMS the phi-governs-sign mechanism rather than refuting\
+    \ it. Ecological foothold = REAL but confined to symbolic-answer evals (MATH);\
+    \ integer-QA leaderboards are safe. In-the-wild inversion demo needs a MATH-answer\
+    \ extractor + symbolic benchmark (L2 spec in RESULTS). FLAG: L0 inversion construction\
+    \ exploratory; Stage-A answer-frequencies are flagged proxy (q + dataset H_C/H_W\
+    \ structure anchored in real gold strings; Stage-B fully real samples)."
+  data_path: experiments/2026-06-03/EXP-0051/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0046
@@ -75,11 +92,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: 'L1 EXP-0051 dispatched (cost-aware staged: Stage-A real phi+grader-precision
-  gate -> Stage-B real model-pair inversion only if gated); researcher-0049'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0051; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0051
+active_experiments: []
 created_at: '2026-06-03T16:35:08Z'
-last_updated: '2026-06-03T17:36:36Z'
+last_updated: '2026-06-03T18:11:29Z'
