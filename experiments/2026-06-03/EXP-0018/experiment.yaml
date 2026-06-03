@@ -12,13 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "L1 REFUTED/operationally-dead (N1\u2227N4 fire on real data). REAL\
+  \ traces=CoQA 4764 multi-turn turns (HF stanfordnlp/coqa, honest substitute: real\
+  \ corpus+real retrieval+answer_start labels), REAL embedding=all-MiniLM-L6-v2 on\
+  \ H100, REAL LLM=Qwen2.5-1.5B via vLLM. LOAD-BEARING: in-context live-window gate\
+  \ is statistically INDISTINGUISHABLE from a semantic QUERY CACHE at matched skip-rate\
+  \ \u2014 precision \u0394 CI straddles 0 for skip\u226520%, real-LLM F1 \u0394=+0.0004\
+  \ [-0.0045,+0.0053]. Real embedding beats lexical by only +0.016 AUC; BOTH ~0.55\
+  \ (near chance) \u2014 L0's 0.84-1.0 was generator-tautological. Real-LLM cost of\
+  \ skipping ~2.6 F1 (gate=cache). PRIOR-ART KILL: A-RAG (arXiv 2602.03442) Context\
+  \ Tracker already gates retrieval on live-window residency. Surviving=measurement\
+  \ methodology + the negative itself. Recommend weaken\u2192refuted."
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0018/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T04:49:26Z'
 prompt_version: ''
 committee_approved: VERDICT-0016

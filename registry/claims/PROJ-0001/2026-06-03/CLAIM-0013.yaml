@@ -1,7 +1,7 @@
 claim_id: CLAIM-0013
 project_id: PROJ-0001
 stage: seed
-status: seed
+status: weakened
 claim: "In long-horizon agents with external memory/RAG, a non-trivial fraction (>20%)\
   \ of retrieval calls are REDUNDANT \u2014 they return content already present in\
   \ the live context window \u2014 AND a cheap pre-retrieval check (lexical/embedding\
@@ -34,7 +34,20 @@ supporting_evidence:
     task-acc). Adaptive-retrieval (Self-RAG/FLARE/SKR) published; novelty=in-context-redundancy-specific
     gate + matched-random control + independent GT. 8 seeds, 5.1s, stdlib serial.'
   data_path: experiments/2026-06-03/EXP-0017/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0018
+  summary: "L1 REFUTED/operationally-dead (N1\u2227N4 fire on real data). REAL traces=CoQA\
+    \ 4764 multi-turn turns (HF stanfordnlp/coqa, honest substitute: real corpus+real\
+    \ retrieval+answer_start labels), REAL embedding=all-MiniLM-L6-v2 on H100, REAL\
+    \ LLM=Qwen2.5-1.5B via vLLM. LOAD-BEARING: in-context live-window gate is statistically\
+    \ INDISTINGUISHABLE from a semantic QUERY CACHE at matched skip-rate \u2014 precision\
+    \ \u0394 CI straddles 0 for skip\u226520%, real-LLM F1 \u0394=+0.0004 [-0.0045,+0.0053].\
+    \ Real embedding beats lexical by only +0.016 AUC; BOTH ~0.55 (near chance) \u2014\
+    \ L0's 0.84-1.0 was generator-tautological. Real-LLM cost of skipping ~2.6 F1\
+    \ (gate=cache). PRIOR-ART KILL: A-RAG (arXiv 2602.03442) Context Tracker already\
+    \ gates retrieval on live-window residency. Surviving=measurement methodology\
+    \ + the negative itself. Recommend weaken\u2192refuted."
+  data_path: experiments/2026-06-03/EXP-0018/
 verdict_history:
 - verdict_id: VERDICT-0016
   date: '2026-06-03'
@@ -42,10 +55,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0016=yellow: address required_evidence to advance'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0018; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0018
+active_experiments: []
 created_at: '2026-06-03T03:57:25Z'
-last_updated: '2026-06-03T04:32:18Z'
+last_updated: '2026-06-03T04:49:26Z'
