@@ -1,0 +1,40 @@
+claim_id: CLAIM-0026
+project_id: PROJ-0006
+stage: seed
+status: seed
+claim: "In long multi-turn agentic sessions, speculative-decoding draft-model acceptance\
+  \ rate DRIFTS materially as the running context grows (the token distribution shifts\
+  \ from early conversational prose to deep tool-call/JSON/structured context), such\
+  \ that a session-phase-ADAPTIVE draft policy (adjust draft length / draft model\
+  \ by a cheap detected context-phase signal) achieves strictly higher net tokens/sec\
+  \ than the BEST-TUNED FIXED draft policy on agentic traffic \u2014 because the per-phase\
+  \ optimal draft configuration differs enough that one fixed setting is mistuned\
+  \ for a non-trivial fraction of the session."
+why_it_matters: "NEW axis (draft-model STALENESS/drift across agentic session phases\
+  \ \u2014 untouched by the 18 prior claims; distinct from EXP-0006 grammar-REGION-within-a-response\
+  \ and EXP-0011 early-exit). Falsifiable: (1) does acceptance actually DRIFT across\
+  \ session phases (measure acceptance vs context-depth)? (2) does phase-adaptive\
+  \ beat the BEST-TUNED FIXED draft policy (the Jensen-floor kill that sank EXP-0006/0011\
+  \ \u2014 pre-baked as the control)? L0: model/trace acceptance-vs-phase + adaptive\
+  \ vs best-tuned-fixed net tok/s; honest-negative if drift is small OR a single tuned\
+  \ fixed draft captures the gain. Topic: inference-optimization. Distinguish from\
+  \ EAGLE/Medusa/SpecDec++/DSL (draft-length adaptation exists) \u2014 novelty is\
+  \ the SESSION-PHASE-DRIFT characterization + whether it beats best-tuned-fixed on\
+  \ long agentic sessions specifically."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r3-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0027 result, then ros exp complete --exp EXP-0027 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0027
+created_at: '2026-06-03T08:20:51Z'
+last_updated: '2026-06-03T08:21:19Z'
