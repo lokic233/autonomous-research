@@ -1,0 +1,13 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "Standard Exact-Match vs SymPy vs LLM-as-a-Judge", why: "L1 must use the field's actual standard canonicalizers (e.g., lm-eval-harness exact match vs Minerva's SymPy vs an LLM judge) to measure their true empirical precision/recall tradeoffs, rather than assuming q=1.0.", repo_or_cite: "Minerva (Lewkowycz et al., 2022); lm-eval-harness"}
+STRAWMAN_RISKS: 
+  - "Assuming q=1.0 (perfect precision) is achievable at high recall in the wild. The L0 control explicitly shows the effect attenuates and vanishes at q=0.6. Real canonicalizers face a strict precision-recall tradeoff; if high recall inevitably causes precision to drop, the effect may be ecologically void."
+  - "The L0 inversion parameter region (e.g., A_pc=0.50 vs B_pc=0.28 with diametrically opposed fragmentation asymmetries) might be a synthetic strawman that does not naturally occur between real model checkpoints on standard benchmarks."
+MISSING_METRICS: 
+  - "Empirical precision (q) and recall (r) of the actual canonicalizers used in L1."
+  - "Empirical fragmentation asymmetry (phi) measured from actual LLM answer distributions on real datasets (e.g., MATH, GSM8K)."
+KILLER_EXPERIMENT: Measure the actual precision (q) of standard high-recall canonicalizers (SymPy, LLM-Judge) on a real dataset like MATH, and apply them to a real model pair where phi suggests a rank inversion should occur. If the empirical precision drop of the high-recall canonicalizer washes out the rank inversion (as predicted by L0's q=0.6 control), the claim's ecological validity is falsified.
+RATIONALE: The L0 results honestly report that the negative slope effect vanishes by q=0.6. Because real-world canonicalizers inherently suffer false positives (over-merging) as they chase higher recall, L1 must definitively prove that the inversion survives the real-world precision penalty of high-recall extractors. Without this, the phenomenon is merely a synthetic curiosity.
+```

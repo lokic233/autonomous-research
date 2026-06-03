@@ -1,0 +1,29 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The "asymmetric sign-flip" reduces to classical plurality vote-splitting under bucket aggregation: maj@k picks the largest bucket, so any merge operation applied to a distribution with a dominant-attractor side will collapse mass toward that side. Wang2022/CJT assume FIXED atoms; introducing a variable-grain measurement stage trivially breaks monotonicity — this is the dual of Duverger/IIA violations in social choice, not a novel phenomenon of "canonicalizer recall" per se.
+- Convergence of all curves to ~0.66 at r=1.0 is mechanical and predicted in closed form: at perfect merge each class becomes one bucket, so maj@k accuracy = P(correct-class plurality | p_C=0.45, DOM_FRAC=0.7, M_INC=3). The packet narrates this as "mechanistically correct" but it is also an analytically computable baseline; no simulation needed.
+- At q=0.6 the slope vanishes (z=-0.4) — i.e. the "phenomenon" requires the high-precision regime where r is the only varying knob. That's a single-knob monotonicity argument, not a two-parameter phase diagram.
+
+CONFOUNDS:
+- The generative model BUILDS IN the asymmetry by construction: H_C and H_W are orthogonal free parameters and phi = H_C - H_W is the very axis being claimed as causal. "Sign of d(acc)/dr depends on phi" is near-tautological inside a model that exposes phi as a knob.
+- DOM_FRAC=0.7 (fraction of incorrect mass on the dominant wrong attractor) is load-bearing for the negative-slope branch and is fixed at one value in the primary; the effect is almost certainly monotone in DOM_FRAC and dies as DOM_FRAC -> 1/M_INC = 0.33. No sensitivity sweep reported.
+- Real canonicalizers are not parameterized by a scalar "recall" — exact-match, sympy, and LLM-judge differ in WHICH equivalences they catch (algebraic vs lexical vs semantic), not in scalar aggressiveness. The Bernoulli-merge surrogate may not be a faithful model of any real grader knob.
+- k=20 i.i.d. multinomial draws ignore intra-prompt correlation (temperature, prefix-sharing); real SC samples are not independent.
+
+ASSUMPTIONS_UNTESTED:
+- That any real free-form QA benchmark exhibits phi << 0 in the direction needed for the leaderboard-inversion narrative. The entire ecological case is deferred to L1; phi has never been measured on GSM8K/MATH/GPQA.
+- That the parameters chosen for the inversion construction (A_pc=0.50, B_pc=0.28, H_C/H_W=0.95/0.05) correspond to any actually-observed model pair.
+- DOM_FRAC=0.7 is asserted, not justified from empirical answer-cluster statistics.
+- The "broad inversion region a_pc∈[0.45,0.65] × b_pc∈[0.20,0.40]" — no claim that this region contains realistic (p_C, fragmentation) tuples for any deployed LLM.
+
+STATISTICAL_GAPS:
+- z = -19.8, +41.6, -48.4, +52.8 are simulation-precision artifacts (60 problems × 30 seeds against a synthetic multinomial with no real noise floor), not external-validity evidence. Reporting |z|>>2 from a generative simulation where the effect was built in conflates "the simulator is internally consistent" with "the effect is large."
+- POST-HOC RE-PARAMETERIZATION OF THE INVERSION: the originally-committed (A_pc=0.42, B_pc=0.46) did NOT invert; the researcher then tuned to (0.50, 0.28) to force the inversion. This is parameter selection after observing the outcome — pre-registration was for the PHENOMENON, not for these specific p_C values, but the swap should at minimum be flagged as exploratory, not confirmatory, with appropriate multiple-comparisons accounting.
+- "Dozens of clean significant inversions found" over a 2D sweep — denominator (number of cells tested) and any FDR control are not reported.
+- No closed-form check against the analytical plurality-win probability at r=1, which would distinguish "we measured the predicted baseline" from "we re-derived a closed form in simulation."
+- Precision-control at q=1.0 only — no joint (q, r) surface; the "high-precision regime" claim is sustained by two points.
+
+RATIONALE: The simulation cleanly demonstrates an internally consistent mechanism (cite: results/primary.csv phi=-0.9 slope z=-19.8; precision_ctrl.csv q=1.0 z=-28.2; inversion.csv |z|=48.4/52.8 at A_pc=0.50/B_pc=0.28), and the precision-artifact control is a legitimate falsification attempt that passed at q=1.0. However, the mechanism is best described as classical plurality vote-splitting under variable-grain bucket aggregation (cite: Wang2022 self-consistency assumes pre-canonicalized atoms; CJT/Condorcet1785 assumes fixed atoms — none claim monotonicity *under a variable-recall measurement stage*, but neither does anyone claim the contrary; the gap is more under-studied than contradicted). The novelty over textbook plurality theory is therefore "no one named this knob and put a sign on it," which is a real but modest contribution. The empirical case is entirely synthetic with parameters (phi, DOM_FRAC, p_C) chosen — and the inversion p_C values RE-chosen after the first attempt failed — to demonstrate the effect; nothing has been measured on a real benchmark or real grader. yellow, contingent on L1 (a) measuring phi on real free-form QA, (b) showing the sign-flip with a real exact-match-vs-Minerva/sympy grader pair, and (c) reporting the constructed-vs-found ratio for inversions across realistic (p_C, phi, DOM_FRAC) tuples. Promote to green only if L1 finds a real model pair whose maj@k rank flips under two real graders on a fixed benchmark.
+```
