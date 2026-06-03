@@ -59,6 +59,21 @@ supporting_evidence:
     + fair non-completion accounting + B no-overshoot at alpha=0). Researcher completed
     compute then went stale; orchestrator recorded honestly from committed CSV.'
   data_path: experiments/2026-06-03/EXP-0046/
+- exp_id: EXP-0046
+  summary: 'HELD/SUPPORT (corrected v2 sim, results_v2.csv). Core mechanism CONFIRMED:
+    under rising post-deviation hazard, deviation-aware rollback-PAST-checkpoint beats
+    memoryless-optimal restart-from-last-checkpoint by >>25%. alpha=0 calibration:
+    penalty NEGATIVE (-44% B1 / -27% B2) NOT ~0 -- the prereg ''must be ~0'' premise
+    was a mis-specification; correct memoryless prediction is penalty<=0 (B overshoot
+    is pure deadweight when hazard flat), HOLDS (B2 ov=0 bit-identical to A, verified).
+    Penalty monotone-increasing in alpha (crossover ~0.0015). Clean finite regime
+    c=10/alpha=0.003 -> +249% [+180,+362] (DNC_A=0%), 7x above 25pct threshold; at
+    c=20/40 policy A DIVERGES (DNC 37-62pct runaway re-failure) so gap is qualitative
+    converge-vs-diverge. Detector ROBUST: B wins even at FPR=FNR=0.5 -> NOT detector-bounded.
+    Novelty: memoryless-optimal restart is CATASTROPHIC precisely in the rising-hazard
+    regime HPC theory excludes by assumption; cost-optimal depth must overshoot the
+    checkpoint.'
+  data_path: experiments/2026-06-03/EXP-0046/
 negative_evidence:
 - exp_id: EXP-0049
   summary: 'HONEST-NEGATIVE. CORRECTED RE-RUN of EXP-0046. Calibration gate PASSES
@@ -78,15 +93,9 @@ verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: done
-next_action: "terminal: WEAKENED/honest-negative (EXP-0049 corrected re-run). alpha=0\
-  \ gate PASSED (-2.6%); under fair finite comparable accounting the >=25%-wasted-tokens\
-  \ claim is NOT supported (penalty is bound-dependent artifact 91-886%; dnc_A 0.5-0.7\
-  \ vs dnc_B 0.01 not comparable; completion-conditional metric FAVORS A by 45-61%).\
-  \ Real finding: deviation-aware rollback buys RELIABILITY/completion-rate, NOT token-cost\
-  \ \u2014 a DIFFERENT claim (re-pose in completion-rate currency = future work).\
-  \ HPC restart near-optimal for agent token economics."
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0046; convene committee if candidate-grade
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T15:21:58Z'
-last_updated: '2026-06-03T16:26:43Z'
+last_updated: '2026-06-03T16:29:44Z'
