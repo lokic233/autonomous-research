@@ -1470,3 +1470,25 @@ ack (e.g. `agent==A`) runs INSIDE the existing `_FileLock`; route `cmd_inbox_ack
 it. No-Channel fallback loop kept. AST-validated.
 **Verify:** post-fix 0/8 lost submits; per-agent ack still correctly acks the matching item.
 **Commit:** accb57f (research-os main).
+
+---
+
+## BUG-98 — late heartbeat from a RETIRED agent resurrects it to `running` → split-brain
+**Found:** v3 ACTIVE-DEBUG bugbash (split-brain-under-load surface), 2026-06-03.
+**Surface:** `cmd_heartbeat` (engine/ros.py).
+**Bug:** a lagging/duplicate `ros heartbeat --agent X --status running` from an agent already in a
+terminal state (retired/completed/failed/superseded/dropped) unconditionally flipped `rec['status']`
+back to a live value, while `retired_at`/`retired_to` still pointed at a LIVE successor → two `running`
+agents on the same session (e.g. orchestrator r3 + r4) = split-brain, and the liveness monitor sees the
+zombie as alive again. Acute under retire/successor handoff load when the outgoing agent's final in-flight
+heartbeat lands AFTER the successor registered.
+**Repro (isolated /tmp):** retired agent + `heartbeat --status running` → status flips to `running`
+(retired_at/retired_to still present). Reproduced 1/1.
+**Fix (minimal, no new mechanism):** terminal states are absorbing in `cmd_heartbeat` — a late heartbeat
+still bumps `last_heartbeat`/`heartbeat_count` (liveness signal preserved) but CANNOT change a terminal
+status. Intentional state changes go through `ros retire`/`reap`, not heartbeat. AST-validated.
+**Verify:** post-fix the retired agent stays `retired` (hb bumps to 32), terminal→terminal also held,
+and a live agent still sets `running` normally.
+**Commit:** code landed in accb57f (folded with BUG-97 by parallel sessions sharing the index);
+attributed as BUG-98 in 15c4538 (research-os main).
+**Note:** shared engine → fix protects v2 (golden ref) and v3.
