@@ -1,0 +1,50 @@
+harness loaded
+EXP-0057 harness loaded (interleave + rho_within + per-shard baseline)
+=== BLOCKER 1: INTERLEAVING (cycle_length C) ===
+  B=  320 L=  640 C= 1 L_eff=  640.0  infl_vsFull= 14.792+/-0.267  infl_vsPerShard= 0.585  rho=0.5870  t=0.8s
+  B=  320 L=  640 C= 2 L_eff=  320.0  infl_vsFull=  9.654+/-0.270  infl_vsPerShard= 0.789  rho=0.3875  t=1.7s
+  B=  320 L=  640 C= 4 L_eff=  160.0  infl_vsFull=  5.337+/-0.659  infl_vsPerShard= 1.002  rho=0.2230  t=2.6s
+  B=  320 L=  640 C= 8 L_eff=   80.0  infl_vsFull=  3.015+/-0.412  infl_vsPerShard= 1.216  rho=0.1176  t=3.4s
+  B=  320 L=  640 C=16 L_eff=   40.0  infl_vsFull=  1.426+/-0.076  infl_vsPerShard= 1.952  rho=0.0595  t=4.3s
+  B=  320 L= 6400 C= 1 L_eff= 6400.0  infl_vsFull= 24.248+/-0.420  infl_vsPerShard= 0.953  rho=0.9541  t=9.1s
+  B=  320 L= 6400 C= 2 L_eff= 3200.0  infl_vsFull= 11.659+/-0.714  infl_vsPerShard= 1.007  rho=0.4875  t=13.9s
+  B=  320 L= 6400 C= 4 L_eff= 1600.0  infl_vsFull=  4.918+/-0.531  infl_vsPerShard= 1.132  rho=0.2461  t=18.9s
+  B=  320 L= 6400 C= 8 L_eff=  800.0  infl_vsFull=  2.436+/-0.354  infl_vsPerShard= 1.411  rho=0.1231  t=23.8s
+  B=  320 L= 6400 C=16 L_eff=  400.0  infl_vsFull=  0.967+/-0.007  infl_vsPerShard= 4.458  rho=0.0611  t=28.8s
+  B=   64 L=  640 C= 1 L_eff=  640.0  infl_vsFull= 22.826+/-0.395  infl_vsPerShard= 0.902  rho=0.9028  t=29.6s
+  B=   64 L=  640 C= 2 L_eff=  320.0  infl_vsFull= 11.924+/-0.450  infl_vsPerShard= 0.974  rho=0.4726  t=30.5s
+  B=   64 L=  640 C= 4 L_eff=  160.0  infl_vsFull=  5.705+/-0.659  infl_vsPerShard= 1.072  rho=0.2395  t=31.4s
+  B=   64 L=  640 C= 8 L_eff=   80.0  infl_vsFull=  3.041+/-0.450  infl_vsPerShard= 1.224  rho=0.1180  t=32.3s
+  B=   64 L=  640 C=16 L_eff=   40.0  infl_vsFull=  1.345+/-0.087  infl_vsPerShard= 1.837  rho=0.0559  t=33.1s
+  B= 1600 L= 6400 C= 1 L_eff= 6400.0  infl_vsFull= 19.569+/-0.298  infl_vsPerShard= 0.769  rho=0.7768  t=38.0s
+  B= 1600 L= 6400 C= 2 L_eff= 3200.0  infl_vsFull= 10.438+/-0.568  infl_vsPerShard= 0.902  rho=0.4430  t=42.9s
+  B= 1600 L= 6400 C= 4 L_eff= 1600.0  infl_vsFull=  4.731+/-0.505  infl_vsPerShard= 1.089  rho=0.2382  t=47.8s
+  B= 1600 L= 6400 C= 8 L_eff=  800.0  infl_vsFull=  2.399+/-0.336  infl_vsPerShard= 1.391  rho=0.1220  t=52.6s
+  B= 1600 L= 6400 C=16 L_eff=  400.0  infl_vsFull=  0.994+/-0.006  infl_vsPerShard= 4.582  rho=0.0621  t=57.5s
+=== L_eff REFERENCE: sequential inflation(B, L') for L'=L/C values ===
+  B=  320 L=  640 C= 1 L_eff=  640.0  obs(interleave)= 14.792  ref seq(L_eff)= 15.097  rel_err=  2.0%  t=58.2s
+  B=  320 L=  640 C= 2 L_eff=  320.0  obs(interleave)=  9.654  ref seq(L_eff)= 10.178  rel_err=  5.2%  t=58.9s
+  B=  320 L=  640 C= 4 L_eff=  160.0  obs(interleave)=  5.337  ref seq(L_eff)=  6.271  rel_err= 14.9%  t=59.6s
+  B=  320 L=  640 C= 8 L_eff=   80.0  obs(interleave)=  3.015  ref seq(L_eff)=  3.691  rel_err= 18.3%  t=60.3s
+  B=  320 L=  640 C=16 L_eff=   40.0  obs(interleave)=  1.426  ref seq(L_eff)=  2.414  rel_err= 40.9%  t=61.0s
+  B=  320 L= 6400 C= 1 L_eff= 6400.0  obs(interleave)= 24.248  ref seq(L_eff)= 23.798  rel_err=  1.9%  t=64.9s
+  B=  320 L= 6400 C= 2 L_eff= 3200.0  obs(interleave)= 11.659  ref seq(L_eff)= 22.370  rel_err= 47.9%  t=67.0s
+  B=  320 L= 6400 C= 4 L_eff= 1600.0  obs(interleave)=  4.918  ref seq(L_eff)= 20.343  rel_err= 75.8%  t=68.2s
+  B=  320 L= 6400 C= 8 L_eff=  800.0  obs(interleave)=  2.436  ref seq(L_eff)= 16.398  rel_err= 85.1%  t=69.0s
+  B=  320 L= 6400 C=16 L_eff=  400.0  obs(interleave)=  0.967  ref seq(L_eff)= 11.552  rel_err= 91.6%  t=69.7s
+  B=   64 L=  640 C= 1 L_eff=  640.0  obs(interleave)= 22.826  ref seq(L_eff)= 23.169  rel_err=  1.5%  t=70.3s
+  B=   64 L=  640 C= 2 L_eff=  320.0  obs(interleave)= 11.924  ref seq(L_eff)= 20.992  rel_err= 43.2%  t=71.0s
+  B=   64 L=  640 C= 4 L_eff=  160.0  obs(interleave)=  5.705  ref seq(L_eff)= 16.732  rel_err= 65.9%  t=71.7s
+  B=   64 L=  640 C= 8 L_eff=   80.0  obs(interleave)=  3.041  ref seq(L_eff)= 11.297  rel_err= 73.1%  t=72.4s
+  B=   64 L=  640 C=16 L_eff=   40.0  obs(interleave)=  1.345  ref seq(L_eff)=  6.942  rel_err= 80.6%  t=73.1s
+  B= 1600 L= 6400 C= 1 L_eff= 6400.0  obs(interleave)= 19.569  ref seq(L_eff)= 19.082  rel_err=  2.5%  t=77.0s
+  B= 1600 L= 6400 C= 2 L_eff= 3200.0  obs(interleave)= 10.438  ref seq(L_eff)= 14.273  rel_err= 26.9%  t=79.1s
+  B= 1600 L= 6400 C= 4 L_eff= 1600.0  obs(interleave)=  4.731  ref seq(L_eff)=  9.380  rel_err= 49.6%  t=80.4s
+  B= 1600 L= 6400 C= 8 L_eff=  800.0  obs(interleave)=  2.399  ref seq(L_eff)=  5.792  rel_err= 58.6%  t=81.2s
+  B= 1600 L= 6400 C=16 L_eff=  400.0  obs(interleave)=  0.994  ref seq(L_eff)=  3.410  rel_err= 70.9%  t=81.9s
+=== BLOCKER 2: RHO_WITHIN sweep at realistic (B=320,L=640,C=1) ===
+  rho_target=0.20 achieved=0.189 noise=2.000  infl_vsFull=  4.361+/-0.076  infl_vsPerShard= 0.636  t=82.8s
+  rho_target=0.50 achieved=0.484 noise=1.000  infl_vsFull=  9.602+/-0.149  infl_vsPerShard= 0.600  t=83.6s
+  rho_target=0.80 achieved=0.791 noise=0.500  infl_vsFull= 15.097+/-0.210  infl_vsPerShard= 0.589  t=84.6s
+=== DONE 84.6s ===
+wrote results.json + interleave.csv + leff_check.csv + rho_within.csv
