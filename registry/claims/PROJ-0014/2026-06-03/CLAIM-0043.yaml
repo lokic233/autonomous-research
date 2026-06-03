@@ -1,0 +1,45 @@
+claim_id: CLAIM-0043
+project_id: PROJ-0014
+stage: seed
+status: seed
+claim: "Standard recall@k OVER-COUNTS RAG retrieval success: fixed-size chunking splits\
+  \ a non-trivial fraction (>20%) of gold answer spans across chunk boundaries, and\
+  \ recall@k credits a retrieved chunk that contains only a FRAGMENT of the gold span\
+  \ (insufficient to answer) as a hit \u2014 so recall@k materially exceeds answer-completeness@k\
+  \ (the fraction of queries where a retrieved chunk contains the WHOLE gold span),\
+  \ inflating reported retrieval scores by a measurable margin that standard RAG eval\
+  \ does not report."
+why_it_matters: "FRESH AREA (data-systems-for-ml + eval-and-safety). LIGHTWEIGHT:\
+  \ one sharp claim. Screened vs all 3 anti-patterns: NOT a tuned-knob (it's a FIXED\
+  \ metric-validity measurement), NOT KV-reuse, NOT predictor-vs-own-logprob. Falsifiable:\
+  \ (1) under standard fixed-size chunking, what fraction of gold answer spans get\
+  \ SPLIT across chunk boundaries? (2) does recall@k (chunk overlaps the span) materially\
+  \ exceed answer-completeness@k (chunk contains the WHOLE span) \u2014 i.e. how much\
+  \ does recall@k OVER-COUNT? (3) is the gap >20% / large enough to change reported\
+  \ RAG retrieval scores? L0: corpus of docs with gold answer spans placed at varying\
+  \ offsets; fixed-size chunker (vary chunk size, overlap, span length); compute recall@k\
+  \ vs completeness@k vs the split rate. Anti-circular (GT = gold span offset; chunker+metric\
+  \ read text only). Honest-negative if recall@k ~ completeness@k (low split rate\
+  \ or overlap windows prevent splits) OR the gap doesn't move reported scores. Topic:\
+  \ eval-and-safety/data-systems. PRIOR-ART (front-loaded): chunking-STRATEGY work\
+  \ is heavy (semantic/fixed/query-dependent/multi-size-RRF/code-RAG) but OPTIMIZES\
+  \ chunking; the contribution here is the MEASURED recall@k metric OVER-COUNT from\
+  \ span-splitting + its score-distortion (a metric-VALIDITY result), NOT 'chunking\
+  \ matters' and NOT lost-in-the-middle (reader position)."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0042 result, then ros exp complete --exp EXP-0042 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0042
+created_at: '2026-06-03T14:42:33Z'
+last_updated: '2026-06-03T14:42:50Z'

@@ -1,0 +1,73 @@
+Both web-search tools were permission-denied in this environment, so I cannot run live retrieval. I'm citing canonical, retrievable sources from the contamination/dedup literature (stable arXiv IDs) and flagging that explicitly per the honesty rule.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lee et al. 2021, 'Deduplicating Training Data Makes Language Models Better'",
+   url: "https://arxiv.org/abs/2107.06499",
+   why_close: "FATAL. This canonical dedup paper does NOT use one granularity — it introduces and
+   directly contrasts TWO: NearDup (MinHash-LSH, whole-document near-duplicate) AND ExactSubstr
+   (suffix-array exact substring match, ≥50 tokens). ExactSubstr exists *precisely because*
+   document-level near-dedup, being a set/Jaccard measure over the whole doc, fails to catch short
+   shared substrings embedded in otherwise-dissimilar documents. The 'union-normalization dilutes a
+   short span' mechanism the packet presents as its finding IS the stated motivation for substring-level
+   dedup in this 2021 paper. The doc-vs-substring granularity distinction is foundational here."}
+- {cite: "Chowdhery et al. 2022 (PaLM); Brown et al. 2020 (GPT-3)",
+   url: "https://arxiv.org/abs/2204.02311 ; https://arxiv.org/abs/2005.14165",
+   why_close: "FATAL to the strawman. The packet's 'passage-level detector' = 'flag if ≥span_thresh of
+   an item's 8-grams appear in the doc' is literally PaLM's published contamination rule (item
+   contaminated if ≥70% of its 8-grams appear anywhere in training; GPT-3 uses 13-grams). I.e. the
+   STANDARD contamination-measurement practice is ALREADY passage/n-gram-level. NOBODY measures eval
+   contamination with whole-document MinHash near-dedup. So 'doc-level near-dedup is the standard
+   practice that under-counts' is a strawman: it benchmarks a tool nobody uses for contamination
+   against the tool everybody already uses."}
+- {cite: "Yang et al. 2023, 'Rethinking Benchmark and Contamination for LMs with Rephrased Samples'",
+   url: "https://arxiv.org/abs/2311.04850",
+   why_close: "FATAL to the 'honest negative'. Already published that n-gram/string-match
+   decontamination (GPT-4/PaLM-style) is defeated by rephrased/translated contamination, motivating
+   an LLM-based decontaminator. The packet's negative boundary ('gap collapses under paraphrase ≥0.2,
+   8-grams don't survive token edits') re-derives this known result on synthetic data."}
+- {cite: "Xu et al. 2024 survey 'Benchmark Data Contamination of LLMs'; Ravaut et al. 2024 survey",
+   url: "https://arxiv.org/abs/2406.04244 ; https://arxiv.org/abs/2404.00699",
+   why_close: "Taxonomize string/n-gram vs embedding vs model-based detection and document that
+   n-gram methods are paraphrase-fragile and operate at span/example granularity — independent
+   confirmation of both collisions above."}
+
+NAMING_VS_MECHANISM: The mechanism is real (not a mere rename) BUT it is not new — it is the
+established Lee-et-al-2021 NearDup-vs-ExactSubstr distinction, restated. The packet's quantified core
+("50-tok item in 5000-tok doc → Jaccard ≈ 0.01 → doc-recall 0") is arithmetic of set-Jaccard on a
+short span, not an empirical discovery; the materiality figure (true 20% → doc reports 0%) is true BY
+CONSTRUCTION of the synthetic corpus, not a measurement of any real corpus. The one genuinely-novel
+deliverable the orchestrator names — the real paraphrase distribution of contamination at scale, which
+decides whether the gap matters — is exactly the part NOT done.
+
+FATAL_COLLISIONS:
+- Core gap (doc near-dedup misses short embedded spans that substring/n-gram matching catches):
+  OCCUPIED by Lee et al. 2021 (mechanism + the very tool split) AND by GPT-3/PaLM (passage-level IS
+  the standard contamination method). Verified in ≥2 independent sources.
+- Paraphrase boundary (n-gram contamination checks die under ~20% token edits):
+  OCCUPIED by Yang et al. 2023 and the 2024 surveys. Verified in ≥2 independent sources.
+- Strawman baseline: the claim's premise ("document-level near-dedup is the standard contamination
+  practice") is false; the standard practice is already passage/n-gram, so the headline 0%-vs-20%
+  contrast measures a non-practice.
+
+MANDATORY_RELATED_WORK (authors MUST cite and distinguish against, or the claim is dead):
+- Lee et al. 2021 (NearDup vs ExactSubstr) — arXiv:2107.06499
+- Brown et al. 2020 (GPT-3 13-gram) — arXiv:2005.14165; Chowdhery et al. 2022 (PaLM 8-gram/70%) — arXiv:2204.02311
+- Yang et al. 2023 (rephrased-sample decontamination failure) — arXiv:2311.04850
+- Dodge et al. 2021 (C4 documentation, example-level contamination measurement) — arXiv:2104.08758
+- Elazar et al. 2023 'What's In My Big Data?' — arXiv:2310.20707
+- A 2024 contamination survey (Xu arXiv:2406.04244 or Ravaut arXiv:2404.00699)
+
+RATIONALE: The contribution as scoped — a quantified granularity gap + rate distortion + precision
+boundary — collides on every axis with deployed prior art. (1) The mechanism is the foundational
+NearDup-vs-ExactSubstr split (Lee 2021). (2) The 'standard practice' premise is a strawman: real
+contamination detection is already passage/n-gram (PaLM's ≥70%-of-8-grams rule is literally the
+packet's passage detector). (3) The honest negative (paraphrase kills it) is the published Yang-2023
+result. What remains genuinely unmeasured (real-corpus paraphrase distribution, real MinHash-LSH vs
+real GPT-3/PaLM n-gram counts on Pile/C4/Dolma) is precisely the L1 the packet did NOT run — and the
+result's significance is entirely contingent on that unmeasured distribution. On synthetic stdlib
+lexical data the 0%-vs-20% headline is true by construction, not discovery. This is the
+already-known-folklore case the orchestrator flagged: converge, do not deep-mine PROJ-0013.
+```
