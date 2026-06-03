@@ -1,0 +1,42 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE:
+- L1 must measure empirical phi (fragmentation asymmetry) on real free-form QA benchmarks (GSM8K, MATH, GPQA) and show the sign-flip survives with real canonicalizer pairs (exact-match vs Minerva/sympy vs LLM-judge)
+- L1 must report the empirical precision (q) of the high-recall canonicalizer used; if q degrades enough to wash out the effect (as L0 predicts at q≤0.6), the ecological case collapses
+- A real model pair whose maj@k ranking inverts under two real canonicalizers on a fixed benchmark — the constructed L0 inversion is a corollary of the mechanism, not evidence of ecological plausibility
+- DOM_FRAC sensitivity: the negative-slope branch is load-bearing on DOM_FRAC=0.7 (single value); a sweep toward DOM_FRAC→1/M_INC should be reported to bound where the effect dies
+- Clarify confirmatory vs exploratory status of the inversion construction: original (A_pc=0.42, B_pc=0.46) failed to invert; retuned (0.50, 0.28) succeeded — this is post-hoc parameter selection and must be flagged as exploratory with the full search denominator reported
+
+MANDATORY_BASELINES:
+- Spoiler effect / Duverger's Law / vote-splitting (social choice) — the actual mechanistic incumbent; MUST be cited and explicitly differentiated (novelty_killer)
+- Bulian et al. 2022 "Tomayto, Tomahto" (BEM) — the answer-equivalence precision/recall construct pre-exists here; not cited (novelty_killer)
+- Kuhn et al. 2023 / Farquhar et al. 2024 (semantic entropy / clustering granularity) — variable-grain equivalence over free-form outputs (novelty_killer)
+- Biderman et al. 2024 (2405.14782) + Minerva SymPy normalization + HF Open-LLM-Leaderboard parsing-sensitivity reports — prior evidence that grader/extraction differences shift rankings (novelty_killer, evaluation_prosecutor)
+- Standard exact-match vs SymPy vs LLM-as-a-Judge at measured empirical q and r on L1 benchmarks (evaluation_prosecutor)
+
+PRIOR_ART_ADEQUATE: no
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0048", change: "status remains evidence_ready; do NOT promote to validated until L1 produces (a) measured phi on real benchmark, (b) sign-flip with real canonicalizer pair, (c) real model-pair ranking inversion or honest null; add mandatory_citations field listing spoiler-effect/Duverger, Bulian2022-BEM, Kuhn2023/Farquhar2024-semantic-entropy, Biderman2024-eval-reproducibility; flag inversion construction as exploratory-not-confirmatory"}
+
+RATIONALE:
+Unanimous YELLOW from all five reviewers. No RED, no GREEN. The synthesis:
+
+(1) MECHANISM IS REAL BUT NOT NEW. Four of five reviewers (novelty_killer, theory_skeptic, evaluation_prosecutor, product_realist) converge on the same diagnosis: the core mechanism — that consolidating a fragmented faction under plurality voting can flip the winner — is the classical spoiler effect / vote-splitting (Duverger's Law, IIA violations in social choice). The packet addresses CJT and "plurality theory" generically but never names the spoiler effect, which is the true mechanistic incumbent. This is a significant prior-art gap. The novelty_killer correctly identifies that Wang2022 self-consistency assumes pre-canonicalized atoms and does not occupy the variable-recall knob, but neither does the variable-recall knob itself constitute a new mechanism — it is the known mechanism applied to a new domain.
+
+(2) THE PRECISION-CONTROL IS THE STRONGEST CONTRIBUTION. All reviewers acknowledge that the q=1.0 isolation (phi=-0.9 drops 0.982→0.666, z=-28.2 at perfect precision where over-merge is impossible) is a legitimate falsification attempt that passed, confirming the effect is pure-recall, not a precision artifact. This is the most novel and valuable element of the L0 work (novelty_killer: "the precision-control is the most novel/valuable part").
+
+(3) THE INVERSION IS CONSTRUCTED, NOT DISCOVERED. The theory_skeptic and product_realist both flag that the secondary inversion was post-hoc re-parameterized (original A_pc=0.42/B_pc=0.46 did not invert; retuned to 0.50/0.28). This weakens its confirmatory status. The inversion demonstrates the social-choice corollary inside a synthetic generator where the mechanism was built in — it does not constitute independent evidence of ecological plausibility. The z-scores (|z|>48) are simulation-precision artifacts reflecting internal consistency of the generator, not external validity (theory_skeptic).
+
+(4) ECOLOGICAL VALIDITY IS ENTIRELY DEFERRED. All five reviewers note that no real benchmark, real model, or real canonicalizer has been tested. The evaluation_prosecutor's killer experiment is the right gate: measure actual precision (q) of high-recall canonicalizers (SymPy, LLM-judge) on real data — if q degrades enough, the L0-predicted attenuation (gone at q=0.6) falsifies the ecological case. The product_realist adds that no cited instance of a real published ranking actually flipping due to canonicalizer recall exists.
+
+(5) PRIOR-ART SEARCH IS INADEQUATE. The novelty_killer identified five mandatory related-work items (spoiler effect, Bulian 2022 BEM, Kuhn/Farquhar semantic entropy, Biderman 2024 eval reproducibility, Universal SC) — none cited in the packet. Live search was permission-blocked, preventing verification to the ≥2-source bar. Per committee rules, GREEN cannot be emitted with inadequate prior-art search. The missing citations do not constitute fatal collisions (the COMBINATION of recall-as-sign-flipping-knob isolated from precision appears unoccupied), but the framing must acknowledge the mechanistic incumbents rather than positioning against only CJT.
+
+(6) ADDITIONAL CONCERNS NOT RISING TO RED. Theory_skeptic notes DOM_FRAC=0.7 is load-bearing and unswepped; real canonicalizers are not parameterized by scalar recall; k=20 i.i.d. ignores intra-prompt correlation. Product_realist notes adoption barriers (no method to estimate phi a priori, leaderboard lock-in, per-model tuning burden). These are honest scope limitations, not fatal flaws.
+
+VERDICT SYNTHESIS: The L0 work is internally consistent, well-controlled (precision isolation is genuinely valuable), and honestly scoped (attenuation reported). But the contribution is application novelty (naming and sign-labeling a known social-choice mechanism in the eval domain), not a new mechanism; the prior-art framing has significant gaps; and all ecological validity is deferred to L1. This is a clean YELLOW: the work merits L1 investment, but GREEN requires (a) mandatory citations added and differentiated, (b) real-benchmark phi measurement, (c) real-canonicalizer sign-flip, and (d) a real or honestly-null ranking inversion. The inversion construction should be reclassified as exploratory.
+```
