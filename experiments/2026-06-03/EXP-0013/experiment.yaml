@@ -11,7 +11,7 @@ resource_budget:
   host_mem_floor_gb: 0
 needs_gpu: true
 dispatched_by: orchestrator-r2-001
-node_lease: devgpu014:EXP-0013
+node_lease: ''
 status: completed
 result_summary: 'L1 REFUTES the load-bearing assumption on REAL Qwen2.5-1.5B-Instruct
   tool-agent traces (HF transformers eager attn, 40 seeds x 2 designs, 806 tool-result
@@ -35,3 +35,6 @@ started_at: '2026-06-03T01:22:25Z'
 completed_at: '2026-06-03T01:40:20Z'
 prompt_version: ''
 committee_approved: VERDICT-0011
+_audit_notes:
+- 'node_lease cleared (BUG-110 backfill: pre-fix stale lease residue; gpu_queue lease
+  was already empty)'

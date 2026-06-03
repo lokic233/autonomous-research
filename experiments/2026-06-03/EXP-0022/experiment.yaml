@@ -11,7 +11,7 @@ resource_budget:
   host_mem_floor_gb: 0
 needs_gpu: false
 dispatched_by: orchestrator-r3-001
-node_lease: devgpu014:EXP-0022
+node_lease: ''
 status: completed
 result_summary: 'L1 REAL quant-degradation (Qwen2.5-1.5B fp16 vs bnb-NF4-4bit, 160
   real prompts: GSM8K/CoQA/general). (1) Degradation IS heavy-tailed/request-dependent
@@ -36,3 +36,6 @@ started_at: '2026-06-03T06:54:02Z'
 completed_at: '2026-06-03T08:21:35Z'
 prompt_version: ''
 committee_approved: VERDICT-0019
+_audit_notes:
+- 'node_lease cleared (BUG-110 backfill: pre-fix stale lease residue; gpu_queue lease
+  was already empty)'

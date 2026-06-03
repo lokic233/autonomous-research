@@ -11,7 +11,7 @@ resource_budget:
   host_mem_floor_gb: 0
 needs_gpu: true
 dispatched_by: orchestrator-r1-001
-node_lease: devgpu014:EXP-0003
+node_lease: ''
 status: completed
 result_summary: 'Real-system GPU L1 REFUTES adaptive3: under real prefix-chained KV
   caching + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU
@@ -27,3 +27,6 @@ started_at: '2026-06-02T23:02:57Z'
 completed_at: '2026-06-02T23:53:03Z'
 prompt_version: ''
 committee_approved: VERDICT-0002
+_audit_notes:
+- 'node_lease cleared (BUG-110 backfill: pre-fix stale lease residue; gpu_queue lease
+  was already empty)'
