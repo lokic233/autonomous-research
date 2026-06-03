@@ -5,3 +5,104 @@ Using AI Gateway (Meta Model API upstream)
 [0m
 > build · avocado-code-latest
 [0m
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md"}
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m→ [0mRead .
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "_committee_common_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "TOOLING_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3 | head -30
+total 88
+drwxr-xr-x  21 dengcchi  staff   672 Jun  3 07:42 .
+drwxr-x---+ 91 dengcchi  staff  2912 Jun  3 15:16 ..
+drwxr-xr-x  15 dengcchi  staff   480 Jun  3 15:16 .git
+-rw-r--r--   1 dengcchi  staff    56 Jun  2 11:39 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+-rw-r--r--   1 dengcchi  staff  1221 Jun  3 06:46 DECISION_expand_lightweight.md
+-rw-r--r--   1 dengcchi  staff  2699 Jun  2 17:24 HANDOFF_r1_to_r2.md
+-rw-r--r--   1 dengcchi  staff  2516 Jun  2 23:21 HANDOFF_r2_to_r3.md
+-rw-r--r--   1 dengcchi  staff  2856 Jun  3 03:22 HANDOFF_r3_to_r4.md
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 00:15 ORCHESTRATOR_CHARTER.md
+-rw-r--r--   1 dengcchi  staff  2222 Jun  3 04:48 QUIESCENCE_r4_001.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  3123 Jun  3 05:33 QUIESCENCE_r4_002.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  2055 Jun  3 07:42 RESEARCHER_CHARTER.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:01 experiments
+drwxr-xr-x   5 dengcchi  staff   160 Jun  3 02:14 learning
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x  26 dengcchi  staff   832 Jun  3 14:53 projects
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3696 Jun  3 08:36 research-os.config.yaml
+drwxr-xr-x  10 dengcchi  staff   320 Jun  3 11:29 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -type d -name "_shared" 2>/dev/null
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*.md" | xargs grep -l "TOOLING_v001" 2>/dev/null | head -5
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*committee*" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0034/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0033/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0056/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0051/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0058/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0035/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0059/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0050/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0044/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0042/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0045/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0059/ | head -30
+total 72
+drwxr-xr-x  10 dengcchi  staff    320 Jun  3 15:15 .
+drwxr-xr-x  47 dengcchi  staff   1504 Jun  3 14:53 ..
+-rw-r--r--   1 dengcchi  staff  10621 Jun  3 15:15 COMMITTEE1_PACKET.md
+-rw-r--r--   1 dengcchi  staff   4049 Jun  3 14:56 PRE_REGISTRATION.md
+-rw-r--r--   1 dengcchi  staff   4488 Jun  3 14:59 RESULTS.md
+drwxr-xr-x  15 dengcchi  staff    480 Jun  3 15:15 committee1
+-rw-------   1 dengcchi  staff   1338 Jun  3 14:59 experiment.yaml
+drwxr-xr-x   2 dengcchi  staff     64 Jun  3 14:53 logs
+drwxr-xr-x   4 dengcchi  staff    128 Jun  3 14:57 results
+-rw-r--r--   1 dengcchi  staff   6078 Jun  3 14:57 sim.py
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0059/committee1/ | head -30
+total 160
+drwxr-xr-x  15 dengcchi  staff    480 Jun  3 15:15 .
+drwxr-xr-x  10 dengcchi  staff    320 Jun  3 15:15 ..
+-rw-r--r--   1 dengcchi  staff    166 Jun  3 15:15 .members.txt
+-rw-r--r--   1 dengcchi  staff     80 Jun  3 15:16 _runner.log
+-rw-r--r--   1 dengcchi  staff      0 Jun  3 15:15 area_chair.err
+-rw-r--r--   1 dengcchi  staff  11837 Jun  3 15:16 evaluation_prosecutor.err
+-rw-r--r--   1 dengcchi  staff   1971 Jun  3 15:16 evaluation_prosecutor.out
+-rw-r--r--   1 dengcchi  staff    572 Jun  3 15:15 novelty_killer.err
+-rw-r--r--   1 dengcchi  staff      0 Jun  3 15:15 novelty_killer.out
+-rw-r--r--   1 dengcchi  staff   4837 Jun  3 15:16 product_realist.err
+-rw-r--r--   1 dengcchi  staff     41 Jun  3 15:16 product_realist.out
+-rw-r--r--   1 dengcchi  staff  28580 Jun  3 15:16 systems_reviewer.err
+-rw-r--r--   1 dengcchi  staff      0 Jun  3 15:15 systems_reviewer.out
+-rw-r--r--   1 dengcchi  staff    572 Jun  3 15:15 theory_skeptic.err
+-rw-r--r--   1 dengcchi  staff   5822 Jun  3 15:16 theory_skeptic.out
+[0m
+[0m→ [0mRead experiments/2026-06-03/EXP-0059/committee1/product_realist.out
+[0m→ [0mRead experiments/2026-06-03/EXP-0059/committee1/product_realist.err
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/committee/_committee_common_v001.md
+[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md

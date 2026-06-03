@@ -1,0 +1,76 @@
+I have enough to vote honestly. Critical finding: I verified via arXiv that the packet's designated closest prior work is mischaracterized, while general web-search egress is blocked (so I cannot complete a ≥2-independent-source collision sweep — which by my role's rule means an honest YELLOW, not a fabricated GREEN nor an unverifiable RED).
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Bordt et al., 'How much can we forget about Data Contamination?', arXiv:2410.03249",
+   url: "https://arxiv.org/abs/2410.03249",
+   why_close: "PACKET-DESIGNATED closest prior work + the entire novelty pivot ('Bordt applied
+   the filter, saw significant filtering, called removal BENIGN; our delta = it's NOT benign').
+   I FETCHED THE ARXIV ABSTRACT: this paper is about whether contaminated examples are FORGOTTEN
+   as training data scales ('even 144x contamination can be forgotten beyond ~5x Chinchilla'). It
+   does NOT apply an n-gram decontam filter, does NOT characterize removal as benign, does NOT
+   discuss length-biased removal. The packet's primary novelty-distinguishing anchor is MIS-CITED
+   /MIS-SUMMARIZED. The 'genuine delta vs Bordt' argument therefore currently rests on a paper
+   that says no such thing."}
+- {cite: "Yang et al., 'Rethinking Benchmark and Contamination ... Rephrased Samples', arXiv:2311.04850",
+   url: "https://arxiv.org/abs/2311.04850",
+   why_close: "VERIFIED via abstract: orthogonal/opposite-direction (n-gram decontam FALSE NEGATIVES
+   — paraphrase/translation evades the filter; inflation from UN-removed contamination). Packet
+   characterizes this correctly. Not a collision; mandatory to cite as the 'failure-mode-on-the-
+   other-axis' contrast."}
+- {cite: "Brown et al. (GPT-3), arXiv:2005.14165; Dubey et al. (Llama 3), arXiv:2407.21783",
+   url: "https://arxiv.org/abs/2005.14165 ; https://arxiv.org/abs/2407.21783",
+   why_close: "Define the EXACT filter under test (GPT-3 13-gram; Llama3 8-gram) and both report
+   large benign-treated removal fractions + a 'clean subset' re-scoring. Could not retrieve full
+   text (abstract-only fetch), but these are the canonical 'removal treated as benign collateral'
+   sources the claim's delta must actually be measured against — and a more credible Bordt-substitute
+   anchor than 2410.03249."}
+
+NAMING_VS_MECHANISM:
+The STRUCTURAL ANCHOR (removal-prob monotone-increasing in length) is NOT a novel mechanism — it is
+the elementary union bound over per-n-gram match events, which the claim itself concedes is
+"re-derivable"; any practitioner of n-gram matching knows longer strings collide more often. So the
+removal-monotonicity is known math dressed as a finding, NOT a mechanism delta. The candidate
+MECHANISM novelty is narrower: (collateral length-selection) x (length<->difficulty coupling) =>
+UPWARD bias in the post-decontam ESTIMAND with ZERO real contamination, cleanly isolated by the
+alpha=0 control. That estimand-reshaping-as-mitigation-artifact framing is what (if anything) is new
+— but it is a FRAMING/positioning delta on top of obvious mechanics, and I could not confirm it is
+unclaimed because general web search egress is blocked in this session.
+
+FATAL_COLLISIONS:
+- None VERIFIED to the ≥2-independent-source standard (egress-blocked => cannot complete a live
+  collision sweep; per role rule this is an honest YELLOW, not a manufactured RED).
+- NEAR-FATAL TO THE NOVELTY ARGUMENT (not to the science): the packet's load-bearing
+  closest-prior-work (Bordt 2410.03249) is demonstrably mis-attributed (verified). The novelty case
+  must be rebuilt before any GREEN is defensible.
+
+MANDATORY_RELATED_WORK:
+- The CORRECT decontamination-removal sources: GPT-3 (2005.14165) decontam + clean-subset analysis;
+  Llama 3 (2407.21783) 8-gram removal fractions. Measure the delta against THESE, not 2410.03249.
+- Decontamination FALSE-POSITIVE / over-removal literature (the half of the problem this claim lives
+  in): Singh et al. 'Evaluation data contamination in LLMs: how do we measure it and (when) does it
+  matter?'; Dodge et al. 'Documenting the C4 corpus' (contamination/over-flagging); any survey of
+  benchmark-curation SELECTION BIAS. Required to establish freedom-to-operate on "removal distorts
+  the estimand."
+- Yang 2311.04850 (already cited) as the opposite-axis failure mode.
+- The correct Bordt paper's actual topic (forgetting-at-scale) should be cited for what it IS, and
+  removed from the "called removal benign" role.
+
+RATIONALE:
+I could fetch arXiv abstracts but NOT run general web search (egress blocked), so I cannot satisfy the
+mandate's "≥2 independent sources" for either a KILL collision or a clean novelty certification.
+Within what I VERIFIED: (1) 2311.04850 is correctly positioned as opposite-direction; (2) 2410.03249,
+the packet's central novelty anchor, does NOT discuss decontam-removal benignity at all — the
+"delta vs Bordt" is built on a mis-cited paper. The removal-monotonicity 'anchor' is union-bound math,
+not a mechanism contribution; the only candidate novelty is the coupling-gated score-inflation framing,
+which is unverified-free-to-operate. RED is not warranted (no 2-source collision; the science +
+alpha=0 control are sound). GREEN is not warranted (sweep incomplete + anchor mis-cited).
+SCOPING FIX to clear YELLOW: (a) re-run a live ≥2-source prior-art sweep specifically on
+"decontamination false positives / over-removal / length or selection bias in benchmark filtering";
+(b) replace the Bordt-2410.03249 anchor with GPT-3/Llama3 removal-as-benign sources and verify none
+already frame removal as a length/difficulty-correlated estimand bias; (c) state the contribution
+explicitly as the coupling-gated inflation + alpha=0 isolation, NOT the union-bound monotonicity.
+PROMPT_VERSION: v001
+```

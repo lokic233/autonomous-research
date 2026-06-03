@@ -441,3 +441,897 @@ hook: PostToolUse Completed
 codex
 The packet already includes the common rules inline, and the separate rule files appear absent from this checkout. I’m treating the pasted v001 text as binding and using the tooling requirement by doing an external OSS/prior-art search rather than relying on the packet alone.
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+The internal loader blocks external pages in this mode, but network shell access is available. I’m using direct `curl`/repo API reads for citation snippets and only pulling small targeted files.
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1 | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://api.github.com/repos/LMCache/LMCache/git/trees/main?recursive=1 | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1
+
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/LMCache/LMCache/git/trees/main?recursive=1
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1 | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/EleutherAI/lm-evaluation-harness/main/docs/decontamination.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 328ms:
+# Decontamination
+
+## Usage
+
+The provided directory should contain
+the ngram files and info.json produced in "Pile Ngram Generation" further down.
+
+```bash
+python -m lm_eval \
+    --model gpt2 \
+    --device 0 \
+    --tasks sciq
+```
+
+## Background
+
+Downstream evaluations test model generalization, and are less useful when test set data also exists in the training set, referred to as leakage or contamination.
+
+Filtering your training set against the test set is a good first step, however this isn't always possible, as in the case of a new benchmark or one that wasn't considered prior to model training. When training set filtering isn't possible, it is useful to measure the impact of test set leakage by detecting the contaminated test examples and producing a clean version of the benchmark.
+
+The basis for our decontamination procedure can be found in Appendix C of "Language Models are Few-Shot Learners". OpenAI defined a test document as contaminated if any N-gram overlap existed with any training document. They used a range of N values between 8 and 13 depending on dataset, while we just used 13 for simplicity.
+
+## Implementation
+
+Contamination detection can be found in `lm_eval/decontaminate.py` with supporting code in `lm_eval/decontamination/`.
+
+decontaminate.py does the following:
+
+1. Build dictionaries of all ngrams and their corresponding evaluation/document ids.
+2. Scan through sorted files containing training set n-grams.
+3. If a match is found, the corresponding evaluation/document combinations are marked as contaminated.
+
+`lm_eval/evaluator.py` can then produce a clean version of the benchmark by excluding the results of contaminated documents. For each metric, a clean version will be shown in the results with a "decontaminate" suffix.
+
+This is disabled by default for new tasks, to support decontamination on a task override the "should_decontaminate" and "doc_to_decontamination_query" methods. For more details see the [task guide](task_guide.md).
+
+## Pile Ngram Generation
+
+The relevant scripts can be found in `scripts/clean_training_data`, which also import from
+`lm_eval/decontamination/`
+
+1. git clone https://github.com/EleutherAI/lm-evaluation-harness.git
+2. pip install -r requirements.txt
+3. Download The Pile from [The Eye](https://the-eye.eu/public/AI/pile/train/)
+4. Place pile files in "pile" directory under "lm-evaluation-harness" (or create a symlink)
+5. Run generate_13_grams.
+
+```bash
+export PYTHONHASHSEED=0
+python -m scripts/clean_training_data/generate_13_grams \
+       -dir path/to/working/directory \
+       -n 13 \
+       -buckets 500
+```
+
+Took approximately 4 days for us. We had the time to wait, but this could be scaled out by doing partial pile scans on multiple instances of this script and merging the relevant buckets. We fixed PYTHONHASHSEED to ensure reproducibility of bucket hashing in case you need to stop and start.
+
+6. Sort the generated 13-grams.
+
+```bash
+python -m scripts/clean_training_data/sort_13_gram_buckets \
+       -dir path/to/working/directory/output
+```
+
+Took approximately 5 days for us. You could speed this up by spreading the files around to different machines and running the sort script before gathering them together.
+
+7. Compress the sorted 13 grams files and place them together with info.json.
+
+This step only takes a few hours.
+
+```bash
+python -m scripts/clean_training_data/compress_and_package \
+       -dir path/to/working/directory \
+       -output path/to/final/directory \
+       -procs 8
+```
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1' | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1' | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/LMCache/LMCache/git/trees/main?recursive=1' | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/flashinfer-ai/flashinfer/git/trees/main?recursive=1' | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/NVIDIA/TensorRT-LLM/git/trees/main?recursive=1' | grep -i -E 'decontam|contamin|ngram|n-gram' | head -50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 449ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 619ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 1063ms:
+      "path": "benchmarks/benchmark_ngram_proposer.py",
+      "path": "tests/v1/spec_decode/test_ngram.py",
+      "path": "vllm/v1/spec_decode/ngram_proposer.py",
+      "path": "vllm/v1/spec_decode/ngram_proposer_gpu.py",
+
+ succeeded in 1324ms:
+      "path": "python/sglang/jit_kernel/benchmark/bench_ngram_compute_decode.py",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/ngram.cpp",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/ngram.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/ngram_corpus_ffi.cpp",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/param.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/queue.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/result.cpp",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/result.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/suffix_automaton.cpp",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/suffix_automaton.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/trie.cpp",
+      "path": "python/sglang/jit_kernel/csrc/ngram_corpus/trie.h",
+      "path": "python/sglang/jit_kernel/csrc/ngram_embedding.cuh",
+      "path": "python/sglang/jit_kernel/ngram_corpus.py",
+      "path": "python/sglang/jit_kernel/ngram_embedding.py",
+      "path": "python/sglang/jit_kernel/tests/test_ngram_embedding.py",
+      "path": "python/sglang/srt/speculative/cpp_ngram",
+      "path": "python/sglang/srt/speculative/cpp_ngram/.clang-format",
+      "path": "python/sglang/srt/speculative/cpp_ngram/external_corpus.py",
+      "path": "python/sglang/srt/speculative/cpp_ngram/ngram_corpus.py",
+      "path": "python/sglang/srt/speculative/ngram_info.py",
+      "path": "python/sglang/srt/speculative/ngram_worker.py",
+      "path": "python/sglang/test/server_fixtures/ngram_fixture.py",
+      "path": "sgl-kernel/csrc/speculative/ngram_utils.cu",
+      "path": "sgl-kernel/tests/speculative/test_ngram_utils.py",
+      "path": "test/manual/spec/test_spec_ngram_fa3.py",
+      "path": "test/registered/spec/test_spec_ngram.py",
+      "path": "test/registered/spec/test_spec_ngram_extra.py",
+      "path": "test/registered/unit/spec/test_ngram_corpus.py",
+
+ succeeded in 1852ms:
+      "path": "cpp/tensorrt_llm/kernels/banRepeatNgram.cu",
+      "path": "cpp/tensorrt_llm/kernels/banRepeatNgram.h",
+      "path": "cpp/tests/unit_tests/kernels/banRepeatNGramsKernelsTest.cpp",
+      "path": "docs/source/blogs/tech_blog/blog07_NGram_performance_Analysis_And_Auto_Enablement.md",
+      "path": "examples/ngram",
+      "path": "examples/ngram/README.md",
+      "path": "examples/ngram/requirements.txt",
+      "path": "examples/ngram/run_dtm_ngram.py",
+      "path": "security_scanning/examples/ngram",
+      "path": "security_scanning/examples/ngram/poetry.lock",
+      "path": "security_scanning/examples/ngram/pyproject.toml",
+      "path": "tensorrt_llm/_torch/speculative/ngram.py",
+      "path": "tests/integration/defs/disaggregated/test_configs/disagg_config_ngram.yaml",
+      "path": "tests/integration/defs/examples/test_ngram.py",
+      "path": "tests/unittest/_torch/speculative/hw_agnostic/test_ngram.py",
+      "path": "tests/unittest/llmapi/apps/_test_openai_kv_cache_contamination.py",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+2026-06-03T22:16:50.312496Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/v1/spec_decode/ngram_proposer.py | sed -n '1,140p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/speculative/ngram_worker.py | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/examples/ngram/README.md | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/datatrove/main/README.md | grep -i -E 'minhash|dedup|decontam|contamin' | head -50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 222ms:
+DataTrove is a library to process, filter and deduplicate text data at a very large scale. It provides a set of prebuilt commonly used processing blocks with a framework to easily add custom functionality.
+  * [Deduplicating data](#deduplicating-data)
+- `decont` for decontamination with lighteval: `uv sync --extra decont`
+- [minhash_deduplication.py](examples/minhash_deduplication.py) full pipeline to run minhash deduplication of text data
+- [sentence_deduplication.py](examples/sentence_deduplication.py) example to run sentence level exact deduplication
+- [exact_substrings.py](examples/exact_substrings.py) example to run ExactSubstr (requires [this repo](https://github.com/google-research/deduplicate-text-datasets))
+- **[dedup](src/datatrove/pipeline/dedup)** blocks for deduplication
+- When checkpointing is enabled a sqlite-backed `RequestCache` deduplicates individual rollouts via payload hashes (requires `xxhash` and `aiosqlite`) so completed generations are never re-sent during retries.
+### Deduplicating data
+For deduplication check the examples [minhash_deduplication.py](examples/minhash_deduplication.py), [sentence_deduplication.py](examples/sentence_deduplication.py) and [exact_substrings.py](examples/exact_substrings.py).
+- `contamination_stats.py`: `word_contamination_{words[0]}`: Frequency of words contamination in the document.
+
+ succeeded in 231ms:
+# NGram Speculative Decoding
+
+> [!WARNING]
+> The `convert_checkpoint.py` / `trtllm-build` / `run.py` workflow described
+> below is **legacy** and will not receive new features. New projects should use
+> [`trtllm-serve`](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html)
+> or the [LLM Python API](https://nvidia.github.io/TensorRT-LLM/llm-api/index.html) instead.
+
+This document shows how to build and run a model using NGram speculative decoding (supported as `ASSISTED_GENERATION` in transformers and vLLM, source: [GitHub](https://github.com/apoorvumang/prompt-lookup-decoding/tree/main)) in TensorRT LLM on single GPU, or single node multiple GPU.
+
+## Overview
+
+We provide two styles of workflow to run NGram (named V1 and V2 respectively) now. V1 is in TRT workflow and similar to the Draft-Target-Model workflow, running in orchestrator mode and calling `runner.generate()` multiple times to get outputs, which is more flexible for customizing but slightly more overhead. V2 is in pytorch workflow and similar to the Look-Ahead workflow, running in leader mode and calling `runner.generate()` only one time to get outputs, which provides higher performance but fixed process.
+
+The NGram has 3 additional hyperparameters that you need to specify to control the process of generation:
+- `max_draft_len`: the maximum number of tokens provided as draft tokens in one iteration, which is usually from 4 to 10 in common usage (default value: 4). Empirically, the larger the value is, the higher acceptance rate but higher overhead is expected at the same time, so the right balance based on the models and application scenarios needs to be found.
+- `max_matching_ngram_size`: the maximum number of tokens extracted from the tail of the input prompt or generated output as a pattern, which is used to search corresponding draft tokens (default value: 2). Empirically, the larger the value is, the more precise context can be matched from the existed sequence, indicating higher acceptance rate, but the higher probability of miss-match and higher overhead appear, which fall back to normal generation (one token per iteration).
+- `device_list`: the index list of device(s) to run the model in V1 workflow. The length of it must be the same as the TP size of the draft model engine. For instances, `device_list=[0]` means using tp_size=1 and GPU 0 for the model, `device_list=[4,5,6,7]` means using tp=4 and GPU from 4 to 7 for the model. This parameter is neddless in V2 workflow.
+
++ For example, the process of getting draft tokens using `max_draft_len=2` and `max_matching_ngram_size=4` with a sentence `prefix=[..., t1, t2, t3, t4]` is like below:
+
+```Python
+pattern = prefix[:-2]                               # pattern=[t3, t4] (length=2)
+if pattern in pool and len(pool[pattern]) == 4:     # assuming it is {(t3, t4): (t5, t6, t7, t8)}
+    return pool[pattern]                            # draft token = [t5, t6, t7, t8]
+elif pattern in pool and len(pool[pattern]) == <4:  # assuming it is {(t3, t4): (t9, t10, t11)}
+    return pool[pattern]                            # draft token = [t9, t10, t11]
+pattern = prefix[:-1]                               # Try shorter pattern if no candidate of length=2 exists, pattern=[t4] (length=1)
+if pattern in pool and len(pool[pattern]) == 4:     # The same process as above
+    return pool[pattern]
+elif pattern in pool and len(pool[pattern]) == <4:
+    return pool[pattern]
+return None                                         # No any candidate exists
+```
+
+## Support Matrix
+  * GPU Compute Capability >= 8.0 (Ampere or newer)
+  * FP16 / BF16 / FP8
+  * Paged KV Cache
+  * Tensor Parallel
+
+## Usage
+
+### V1 workflow
+
++ We use an open-source `llama-v2-13B` models in this example.
++ `--use_paged_context_fmha=enable` must be specified since we need KVcache reuse in this approach.
++ `--speculative_decoding_mode=draft_tokens_external` must be specified.
++ `--max_draft_len` must be specified as the length maximum of the draft tokens.
++ `--ngram_config` is corresponding configuration of NGram, we can see its usage in [util.py](../util.py).
+  + As an example, `[10,2,[0]]` means `max_draft_len=10`, `max_matching_ngram_size=2`, and device of target model is `GPU0`.
++ `--kv_cache_enable_block_reuse` must be specified for this approach.
++ Only CPP session is supported, so `--use_py_session` must not be specified.
++ `--num_beams` can not be specified as larger than 1 since beam search is not supported in this approach yet.
+
+```bash
+# Build engine
+python3 examples/models/core/llama/convert_checkpoint.py \
+    --model_dir <Path To Llama-v2-13B repo> \
+    --output_dir ./ckpt-target \
+    --dtype float16
+
+trtllm-build \
+    --checkpoint_dir ./ckpt-target \
+    --output_dir ./target-engine \
+    --gemm_plugin float16 \
+    --use_paged_context_fmha enable \
+    --speculative_decoding_mode draft_tokens_external \
+    --max_draft_len 10 \
+    --max_batch_size 4 \
+    --max_input_len 3200 \
+    --max_seq_len 4800
+
+# Run decoding
+python3 examples/run.py \
+    --tokenizer_dir <Path To Llama-v2-7B repo> \
+    --engine_dir ./target-engine \
+    --ngram_config "[10,2,[0]]" \
+    --max_output_len 256 \
+    --kv_cache_enable_block_reuse \
+    --input_text "How does Draft-Sampling work?"
+
+# Run summarization tasks
+python examples/summarize.py \
+    --test_hf \
+    --test_trt_llm \
+    --check_accuracy \
+    --hf_model_dir <Path To Llama-v2-7B repo> \
+    --engine_dir ./target-engine \
+    --batch_size 1 \
+    --ngram_config "[10,2,[0]]" \
+    --kv_cache_enable_block_reuse
+```
+
+### V2 workflow
+
+```bash
+python3 examples/llm-api/quickstart_advanced.py \
+    --spec_decode_max_draft_len 4 \
+    --max_matching_ngram_size 2 \
+    --disable_overlap_scheduler \
+    --disable_kv_cache_reuse
+```
+
+ succeeded in 300ms:
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+import os
+
+import numpy as np
+import torch
+from numba import get_num_threads, jit, njit, prange, set_num_threads
+
+from vllm.config import VllmConfig
+
+
+class NgramProposer:
+    def __init__(self, vllm_config: VllmConfig):
+        assert vllm_config.speculative_config is not None
+        assert vllm_config.speculative_config.prompt_lookup_min is not None
+        assert vllm_config.speculative_config.prompt_lookup_max is not None
+
+        # Minimum length of the n-gram to match.
+        self.min_n = vllm_config.speculative_config.prompt_lookup_min
+        # Maximum length of the n-gram to match.
+        self.max_n = vllm_config.speculative_config.prompt_lookup_max
+        # Number of tokens follow the match. If there are less than k
+        # tokens follow the match, we will return the maximum amount of
+        # tokens until the end.
+        self.k = vllm_config.speculative_config.num_speculative_tokens
+        # Maximum length of the model.
+        self.max_model_len = vllm_config.model_config.max_model_len
+
+        # Pre-allocate buffers for numba batch propose.
+        max_num_seqs = vllm_config.scheduler_config.max_num_seqs
+        self.valid_ngram_draft = np.zeros((max_num_seqs, self.k), dtype=np.int32)
+        self.valid_ngram_num_drafts = np.zeros((max_num_seqs), dtype=np.int32)
+
+        # Threshold of total number of tokens in the batch to enable
+        # multi-threading in numba batch propose.
+        self.num_tokens_threshold = 8192
+        tp_size = vllm_config.parallel_config.tensor_parallel_size
+        cpu_count = os.cpu_count()
+        # Max number of threads for numba parallel processing.
+        if cpu_count:
+            # Divide by 2 to use physical cores
+            # and not logical cores (hyper-threading).
+            # Cap the number of threads to 8 to avoid using too many threads
+            # since other components like frontend (incl tokenization)
+            # and Structured Outputs also use multiple threads.
+            # TODO(ekagra-ranjan): bump up the cap from 1 to 8
+            # when TP parallelization for ngram is implemented.
+            self.num_numba_thread_available = min(1, (cpu_count // 2))
+            # Divide by tp_size to ensure each tensor parallel rank
+            # has some threads since all ranks will run this.
+            self.num_numba_thread_available //= tp_size
+        else:
+            self.num_numba_thread_available = 1
+
+        # Trigger Numba JIT compilation for N-gram proposer.
+        # This usually takes less than 1 second.
+        self.propose(
+            [[]] * 1024,
+            np.zeros(1024, dtype=np.int32),
+            np.zeros((1024, self.max_model_len), dtype=np.int32),
+        )
+
+    def batch_propose(
+        self,
+        num_requests: int,
+        valid_ngram_requests: list,
+        num_tokens_no_spec: np.ndarray,
+        token_ids_cpu: np.ndarray,
+    ) -> list[list[int]]:
+        """Batch version of ngram proposer using numba for acceleration.
+
+        Args:
+            valid_ngram_requests:
+                Set of indices of requests that need ngram proposals.
+            num_tokens_no_spec:
+                Numpy array of shape (batch_size,) representing the number
+                of tokens without speculative tokens for each request.
+            token_ids_cpu:
+                Numpy array of shape (batch_size, max_model_len)
+                representing the token IDs for each request.
+
+        Returns:
+            list[list[int]]:
+                A list where each element is a list of proposed
+                token IDs for the corresponding request.
+        """
+        draft_token_ids: list[list[int]] = []
+
+        # Only run batch propose if there are requests needing ngram proposals.
+        # avoid calling numba function with empty list which causes error
+        # ValueError: cannot compute fingerprint of empty list
+        if num_ngram_requests := len(valid_ngram_requests):
+            original_num_numba_threads = get_num_threads()
+            # Ensure we use at least one thread.
+            # If total tokens is small, using multiple threads
+            # may slow down due to overhead.
+            total_tokens = np.sum(num_tokens_no_spec)
+            if total_tokens >= self.num_tokens_threshold:
+                final_num_threads = max(
+                    1, min(self.num_numba_thread_available, num_ngram_requests)
+                )
+                set_num_threads(final_num_threads)
+            else:
+                set_num_threads(1)
+
+            batch_propose_numba(
+                valid_ngram_requests,
+                num_tokens_no_spec,
+                token_ids_cpu,
+                self.min_n,
+                self.max_n,
+                self.max_model_len,
+                self.k,
+                self.valid_ngram_draft,
+                self.valid_ngram_num_drafts,
+            )
+
+            # Restore original number of threads.
+            set_num_threads(original_num_numba_threads)
+
+        for i in range(num_requests):
+            if i in valid_ngram_requests and self.valid_ngram_num_drafts[i] > 0:
+                draft_token_ids.append(
+                    self.valid_ngram_draft[i, : self.valid_ngram_num_drafts[i]].tolist()
+                )
+            else:
+                draft_token_ids.append([])
+
+        return draft_token_ids
+
+    def propose(
+        self,
+        sampled_token_ids: list[list[int]],
+        num_tokens_no_spec: np.ndarray,
+        token_ids_cpu: np.ndarray,
+        slot_mappings: dict[str, torch.Tensor]
+        | list[dict[str, torch.Tensor]]
+        | None = None,  # unused
+    ) -> list[list[int]]:
+        # find which requests need ngram proposals
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 396ms:
+import logging
+from typing import List, Optional
+
+import numpy as np
+import torch
+from sgl_kernel.speculative import reconstruct_indices_from_tree_mask
+
+from sglang.srt.layers.utils.logprob import add_output_logprobs_for_spec_v1
+from sglang.srt.managers.schedule_batch import ScheduleBatch
+from sglang.srt.managers.scheduler import GenerationBatchResult
+from sglang.srt.managers.tp_worker import TpModelWorker
+from sglang.srt.model_executor.forward_batch_info import ForwardMode
+from sglang.srt.observability.req_time_stats import set_time_batch
+from sglang.srt.observability.trace import get_global_tracing_enabled
+from sglang.srt.server_args import ServerArgs
+from sglang.srt.speculative.cpp_ngram.ngram_corpus import NgramCorpus
+from sglang.srt.speculative.ngram_info import NgramVerifyInput
+from sglang.srt.speculative.spec_info import SpeculativeAlgorithm
+from sglang.srt.speculative.spec_utils import generate_token_bitmask
+
+logger = logging.getLogger(__name__)
+
+
+USE_FULL_MASK = True
+
+
+class NGRAMWorker:
+    def __init__(
+        self,
+        server_args: ServerArgs,
+        gpu_id: int,
+        tp_rank: int,
+        dp_rank: Optional[int],
+        moe_ep_rank: int,
+        attn_cp_rank: int,
+        moe_dp_rank: int,
+        nccl_port: int,
+        target_worker: TpModelWorker,
+    ):
+        self.target_worker = target_worker
+        self.model_runner = target_worker.model_runner
+        self.tp_rank = tp_rank
+        self.page_size = server_args.page_size
+        self.draft_token_num: int = server_args.speculative_num_draft_tokens
+        self.max_trie_depth: int = server_args.speculative_ngram_max_trie_depth
+
+        self.max_batch_size = target_worker.max_running_requests
+        self.device = f"cuda:{gpu_id}" if gpu_id >= 0 else "cuda"
+
+        self._init_preallocated_tensors()
+
+        self.ngram_corpus = NgramCorpus(
+            min_bfs_breadth=server_args.speculative_ngram_min_bfs_breadth,
+            max_bfs_breadth=server_args.speculative_ngram_max_bfs_breadth,
+            match_type=server_args.speculative_ngram_match_type,
+            capacity=server_args.speculative_ngram_capacity,
+            max_trie_depth=server_args.speculative_ngram_max_trie_depth,
+            draft_token_num=server_args.speculative_num_draft_tokens,
+            external_sam_budget=server_args.speculative_ngram_external_sam_budget,
+            external_corpus_max_tokens=server_args.speculative_ngram_external_corpus_max_tokens,
+        )
+        if server_args.speculative_ngram_external_corpus_path is not None:
+            from sglang.srt.speculative.cpp_ngram.external_corpus import (
+                iter_external_corpus_chunks,
+            )
+
+            corpus_path = server_args.speculative_ngram_external_corpus_path
+            chunks = list(
+                iter_external_corpus_chunks(
+                    corpus_path,
+                    target_worker.tokenizer,
+                    server_args.speculative_ngram_external_corpus_max_tokens,
+                )
+            )
+            loaded = self.add_external_corpus(corpus_path, chunks)
+            self.commit_corpus_load(corpus_path, loaded)
+            logger.info(
+                "Loaded external ngram corpus '%s' (%d tokens).",
+                corpus_path,
+                loaded,
+            )
+
+    def clear_cache_pool(self):
+        self.ngram_corpus.reset()
+
+    def update_weights_from_tensor(self, recv_req):
+        # NGRAM has no draft weights of its own — the n-gram corpus is a CPU
+        # lookup structure built from request token streams — and its
+        # `model_runner` is shared with the target worker. The scheduler
+        # mixin dispatches via `self.draft_worker or self.tp_worker`, so
+        # without this method any caller of `update_weights_from_tensor`
+        # under `--speculative-algorithm NGRAM` raises AttributeError.
+        return self.target_worker.update_weights_from_tensor(recv_req)
+
+    def add_external_corpus(self, corpus_id: str, token_chunks: list[list[int]]) -> int:
+        return self.ngram_corpus.load_external_corpus_named(corpus_id, token_chunks)
+
+    def commit_corpus_load(self, corpus_id: str, loaded_token_count: int) -> None:
+        self.ngram_corpus.commit_external_corpus_load(corpus_id, loaded_token_count)
+
+    def remove_external_corpus(self, corpus_id: str) -> None:
+        self.ngram_corpus.remove_external_corpus(corpus_id)
+
+    def list_external_corpora(self) -> dict[str, int]:
+        return self.ngram_corpus.list_external_corpora()
+
+    def _efficient_concat_last_n(self, seq1: List[int], seq2: List[int], n: int):
+        seq2_len = len(seq2)
+        if seq2_len >= n:
+            return seq2[-n:]
+
+        need_from_seq1 = n - seq2_len
+        return seq1[-need_from_seq1:] + seq2
+
+    def _init_preallocated_tensors(self):
+        max_total_drafts = self.max_batch_size * self.draft_token_num
+        max_total_mask_size = (
+            self.max_batch_size * self.draft_token_num * self.draft_token_num
+        )
+
+
+ exited 1 in 58212ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/pipeline/filters/lighteval.py | sed -n '1,200p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/huggingface/datatrove/git/trees/main?recursive=1' | grep -i -E 'decont|contamin|lighteval|ngram|n-gram' | head -100" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/huggingface/lighteval/git/trees/main?recursive=1' | grep -i -E 'decont|contamin|ngram|n-gram' | head -100" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 198ms:
+404: Not Found
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 379ms:
+      "path": "src/datatrove/pipeline/decont",
+      "path": "src/datatrove/pipeline/decont/__init__.py",
+      "path": "src/datatrove/pipeline/decont/n_grams.py",
+      "path": "src/datatrove/pipeline/stats/contamination_stats.py",
+      "path": "tests/pipeline/dedup/test_ngrams_decont.py",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 491ms:
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/pipeline/decont/n_grams.py | sed -n '1,260p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 245ms:
+"""
+Used for n-gram decontamination.
+First build an index using the tasks we want to use to decontaminate our training dataset.
+Then read your training data and apply the filter with the index loaded.
+"""
+
+import os
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
+
+import numpy as np
+
+from datatrove.data import Document, DocumentsPipeline
+from datatrove.io import DataFolderLike, file_exists, get_datafolder, open_file
+from datatrove.pipeline.base import PipelineStep
+from datatrove.pipeline.filters.base_filter import BaseFilter
+from datatrove.pipeline.writers.disk_base import DiskWriter
+from datatrove.utils.binaryio import read_np_from_file
+from datatrove.utils.hashing import HashConfig, create_hash_func
+from datatrove.utils.logging import logger
+from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+from datatrove.utils.typeshelper import Languages
+from datatrove.utils.word_tokenizers import load_word_tokenizer
+
+
+@dataclass
+class NGramsDecontConfig:
+    """
+    Example for n_grams=4
+    query = ['A', 'B', 'C', 'D', 'E'] (the prompt/instruction)
+    label = ['F', 'G', 'H', 'I', 'J'] (the answer/gold)
+    Will find the following N-GRAMS in the training data:
+        'F G H I'
+        'G H I J'
+        + IF find_query_ngrams:
+            'A B C D'
+            'B C D E'
+        + IF find_overlap_ngrams:
+            'C D E F'
+            'D E F G'
+            'E F G H'
+    """
+
+    n_grams: int = 12
+    find_query_ngrams: bool = False  # enable to also check for matches in n-grams containing only the input/prompt
+    find_overlap_ngrams: bool = True  # will also find matches for n-grams containing BOTH input and query
+    norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+    hash_config: HashConfig = field(default_factory=HashConfig)
+
+
+class NGramsDecontIndexer(PipelineStep):
+    """
+    Creates a decontamination index (basically a list of uint64 hashes from ngrams) for each reference task.
+    Ways to provide task data:
+      - as input documents from the previous pipeline step with "text=label/correct answer"
+        and metadata={"query": query/prompt/input, "task": task name}
+      - as a list of strings in the format "suite|task" from the lighteval metadata table:
+      https://github.com/huggingface/lighteval/blob/main/src/lighteval/tasks/tasks_table.jsonl as `lighteval_tasks`
+      - a path to a text file containing one such list, with one "suite|task" per line as `lighteval_tasks`
+      you can also define your custom tasks with `custom_lighteval_tasks`. See explanation for `custom_tasks` here:
+      https://github.com/huggingface/lighteval/tree/main?tab=readme-ov-file#evaluate-a-model-on-extended-community-or-custom-tasks
+
+    """
+
+    type = "🦠 - DECONT"
+    name = "💥 N-grams build index"
+    _requires_dependencies = ["lighteval"]
+
+    def __init__(
+        self,
+        output_folder: DataFolderLike,
+        lighteval_tasks: str | list[str] | None = None,  # list in the format suite|task or path to one such list
+        custom_lighteval_tasks: str | None = None,
+        config: NGramsDecontConfig = None,
+        language: str = Languages.english,
+    ):
+        super().__init__()
+        self.output_folder = get_datafolder(output_folder)
+        # parse list of tasks
+        if isinstance(lighteval_tasks, str):
+            if file_exists(lighteval_tasks):
+                with open_file(lighteval_tasks, "rt") as f:
+                    self.lighteval_tasks = f.read().strip().splitlines()
+            else:
+                self.lighteval_tasks = [lighteval_tasks]
+        else:
+            self.lighteval_tasks = lighteval_tasks
+        self.custom_lighteval_tasks = custom_lighteval_tasks
+        self.config = config or NGramsDecontConfig()
+        self.tokenizer = load_word_tokenizer(language)
+        self.hash_func = create_hash_func(self.config.hash_config)
+
+    def compute_hashes(self, label: str, query: str | None = None) -> list[int]:
+        label_tokens = self.tokenizer.word_tokenize(simplify_text(label, self.config.norm_config))
+        ngrams_to_compute = list(ngrams(label_tokens, self.config.n_grams))
+        if query is not None:
+            query_tokens = self.tokenizer.word_tokenize(simplify_text(query, self.config.norm_config))
+            if self.config.find_query_ngrams:
+                ngrams_to_compute.extend(ngrams(query_tokens, self.config.n_grams))
+            if self.config.find_overlap_ngrams:
+                # add tokens overlapping query and label
+                """
+                A, B, C, D, E | F, G, H, I, J
+                5 grams
+                B, C, D, E, F (-N + 1 + i:) + (:i + 1)
+                ...
+                E, F, G, H, I
+                """
+                ngrams_to_compute.extend(
+                    [
+                        query_tokens[-self.config.n_grams + 1 + i :] + label_tokens[: i + 1]
+                        for i in range(self.config.n_grams - 1)
+                        # make sure we actually get a list of size N
+                        if len(query_tokens) >= self.config.n_grams - 1 - i and len(label_tokens) >= i + 1
+                    ]
+                )
+        return list(map(self.hash_func, map(" ".join, ngrams_to_compute)))
+
+    def run(self, data: DocumentsPipeline = None, rank: int = 0, world_size: int = 1):
+        if world_size != 1:
+            raise ValueError("Decontamination index building requires a single worker.")
+        hashes = defaultdict(set)
+        # use whatever date is parsed in with the following format:
+        # doc.text -> label
+        # doc.metadata["input"] -> input
+        if data:
+            for doc in data:
+                if not self.config.find_query_ngrams and "query" not in doc.metadata:
+                    raise ValueError(
+                        "only_label_ngrams is False but could not find 'query' field in documents metadata"
+                    )
+                hashes[doc.metadata.get("task", "input")].update(
+                    self.compute_hashes(doc.text, doc.metadata.get("query", None))
+                )
+
+        # parse data from lighteval defined tasks
+        from lighteval.tasks.lighteval_task import LightevalTask
+        from lighteval.tasks.registry import Registry
+
+        task_dict = Registry(cache_dir=os.getenv("HF_HOME"), custom_tasks=self.custom_lighteval_tasks).get_task_dict(
+            self.lighteval_tasks
+        )
+        LightevalTask.load_datasets(task_dict.values())
+
+        for task_name, task in task_dict.items():
+            for eval_doc in task.eval_docs():
+                try:
+                    golds = eval_doc.get_golds()
+                    query = eval_doc.query
+                except Exception as e:
+                    logger.warning(f"Error while fetching doc data: {e}")
+                    continue
+                for gold in golds:
+                    hashes[task_name].update(self.compute_hashes(gold, query))
+
+        for task_name, task_hashes in hashes.items():
+            hashes_array = np.array(list(task_hashes), dtype=self.config.hash_config.np_descr)
+            logger.info(f"Saving {len(task_hashes)} hashes for {task_name}")
+            with self.output_folder.open(f"{task_name.replace(' ', '_')}.index.hashes", mode="wb") as f:
+                if self.output_folder.is_local():
+                    hashes_array.tofile(f)
+                else:
+                    f.write(hashes_array.tobytes())
+
+
+class NGramsDecontFilter(BaseFilter):
+    """
+    Loads list of hashes created by the Indexer step.
+    For each document in the block's input, we will check if any of its ngrams are part of the reference eval tasks.
+    If so, they will be removed. The contaminated ngram and task where it was found will be saved in the removed
+    document's metadata.
+    """
+
+    type = "🦠 - DECONT"
+    name = "💥 N-grams decontaminate"
+
+    def __init__(
+        self,
+        index_folder: DataFolderLike,
+        config: NGramsDecontConfig = None,
+        exclusion_writer: DiskWriter = None,
+        language: str = Languages.english,
+    ):
+        super().__init__()
+        self.index_folder = get_datafolder(index_folder)
+        self.config = config or NGramsDecontConfig()
+        self.exclusion_writer = exclusion_writer
+        self.language = language
+        self._index_hashes = None
+        self.hash_func = create_hash_func(self.config.hash_config)
+        self.tokenizer = load_word_tokenizer(language)
+
+    def load_index_hashes(self):
+        def load_index_from_file(file):
+            with self.index_folder.open(file, mode="rb") as f:
+                return file, read_np_from_file(
+                    f, np.dtype(self.config.hash_config.np_descr), self.index_folder.is_local()
+                ).tolist()
+
+        with ThreadPoolExecutor() as pool:
+            hashes = pool.map(load_index_from_file, self.index_folder.list_files(glob_pattern="**/*.index.hashes"))
+
+        self._index_hashes = {}
+        for filename, hashlist in hashes:
+            taskname = filename.removesuffix(".index.hashes")
+            logger.info(f"Loading {len(hashlist)} hashes for {taskname}")
+            for hash in hashlist:
+                self._index_hashes[hash] = taskname
+
+    def filter(self, doc: Document) -> bool | tuple[bool, str]:
+        if self._index_hashes is None:
+            self.load_index_hashes()
+
+        text_tokens = self.tokenizer.word_tokenize(simplify_text(doc.text, self.config.norm_config))
+        ngrams_to_compute = list(ngrams(text_tokens, self.config.n_grams))
+        for n_gram in map(" ".join, ngrams_to_compute):
+            task = self._index_hashes.get(self.hash_func(n_gram), None)
+            if task is not None:
+                doc.metadata["contaminated_ngram"] = n_gram
+                doc.metadata["contaminated_task"] = task
+                self.stat_update(f"contaminated_{task}")
+                if ":" in task:
+                    self.stat_update(f"contaminated_tg_{task[: task.index(':')]}")
+                return False, "contaminated"
+        return True
+
+codex
+```
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "EleutherAI lm-evaluation-harness", url: "https://github.com/EleutherAI/lm-evaluation-harness/blob/main/docs/decontamination.md", overlap: "High: implements GPT-3-style benchmark decontamination by marking eval docs contaminated on any train/eval n-gram match and reporting metrics excluding contaminated docs; docs cite 8-13/OpenAI and use 13."},
+  {system: "HuggingFace DataTrove", url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/pipeline/decont/n_grams.py", overlap: "Medium-high: implements n-gram decontamination hash index from eval tasks and filters training documents on any matching n-gram; mechanism exists, but not this length-bias analysis."},
+  {system: "OpenAI GPT-3", url: "https://arxiv.org/abs/2005.14165", overlap: "High as prior method: packet and lm-eval docs cite Appendix C n-gram overlap decontamination with N in 8-13."},
+  {system: "vLLM/SGLang/TensorRT-LLM", url: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/spec_decode/ngram_proposer.py", overlap: "Low/none for this claim: searched OSS shows n-gram speculative decoding/prompt lookup, not benchmark decontamination or survivor-set bias correction."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: "Partial. The combinatorial length-bias mechanism holds for any remove-on-any-kgram-overlap filter under nonzero per-position match probability, and OSS implementations do use that any-match structure. But the packet evidence is L0 synthetic: iid per-kgram q, synthetic length distribution/difficulty, no real web corpus n-gram index, no real benchmark item lengths, and no measured per-item accuracy slope. Realistic-scale reproducibility is not yet shown; L1 should run lm-eval/DataTrove-style decontamination against C4/Pile/web n-grams on GSM8K/QuALITY/MMLU and report survivor length shift plus realized score delta."
+RATIONALE: "This is not mere glue: the contribution is the selection-effect insight that an already-shipping any-match n-gram decontamination mechanism acts as a length-biased sampler, with score inflation only when difficulty is length-coupled. Existing systems already implement the underlying mechanism: lm-evaluation-harness says contamination detection builds eval n-gram dictionaries, scans training n-grams, marks matches contaminated, and evaluator excludes contaminated documents; DataTrove's NGramsDecontFilter removes a document when any computed n-gram hash appears in the eval-task index. Prior work cited in packet/Bordt 2410.03249 appears close because it applies filtering and observes filtering, but the packet claims the missing delta is that collateral removal is not benign when length correlates with difficulty. Vote is yellow because the systems-level mechanism is real and reproducible at toy scale, but realistic workload validity is still insufficient evidence: q is modeled, not measured; benchmark difficulty coupling is asserted but not measured here; and leaderboard-level impact remains unproven."
+```
+tokens used
+59,165

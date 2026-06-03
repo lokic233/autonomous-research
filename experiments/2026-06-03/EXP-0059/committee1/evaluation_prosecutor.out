@@ -1,0 +1,12 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES:
+- name: Real corpus n-gram overlap vs. IID Bernoulli
+  why: The L0 simulation models k-gram matches as independent Bernoulli(q) trials. In real text, n-gram overlaps are highly correlated (bursty, contiguous). The true removal probability scaling with length might be significantly flatter than the theoretical IID union-bound suggests.
+  repo_or_cite: Bordt 2024 (2410.03249) / Brown 2020 (2005.14165)
+STRAWMAN_RISKS: ["Assuming k-gram matches are independent events overstates the length penalty.", "Synthetic length-difficulty coupling (alpha) may not reflect real benchmarks where length often comes from boilerplate or few-shot prompts rather than task complexity."]
+MISSING_METRICS: ["Empirical removal rate vs. length on real text (not synthetic)", "Realized score shift using actual model accuracies (e.g., Llama-3) on GSM8K/MMLU"]
+KILLER_EXPERIMENT: Apply a standard 8-gram or 13-gram decontamination filter to actual GSM8K and MMLU test sets against a real pretraining corpus (e.g., The Pile or FineWeb). Plot empirical removal probability versus item length to check if it actually follows the aggressive $1-(1-q)^{L-k+1}$ curve or if burstiness flattens it. Then, compute the true score inflation using real per-item accuracies from a production model.
+RATIONALE: The evaluation hinges on a critical simplifying assumption: that each k-gram match is an independent Bernoulli event. In natural language, if one k-gram matches, the adjacent k-gram is highly likely to match due to contiguous phrase copying or boilerplate. This correlation drastically reduces the effective number of independent trials, which could severely flatten the length penalty and reduce the score inflation magnitude. The L0 structural anchor is mathematically valid for the toy IID model, but its relevance to real decontamination remains unproven until L1 testing confirms the removal curve holds on actual text.
+```
