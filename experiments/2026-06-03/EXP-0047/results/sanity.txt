@@ -1,0 +1,18 @@
+=== BM25 sanity unit check (k1=1.20 b=0.75) ===
+docs=[['a', 'b', 'c'], ['a', 'a', 'd'], ['e', 'f', 'g', 'a']]
+N=3 avgdl=3.333333 doclens=[3, 3, 4] df['a']=3
+idf('a') = ln((3-3+0.5)/(3+0.5)+1) = 0.133531393
+doc0: hand=0.139227044443 impl=0.139227044443 diff=0.00e+00
+doc1: hand=0.188919012073 impl=0.188919012073 diff=0.00e+00
+doc2: hand=0.123432379737 impl=0.123432379737 diff=0.00e+00
+rank order by score: [1, 0, 2] (expect doc1 first)
+SANITY PASS: impl matches hand calc to <1e-9 and ranking correct.
+
+=== EXP-0047 additional checks ===
+doc0: bm25_score_b(b=0.75)=0.139227044443  m.bm25_score=0.139227044443  diff=0.00e+00
+doc1: bm25_score_b(b=0.75)=0.188919012073  m.bm25_score=0.188919012073  diff=0.00e+00
+doc2: bm25_score_b(b=0.75)=0.123432379737  m.bm25_score=0.123432379737  diff=0.00e+00
+b=0: doc score for f=2 short(len3)=0.183605665 long(len102)=0.183605665 diff=0.00e+00 (must be ~0)
+BM25L doc0 hand=0.167011566869 impl=0.167011566869 diff=0.00e+00
+long doc (len200, f=1): BM25L=0.089063768  BM25=0.005312280  (BM25L>=BM25? True)
+EXP-0047 SANITY PASS: b-param matches baseline; b=0 removes len-dep; BM25L hand-verified; BM25L>=BM25 on long doc.
