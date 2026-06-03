@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "PARTIAL-HELD (non-circular, H2O-baselined). Noisy causal reference\
+  \ predictor BEATS H2O/SnapKV at REALISTIC measured AUC<0.85 \u2014 robust at critical-handle\
+  \ AUC 0.64-0.82, frac>=0.4-0.6 (CAUSAL-H2O paired 95%CI_lo>0, 64 seeds) \u2014 but\
+  \ ONLY on the sharp task-chain metric where H2O/RT score 0.000 everywhere (they\
+  \ evict cold-then-hot delayed callbacks). On aggregate availability CAUSAL merely\
+  \ TIES H2O. Circularity BROKEN: latent theta read only in trace-gen+oracle (grep-audited);\
+  \ predictor uses noisy ngram+decayed-past-attn proxy with boundary error; AUC MEASURED.\
+  \ NOT strawman (beats H2O specifically). Big oracle headroom. Win decays at tight\
+  \ budget/low AUC. Mechanism = non-persistence-of-importance (Scissorhands counterexample).\
+  \ L1 owed: real attention, real tool-agent task accuracy, verify real delayed-callback\
+  \ structure, head-to-head vs H2O/SnapKV/Scissorhands/ACON."
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0012/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T01:11:03Z'
 prompt_version: ''
