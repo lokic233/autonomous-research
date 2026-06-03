@@ -1,0 +1,30 @@
+I attempted the mandated live ≥2-source prior-art sweep with both available web-search tools; **both were permission-blocked in this session**, so I could not verify any collision against ≥2 live independent sources. Per my mandate ("a KILL collision must be verified in ≥2 independent sources"), I cannot issue a RED on a collision I could not confirm. I vote from training-knowledge prior art (Jan 2026 cutoff), flagging the search gap explicitly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Wang et al., Self-Knowledge Guided Retrieval Augmentation (SKR), EMNLP Findings 2023",
+   url: "https://arxiv.org/abs/2310.05002",
+   why_close: "Gates retrieval on whether the model ALREADY HAS the answer. Differs on locus: SKR gates on PARAMETRIC self-knowledge ('do I already know this internally'); this claim gates on IN-CONTEXT presence ('is it already resident in the live window'). Real mechanism delta, but the 'skip because answer already available' frame is shared — authors MUST cite & distinguish."}
+- {cite: "Bang et al./Zilliz, GPTCache: An Open-Source Semantic Cache for LLM Apps, NLP-OSS@EMNLP 2023",
+   url: "https://arxiv.org/abs/2411.05276 (and github.com/zilliztech/GPTCache)",
+   why_close: "Skips an LLM/retrieval call when a semantically-similar query was already served, via embedding overlap of the incoming query against stored items — structurally the SAME cheap-overlap skip mechanism, just keyed on an external cache rather than the live context deque. The 'lexical/embedding-overlap-of-query-vs-resident-spans, no extra model call' check is near-isomorphic to semantic-cache hit detection."}
+- {cite: "Asai et al., Self-RAG, 2023 / Jiang et al., FLARE, 2023 / Jeong et al., Adaptive-RAG, 2024",
+   url: "https://arxiv.org/abs/2310.11511 , https://arxiv.org/abs/2305.06983 , https://arxiv.org/abs/2403.14403",
+   why_close: "Whether/when-to-retrieve gating. Authors already disclaim novelty here — correctly. These gate on knowledge-NEED/confidence, not in-context-presence."}
+
+NAMING_VS_MECHANISM:
+There IS a real mechanism delta over Self-RAG/FLARE/SKR/Adaptive-RAG: gating on "the answer is already resident in THIS window" is a distinct signal from "do I need external knowledge at all." NOT mere renaming. BUT the delta substantially collapses against (a) SKR's "already-have-it" framing and (b) semantic-cache hit detection (GPTCache), both of which skip work via cheap query-vs-stored overlap. The genuinely thin-but-real contributions are the METHODOLOGY pieces — the matched-random-skip control and the independent item-id redundancy GT — not the gate concept itself. Those two are a measurement-methodology contribution, and on a constructed trace they characterize a method, not establish a finding.
+
+FATAL_COLLISIONS:
+None VERIFIED to my ≥2-source standard — live prior-art search was permission-blocked, so I cannot assert a kill. SKR + GPTCache are strong collision CANDIDATES on the core skip mechanism that I could not rule out; if either (esp. a conversational/history-aware variant gating on in-context presence) is confirmed to gate on resident-context with a redundancy evaluation, the gate-concept novelty falls and only the control+GT methodology survives.
+
+MANDATORY_RELATED_WORK (authors MUST cite & distinguish before any GREEN):
+1. SKR (arXiv:2310.05002) — distinguish in-context vs parametric "already-have-it."
+2. GPTCache / semantic caching — distinguish live-window dedup from external semantic-cache hit detection (same overlap mechanism).
+3. Conversational / history-aware adaptive retrieval (multi-turn "should I retrieve given dialogue history") — the nearest neighbor I could NOT search; the L1 must run a live ≥2-source sweep for any work that gates retrieval specifically on dialogue/context residency.
+
+RATIONALE:
+Not RED: my mandate forbids a kill without ≥2 verified collision sources, and the web-search tools were blocked this session — I will not fabricate a verified collision. Not GREEN: the claimed in-context-redundancy gate has unrebutted, uncited strong neighbors (SKR on the "already-have-it" frame; GPTCache on the near-identical cheap-overlap skip mechanism), and the surviving novelty is the modest measurement-methodology (matched-random control + independent item-id GT) on a CONSTRUCTED trace — a method characterization, not a validated finding. The researcher's honesty about disclaiming adaptive-retrieval novelty and pre-defending circularity is genuinely good practice and keeps this out of RED, but the novelty case is not yet established against the two candidate collisions above. YELLOW: cite/distinguish SKR + semantic-caching, and at L1 run the live conversational-retrieval prior-art sweep I could not complete.
+```

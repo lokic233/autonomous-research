@@ -1,0 +1,27 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+MUNDANE_EXPLANATIONS: [
+  "(A) Redundancy fraction 0.235->0.816 is largely a mechanical restatement of the input knob p_repeat x window-residency probability — it's not a discovered constant, it's algebra on the generative process; the >20% finding is guaranteed by construction once p_repeat>=0.4.",
+  "(B) Jaccard AUC=1.000 at paraphrase=0 is tautological: spans are built from per-item keyword cores, so with zero rewording lexical features are a deterministic function of the very item-id that defines GT. The reported degradation 1.00->0.84 is essentially a calibration of how much paraphrase_rate noise the researcher chose to inject.",
+  "(C) 'Beats random-skip at matched skip-rate everywhere with CI>0' is the expected result for ANY check with above-chance AUC — random-skip is an extremely weak hard baseline. The +9 to +19 pt gap is what the AUC numbers already predict; it is not additional evidence."
+]
+CONFOUNDS: [
+  "Anti-circularity is PARTIAL, not clean. GT uses item-id and the check uses only text — but the spans' text is generated FROM the item-id via shared keyword cores. Paraphrase_rate is the only thing breaking the deterministic id->text map; so paraphrase_rate effectively controls the answer the experiment is designed to find. The researcher's defense (separate knob) is honest but does not eliminate the construct-validity confound, it just parameterizes it.",
+  "Task-success model (success iff item resident) collapses to: cheap-check FP <=> task fail. This makes 'safe Pareto point' a near-mechanical function of the check's precision at chosen tau, not a property of real LLM behavior (which can re-ask, partially answer, or fail in other ways).",
+  "Matched-random-skip is the wrong hard baseline for deployment claims. Deployed systems are always-retrieve; the relevant comparison is the (savings, accuracy-loss) frontier vs always-retrieve and vs any prior adaptive-retrieval gate (Self-RAG/SKR/Adaptive-RAG). Beating random does not establish positive utility vs the deployed baseline class."
+]
+ASSUMPTIONS_UNTESTED: [
+  "Eviction policy / window mechanics (FIFO? LRU?) — redundancy curves are sensitive to this and only one regime is reported.",
+  "Vocab size, keyword-core overlap across items, filler-noise level — all control how separable items are; no sensitivity sweep.",
+  "1:1 cost model for skipped retrieval; no model of injected-token vs latency tradeoff, and no model of the COST of a wrong skip (re-ask roundtrip).",
+  "Independence of paraphrase_rate from p_repeat: in real traces these likely covary (frequent re-queries probably have higher lexical reuse), which would inflate detectability — direction of bias unmeasured.",
+  "Hashed-embedding 'surrogate' is asserted to be a lower bound for a real embedding without empirical evidence; the paraphrase-gap closure claim for real embeddings is conjecture, not measurement."
+]
+STATISTICAL_GAPS: [
+  "8 seeds with bootstrap CI of +/-0.005-0.01 reflects simulation precision, NOT epistemic uncertainty about reality. The narrow CIs should not be read as strong evidence — they only bound Monte Carlo noise of the generator.",
+  "No reported headroom ratio (check_savings / oracle_savings at matched safe accuracy) — the oracle is shown as AUC=1 but the fraction-of-oracle-utility recovered by the cheap check is not given as a single comparable number.",
+  "No ablation isolating contribution of (i) the in-context-resident GT definition vs (ii) the matched-random-skip control vs (iii) the cheap check — the claimed methodological contribution is bundled, not decomposed.",
+  "No sensitivity bands on the workload axes themselves (W, p_repeat, paraphrase): the conditional map is reported at grid points but not as a fitted surface with uncertainty, so the 'whole realistic band' claim is interpolation."
+]
+RATIONALE: The framework is genuinely careful — the item-id/text separation via paraphrase_rate is a real methodological improvement over CLAIM-0008's circularity failure, and the researcher's own verdict (HELD-conditional, not a universal, no novelty for adaptive retrieval) is appropriately bounded. But the L0 numerical results are dominated by structural consequences of the generative model: redundancy ~ f(p_repeat, W) is algebra; AUC vs paraphrase is calibration of an injected-noise knob; beating random-skip is implied by any above-chance AUC. The honest scientific content here is the FRAMEWORK + the conditional surface, not the headline numbers. The construct-validity confound (text is generated from item-id, only paraphrase breaks the deterministic link) is not eliminated, only parameterized. Vote YELLOW: methodologically promising, anti-circular guard is real but partial, results are conditional on assumptions that only real-trace L1 can break — the researcher's own framing supports yellow, not green.
+```

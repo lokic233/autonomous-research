@@ -1,0 +1,71 @@
+verdict_id: VERDICT-0016
+claim_id: CLAIM-0013
+project_id: PROJ-0001
+date: '2026-06-03'
+experiment_ids:
+- EXP-0017
+experiment_paths:
+- experiments/2026-06-03/EXP-0017
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(none \u2014 unanimous yellow, no fatal"
+- "researcher's intellectual honesty commended, firmly out of RED) GREEN blocked by:\
+  \ (1) MISSING LOAD-BEARING BASELINE \u2014 random-skip is a sanity check, NOT the\
+  \ deployment-relevant comparator"
+- 'semantic query cache (GPTCache/RAGCache: cache past (query,result), skip on embedding-similarity
+  hit) is the industry standard the L0 entirely omits'
+- if a simple query-cache captures the same redundant retrievals at >= Pareto efficiency,
+  the 'live window' contribution is operationally falsified
+- "(2) NOVELTY UNRESOLVED (not refuted) \u2014 novelty_killer egress-blocked"
+- SKR (arXiv 2310.05002 'do I already know this') + GPTCache/semantic-caching are
+  strong collision candidates on the core mechanism
+- surviving novelty = the MEASUREMENT METHODOLOGY (matched-random control + independent
+  item-id redundancy GT), modest but real
+- "(3) construct validity \u2014 redundancy frac is algebra on the generative process,\
+  \ Jaccard AUC=1.0 at paraphrase=0 is tautological, anti-circularity guard is PARTIAL\
+  \ (text generated from item-id via shared keyword cores"
+- paraphrase_rate parameterizes the confound rather than eliminating it)
+required_evidence:
+- 'L1: REAL long-horizon agent+RAG traces w/ human-annotated in-context-presence labels
+  (not constructed generator)'
+- "L1: HEAD-TO-HEAD vs SEMANTIC QUERY CACHE (GPTCache/RAGCache) at matched skip-rate\
+  \ \u2014 the load-bearing operational baseline"
+- 'L1: REAL sentence embedding replacing the stdlib hashed surrogate, measured AUC-gap
+  closure vs lexical Jaccard'
+- 'L1: end-to-end task accuracy w/ a REAL LLM in the loop (model may recover from
+  wrong skips via re-ask, or fail despite correct retrieval)'
+- 'L1: live >=2-source prior-art sweep for conversational/history-aware retrieval
+  gating on in-context residency'
+- cite+distinguish SKR (2310.05002) + GPTCache/semantic caching BEFORE any GREEN
+- 'L1: Self-RAG/SKR/Adaptive-RAG gate on the SAME real traces to establish marginal
+  value of in-context-presence signal over ''do I need external knowledge'' signal'
+map_delta_proposals:
+- 'CLAIM-0013 -> HELD-conditional (L0 yellow, real 6/6). Contribution NARROWED to
+  MEASUREMENT METHODOLOGY (anti-circular item-id GT + matched-random control + conditional
+  surface), NOT the gate concept (unestablished vs SKR + semantic caching). L1 gate:
+  real traces + real embedding + real LLM task accuracy + SEMANTIC-CACHE baseline
+  + prior-art resolution. No promotion until prior-art gap closed + the gate beats
+  a semantic query cache, not just random-skip'
+baseline_requirements:
+- "Semantic query cache (GPTCache-style) \u2014 the operationally-relevant comparator\
+  \ the L0 omits"
+- always-retrieve (present, adequate)
+- oracle skip (present, adequate)
+- Self-RAG / SKR / Adaptive-RAG on real traces (L1)
+created_at: '2026-06-03T04:32:18Z'

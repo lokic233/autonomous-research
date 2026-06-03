@@ -3,3 +3,72 @@ MetaCode at Meta (https://fburl.com/metacode)
 [0m
 > build · avocado-code-latest
 [0m
+[0m→ [0mRead .
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md"}
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001","engine":"FILENAME"}
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/TOOLING_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/prompts/**"[90m 0 matches[0m
+[0m→ [0mRead projects
+[0m→ [0mRead projects/PROJ-0001
+[0m✱ [0mGlob "**/*committee*common*"[90m 0 matches[0m
+[0m✱ [0mGlob "**/*.md"[90m 0 matches[0m
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*committee*" -o -name "*TOOLING*" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0013/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0014/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0015/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0004/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0001/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0006/committee1
+/Users/dengcchi/autonomous-research-v3/runtime/orchestrator/committee_queue.yaml
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.log
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.alive
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "prompts" -type d 2>/dev/null
+[0m→ [0mRead learning/roles/committee.md
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/
+total 120
+drwxr-xr-x  10 dengcchi  staff    320 Jun  2 21:27 .
+drwxr-xr-x  12 dengcchi  staff    384 Jun  2 20:57 ..
+drwxr-xr-x  15 dengcchi  staff    480 Jun  2 21:27 committee1
+-rw-r--r--   1 dengcchi  staff  16603 Jun  2 21:27 COMMITTEE1_PACKET.md
+-rw-------   1 dengcchi  staff   1395 Jun  2 21:25 experiment.yaml
+drwxr-xr-x   3 dengcchi  staff     96 Jun  2 21:16 logs
+-rw-r--r--   1 dengcchi  staff   7047 Jun  2 21:05 PRE_REGISTRATION.md
+drwxr-xr-x   6 dengcchi  staff    192 Jun  2 21:16 results
+-rw-r--r--   1 dengcchi  staff  10582 Jun  2 21:24 RESULTS.md
+-rw-r--r--   1 dengcchi  staff  14470 Jun  2 21:16 run_exp0017.py
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1/
+total 4248
+-rw-r--r--   1 dengcchi  staff       80 Jun  2 21:28 _runner.log
+drwxr-xr-x  15 dengcchi  staff      480 Jun  2 21:27 .
+drwxr-xr-x  10 dengcchi  staff      320 Jun  2 21:27 ..
+-rw-r--r--   1 dengcchi  staff      166 Jun  2 21:27 .members.txt
+-rw-r--r--   1 dengcchi  staff        0 Jun  2 21:27 area_chair.err
+-rw-r--r--   1 dengcchi  staff    12679 Jun  2 21:28 evaluation_prosecutor.err
+-rw-r--r--   1 dengcchi  staff     1850 Jun  2 21:28 evaluation_prosecutor.out
+-rw-r--r--   1 dengcchi  staff      164 Jun  2 21:27 novelty_killer.err
+-rw-r--r--   1 dengcchi  staff        0 Jun  2 21:27 novelty_killer.out
+-rw-r--r--   1 dengcchi  staff     3208 Jun  2 21:28 product_realist.err
+-rw-r--r--   1 dengcchi  staff       41 Jun  2 21:27 product_realist.out
+-rw-r--r--   1 dengcchi  staff  1920162 Jun  2 21:28 systems_reviewer.err
+-rw-r--r--   1 dengcchi  staff        0 Jun  2 21:27 systems_reviewer.out
+-rw-r--r--   1 dengcchi  staff      164 Jun  2 21:27 theory_skeptic.err
+-rw-r--r--   1 dengcchi  staff     4900 Jun  2 21:28 theory_skeptic.out
+[0m
+[0m→ [0mRead experiments/2026-06-03/EXP-0017/committee1/product_realist.out
+[0m→ [0mRead experiments/2026-06-03/EXP-0017/committee1/product_realist.err
+[0m→ [0mRead experiments/2026-06-03/EXP-0017/committee1/.members.txt

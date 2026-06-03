@@ -1,0 +1,31 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "L1: Real long-horizon agent+RAG traces with human-annotated in-context-presence labels (not constructed generator)",
+  "L1: Head-to-head comparison vs semantic query cache (GPTCache/RAGCache) at matched skip-rate — evaluation_prosecutor's point is unrebutted: random-skip is a sanity check, not a deployment-relevant baseline",
+  "L1: Real sentence embedding replacing stdlib hashed surrogate, with measured AUC gap closure vs lexical Jaccard",
+  "L1: End-to-end task accuracy with a real LLM in the loop (model may recover from wrong skips via re-ask, or fail despite correct retrieval)",
+  "L1: Live ≥2-source prior-art sweep for conversational/history-aware retrieval gating on in-context residency — novelty_killer was permission-blocked and could NOT complete this; the gap is structural, not optional",
+  "Cite & distinguish SKR (arXiv:2310.05002) and GPTCache/semantic caching BEFORE any future GREEN consideration — novelty_killer's collision candidates are unresolved"
+]
+MANDATORY_BASELINES: [
+  "Semantic query cache (GPTCache-style): cache past (query, result) pairs, skip on embedding-similarity hit — the operationally relevant comparator the L0 entirely omits (evaluation_prosecutor, unrebutted)",
+  "Always-retrieve (already present as acc=1.000 baseline — adequate)",
+  "Oracle skip (already present as AUC=1.0 upper bound — adequate)",
+  "At L1: Self-RAG / SKR / Adaptive-RAG gate on the same real traces, to establish marginal value of in-context-presence signal over 'do I need external knowledge' signal"
+]
+PRIOR_ART_ADEQUATE: no
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0013", change: "status: HELD-conditional (L0 yellow, 5/5 yellow). Contribution narrowed to MEASUREMENT METHODOLOGY (anti-circular GT + matched-random control + conditional surface), NOT the gate concept itself. Gate-concept novelty unestablished vs SKR + semantic caching — requires citation/distinction + live prior-art sweep before L1. L1 requirements: real traces, real embedding, real LLM task accuracy, semantic-cache baseline. No promotion until prior-art gap closed."}
+RATIONALE: Unanimous 5/5 YELLOW from a committee that engaged seriously with the evidence. The researcher's own "HELD-conditional" framing is honest and appropriate — this is the strongest aspect of the submission. Three findings drive the verdict:
+
+(1) THE FRAMEWORK IS REAL BUT THE NUMBERS ARE NOT INDEPENDENTLY INFORMATIVE. Theory_skeptic's critique is the most penetrating and is unrebutted: redundancy fraction ~f(p_repeat, W) is algebra on the generative process, not a discovered constant; Jaccard AUC=1.0 at paraphrase=0 is tautological given keyword-core span construction; beating random-skip is the expected outcome of any above-chance classifier. The anti-circularity guard (item-id vs text separation via paraphrase_rate) is a genuine improvement over CLAIM-0008's circular failure, but it is PARTIAL — text is generated from item-id via shared keyword cores, and paraphrase_rate is the only thing breaking the deterministic link, so it parameterizes the confound rather than eliminating it. The scientific content is the framework + conditional map, not the headline numbers. The researcher mostly agrees with this framing.
+
+(2) NOVELTY IS UNRESOLVED, NOT REFUTED. Novelty_killer was permission-blocked on live web search and explicitly cannot verify or rule out collisions against ≥2 independent sources. SKR ("do I already know this") and GPTCache (semantic query-cache hit detection via embedding overlap) are strong collision candidates on the core mechanism. The surviving novelty is the measurement methodology — matched-random-skip control + independent item-id redundancy GT — which is a modest but real contribution. The researcher's disclaimer of adaptive-retrieval novelty is honest and correct. But the gate-concept novelty (skip because answer is already in the live window) has NOT been distinguished from (a) SKR's "already-have-it" parametric-knowledge gate applied to in-context knowledge, or (b) semantic caching's structurally isomorphic overlap-based skip. These citations are MANDATORY before any future GREEN.
+
+(3) THE MISSING BASELINE IS LOAD-BEARING. Evaluation_prosecutor's point that random-skip is a strawman when semantic query caching is the industry standard for cutting RAG redundancy costs is unrebutted. If a simple (query, result) cache captures the same redundant retrievals at equal or better Pareto efficiency, the specific "live window" contribution is falsified operationally. The L1 MUST include this head-to-head.
+
+PROCEDURAL NOTE: Prior-art search is INADEQUATE (novelty_killer confirms tools were blocked). Per my mandate, I cannot emit GREEN without adequate prior-art search. Even setting this aside, the unanimous YELLOW from all five reviewers, with substantive unrebutted concerns (construct validity, missing semantic-cache baseline, unresolved novelty collisions), independently supports YELLOW. The researcher's intellectual honesty — pre-defended circularity, explicit limitations, appropriate "HELD-conditional" verdict, no overclaiming — is genuinely commendable and keeps this firmly out of RED. The L0 accomplished what an L0 should: it built a clean measurement framework, ran a characterization, and identified exactly what the L1 must close. YELLOW with a clear, achievable promotion path.
+```
