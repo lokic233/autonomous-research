@@ -1,0 +1,70 @@
+verdict_id: VERDICT-0012
+claim_id: CLAIM-0010
+project_id: PROJ-0002
+date: '2026-06-03'
+experiment_ids:
+- EXP-0012
+- EXP-0013
+experiment_paths:
+- experiments/2026-06-03/EXP-0012
+- experiments/2026-06-03/EXP-0013
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+fatal_objections:
+- 'LOAD-BEARING ASSUMPTION FALSE (GPU L1, real Qwen2.5-1.5B, 806 spans): cold-then-hot
+  delayed-callback frequency = 0.000 (threshold >=15%), even in a design built hostile
+  to H2O. Critical handle spans are HEAVY-HITTERS from commit (attention rank rises
+  monotonically 0.50->1.0), never cold'
+- Real H2O accumulated-attention is a near-perfect future-ref predictor (overall AUC
+  0.999/0.819, critical-handle 1.000)
+- the lexical proxy is WEAKER (0.857/0.647). The L0's 'H2O crit-AUC~0, proxy wins'
+  is INVERTED in real traces
+- "Real pass@1 at matched KV budget: CAUSAL - H2O = +0.00 [CI 0,0] at every budget\
+  \ \u2014 ZERO advantage"
+- only recency-truncation loses (the strawman VERDICT-0009 flagged). The L0 'H2O=0'
+  gap was an engineered-sim artifact
+- 'Prior-art subsumes residual: A2SF (2407.20485 same biased-attention diagnosis),
+  ArkVale (NeurIPS24 recallable KV via query geometry, no lexical signal), Quest (2406.10774),
+  Apple ''Learning to Evict'' (2602.10238 identical ''past-attention=indirect proxy
+  for future value'' framing)'
+- Scissorhands persistence-of-importance CONFIRMED by our data -> claimed counterexample
+  gone
+- All 4 pre-registered honest-negative branches (N1-N4) triggered
+required_evidence:
+- "None \u2014 claim REFUTED on its load-bearing premise by real-model evidence"
+- "buried DEAD-0002. Revival condition (recorded): a real benchmark on a larger model\
+  \ showing >=15% cold-then-hot frequency AND the lexical signal beating real H2O\
+  \ attention AND ArkVale/Quest missing those spans \u2014 judged unlikely given monotonic\
+  \ heavy-hitter behavior observed"
+map_delta_proposals:
+- "CLAIM-0010 -> KILL / DEAD-0002 (two-pass closure). The CLAIM-0008->0010 redesign\
+  \ correctly fixed all 4 committee#1 defects and earned a real-model L1 (committee#1\
+  \ unanimous yellow VERDICT-0011) \u2014 but the GPU L1 showed the engineered cold-then-hot\
+  \ structure does NOT exist in real LLM attention: real H2O retains task-critical\
+  \ handle spans (heavy-hitters from commit), so the causal predictor's entire edge\
+  \ vanishes (CAUSAL-H2O=+0). Demonstrates the two-pass model's value: a unanimous-yellow\
+  \ L0 candidate, honestly killed at real-H100. No false green."
+baseline_requirements:
+- (all run/cited in L1) H2O + SnapKV w/ real attention
+- A2SF
+- ArkVale
+- Quest
+- Apple Learning-to-Evict
+- ACON
+- Scissorhands
+created_at: '2026-06-03T01:51:47Z'

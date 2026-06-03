@@ -1,0 +1,14 @@
+```text
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "H2O", url: "https://github.com/FMInference/H2O", overlap: "attention-heavy-hitter KV eviction; same H2O baseline signal"},
+  {system: "OpenVINO GenAI", url: "https://openvinotoolkit.github.io/openvino.genai/docs/concepts/optimization-techniques/kvcache-eviction-algorithm/", overlap: "shipping KVCache eviction using attention scores; documents H2O/SnapKV-style eviction and KVCrush"},
+  {system: "SGLang RadixAttention", url: "https://lmsys.org/blog/2024-01-17-sglang/", overlap: "shipping KV cache reuse/retention via radix tree plus LRU eviction for multi-call programs; not lexical future-reference prediction"},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "shipping paged KV reuse with LRU eviction/offload; reuse/retention system but not claim's lexical span predictor"},
+  {system: "LMCache", url: "https://docs.lmcache.ai/kv_cache/caching_policies.html", overlap: "shipping KV offload/share/cache management with LRU/MRU/LFU/FIFO policies and pinning; infrastructure overlap, not the claimed predictor"}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold on the realistic L1 workload in the packet: 806 real Qwen2.5-1.5B tool-result spans, 40 seeds, real eager attention. cold_then_hot frequency is 0.000 in both easy and hostile-to-H2O hard traces, below the pre-registered <5% rare threshold and far below the >=15% meaningful threshold. CAUSAL-H2O pass@1 delta is +0.00 [0,0] at every matched KV budget. Remaining scale gaps: no tau-bench/AppWorld install, only 1.5B model and constructed real-agent transcripts, but these gaps cannot rescue a claim whose stated load-bearing mechanism is directly absent in the measured traces.
+RATIONALE: RED. The claimed systems insight requires committed tool-result spans that are cold under H2O shortly after commit and hot only later. The packet's L1 directly refutes that mechanism: critical handle spans are heavy-hitters from commit, attention rank rises 0.50->1.00, H2O future-ref AUC is 0.999/0.819 overall and 1.000 on critical handles, while the lexical proxy is weaker at 0.857/0.647. End-to-end, CAUSAL gives no advantage over H2O: +0.00 [0,0] at all budgets. Prior art and OSS also leave no defensible systems-design contribution: H2O implements heavy-hitter eviction, OpenVINO GenAI ships attention-score KV eviction including SnapKV/KVCrush, SGLang/TensorRT-LLM/LMCache ship KV reuse/retention/eviction infrastructure, and ArkVale/Quest-style prior work covers query-aware or recallable recovery of later-important KV without lexical handles. The residual lexical tool-span signal is glue, and in the measured workload it is redundant with H2O.
+```

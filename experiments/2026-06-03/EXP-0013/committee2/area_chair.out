@@ -1,0 +1,39 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: red, product_realist: red}
+
+FATAL_OBJECTIONS:
+  - Load-bearing premise empirically falsified: cold-then-hot frequency = 0.000 across 806 real Qwen2.5-1.5B spans (both easy and adversarial-to-H2O designs), below the pre-registered <5% "rare" threshold by the maximum possible margin. Critical handle span is a heavy-hitter from commit (rank 0.50→1.00 monotonic). Premise FAILS — the phenomenon the claim is built on does not occur.
+  - H2O already retains the critical span: real accumulated-attention future-ref AUC = 0.999/0.819 overall, 1.000 on the critical handle. The proposed lexical proxy is strictly WEAKER (0.857/0.647). The L0's "H2O crit AUC ≈ 0" is INVERTED in real traces.
+  - Zero end-to-end advantage: CAUSAL − H2O pass@1 = +0.00 [CI 0,0] at every matched KV budget, both designs. The claim's entire contribution vanishes.
+  - Prior-art subsumption of residual mechanism: A2SF owns the attention-bias diagnosis; ArkVale solves cold-then-hot via recallable KV without lexical signals; Apple "Learning to Evict" pre-states the identical "past-attention is an indirect proxy for future value" framing; Quest provides query-aware future-KV prediction. The only non-subsumed component (lexical handle-recurrence) is empirically inert.
+  - Scissorhands persistence-of-importance CONFIRMED by L1 data — the claimed counterexample is eliminated.
+
+REQUIRED_EVIDENCE:
+  - [SATISFIED] Real-trace cold-then-hot frequency measurement (EXP-0013 §1: 0.000, pre-registered threshold applied)
+  - [SATISFIED] Real future-reference AUC comparison H2O vs proxy (EXP-0013 §2: H2O wins 0.999/0.819 vs 0.857/0.647)
+  - [SATISFIED] End-to-end pass@1 at matched KV budget (EXP-0013 §3: delta = +0.00 [0,0])
+  - [SATISFIED] Prior-art sweep with ≥2-source verification per fatal collision (novelty_killer confirmed: ArkVale via NeurIPS proceedings + OpenReview + GitHub; Apple-KVP via arXiv + ADS + apple.com; A2SF via arXiv)
+  - [FOR RECORD — theory_skeptic scope caveat] Single model (1.5B), constructed transcripts, mid+late layer aggregation, degenerate bootstrap CI. These are valid methodological limitations but do not rescue the claim: the mundane explanation (StreamingLLM attention-sink + Scissorhands persistence) predicts the observed result, and the burden of proof is on the claim to demonstrate cold-then-hot EXISTS, not on the refutation to prove it is absent in all possible configurations.
+
+MANDATORY_BASELINES: [H2O (2306.14048), SnapKV (2404.14469), ArkVale (NeurIPS24), A2SF (2407.20485), Quest (2406.10774), Apple "Learning to Evict" (2602.10238)]
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0010", change: "status: REFUTED → DEAD-0002; add DEAD reason: load-bearing cold-then-hot premise falsified at 0/806 real spans (pre-registered honest negative); H2O retains critical handles (AUC 1.000); prior-art subsumes residual mechanism; CAUSAL−H2O = +0.00. Link: killed by EXP-0013 (L1). Retain as DEAD (not deleted) — the honest negative is itself a finding: real LLM attention on tool-result spans follows Scissorhands persistence, not delayed cold-then-hot."}
+
+PRIOR_ART_ADEQUATE: yes
+  Novelty_killer verified ≥2 independent sources per fatal collision (anti-hallucination rule honored).
+  A2SF, ArkVale, Apple-KVP, Quest, InfiniGen, Scissorhands, H2O, SnapKV all cited with retrievable URLs.
+  No reviewer flagged missing prior-art coverage. The sweep is thorough.
+
+RATIONALE:
+Unanimous 5/5 RED on a pre-registered honest negative. The kill rests on two independent, individually sufficient axes:
+
+(1) EMPIRICAL REFUTATION. The claim's single load-bearing assumption — that committed tool-result spans exhibit delayed cold-then-hot callbacks at meaningful frequency — is falsified at 0/806 spans in real Qwen2.5-1.5B traces, including a design deliberately built to be adversarial to H2O. The pre-registered threshold (≥15% meaningful, <5% rare) is missed by the maximum possible margin. The mechanism is clear: early committed handles are persistent heavy-hitters (Scissorhands persistence, StreamingLLM attention-sink dynamics), so H2O natively retains them (future-ref AUC 1.000 on critical handle). The CAUSAL predictor's lexical proxy is strictly weaker than H2O (0.857/0.647 vs 0.999/0.819) and delivers zero pass@1 advantage at any budget [CI 0,0]. The L0 win was an artifact of engineered sim structure absent from real LLM attention.
+
+(2) PRIOR-ART SUBSUMPTION. Even if the empirical refutation were set aside, the residual conceptual contribution is covered: A2SF owns the accumulated-attention-bias diagnosis; ArkVale solves cold-then-hot via recallable KV without lexical signals; Apple "Learning to Evict" pre-states the identical motivating framing; Quest provides query-aware future-KV prediction. The only surviving novel component (lexical n-gram handle-recurrence as retention importance) is both thin AND empirically inert.
+
+ADDRESSING THE THEORY_SKEPTIC'S SCOPE CAVEAT: The red on generalization scope is methodologically sound — one 1.5B model, constructed transcripts, and degenerate CIs do limit how broadly we can claim cold-then-hot is absent. However, this does not rescue CLAIM-0010 for three reasons: (a) the burden of proof is on the claim to demonstrate cold-then-hot EXISTS at meaningful frequency; it has failed that burden on the only real-model test conducted; (b) the mundane explanation (early-token attention accumulation + persistence-of-importance) is well-established theory that predicts the observed result as the default, making cold-then-hot the extraordinary claim requiring extraordinary evidence; (c) even if cold-then-hot were found in some other configuration, ArkVale/Quest already solve it without lexical handles, so the contribution remains subsumed. The scope caveat is recorded for completeness but is not load-bearing against the kill.
+
+PROCESS NOTE: This is a clean, pre-registered honest negative — the experiment was designed with explicit negative branches (N1–N4), all four triggered, and the researcher reported the refutation without hedging. The two-pass committee process worked as intended: committee#1 (VERDICT-0011) correctly identified the unvalidated assumption, approved the GPU L1 to test it, and committee#2 now correctly kills the claim on the evidence. CLAIM-0010 is buried as DEAD-0002 with full provenance.
+```
