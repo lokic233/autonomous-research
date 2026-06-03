@@ -6,15 +6,15 @@ session_id: ''
 project_id: PROJ-0010
 claim_id: CLAIM-0039
 exp_id: EXP-0036
-status: open
+status: done
 summary: 'L0: residual GPU step-bubble idle UNDER real continuous batching (bursty/correlated
   tool-waits) + does agent-step-aware interleaving reclaim it at matched p99 vs REAL
   continuous batching (not serial strawman); honest-negative if continuous batching
   already captures it'
 evidence_delta: ''
 opened_at: '2026-06-03T11:19:29Z'
-updated_at: '2026-06-03T11:19:29Z'
-closed_at: ''
+updated_at: '2026-06-03T11:29:28Z'
+closed_at: '2026-06-03T11:29:28Z'
 history:
 - ts: '2026-06-03T11:19:29Z'
   event: open
@@ -23,3 +23,7 @@ history:
     tool-waits) + does agent-step-aware interleaving reclaim it at matched p99 vs
     REAL continuous batching (not serial strawman); honest-negative if continuous
     batching already captures it'
+- ts: '2026-06-03T11:29:28Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0036 completed EXP EXP-0036 (kill)

@@ -1,0 +1,40 @@
+dead_id: DEAD-0008
+original_claim_id: CLAIM-0039
+original_claim: "In multi-agent LLM serving where agents alternate short decode bursts\
+  \ with long external tool-waits, the GPU 'step bubbles' (idle during an agent's\
+  \ tool-wait) represent a MEASURABLE aggregate-throughput loss that vanilla continuous\
+  \ batching does NOT fully recover (because tool-waits are long + bursty + correlated,\
+  \ leaving residual idle), AND an agent-step-aware admission/interleaving policy\
+  \ reclaims a non-trivial fraction of that residual idle at matched per-agent latency\
+  \ \u2014 beating REAL continuous batching (vLLM-style), not a serial strawman."
+reason_killed: 'NEGATIVE (continuous batching already captures it) -> KILL CLAIM-0039.
+  Residual fillable GPU decode-idle beyond vanilla continuous batching = 0.000000
+  across all 288 configs (cb_util == ready-work ceiling everywhere; CB provably work-conserving).
+  All idle is STRUCTURAL (#ready<B, agents off-GPU in tool-wait) which no policy can
+  fill. Correlation does NOT create unfillable aligned bubbles: mean ceiling RISES
+  with rho (0.472->0.489), opposite the claim. Agent-step-aware (SJF) does NOT beat
+  CB at matched p99: median (c)-(b) tput delta=0.00%, only 7/288 trivial wins (max
+  +3.3%, not concentrated at high rho), 66/288 ''gains'' only by sacrificing p99 (median
+  2.06x worse). PAIRED bootstrap CI; serial floor confirmed (CB 1.5x median over serial).
+  v1 RNG-per-policy artifact found+fixed (pre-sampled paired arrival tapes; M<B byte-identical).
+  L1: real vLLM/SGLang + real agent tool-wait traces + KV-cache admission (the abstracted-away
+  bottleneck).'
+killing_verdict: ''
+killing_experiments:
+- EXP-0036
+duplicate_patterns:
+- "In multi-agent LLM serving where agents alternate short decode bursts with long\
+  \ external tool-waits, the GPU 'step bubbles' (idle during an agent's tool-wait)\
+  \ represent a MEASURABLE aggregate-throughput loss that vanilla continuous batching\
+  \ does NOT fully recover (because tool-waits are long + bursty + correlated, leaving\
+  \ residual idle), AND an agent-step-aware admission/interleaving policy reclaims\
+  \ a non-trivial fraction of that residual idle at matched per-agent latency \u2014\
+  \ beating REAL continuous batching (vLLM-style), not a serial strawman."
+- admission agent agents aggregate alternate aware batching beating because bubbles
+  bursts bursty continuous correlated decode does during external fraction fully gpu
+  idle interleaving latency leaving llm long loss matched measurable multi non not
+  per policy real reclaims recover represent residual serial serving short step strawman
+  style throughput tool trivial vanilla vllm wait waits where
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T11:29:28Z'

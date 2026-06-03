@@ -1,0 +1,68 @@
+verdict_id: VERDICT-0036
+claim_id: CLAIM-0038
+project_id: PROJ-0009
+date: '2026-06-03'
+experiment_ids:
+- EXP-0035
+experiment_paths:
+- experiments/2026-06-03/EXP-0035
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- "RELABELING (3rd instance of this failure mode after CLAIM-0015/0037): schema-overlap\
+  \ fails the anti-relabeling test \u2014 vs generic difficulty FAILS in ALL 12 cells\
+  \ (delta CI entirely <0"
+- difficulty AUC 0.59-0.69 beats schema 0.48-0.56) AND adds NOTHING beyond agent self-logprob
+  (delta-AUC <=0 in 11/12, schema HURTS in 7/12)
+- schema-overlap is at/below chance for K>=6 (AUC ~0.50)
+- oracle gap ~0.2 AUC -> lexical schema geometry is a lossy readout of latent confusability
+- agent self-logprob already integrates confusability+difficulty -> strictly dominates
+  a noisy single-factor schema proxy
+- tool RETRIEVAL (ToolLLM/Gorilla/ToolBench) is published
+- tool-selection-error is not novel
+- the intended novelty (pre-call schema-geometry as error predictor adding beyond
+  self-logprob) does not hold
+- '(2 greens are GREEN-ON-THE-KILL: the negative is methodologically sound + anti-circular,
+  NOT green on the claim)'
+required_evidence:
+- "None \u2014 relabeling, dominated by both generic difficulty and the agent's own\
+  \ logprob. (Env caveat: lexical not neural embedding"
+- 'but the load-bearing kill is ''adds beyond self-logprob'' which a better schema
+  feature is unlikely to flip since logprob already integrates everything. L1 falsification
+  target if ever revisited: schema-overlap will NOT add beyond a calibrated agent''s
+  logprob.)'
+map_delta_proposals:
+- "CLAIM-0038 -> KILL (DEAD-0007, relabeling). 3RD relabeling-vs-own-signal death\
+  \ (CLAIM-0015 quant-router, CLAIM-0037 failure-attribution, CLAIM-0038 tool-confusability)\
+  \ \u2014 establishes a THIRD ANTI-PATTERN: 'a cheap external signal predicting an\
+  \ outcome the model's own logprob/confidence already encodes' \u2014 screen future\
+  \ claims against it (must add BEYOND self-logprob). PROJ-0009 converged. Anti-relabeling\
+  \ screen WORKED, caught cheaply at L0. No false green"
+baseline_requirements:
+- Generic prompt-difficulty (beats schema all 12 cells)
+- Agent tool-choice self-logprob (dominates
+- schema adds nothing)
+- random@matched-flag
+- oracle latent-confusability (upper bound, gap ~0.2)
+- ToolLLM/Gorilla/ToolBench (tool retrieval, prior art)
+committee_run_dir: experiments/2026-06-03/EXP-0035/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T11:32:48Z'
