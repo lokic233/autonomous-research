@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HELD (structural core). Realistic operating point T=0.8 moderate
+  density: connected-components innocent-removal=0.724+-0.003 (72% of removed docs
+  are NOT near-dups of any retained doc, deleted purely via transitive chaining).
+  Non-transitive SemDeDup arm=0.000 and complete-linkage=0.000 -> mitigation ELIMINATES
+  it (proves it''s the transitive-closure step, not similarity). PERSISTS & LARGER
+  with EXACT Jaccard edges (0.724 exact vs 0.323 MinHash) -> NOT an LSH-FP artifact.
+  Grows with density (0.36 low -> 0.94 extreme), large even at low density. Honest
+  boundary: collapses to ~0 at T=0.9 when drift-chains break (graph clique-like);
+  real-corpus chain prevalence at T~0.8 is the L1 question. HELD.'
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0061/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T22:49:47Z'
 prompt_version: ''

@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0024
 claim_id: CLAIM-0054
 exp_id: EXP-0061
-status: open
+status: done
 summary: 'L0: connected-components near-dedup transitively removes non-dup docs. Build
   GT chain/clique/singleton geometry; union-find CC keep-one-rep; measure innocently-chained-removal
   fraction (sim-to-rep<T); MITIGATION ARM = SemDeDup non-transitive + complete-linkage
@@ -16,8 +16,8 @@ summary: 'L0: connected-components near-dedup transitively removes non-dup docs.
   loop'
 evidence_delta: ''
 opened_at: '2026-06-03T22:38:25Z'
-updated_at: '2026-06-03T22:38:25Z'
-closed_at: ''
+updated_at: '2026-06-03T22:49:47Z'
+closed_at: '2026-06-03T22:49:47Z'
 history:
 - ts: '2026-06-03T22:38:25Z'
   event: open
@@ -29,3 +29,7 @@ history:
     = not LSH-FP); GUARD report the REALISTIC-DENSITY operating point; anti-circular
     (GT never read by pipeline); honest-neg if ~0 at realistic density; PERSISTENT-SEEDER
     loop'
+- ts: '2026-06-03T22:49:47Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0059 completed EXP EXP-0061 (support)
