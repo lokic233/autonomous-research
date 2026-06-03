@@ -1,0 +1,69 @@
+verdict_id: VERDICT-0035
+claim_id: CLAIM-0037
+project_id: PROJ-0008
+date: '2026-06-03'
+experiment_ids:
+- EXP-0033
+- EXP-0034
+experiment_paths:
+- experiments/2026-06-03/EXP-0033
+- experiments/2026-06-03/EXP-0034
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "RELABELING: online stepwise agent-failure detection is PUBLISHED \u2014 Mavi et\
+  \ al. 2511.07364 'Stepwise Confidence Estimation for Failure Detection' does online\
+  \ stepwise failure detection on multi-step agent trajectories at AUC~0.9 (stepwise\
+  \ beats holistic +15% rel)"
+- Vasudev 2602.03338 LLM-critic failure prediction AUROC 0.94
+- "AgentBoard progress-rate + PRMs (Lightman 2023) occupy adjacent online-progression\
+  \ space \u2014 live-verified"
+- The cheap-L0 follow-up (EXP-0034) showed the monitor beats self-confidence ONLY
+  when conf AUROC <~0.72 (naive verbalized regime)
+- at the online-stepwise-self-eval calibration the prior art already achieves (~0.9),
+  the claim's OWN model says the monitor LOSES
+- Lead-time novelty unsupported even at L0 (only 42% of failures flagged >=1 step
+  early, < pre-registered 0.5 bar)
+- The one robust positive (+0.095 vs static difficulty) is the LEAST-novel half (implicit
+  in any PRM/progress-rate work)
+required_evidence:
+- "None \u2014 strong claim falsified (does not beat self-confidence at realistic\
+  \ online-stepwise calibration), weak form is relabeling of published online stepwise\
+  \ failure detection, lead-time unsupported. No L1 (the cheap L0 follow-up correctly\
+  \ AVOIDED a wasted GPU pass)"
+map_delta_proposals:
+- 'CLAIM-0037 -> RED (two-pass closure: L0 EXP-0033 weaken + cheap-L0 follow-up EXP-0034
+  prior-art kill). Strong claim FALSIFIED (ties/loses self-confidence)'
+- "weak form = RELABELING of published online stepwise failure detection (Mavi 2511.07364).\
+  \ PROJ-0008 converged. PROCESS WIN: a cheap 7.9s L0 follow-up (sigma_conf sweep\
+  \ + prior-art) avoided a full GPU L1 on an unwinnable claim \u2014 cost-aware experiment\
+  \ gating. Anti-pattern screening also WORKED (cleared the relabeling-vs-difficulty\
+  \ test that killed CLAIM-0015"
+- died instead on relabeling-vs-online-stepwise-detection). No false green
+baseline_requirements:
+- "Mavi 2511.07364 stepwise confidence failure detection (AUC~0.9) \u2014 direct collision"
+- Vasudev 2602.03338 LLM-critic failure prediction (AUROC 0.94)
+- AgentBoard progress-rate (Ma NeurIPS24)
+- PRM/Lets-Verify (Lightman 2023)
+- agent self-confidence + generic difficulty (the L0 baselines)
+committee_run_dir: experiments/2026-06-03/EXP-0034/committee2
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T10:18:48Z'
