@@ -1,0 +1,32 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: green, evaluation_prosecutor: green, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS: [
+  "Residual_idle = 0.000000 across ALL 288 configs — CB is provably work-conserving in this abstraction; the central hypothesis (CB leaves fillable agent-step-bubble idle) is empirically refuted by the claim's own experiment.",
+  "0/288 configs show a non-trivial step-aware throughput win at matched p99; the 7/288 trivial wins (<1%) are statistically indistinguishable from the uncorrected multiple-comparison false-positive rate (7/288 ≈ 2.4% vs 5% nominal).",
+  "Correlation goes the WRONG direction: ceiling RISES with rho (0.472→0.489) because synchronized cohort returns bunch ready work together — refuting the aligned-bubble premise that motivated the claim.",
+  "The mechanism (reclaim tool-wait idle via agent-aware scheduling) collides with ≥2 independent prior sources for the incumbent (Orca OSDI'22, vLLM SOSP'23) and with dedicated tool-wait-specific work (INFERCEPT ICML'24, Parrot OSDI'24)."
+]
+REQUIRED_EVIDENCE: []
+MANDATORY_BASELINES: [
+  "Continuous Batching / Orca (OSDI'22) — used correctly as the real control, not a strawman",
+  "vLLM / PagedAttention (SOSP'23) — second independent source for the work-conserving incumbent"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0039", change: "status -> DEAD-0008; add to dead-scheduling cluster with CLAIM-0004/0006/0012; record anti-pattern: 'continuous-batching-captures-it' (slot-occupancy variant); flag L1 KV-admission-under-correlated-bursts as a SEPARATE potential claim (different bottleneck, different mechanism), not a continuation of CLAIM-0039"}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+
+All five reviewers converge on the same substantive conclusion: CLAIM-0039 is dead as a slot-occupancy claim. The two RED votes (novelty_killer, product_realist) and three GREEN votes (systems_reviewer, evaluation_prosecutor, theory_skeptic) are not in tension — the REDs confirm the claim has no novelty and no product value, while the GREENs confirm the methodology that produced the kill is sound. There is no unrebutted RED opposing the verdict; every RED reinforces it.
+
+**Methodology integrity.** The researcher caught and fixed a real policy-dependent-RNG bug (v1→v2), verified the fix (CB==stepaware byte-identical when M<B), pre-registered the kill branch as a valid outcome, and reported honest paired bootstrap CIs across 288 configs × 5 seeds. The evaluation_prosecutor confirms the strongest applicable baseline was used correctly and the matched-p99 gate properly penalizes SJF tail-latency sacrifice. The theory_skeptic notes the result is algebraically mandated by the L0 abstraction (work-conserving greedy filler in a 1-token/slot/step model cannot leave fillable idle below the ready-work ceiling by construction) — this is not a flaw but a confirmation: the claim's hypothesis fails even in the model most favorable to it.
+
+**Prior-art adequacy.** The novelty_killer cites four relevant works from two independent research groups across three venues (Orca OSDI'22, vLLM SOSP'23, INFERCEPT ICML'24, Parrot OSDI'24), satisfying the ≥2-independent-source collision bar. Live web retrieval was permission-blocked, but the canonical citations are grounded in the packet and within knowledge cutoff — the collision is structural (iteration-level scheduling IS the mechanism), not dependent on a particular URL resolving. The "FRESH axis" framing (agent-step-bubble residual beyond CB) is naming, not mechanism: INFERCEPT already targets GPU/KV reclamation during tool-call interceptions in agentic serving, directly occupying the axis the claim called untouched.
+
+**The kill mechanism.** CB hits the ready-work ceiling exactly (residual_idle=0) because it greedily fills every free slot with any ready burst every step — it cannot leave fillable idle by construction. The only idle is structural (agents simultaneously off-GPU in tool-wait → #ready < B), and no scheduler can decode work that isn't ready. Step-awareness (SJF on remaining burst) is throughput-equivalent to FCFS when the server is work-conserving and burst length is independent of arrival order; the +0.32% mean delta is noise, and the 66/288 "wins" are the textbook SJF→tail-latency tradeoff (median 2.06× worse p99).
+
+**L1 pointer is a DIFFERENT claim.** The researcher correctly flags that KV-cache admission under correlated bursts on real vLLM/SGLang is the plausible residual — but this is a KV-bound bottleneck, not a slot-occupancy one, and would need its own claim, hypothesis, and prior-art screen (LMCache, PagedAttention eviction policies, etc.). It should not be filed as CLAIM-0039 L1 but as a new claim if pursued.
+
+**Verdict.** KILL. CLAIM-0039 joins the dead scheduling cluster (CLAIM-0004/0006/0012) under the anti-pattern "continuous-batching-captures-it." The negative is clean, methodologically sound, theoretically grounded, and consistent with ≥4 independent prior works. No reviewer presents evidence that the claim could survive in any reformulation that remains a slot-occupancy story.
+```
+PROMPT_VERSION: v001

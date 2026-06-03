@@ -444,3 +444,1648 @@ hook: PostToolUse Completed
 hook: PostToolUse Completed
 hook: PostToolUse Completed
 2026-06-03T11:34:38.227964Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'pkill -P $(ps -o ppid= -p $$) find || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 25859ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'ps -ef | grep "find /Users/dengcchi" | grep -v grep' in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The local rules require retrievable prior-art citations and a separate check for implementation overlap. I’m searching for shipping systems that already fill cross-request decode slots via iteration-level/continuous batching, plus whether any of the named stacks have agent-specific step-aware scheduling.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/opt/homebrew/bin/gh
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'command -v curl || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/usr/bin/curl
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'gh search code "continuous batching" --repo vllm-project/vllm --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "continuous batching" --repo sgl-project/sglang --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "iteration-level" ORCA LLM serving --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "in-flight batching" --repo NVIDIA/TensorRT-LLM --limit 10' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 955ms:
+vllm-project/vllm:docs/README.md: - Continuous batching of incoming requests, chunked prefill, prefix caching
+vllm-project/vllm:docs/README.md: - [How continuous batching enables 23x throughput in LLM inference while reducing p50 latency](https://www.anyscale.com/blog/continuous-batching-llm-inference) by Cade Daniel et al.
+vllm-project/vllm:docs/serving/offline_inference.md: - Continuous batching keeps vLLM replicas saturated and maximizes GPU utilization.
+vllm-project/vllm:examples/ray_serving/batch_llm_inference.py: * Continuous batching that keeps vLLM replicas saturated and maximizes GPU
+vllm-project/vllm:vllm/model_executor/models/plamo2.py: # kernels to operate in continuous batching and in chunked prefill
+vllm-project/vllm:vllm/model_executor/layers/mamba/short_conv.py: # short_conv triton kernels to operate in continuous batching and in
+vllm-project/vllm:vllm/model_executor/layers/mamba/mamba_mixer2.py: # kernels to operate in continuous batching and in chunked prefill
+vllm-project/vllm:vllm/model_executor/layers/mamba/ops/causal_conv1d.py: def _causal_conv1d_fwd_kernel(  # continuous batching
+vllm-project/vllm:vllm/model_executor/layers/mamba/ops/causal_conv1d.py: """support varlen + continuous batching when x is 2D tensor
+vllm-project/vllm:README.md: - Continuous batching of incoming requests, chunked prefill, prefix caching
+vllm-project/vllm:tests/kernels/test_fused_recurrent_packed_decode.py: # Continuous batching indices (include PAD_SLOT_ID=-1 cases).
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1002ms:
+sgl-project/sglang:docs/index.rst: - **Fast Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
+sgl-project/sglang:docs/platforms/tpu.md: | High-Throughput Continuous Batching | ✅ | Dynamic request batching for maximum TPU utilization |
+sgl-project/sglang:sgl-kernel/csrc/mamba/causal_conv1d.h: // For the continuous batching case. Makes it so that the mamba state for
+sgl-project/sglang:docs/advanced_features/sglang_for_rl.md: - **Async non-blocking efficiency**: SGLang’s native async server/router architecture (HTTPS/gRPC) manages concurrency automatically. This guarantees maximum GPU saturation and effective continuous batching without requiring complex, manual implementation by engineers.
+sgl-project/sglang:python/sglang/srt/models/falcon_h1.py: # proper continuous batching computation including
+sgl-project/sglang:python/sglang/srt/layers/attention/mamba/ops/ssd_state_passing.py: #   are used for continuous batching. In which case we
+sgl-project/sglang:python/sglang/srt/layers/attention/mamba/ops/ssd_state_passing.py: ), "seq_idx must be provided for continuous batching"
+sgl-project/sglang:python/sglang/srt/models/qwen3_next.py: # proper continuous batching computation including
+sgl-project/sglang:docs_new/docs/hardware-platforms/tpu.mdx: <td style={{padding: "9px 12px", fontWeight: 500, backgroundColor: "rgba(255,255,255,0.02)"}}>High-Throughput Continuous Batching</td>
+sgl-project/sglang:docs_new/cookbook/autoregressive/FlashLabs/Chroma1.0.mdx: 3. **Batching Limitations**: The current implementation supports a batch size of 1, meaning SGLang's advanced continuous batching capabilities are not yet fully applicable.
+sgl-project/sglang:python/sglang/srt/managers/scheduler.py: # The running decoding batch for continuous batching
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 959ms:
+NVIDIA/TensorRT-LLM:docs/source/overview.md: - **[In-Flight Batching & Paged Attention](./features/paged-attention-ifb-scheduler.md)**: In-flight batching eliminates wait times by dynamically managing request execution, processing context and generation phases together for maximum GPU utilization and reduced latency.
+NVIDIA/TensorRT-LLM:examples/models/core/glm-4-9b/README.md: - [In-flight batching](#in-flight-batching)
+NVIDIA/TensorRT-LLM:examples/models/core/glm-4-9b/README.md: * IFB: In-flight Batching (see introduction below)
+NVIDIA/TensorRT-LLM:AGENTS.md: - **Scheduling pipeline**: Scheduler → BatchManager (in-flight batching) → KV Cache Manager
+NVIDIA/TensorRT-LLM:docs/source/features/multi-modality.md: * **In-Flight Batching**: Batches multimodal requests within the GPU executor to improve GPU utilization and throughput.
+NVIDIA/TensorRT-LLM:cpp/include/tensorrt_llm/runtime/iGptDecoderBatched.h: //! GPT decoder class with support for in-flight batching
+NVIDIA/TensorRT-LLM:examples/summarize.py: "The given engine does not support in-flight batching, fallback to python session"
+NVIDIA/TensorRT-LLM:docs/source/release-notes.md: - Supported in-flight batching for CogVLM models.
+NVIDIA/TensorRT-LLM:docs/source/release-notes.md: - Added in-flight batching support for GLM 10B model.
+NVIDIA/TensorRT-LLM:docs/source/features/auto_deploy/auto-deploy.md: AutoDeploy provides an alternative method for deploying models using the LLM API without requiring code changes to the source model (for example, Hugging Face Transformers models) or manual implementation of inference optimizations, such as KV-caches, multi-GPU parallelism, or quantization. Instead, AutoDeploy extracts a computation graph from the source model and applies inference optimizations through a series of automated graph transformations. AutoDeploy generates an inference-optimized graph that can be directly executed in the TensorRT LLM PyTorch runtime and leverages various runtime optimizations including in-flight batching, paging, and overlap scheduling.
+NVIDIA/TensorRT-LLM:tensorrt_llm/runtime/generation.py: # With in-flight batching and while loop we'll free some sequences, when they are done
+NVIDIA/TensorRT-LLM:cpp/tensorrt_llm/executor/executorImpl.cpp: "Static batching type is deprecated. Please use in-flight batching with "
+
+ succeeded in 3277ms:
+izwi-ai/izwi:docs/basics/FOUNDATIONAL_LLM_SERVING_PAPERS.md: Before Orca, LLM serving systems processed requests in **static batches**: you'd wait until you had a group of requests, send them all through the model together, and wait until every single one finished before starting the next batch.
+izwi-ai/izwi:docs/basics/FOUNDATIONAL_LLM_SERVING_PAPERS.md: ### The Core Innovation: Iteration-Level Scheduling (Continuous Batching)
+harvard-edge/cs249r_book:mlsysim/mlsysim/engine/solvers/serving.py: Analyzes production LLM serving with Continuous Batching and PagedAttention.
+harvard-edge/cs249r_book:mlsysim/mlsysim/engine/solvers/serving.py: Serving with PagedAttention."
+harvard-edge/cs249r_book:mlsysim/mlsysim/engine/solvers/serving.py: 2. Yu et al. (2022), "ORCA: A Distributed Serving System for
+v9ai/ai-engineer-roadmap:content/llm-serving.md: Traditional ML serving uses **static batching**: collect N requests, process them as a batch, return all results. This works terribly for LLM inference because requests have wildly different output lengths. In a static batch, all requests must wait for the longest one to finish, wasting GPU cycles on padding.
+v9ai/ai-engineer-roadmap:content/llm-serving.md: The Orca paper (Yu et al., 2022, "Orca: A Distributed Serving System for Transformer-Based Generative Models") introduced **continuous batching** (also called **iteration-level scheduling**). The key insight: instead of batching at the request level, batch at the iteration (token) level.
+jaipack17/write-ups:LLM Serving/Overview of vLLM, Orca, SGLang, vAttention.md: KVCache grows and shrinks dynamically, and for a large number of requests, it needs to be managed properly. LLM inference is **memory bound**.
+jaipack17/write-ups:LLM Serving/Overview of vLLM, Orca, SGLang, vAttention.md: ## Paper-1: Orca Serving System (2022)
+jaipack17/write-ups:LLM Serving/Overview of vLLM, Orca, SGLang, vAttention.md: Orca is a distributed serving system that helps scale and serve LLMs at high speed. It introduces **iteration-level scheduling** and **selective batching** which are essential improvements in the way requests are handled before models process them.
+tom-jerr/tom-jerr.github.io:docs/paperreadings/llm/serving/Orca.md: - LLM
+tom-jerr/tom-jerr.github.io:docs/paperreadings/llm/serving/Orca.md: 在进行 iteration-level 调度时对操作进行 batching 操作时有困难
+handbook-academy/engineering-handbook:content/hld/part-9-ai-ml-system-design/00-llm-serving-architecture.md: ### Why naive serving fails
+handbook-academy/engineering-handbook:content/hld/part-9-ai-ml-system-design/00-llm-serving-architecture.md: ### Continuous batching (iteration-level scheduling)
+Czyszka/nanoserve-mini:docs/learning/paper-notes/efficient-llm-serving-survey.md: - **Category:** survey / systems / LLM serving.
+Czyszka/nanoserve-mini:docs/learning/paper-notes/efficient-llm-serving-survey.md: - **Context:** Connects vLLM/PagedAttention, Orca-style iteration-level scheduling, FasterTransformer, TensorRT-LLM, TGI, FlexGen, FlexFlow-Serve, LightLLM, MLC-LLM, low-bit quantization, parallelism, KV cache management, scheduling, and kernel optimization.
+Czyszka/nanoserve-mini:docs/learning/paper-notes/efficient-llm-serving-survey.md: - **Correctness:** The assumptions fit `nanoserve-mini`: GPU-based serving, autoregressive decoding, variable prompt/output lengths, memory pressure from KV cache, and the latency-throughput trade-off. The survey is broad, so it should guide what to measure rather than settle any performance claim by itself.
+Czyszka/nanoserve-mini:docs/learning/paper-notes/efficient-llm-serving-survey.md: - **Contributions:** A taxonomy of algorithmic innovations and system optimizations for LLM serving; a comparison of representative open-source GPU serving systems; a benchmark-methodology discussion; and future directions for serving research.
+mental2008/awesome-papers:paper-list/systems-for-ml/llm.md: * Orca: A Distributed Serving System for Transformer-Based Generative Models ([OSDI 2022](../../reading-notes/conference/osdi-2022/)) \[[Personal Notes](../../reading-notes/conference/osdi-2022/orca.md)] \[[Paper](https://www.usenix.org/conference/osdi22/presentation/yu)]
+mental2008/awesome-papers:paper-list/systems-for-ml/llm.md: * Efficient Memory Management for Large Language Model Serving with PagedAttention ([SOSP 2023](../../reading-notes/conference/sosp-2023/)) \[[Paper](https://dl.acm.org/doi/10.1145/3600006.3613165)] \[[arXiv](https://browse.arxiv.org/abs/2309.06180)] \[[Code](https://github.com/vllm-project/vllm)] \[[Homepage](https://vllm.ai/)]
+architrk/continiousfunction:prompts/cf-twentythree-substantive-claim-review-llm-serving-20260507.txt: - `/tmp/cf-llm-serving-source-check/orca-2022.txt`, from https://www.usenix.org/system/files/osdi22-yu.pdf
+architrk/continiousfunction:prompts/cf-twentythree-substantive-claim-review-llm-serving-20260507.txt: - `/tmp/cf-llm-serving-source-check/pagedattention-2023.txt`, from https://arxiv.org/pdf/2309.06180v1
+architrk/continiousfunction:prompts/cf-twentythree-substantive-claim-review-llm-serving-20260507.txt: 1. Does Orca substantively support the scheduling part of the claim: generative transformer inference as multi-iteration autoregressive serving, each iteration generating one output token, request-level batching being too static, and the need for iteration-level scheduling plus selective batching?
+architrk/continiousfunction:prompts/cf-twentythree-substantive-claim-review-llm-serving-20260507.txt: 2. Does PagedAttention substantively support the memory/throughput part of the claim: high-throughput serving needing sufficiently large batches, KV cache memory being huge and dynamically growing/shrinking, fragmentation or duplication limiting batch size, and memory constraints limiting throughput?
+makr-code/ThemisDB:research/DB_NATIVE_LLM_SERVING_OPTIMIZATION_PAPER_DRAFT.md: Our method evaluates serving policy bundles rather than isolated toggles. Each bundle combines batching strategy, KV-page policy, and speculative configuration. We compare bundles under serving-only and mixed-load regimes.
+makr-code/ThemisDB:research/DB_NATIVE_LLM_SERVING_OPTIMIZATION_PAPER_DRAFT.md: 1. W. Kwon et al., "Efficient Memory Management for Large Language Model Serving with PagedAttention," SOSP 2023. URL: https://arxiv.org/abs/2309.06180
+makr-code/ThemisDB:research/DB_NATIVE_LLM_SERVING_OPTIMIZATION_PAPER_DRAFT.md: 2. G. Yu et al., "Orca: A Distributed Serving System for Transformer-Based Generative Models," OSDI 2022. URL: https://www.usenix.org/conference/osdi22/presentation/yu
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/index.rst | sed -n '1,140p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/README.md | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/docs/source/features/paged-attention-ifb-scheduler.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/text-generation-inference/main/README.md | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 229ms:
+SGLang Documentation
+====================
+
+.. raw:: html
+
+  <a class="github-button" href="https://github.com/sgl-project/sglang" data-size="large" data-show-count="true" aria-label="Star sgl-project/sglang on GitHub">Star</a>
+  <a class="github-button" href="https://github.com/sgl-project/sglang/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork sgl-project/sglang on GitHub">Fork</a>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <br></br>
+
+SGLang is a high-performance serving framework for large language models and multimodal models.
+It is designed to deliver low-latency and high-throughput inference across a wide range of setups, from a single GPU to large distributed clusters.
+Its core features include:
+
+- **Fast Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
+- **Broad Model Support**: Supports a wide range of language models (Llama, Qwen, DeepSeek, Kimi, GLM, GPT, Gemma, Mistral, etc.), embedding models (e5-mistral, gte, mcdse), reward models (Skywork), and diffusion models (WAN, Qwen-Image), with easy extensibility for adding new models. Compatible with most Hugging Face models and OpenAI APIs.
+- **Extensive Hardware Support**: Runs on NVIDIA GPUs (GB200/B300/H100/A100/Spark/5090), AMD GPUs (MI355/MI300), Intel Xeon CPUs, Google TPUs, Ascend NPUs, and more.
+- **Active Community**: SGLang is open-source and supported by a vibrant community with widespread industry adoption, powering over 400,000 GPUs worldwide.
+- **RL & Post-Training Backbone**: SGLang is a proven rollout backend used for training many frontier models, with native RL integrations and adoption by well-known post-training frameworks such as AReaL, Miles, slime, Tunix, verl and more.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Get Started
+
+   get_started/install.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Basic Usage
+
+   basic_usage/send_request.ipynb
+   basic_usage/openai_api.rst
+   basic_usage/ollama_api.md
+   basic_usage/offline_engine_api.ipynb
+   basic_usage/native_api.ipynb
+   basic_usage/sampling_params.md
+   basic_usage/popular_model_usage.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Advanced Features
+
+   advanced_features/server_arguments.md
+   advanced_features/object_storage.md
+   advanced_features/hyperparameter_tuning.md
+   advanced_features/attention_backend.md
+   advanced_features/speculative_decoding.ipynb
+   advanced_features/adaptive_speculative_decoding.md
+   advanced_features/structured_outputs.ipynb
+   advanced_features/structured_outputs_for_reasoning_models.ipynb
+   advanced_features/tool_parser.ipynb
+   advanced_features/separate_reasoning.ipynb
+   advanced_features/quantization.md
+   advanced_features/quantized_kv_cache.md
+   advanced_features/expert_parallelism.md
+   advanced_features/dp_dpa_smg_guide.md
+   advanced_features/lora.ipynb
+   advanced_features/pd_disaggregation.md
+   advanced_features/epd_disaggregation.md
+   advanced_features/pipeline_parallelism.md
+   advanced_features/hicache.rst
+   advanced_features/pd_multiplexing.md
+   advanced_features/vlm_query.ipynb
+   advanced_features/dp_for_multi_modal_encoder.md
+   advanced_features/cuda_graph_for_multi_modal_encoder.md
+   advanced_features/piecewise_cuda_graph.md
+   advanced_features/breakable_cuda_graph.md
+   advanced_features/sgl_model_gateway.md
+   advanced_features/deterministic_inference.md
+   advanced_features/observability.md
+   advanced_features/checkpoint_engine.md
+   advanced_features/sglang_for_rl.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Supported Models
+
+   supported_models/text_generation/index
+   supported_models/retrieval_ranking/index
+   supported_models/specialized/index
+   supported_models/extending/index
+
+.. toctree::
+   :maxdepth: 2
+   :caption: SGLang Diffusion
+
+   diffusion/index
+   diffusion/installation
+   diffusion/compatibility_matrix
+   diffusion/api/cli
+   diffusion/api/openai_api
+   diffusion/performance/index
+   diffusion/performance/ring_sp_performance
+   diffusion/performance/attention_backends
+   diffusion/performance/cache/index
+   diffusion/quantization
+   diffusion/contributing
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Hardware Platforms
+
+   platforms/amd_gpu.md
+   platforms/cpu_server.md
+   platforms/tpu.md
+   platforms/nvidia_jetson.md
+   platforms/ascend/ascend_npu_support.rst
+   platforms/xpu.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer Guide
+
+   developer_guide/contribution_guide.md
+   developer_guide/development_guide_using_docker.md
+   developer_guide/development_jit_kernel_guide.md
+   developer_guide/benchmark_and_profiling.md
+   developer_guide/bench_serving.md
+   developer_guide/evaluating_new_models.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: References
+
+   references/faq.md
+   references/environment_variables.md
+   references/production_metrics.md
+   references/production_request_trace.md
+   references/multi_node_deployment/multi_node_index.rst
+   references/custom_chat_template.md
+   references/frontend/frontend_index.rst
+   references/post_training_integration.md
+   references/release_lookup
+   references/learn_more.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Security Acknowledgement
+
+   security/acknowledgements.md
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 195ms:
+> [!CAUTION]
+> text-generation-inference is now in maintenance mode. Going forward, we will accept pull requests for minor bug fixes, documentation improvements and lightweight maintenance tasks.
+>
+> TGI has initiated the movement for optimized inference engines to rely on a `transformers` model architectures. This approach is now adopted by downstream inference engines, which we contribute to and recommend using going forward: [vllm](https://github.com/vllm-project/vllm), [SGLang](https://github.com/sgl-project/sglang), as well as local engines with inter-compatibility such as llama.cpp or MLX.
+
+<div align="center">
+
+<a href="https://www.youtube.com/watch?v=jlMAX2Oaht0">
+  <img width=560 alt="Making TGI deployment optimal" src="https://huggingface.co/datasets/Narsil/tgi_assets/resolve/main/thumbnail.png">
+</a>
+
+# Text Generation Inference
+
+<a href="https://github.com/huggingface/text-generation-inference">
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/huggingface/text-generation-inference?style=social">
+</a>
+<a href="https://huggingface.github.io/text-generation-inference">
+  <img alt="Swagger API documentation" src="https://img.shields.io/badge/API-Swagger-informational">
+</a>
+
+A Rust, Python and gRPC server for text generation inference. Used in production at [Hugging Face](https://huggingface.co)
+to power Hugging Chat, the Inference API and Inference Endpoints.
+
+</div>
+
+## Table of contents
+
+  - [Get Started](#get-started)
+    - [Docker](#docker)
+    - [API documentation](#api-documentation)
+    - [Using a private or gated model](#using-a-private-or-gated-model)
+    - [A note on Shared Memory (shm)](#a-note-on-shared-memory-shm)
+    - [Distributed Tracing](#distributed-tracing)
+    - [Architecture](#architecture)
+    - [Local install](#local-install)
+    - [Local install (Nix)](#local-install-nix)
+  - [Optimized architectures](#optimized-architectures)
+  - [Run locally](#run-locally)
+    - [Run](#run)
+    - [Quantization](#quantization)
+  - [Develop](#develop)
+  - [Testing](#testing)
+
+Text Generation Inference (TGI) is a toolkit for deploying and serving Large Language Models (LLMs). TGI enables high-performance text generation for the most popular open-source LLMs, including Llama, Falcon, StarCoder, BLOOM, GPT-NeoX, and [more](https://huggingface.co/docs/text-generation-inference/supported_models). TGI implements many features, such as:
+
+- Simple launcher to serve most popular LLMs
+- Production ready (distributed tracing with Open Telemetry, Prometheus metrics)
+- Tensor Parallelism for faster inference on multiple GPUs
+- Token streaming using Server-Sent Events (SSE)
+- Continuous batching of incoming requests for increased total throughput
+- [Messages API](https://huggingface.co/docs/text-generation-inference/en/messages_api) compatible with Open AI Chat Completion API
+- Optimized transformers code for inference using [Flash Attention](https://github.com/HazyResearch/flash-attention) and [Paged Attention](https://github.com/vllm-project/vllm) on the most popular architectures
+- Quantization with :
+  - [bitsandbytes](https://github.com/TimDettmers/bitsandbytes)
+  - [GPT-Q](https://arxiv.org/abs/2210.17323)
+  - [EETQ](https://github.com/NetEase-FuXi/EETQ)
+  - [AWQ](https://github.com/casper-hansen/AutoAWQ)
+  - [Marlin](https://github.com/IST-DASLab/marlin)
+  - [fp8](https://developer.nvidia.com/blog/nvidia-arm-and-intel-publish-fp8-specification-for-standardization-as-an-interchange-format-for-ai/)
+- [Safetensors](https://github.com/huggingface/safetensors) weight loading
+- Watermarking with [A Watermark for Large Language Models](https://arxiv.org/abs/2301.10226)
+- Logits warper (temperature scaling, top-p, top-k, repetition penalty, more details see [transformers.LogitsProcessor](https://huggingface.co/docs/transformers/internal/generation_utils#transformers.LogitsProcessor))
+- Stop sequences
+- Log probabilities
+- [Speculation](https://huggingface.co/docs/text-generation-inference/conceptual/speculation) ~2x latency
+- [Guidance/JSON](https://huggingface.co/docs/text-generation-inference/conceptual/guidance). Specify output format to speed up inference and make sure the output is valid according to some specs..
+- Custom Prompt Generation: Easily generate text by providing custom prompts to guide the model's output
+- Fine-tuning Support: Utilize fine-tuned models for specific tasks to achieve higher accuracy and performance
+
+### Hardware support
+
+- [Nvidia](https://github.com/huggingface/text-generation-inference/pkgs/container/text-generation-inference)
+- [AMD](https://github.com/huggingface/text-generation-inference/pkgs/container/text-generation-inference) (-rocm)
+- [Inferentia](https://github.com/huggingface/optimum-neuron/tree/main/text-generation-inference)
+- [Intel GPU](https://github.com/huggingface/text-generation-inference/pull/1475)
+- [Gaudi](https://github.com/huggingface/tgi-gaudi)
+- [Google TPU](https://huggingface.co/docs/optimum-tpu/howto/serving)
+
+
+## Get Started
+
+### Docker
+
+For a detailed starting guide, please see the [Quick Tour](https://huggingface.co/docs/text-generation-inference/quicktour). The easiest way of getting started is using the official Docker container:
+
+```shell
+model=HuggingFaceH4/zephyr-7b-beta
+# share a volume with the Docker container to avoid downloading weights every run
+volume=$PWD/data
+
+docker run --gpus all --shm-size 1g -p 8080:80 -v $volume:/data \
+    ghcr.io/huggingface/text-generation-inference:3.3.5 --model-id $model
+```
+
+And then you can make requests like
+
+```bash
+curl 127.0.0.1:8080/generate_stream \
+    -X POST \
+    -d '{"inputs":"What is Deep Learning?","parameters":{"max_new_tokens":20}}' \
+    -H 'Content-Type: application/json'
+```
+
+You can also use [TGI's Messages API](https://huggingface.co/docs/text-generation-inference/en/messages_api) to obtain Open AI Chat Completion API compatible responses.
+
+```bash
+curl localhost:8080/v1/chat/completions \
+    -X POST \
+    -d '{
+  "model": "tgi",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What is deep learning?"
+    }
+  ],
+  "stream": true,
+  "max_tokens": 20
+}' \
+    -H 'Content-Type: application/json'
+```
+
+**Note:** To use NVIDIA GPUs, you need to install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html). We also recommend using NVIDIA drivers with CUDA version 12.2 or higher. For running the Docker container on a machine with no GPUs or CUDA support, it is enough to remove the `--gpus all` flag and add `--disable-custom-kernels`, please note CPU is not the intended platform for this project, so performance might be subpar.
+
+**Note:** TGI supports AMD Instinct MI210 and MI250 GPUs. Details can be found in the [Supported Hardware documentation](https://huggingface.co/docs/text-generation-inference/installation_amd#using-tgi-with-amd-gpus). To use AMD GPUs, please use `docker run --device /dev/kfd --device /dev/dri --shm-size 1g -p 8080:80 -v $volume:/data ghcr.io/huggingface/text-generation-inference:3.3.5-rocm --model-id $model` instead of the command above.
+
+To see all options to serve your models (in the [code](https://github.com/huggingface/text-generation-inference/blob/main/launcher/src/main.rs) or in the cli):
+```
+text-generation-launcher --help
+```
+
+### API documentation
+
+You can consult the OpenAPI documentation of the `text-generation-inference` REST API using the `/docs` route.
+The Swagger UI is also available at: [https://huggingface.github.io/text-generation-inference](https://huggingface.github.io/text-generation-inference).
+
+### Using a private or gated model
+
+You have the option to utilize the `HF_TOKEN` environment variable for configuring the token employed by
+`text-generation-inference`. This allows you to gain access to protected resources.
+
+For example, if you want to serve the gated Llama V2 model variants:
+
+1. Go to https://huggingface.co/settings/tokens
+2. Copy your CLI READ token
+3. Export `HF_TOKEN=<your CLI READ token>`
+
+or with Docker:
+
+```shell
+model=meta-llama/Meta-Llama-3.1-8B-Instruct
+volume=$PWD/data # share a volume with the Docker container to avoid downloading weights every run
+token=<your cli READ token>
+
+docker run --gpus all --shm-size 1g -e HF_TOKEN=$token -p 8080:80 -v $volume:/data \
+    ghcr.io/huggingface/text-generation-inference:3.3.5 --model-id $model
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 306ms:
+<!-- markdownlint-disable MD001 MD041 -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-dark.png">
+    <img alt="vLLM" src="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png" width=55%>
+  </picture>
+</p>
+
+<h3 align="center">
+Easy, fast, and cheap LLM serving for everyone
+</h3>
+
+<p align="center">
+| <a href="https://docs.vllm.ai"><b>Documentation</b></a> | <a href="https://blog.vllm.ai/"><b>Blog</b></a> | <a href="https://arxiv.org/abs/2309.06180"><b>Paper</b></a> | <a href="https://x.com/vllm_project"><b>Twitter/X</b></a> | <a href="https://discuss.vllm.ai"><b>User Forum</b></a> | <a href="https://slack.vllm.ai"><b>Developer Slack</b></a> |
+</p>
+
+🔥 We have built a vLLM website to help you get started with vLLM. Please visit [vllm.ai](https://vllm.ai) to learn more.
+For events, please visit [vllm.ai/events](https://vllm.ai/events) to join us.
+
+---
+
+## About
+
+vLLM is a fast and easy-to-use library for LLM inference and serving.
+
+Originally developed in the [Sky Computing Lab](https://sky.cs.berkeley.edu) at UC Berkeley, vLLM has grown into one of the most active open-source AI projects built and maintained by a diverse community of many dozens of academic institutions and companies from over 2000 contributors.
+
+vLLM is fast with:
+
+- State-of-the-art serving throughput
+- Efficient management of attention key and value memory with [**PagedAttention**](https://blog.vllm.ai/2023/06/20/vllm.html)
+- Continuous batching of incoming requests, chunked prefill, prefix caching
+- Fast and flexible model execution with piecewise and full CUDA/HIP graphs
+- Quantization: FP8, MXFP8/MXFP4, NVFP4, INT8, INT4, GPTQ/AWQ, GGUF, compressed-tensors, ModelOpt, TorchAO, and [more](https://docs.vllm.ai/en/latest/features/quantization/index.html)
+- Optimized attention kernels including FlashAttention, FlashInfer, TRTLLM-GEN, FlashMLA, and Triton
+- Optimized GEMM/MoE kernels for various precisions using CUTLASS, TRTLLM-GEN, CuTeDSL
+- Speculative decoding including n-gram, suffix, EAGLE, DFlash
+- Automatic kernel generation and graph-level transformations using torch.compile
+- Disaggregated prefill, decode, and encode
+
+vLLM is flexible and easy to use with:
+
+- Seamless integration with popular Hugging Face models
+- High-throughput serving with various decoding algorithms, including *parallel sampling*, *beam search*, and more
+- Tensor, pipeline, data, expert, and context parallelism for distributed inference
+- Streaming outputs
+- Generation of structured outputs using xgrammar or guidance
+- Tool calling and reasoning parsers
+- OpenAI-compatible API server, plus Anthropic Messages API and gRPC support
+- Efficient multi-LoRA support for dense and MoE layers
+- Support for NVIDIA GPUs, AMD GPUs, and x86/ARM/PowerPC CPUs. Additionally, diverse hardware plugins such as Google TPUs, Intel Gaudi, IBM Spyre, Huawei Ascend, Rebellions NPU, Apple Silicon, MetaX GPU, and more.
+
+vLLM seamlessly supports 200+ model architectures on Hugging Face, including:
+
+- Decoder-only LLMs (e.g., Llama, Qwen, Gemma)
+- Mixture-of-Expert LLMs (e.g., Mixtral, DeepSeek-V3, Qwen-MoE, GPT-OSS)
+- Hybrid attention and state-space models (e.g., Mamba, Qwen3.5)
+- Multi-modal models (e.g., LLaVA, Qwen-VL, Pixtral)
+- Embedding and retrieval models (e.g., E5-Mistral, GTE, ColBERT)
+- Reward and classification models (e.g., Qwen-Math)
+
+Find the full list of supported models [here](https://docs.vllm.ai/en/latest/models/supported_models.html).
+
+## Getting Started
+
+Install vLLM with [`uv`](https://docs.astral.sh/uv/) (recommended) or `pip`:
+
+```bash
+uv pip install vllm
+```
+
+Or [build from source](https://docs.vllm.ai/en/latest/getting_started/installation/gpu/index.html#build-wheel-from-source) for development.
+
+Visit our [documentation](https://docs.vllm.ai/en/latest/) to learn more.
+
+- [Installation](https://docs.vllm.ai/en/latest/getting_started/installation.html)
+- [Quickstart](https://docs.vllm.ai/en/latest/getting_started/quickstart.html)
+- [List of Supported Models](https://docs.vllm.ai/en/latest/models/supported_models.html)
+
+## Contributing
+
+We welcome and value any contributions and collaborations.
+Please check out [Contributing to vLLM](https://docs.vllm.ai/en/latest/contributing/index.html) for how to get involved.
+
+## Citation
+
+If you use vLLM for your research, please cite our [paper](https://arxiv.org/abs/2309.06180):
+
+```bibtex
+@inproceedings{kwon2023efficient,
+  title={Efficient Memory Management for Large Language Model Serving with PagedAttention},
+  author={Woosuk Kwon and Zhuohan Li and Siyuan Zhuang and Ying Sheng and Lianmin Zheng and Cody Hao Yu and Joseph E. Gonzalez and Hao Zhang and Ion Stoica},
+  booktitle={Proceedings of the ACM SIGOPS 29th Symposium on Operating Systems Principles},
+  year={2023}
+}
+```
+
+## Contact Us
+
+<!-- --8<-- [start:contact-us] -->
+- For technical questions and feature requests, please use GitHub [Issues](https://github.com/vllm-project/vllm/issues)
+- For discussing with fellow users, please use the [vLLM Forum](https://discuss.vllm.ai)
+- For coordinating contributions and development, please use [Slack](https://slack.vllm.ai)
+- For security disclosures, please use GitHub's [Security Advisories](https://github.com/vllm-project/vllm/security/advisories) feature
+- For collaborations and partnerships, please contact us at [collaboration@vllm.ai](mailto:collaboration@vllm.ai)
+<!-- --8<-- [end:contact-us] -->
+
+## Media Kit
+
+- If you wish to use vLLM's logo, please refer to [our media kit repo](https://github.com/vllm-project/media-kit)
+
+ succeeded in 235ms:
+# Paged Attention, IFB, and Request Scheduling
+
+## In-flight Batching
+
+TensorRT LLM supports in-flight batching of requests (also known as continuous
+batching or iteration-level batching) for higher serving throughput. With this feature,
+sequences in the context phase can be processed together with sequences in the
+generation phase. The purpose of that technique is to better interleave
+requests to reduce latency as well as make better use of the GPUs.
+For efficiency reasons (1), the support for inflight batching ***requires the
+input tensors to be packed (no padding)***.
+
+***In the current implementation, the sequences that are going through the
+context phase must come before the sequences in the generation phase in the input
+tensor. For example, for sequences `S0`, `S1` and `S2`, if `S0` and `S2` are in
+context phase (and `S1` in generation), tokens from `S0` and `S2` must appear
+before the tokens of `S1` in the input tensor***. The constraint may or may not
+be relaxed in a future version.
+
+_(1) Padding sequences in the generation phase that contain a single token to
+the length of the maximum input sequence is inefficient use of resources.
+
+### `max_batch_size`, `max_seq_len` and `max_num_tokens`
+
+<p align="center">
+    <img src="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/media/max_bs_toks_len.svg?raw=true" alt="Explain `max_batch_size`, `max_seq_len` and `max_num_tokens`" width="30%" height="auto">
+</p>
+
+#### `max_batch_size`
+
+`max_batch_size` defines the maximum number of requests that the engine can handle.​
+
+It controls the maximum number of requests that can be scheduled at runtime.
+
+Set a sufficiently high  `max_batch_size` when building the engine so that it does not become the bottleneck of the throughput, and use runtime `max_batch_size` to tune throughput or latency without rebuilding the engine.
+
+#### `max_seq_len`
+
+`max_seq_len` defines the maximum sequence length of a single request.
+
+Starting from TensorRT LLM v0.11, when `--remove_input_padding` and `--context_fmha` are enabled, `max_seq_len` can replace `max_input_len` and `max_output_len`, and is set to `max_position_embeddings` by default.
+
+Use default `max_seq_len` (which is `max_position_embeddings`), no need to tune it unless you are very sure what max sequence lengths would be on your workloads. If GPU memory is so limited that it cannot support even one request reaching `max_seq_len`, you need to reduce it.
+
+#### `max_num_tokens`
+
+`max_num_tokens` defines the maximum number of batched input tokens after padding is removed in each batch.​
+
+`max_num_tokens` is set to 8192 by default starting from v0.11. It is recommended to tune --max_num_tokens for optimal performance.
+
+The maximum number of tokens will not take effect when input padding is not removed. When input padding is removed, the tokens from different sequences are
+packed together and the maximum number of the tokens can be set to a different
+(lower) value, which by default is 8192.
+
+There are two aspects that must be considered. Firstly, some input sequences
+will be shorter than the maximum input length. Secondly, when in-flight
+sequence batching is enabled, requests in context phase will be executed with
+requests in generation phase. Those latter requests produce a lot fewer tokens
+than `max_input_len` (at most, `beam_width` tokens).
+
+max_num_tokens affects workspace buffer sizes to be allocated as well as one of the matrix multiplication dimensions. Hence, using a more realistic value for `max_num_tokens` allows TensorRT LLM to
+allocate more memory to store the KV cache and execute more requests together.
+It leads to increased efficiency.
+
+GPUs yield higher utilization with larger matrix multiplications. Hence, increasing `max_num_tokens` appropriately will be beneficial to performance. At some point, GPU utilization will plateau,
+going beyond that saturation point may hurt both first token latency as well as
+total end-to-end latency. In summary, one should select reasonably high max_num_tokens for high token throughput/good GPU math utilization but not very high in order to meet SLO TTFT (time to first token) and TPOT (time per output token).
+
+
+## Chunked Context (a.k.a Chunked Prefill)
+
+The original behavior was to process all context tokens at once. However, this feature splits the context into several chunks. In this way, the
+context chunks can be batched with more tokens during the generation phase,
+which should increase overall throughput. Chunking contexts also removes
+constraints on input length. To enable this feature, the FMHA paged kv-cache also
+needs to be enabled. Except for the last chunk, the size of each context chunk needs to be an integer multiple of the kv-cache block size.
+
+## KV Cache
+
+In the generation phase, a common optimization is to provide the MHA kernel
+with a cache containing the values of the past K and V elements that have
+already been computed.  That cache is known as the KV cache. TensorRT LLM uses
+that technique to accelerate its generation phase. In TensorRT LLM, there is
+one KV cache per Transformer layer, which means that there are as many KV
+caches as layers in a model. The current version of TensorRT LLM supports two
+different types of KV caches: **contiguous** and **paged** KV caches.
+
+### Contiguous KV Cache
+
+The contiguous KV cache is a monolithic tensor. Its shape is:
+```
+[max_batch_size * max_beam_width, 2, num_heads, max_seqlen, hidden_dim_per_head].
+```
+
+This implementation uses much more memory than needed when sequences are shorter than the maximum sequence length. Even if they approach the limit after generating many output tokens, it may take many steps to reach that point.
+
+### Paged KV Cache
+
+The paged KV cache decomposes the KV cache into blocks that are distributed to
+the different requests by a cache manager during processing. That cache manager
+keeps track of the sequences, allocates new blocks from a pool, and recycles those blocks when required. See the simplified implementation of
+[`tensorrt_llm.runtime.KVCacheManager`](source:tensorrt_llm/runtime/kv_cache_manager.py).
+A more efficient C++ implementation is included in the
+[Batch Manager](source:cpp/include/tensorrt_llm/batch_manager).
+
+## The schedulers
+
+This section visualizes how TensorRT LLM schedules requests based on max-batch size and max-num tokens. The example starts out with a newly initialized engine as well as a few unscheduled requests that have come in. For the sake of this example, toy values are set to `max batch size = 4` and `max num tokens = 12`. Each square block represents a token, and its color represents which request it belongs to.
+
+![TRT-LLM Scheduler Visualization 1](../media/TRTLLM_Scheduler_Vis_1.svg)
+
+
+Now the scheduler takes the first two requests, Request 1 and Request 2, and schedules them to execute the context phase. However, it cannot schedule any more requests because the prompts of the first two requests had 5 tokens each, leaving a budget of 2 tokens due to the max num tokens limit. Since all remaining requests have more than 2 prompt tokens none of them can be scheduled (context chunking can help in this situation, see the paged context attention section below). The tokens are marked with a "C" on them to represent that they are prompt tokens that were processed in the context phase.
+
+> Note: The tokens for different requests are shown on different rows simply for visualization purposes and are not representative of actual memory layouts
+
+![TRT-LLM Scheduler Visualization 2](../media/TRTLLM_Scheduler_Vis_2.svg)
+
+Now the engine runs an iteration of execution, completing the context phases for both of the scheduled requests. After it is done, the kv-cache of the prompts for both requests have been created and the first token has been generated. Tokens that were generated are marked with "G(n)" - for example a token marked "G1" represents that it is the first token generated for its request.
+
+TRT-LLM prioritizes scheduling requests in generation phase first so the two generated tokens are queued to be processed in the next iteration. Now, since the two previously scheduled requests have entered generation phase and only take up two tokens out of the max num token budget of 12, the scheduler is able to schedule two additional requests, Request 3 and Request 4. It cannot schedule the last request, Request 5, even though there is space for it in the max num tokens budget because of the max batch size limit of 4.
+
+![TRT-LLM Scheduler Visualization 3](../media/TRTLLM_Scheduler_Vis_3.svg)
+
+After the next iteration of execution, the second tokens for Requests 1 and 2 have been generated, and the first tokens for Request 3 and 4 have been generated. Let's say that G2, which was generated for Request 1, is the stop token signifying that Request 1 is completed. In this case the scheduler would evict Request 1 before performing another execution iteration and prepare to return it to the user. This eviction puts the state of the engine below the max batch size limit and allows Request 5 to be scheduled.
+
+Also note that G1, which was generated for Request 2, has been added to the kv-cache for Request 2, illustrating how the kv-cache for a request grows as more tokens are generated.
+
+![TRT-LLM Scheduler Visualization 4](../media/TRTLLM_Scheduler_Vis_4.svg)
+
+Overall, the max batch size and max num tokens limits play a key role in determining when requests are executed. Tuning these parameters can significantly impact throughput, as well as how the engine balances previously scheduled requests in the generation phase with new requests in the context phase.
+
+> Note: This presents a simplified visualization of the scheduler to highlight how max batch size and max num tokens affect it. The scheduler also considers things like amount of free memory available to be used for kv-cache and has other configurable options that can affect its behavior. See the Runtime Flags of the Additional Options page for more on this.
+
+## Revisiting Paged Context Attention and Context Chunking
+
+Previously we recommended enabling paged context attention even though in our case study it didn't affect performance significantly. Now that we understand the TensorRT LLM scheduler, we can explain why this is beneficial. In short, we recommend enabling it because it enables context chunking, which allows the context phase of a request to be broken up into pieces and processed over several execution iterations, allowing the engine to provide a more stable balance of context and generation phase execution. Enabling chunking results in lower TTFTs on average across requests but it may increase TTFT for small number of "lucky" requests that would have been processed in a single iteration in absence of chunking.
+
+The [visualization](#the-schedulers) of the TensorRT LLM scheduler showed that initially Request 3 couldn't be scheduled because it would put the scheduler over the max-num tokens limit. However, with context chunking, this is no longer the case, and the first chunk of Request 3 can be scheduled.
+
+![TRT-LLM Scheduler Visualization Chunked Context 1](../media/TRTLLM_Scheduler_Vis_Chunked_Context_1.svg)
+
+This is extremely beneficial for several reasons. First, it eliminates the possibility of requests with large prompts (relative to max num tokens) not being scheduled due to other requests already in-flight. In production workloads, this can mitigate queuing effects and worst case TTFT numbers. Second, it allows for setting smaller values of max num tokens, since you no longer need max num tokens to be at least as large as the longest prompt you want to support. For long-context cases this is extremely important, because setting extremely large values of max-num tokens takes away from memory available to be used as kv-cache. Given that, in the worst-case scenario, chunked context has minimal impact on performance but can significantly benefit it in many situations, NVIDIA recommends that you always enable it.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://www.usenix.org/conference/osdi22/presentation/yu | sed -n '1,180p' | sed -e 's/<["'^>]*>/ /g'"' | tr -s ' ' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/LMCache/LMCache/main/README.md | sed -n '1,140p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md | sed -n '1,140p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "tool" "continuous batching" "agent" --repo vllm-project/vllm --limit 20' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 202ms:
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-black-background.png?raw=true">
+    <img alt="FlashInfer" src="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-white-background.png?raw=true" width=55%>
+  </picture>
+</p>
+<h1 align="center">
+High-Performance GPU Kernels for Inference
+</h1>
+
+<p align="center">
+| <a href="https://docs.flashinfer.ai"><b>Documentation</b></a> | <a href="https://github.com/flashinfer-ai/flashinfer/releases/latest"><b>Latest Release</b></a> | <a href="https://flashinfer.ai"><b>Blog</b></a> | <a href="https://join.slack.com/t/flashinfer/shared_invite/zt-379wct3hc-D5jR~1ZKQcU00WHsXhgvtA"><b>Slack</b></a> |  <a href="https://github.com/orgs/flashinfer-ai/discussions"><b>Discussion Forum</b></a> |
+</p>
+
+[![Build Status](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/badge/icon)](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/)
+[![Documentation](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml/badge.svg)](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml)
+
+**FlashInfer** is a library and kernel generator for inference that delivers state-of-the-art performance across diverse GPU architectures. It provides unified APIs for attention, GEMM, and MoE operations with multiple backend implementations including FlashAttention-2/3, cuDNN, CUTLASS, and TensorRT-LLM.
+
+## Why FlashInfer?
+
+- **State-of-the-art Performance**: Optimized kernels for prefill, decode, and mixed batching scenarios
+- **Multiple Backends**: Automatically selects the best backend for your hardware and workload
+- **Modern Architecture Support**: Support for SM75 (Turing) and later (through Blackwell)
+- **Low-Precision Compute**: FP8 and FP4 quantization for attention, GEMM, and MoE operations
+- **Production-Ready**: CUDAGraph and torch.compile compatible for low-latency serving
+
+## Core Features
+
+### Attention Kernels
+- **Paged and Ragged KV-Cache**: Efficient memory management for dynamic batch serving
+- **Decode, Prefill, and Append**: Optimized kernels for all attention phases
+- **MLA Attention**: Native support for DeepSeek's Multi-Latent Attention
+- **Cascade Attention**: Memory-efficient hierarchical KV-Cache for shared prefixes
+- **Sparse Attention**: Block-sparse and variable block-sparse patterns
+- **POD-Attention**: Fused prefill+decode for mixed batching
+
+### GEMM & Linear Operations
+- **BF16 GEMM**: BF16 matrix multiplication for SM10.0+ GPUs.
+- **FP8 GEMM**: Per-tensor and groupwise scaling
+- **FP4 GEMM**: NVFP4 and MXFP4 matrix multiplication for Blackwell GPUs
+- **Grouped GEMM**: Efficient batched matrix operations for LoRA and multi-expert routing
+
+### Mixture of Experts (MoE)
+- **Fused MoE Kernels**
+- **Multiple Routing Methods**: DeepSeek-V3, Llama-4, and standard top-k routing
+- **Quantized MoE**: FP8 and FP4 expert weights with block-wise scaling
+
+### Sampling & Decoding
+- **Sorting-Free Sampling**: Efficient Top-K, Top-P, and Min-P without sorting
+- **Speculative Decoding**: Chain speculative sampling support
+
+### Communication
+- **AllReduce**: Custom implementations
+- **Multi-Node NVLink**: MNNVL support for multi-node inference
+- **NVSHMEM Integration**: For distributed memory operations
+
+### Other Operators
+- **RoPE**: LLaMA-style rotary position embeddings (including LLaMA 3.1)
+- **Normalization**: RMSNorm, LayerNorm, Gemma-style fused operations
+- **Activations**: SiLU, GELU with fused gating
+
+## GPU Support
+
+| Architecture | Compute Capability | Example GPUs |
+|--------------|-------------------|------|
+| Turing | SM 7.5 | T4, RTX 20 series |
+| Ampere | SM 8.0, 8.6 | A100, A10, RTX 30 series |
+| Ada Lovelace | SM 8.9 | L4, L40, RTX 40 series |
+| Hopper | SM 9.0 | H100, H200 |
+| Blackwell | SM 10.0, 10.3 | B200, B300 |
+| Blackwell | SM 11.0 | Jetson Thor |
+| Blackwell | SM 12.0, 12.1 | RTX 50 series, DGX Spark |
+
+> **Note:** Not all features are supported across all compute capabilities.
+
+## News
+
+Latest: [![GitHub Release](https://img.shields.io/github/v/release/flashinfer-ai/flashinfer)](https://github.com/flashinfer-ai/flashinfer/releases/latest)
+
+Notable updates:
+- [2025-10-08] Blackwell support added in [v0.4.0](https://github.com/flashinfer-ai/flashinfer/releases/tag/v0.4.0)
+- [2025-03-10] [Blog Post](https://flashinfer.ai/2025/03/10/sampling.html) Sorting-Free GPU Kernels for LLM Sampling, which explains the design of sampling kernels in FlashInfer.
+
+## Getting Started
+
+### Installation
+
+**Quickstart:**
+
+```bash
+pip install flashinfer-python
+```
+
+**Package Options:**
+
+- **flashinfer-python**: Core package that compiles/downloads kernels on first use
+- **flashinfer-cubin**: Pre-compiled kernel binaries for all supported GPU architectures
+- **flashinfer-jit-cache**: Pre-built kernel cache for specific CUDA versions
+
+**For faster initialization and offline usage**, install the optional packages to have most kernels pre-compiled:
+
+```bash
+pip install flashinfer-python flashinfer-cubin
+# JIT cache (replace cu129 with your CUDA version)
+pip install flashinfer-jit-cache --index-url https://flashinfer.ai/whl/cu129
+```
+
+**For Blackwell (SM100+) CuTe DSL kernels**, install with the CUDA 13 extra to enable Blackwell-optimized kernels:
+
+```bash
+pip install flashinfer-python[cu13]
+```
+
+### Verify Installation
+
+```bash
+flashinfer show-config
+```
+
+### Basic Usage
+
+```python
+import torch
+import flashinfer
+
+# Single decode attention
+q = torch.randn(32, 128, device="cuda", dtype=torch.float16)  # [num_qo_heads, head_dim]
+k = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)  # [kv_len, num_kv_heads, head_dim]
+v = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)
+
+output = flashinfer.single_decode_with_kv_cache(q, k, v)
+```
+
+See [documentation](https://docs.flashinfer.ai/) for comprehensive API reference and tutorials.
+
+### Install from Source
+
+```bash
+git clone https://github.com/flashinfer-ai/flashinfer.git --recursive
+
+ succeeded in 234ms:
+# LMCache core library
+
+## Installation
+
+**Prerequisite:** Python >= 3.10
+
+```bash
+pip install -e .
+```
+
+## Demos
+Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).
+
+## Quickstart: 
+
+**Prerequisites**: To run the quickstart demo, your server should have 1 GPU and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start vLLM + LMCache 
+```bash
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface access token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.6 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example-local.yaml
+```
+Please fill `Huggingface cache dir on your local machine` and `Your huggingface access token` in the above command. 
+
+You can also change the `model` variable to use different models.
+
+The vLLM engine is ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 3:** Run demo application
+
+You can now run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+
+# Start the demo chat application
+python openai_chat_completion_client.py 8000
+```
+
+This demo is a QA application based on a long context (`examples/f.txt`). The TTFT should be drastically reduced since the second round of QA.
+
+
+
+## Use case 1: share prefix KV between different vLLM instance through LMCache
+The following instructions help deploy LMCache backend + multile vLLM instance by docker containers. The architecture of the demo application looks like this:
+
+<img width="817" alt="image" src="https://github.com/LMCache/LMCache/assets/25103655/ab64f84d-26e1-46ce-a503-e7e917b618bc">
+
+
+**Prerequisites**: To run the quickstart demo, your server must have 2 GPUs and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/lmcache-server:0.1.0
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start LMCache backend server 
+```bash
+docker run --name lmcache-server --network host -d apostacyh/lmcache-server:0.1.0 0.0.0.0 65432
+```
+
+**Step 3:** start 2 vLLM instances
+```bash
+# The first vLLM instance listens at port 8000
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Now, open another terminal and start another vLLM instance
+```bash
+# The second vLLM instance listens at port 8001
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=1"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8001:8001 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8001 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Remember to replace the `Huggingface cache dir on your local machine` and `Your huggingface token` in the commandline.
+
+The vLLM engines are ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 4:** Run demo application
+You can run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+```
+
+In one terminal:
+```
+# Connect to the first vLLM engine
+python openai_chat_completion_client.py 8000
+```
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 536ms:
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Orca: A Distributed Serving System for Transformer-Based Generative Models | USENIX 
+ 
+ 
+ #backtotop{bottom:20px;right:20px;}
+ 
+ 
+ 
+ 
+ 
+ 
+ window.Backdrop = {settings: {"basePath":"\/","pathPrefix":"","drupalCompatibility":true,"ajaxPageState":{"theme":"neat_conference","theme_token":"VciPasQEKhFjoxyZiucxnwCU3w1FnUi_YwmPiKKvEc8","css":{"core\/misc\/normalize.css":1,"core\/modules\/system\/css\/system.css":1,"core\/modules\/system\/css\/system.theme.css":1,"core\/modules\/system\/css\/messages.theme.css":1,"modules\/contrib\/back_to_top\/css\/back_to_top.css":1,"modules\/custom\/adamm\/css\/base.css":1,"modules\/custom\/adamm\/css\/dropdown.css":1,"core\/modules\/comment\/css\/comment.css":1,"core\/modules\/date\/css\/date.css":1,"core\/modules\/field\/css\/field.css":1,"modules\/contrib\/og\/css\/og.css":1,"modules\/contrib\/paragraphs\/css\/paragraphs.css":1,"core\/modules\/search\/search.theme.css":1,"modules\/contrib\/special_menu_items\/css\/special_menu_items.css":1,"modules\/custom\/usenix_conference\/css\/timezone-picker.css":1,"modules\/custom\/usenix_logo_preview\/css\/usenix_logo_preview.css":1,"core\/modules\/user\/css\/user.css":1,"modules\/contrib\/workflow\/workflow_admin_ui\/workflow_admin_ui.css":1,"core\/modules\/views\/css\/views.css":1,"modules\/contrib\/rules\/rules.css":1,"0":1,"modules\/contrib\/geshifilter\/geshifilter.css":1,"modules\/custom\/biblio\/biblio.css":1,"layouts\/neat_conference\/neat-conference.css":1,"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/font-awesome\/4.4.0\/css\/font-awesome.min.css":1,"modules\/contrib\/tb_megamenu\/css\/bootstrap.css":1,"modules\/contrib\/tb_megamenu\/css\/base.css":1,"modules\/contrib\/tb_megamenu\/css\/default.css":1,"modules\/contrib\/tb_megamenu\/css\/compatibility.css":1,"core\/modules\/system\/css\/menu-dropdown.theme.breakpoint.css":1,"core\/modules\/system\/css\/menu-dropdown.theme.breakpoint-queries.css":1,"themes\/neat_conference\/css\/neat.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc_colo.css":1,"themes\/neat_conference\/css\/schemes\/scheme-atc_colo_dark.css":1,"themes\/neat_conference\/css\/schemes\/scheme-enigma.css":1,"themes\/neat_conference\/css\/schemes\/scheme-enigma_temp.css":1,"themes\/neat_conference\/css\/schemes\/scheme-fast.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_lean.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_blue.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_red.css":1,"themes\/neat_conference\/css\/schemes\/scheme-lisa_green.css":1,"themes\/neat_conference\/css\/schemes\/scheme-nsdi.css":1,"themes\/neat_conference\/css\/schemes\/scheme-osdi.css":1,"themes\/neat_conference\/css\/schemes\/scheme-security.css":1,"themes\/neat_conference\/css\/schemes\/scheme-security_colo.css":1,"themes\/neat_conference\/css\/schemes\/scheme-soups.css":1,"themes\/neat_conference\/css\/schemes\/scheme-srecon.css":1,"themes\/neat_conference\/css\/schemes\/scheme-pepr_woot.css":1,"themes\/neat_conference\/fonts\/fontawesome\/css\/all.min.css":1,"themes\/neat_conference\/system.theme.css":1},"js":{"public:\/\/google_tag\/google_tag.script.js":1,"modules\/contrib\/jquery_update\/replace\/jquery\/1.12\/jquery.min.js":1,"core\/misc\/jquery.once.js":1,"core\/misc\/backdrop.js":1,"modules\/contrib\/behavior_weights\/js\/behavior_weights.js":1,"modules\/contrib\/jquery_update\/js\/jquery_browser.js":1,"modules\/contrib\/beautytips\/js\/jquery.bt.min.js":1,"modules\/contrib\/beautytips\/js\/beautytips.js":1,"modules\/contrib\/back_to_top\/js\/back_to_top.js":1,"modules\/custom\/adamm\/js\/accessible-menu\/dist\/disclosure-menu.iife.js":1,"modules\/custom\/adamm\/js\/contentexpander\/contentExpander.js":1,"modules\/custom\/adamm\/js\/adamm.js":1,"modules\/contrib\/views_slideshow\/js\/views_slideshow.js":1,"modules\/contrib\/views_slideshow\/contrib\/views_slideshow_cycle\/js\/formoptions.js":1,"modules\/contrib\/views_slideshow\/contrib\/views_slideshow_cycle\/js\/views_slideshow_cycle.js":1,"modules\/contrib\/beautytips\/other_libs\/jquery.hoverIntent.minified.js":1,"modules\/contrib\/field_group\/js\/field_group.js":1,"modules\/contrib\/field_group\/js\/field_groups.js":1,"modules\/contrib\/tb_megamenu\/js\/tb-megamenu-frontend.js":1,"modules\/contrib\/tb_megamenu\/js\/tb-megamenu-touch.js":1,"core\/modules\/system\/js\/menus.js":1,"themes\/neat_conference\/js\/bibtex.js":1,"themes\/neat_conference\/js\/mobile.js":1,"themes\/neat_conference\/js\/jquery.slicknav.min.js":1,"themes\/neat_conference\/js\/tech-schedule.js":1,"themes\/neat_conference\/js\/training-program.js":1,"themes\/neat_conference\/js\/organizers.js":1,"themes\/neat_conference\/js\/protected-files.js":1}},"back_to_top":{"distance":"100","text":"Back to top","title":1,"type":"image","disable_mobile":0},"beautytipStyles":{"default":[],"plain":[],"netflix":{"positions":["right","left"],"fill":"#FFF","padding":5,"shadow":true,"shadowBlur":12,"strokeStyle":"#B9090B","spikeLength":50,"spikeGirth":20,"cornerRadius":10,"centerPointY":0.1,"overlap":-8,"cssStyles":{"fontSize":"12px","fontFamily":"arial,helvetica,sans-serif"}},"facebook":{"fill":"#F7F7F7","padding":8,"strokeStyle":"#B7B7B7","cornerRadius":0,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"11px"}},"transparent":{"fill":"rgba(0, 0, 0, .8)","padding":20,"strokeStyle":"#CC0","strokeWidth":3,"spikeLength":40,"spikeGirth":40,"cornerRadius":40,"cssStyles":{"color":"#FFF","fontWeight":"bold"}},"big-green":{"fill":"#00FF4E","padding":20,"strokeWidth":0,"spikeLength":40,"spikeGirth":40,"cornerRadius":15,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"14px"}},"google-maps":{"positions":["top","bottom"],"fill":"#FFF","padding":15,"strokeStyle":"#ABABAB","strokeWidth":1,"spikeLength":65,"spikeGirth":40,"cornerRadius":25,"centerPointX":0.9,"cssStyles":{"fontSize":"12px","fontFamily":"arial,helvetica,sans-serif"}},"hulu":{"fill":"#F4F4F4","strokeStyle":"#666666","spikeLength":20,"spikeGirth":10,"width":350,"overlap":0,"centerPointY":1,"cornerRadius":0,"cssStyles":{"fontFamily":"\u0022Lucida Grande\u0022,Helvetica,Arial,Verdana,sans-serif","fontSize":"12px","padding":"10px 14px"},"shadow":true,"shadowColor":"rgba(0,0,0,.5)","shadowBlur":8,"shadowOffsetX":4,"shadowOffsetY":4}},"beautytips":{".beautytips":{"cssSelect":".beautytips","style":null}},"field_group":{"div":"full"}}}; 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Back to USENIX Sign In Conferences 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Attend 
+
+ succeeded in 379ms:
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'gh search code "step-aware" "LLM" "serving" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "tool-wait" "LLM" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "agent" "scheduler" "continuous batching" --limit 20' in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 1207ms:
+ai-dynamo/dynamo:docs/agents/agent-tracing.md: (`tool_end` / `tool_error`) to preserve tool-wait time between dependent LLM requests.
+yysun/agent-world:.docs/done/2026/03/05/tool-wait-retry-system-status.md: **Req:** `.docs/reqs/2026/03/05/req-tool-wait-retry-system-status.md`
+yysun/agent-world:.docs/done/2026/03/05/tool-wait-retry-system-status.md: **Plan:** `.docs/plans/2026/03/05/plan-tool-wait-retry-system-status.md`
+yysun/agent-world:.docs/done/2026/03/05/tool-wait-retry-system-status.md: Implemented bounded timeout/retry/backoff/escalation reliability across MCP, queue dispatch, shell, web fetch, LLM queueing, and storage agent-load paths, plus chat-scoped per-second status emissions for active wait/retry windows. Finalized with centralized reliability config to keep timeout/retry defaults and env overrides consistent across boundaries.
+m4xxxxx/AIxVuln:DecisionBrain/Tools.go: definitions = append(definitions, llm.ToolDef{
+m4xxxxx/AIxVuln:DecisionBrain/Tools.go: Name:        "Tool-Wait",
+JamieScanlon/SwiftAgentKit:Sources/SwiftAgentKit/LLM/LLMProtocol.swift: /// Tool-waiting and queue position are **per-request** concerns; see `LLMRequestState`
+JamieScanlon/SwiftAgentKit:Sources/SwiftAgentKit/LLM/LLMProtocol.swift: /// and `StatefulLLM` / `QueuedLLM`. The default implementation returns `.idle(.ready)`.
+JamieScanlon/SwiftAgentKit:Sources/SwiftAgentKit/LLM/LLMProtocol.swift: /// Send multiple messages to the LLM and get a response
+JustinPerea/ai-research-vault:inbox/2026-05-23.md: - **IdleSpec (KAIST / Amazon AGI)** exploits the agentic-LLM tool-wait latency by speculatively planning during idle time — **+5.1 pp GAIA / FRAMES (Gemini-2.5-Flash) and up to +9.1 pp MLE-Bench Any Medal**. Composes with [arxiv:2605.15077] AsyncFC (concurrency-via-futures) on the harness-side parallelism cluster.
+JKHeadley/instar:upgrades/side-effects/build-stall-visibility-fix2-3.md: **Long-tool-wait detector.** Detector is OFF by default. When ON, the swap message replaces (not blocks) the LLM-generated standby — same channel, same tier, same authority, different content. The hysteresis-during-recovery branch suppresses the "blocked" message while sustained text is accumulating, so the user never sees "blocked" while watching new output appear.
+betaHi/AgentGuard:README.md: Agents, tools, subagents, LLM calls, handoffs, token usage, cache hit/miss, tool-wait latency (tool_use → tool_result), timestamps, parent/child topology. Claude sessions additionally preserve real wall-clock timings and usage tokens recovered from the JSONL side-channel the SDK does not expose.
+zenml-io/kitaru:docs/content/docs/guides/pydantic-ai-adapter.mdx: - `type: str` — dashboard grouping. Defaults to `"llm_call"`, `"tool_call"`, or `"mcp_call"` so adapter checkpoints group with native `kitaru.llm()` / `@kitaru.checkpoint(type="tool_call")` calls.
+zenml-io/kitaru:docs/content/docs/guides/pydantic-ai-adapter.mdx: | `emit_child_events` | `True` | Track per-request / per-tool events. `False` disables tool-wait correlation. |
+shikicloud/MLSys:EN/wiki/llm-serving-for-agents/agent-serving-challenges.md: - During tool execution: 0 requests to LLM
+shikicloud/MLSys:EN/wiki/llm-serving-for-agents/agent-serving-challenges.md: | Tool-wait gaps | GPU idle during tool exec | Gap reuse (Continuum) |
+telephone-man/telecom-voice-agent-lab:.env.example: OPENAI_LLM_HISTORY_MESSAGES=6
+telephone-man/telecom-voice-agent-lab:.env.example: OPENAI_LLM_REASONING_EFFORT=minimal
+telephone-man/telecom-voice-agent-lab:.env.example: LLM_FAST_PATH_RESPONSES=0
+telephone-man/telecom-voice-agent-lab:.env.example: # Explicit opt-in for the README weather walkthrough's local tool-wait demo.
+telephone-man/telecom-voice-agent-lab:.env.example: LLM_ENABLE_MOCK_WEATHER_TOOL=0
+jb-san/mini-harness:src/agent/agent.ts: type AgentState = "idle" | "thinking" | "tool-wait";
+jb-san/mini-harness:src/agent/agent.ts: this.bus.emit("llm:done", {
+mlimarenko/IronRAG:CHANGELOG.md: calls with generation time and tool-wait split plus token counts, and a
+mlimarenko/IronRAG:CHANGELOG.md: reply-latency badge), and the LLM-iteration stat reflects the actual
+AyerElysia/Strange-Loop-Chatter:proactive_message_plugin/inner_monologue.py: response = await llm_request.send(stream=False)
+AyerElysia/Strange-Loop-Chatter:proactive_message_plugin/inner_monologue.py: elif call.name in {"wait_longer", "tool-wait_longer"}:
+WillyDrucker/WAT321:src/WAT321_MCP_SERVER/bin/opencode/heartbeat.mjs: * the user reads as "I dispatched to Local LLM but the widget jumped
+WillyDrucker/WAT321:src/WAT321_MCP_SERVER/bin/opencode/heartbeat.mjs: * Idle gaps reset the window (a tool-wait pause would otherwise smear
+agentpatterns-ai/website:agent-design/idle-time-speculative-planning.md: > Convert tool-wait slack into best-of-K planning by drafting progressive and recovery plan candidates during idle windows, then aggregating against the real observation once it lands — applies only when idle windows exceed one reasoning step and wall-clock latency dominates dollar cost.
+agentpatterns-ai/website:agent-design/idle-time-speculative-planning.md: - **Metered, cost-bound workloads.** Latency parity is real, but discarded draft branches are pure token spend. The "no latency overhead" headline does not extend to dollar cost — speculative drafting "consumes additional LLM tokens during the idle window" ([arXiv:2605.22154](https://arxiv.org/html/2605.22154)).
+LouisChang0126/Intro2GenAI-hw1:public/app.js: // 2. 檢查不支援的運算符號 (LLM 常犯錯誤：使用 ^ 符號表示次方)
+LouisChang0126/Intro2GenAI-hw1:public/app.js: waitDiv.className = 'message assistant tool-waiting';
+LouisChang0126/Intro2GenAI-hw1:public/app.js: waitDiv.id = `tool-wait-${callId}`;
+absolem223/W_IA_TOY:src/main/agent/AgentExecutor.ts: event: 'LLM_COMPLETE',
+absolem223/W_IA_TOY:src/main/agent/AgentExecutor.ts: this.updateSessionPhase(session, 'tool-wait')
+Sh1ra083/CerberV2:frontend/src/components/AgentView.tsx: // ── Thinking block: LLM's reasoning text (italic, no card border) ──
+Sh1ra083/CerberV2:frontend/src/components/AgentView.tsx: {!b.content && b.running && <div className="av2-tool-wait">ожидание...</div>}
+phillt/bernard:docs/manual.html: <li><a href="#tool-wait">Wait</a></li>
+phillt/bernard:docs/manual.html: <td>Override the LLM provider</td>
+AutoByteus/autobyteus-workspace:tickets/done/agent-based-compaction/design-spec.md: - Spine: `normal run events -> segment/assistant text accumulation -> terminal/final turn/status/error/tool-wait -> final content or failure`
+AutoByteus/autobyteus-workspace:tickets/done/agent-based-compaction/design-spec.md: 16. Remove/decommission `LLMCompactionSummarizer`, `AUTOBYTEUS_COMPACTION_MODEL_IDENTIFIER`, web direct model selector, docs references, and tests that assert active-model fallback.
+
+ succeeded in 1885ms:
+raullenchai/Rapid-MLX:vllm_mlx/scheduler.py: class Scheduler:
+raullenchai/Rapid-MLX:vllm_mlx/scheduler.py: Scheduler for continuous batching using mlx-lm BatchGenerator.
+Cypherx12/Faster-MoA-PD:src/sglang_ext/scheduler.py: class Scheduler(
+Cypherx12/Faster-MoA-PD:src/sglang_ext/scheduler.py: SchedulerOutputProcessorMixin,
+Cypherx12/Faster-MoA-PD:src/sglang_ext/scheduler.py: SchedulerUpdateWeightsMixin,
+Cypherx12/Faster-MoA-PD:src/sglang_ext/scheduler.py: SchedulerProfilerMixin,
+zhaochenyang20/Awesome-ML-SYS-Tutorial:sglang/sglang-scheduler/readme.md: - Radix Attention: Different requests may share the same prefix. For tokens with the same content and position encoding, there is no need to repeatedly calculate the KV cache of their prefix. For example, AI agents for multiple users may share the same prompt prefix. We only need to calculate the KV cache of the same prefix once, and then other users can reuse this prefix, without each user's request calculating independently.
+zhaochenyang20/Awesome-ML-SYS-Tutorial:sglang/sglang-scheduler/readme.md: - Inference "congestion avoidance": Similar to TCP congestion avoidance mechanism's dynamic adjustment strategy, which gradually increases the congestion window to probe the network's limit, the Scheduler implements a similar approach through the `new_token_ratio` and `new_token_ratio_decay` fields to probe the GPU's limit. When a batch executes successfully, the Scheduler gradually increases the scale of the next batch to achieve higher throughput; when a batch fails, the Scheduler reduces the scale of the next batch to avoid resource overload. This dynamic adjustment mechanism not only approximates the maximum utilization of GPU memory but also ensures relatively stable inference performance.
+barometech/PromeTorch:vliw_mission/round2/agent_7_pipeline_overlap.md: kernel (agent_4 / fused_attn_prefetch). This does not require a
+barometech/PromeTorch:vliw_mission/round2/agent_7_pipeline_overlap.md: syscalls into the kernel for each call — and the Linux read-ahead scheduler
+huggingface/transformers:src/transformers/generation/configuration_utils.py: user_agent=user_agent,
+huggingface/transformers:src/transformers/generation/configuration_utils.py: Class that holds arguments relative to continuous batching, when using continuous batching through the
+verum-lang/verum:core/math/agent.vr: // Continuous batching scheduler for high-throughput LLM serving
+verum-lang/verum:core/math/agent.vr: pending_requests: List<AgentRequest>,
+ai-boost/awesome-prompts:prompts/llm_architect.txt: - Hyperparameter tuning: learning rate, batch size, warmup, scheduler
+ai-boost/awesome-prompts:prompts/llm_architect.txt: - **Batching strategies** — continuous batching, dynamic batching
+kekzl/imp:docs/audit/performance_agent_readiness_2026_05_31.md: | 3b | … **Streaming** | **synthetisch** | `handlers.cpp:3572` "Phase 2 synthetic" — volle Generierung dann SSE-Replay → TTFT = volle Latenz | **kritisch für Agents** | M |
+kekzl/imp:docs/audit/performance_agent_readiness_2026_05_31.md: | 4 | **Prefix/Prompt-Caching über Turns** | **vollständig** | content-addressed `kv_cache_manager.h:70-283`, Scheduler-Reuse `scheduler.cpp:70`, LRU-Eviction, Metrik `imp_tokens_cached_total` | kritisch | — |
+cklxx/arle:docs/projects/agent-rl-self-evolving.md: - **agent-infer 已有基建**：FlashInfer HD128/HD256、Paged KV、Radix prefix cache、chunked prefill、continuous batching、OpenAI v1 agent loop、Metal runtime。rollout 侧几乎不用新建。
+cklxx/arle:docs/projects/agent-rl-self-evolving.md: | Rollout | 复用 agent-infer scheduler + agent tool loop | 重写 rollout |
+areal-project/AReaL:docs/en/tutorial/gsm8k_grpo.md: **Key Pattern**: Engines use `as_controller(config, scheduler)` to wrap themselves in
+areal-project/AReaL:docs/en/tutorial/gsm8k_grpo.md: - Processes multiple concurrent generations with continuous batching
+harvard-edge/cs249r_book:interviews/vault/questions/edge/deployment/edge-1664.yaml: realistic_solution: Implement an inference server with continuous batching and paged attention to rigidly manage the KV cache within the 32GB limit. Both models must be quantized to INT8 to co-locate them in memory, entirely avoiding swap-induced cold starts. A priority-aware scheduler should preempt the 14B background batch at the token-generation iteration level to immediately process incoming 8B latency-sensitive requests, heavily utilizing the 400 TOPS compute to maximize overall token throughput.
+elizaOS/eliza:plugins/plugin-local-inference/src/services/engine.ts: * expert offload (`-ot`), `--parallel` continuous batching, or MTP
+elizaOS/eliza:plugins/plugin-local-inference/src/services/engine.ts: * scheduler.
+huangruiteng/CS-Notes:Notes/LLM-MLSys.md: * Enables the CTA scheduler to overlap the two operations
+huangruiteng/CS-Notes:Notes/LLM-MLSys.md: ### Continuous Batching: Orca
+casys-kaist/LLMServingSim:AGENTS.md: │   │   ├── scheduler.py        # vLLM-style continuous batching scheduler
+fengbintu/Neural-Networks-on-Silicon:README.md: - Duplex: A Device for Large Language Models with Mixture of Experts, Grouped Query Attention, and Continuous Batching
+fengbintu/Neural-Networks-on-Silicon:README.md: - 1.78mJ/Frame 373fps 3D GS Processor Based on Shape-Aware Hybrid Architecture Using Earlier Computation Skipping and Gaussian Cache Scheduler
+jundot/omlx:apps/omlx-mac/Resources/Localizable.xcstrings: "value" : "Continuous batching vs 1× baseline"
+jundot/omlx:apps/omlx-mac/Resources/Localizable.xcstrings: "comment" : "Display name for the Hermes Agent integration",
+liangqianxing/liangqianxing.github.io:source/downloads/pdf/alibaba-agent-infra-interview.html: <ul><li>API Gateway：鉴权、限流、租户隔离。</li><li>Planner：把用户目标拆成步骤。</li><li>Scheduler：调度任务到 worker。</li><li>Agent Runtime：执行 Agent loop，管理上下文。</li><li>Tool Executor：工具调用、参数校验、沙箱、超时。</li><li>Memory / RAG：检索知识和历史状态。</li><li>Evaluator：质量评估、安全检查、终止判断。</li></ul>
+liangqianxing/liangqianxing.github.io:source/downloads/pdf/alibaba-agent-infra-interview.html: <ul><li>Prefill：处理 prompt，建立 KV cache。</li><li>Decode：一次生成一个 token，逐步追加 KV cache。</li><li>LLM 推理慢：权重大、decode 自回归、KV cache 占显存、小 batch GPU 利用率低。</li><li>vLLM：PagedAttention + continuous batching，降低 KV cache 碎片，提高并发。</li><li>Streaming：优化体感延迟和 time to first token，不减少总计算。</li></ul>
+littleenhaochang-hub/ai-accelerator-research:reports/lora_scheduler_report.md: 在多租戶 (Multi-tenant) 或多 Agent 協作場景下，同一基礎模型需要頻繁切換不同的 LoRA (Low-Rank Adaptation) 權重。軟體層面的 Context Switch 會打斷 MAC 流水線，導致巨量的切換延遲。
+littleenhaochang-hub/ai-accelerator-research:reports/lora_scheduler_report.md: 提出「硬體 LoRA 調度器與多工器 (Hardware LoRA Scheduler & Multiplexer)」。在 NPU 的 SRAM 與 MAC 陣列之間加入專屬的 LoRA 權重廣播匯流排。硬體可以根據 Token 附帶的 Adapter ID，以 Zero-cycle 延遲在不同的 LoRA 權重間動態切換，實現完全硬體化的 Continuous Batching。
+DevOpsMadDog/Fixops:suite-core/core/single_agent.py: 1. vLLM (recommended): High-throughput, continuous batching, PagedAttention
+DevOpsMadDog/Fixops:suite-core/core/single_agent.py: """Expert roles in the AI agent panel."""
+AkihikoWatanabe/paper_notes:docs/agent_docs/Slide.xml: <maintainer-comment-text><p>WSD Scheduler:<br>- <a href="https://github.com/AkihikoWatanabe/paper_notes/issues/2540" target="_blank" rel="noopener noreferrer">[Paper Note] MiniCPM: Unveiling the Potential of Small Language Models with Scalable   Training Strategies, Shengding Hu+, COLM'24</a>
+AkihikoWatanabe/paper_notes:docs/agent_docs/Slide.xml: </p><p>vLLM, paged attention, prefix caching, continuous batching, 分散環境でのKV Cacheの共有, ...おおお、、読まねば</p></maintainer-comment-text>
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 2991ms:
+xlang-ai/xlang-paper-reading:llm-code-generation.md: 1. **Making Large Language Models Better Reasoners with Step-Aware Verifier.** ACL 2023
+xlang-ai/xlang-paper-reading:llm-code-generation.md: 1. **Can LLM Already Serve as A Database Interface? A BIg Bench for Large-Scale Database Grounded Text-to-SQLs.** Arxiv
+isLinXu/paper-list:docs/LLM/2026-03.md: |2026-03-11|CacheSolidarity: Preventing Prefix Caching Side Channels in Multi-tenant LLM Serving Systems|Panagiotis Georgios Pennas et.al.|[2603.10726](https://arxiv.org/abs/2603.10726)|[translate](https://papers.cool/arxiv/2603.10726)|[read](https://hjfy.top/arxiv/2603.10726)|null|
+isLinXu/paper-list:docs/LLM/2026-03.md: |2026-03-10|Let's Reward Step-by-Step: Step-Aware Contrastive Alignment for Vision-Language Navigation in Continuous Environments|Haoyuan Li et.al.|[2603.09740](https://arxiv.org/abs/2603.09740)|[translate](https://papers.cool/arxiv/2603.09740)|[read](https://hjfy.top/arxiv/2603.09740)|null|
+CSQianDong/Awesome-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.md: **Abstract**: Large Language Models (LLMs) have demonstrated remarkable improvements in reasoning and planning through increased test-time compute, often by framing problem-solving as a search process. While methods like Monte Carlo Tree Search (MCTS) have proven effective in some domains, their reliance on fixed exploration hyperparameters limits their adaptability across tasks of varying difficulty, rendering them impractical or expensive in certain settings. In this paper, we propose \textbf{LLM-First Search (LFS)}, a novel \textit{LLM Self-Guided Search} method that removes the need for pre-defined search strategies by empowering the LLM to autonomously control the search process via self-guided exploration. Rather than relying on external heuristics or hardcoded policies, the LLM evaluates whether to pursue the current search path or explore alternative branches based on its internal scoring mechanisms. This enables more flexible and context-sensitive reasoning without requiring manual tuning or task-specific adaptation. We evaluate LFS on Countdown and Sudoku against three classic widely-used search algorithms, Tree-of-Thoughts' Breadth First Search (ToT-BFS), Best First Search (BestFS), and MCTS, each of which have been used to achieve SotA results on a range of challenging reasoning tasks. We found that LFS (1) performs better on more challenging tasks without additional tuning, (2) is more computationally efficient compared to the other methods, especially when powered by a stronger model, (3) scales better with stronger models, due to its LLM-First design, and (4) scales better with increased compute budget. Our code is publicly available at \href{this https URL}{LLM-First-Search}.
+CSQianDong/Awesome-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.md: # Safe: Enhancing Mathematical Reasoning in Large Language Models via Retrospective Step-aware Formal Verification
+xuekt98/learning-notes:master readed paper/2024/2024.06 Finetune LLM/Content.md: ## Non-LLM Based
+xuekt98/learning-notes:master readed paper/2024/2024.06 Finetune LLM/Content.md: <font color=orange>**Label:**</font> zero-shot; text-to-video; LLM
+xuekt98/learning-notes:master readed paper/2024/2024.06 Finetune LLM/Content.md: <font color=orange>**Abastract:**</font> a zero-shot text-to-video model using LLM as a director and using step-aware attention shift to ensure identical coherence and temporal coherence and introducing a training-free dual-path interpolation strategy for frame interpolation.
+Mega4alik/ollm:samples/45k_sample.txt: thinking models with their non-thinking standard LLM counterparts. They have shown that under
+Mega4alik/ollm:samples/45k_sample.txt: equivalent inference token budgets, non-thinking LLMs can eventually reach performance comparable
+Mega4alik/ollm:samples/45k_sample.txt: Making language models better reasoners with step-aware verifier. In Proceedings of the 61st
+Efficient-ML/Awesome-Model-Quantization:README.md: - [[AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/33807/35962)] OAC: Output-adaptive Calibration for Accurate Post-Training Quantization of LLMs
+Efficient-ML/Awesome-Model-Quantization:README.md: - [[AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/34039)] Optimizing Quantized Diffusion Models via Distillation with Decay Timestep-Aware Loss
+Efficient-ML/Awesome-Model-Quantization:README.md: - [[ICML](https://openreview.net/forum?id=0jpbpFia8m)] SqueezeLLM: Dense-and-Sparse Quantization [[code](https://github.com/SqueezeAILab/SqueezeLLM)] [![GitHub stars](https://img.shields.io/github/stars/SqueezeAILab/SqueezeLLM?style=social)](https://github.com/SqueezeAILab/SqueezeLLM)
+Efficient-ML/Awesome-Model-Quantization:README.md: - [[MLSys](https://proceedings.mlsys.org/paper_files/paper/2024/hash/42a452cbafa9dd64e9ba4aa95cc1ef21-Abstract-Conference.html)] AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration [[code](https://github.com/mit-han-lab/llm-awq)] [![GitHub stars](https://img.shields.io/github/stars/mit-han-lab/llm-awq?style=social)](https://github.com/mit-han-lab/llm-awq)
+zhaoyang97/Paper-Notes-en:docs/ACL2026/llm_reasoning/index.md: **[Revisiting the Uniform Information Density Hypothesis in LLM Reasoning](revisiting_the_uniform_information_density_hypothesis_in_llm_reasoning.md)**
+zhaoyang97/Paper-Notes-en:docs/ACL2026/llm_reasoning/index.md: :   This paper proposes Step-GRPO, which internalizes dynamic early-exit capability into the model — measuring reasoning complexity via semantic steps rather than raw tokens, exposing concise correct trajectories through dynamically truncated rollouts, and guiding the model to learn when to stop reasoning via step-aware relative rewards. On Qwen3-8B, it reduces token consumption by 32% with no accuracy degradation.
+business-science/ai-data-science-team:ai_data_science_team/multiagents/supervisor_ds_team.py: # Deterministic, step-aware routing for common data science workflows.
+business-science/ai-data-science-team:ai_data_science_team/multiagents/supervisor_ds_team.py: chain = prompt | llm
+P-Revanth/ai-lead-capture:specs/phase-4-llm-integration.md: ## 7. Step-Aware Merge Rules (Deterministic)
+P-Revanth/ai-lead-capture:specs/phase-4-llm-integration.md: 2. LLM extraction improves flexibility for user phrasing while preserving validations.
+P-Revanth/ai-lead-capture:specs/phase-4-llm-integration.md: 3. Invalid/malformed LLM output does not break API flow.
+Doragd/Algorithm-Practice-in-Industry:paperBotV2/arxiv_daily/data/20251204.json: "ori_summary": "Achieving generalizable embodied policies remains a key challenge. Traditional policy learning paradigms, including both Imitation Learning (IL) and Reinforcement Learning (RL), struggle to cultivate generalizability across diverse scenarios. While IL policies often overfit to specific expert trajectories, RL suffers from the inherent lack of a unified and general reward signal necessary for effective multi-scene generalization. We posit that the world model is uniquely capable of serving as a universal environment proxy to address this limitation. However, current world models primarily focus on their ability to predict observations and still rely on task-specific, handcrafted reward functions, thereby failing to provide a truly general training environment. Toward this problem, we propose RoboScape-R, a framework leveraging the world model to serve as a versatile, general-purpose proxy for the embodied environment within the RL paradigm. We introduce a novel world model-based general reward mechanism that generates ''endogenous'' rewards derived from the model's intrinsic understanding of real-world state transition dynamics. Extensive experiments demonstrate that RoboScape-R effectively addresses the limitations of traditional RL methods by providing an efficient and general training environment that substantially enhances the generalization capability of embodied policies. Our approach offers critical insights into utilizing the world model as an online training strategy and achieves an average 37.5% performance improvement over baselines under out-of-domain scenarios.",
+Doragd/Algorithm-Practice-in-Industry:paperBotV2/arxiv_daily/data/20251204.json: "ori_summary": "Cooking is a sequential and visually grounded activity, where each step such as chopping, mixing, or frying carries both procedural logic and visual semantics. While recent diffusion models have shown strong capabilities in text-to-image generation, they struggle to handle structured multi-step scenarios like recipe illustration. Additionally, current recipe illustration methods are unable to adjust to the natural variability in recipe length, generating a fixed number of images regardless of the actual instructions structure. To address these limitations, we present CookAnything, a flexible and consistent diffusion-based framework that generates coherent, semantically distinct image sequences from textual cooking instructions of arbitrary length. The framework introduces three key components: (1) Step-wise Regional Control (SRC), which aligns textual steps with corresponding image regions within a single denoising process; (2) Flexible RoPE, a step-aware positional encoding mechanism that enhances both temporal coherence and spatial diversity; and (3) Cross-Step Consistency Control (CSCC), which maintains fine-grained ingredient consistency across steps. Experimental results on recipe illustration benchmarks show that CookAnything performs better than existing methods in training-based and training-free settings. The proposed framework supports scalable, high-quality visual synthesis of complex multi-step instructions and holds significant potential for broad applications in instructional media, and procedural content creation.",
+ttqteo/ttqteo:contents/blogs/2025/12/25/llm-research-papers-the-2024-list-ug2o.mdx: - 7 May, _vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention_, <a target="_blank" rel="noopener noreferrer nofollow" href="https://arxiv.org/abs/2405.04437"><u>https://arxiv.org/abs/2405.04437</u></a>
+ttqteo/ttqteo:contents/blogs/2025/12/25/llm-research-papers-the-2024-list-ug2o.mdx: - 6 Jun, _Step-aware Preference Optimization: Aligning Preference with Denoising Performance at Each Step_, <a target="_blank" rel="noopener noreferrer nofollow" href="https://arxiv.org/abs/2406.04314"><u>https://arxiv.org/abs/2406.04314</u></a>
+Yukijudaii1352/KnowledgePlatform:content/llm/llm_rl/grpo_paper.txt: , GRPO surpasses online RFT, thereby highlighting the efficiency of altering positive and negative gradient coefficients. In addition, GRPO+PS shows superior performance compared to GRPO+OS, indicating the benefits of using fine-grained, step-aware gradient coefficients.
+Yukijudaii1352/KnowledgePlatform:content/llm/llm_rl/grpo_paper.txt: Efficient memory management for large language model serving with pagedattention.
+bedwards/hex-index:library/sebastianraschka/llm-research-papers-the-2024-list.md: -   7 May, *vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention*, [https://arxiv.org/abs/2405.04437](https://arxiv.org/abs/2405.04437)
+bedwards/hex-index:library/sebastianraschka/llm-research-papers-the-2024-list.md: -   6 Jun, *Step-aware Preference Optimization: Aligning Preference with Denoising Performance at Each Step*, [https://arxiv.org/abs/2406.04314](https://arxiv.org/abs/2406.04314)
+supunabeywickrama/my-colab-work:ML_LLM_VLM_FINE_TUNE.ipynb: "- Fine-tunes an LLM for step-by-step troubleshooting with safety validation\n",
+supunabeywickrama/my-colab-work:ML_LLM_VLM_FINE_TUNE.ipynb: "## 🧠 4. Step-Aware Dataset Design (VERY ADVANCED ⭐)\n",
+futurewei-cloud/StorageIntern:2024/AnqiYang/kv_version/dataset/1_llm.txt: to zero, observing which token had the highest probability in
+futurewei-cloud/StorageIntern:2024/AnqiYang/kv_version/dataset/1_llm.txt: four lines are focused on “Hallucination Alleviation.” #LLM indicates the number of LLMs needed. Train. denotes “How many works need training?”
+Lumiwealth/lumibot:CHANGELOG.md: - **Live FRED macro requests no longer use tomorrow's real-time date after UTC midnight.** Default FRED/ALFRED requests clamp the live as-of date to FRED's current Central-time date, preventing after-hours agents from receiving 400 errors while preserving explicit historical `as_of` backtest requests.
+Lumiwealth/lumibot:CHANGELOG.md: - **Multi-provider LLM support for AI agents via LiteLLM bridge.** Agents can now use any LLM provider LiteLLM supports (OpenAI GPT, xAI Grok, Anthropic Claude, Groq, Mistral, Cohere, and ~100 others) by passing a provider-prefixed `default_model` to `self.agents.create(...)`. Gemini ids still take Google ADK's native fast path; anything else is transparently wrapped via `google.adk.models.lite_llm.LiteLlm`. New `_resolve_model_for_adk()` helper in `lumibot/components/agents/runtime.py` does the routing. Added `litellm>=1.77.0` to `setup.py` install_requires. Replay cache already keyed on the model id (`manager.py:516`), so swapping providers on the same backtest produces fresh runs rather than stale cross-model replays. Three provider-specific M2 demo strategies mirror the existing Gemini demo with only the `default_model` + provider key changed: `lumibot/example_strategies/agent_m2_liquidity_openai.py` (openai/gpt-5.4-mini), `agent_m2_liquidity_grok.py` (xai/grok-4.20-0309-reasoning = Grok 4.2), and `agent_m2_liquidity_anthropic.py` (anthropic/claude-sonnet-4-6). Public docs updated in `docsrc/agents.rst`, `docsrc/agents_quickstart.rst`, and `docsrc/environment_variables.rst` to document supported providers and required env vars (`GEMINI_API_KEY` / `OPENAI_API_KEY` / `XAI_API_KEY` or `GROK_API_KEY` / `ANTHROPIC_API_KEY`). New unit tests `TestResolveModelForAdk` in `tests/test_agent_runtime_cache.py` cover Gemini passthrough (6 ids incl. case and whitespace variants), LiteLlm wrapping (OpenAI, xAI, Anthropic, Groq, Mistral prefixes), and non-string passthrough.
+Lumiwealth/lumibot:CHANGELOG.md: - **Automatic retry on transient provider errors for AI agents.** `GoogleADKRuntime.run()` now wraps the ADK runner in a 3-attempt retry loop with exponential backoff (2s/4s/8s). Catches transient failures (network blips, 429 rate limits, 500/503/529 server errors, brief timeouts) and retries silently; real configuration errors (auth failures, invalid model ids, context-length-exceeded) still fail fast via a non-retryable error classifier. For the LiteLLM path, `litellm.num_retries = 3` is also set so the LiteLLM layer gets its own provider-aware retry (HTTP-level, 429 Retry-After aware) inside each attempt. Production agents now survive normal cloud-provider hiccups without strategy-level error handling. LiteLLM also configured with `drop_params = True` (silently drops provider-unsupported params instead of raising; needed for xAI rejecting `max_completion_tokens`) and `suppress_debug_info = True` (mutes cosmetic "Provider List" banner for current-generation models not yet in LiteLLM's static cost registry like `gpt-5.4-*` and `grok-4.20-*`).
+KJaebye/EmbodiedAI-Robotics-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.jsonl: {'arxiv_id': 'arXiv:2506.04654', 'title': 'E-bike agents: Large Language Model-Driven E-Bike Accident Analysis and Severity Prediction', 'authors': 'Zhichao Yang, Jiashu He, Mohammad B. Al-Khasawneh, Darshan Pandit, Cirillo Cinzia', 'link': 'https://arxiv.org/abs/2506.04654', 'abstract': 'Electric bicycles (e-bikes) are rapidly increasing in use, raising safety concerns due to a rise in accident reports. However, e-bike incident reports often use unstructured narrative formats, which hinders quantitative safety analysis. This study introduces E-bike agents, a framework that uses large language models (LLM) powered agents to classify and extract safety variables from unstructured incident reports. Our framework consists of four LLM agents, handling data classification, information extraction, injury cause determination, and component linkage, to extract the key factors that could lead to E-bike accidents and cause varying severity levels. Furthermore, we used an ordered logit model to examine the relationship between the severity of the incident and the factors retrieved, such as gender, the type of cause, and environmental conditions. Our research shows that equipment issues are slightly more common than human-related ones, but human-related incidents are more often fatal. Specifically, pedals, tires, and brakes are frequent contributors to accidents. The model achieves a high weighted F1 score of 0.87 in classification accuracy, highlighting the potential of using LLMs to extract unstructured data in niche domains, such as transportation. Our method offers a scalable solution to improve e-bike safety analytics and provides actionable information for policy makers, designers, and regulators.', 'abstract_zh': '电助力自行车(e-bike)的使用迅速增加，由于事故报告增多而引起安全关注。然而，e-bike事故报告往往使用非结构化的叙述格式，这阻碍了定量安全分析。本文介绍了一种E-bike代理框架，该框架利用大语言模型（LLM）驱动的代理对非结构化的事故报告进行分类和提取安全变量。该框架包括四个LLM代理，分别处理数据分类、信息提取、伤害原因确定和组件关联，以提取可能导致e-bike事故和不同严重程度的关键因素。此外，我们使用有序logit模型分析事故严重程度与提取因素之间的关系，如性别、原因类型和环境条件。研究发现，设备问题比人为问题略多，但人为事故更致命。具体来说，脚踏、轮胎和刹车是事故频发的原因。模型在分类准确性上获得较高加权F1分数0.87，突显了在交通等专业领域使用LLM提取非结构化数据的潜力。本文方法提供了可扩展的解决方案，以提高e-bike安全分析质量，并为决策者、设计师和监管机构提供可操作信息。', 'title_zh': '基于大型语言模型的电动自行车事故分析与严重性预测'}
+KJaebye/EmbodiedAI-Robotics-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.jsonl: {'arxiv_id': 'arXiv:2506.04651', 'title': 'Agents of Change: Self-Evolving LLM Agents for Strategic Planning', 'authors': 'Nikolas Belle, Dakota Barnes, Alfonso Amayuelas, Ivan Bercovich, Xin Eric Wang, William Wang', 'link': 'https://arxiv.org/abs/2506.04651', 'abstract': "Recent advances in LLMs have enabled their use as autonomous agents across a range of tasks, yet they continue to struggle with formulating and adhering to coherent long-term strategies. In this paper, we investigate whether LLM agents can self-improve when placed in environments that explicitly challenge their strategic planning abilities. Using the board game Settlers of Catan, accessed through the open-source Catanatron framework, we benchmark a progression of LLM-based agents, from a simple game-playing agent to systems capable of autonomously rewriting their own prompts and their player agent's code. We introduce a multi-agent architecture in which specialized roles (Analyzer, Researcher, Coder, and Player) collaborate to iteratively analyze gameplay, research new strategies, and modify the agent's logic or prompt. By comparing manually crafted agents to those evolved entirely by LLMs, we evaluate how effectively these systems can diagnose failure and adapt over time. Our results show that self-evolving agents, particularly when powered by models like Claude 3.7 and GPT-4o, outperform static baselines by autonomously adopting their strategies, passing along sample behavior to game-playing agents, and demonstrating adaptive reasoning over multiple iterations.", 'abstract_zh': '近期大规模语言模型的发展使它们能够在多种任务中作为自主代理使用，但仍难以形成和遵守连贯的长期策略。本文探讨将语言模型代理置于明确挑战其战略规划能力的环境中时，它们能否自我提升。通过使用开源Catanatron框架访问《,settlers of Catan》这一棋盘游戏，我们对一系列基于语言模型的代理进行了基准测试，从简单的游戏代理到能够自主重写自己提示和玩家代理代码的系统。我们引入了一种多代理架构，其中专门的角色（分析员、研究员、程序员和玩家）协作迭代地分析游戏玩法、研究新策略并修改代理的逻辑或提示。通过对手工构建的代理与完全由语言模型进化出的代理进行比较，我们评估了这些系统诊断失败和随着时间迭代适应的能力。结果显示，特别是由 Claude 3.7 和 GPT-4o 等模型驱动的自进化代理优于静态基线，能够自主采用策略、传递示例行为给游戏代理，并在多次迭代中展示适应性推理。', 'title_zh': '变革的推动者：自演进的大语言模型代理在战略规划中的应用'}
+KJaebye/EmbodiedAI-Robotics-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.jsonl: {'arxiv_id': 'arXiv:2506.04512', 'title': 'Schema Generation for Large Knowledge Graphs Using Large Language Models', 'authors': 'Bohui Zhang, Yuan He, Lydia Pintscher, Albert Meroño Peñuela, Elena Simperl', 'link': 'https://arxiv.org/abs/2506.04512', 'abstract': "Schemas are vital for ensuring data quality in the Semantic Web and natural language processing. Traditionally, their creation demands substantial involvement from knowledge engineers and domain experts. Leveraging the impressive capabilities of large language models (LLMs) in related tasks like ontology engineering, we explore automatic schema generation using LLMs. To bridge the resource gap, we introduce two datasets: YAGO Schema and Wikidata EntitySchema, along with evaluation metrics. The LLM-based pipelines effectively utilize local and global information from knowledge graphs (KGs) to generate validating schemas in Shape Expressions (ShEx). Experiments demonstrate LLMs' strong potential in producing high-quality ShEx schemas, paving the way for scalable, automated schema generation for large KGs. Furthermore, our benchmark introduces a new challenge for structured generation, pushing the limits of LLMs on syntactically rich formalisms.", 'abstract_zh': '基于大型语言模型的Schema自动生成对于语义网和自然语言处理中的数据质量至关重要。传统上，Schema的创建需要知识工程师和领域专家的大量参与。通过利用大型语言模型在onto工程等相关任务中的卓越能力，我们探索了使用大型语言模型进行自动Schema生成。为了弥合资源差距，我们引入了两个数据集：YAGO Schema和Wikidata EntitySchema，以及评价指标。基于大型语言模型的流水线有效利用知识图谱的局部和全局信息，生成Shape Expressions (ShEx)形式的验证Schema。实验表明，大型语言模型在生成高质量ShEx Schema方面具有巨大潜力，为大规模知识图谱的可扩展、自动化Schema生成铺平了道路。此外，我们的基准测试引入了结构化生成的新挑战，推动了大型语言模型在语法丰富形式化语言上的能力极限。', 'title_zh': '使用大规模语言模型大规模知识图谱的模式生成'}
+KJaebye/EmbodiedAI-Robotics-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.jsonl: {'arxiv_id': 'arXiv:2506.04598', 'title': 'Scaling Laws for Robust Comparison of Open Foundation Language-Vision Models and Datasets', 'authors': 'Marianna Nezhurina, Tomer Porian, Giovanni Pucceti, Tommie Kerssies, Romain Beaumont, Mehdi Cherti, Jenia Jitsev', 'link': 'https://arxiv.org/abs/2506.04598', 'abstract': "In studies of transferable learning, scaling laws are obtained for various important foundation models to predict their properties and performance at larger scales. We show here how scaling law derivation can also be used for model and dataset comparison, allowing to decide which procedure is to be preferred for pre-training. For the first time, full scaling laws based on dense measurements across a wide span of model and samples seen scales are derived for two important language-vision learning procedures, CLIP and MaMMUT, that use either contrastive only or contrastive and captioning text generative loss. Ensuring sufficient prediction accuracy for held out points, we use derived scaling laws to compare both models, obtaining evidence for MaMMUT's stronger improvement with scale and better sample efficiency than standard CLIP. To strengthen validity of the comparison, we show scaling laws for various downstream tasks, classification, retrieval, and segmentation, and for different open datasets, DataComp, DFN and Re-LAION, observing consistently the same trends. We show that comparison can also be performed when deriving scaling laws with a constant learning rate schedule, reducing compute cost. Accurate derivation of scaling laws provides thus means to perform model and dataset comparison across scale spans, avoiding misleading conclusions based on measurements from single reference scales only, paving the road for systematic comparison and improvement of open foundation models and datasets for their creation. We release all the pre-trained models with their intermediate checkpoints, including openMaMMUT-L/14, which achieves $80.3\\%$ zero-shot ImageNet-1k accuracy, trained on 12.8B samples from DataComp-1.4B. Code for reproducing experiments in the paper and raw experiments data can be found at this https URL.", 'abstract_zh': '在迁移学习研究中，通过建立各种重要基础模型的标度律来预测其在更大尺度下的属性和性能。我们展示了如何利用标度律推导方法来进行模型和数据集的比较，以便决定预训练时应优先采用哪种 procedure。首次基于广泛范围的模型和样本观测尺度，推导了两种重要的语言-视觉学习 procedure（CLIP 和 MaMMUT）的完整标度律，这两种 procedure 分别使用对比或对比和配图文本生成损失。通过确保对外预测点足够的准确性，我们使用推导出的标度律比较了两种模型，提供了 MaMMUT 在规模上表现出更强改进和更好样本效率的证据。为增强比较的可靠性，我们展示了在多种下游任务（分类、检索和分割）以及不同开源数据集（DataComp、DFN 和 Re-LAION）上推导出的标度律，观察到一致的趋势。我们展示了即使在使用恒定学习率调度推导标度律时也能进行比较，从而减少了计算成本。准确推导出的标度律提供了在不同尺度范围内比较模型和数据集的方法，避免了仅基于单一参考尺度测量得出错误结论的情况，为系统比较和改进开放基础模型和数据集奠定了道路。我们发布了所有预训练模型及其中间检查点，包括 openMaMMUT-L/14，该模型在 128亿个 DataComp-1.4B 样本上训练，实现了80.3% 的零样本 ImageNet-1k 准确率。论文中的实验代码和原始实验数据可在此处找到。', 'title_zh': '开放基础语言-视觉模型和数据集稳健比较的标度律'}
+KJaebye/EmbodiedAI-Robotics-arXiv-Daily-Reporter:6-Jun-2025/topic/LLM_related_papers.jsonl: {'arxiv_id': 'arXiv:2506.04592', 'title': 'Safe: Enhancing Mathematical Reasoning in Large Language Models via Retrospective Step-aware Formal Verification', 'authors': 'Chengwu Liu, Ye Yuan, Yichun Yin, Yan Xu, Xin Xu, Zaoyu Chen, Yasheng Wang, Lifeng Shang, Qun Liu, Ming Zhang', 'link': 'https://arxiv.org/abs/2506.04592', 'abstract': 'Chain-of-Thought (CoT) prompting has become the de facto method to elicit reasoning capabilities from large language models (LLMs). However, to mitigate hallucinations in CoT that are notoriously difficult to detect, current methods such as process reward models (PRMs) or self-consistency operate as opaque boxes and do not provide checkable evidence for their judgments, possibly limiting their effectiveness. To address this issue, we draw inspiration from the idea that "the gold standard for supporting a mathematical claim is to provide a proof". We propose a retrospective, step-aware formal verification framework $Safe$. Rather than assigning arbitrary scores, we strive to articulate mathematical claims in formal mathematical language Lean 4 at each reasoning step and provide formal proofs to identify hallucinations. We evaluate our framework $Safe$ across multiple language models and various mathematical datasets, demonstrating a significant performance improvement while offering interpretable and verifiable evidence. We also propose $FormalStep$ as a benchmark for step correctness theorem proving with $30,809$ formal statements. To the best of our knowledge, our work represents the first endeavor to utilize formal mathematical language Lean 4 for verifying natural language content generated by LLMs, aligning with the reason why formal mathematical languages were created in the first place: to provide a robust foundation for hallucination-prone human-written proofs.', 'abstract_zh': 'Safe：使用形式化数学语言验证大型语言模型生成内容的回顾性步骤感知形式化验证框架', 'title_zh': 'Safe: 通过回顾性的步骤感知形式验证增强大型语言模型的数学推理能力'}
+LightChen233/Awesome-Long-Chain-of-Thought-Reasoning:pages/paper.md: <li><i><b>Making Language Models Better Reasoners with Step-Aware Verifier</b></i>, Li et al., <a href="https://aclanthology.org/2023.acl-long.291/" target="_blank"><img src="https://img.shields.io/badge/PDF-2023.07-blue" alt="PDF Badge"></a></li>
+LightChen233/Awesome-Long-Chain-of-Thought-Reasoning:pages/paper.md: <li><i><b>Thinking Short and Right Over Thinking Long: Serving LLM Reasoning Efficiently and Accurately</b></i>, Wang et al., <a href="https://arxiv.org/abs/2505.13326" target="_blank"><img src="https://img.shields.io/badge/arXiv-2025.05-red" alt="arXiv Badge"></a></li>
+cuixing158/Awesome-CV-MasterHub:docs/Image-Generation.md: | **[Image Generators are Generalist Vision Learners](https://arxiv.org/abs/2604.20329v1)** | 2026-04-22 | <details><summary>Show</summary><p>Recent works show that image and video generators exhibit zero-shot visual understanding behaviors, in a way reminiscent of how LLMs develop emergent capabilities of language understanding and reasoning from generative pretraining. While it has long been conjectured that the ability to create visual content implies an ability to understand it, there has been limited evidence that generative vision models have developed strong understanding capabilities. In this work, we demonstrate that image generation training serves a role similar to LLM pretraining, and lets models learn powerful and general visual representations that enable SOTA performance on various vision tasks. We introduce Vision Banana, a generalist model built by instruction-tuning Nano Banana Pro (NBP) on a mixture of its original training data alongside a small amount of vision task data. By parameterizing the output space of vision tasks as RGB images, we seamlessly reframe perception as image generation. Our generalist model, Vision Banana, achieves SOTA results on a variety of vision tasks involving both 2D and 3D understanding, beating or rivaling zero-shot domain-specialists, including Segment Anything Model 3 on segmentation tasks, and the Depth Anything series on metric depth estimation. We show that these results can be achieved with lightweight instruction-tuning without sacrificing the base model's image generation capabilities. The superior results suggest that image generation pretraining is a generalist vision learner. It also shows that image generation serves as a unified and universal interface for vision tasks, similar to text generation's role in language understanding and reasoning. We could be witnessing a major paradigm shift for computer vision, where generative vision pretraining takes a central role in building Foundational Vision Models for both generation and understanding.</p></details> | <details><summary>Proje...</summary><p>Project Page: http://vision-banana.github.io</p></details> | None |
+cuixing158/Awesome-CV-MasterHub:docs/Image-Generation.md: | **[Tstars-Tryon 1.0: Robust and Realistic Virtual Try-On for Diverse Fashion Items](https://arxiv.org/abs/2604.19748v2)** | 2026-04-22 | <details><summary>Show</summary><p>Recent advances in image generation and editing have opened new opportunities for virtual try-on. However, existing methods still struggle to meet complex real-world demands. We present Tstars-Tryon 1.0, a commercial-scale virtual try-on system that is robust, realistic, versatile, and highly efficient. First, our system maintains a high success rate across challenging cases like extreme poses, severe illumination variations, motion blur, and other in-the-wild conditions. Second, it delivers highly photorealistic results with fine-grained details, faithfully preserving garment texture, material properties, and structural characteristics, while largely avoiding common AI-generated artifacts. Third, beyond apparel try-on, our model supports flexible multi-image composition (up to 6 reference images) across 8 fashion categories, with coordinated control over person identity and background. Fourth, to overcome the latency bottlenecks of commercial deployment, our system is heavily optimized for inference speed, delivering near real-time generation for a seamless user experience. These capabilities are enabled by an integrated system design spanning end-to-end model architecture, a scalable data engine, robust infrastructure, and a multi-stage training paradigm. Extensive evaluation and large-scale product deployment demonstrate that Tstars-Tryon1.0 achieves leading overall performance. To support future research, we also release a comprehensive benchmark. The model has been deployed at an industrial scale on the Taobao App, serving millions of users with tens of millions of requests.</p></details> | <details><summary>24 pa...</summary><p>24 pages, model evaluation report</p></details> | None |
+cuixing158/Awesome-CV-MasterHub:docs/Image-Generation.md: | **[Visual Instruction-Finetuned Language Model for Versatile Brain MR Image Tasks](https://arxiv.org/abs/2604.02748v1)** | 2026-04-03 | <details><summary>Show</summary><p>LLMs have demonstrated remarkable capabilities in linguistic reasoning and are increasingly adept at vision-language tasks. The integration of image tokens into transformers has enabled direct visual input and output, advancing research from image-to-text descriptions to text-to-image generation. However, simple text-to-image generation holds limited clinical utility. In medical imaging, tasks such as image segmentation for localizing pathologies or image translation for reconstructing missing sequences have much greater clinical importance. Despite this, integrating these diverse, clinically relevant tasks within a single, versatile language model remains unexplored. Our method, LLaBIT (Large Language Model for Brain Image Translation), extends the visual reasoning of LLMs to these clinically meaningful tasks in the brain MRI domain. To mitigate the spatial information loss inherent in image tokenization, we incorporate a mechanism to reuse feature maps from the image encoder, minimizing data degradation. We also generate text data using LLMs with strict predefined instructions to augment limited image-text paired data in brain MRI. We comprehensively evaluated our method on five brain MRI datasets across four distinct tasks: report generation, visual question answering, image segmentation, and image translation. Our model not only demonstrated superior performance across all tasks but also outperformed specialized, task-specific models in direct comparisons, highlighting its efficacy and versatility</p></details> | ICPR 2026 accepted | None |
+cuixing158/Awesome-CV-MasterHub:docs/Image-Generation.md: | **[ExploreVLA: Dense World Modeling and Exploration for End-to-End Autonomous Driving](https://arxiv.org/abs/2604.02714v1)** | 2026-04-03 | <details><summary>Show</summary><p>End-to-end autonomous driving models based on Vision-Language-Action (VLA) architectures have shown promising results by learning driving policies through behavior cloning on expert demonstrations. However, imitation learning inherently limits the model to replicating observed behaviors without exploring diverse driving strategies, leaving it brittle in novel or out-of-distribution scenarios. Reinforcement learning (RL) offers a natural remedy by enabling policy exploration beyond the expert distribution. Yet VLA models, typically trained on offline datasets, lack directly observable state transitions, necessitating a learned world model to anticipate action consequences. In this work, we propose a unified understanding-and-generation framework that leverages world modeling to simultaneously enable meaningful exploration and provide dense supervision. Specifically, we augment trajectory prediction with future RGB and depth image generation as dense world modeling objectives, requiring the model to learn fine-grained visual and geometric representations that substantially enrich the planning backbone. Beyond serving as a supervisory signal, the world model further acts as a source of intrinsic reward for policy exploration: its image prediction uncertainty naturally measures a trajectory's novelty relative to the training distribution, where high uncertainty indicates out-of-distribution scenarios that, if safe, represent valuable learning opportunities. We incorporate this exploration signal into a safety-gated reward and optimize the policy via Group Relative Policy Optimization (GRPO). Experiments on the NAVSIM and nuScenes benchmarks demonstrate the effectiveness of our approach, achieving a state-of-the-art PDMS score of 93.7 and an EPDMS of 88.8 on NAVSIM. The code and demo will be publicly available at https://zihaosheng.github.io/ExploreVLA/.</p></details> | <details><summary>The c...</summary><p>The code and demo will be publicly available at https://zihaosheng.github.io/ExploreVLA/</p></details> | [Code Link](https://zihaosheng.github.io/ExploreVLA) |
+Luvata/awesome-papers:data/csv/atfortes-Awesome-LLM-Reasoning.csv: 6c1e1cc1e0e1f8fd026fe517607b2d4535565fa7,PAL: Program-aided Language Models,"Large language models (LLMs) have recently demonstrated an impressive ability to perform arithmetic and symbolic reasoning tasks, when provided with a few examples at test time (""few-shot prompting""). Much of this success can be attributed to prompting methods such as""chain-of-thought'', which employ LLMs for both understanding the problem description by decomposing it into steps, as well as solving each step of the problem. While LLMs seem to be adept at this sort of step-by-step decomposition, LLMs often make logical and arithmetic mistakes in the solution part, even when the problem is decomposed correctly. In this paper, we present Program-Aided Language models (PAL): a novel approach that uses the LLM to read natural language problems and generate programs as the intermediate reasoning steps, but offloads the solution step to a runtime such as a Python interpreter. With PAL, decomposing the natural language problem into runnable steps remains the only learning task for the LLM, while solving is delegated to the interpreter. We demonstrate this synergy between a neural LLM and a symbolic interpreter across 13 mathematical, symbolic, and algorithmic reasoning tasks from BIG-Bench Hard and other benchmarks. In all these natural language reasoning tasks, generating code using an LLM and reasoning using a Python interpreter leads to more accurate results than much larger models. For example, PAL using Codex achieves state-of-the-art few-shot accuracy on the GSM8K benchmark of math word problems, surpassing PaLM-540B which uses chain-of-thought by absolute 15% top-1. Our code and data are publicly available at http://reasonwithpal.com/ .",2022-11-18,"{'id': 'fc0a208c-acb7-47dc-a0d4-af8190e21d29', 'name': 'International Conference on Machine Learning', 'type': 'conference', 'alternate_names': ['ICML', 'Int Conf Mach Learn'], 'url': 'https://icml.cc/'}",61,369,67,"This paper presents Program-Aided Language models (PAL): a novel approach that uses the LLM to read natural language problems and generate programs as the intermediate reasoning steps, but offloads the solution step to a runtime such as a Python interpreter. (tldr@v2.0.0)",2211.10435,2025-01-11T23:36:45.128217Z
+Luvata/awesome-papers:data/csv/atfortes-Awesome-LLM-Reasoning.csv: 078e4ff3739a96365482483beca71fc505a7e7eb,Iteration Head: A Mechanistic Study of Chain-of-Thought,"Chain-of-Thought (CoT) reasoning is known to improve Large Language Models both empirically and in terms of theoretical approximation power. However, our understanding of the inner workings and conditions of apparition of CoT capabilities remains limited. This paper helps fill this gap by demonstrating how CoT reasoning emerges in transformers in a controlled and interpretable setting. In particular, we observe the appearance of a specialized attention mechanism dedicated to iterative reasoning, which we coined""iteration heads"". We track both the emergence and the precise working of these iteration heads down to the attention level, and measure the transferability of the CoT skills to which they give rise between tasks.",2024-06-04,"{'id': '1901e811-ee72-4b20-8f7e-de08cd395a10', 'name': 'arXiv.org', 'alternate_names': ['ArXiv'], 'issn': '2331-8422', 'url': 'https://arxiv.org'}",0,3,49,"This paper demonstrates how chain-of-Thought reasoning emerges in transformers in a controlled and interpretable setting by observing the appearance of a specialized attention mechanism dedicated to iterative reasoning, which is coined ""iteration heads"". (tldr@v2.0.0)",2406.02128,2025-01-11T23:36:47.592781Z
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+Prior-art check found the expected overlap: multiple maintained serving systems already implement the cross-request batching mechanism under names like continuous batching, iteration-level batching, or in-flight batching. I’m doing one quick artifact existence check in the repo so the reproducibility line is grounded rather than assumed from the packet.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find projects/PROJ-0010 experiments registry -path '*EXP-0036*' -o -path '*CLAIM-0039*' -o -name 'PRE_REGISTRATION.md' -o -name 'sim.py' -o -name 'policy_compare.csv' -o -name 'raw_runs.csv' -o -name 'sim_run_v2.log' | sort" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-02/EXP-0001/PRE_REGISTRATION.md
+experiments/2026-06-02/EXP-0001/sim.py
+experiments/2026-06-02/EXP-0002/PRE_REGISTRATION.md
+experiments/2026-06-02/EXP-0002/sim.py
+experiments/2026-06-02/EXP-0003/PRE_REGISTRATION.md
+experiments/2026-06-02/EXP-0004/PRE_REGISTRATION.md
+experiments/2026-06-02/EXP-0004/sim.py
+experiments/2026-06-02/EXP-0005/PRE_REGISTRATION.md
+experiments/2026-06-02/EXP-0005/scripts/sim.py
+experiments/2026-06-02/EXP-0006/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0007/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0007/scripts/sim.py
+experiments/2026-06-03/EXP-0009/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0010/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0010/scripts/sim.py
+experiments/2026-06-03/EXP-0012/sim.py
+experiments/2026-06-03/EXP-0013/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0014/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0014/sim.py
+experiments/2026-06-03/EXP-0015/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0017/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0018/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0019/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0019/sim.py
+experiments/2026-06-03/EXP-0020/sim.py
+experiments/2026-06-03/EXP-0021/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0022/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0023/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0027/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0029/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0033/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0034/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0035/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0036
+experiments/2026-06-03/EXP-0036/COMMITTEE1_PACKET.md
+experiments/2026-06-03/EXP-0036/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0036/RESULTS.md
+experiments/2026-06-03/EXP-0036/committee1
+experiments/2026-06-03/EXP-0036/committee1/.members.txt
+experiments/2026-06-03/EXP-0036/committee1/_runner.log
+experiments/2026-06-03/EXP-0036/committee1/area_chair.err
+experiments/2026-06-03/EXP-0036/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0036/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0036/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0036/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0036/committee1/product_realist.err
+experiments/2026-06-03/EXP-0036/committee1/product_realist.out
+experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0036/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0036/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0036/experiment.yaml
+experiments/2026-06-03/EXP-0036/logs
+experiments/2026-06-03/EXP-0036/logs/sim_run.log
+experiments/2026-06-03/EXP-0036/logs/sim_run_v2.log
+experiments/2026-06-03/EXP-0036/results
+experiments/2026-06-03/EXP-0036/results/policy_compare.csv
+experiments/2026-06-03/EXP-0036/results/raw_runs.csv
+experiments/2026-06-03/EXP-0036/sim.py
+experiments/2026-06-03/EXP-0037/PRE_REGISTRATION.md
+registry/claims/PROJ-0010/2026-06-03/CLAIM-0039.yaml
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find . -type f \\( -name 'policy_compare.csv' -o -name 'raw_runs.csv' -o -name 'sim.py' -o -name 'PRE_REGISTRATION.md' -o -name 'sim_run_v2.log' \\) | sort" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 116ms:
+./experiments/2026-06-02/EXP-0001/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0001/sim.py
+./experiments/2026-06-02/EXP-0002/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0002/sim.py
+./experiments/2026-06-02/EXP-0003/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/sim.py
+./experiments/2026-06-02/EXP-0005/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0005/scripts/sim.py
+./experiments/2026-06-02/EXP-0006/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0007/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0007/scripts/sim.py
+./experiments/2026-06-03/EXP-0009/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0010/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0010/scripts/sim.py
+./experiments/2026-06-03/EXP-0012/sim.py
+./experiments/2026-06-03/EXP-0013/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0014/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0014/sim.py
+./experiments/2026-06-03/EXP-0015/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0017/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0018/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0019/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0019/sim.py
+./experiments/2026-06-03/EXP-0020/sim.py
+./experiments/2026-06-03/EXP-0021/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0022/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0023/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0027/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0029/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0033/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0034/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0035/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0036/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0036/logs/sim_run_v2.log
+./experiments/2026-06-03/EXP-0036/results/policy_compare.csv
+./experiments/2026-06-03/EXP-0036/results/raw_runs.csv
+./experiments/2026-06-03/EXP-0036/sim.py
+./experiments/2026-06-03/EXP-0037/PRE_REGISTRATION.md
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'wc -l experiments/2026-06-03/EXP-0036/results/policy_compare.csv experiments/2026-06-03/EXP-0036/results/raw_runs.csv' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+     289 experiments/2026-06-03/EXP-0036/results/policy_compare.csv
+    4321 experiments/2026-06-03/EXP-0036/results/raw_runs.csv
+    4610 total
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,8p' experiments/2026-06-03/EXP-0036/results/policy_compare.csv" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+M,B,Dmean,Wmean,wait_dist,rho,cb_util_mean,ceiling_mean,residual_idle_mean,serial_tput_mean,cb_tput_mean,stepaware_tput_mean,tput_delta_c_minus_b_mean,tput_delta_ci_lo,tput_delta_ci_hi,cb_p99_mean,stepaware_p99_mean,p99_delta_c_minus_b_mean,contention_regime
+4,2,8,50,exponential,0.0,0.27905,0.27905,0.00000,0.52255,0.55810,0.55820,0.00010,-0.00015,0.00045,33.800,35.000,1.200,starved
+4,2,8,50,exponential,0.5,0.31202,0.31202,0.00000,0.57575,0.62405,0.62415,0.00010,-0.00095,0.00100,40.600,40.600,0.000,starved
+4,2,8,50,exponential,0.9,0.36355,0.36355,0.00000,0.61075,0.72710,0.72680,-0.00030,-0.00215,0.00165,39.000,38.200,-0.800,starved
+4,2,8,50,lognormal-heavytail,0.0,0.26617,0.26617,0.00000,0.49725,0.53235,0.53160,-0.00075,-0.00210,0.00060,36.800,35.600,-1.200,starved
+4,2,8,50,lognormal-heavytail,0.5,0.32440,0.32440,0.00000,0.57555,0.64880,0.64900,0.00020,0.00000,0.00060,40.200,39.000,-1.200,starved
+4,2,8,50,lognormal-heavytail,0.9,0.26755,0.26755,0.00000,0.46665,0.53510,0.53640,0.00130,0.00005,0.00325,42.200,42.800,0.600,starved
+4,2,8,200,exponential,0.0,0.07660,0.07660,0.00000,0.15300,0.15320,0.15320,0.00000,0.00000,0.00000,35.800,35.800,0.000,starved
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PreToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'tail -40 experiments/2026-06-03/EXP-0036/logs/sim_run_v2.log' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+configs=288 x seeds=5 x policies=3 = 4320 runs
+  ...180 runs
+  ...360 runs
+  ...540 runs
+  ...720 runs
+  ...900 runs
+  ...1080 runs
+  ...1260 runs
+  ...1440 runs
+  ...1620 runs
+  ...1800 runs
+  ...1980 runs
+  ...2160 runs
+  ...2340 runs
+  ...2520 runs
+  ...2700 runs
+  ...2880 runs
+  ...3060 runs
+  ...3240 runs
+  ...3420 runs
+  ...3600 runs
+  ...3780 runs
+  ...3960 runs
+  ...4140 runs
+  ...4320 runs
+DONE total_runs=4320
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: green
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Orca", url: "https://www.usenix.org/conference/osdi22/presentation/yu", overlap: "Defines iteration-level scheduling/continuous batching for generative transformer serving; directly covers cross-request decode-slot filling."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm", overlap: "README lists continuous batching of incoming requests plus PagedAttention; this is the packet's real incumbent baseline."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang/blob/main/docs/index.rst", overlap: "Docs list continuous batching, paged attention, chunked prefill, and scheduler/runtime support; overlaps with serving mechanism, not agent-step-specific policy."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/features/paged-attention-ifb-scheduler.html", overlap: "In-flight batching is described as continuous/iteration-level batching that interleaves context and generation requests to improve GPU use."},
+  {system: "HuggingFace TGI", url: "https://github.com/huggingface/text-generation-inference", overlap: "README lists continuous batching of incoming requests for increased throughput; another shipping implementation of the incumbent."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache sharing layer on vLLM; relevant to the packet's L1 caveat, but not evidence for agent-step-aware slot scheduling."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "Kernel library for prefill/decode/mixed batching and paged/ragged KV cache; not a request scheduler, so only indirect overlap."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: green for killing the slot-occupancy claim as stated: CB utilization equals the ready-work ceiling in all 288 configs, and artifacts exist with 289-line policy_compare.csv and 4321-line raw_runs.csv matching 288 configs and 4320 runs. Not sufficient as a real serving result: CPU-only model has 1 token/slot/step, fixed B, no prefill, no KV pressure, no GPU traces, and no real agent/tool latency trace. A later L1 must test vLLM/SGLang/TensorRT-LLM under KV admission, chunked prefill, and real tool-wait correlation.
+RATIONALE: Shipping systems already implement the mechanism that the claim tried to beat: Orca iteration-level scheduling, vLLM/SGLang/TGI continuous batching, and TensorRT-LLM in-flight batching. The packet’s corrected paired-arrival experiment says residual_idle = ready-work-ceiling − CB decode-util = 0.000000 across all 288 configs, so there is no fillable slot idle for an agent-step-aware policy to reclaim in this abstraction. Step-aware vs CB shows median 0.00%, mean +0.32%, max +3.31% throughput delta, with only 7/288 CI-positive wins at no p99 loss and 66/288 throughput gains only by p99 sacrifice. This supports the negative systems insight: the proposed agent-step-aware slot scheduler is not a design advance beyond existing work-conserving continuous batching; any remaining plausible bottleneck is KV/prefill/admission, a different claim.
+tokens used
+80,486

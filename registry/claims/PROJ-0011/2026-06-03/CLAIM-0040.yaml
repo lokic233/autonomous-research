@@ -26,17 +26,31 @@ why_it_matters: "FRESH axis (tool-result streaming early-commit \u2014 untouched
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0037
+  summary: 'L0 analytic+MC sim (7 seeds, 1260 cells, serial, stdlib): early-commit
+    on streaming tool-result PREFIX for agent re-ingestion. HELD-PARTIAL. 1064/1260
+    cells robust-win; realistic region (acc 0.7-0.8, f_fl 0.3-0.5) +12.1%, high-rho
+    up to +48%. KEY: break-even p*=W/((1-d)rho+W) is LOW (0.07-0.39) exactly where
+    payoff is HIGH (rho>=2) -- the INVERSE of EXP-0004''s spec-tool-CALL-prefetch
+    trap; a mediocre detector (acc~0.75) clears p* in every rho>=2 cell (W<=2). The
+    two model-internal negative triggers (wrong-commit dominance, implausible-accuracy
+    break-even) did NOT fire. HELD because two falsifiable parts are EMPIRICAL and
+    unmeasurable CPU-only: (A) real front-loading rate, (B) real partial-stream detectability
+    -- BLIND detector ablation (242/540 win, loses to -57% on tail-heavy) proves detectability
+    is load-bearing. L1 must measure real tool-result corpora (API/RAG/code-exec/log),
+    real rho=T_stream/T_step, real redo cost W (side-effects=>W>1, gate to reversible
+    steps). Novelty vs prior art = the correctness-safety break-even map for SEMANTIC
+    early-commit, not the overlap (streaming-LLM) itself. Paths: experiments/2026-06-03/EXP-0037/{PRE_REGISTRATION.md,RESULTS.md,sim_early_commit.py,results/*.csv}.'
+  data_path: experiments/2026-06-03/EXP-0037/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0037 result, then ros exp complete --exp EXP-0037 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0037; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0037
+active_experiments: []
 created_at: '2026-06-03T11:28:58Z'
-last_updated: '2026-06-03T11:29:24Z'
+last_updated: '2026-06-03T11:37:26Z'

@@ -1,0 +1,27 @@
+```
+ROLE: theory_skeptic  VOTE: green
+MUNDANE_EXPLANATIONS: [
+  "residual_idle=0 is a near-tautology of the L0 model: a work-conserving greedy filler in a 1-token/slot/step abstraction with no KV/prefill cost CANNOT leave fillable idle below E[min(#ready,B)]/B by construction. The 'finding' is the textbook Orca/vLLM result restated in sim form — exactly what basic queueing theory predicts.",
+  "Ceiling rising with rho (0.472→0.489) is also predicted, not anomalous: a shared cohort pool synchronizes wait-end events, so when the cohort returns, #ready spikes above B and min(#ready,B) saturates at B → higher mean util. Correlation creates SUPER-filled steps, not aligned bubbles, given mean-preserving cohort sharing.",
+  "SJF (c) ≡ FCFS (b) on throughput when the server is work-conserving and burst length is independent of arrival — both leave zero idle whenever ≥1 burst is ready. The +0.32% mean delta and 7/288 ~noise wins are consistent with seed jitter on paired tapes, not a real effect.",
+  "The 66/288 'gain by sacrificing p99' (median 2.06× worse) is the standard SJF→tail-latency tradeoff (Bender/Wierman), not a novel agent-step-bubble phenomenon."
+]
+CONFOUNDS: [
+  "Model-induced tautology: 1 token/slot/step + no KV admission + fixed B + no prefill bakes CB-work-conservation in. The kill is genuine for THIS claim as stated (slot-occupancy), but cannot generalize to 'no residual exists' in real systems — researcher correctly flags this as the L1 pointer (KV-bound, not slot-bound).",
+  "Cohort-pool correlation mechanism may not match real tool-wait correlation structure (shared backends correlate FAILURES/timeouts, not mean wait — heavier upper tail rather than synchronized returns). The 'rho INCREASES ceiling' result could flip under a tail-correlated wait model.",
+  "Burst length D and wait length W are independent in the sim; in real agent traces, long tool-waits correlate with long downstream reasoning (more decode) → could break the work-conservation symmetry the kill relies on."
+]
+ASSUMPTIONS_UNTESTED: [
+  "Exponential/lognormal wait choice — not stress-tested against power-law / mixture distributions where step-aware admission could matter (long-tail rare events).",
+  "Independence of burst from wait (above).",
+  "Fixed B (no admission/back-pressure variance); real systems vary effective B with KV pressure.",
+  "Cohort sharing as the only correlation lever (no cross-agent dependency graph)."
+]
+STATISTICAL_GAPS: [
+  "5 seeds × 4000 steps for p99 estimation under heavy-tailed lognormal — p99 noise floor likely large; the 'matched p99' gate could be admitting noise as 'not worse'. Should report p99 CI width per config, not point ratio.",
+  "Power analysis missing: what effect size on (c)−(b) tput delta is the 5-seed paired bootstrap actually powered to detect? If MDE ~1%, the '0/288 non-trivial wins' may be 'underpowered to see <1% wins' rather than 'no wins exist'. Given claim asks for 'non-trivial fraction', this is OK for the kill but should be stated.",
+  "Multiple-comparison correction across 288 configs not reported — 7/288 trivial 'wins' is exactly the ~2.4% false-positive rate of an uncorrected 95% bootstrap CI."
+]
+RATIONALE: The negative result is REINFORCED by theory, not undermined by it: CB-as-work-conserving is the textbook prediction (Orca OSDI'22, vLLM SOSP'23), and the sim shows the algebraically-mandated outcome — residual_idle≡0 in a model where greedy filling has no penalty. The claim as stated (slot-occupancy residual beyond CB) is dead on both empirical and theoretical grounds: there is no fillable slot-bubble for ANY policy to reclaim in this abstraction, and the cohort-correlation mechanism the claim relied on goes the WRONG way (raises ceiling). The researcher caught a real RNG/policy-coupling bug (v1→v2, verified byte-identical CB==stepaware when M<B), explicitly flagged the L0 abstraction as the one place residual COULD hide (KV-cache admission under correlated bursts — a DIFFERENT bottleneck), and reported honest paired CIs. The 7/288 trivial wins are statistically indistinguishable from the uncorrected-multiple-test false-positive rate, and the 66/288 'wins' are the textbook SJF tail-latency trade. GREEN on the kill of CLAIM-0039 as a slot-occupancy claim; the L1 KV-admission question is a different claim and should not be conflated.
+PROMPT_VERSION: v001
+```

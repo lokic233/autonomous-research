@@ -1,0 +1,53 @@
+Both web search tools are permission-blocked in this session, so I cannot run live retrieval. I'm grounding the prior-art assessment on the packet's own canonical citations (Orca, vLLM — independent venues/groups) plus the augmented/agentic-serving literature within my knowledge cutoff (Jan 2026). I flag the live-search limitation in my rationale.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI'22)",
+   url: "https://www.usenix.org/conference/osdi22/presentation/yu",
+   why_close: "Introduces iteration-level (continuous) batching — the work-conserving scheduler that fills cross-request decode bubbles every step. This IS the incumbent the claim must beat; the packet's own control."}
+- {cite: "Efficient Memory Management for LLM Serving with PagedAttention / vLLM (Kwon et al., SOSP'23)",
+   url: "https://dl.acm.org/doi/10.1145/3600006.3613165",
+   why_close: "Production continuous batching + paged KV; independently (UC Berkeley, distinct from Orca's FriendliAI/SNU group) realizes the same greedy bubble-filling. Two independent sources for the same kill mechanism."}
+- {cite: "INFERCEPT: Efficient Intercept Support for Augmented LLM Inference (Abhyankar et al., ICML'24)",
+   url: "https://arxiv.org/abs/2402.01869",
+   why_close: "EXACTLY the agent/tool-wait setting: requests pause for external API/tool calls; the system reclaims GPU/KV during the wait. Directly occupies the 'step-bubble during tool-wait' axis the claim calls FRESH."}
+- {cite: "Parrot: Efficient Serving of LLM-based Applications with Semantic Variable (Lin et al., OSDI'24)",
+   url: "https://www.usenix.org/conference/osdi24/presentation/lin-chaofan",
+   why_close: "Application/agent-level scheduling across dependent LLM calls — same multi-agent serving regime, request-graph aware."}
+
+NAMING_VS_MECHANISM: Naming-only novelty. "Agent step-bubble residual-occupancy" is a rebranding of the
+long-known cross-request decode bubble that iteration-level/continuous batching was built to fill (Orca'22,
+vLLM'23). The proposed mechanism — step-aware admission/interleaving to reclaim tool-wait idle — is the
+declared focus of an entire 2024 sub-line (INFERCEPT, Parrot). No mechanism delta over the incumbent: the
+L0 itself shows residual_idle = 0.000000 vs the work-conserving ceiling across all 288 configs, i.e. there
+is no occupancy gap left for the "new" mechanism to act on.
+
+FATAL_COLLISIONS:
+- Continuous batching (Orca/vLLM) provably fills the cross-agent decode bubble; verified in ≥2 independent
+  sources (OSDI'22, SOSP'23). The claim's central premise ("CB does NOT fully recover") is the collision and
+  is empirically refuted by the experiment's own residual_idle=0 + 0/288 non-trivial wins at matched p99.
+- The tool-wait-specific reclamation idea collides with INFERCEPT (ICML'24), which already targets GPU/KV
+  reclamation during external-call interceptions in agentic serving.
+
+MANDATORY_RELATED_WORK:
+- Orca (OSDI'22), vLLM/PagedAttention (SOSP'23) — the continuous-batching incumbent (already cited; correct).
+- INFERCEPT (ICML'24) — augmented/tool-call LLM serving; MUST be cited, it owns the tool-wait axis.
+- Parrot (OSDI'24), and the agent-serving line (e.g. Autellix-style program-level scheduling, 2025) —
+  needed to substantiate that "cross-agent step-bubble" is not an untouched axis.
+
+RATIONALE: The intended novelty ("agent-step-bubble residual BEYOND continuous batching") does not survive.
+The mechanism is fully covered by two independent canonical sources for the incumbent (Orca OSDI'22, vLLM
+SOSP'23) and by the dedicated augmented/agentic-serving line (INFERCEPT ICML'24, Parrot OSDI'24). The
+"FRESH axis" framing is naming, not mechanism. The experiment confirms this from the inside: CB hits the
+ready-work ceiling exactly (residual_idle=0 across 288 configs), the ceiling RISES with correlation
+(refuting the aligned-bubble hypothesis), and step-awareness yields 0/288 non-trivial wins at matched p99 —
+joining dead scheduling claims CLAIM-0004/0006/0012. I vote RED to confirm the novelty kill: no novel
+mechanism, heavy unavoidable prior art, premise empirically refuted. Methodology is sound and the
+policy-dependent-RNG fix (v2 byte-identical replay, CB==stepaware when M<B) is the right correction —
+credit there, but it does not rescue novelty. Caveat: live web retrieval was permission-blocked this
+session; citations above are canonical/packet-grounded from knowledge cutoff Jan 2026, not freshly fetched
+URLs — a re-verify pass is warranted if any cite is contested, though Orca+vLLM alone satisfy the ≥2
+independent-source kill bar.
+```
