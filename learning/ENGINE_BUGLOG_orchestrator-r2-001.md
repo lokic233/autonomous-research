@@ -1203,3 +1203,12 @@ cycle catches the rest), and a push of already-committed work is always safe. Va
 1 unpushed commit -> monitor flushed both -> local==remote, 0 uncommitted. v3 persistence is now self-healing
 (every 5 min) instead of bound to orchestrator cadence. Driver invokes scripts fresh each cycle so the fix
 is live without a restart. Engine main 33091f2.
+
+## 2026-06-03 ~09:20 UTC — BUG-84 (committee KILL verdict never buried to cemetery -> resurrection hole) [v3-impl]
+ros verdict write --final kill set claim status=dead but, UNLIKE ros exp complete --effect kill, never
+wrote a DEAD-* cemetery entry. So committee-killed ideas were absent from the dedup set that `ros seed new`
+checks -> a killed idea could be RE-SEEDED (violates Invariant 2: no cemetery idea resurrects). Found via
+live debug: v3 had 6 terminal-dead claims but only 3 DEAD entries; the 3 missing (CLAIM-0014/0016/0026) were
+all committee-KILL verdicts. FIX: cmd_verdict_write buries on --final kill, idempotent (skips if claim
+already has a DEAD entry so exp-complete doesn't double-bury). Validated: kill->buried->re-seed REFUSED
+(hard match 1.0)->2nd kill no double-bury. Backfilled the 3 live unburied kills (DEAD-0004/5/6). Engine e1814f0.
