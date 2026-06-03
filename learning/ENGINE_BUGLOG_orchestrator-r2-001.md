@@ -1534,3 +1534,16 @@ and RE-READ the queue inside the lock. Minimal — reuses the existing BUG-85 lo
 new exp correctly enqueued). AST-validated.
 **Commit:** research-os main f112e6a.
 **Note:** shared engine → fix protects v2 (golden ref) and v3.
+
+## 2026-06-03 ~11:03 UTC — BUG-101 (orchestrator self-check job hardcoded a stale agent-id -> design stall) [v3-impl live debug]
+OPERATIONAL/config bug (not engine code). The orchestrator self-check schedule job (af9235ca) hardcoded
+`ros heartbeat --agent orchestrator-r2-001` in its message. Across the r2->r3->r4 handoffs the id was never
+updated, so r4 (the live orchestrator) read "you are orchestrator-r2-001" and heartbeat as r2 — which is
+RETIRED. Pre-BUG-98 that silently resurrected r2 (split-brain but something ran); POST-BUG-98 (terminal
+states absorbing) those heartbeats are correctly IGNORED, so r4 never registered liveness as itself and
+sat at hb-count 3 / 12k tokens / no design for ~40min despite DESIGN? 0/4 firing every cycle = a real
+design STALL (a BUG-98-exposed latent). FIX: rewrote the self-check message to be GENERATION-AGNOSTIC —
+STEP 0 discovers the newest non-terminal orchestrator-rN-001 in runtime/agents and adopts THAT id (and
+spawns r(N+1) if the newest is retired). Handoffs can no longer break orchestrator identity. No engine
+change. LESSON: any scheduled-job message that names a specific agent generation is a latent stall across
+handoffs — always discover-the-live-agent, never hardcode the r-number.
