@@ -1,0 +1,60 @@
+I grounded the collision in two retrievable, independent sources. Here is my vote.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Chroma Research — 'Evaluating Chunking Strategies for Retrieval' (2024)",
+   url: "https://www.trychroma.com/research/evaluating-chunking",
+   why_close: "THE fatal collision. They abandon binary chunk/document-level recall for TOKEN-LEVEL
+   recall/precision and token-wise IoU *explicitly because* 'relevant excerpts may be split across
+   chunks' and chunks carry superfluous/distractor tokens — the exact mechanism CLAIM-0043 asserts.
+   Their 'Precision_Ω' is defined as the bound 'given perfect recall', i.e. they already formalize the
+   partial-coverage / whole-span problem. CLAIM-0043's 'answer-completeness@k' (whole span in one
+   chunk) is a thresholded binary special case of their continuous token-level recall."}
+- {cite: "Joren et al., 'Sufficient Context: A New Lens on RAG Systems', arXiv:2411.06037 (ICLR 2025)",
+   url: "https://arxiv.org/abs/2411.06037",
+   why_close: "Independently establishes the core insight that a high-recall retrieval can still be
+   INSUFFICIENT to answer — separating 'context insufficient' from 'model fails to use sufficient
+   context'. A retrieved fragment counting as a 'hit' yet not supporting the answer is precisely their
+   insufficient-context regime. This is the conceptual claim (recall-hit ≠ answerable), already published."}
+- {cite: "Karpukhin et al., DPR, EMNLP 2020 (open-domain QA 'answer recall'/hits@k)",
+   url: "https://arxiv.org/abs/2004.04906",
+   why_close: "Undercuts framing (i): the long-standing standard QA retrieval metric is 'a retrieved
+   passage CONTAINS the gold answer string', i.e. containment/completeness-flavored for short answers —
+   NOT the '>=1 token overlap = hit' the packet casts as standard. The packet's baseline is a partial
+   mis-cast of the standard, the same failure mode that killed CLAIM-0042."}
+
+NAMING_VS_MECHANISM: This is NAMING, not a mechanism delta. 'answer-completeness@k' renames the
+whole-span threshold of Chroma's already-published token-level recall; the 'over-count = recall − completeness'
+is the gap between binary and token-coverage recall, which Chroma's framework was purpose-built to expose.
+No new mechanism is introduced — only a relabeling plus a sim-inflated quantification.
+
+FATAL_COLLISIONS:
+- Mechanism (chunk-level recall misleads when gold spans split → use token-coverage metric) is occupied
+  by Chroma (token-IoU/recall, motivated verbatim by 'excerpts split across chunks') AND, conceptually,
+  by Sufficient Context (recall ≠ answerable). ≥2 independent sources → KILL bar met.
+- Framing (ii) confirmed: completeness@k IS the obvious, already-published fix (Chroma token-recall;
+  DPR answer-containment for short answers) — the 'over-count' is a known/trivial correction, the direct
+  analogue of CLAIM-0042's omitted Containment metric.
+- Framing (i) partial mis-cast: '>=1 token overlap = hit' is the researcher's operationalization, not the
+  universal reported standard (short-answer QA already reports containment; IR reports graded passage recall).
+- The honest sim caveat compounds it: recall@k=1.000 in every cell (always-retrievable fragment, k-invariant)
+  means the headline magnitudes are upper-bound artifacts, not a measurement of any number practitioners
+  actually report — so even the 'measurement' contribution is thin on top of an occupied mechanism.
+
+MANDATORY_RELATED_WORK:
+- Chroma 'Evaluating Chunking Strategies for Retrieval' (token-level recall/IoU, Precision_Ω) — MUST cite
+  and differentiate; currently absent from the packet's prior-art section.
+- Joren et al. 'Sufficient Context' (arXiv:2411.06037).
+- DPR / open-domain QA 'answer recall' hits@k (Karpukhin 2020) — to correctly state the actual standard.
+- RAGAS context_recall / context_precision (Es et al., 2023) — the deployed metrics the 'unreported in
+  practice' framing must contend with.
+
+RATIONALE: My own prior-art search (Chroma report fetched at trychroma.com/research/evaluating-chunking;
+Sufficient Context fetched at arxiv.org/abs/2411.06037) confirms the mechanism is doubly occupied. Chroma
+explicitly built token-level recall/IoU because 'relevant excerpts may be split across chunks' — that IS
+CLAIM-0043's mechanism and its 'completeness@k' fix. The novelty reduces to renaming a thresholded special
+case and quantifying it under a sim that pins recall@k=1.000, making the headline gap an artifact. Two+
+independent sources verify the collision per the KILL standard. RED. (prompt v001)
+```

@@ -289,3 +289,1358 @@ hook: PostToolUse Completed
 hook: PostToolUse Completed
  succeeded in 109ms:
 2026-06-03T14:51:34.134121Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -maxdepth 4 -type f | sed 's#"'^./##'"' | sort | head -200" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.git/COMMIT_EDITMSG
+.git/FETCH_HEAD
+.git/HEAD
+.git/config
+.git/description
+.git/hooks/applypatch-msg.sample
+.git/hooks/commit-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-commit.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/pre-push.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/pre-receive.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/push-to-checkout.sample
+.git/hooks/sendemail-validate.sample
+.git/hooks/update.sample
+.git/index
+.git/info/exclude
+.git/logs/HEAD
+.git/objects/00/8fc2211db35940f1db659b99a4d32dafc39083
+.git/objects/00/92f4e17c236ce10661d52c665c060789560acc
+.git/objects/00/98a8b98e3244b61571e7a6bc14e54f06832fe0
+.git/objects/00/a2c93ac2cb5abfc52049f4ace1a83e6976b30b
+.git/objects/00/e90313e5fa70d41c9eda3b3c41609de26aa309
+.git/objects/00/fed0a03392d43f491cabbac64608072f8f31f6
+.git/objects/01/077e744a0f8ced2d25d7feff39d1894a133675
+.git/objects/01/5ba6841ef5f63128beae497ff6aaec52e41c87
+.git/objects/01/5ed7b20874812a3fab9232c2c6b3904f97adec
+.git/objects/01/6b5cefbaaa14b15904e16306f4fb18b347e1d0
+.git/objects/01/83a1f0561607674aa670bdf649245ad771eb60
+.git/objects/01/850b3e73ae6e110446ff0740d9e4d011885789
+.git/objects/01/a8cb88bed95762efcb4dd809e95a30ba13421f
+.git/objects/01/c0551a8008470cb235e9a3b56618185ac74933
+.git/objects/01/c7d1d224ce51aa3278746c440fb2e23b11fb0a
+.git/objects/01/c98380f11f31e4b768639500a07d1502519393
+.git/objects/01/e1eefe78d179946a6c419d6cff29f4bc4446b4
+.git/objects/01/fcb274ad58017376842b7e84903f38c2f460fa
+.git/objects/02/02ea6bc9334821f518850cebfa2c0db27a0d01
+.git/objects/02/0627e72792ed752613b18d0076a378e94deafc
+.git/objects/02/0b5f4519b9ba9440bd2aad8ffa5be5fa0d990f
+.git/objects/02/0d2ea5558200ff0fdaaec86d47456c4996f45f
+.git/objects/02/3e95d838bcd7f532cfd0a41c3abc0a37de1653
+.git/objects/02/4e141fd57b318c3bb3351c242869a893abaa24
+.git/objects/02/56673c8aa3eb8bcb276138969c7f9bf2f3920b
+.git/objects/02/5ff459c527373667611184fe05ae3be9c6c5a5
+.git/objects/02/7bbc45180c376ea78a6f1e64ae94fecdf734e7
+.git/objects/02/8b23ec39734bcafddf6b6935068189a9279ebd
+.git/objects/02/94d2d24b5a044c8a97072c467359a9a31f8a61
+.git/objects/02/96b2efd57be8fd39eee2fa89169815b53d47a6
+.git/objects/02/c16f2228cadfbf63616ed954a7c200c73541c6
+.git/objects/03/42ffa005ae2b859c88c77585605dac55ab89de
+.git/objects/03/73b27bab7fdec1a08a3838630ccce0a53b2c51
+.git/objects/03/88065b141a6f62851dfe03a25b22c13b09c5cf
+.git/objects/03/8846591fd7a48f2175f6ca53303716bfc10502
+.git/objects/03/8948bcba40366ec97e5e5484066efbc028ded2
+.git/objects/03/9eb69df6c91596fc13833dea2673e6e4299626
+.git/objects/03/b5ce155bc48d1bd7bf3cd833c45f12aedb0497
+.git/objects/03/d87cee21ab9ccc319cf2e0bd610c620cf8b28c
+.git/objects/03/e883ce4a7940cebb19ca7abbee751c6edd621e
+.git/objects/03/f7a524f95008dcb52e306e8e12aeab388651c5
+.git/objects/04/11d524041cbd1a4b2f1c2aa5ce2f7cb9dfbb78
+.git/objects/04/11ffe13946f0fd8692aca978312299c73745f4
+.git/objects/04/2e6893773b29985a5e84bdad64b3bae9ce7f49
+.git/objects/04/2e981c482ac80a0935a7eae55e28af86da52e8
+.git/objects/04/34b05d261e99829bd206144bce530f7f3f5706
+.git/objects/04/4c2a1901e511f9c2a82297ac0b078a95c3c74f
+.git/objects/04/62c9ae86944bdb3876b944cb0b9fba73133bd0
+.git/objects/04/63e9cc43e78cfe9075346949a5f15a4e4928e1
+.git/objects/04/c89fc9cbe2aac087ea736b48a54eaff90f623a
+.git/objects/04/c9dd5248d1c80011c356d063c197d5b470dc24
+.git/objects/04/d486faa6aaec05450f177ca179474d82f5ec08
+.git/objects/04/e4ff7f53ccfc81c6f07253b4143ad274484c03
+.git/objects/04/fbcf3df0071f6464cdb34958939072b4335192
+.git/objects/05/1e63975cb41d2e6b7f09319a7150e964a0149c
+.git/objects/05/2e987562e0147db5d0dc1a8663eae52e0b6805
+.git/objects/05/4963c4c61a1970f2311c1de8877ac9db188087
+.git/objects/05/8d65ab5d0a4d45f243cb890e1a6ae05a3a2896
+.git/objects/05/aa345c81c7f3b1fddccd0bede236fce1447df5
+.git/objects/05/b9524d196012f4a12d78f1920c6d90fc651bf0
+.git/objects/05/d08234086728c96890a8ee6027b45d99429fba
+.git/objects/05/e423ff550620a9f753bb5348b2a1246fd8d4a2
+.git/objects/05/ffc34b4d02fb0cf6f9fb10af3e7ec0bd11d11c
+.git/objects/06/0e34169e8d24bd994b8fa73a7bd55711308da2
+.git/objects/06/2709c941a985cf4b2c0cb9554a5b8478052082
+.git/objects/06/5d39de66e77fde662da478b2c8903fb7ce84ec
+.git/objects/06/94bb9954b399a658c0934cc15df43271d411dc
+.git/objects/06/97cceec1f671f5698dbdc764f1a55f933c0b4c
+.git/objects/06/a2445cce77769a8bca01eca0b56284c2f1b716
+.git/objects/06/df62cae40f438c51aac3d773d36e165926e045
+.git/objects/06/e0cde0416aa8e322979021c8915b3c4ea362b5
+.git/objects/06/e6b60065dc9ebee08fa203f046f78d1875295e
+.git/objects/06/edf07a097e53ada8da390eb85833054b03adf5
+.git/objects/06/f716242af9c946498c99ec274cc97af8a24fde
+.git/objects/07/09e50e9f3b6267257fc46ab6d44a32db901e42
+.git/objects/07/204b76c6cf65aa97ddcfad53b2a9d1bc489460
+.git/objects/07/21344831ec08318fb4c171cf01e82286b1994c
+.git/objects/07/22dd6cdca7b676d56134e7b9e2c5819c2cb013
+.git/objects/07/6533d370e5cbac6ae0c6362b39f42879d6eacb
+.git/objects/07/727d2af5f1bc43758ff7a4e951a4e116f386b4
+.git/objects/07/8bffdd65c14e27123eab1be8e6c0bb9e587d6a
+.git/objects/07/a532cf0447968d13fb68eb744731d16d51c8b9
+.git/objects/07/b4c2d4bb8a772e93a04a0b9052e7035af53fda
+.git/objects/07/b5cab082b8d705d3cbbc73c0188ce654df96cd
+.git/objects/07/ebb0fdf50a5cf8edc18567d93db706cd14c4e7
+.git/objects/07/fe382c1953391c46f70099ae1c298624883383
+.git/objects/08/1ca790d052c248986b1827abc4be9f91c3d5c8
+.git/objects/08/1fd07cd2f33f29de1481a801b4b06b65a99b8d
+.git/objects/08/5fba53c7d41b5d6457c6eb2fcb875c001c27ff
+.git/objects/08/62b06f3e825a3a26fd9f1b8339365b6f5168e0
+.git/objects/08/65635dfb6781cd8a4d326a2167492df5cd075e
+.git/objects/08/7725085eb4695122342429e95f405bb97e65ee
+.git/objects/08/8246e817ea4320ea3de213074232a20f25bc7d
+.git/objects/08/84ec285c7ad76f81b54d5d2db05840710badd5
+.git/objects/08/8a75876dbfdd2a4437f934afc84eaeff1105da
+.git/objects/08/94432db906b1e9e308f3f8d7704da0388ac230
+.git/objects/08/c5cc704bc1d2c64ea5df10c1fa9ff2b4b5cc36
+.git/objects/08/c78f66f582edada23ab81856302d57b1453aff
+.git/objects/08/d372cb0584ead6ec88a2f443a36ac7e9e9bc54
+.git/objects/08/f6d35523726a2acfaae13ce744bb9236b547b4
+.git/objects/09/0885d911f432bbd2e06e5a2e10929536d28c0d
+.git/objects/09/46e44b90d4311bc35740e7c20388f0a8e99baa
+.git/objects/09/7ddb0ac7c4c97a5aaab0adeb8518ad2a0e335b
+.git/objects/09/84f11c19e892352559dd3d05011f3ccbda55d8
+.git/objects/09/911af2242473f3f2df0ce9d41264eb41be7eda
+.git/objects/09/985249fb92c63116adf9f93dc341879bfbf317
+.git/objects/09/99e6fdf942b14d157a2f614221c667edccc6da
+.git/objects/09/a0c36a2be0e9a4f376a8e2d86bb0b17be75bcb
+.git/objects/09/bcbe6432efa798401ccc615ab848892f919df5
+.git/objects/09/e77bb88cab4771cead7d987a80cb56e7bbaf0a
+.git/objects/09/ed8c36b5b35421781933085b1aaad24a377692
+.git/objects/0a/128392f0f60d06daa37002db39ca0f83e5511c
+.git/objects/0a/16e66fc7bb7f61e79604032f471f19fd339868
+.git/objects/0a/1da6578274b3e6325cbc297461d8a1dbce4d6a
+.git/objects/0a/322a7ad46bf747d9bae9f461f820e7821458b6
+.git/objects/0a/52123e9e71e726a6623ad9acc6286f5c27244d
+.git/objects/0a/6209679282cd4cc7d00877d1f16a5d9ad0fbbc
+.git/objects/0a/7049be7fb09335d4fc21afaa716c66b21d8568
+.git/objects/0a/96b4ab1b3444503903dfba32e91eda6b68d8d6
+.git/objects/0a/b2bf9ee13087c366fe2f10fd3fa16bb9f9aae8
+.git/objects/0a/c65625f401f78993baf5af2fc0639e5f8a2ed1
+.git/objects/0a/c6aaf2c6af27703f25d0461972cca786ffef46
+.git/objects/0a/d84fd061e82f31d351f59d4bd0b1e491c4c373
+.git/objects/0b/137437328b87895a123a838fb5d9eb30d69c72
+.git/objects/0b/15dc1a37b45ffa2c66cc175c8473217b3d5394
+.git/objects/0b/22876e5d71ba3e8b7ede0535335ec40f46c19d
+.git/objects/0b/30f88d1459fb69602064d9bad5a15c17bcfa44
+.git/objects/0b/3f046f274d791fb1b58c988b298abb91fd0382
+.git/objects/0b/4f49a2da3d296cfee58ef35b22b332cc95bec7
+.git/objects/0b/55b46ce166ee00c66fa94d8b02a5c1d629b756
+.git/objects/0b/55d32859db4dfa2b5a84f73a6087c226a4795c
+.git/objects/0b/6047e40b9aab3a5dd3723a7fd7c0920d630c12
+.git/objects/0b/6a01e1af40c01594a9b4974e4860f64bb4bed5
+.git/objects/0b/6f18f7dde7f24cd3ced1330f97f7f9c89110a9
+.git/objects/0b/766207b4a7030ae73e4c8d1c13744788904bfd
+.git/objects/0b/920364ad7b730760ae5ae20d08ca6696d4f17e
+.git/objects/0b/9f4cfd6609bc2a08fee6d124b816afe475a34c
+.git/objects/0b/a104c25728cef04b6bad2cb4bdff5c81b24597
+.git/objects/0b/b019f8a684be90c3121448bca5805f0d95a109
+.git/objects/0b/ca42d9f90f73ad4a431226cbc63eb52c4e4f35
+.git/objects/0b/cfa9d08d4ad2ea9634e0eeaacb87becd86eb44
+.git/objects/0b/de33543d7c0b0a41d43d5eafb187da6eed0d13
+.git/objects/0c/065e83ed1dd4a2586bb2624c3fd9f5e2cb0992
+.git/objects/0c/20aa1bd6dd1171c3ca2c88d42184f58ff00707
+.git/objects/0c/20bdb1c09ef6a227c24eb86e68618ef5102f5d
+.git/objects/0c/82f923deec2d485311d25b3f2e0958a5c5b2a9
+.git/objects/0c/87e7d07cbf259ad58110ca9e4ef7c2748fc57f
+.git/objects/0c/b7e73834bb294199b161bdef707b3180a08895
+.git/objects/0c/e1cc0030024e04cf005b2305244f10d88f0ede
+.git/objects/0c/e2e394a968a45294918c88d3ce75a61aa8d2a7
+.git/objects/0c/ee6e9b89faa31fded50487d9a7079219ae7fe5
+.git/objects/0c/fc06978f083cfb61c69e2e6440d58fb60a2841
+.git/objects/0d/14944dbfe8f742ed9e7921bab4e7b27c653d21
+.git/objects/0d/227efadc3d22c433a49fc786109d29756cb4cc
+.git/objects/0d/24e88b65396e064cf83fb7ccfd5787f1f906bb
+.git/objects/0d/5a3c5d73ae3c79a2e73f33cfefab749107007d
+.git/objects/0d/81ed951a9115d22f730848851507ffeec42f0f
+.git/objects/0d/836c5dc40f45f3a33326cd86334acbeea32976
+.git/objects/0d/954d9ad2675852342e7160453404438a900aa6
+.git/objects/0d/c14625e5337b2ff621f31631e248c9b030fd63
+.git/objects/0d/d502f310658038866d3210c93056ef27beb0f8
+.git/objects/0d/ee3cec0abccecb1b1b0c3225dacd9f0ca8bb7e
+.git/objects/0e/0c0e79a2c2a5f247d44c2a71a49b7421176e72
+.git/objects/0e/89681631264ccde4061c1996678d2df1335faa
+.git/objects/0f/0512b8d3a43dfac44351373506362139c24644
+.git/objects/0f/24ccb0c0f7617520374bc175f0f0913157bafd
+.git/objects/0f/26f697b8030549889acd1f33181c499497dde6
+.git/objects/0f/55794fc2b0058424bce779aeeab4b7c1443e1b
+.git/objects/0f/65132c271db0c03c178de24fea5da5691a4419
+.git/objects/0f/a7986b5b2795aca6abddc7992999660922eb7e
+.git/objects/0f/adf6d0b3221c92bd9743617e30bfd0f54a5a07
+.git/objects/0f/b21c7c31b407fd63e0d84767ef4320b88b32ce
+.git/objects/0f/b7a0d07bdba7843607df407e158a38858a7590
+.git/objects/0f/b9c451137eddb238883019d280bcff1bddbb7b
+.git/objects/0f/c7ff271c8d4eb830ebe3f1b3ec59cd456bbc0a
+.git/objects/0f/cc08661d69a6dd4d4448c940cc6bb3646ec625
+.git/objects/0f/e47f13c78755626843dfc3ef7bc8fec1251923
+.git/objects/0f/ee566e6041c2ccbfcef42b8b4c8e37f51119ca
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.codex -path '*TOOLING_v001.md' -o -path '*_committee_common_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -maxdepth 5 -type d | sed 's#"'^./##'"' | sort | grep -E '("'^prompts|_shared|committee)'"'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 103ms:
+experiments/2026-06-02/EXP-0001/committee1
+experiments/2026-06-02/EXP-0002/committee1
+experiments/2026-06-02/EXP-0004/committee1
+experiments/2026-06-02/EXP-0005/committee1
+experiments/2026-06-02/EXP-0006/committee1
+experiments/2026-06-03/EXP-0007/committee1
+experiments/2026-06-03/EXP-0009/committee1
+experiments/2026-06-03/EXP-0010/committee1
+experiments/2026-06-03/EXP-0011/committee1
+experiments/2026-06-03/EXP-0012/committee1
+experiments/2026-06-03/EXP-0013/committee2
+experiments/2026-06-03/EXP-0014/committee1
+experiments/2026-06-03/EXP-0015/committee1
+experiments/2026-06-03/EXP-0016/committee2
+experiments/2026-06-03/EXP-0017/committee1
+experiments/2026-06-03/EXP-0018/committee2
+experiments/2026-06-03/EXP-0019/committee1
+experiments/2026-06-03/EXP-0020/committee1
+experiments/2026-06-03/EXP-0021/committee2
+experiments/2026-06-03/EXP-0022/committee2
+experiments/2026-06-03/EXP-0023/committee1
+experiments/2026-06-03/EXP-0027/committee1
+experiments/2026-06-03/EXP-0029/committee1
+experiments/2026-06-03/EXP-0033/committee1
+experiments/2026-06-03/EXP-0034/committee2
+experiments/2026-06-03/EXP-0035/committee1
+experiments/2026-06-03/EXP-0036/committee1
+experiments/2026-06-03/EXP-0037/committee1
+experiments/2026-06-03/EXP-0038/committee2
+experiments/2026-06-03/EXP-0039/committee1
+experiments/2026-06-03/EXP-0040/committee1
+experiments/2026-06-03/EXP-0042/committee1
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 749ms:
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find experiments -path '*/committee1/*' -maxdepth 6 -type f | sort | tail -80" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-03/EXP-0035/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0035/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0035/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0036/committee1/.members.txt
+experiments/2026-06-03/EXP-0036/committee1/.v3_notified.ready
+experiments/2026-06-03/EXP-0036/committee1/_runner.log
+experiments/2026-06-03/EXP-0036/committee1/_status.txt
+experiments/2026-06-03/EXP-0036/committee1/area_chair.err
+experiments/2026-06-03/EXP-0036/committee1/area_chair.out
+experiments/2026-06-03/EXP-0036/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0036/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0036/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0036/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0036/committee1/product_realist.err
+experiments/2026-06-03/EXP-0036/committee1/product_realist.out
+experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0036/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0036/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0036/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0037/committee1/.members.txt
+experiments/2026-06-03/EXP-0037/committee1/.v3_notified.ready
+experiments/2026-06-03/EXP-0037/committee1/_runner.log
+experiments/2026-06-03/EXP-0037/committee1/_status.txt
+experiments/2026-06-03/EXP-0037/committee1/area_chair.err
+experiments/2026-06-03/EXP-0037/committee1/area_chair.out
+experiments/2026-06-03/EXP-0037/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0037/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0037/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0037/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0037/committee1/product_realist.err
+experiments/2026-06-03/EXP-0037/committee1/product_realist.out
+experiments/2026-06-03/EXP-0037/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0037/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0037/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0037/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0039/committee1/.members.txt
+experiments/2026-06-03/EXP-0039/committee1/.v3_notified.ready
+experiments/2026-06-03/EXP-0039/committee1/_runner.log
+experiments/2026-06-03/EXP-0039/committee1/_status.txt
+experiments/2026-06-03/EXP-0039/committee1/area_chair.err
+experiments/2026-06-03/EXP-0039/committee1/area_chair.out
+experiments/2026-06-03/EXP-0039/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0039/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0039/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0039/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0039/committee1/product_realist.err
+experiments/2026-06-03/EXP-0039/committee1/product_realist.out
+experiments/2026-06-03/EXP-0039/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0039/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0039/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0039/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0040/committee1/.members.txt
+experiments/2026-06-03/EXP-0040/committee1/.v3_notified.ready
+experiments/2026-06-03/EXP-0040/committee1/_runner.log
+experiments/2026-06-03/EXP-0040/committee1/_status.txt
+experiments/2026-06-03/EXP-0040/committee1/area_chair.err
+experiments/2026-06-03/EXP-0040/committee1/area_chair.out
+experiments/2026-06-03/EXP-0040/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0040/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0040/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0040/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0040/committee1/product_realist.err
+experiments/2026-06-03/EXP-0040/committee1/product_realist.out
+experiments/2026-06-03/EXP-0040/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0040/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0040/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0040/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0042/committee1/.members.txt
+experiments/2026-06-03/EXP-0042/committee1/_runner.log
+experiments/2026-06-03/EXP-0042/committee1/area_chair.err
+experiments/2026-06-03/EXP-0042/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0042/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0042/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0042/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0042/committee1/product_realist.err
+experiments/2026-06-03/EXP-0042/committee1/product_realist.out
+experiments/2026-06-03/EXP-0042/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0042/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0042/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0042/committee1/theory_skeptic.out
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find . -path ./.git -prune -o -type f -print | grep -E '/_shared/|_committee_common_v001|TOOLING_v001'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -path ./.git -prune -o -type f -name '*.md' -print | grep -E 'committee|TOOLING|prompt|shared|common'" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+ succeeded in 0ms:
+./learning/roles/committee.md
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 26924ms:
+find: /Users/dengcchi/Library/Application Support/CallHistoryTransactions: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/com.apple.sharedfilelist: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/Knowledge: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/com.apple.TCC: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/FileProvider: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/AddressBook: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/FaceTime: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/DifferentialPrivacy: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/com.apple.avfoundation/Frecents: Operation not permitted
+find: /Users/dengcchi/Library/Application Support/CallHistoryDB: Operation not permitted
+find: /Users/dengcchi/Library/Assistant/SiriVocabulary: Operation not permitted
+find: /Users/dengcchi/Library/Daemon Containers: Operation not permitted
+find: /Users/dengcchi/Library/Autosave Information: Operation not permitted
+find: /Users/dengcchi/Library/IdentityServices: Operation not permitted
+find: /Users/dengcchi/Library/Messages: Operation not permitted
+find: /Users/dengcchi/Library/HomeKit: Operation not permitted
+find: /Users/dengcchi/Library/Sharing: Operation not permitted
+find: /Users/dengcchi/Library/com.apple.aiml.instrumentation: Operation not permitted
+find: /Users/dengcchi/Library/Mail: Operation not permitted
+find: /Users/dengcchi/Library/Trial: Operation not permitted
+find: /Users/dengcchi/Library/AppleMediaServices: Operation not permitted
+find: /Users/dengcchi/Library/DuetExpertCenter: Operation not permitted
+find: /Users/dengcchi/Library/Accounts: Operation not permitted
+find: /Users/dengcchi/Library/Safari: Operation not permitted
+find: /Users/dengcchi/Library/Biome: Operation not permitted
+find: /Users/dengcchi/Library/IntelligencePlatform: Operation not permitted
+find: /Users/dengcchi/Library/Shortcuts: Operation not permitted
+find: /Users/dengcchi/Library/Suggestions: Operation not permitted
+find: /Users/dengcchi/Library/Weather: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.stocks-news: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.photolibraryd.private: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.feedback: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.telephonyutilities.callservicesd: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.swtransparency: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.ArchiveUtility.PKSignedContainer: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.accessibility.voicebanking: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.icloud.searchpartyuseragent: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.siri.referenceResolution: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.stocks: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.usernoted: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.VoiceMemos.shared: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.contacts: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.secure-control-center-preferences: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.chronod: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.MailPersonaStorage: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.private.translation: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.appstoreagent: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.portrait.BackgroundReplacement: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.icloud.fmfcore: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.liveactivitiesd: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.amsondevicestoraged: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.SiriTTS: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.notes.import: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.calendar: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.siri.userfeedbacklearning: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.gamecenter: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.tips: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.loginwindow.persistent-apps: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.spotlight: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.studentd: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.ManagedSettings: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.sharingd: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.printtool: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.corerepair: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.news: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.scopedbookmarkagent: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.weather: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.systempreferences.cache: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.feedbacklogger: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.controlcenter: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.siri.remembers: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.notes: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.stickersd.group: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.UserNotifications: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.tipsnext: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.moments: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.Safari.SandboxBroker: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.transparency: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.reminders: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.findmy.findmylocateagent: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.mail: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.bird: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.DeviceActivity: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.Journal: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.Home.group: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.iCloudDrive: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.energykit: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/com.apple.PreviewLegacySignaturesConversion: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.siri.ASR.shared: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.replicatord: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.Photos.PhotosFileProvider: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.icloud.fmipcore: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.AppleSpell: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.mlhost: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.PegasusConfiguration: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.shortcuts: Operation not permitted
+find: /Users/dengcchi/Library/Group Containers/group.com.apple.inputmethod.chineseim: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.VoiceMemos: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.archiveutility: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.Maps/Data/Maps: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.Home: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.Safari: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.mail: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.MobileSMS: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.Notes: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.news: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.corerecents.recentsd/Data/Library/Recents: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.stocks: Operation not permitted
+find: /Users/dengcchi/Library/Containers/com.apple.Safari.WebApp: Operation not permitted
+find: /Users/dengcchi/Library/ContainerManager: Operation not permitted
+find: /Users/dengcchi/Library/PersonalizationPortrait: Operation not permitted
+find: /Users/dengcchi/Library/Metadata/CoreSpotlight: Operation not permitted
+find: /Users/dengcchi/Library/Metadata/com.apple.IntelligentSuggestions: Operation not permitted
+find: /Users/dengcchi/Library/Cookies: Operation not permitted
+find: /Users/dengcchi/Library/CoreFollowUp: Operation not permitted
+find: /Users/dengcchi/Library/StatusKit: Operation not permitted
+find: /Users/dengcchi/Library/DoNotDisturb: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.HomeKit: Operation not permitted
+find: /Users/dengcchi/Library/Caches/CloudKit: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.Safari: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.containermanagerd: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.Safari.SafeBrowsing: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.homed: Operation not permitted
+find: /Users/dengcchi/Library/Caches/com.apple.ap.adprivacyd: Operation not permitted
+find: /Users/dengcchi/.Trash: Operation not permitted
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+codex
+The named committee files do not appear in this checkout; the prompt already includes the common rules, so I’m applying those and using the tooling intent directly. I’m now checking OSS/eval systems, with special attention to whether the claimed metric is already a shipped evaluation primitive rather than a systems mechanism.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+The internal page loader is blocked for external docs, so I’m switching to direct command-line fetches for public docs and source files. I’m looking for metric definitions, not just package names.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://deepeval.com/docs/metrics-contextual-recall | python3 -c \"import sys,re; s=sys.stdin.read(); print(re.sub('<["'^>]+>'"',' ',s)[:4000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://developers.llamaindex.ai/python/examples/evaluation/retrieval/retriever_eval/ | python3 -c \"import sys,re; s=sys.stdin.read(); print(re.sub('<["'^>]+>'"',' ',s)[:4000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/ | python3 -c \"import sys,re; s=sys.stdin.read(); print(re.sub('<["'^>]+>'"',' ',s)[:4000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://www.trulens.org/getting_started/core_concepts/rag_triad/ | python3 -c \"import sys,re; s=sys.stdin.read(); print(re.sub('<["'^>]+>'"',' ',s)[:4000])\"" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 464ms:
+
+ 
+ 
+   
+    
+       
+       
+      
+         
+      
+      
+      
+      
+         
+      
+      
+         
+      
+      
+        
+      
+      
+       
+       
+    
+    
+      
+         ⟁ RAG Triad - 🦑 TruLens 
+      
+    
+    
+       
+      
+        
+         
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+         
+         
+         :root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"} 
+      
+    
+    
+       
+    
+       
+    
+     __md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}} 
+    
+      
+  
+
+
+  
+  
+
+ function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-VE9D0QFFKD"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-VE9D0QFFKD",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-VE9D0QFFKD",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)} 
+  
+     "undefined"!=typeof __md_analytics&&__md_analytics() 
+  
+
+    
+    
+   
+  
+  
+    
+    
+      
+    
+    
+    
+    
+     
+  
+    
+     
+     
+      
+     
+      
+        
+         
+          Skip to content
+         
+      
+     
+     
+      
+     
+    
+    
+      
+
+ 
+   
+     
+      
+   
+
+     
+     
+      
+         
+     
+     
+       
+         
+           
+            🦑 TruLens
+           
+         
+         
+           
+            
+              ⟁ RAG Triad
+            
+           
+         
+       
+     
+    
+      
+         
+  
+    
+    
+    
+     
+    
+       
+           
+       
+    
+  
+    
+    
+    
+     
+    
+       
+           
+       
+    
+  
+    
+    
+    
+     
+    
+       
+           
+       
+    
+  
+ 
+      
+    
+    
+       var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)} 
+    
+    
+    
+      
+      
+         
+          
+             
+         
+         
+    
+   
+     
+       
+       
+        
+           
+        
+           
+       
+       
+        
+           
+            
+               
+           
+        
+         
+          
+             
+         
+       
+      
+          
+      
+     
+     
+       
+         
+           
+            Initializing search
+           
+            
+         
+       
+     
+   
+ 
+      
+    
+    
+       
+         
+   
+    
+        
+   
+   
+    truera/trulens
+   
+ 
+       
+    
+   
+  
+ 
+    
+     
+      
+      
+        
+          
+            
+ 
+   
+     
+      
+        
+  
+  
+  
+  
+     
+       
+        
+  
+  
+    
+  
+  🏠 Home
+
+       
+     
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+       
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 519ms:
+       Retrieval Evaluation
+ | Developer Documentation    
+					(function (w, d, s, l, i) {
+					  w[l] = w[l] || [];
+					  w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+					  var f = d.getElementsByTagName(s)[0],
+						j = d.createElement(s),
+						dl = l != "dataLayer" ? "&l=" + l : "";
+					  j.async = true;
+					  j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+					  f.parentNode.insertBefore(j, f);
+					})(window, document, "script", "dataLayer", "GTM-WWRFB36R");
+				    
+						document.addEventListener("DOMContentLoaded", function () {
+							var script = document.createElement("script");
+							script.type = "module";
+							script.id = "runllm-widget-script"
+							script.src = "https://widget.runllm.com";
+							script.setAttribute("version", "stable");
+							script.setAttribute("crossorigin", "true");
+							script.setAttribute("runllm-keyboard-shortcut", "Mod+j");
+							script.setAttribute("runllm-name", "LlamaIndex");
+							script.setAttribute("runllm-position", "BOTTOM_RIGHT");
+							script.setAttribute("runllm-assistant-id", "209");
+							script.setAttribute("runllm-disable-ask-a-person", true);
+							script.setAttribute(
+								"runllm-slack-community-url",
+								"https://discord.com/invite/eN6D2HQ4aX"
+							);
+							script.async = true;
+							document.head.appendChild(script);
+						});
+					  function(){var e,t,n;e="33791188609b9b3",t=function(){Reo.init({clientID:"33791188609b9b3"})},
+					(n=document.createElement("script")).src="https://static.reo.dev/"+e+"/reo.js",n.defer=!0,n.onload=t,document.head.appendChild(n)}();  
+					(function() {
+						function scrollToActiveNav() {
+						const sidebar = document.querySelector('nav.sidebar');
+						if (!sidebar) return;
+
+						const activeLink = sidebar.querySelector('[aria-current="page"]');
+						if (!activeLink) return;
+
+						activeLink.scrollIntoView({
+							behavior: 'instant',
+							block: 'center',
+							inline: 'nearest'
+						});
+						}
+
+						if (document.readyState === 'loading') {
+						document.addEventListener('DOMContentLoaded', scrollToActiveNav);
+						} else {
+						scrollToActiveNav();
+						}
+
+						document.addEventListener('astro:page-load', scrollToActiveNav);
+					})();
+					  
+            /* Force desktop nav tabs above 800px regardless of JS measurement */
+            @media (min-width: 50rem) {
+              .stl-nav-links-mode-mobile [data-desktop-only] { display: block !important; }
+              .stl-nav-links-mode-mobile [data-mobile-only] { display: none !important; }
+            }
+            
+            document.addEventListener('DOMContentLoaded', function() {
+              var rightGroup = document.querySelector('.right-group');
+              if (!rightGroup) return;
+
+              // Dynamic CTA button — changes based on current product tab
+              var ctaBtn = document.createElement('a');
+              ctaBtn.style.cssText = 'display:inline-flex;align-items:center;padding:0.375rem 0.75rem;font-size:0.8125rem;font-weight:600;color:#fff;background:var(--ll-vibrant-purple,#3E18F9);border:1px solid var(--ll-vibrant-purple,#3E18F9);border-radius:0.375rem;cursor:pointer;transition:all 0.15s;margin-left:0.25rem;white-space:nowrap;text-decoration:none;';
+
+              function updateCta() {
+                var path = window.location.pathname;
+                if (path.startsWith('/python/framework')) {
+                  ctaBtn.textContent = 'GitHub';
+                  ctaBtn.href = 'https://github.com/run-llama/llama_index';
+                  ctaBtn.target = '_blank';
+                } else {
+                  ctaBtn.textContent = 'API Dashboard';
+                  ctaBtn.href = 'https://cloud.llamaindex.ai';
+                  ctaBtn.target = '';
+                }
+              }
+              updateCta();
+              document.addEventListener('astro:page-load', updateCta);
+
+              rightGroup.appendChild(ctaBtn);
+            });
+            
+        function setu
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 540ms:
+                                          Contextual Recall | DeepEval - The LLM Evaluation Framework                {"@context":"https://schema.org","@type":"Organization","name":"Confident AI Inc.","alternateName":"Confident AI","url":"https://deepeval.com","logo":"https://deepeval.com/icons/DeepEval.svg","sameAs":["https://github.com/confident-ai/deepeval","https://x.com/deepeval","https://discord.gg/a3K9c8GRGt","https://www.reddit.com/r/deepeval/"]}  {"@context":"https://schema.org","@type":"WebSite","name":"DeepEval - The LLM Evaluation Framework","url":"https://deepeval.com"}          ((a,b,c,d,e,f,g,h)=>{let i=document.documentElement,j=["light","dark"];function k(b){var c;(Array.isArray(a)?a:[a]).forEach(a=>{let c="class"===a,d=c&&f?e.map(a=>f[a]||a):e;c?(i.classList.remove(...d),i.classList.add(f&&f[b]?f[b]:b)):i.setAttribute(a,b)}),c=b,h&&j.includes(c)&&(i.style.colorScheme=c)}if(d)k(d);else try{let a=localStorage.getItem(b)||c,d=g&&"system"===a?window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":a;k(d)}catch(a){}})("class","theme","system",null,["light","dark"],null,true,true)       :root:not(.nd-banner-docs-announcement) { --fd-banner-height: 30px; }  .nd-banner-docs-announcement #docs-announcement { display: none; }  if (localStorage.getItem('nd-banner-docs-announcement') === 'true') document.documentElement.classList.add('nd-banner-docs-announcement'); 🔥 DeepEval 4.0 just got released.   Read the announcement .                             Docs          Guides            Tutorials          Integrations                Enterprise            Changelog              Blog                                 Ask AI        K                                                                Search    [data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}    Introduction  Design Philosophy  Comparisons            Getting Started  Human 5-min Quickstart  Vibe Coder 5-min Quickstart  Vibe Coding with DeepEval   Use Cases                 LLM Evals  Introduction   Concepts          End-to-End Evals         Component-Level Evals  Unit Testing in CI/CD  Flags and Configs        Eval Metrics  Introduction   Custom          Agentic          RAG        Answer Relevancy  Faithfulness  Contextual Precision  Contextual Recall  Contextual Relevancy      Multi-Turn          MCP          Safety          Non-LLM          Images          Others                   Prompt Optimization  Introduction   Algorithms                 Synthetic Data Generation  Introduction   Golden Synthesizer          Conversation Simulator                       Benchmarks  Introduction   Available Benchmarks                                   Others  CLI Settings  Environment Variables  Troubleshooting  FAQ  Data Privacy  Miscellaneous                         Contextual Recall                RAG   Contextual Recall         Copy Markdown  Open         LLM-as-a-judge  Single-turn  Reference-based  RAG  Multimodal  
+ The contextual recall metric uses LLM-as-a-judge to measure the quality of your RAG pipeline&#x27;s retriever by evaluating the extent of which the  retrieval_context  aligns with the  expected_output .  deepeval &#x27;s contextual recall metric is a self-explaining LLM-Eval, meaning it outputs a reason for its metric score. 
+           Info    Not sure if the  ContextualRecallMetric  is suitable for your use case? Run the follow command to find out:                 deepeval   recommend   metrics        
+  Required Arguments        
+ To use the  ContextualRecallMetric , you&#x27;ll have to provide the following arguments when creating an   LLMTestCase  : 
+ 
+  input  
+  actual_output  
+  expected_output  
+  retrieval_context  
+ 
+ Read the  How Is It Calculated  section below to learn how test case parameters are used for metric calculation. 
+  Usage        
+ The  ContextualRecallMetric()  can be used for  end-to-end  eva
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 562ms:
+   
+ 
+ 
+ 
+    
+       
+       
+      
+         
+      
+      
+      
+         
+      
+      
+         
+      
+      
+         
+      
+      
+        
+      
+      
+       
+       
+    
+    
+      
+         Context Recall - Ragas 
+      
+    
+    
+       
+      
+        
+         
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+         
+         
+         :root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"} 
+      
+    
+    
+       
+    
+       
+    
+       
+    
+     __md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}} 
+    
+      
+  
+
+
+  
+  
+
+ function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XWJT601CLX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XWJT601CLX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XWJT601CLX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)} 
+  
+     "undefined"!=typeof __md_analytics&&__md_analytics() 
+  
+
+    
+    
+  
+   
+      
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+                  
+
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    
+  
+    
+     
+     
+      
+     
+      
+        
+         
+          Skip to content
+         
+      
+     
+     
+      
+         
+           
+            
+               
+                
+                    
+               
+            
+            
+ 
+ 
+     
+         Ragas Office Hours  - If you need help setting up Evals for your AI application, sign up for our
+        Office Hours  here .
+     
+ 
+
+           
+          
+             var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)} 
+          
+         
+      
+     
+    
+       
+        
+       
+    
+    
+      
+
+ 
+   
+     
+      
+   
+
+     
+     
+      
+          
+     
+     
+       
+         
+           
+            Ragas
+           
+         
+         
+           
+            
+              Context Recall
+            
+           
+         
+       
+     
+    
+      
+         
+  
+    
+    
+    
+     
+    
+       
+            
+       
+    
+  
+    
+    
+    
+     
+    
+       
+            
+       
+    
+  
+    
+    
+    
+     
+    
+       
+            
+       
+    
+  
+ 
+      
+    
+    
+       var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-colo
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/ | tr '\\n' ' ' | sed 's/<["'^>]*>/ /g'"' | grep -Eio '.{0,120}(context recall|reference|retrieved context|claims|attributed).{0,160}' | head -20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://www.trulens.org/getting_started/core_concepts/rag_triad/ | tr '\\n' ' ' | sed 's/<["'^>]*>/ /g'"' | grep -Eio '.{0,120}(context relevance|groundedness|retrieved context|RAG Triad|answer relevance).{0,160}' | head -30" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://deepeval.com/docs/metrics-contextual-recall | tr '\\n' ' ' | sed 's/<["'^>]*>/ /g'"' | grep -Eio '.{0,120}(contextual recall|retrieval_context|expected_output|verdicts|attributed).{0,160}' | head -30" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://developers.llamaindex.ai/python/examples/evaluation/retrieval/retriever_eval/ | tr '\\n' ' ' | sed 's/<["'^>]*>/ /g'"' | grep -Eio '.{0,120}(hit rate|MRR|retrieval|expected_ids|RetrieverEvaluator).{0,160}' | head -30" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 512ms:
+       Retrieval Evaluation  | Developer Documentation     					(function (w, d, s, l, i) { 					  w[l] = w[l] || []; 					  w[l].push({ "gtm.start": new Date().getTime(), even
+] === 'boolean') details.open = state.open[idx]; 							} catch {} 						} 					} 				); 			} catch {} 		})(); 	        Retrieval Evaluation          		(() => { 			const scroller = document.getElementById('starlight__sidebar'); 			if (!window._starlightScrollRestore || !scroller) return; 
+stener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);               Retrieval Evaluation              This notebook uses our  RetrieverEvaluator  to evaluate the quality of any Retriever module defined in LlamaIndex.   We specify a set o
+f different evaluation metrics: this includes hit-rate, MRR, Precision, Recall, AP, and NDCG. For any given question, these will compare the quality of retrieved results from the ground-truth context.   To ease the burd
+orStoreIndex(nodes)      retriever   =   vector_index.as_retriever(  similarity_top_k  =  2  )                  Try out Retrieval         Section titled “Try out Retrieval”     We’ll try out retrieval over a simple dataset.           retrieved_nodes   =   retriever.retrieve(  "What did th
+onal] load      qa_dataset   =   EmbeddingQAFinetuneDataset.from_json(  "pg_eval_dataset.json"  )                  Use  RetrieverEvaluator  for Retrieval Evaluation         Section titled “Use RetrieverEvaluator for Retrieval Evaluation”     We’re now ready to run our retrieval evals. We’ll run ou
+r  RetrieverEvaluator  over the eval dataset that we generated.   We define two functions:  get_eval_results  and also  display_results  that run our retriever over the dataset.    
+e_rerank:            !  pip install cohere   -  q                         from   llama_index.core.evaluation   import   RetrieverEvaluator           metrics   =   [  "hit_rate"  ,   "mrr"  ,   "precision"  ,   "recall"  ,   "ap"  ,   "ndcg"  ]           if   include_cohere_rerank:              met
+vancy"      # requires COHERE_API_KEY environment variable to be set              )           retriever_evaluator   =   RetrieverEvaluator.from_metric_names(              metrics,   retriever  =  retriever      )                         # try it out on a sample query      sample_id, sample_query  
+nges did he face and how did these experiences shape his understanding of programming?      Metrics: {'hit_rate': 1.0, 'mrr': 1.0, 'precision': 0.5, 'recall': 1.0, 'ap': 1.0, 'ndcg': 0.6131471927654584}                         # try it out on an entire dataset      eval_results   = 
+{              text-align: right;      }                                            retrievers         hit_rate         mrr         precision         recall         ap         ndcg                             0         top-2 eval         0.770492         0.655738         0.385246   
+               Powered by                                On this page        Overview           Setup           Try out Retrieval                Build an Evaluation dataset of (query, context) pairs           Use RetrieverEvaluator for Retrieval Evaluation            const m="_top";class 
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 780ms:
+                                                                                                                        Context Recall - Ragas                                                                                                                                                      :r
+                                           Ragas                                                                        Context Recall                                                                                                                                                                
+Guides                                                                                                                📖 References                                                                                                ❤️ Community                                                   
+                                                                                                                        Context Recall                                                                                          Context Recall                                                        
+                                      Example                                                                 LLM Based Context Recall (Legacy API)                                                                 Non LLM Based Context Recall                                                      
+            Example                                                                                             ID BasedContext Recall                                                                                 Example                                                                        
+                                                                                                                      📖 References                                                                                                                                                               
+                                              📖 References                                                                                                                                                               
+                                      Example                                                                 LLM Based Context Recall (Legacy API)                                                                 Non LLM Based Context Recall                                                      
+            Example                                                                                             ID BasedContext Recall                                                                                 Example                                                                        
+                                                                                                                        Context Recall   Context Recall measures how many of the relevant documents (or pieces of information) were successfully retrieved. It focuses on not missing important result
+t out. In short, recall is about not missing anything important.    Since it is about not missing anything, calculating context recall always requires a reference to compare against. The LLM-based Context Recall metric uses  reference  as a proxy to  reference_contexts , which makes it easier 
+to use as annotating reference contexts can be very time-consuming. To estimate context recall from the  reference , the reference is broken down into claims, and each claim is analyzed to determine whether it can be attributed to the retrieved context or not. In an ideal s
+cenario, all claims in the reference answer should be attributable to the retrieved context.   The formula for calculating context recall is as follows:   \[ \text{Context Recall} = \frac{\text{Number of claims in the reference supported by the retrie
+ved context}}{\text{Total number of claims in the reference}} \]   Example           from     openai     import   AsyncOpenAI       from     ragas.llms     import   llm_factory       from     ragas.metrics.collections  
+re is the Eiffel Tower located?"  ,           retrieved_contexts  =  [  "Paris is the capital of France."  ],           reference  =  "The Eiffel Tower is located in Paris."       )       print  (  f  "Context Recall Score:   {  result  .  value  }  "  )        Output:          Context Re
+re is the Eiffel Tower located?"  ,           retrieved_contexts  =  [  "Paris is the capital of France."  ],           reference  =  "The Eiffel Tower is located in Paris."       )          LLM Based Context Recall (Legacy API)     Legacy API   The following example uses the legacy metri
+ =  "Where is the Eiffel Tower located?"  ,           response  =  "The Eiffel Tower is located in Paris."  ,           reference  =  "The Eiffel Tower is located in Paris."  ,           retrieved_contexts  =  [  "Paris is the capital of France."  ],       )            context_recall   = 
+  )       await   context_recall  .  single_turn_ascore  (  sample  )        Output:          1.0         Non LLM Based Context Recall    NonLLMContextRecall  metric is computed using  retrieved_contexts  and  reference_contexts , and the values range between 0 and 1, with higher values indica
+ting better performance. This metrics uses non-LLM string comparison metrics to identify if a retrieved context is relevant or not. You can use any non LLM based metrics as distance measure to identify if a retrieved context is relevant or not.   The formula for calculat
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1095ms:
+                                                                                                                      ⟁ RAG Triad - 🦑 TruLens                                                                                                                                                    
+                                     🦑 TruLens                                                                        ⟁ RAG Triad                                                                                                                                                                
+                                                                                                                      ⟁ RAG Triad                                                                                          ⟁ RAG Triad                                                           
+                              Table of contents                                                       Context Relevance                                                                 Groundedness                                                                 Answer Relevance  
+                                                Table of contents                                                       Context Relevance                                                                 Groundedness                                                                 Answer Relevance  
+                                                                                                                    The RAG Triad &para;    RAGs have become the standard architecture for providing LLMs with context in order to avoid hallucinations. However, even RAGs can suffer from hallu
+nt context or even retrieves irrelevant context that is then weaved into the LLM’s response.   TruEra has innovated the RAG triad to evaluate for hallucinations along each edge of the RAG architecture, shown below:       The RAG triad is made up of 3 evaluations: context relevance, ground
+edness and answer relevance. Satisfactory evaluations on each provides us confidence that our LLM app is free from hallucination.   Context Relevance &para;    The first step of any RAG a
+wer, so any irrelevant information in the context could be weaved into a hallucination. TruLens enables you to evaluate context relevance by using the structure of the serialized record.   Groundedness &para;    After the context is retrieved, it is then formed into an answer by an LLM. LLMs are 
+often prone to stray from the facts provided, exaggerating or expanding to a correct-sounding answer. To verify the groundedness of our application, we can separate the response into individual claims and independently search for evidence that supports each within the retrieved context. 
+  Answer Relevance &para;    Last, our response still needs to helpfully answer the original question. We can verify this by evaluating the relevance of the final response to the
+ector database contains only accurate information, then the answers provided by the RAG are also accurate.   To see the RAG triad in action, check out the  TruLens Quickstart                                                                                         var target=document.getEle
+
+ succeeded in 1645ms:
+                                          Contextual Recall | DeepEval - The LLM Evaluation Framework                {"@context":"https://schema.org","@type":"Organization","name":"Confident AI Inc.","alternateName":"Co
+trics  Introduction   Custom          Agentic          RAG        Answer Relevancy  Faithfulness  Contextual Precision  Contextual Recall  Contextual Relevancy      Multi-Turn          MCP          Safety          Non-LLM          Images          Others                   Prompt Optimization  Intr
+ Others  CLI Settings  Environment Variables  Troubleshooting  FAQ  Data Privacy  Miscellaneous                         Contextual Recall                RAG   Contextual Recall         Copy Markdown  Open         LLM-as-a-judge  Single-turn  Reference-based  RAG  Multimodal    The contextual reca
+uses LLM-as-a-judge to measure the quality of your RAG pipeline&#x27;s retriever by evaluating the extent of which the  retrieval_context  aligns with the  expected_output .  deepeval &#x27;s contextual recall metric is a self-explaining LLM-Eval, meaning it outputs a reason for its metric score.
+ you&#x27;ll have to provide the following arguments when creating an   LLMTestCase  :      input     actual_output     expected_output     retrieval_context      Read the  How Is It Calculated  section below to learn how test case parameters are used for metric calculation.    Usage          T
+a 30-day full refund at no extra cost.&quot;        # Replace this with the expected output from your RAG generator     expected_output   =   &quot;You are eligible for a 30 day full refund at no extra cost.&quot;        # Replace this with the actual retrieved context from your RAG pipeline   
+  retrieval_context   =   [  &quot;All customers are eligible for a 30 day full refund at no extra cost.&quot;  ]        metric   =   ContextualRecallMetric(         threshold  = 
+(         input  =  &quot;What if these shoes don&#x27;t fit?&quot;  ,         actual_output  =  actual_output,         expected_output  =  expected_output,         retrieval_context  =  retrieval_context     )        # To run metric as a standalone     # metric.measure(test_case)     # print(m
+cs   import   ContextualRecallMetric        # Replace this with the actual retrieved context from your RAG pipeline     retrieval_context   =   [         f  &quot;The Eiffel Tower   {  MLLMImage(  ...  )  }   is a wrought-iron lattice tower built in the late 19th century.&quot;  ,         f  &quo
+         actual_output  =  f  &quot;This appears to be Eiffel Tower, which is a famous landmark in France&quot;         expected_output  =  f  &quot;The Eiffel Tower is located in Paris, France.   {  MLLMImage(  ...  )  }  &quot;  ,         retrieval_context  =  retrieval_context     )        #
+owing equation:           Contextual Recall  =   Number of Attributable Statements  Total Number of Statements    \text{Contextual Recall} = \frac{\text{Number of Attributable Statements}}{\text{Total Number of Statements}}          Contextual Recall     =                    Total Number of State
+ments      ​                     The  ContextualRecallMetric  first uses an LLM to extract all  statements made in the  expected_output  , before using the same LLM to classify whether each statement can be attributed to nodes in the  retrieval_context .             Info    We use the  expected
+he  actual_output  because we&#x27;re measuring the quality of the RAG retriever for a given ideal output.     A higher contextual recall score represents a greater ability of the retrieval system to capture all relevant information from the total available relevant set within your knowledge base
+tom template     class   CustomTemplate  (  ContextualRecallTemplate  ):         @  staticmethod         def   generate_verdicts  (expected_output:   str  , retrieval_context: List[  str  ]):             return   f  &quot;&quot;&quot;For EACH sentence in the given expected output below, 
+determine whether the sentence can be attributed to the nodes of retrieval contexts.        Example JSON:     {{         &quot;verdicts&quot;: [             {{                 &quot;verdict&quot;: &quot;yes&q
+,                 &quot;reason&quot;: &quot;...&quot;             }}  ,         ]     }}        Expected Output:     {  expected_output  }        Retrieval Context:     {  retrieval_context  }        JSON:     &quot;&quot;&quot;        # Inject custom template to metric     metric   =   Context
+(rag)/metrics-contextual-precision.mdx\"},{\"$id\":\"(rag)/metrics-contextual-recall.mdx\",\"type\":\"page\",\"name\":\"Contextual Recall\",\"description\":\"$undefined\",\"icon\":\"$undefined\",\"url\":\"/docs/metrics-contextual-recall\",\"$ref\":\"(rag)/metrics-contextual-recall.mdx\"},{\"$id\"
+textual-precision.mdx\"},{\"$id\":\"(multi-turn)/metrics-turn-contextual-recall.mdx\",\"type\":\"page\",\"name\":\"Turn Contextual Recall\",\"description\":\"$undefined\",\"icon\":\"$undefined\",\"url\":\"/docs/metrics-turn-contextual-recall\",\"$ref\":\"(multi-turn)/metrics-turn-contextual-recal
+\",null,{\"children\":\"r/deepeval\"}]]}]]}]]}]]}]\n"])  self.__next_f.push([1,"32:[\"$\",\"$L3a\",null,{\"children\":\"Contextual Recall\"}]\n33:[\"$\",\"$L3b\",null,{\"className\":\"mb-0 text-[15px] font-light\",\"children\":\"$undefined\"}]\n34:[\"$\",\"div\",null,{\"className\":\"flex flex-ro
+odule-scss-module__shacuq__multimodal\",\"children\":\"Multimodal\"}]]}],\"\\n\",[\"$\",\"p\",null,{\"children\":[\"The contextual recall metric uses LLM-as-a-judge to measure the quality of your RAG pipeline's retriever by evaluating the extent of which the \",[\"$\",\"code\",null,{\"children\":
+\"retrieval_context\"}],\" aligns with the \",[\"$\",\"code\",null,{\"children\":\"expected_output\"}],\". \",[\"$\",\"code\",null,{\"children\":\"deepeval\"}],\"'s contextual recall metric is a self-explaining LLM-Eval, meaning it outputs a reason for its m
+,null,{\"children\":\"actual_output\"}]}],\"\\n\",[\"$\",\"li\",null,{\"children\":[\"$\",\"code\",null,{\"children\":\"expected_output\"}]}],\"\\n\",[\"$\",\"li\",null,{\"children\":[\"$\",\"code\",null,{\"children\":\"retrieval_context\"}]}],\"\\n\"]}]\n43:[\"$\",\"p\",null,{\"children\":[\"R
+tements\u003c/mtext\u003e\u003c/mfrac\u003e\u003c/mrow\u003e\u003cannotation encoding=\"application/x-tex\"\u003e\\text{Contextual Recall} = \\frac{\\text{Number of Attributable Statements}}{\\text{Total Number of Statements}}\u003c/annotation\u003e\u003c/semantics\u003e\u003c/math\u003e\u003c/sp
+o extract all \",[\"$\",\"strong\",null,{\"children\":[\"statements made in the \",[\"$\",\"code\",null,{\"children\":\"expected_output\"}]]}],\", before using the same LLM to classify whether each statement can be attributed to nodes in the \",[\"$\",\"code\",null,{\"children\":\"retrieval_con
+dule__RkeT3a__body\",\"children\":[\"$\",\"p\",null,{\"children\":[\"We use the \",[\"$\",\"code\",null,{\"children\":\"expected_output\"}],\" instead of the \",[\"$\",\"code\",null,{\"children\":\"actual_output\"}],\" because we're measuring the quality of the RAG retriever for a given ideal o
+utput.\"]}]}]]}]\n55:[\"$\",\"p\",null,{\"children\":\"A higher contextual recall score represents a greater ability of the retrieval system to capture all relevant information from the total available relevant set within your knowledge base
+],[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#6F42C1\",\"--shiki-dark\":\"#B392F0\"},\"children\":\" generate_verdicts\"}],\"$L99\",\"$L9a\",\"$L9b\",\"$L9c\",\"$L9d\"]}],\"\\n\",\"$L9e\",\"\\n\",\"$L9f\",\"\\n\",\"$La0\",\"\\n\",\"$La1\",\"\\n\",\"$La2\",\"\\n\",\"$La3\",\"\\n
+children\":[[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#24292E\",\"--shiki-dark\":\"#E1E4E8\"},\"children\":\"expected_output \"}],[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#D73A49\",\"--shiki-dark\":\"#F97583\"},\"children\":\"=\"}],[\"$\",\"span\",null,{\"style\":{\"--shi
+children\":[[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#24292E\",\"--shiki-dark\":\"#E1E4E8\"},\"children\":\"retrieval_context \"}],[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#D73A49\",\"--shiki-dark\":\"#F97583\"},\"children\":\"=\"}],[\"$\",\"span\",null,{\"style\":{\"--shi
+dren\":[[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#E36209\",\"--shiki-dark\":\"#FFAB70\"},\"children\":\"    expected_output\"}],[\"$\",\"span\",null,{\"style\":{\"--shiki-light\":\"#D73A49\",\"--shiki-dark\":\"#F97583\"},\"children\":\"=\"}],[\"$\",\"span\",null,{\"style\":{\"--shik
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Ragas Context Recall", url: "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/", overlap: "Ships a RAG retrieval metric that breaks the reference answer into claims and measures whether claims are attributable to retrieved contexts; overlaps with answer-completeness as an answer-support/coverage metric, but not the exact fixed-chunk whole-gold-span containment diagnostic."},
+  {system: "DeepEval ContextualRecallMetric", url: "https://deepeval.com/docs/metrics-contextual-recall", overlap: "Ships contextual recall for RAG by extracting statements from expected_output and classifying attribution to retrieval_context; close competitor to completeness@k and evidence that practitioners already evaluate whether retrieved context supports the expected answer."},
+  {system: "LlamaIndex RetrieverEvaluator", url: "https://developers.llamaindex.ai/python/examples/evaluation/retrieval/retriever_eval/", overlap: "Ships standard retrieval metrics including hit-rate, MRR, precision, recall, AP, and NDCG against ground-truth context IDs; supports the packet's baseline claim that recall/hit-rate are standard, but not the whole-span split metric."},
+  {system: "TruLens RAG Triad", url: "https://www.trulens.org/getting_started/core_concepts/rag_triad/", overlap: "Ships context relevance/groundedness/answer relevance checks; groundedness separates responses into claims and searches retrieved context for support, overlapping with answer-support evaluation rather than exact chunk-boundary containment."},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM", url: "https://github.com/LMCache/LMCache", overlap: "Serving/KV-cache/kernel stacks, not RAG retrieval evaluators; no meaningful overlap found with recall@k versus answer-completeness@k metric mechanism."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: "Partial. The L0 artifact is reproducible-looking and the split-rate mechanism is exact under its definitions, but realistic scale/workload is not established: 8 seeds x 200 synthetic docs/cell, lexical BM25 only, distinctive gold tokens force recall@k=1.000 in every cell, chunk sizes 32/64/128 are smaller than many production RAG settings, and no real QA corpus, dense retriever, semantic chunker, or downstream EM/F1 test is reported. The overlap control is strong: the effect disappears when overlap >= span_len, so the claim only holds for answer spans longer than effective overlap."
+RATIONALE: "This is not a systems design contribution in the vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM sense; it is a metric-validity mechanism and small measurement artifact. The baseline is not a strawman: LlamaIndex documents hit-rate/recall among standard retriever evaluation metrics. But the obvious competitor is not absent from practice: Ragas and DeepEval ship contextual recall metrics that measure whether retrieved context supports/reference-covers answer claims, and TruLens ships groundedness/context checks. Those are not identical to deterministic whole-gold-span-in-one-chunk completeness@k, so I do not mark this red as already fully implemented. However, the systems insight is modest and the magnitude is not yet credible at realistic workload because the packet's own caveat says the synthetic lexical setup always retrieves a fragment, making the recall-completeness gap upper-bound-flavored."
+tokens used
+59,393

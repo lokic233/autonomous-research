@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [{"name": "Exact-Match Recall@k", "why": "Standard open-domain QA retrieval metric requires the passage to contain the verbatim answer string, not just a token overlap.", "repo_or_cite": "DPR (Karpukhin et al., 2020)"}, {"name": "LLM-as-a-Judge Context Recall", "why": "Standard in modern RAG eval frameworks to judge semantic containment of the necessary information.", "repo_or_cite": "RAGAS / TruLens"}]
+STRAWMAN_RISKS: ["Defining the baseline RAG recall metric as '>=1 token overlap'. Standard retrieval metrics in the literature do not use token overlap for retrieval hits; they strictly require full string containment or exact document ID matches."]
+MISSING_METRICS: ["Exact-String-Match Recall@k", "RAGAS Context Recall"]
+KILLER_EXPERIMENT: Re-run the evaluation replacing the '>=1 token overlap' baseline recall with standard DPR exact-string-match recall. The over-count gap will instantly collapse to zero because standard recall already requires the chunk to contain the full answer string.
+RATIONALE: The claim rests entirely on a fabricated baseline metric. Established RAG and open-domain QA retrieval evaluations (e.g., DPR, DrQA, BEIR) define a retrieval 'hit' as the passage containing the full, exact verbatim answer string. Under the true standard metric, a chunk containing only a split fragment of the answer is already correctly scored as a miss. The alleged "over-count" only exists because the L0 experiment explicitly defined recall using an artificially weak '>=1 token overlap' criterion that no practitioner actually uses or reports.
+```
