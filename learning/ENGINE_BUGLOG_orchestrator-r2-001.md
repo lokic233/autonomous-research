@@ -1378,3 +1378,18 @@ those live tasks `done`, silently dropping in-flight work and corrupting the tas
 Old loop on gc of EXP-ORPH closed BOTH. **Fix (minimal):** scope the close to `_tk.get("exp_id")==eid`
 so only the orphan's own task is closed; the owner's other live tasks (and unscoped exp_id=='' tasks)
 are untouched. Patched repro: TASK(EXP-ORPH)->done, TASK(EXP-LIVE)->open (preserved). AST-validated.
+
+## BUG-93 — gpu-poll pull-scheduler gpu_type match case-sensitive; direct dispatch case-insensitive -> silent GPU starvation
+**Surface:** `cmd_gpu_poll` (pull scheduler) vs `cmd_gpu_dispatch` (direct), engine/ros.py. **Commit:** dbb6c81 (research-os main).
+**Found:** v3 ACTIVE-DEBUG bugbash (multi-GPU dispatch / host_mem_floor-fragile surface, isolated /tmp). **Class:** path-divergence / silent starvation.
+
+The pull-scheduler queue-pick predicate did an EXACT match `gt not in ('any', node.get('gpu_type'))`, while
+the direct-dispatch safety gate compares case-insensitively (`exp_gt.lower() != node_gt.lower()`). v3 node
+config registers `gpu_type: H100` / `MI350X` (capitalized). A queued exp recorded with `gpu_type: h100`
+(lowercase) or `'H100 '` (trailing space) would dispatch fine via the DIRECT path but be SKIPPED FOREVER by
+the PULL scheduler — node reports FREE-but-no-matching-exp while the exp sits queued indefinitely. No error,
+just stalled GPU work: the hard-to-notice failure mode.
+
+**Repro (isolated /tmp):** pull vs direct diverged on `'h100'` and `'H100 '` (pull=skip, direct=allow).
+**Fix (minimal, no new mechanism):** normalize both sides `strip().lower()` in the pull predicate to match the
+direct path exactly. Patched repro: 0 divergences across H100/h100/'H100 '/any/MI350X/mi350x. AST-validated.
