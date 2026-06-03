@@ -1363,3 +1363,18 @@ moment any verdict carries an unpadded id. Fixed proactively — it is a fragile
 **Fix (minimal, no new mechanism):** anchor to the full field value:
 `grep -rlE "^claim_id:[[:space:]]+${claim}[[:space:]]*$"`. Same suppression semantics, exact-token match.
 **Verified:** `bash -n` OK; isolated /tmp shows OLD substring false-matches CLAIM-00037, NEW anchored does not.
+
+## BUG-92 — exp gc closes ALL of the orphan owner's open tasks, not just the orphan's own task
+**Surface:** `cmd_exp_gc` (exp gc stale-pending), engine/ros.py. **Commit:** 1fbe863 (research-os main).
+**Found:** v3 ACTIVE-DEBUG bugbash (isolated /tmp repro). **Class:** over-broad state mutation / silent live-work loss.
+
+The BUG-86 orphan-task-close loop closed EVERY open/active task whose `assignee==_owner`. Unlike the
+symmetric BUG-60b exp-complete path — which is guarded by `not other_open` (researcher fully done, so
+closing all their tasks is correct) — exp gc retires ONE stale orphan experiment while the owning
+researcher may still be alive with live tasks on OTHER experiments. The unscoped close wrongly marked
+those live tasks `done`, silently dropping in-flight work and corrupting the task ledger.
+
+**Repro (isolated /tmp):** owner `researcher-9` with two open tasks — TASK(EXP-ORPH) + TASK(EXP-LIVE).
+Old loop on gc of EXP-ORPH closed BOTH. **Fix (minimal):** scope the close to `_tk.get("exp_id")==eid`
+so only the orphan's own task is closed; the owner's other live tasks (and unscoped exp_id=='' tasks)
+are untouched. Patched repro: TASK(EXP-ORPH)->done, TASK(EXP-LIVE)->open (preserved). AST-validated.
