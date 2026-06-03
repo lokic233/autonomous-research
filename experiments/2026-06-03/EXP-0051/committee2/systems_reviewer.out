@@ -1,0 +1,18 @@
+```text
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Math-Verify", url: "https://github.com/huggingface/Math-Verify", overlap: "Implements robust math answer extraction, SymPy/common-representation conversion, and equivalence verification; overlaps with high-recall canonicalizer, not with phi-governed maj@k sign analysis or ranking inversion."},
+  {system: "OpenCompass MATHVerifyEvaluator", url: "https://github.com/open-compass/opencompass/blob/main/opencompass/evaluator/math_evaluator.py", overlap: "Uses math_verify parse/verify and boxed extraction for math scoring; overlaps with symbolic answer equivalence, not self-consistency bucket dynamics."},
+  {system: "EleutherAI lm-evaluation-harness Minerva MATH utils", url: "https://github.com/EleutherAI/lm-evaluation-harness/blob/main/lm_eval/tasks/minerva_math/utils.py", overlap: "Implements Minerva-style answer normalization plus SymPy/math_verify scoring; overlaps with canonicalization/equivalence, not recall-as-treatment or ranking-hazard analysis."},
+  {system: "Google Minerva", url: "https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/", overlap: "Uses majority voting over sampled solutions and most-common final answer; overlaps with maj@k/self-consistency, but does not analyze canonicalizer recall sign flips."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm", overlap: "Inference/serving engine with structured outputs; no found implementation of answer-equivalence majority voting hazard."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "High-performance serving framework; no found implementation of this evaluator mechanism."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache serving extension; no substantive overlap with answer canonicalization or maj@k scoring."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "GPU inference kernels and sampling primitives; no evaluator/canonicalizer overlap."},
+  {system: "TensorRT-LLM", url: "https://github.com/NVIDIA/TensorRT-LLM", overlap: "Inference runtime; examples include simple benchmark scoring/normalization, not symbolic equivalence maj@k hazard."}
+]
+CONTRIBUTION_TYPE: design
+SCALE_REALISM: "Partial. The q=1.0000 precision result on GSM8K/MATH-500 and zero adversarial false merges support realistic high-precision graders. However, the load-bearing MATH phi result still uses proxy answer frequencies, and the only real-model maj@k run is GSM8K, 150 problems, k=16, where Stage A predicts phi≈0 and no inversion. No shipping-scale or real symbolic-MATH model-sample inversion is demonstrated."
+RATIONALE: "No OSS system I found already implements the full mechanism: existing systems implement pieces, especially Math-Verify/OpenCompass/lm-eval symbolic answer equivalence and Minerva majority voting, but not the phi-governed effect of canonicalizer recall on maj@k rankings. This is more than glue because it frames an evaluator-design hazard with a measurable asymmetry variable, but it is not a new voting mechanism: the packet itself ties it to spoiler-effect/Duverger vote splitting. Evidence supports an ecological foothold: q=1.0000 on 239,881 GSM8K and 4,983 MATH-500 merged pairs with zero over-merges, and MATH-500 proxy phi median about -1.0 to -1.2. Evidence is insufficient for green because the claimed in-the-wild ranking inversion remains simulation-only/exploratory, and real model frequencies were measured only on GSM8K where the observed null is expected."
+```

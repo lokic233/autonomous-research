@@ -1,0 +1,32 @@
+Live web-search tools (both the Meta external search and WebSearch/WebFetch) were denied in this session, so I could not run fresh retrieval. I am issuing my novelty verdict from in-knowledge prior art (cutoff Jan 2026) against the packet's cited baselines, and I flag the lack of fresh retrieval explicitly — per the mandate, that means I cannot certify a ≥2-source fatal collision, so a collision-based KILL is off the table.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Wang et al. 2022, Self-Consistency Improves CoT Reasoning",
+   url: "https://arxiv.org/abs/2203.11171",
+   why_close: "Defines maj@k over answers and REQUIRES an answer-marginalization (equivalence-merge) step; it ASSUMES merging helps. This claim is precisely the negation — merging's sign is conditional. Direct parent; the claim is a refinement, not a collision."}
+- {cite: "Kuhn et al. 2023 (Semantic Uncertainty) / Farquhar et al. 2024 (Semantic Entropy, Nature)",
+   url: "https://arxiv.org/abs/2302.09664 ; https://www.nature.com/articles/s41586-024-07421-0",
+   why_close: "These ALREADY operationalize 'recall of equivalence-merging' — clustering answers by meaning before aggregating. This is the single nearest mechanism to the canonicalizer-recall knob. They do NOT analyze the correct-vs-incorrect fragmentation-asymmetry sign-flip on plurality ACCURACY/RANKING, so it is a near-neighbor, not a fatal duplicate — but the authors MUST crisply differentiate."}
+- {cite: "Bulian et al. 2022, Tomayto Tomahto (BEM / answer equivalence)",
+   url: "https://arxiv.org/abs/2202.07654",
+   why_close: "Establishes that the answer-equivalence function materially changes scoring beyond exact match. Foundational to the 'recall matters' premise; not the conditional-sign result."}
+- {cite: "Biderman et al. 2024, Lessons from the Trenches on Reproducible Evaluation",
+   url: "https://arxiv.org/abs/2405.14782",
+   why_close: "Documents that extraction/normalization choices shift benchmark scores and RANKS. This is the closest 'ranking-hazard' precedent — but as an UNCONDITIONAL sensitivity observation, not a phi-governed sign law. The leaderboard-inversion framing risks reading as a relabel of this unless distinguished."}
+
+NAMING_VS_MECHANISM: The core mechanism (vote-splitting / spoiler effect / Duverger) is NOT new and is conceded as such by committee#1 and the packet itself ("novel DOMAIN-APPLICATION, not-a-new-mechanism"). The genuine delta is narrow but real: a specific FALSIFIABLE governing law — sign(d acc / d recall) = sign(phi), phi = H_C − H_W — applied to self-consistency canonicalization. I do not find this exact conditional sign-law pre-stated in the cited literature. So it is more than renaming, but it is a domain-application + governing-law refinement of an established mechanism, NOT a new mechanism.
+
+FATAL_COLLISIONS: None verified. (Required ≥2-source verification could not be completed — live search denied this session.) The semantic-entropy line (Kuhn2023/Farquhar2024) is the only candidate close enough to threaten a KILL; on the evidence I have it analyzes a different objective (meaning-clustering for uncertainty), so it is a mandatory-distinguish, not a collision.
+
+MANDATORY_RELATED_WORK:
+- Kuhn2023 + Farquhar2024 (semantic entropy / meaning-clustering = the equivalence-recall knob) — MUST explicitly contrast: their clustering is for uncertainty, not a sign-flip on plurality accuracy.
+- Wang2022 self-consistency (the monotonicity assumption this claim negates).
+- Biderman2024 (extraction-sensitivity → rank changes; distinguish unconditional sensitivity from the phi-conditioned law).
+- Bulian2022 BEM.
+- Recommend the authors also locate any "when does self-consistency fail / universal self-consistency / soft-weighted self-consistency" work and the lm-eval-harness extraction-robustness literature, since an exact prior statement of the conditional-sign result could plausibly live there and was NOT ruled out by fresh search this session.
+
+RATIONALE: On novelty alone this is not a KILL: I could not verify any fatal collision in ≥2 sources, and the phi-governed sign-flip is a defensible, falsifiable delta over Wang2022 (which assumes monotonic benefit) and over Biderman2024 (which reports only unconditional rank sensitivity). But it is NOT green-grade novelty: the mechanism is admittedly borrowed (spoiler/Duverger), the contribution reduces to a domain-application + governing-law, the single nearest neighbor (semantic-entropy meaning-clustering, Kuhn2023/Farquhar2024) is uncomfortably close and not yet crisply distinguished in the packet, and — critically for a novelty-of-RESULT claim — the load-bearing in-the-wild leaderboard inversion is undemonstrated (Stage-B null on GSM8K; inversion only in exploratory post-hoc-retuned sim). A novel governing-law whose headline consequence is shown only in simulation is, on novelty grounds, YELLOW: real and non-duplicative, but not established as a standalone contribution until the MATH inversion (L2) is shown AND semantic entropy is explicitly carved out. Caveat: this yellow rests on in-knowledge prior art only; fresh ≥2-source search was unavailable.
+```

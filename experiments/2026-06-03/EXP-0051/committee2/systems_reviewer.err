@@ -408,3 +408,1723 @@ mcp: meta_core/three_pai_external_web_search (completed)
 hook: PostToolUse
 hook: PostToolUse Completed
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/EleutherAI/lm-evaluation-harness/main/lm_eval/tasks/minerva_math/utils.py | sed -n '1,260p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/open-compass/opencompass/main/opencompass/evaluator/math_evaluator.py | sed -n '1,260p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/examples/infinitebench/compute_scores.py | sed -n '1,260p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 319ms:
+import re
+
+from opencompass.openicl.icl_evaluator import BaseEvaluator
+from opencompass.registry import ICL_EVALUATORS
+
+# LaTeX patterns that may cause latex2sympy2_extended to hang during parse().
+# If any pattern is detected in the raw prediction, skip parse() for this item.
+_UNSAFE_LATEX_PATTERNS = [
+    r'\\sum\b',
+    r'\\prod\b',
+    r'\\binom\b',
+    r'\\choose\b',
+    r'!',
+]
+
+
+def _extract_boxed(text: str) -> str:
+    """Extract content from the last \\boxed{...} to end of text."""
+    idx = text.rfind('\\boxed')
+    if idx == -1:
+        return text
+    return text[idx + len('\\boxed'):]
+
+
+def _is_unsafe_latex(pred: str) -> bool:
+    return any(re.search(p, pred) for p in _UNSAFE_LATEX_PATTERNS)
+
+
+@ICL_EVALUATORS.register_module()
+class MATHVerifyEvaluator(BaseEvaluator):
+
+    def score(self, predictions, references, test_set=None):
+        try:
+            from latex2sympy2_extended import NormalizationConfig
+            from math_verify import (ExprExtractionConfig,
+                                     LatexExtractionConfig, parse, verify)
+        except ImportError:
+            raise ImportError('Failed to import required modules. Please '
+                              'install the necessary packages: '
+                              'pip install math_verify latex2sympy2_extended')
+
+        self.is_num_equal(predictions, references)
+
+        correct = 0
+        count = 0
+        details = []
+        for i, j in zip(predictions, references):
+            count += 1
+            j_with_env = f'${j}$'
+            gold_parsed = parse(
+                j_with_env,
+                extraction_mode='first_match',
+                extraction_config=[
+                    LatexExtractionConfig(),
+                    ExprExtractionConfig(),
+                ],
+            )
+
+            if len(gold_parsed) != 0:
+                # Check for unsafe LaTeX patterns BEFORE parse(),
+                # as parse() itself can hang on certain expressions.
+                if _is_unsafe_latex(_extract_boxed(i)):
+                    answer_correct = 0
+                    meta_info = 'skipped: unsafe pattern detected'
+                    detail = {
+                        'pred': i,
+                        'answer': str(gold_parsed),
+                        'correct': False,
+                        'meta_info': meta_info,
+                    }
+                    details.append(detail)
+                    continue
+
+                # We require the answer to be provided in correct
+                # latex (no malformed operators)
+                answer_parsed = parse(
+                    i,
+                    extraction_config=[
+                        LatexExtractionConfig(
+                            normalization_config=NormalizationConfig(
+                                nits=False,
+                                malformed_operators=False,
+                                basic_latex=True,
+                                equations=True,
+                                boxed='all',
+                                units=True,
+                            ),
+                            # Ensures that boxed is tried first
+                            boxed_match_priority=0,
+                            try_extract_without_anchor=False,
+                        )
+                    ],
+                    extraction_mode='first_match',
+                )
+
+                answer_correct = float(verify(answer_parsed, gold_parsed))
+                meta_info = 'regular math evaluate'
+                correct += answer_correct
+                detail = {
+                    'pred': str(answer_parsed),
+                    'answer': str(gold_parsed),
+                    'correct': True if answer_correct else False,
+                    'meta_info': meta_info,
+                }
+                details.append(detail)
+        result = {'accuracy': 100 * correct / count, 'details': details}
+        return result
+
+
+if __name__ == '__main__':
+    import sympy
+    from math_verify import parse
+    test_cases = [
+        # 1. Basic arithmetic operations
+        r'Simple fraction: \boxed{\frac{1}{2}}',
+        r'Addition: \boxed{2 + 3}',
+        r'Multiplication: \boxed{2 \times 3}',
+        # 2. Algebraic expressions
+        r'Quadratic: \boxed{x^2 + 2x + 1}',
+        r'Polynomial: \boxed{3x^3 - 2x^2 + 4x - 5}',
+        # 3. Trigonometric functions
+        r'Trigonometry: \boxed{\sin(x) + \cos(x)}',
+        r'Complex trig: \boxed{\tan^2(x) + \sec^2(x)}',
+        # 4. Roots and exponents
+        r'Square root: \boxed{\sqrt{16}}',
+        r'Complex root: \boxed{\sqrt[3]{x^2 + 1}}',
+        # 5. Logarithms
+        r'Natural log: \boxed{\ln(e^2)}',
+        r'Log base: \boxed{\log_2(8)}',
+        # 6. Limits and summations
+        r'Limit: \boxed{\lim_{x \to 0} \frac{\sin(x)}{x}}',
+        r'Sum: \boxed{\sum_{i=1}^{n} i}',
+        # 7. Integrals
+        r'Integral: \boxed{\int_{0}^{1} x^2 dx}',
+        r'Double integral: \boxed{\int_{0}^{1}\int_{0}^{1} xy \,dx\,dy}',
+        # 8. Matrices
+        r'Matrix: \boxed{\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}}',
+        # 9. Complex combinations
+        r'Complex expr: \boxed{\frac{\sqrt{x^2 + 1}}{\ln(x)} + '
+        r'\int_{0}^{x} t^2 dt}',
+        # 10. Error cases
+        r'Empty: \boxed{}',
+        r'Invalid: \boxed{\frac{1}}',  # Missing denominator
+        r'Nested: \boxed{\boxed{1}}',  # Nested boxed
+    ]
+
+    def print_result(expr: str, result: list):
+        print('\n' + '=' * 50)
+        print(f'Input: {expr}')
+        print(f'Output type: {type(result)}')
+        print(f'Output: {result}')
+
+        # If result is sympy expression, show more information
+        if result:
+            for item in result:
+                if isinstance(item, sympy.Basic):
+                    print(f'Sympy repr: {repr(item)}')
+                    try:
+                        print(f'Evaluated: {item.evalf()}')
+                    except Exception as e:
+                        print(f'Cannot evaluate: {e}')
+
+    # Test all cases
+    for test_expr in test_cases:
+        try:
+            result = parse(test_expr)
+            print_result(test_expr, result)
+        except Exception as e:
+            print(f'\nError processing {test_expr}: {e}')
+
+    # Special test: verify numerical calculations
+    numerical_tests = [
+        r'\boxed{2 + 2}',  # Should equal 4
+        r'\boxed{\frac{1}{2} + \frac{1}{3}}',  # Should equal 5/6
+        r'\boxed{\sqrt{16} + \sqrt{9}}',  # Should equal 7
+    ]
+
+    print('\n' + '=' * 50 + '\nNumerical Verification Tests:')
+    for test_expr in numerical_tests:
+        try:
+            result = parse(test_expr)
+            if result and isinstance(result[0], sympy.Basic):
+                expr = result[0]
+                print(f'\nExpression: {test_expr}')
+                print(f'Symbolic: {expr}')
+                print(f'Numerical value: {float(expr.evalf())}')
+        except Exception as e:
+            print(f'\nError in numerical test {test_expr}: {e}')
+
+ succeeded in 328ms:
+import logging
+import re
+import signal
+from importlib.metadata import version
+from typing import Dict, List, Optional
+
+import datasets
+
+
+eval_logger = logging.getLogger(__name__)
+
+
+try:
+    import antlr4
+    import sympy
+    from math_verify import parse, verify
+    from sympy.parsing.latex import parse_latex
+
+    assert version("antlr4-python3-runtime").startswith("4.11")
+except (ModuleNotFoundError, AssertionError) as e:
+    raise type(e)(
+        "`sympy`, `math_verify` and `antlr4-python3-runtime==4.11` are required for generating translation task prompt templates. "
+        "Please install the required packages via pip install lm-eval[math] or pip install -e .[math]"
+    ) from e
+
+
+# taken from
+# https://github.com/wellecks/lm-evaluation-harness/blob/master/lm_eval/tasks/minerva_math.py
+def doc_to_text(doc: dict) -> str:
+    return "Problem:" + "\n" + doc["problem"] + "\n\n" + "Solution:"
+
+
+def process_docs(dataset: datasets.Dataset) -> datasets.Dataset:
+    def _process_doc(doc: dict) -> dict:
+        out_doc = {
+            "problem": doc["problem"],
+            "solution": doc["solution"],
+            "answer": normalize_final_answer(
+                remove_boxed(last_boxed_only_string(doc["solution"]))
+            ),
+        }
+        if getattr(doc, "few_shot", None) is not None:
+            out_doc["few_shot"] = True
+        return out_doc
+
+    return dataset.map(_process_doc)
+
+
+def list_fewshot_samples() -> list[dict]:
+    return [
+        {
+            "problem": "Find the domain of the expression  $\\frac{\\sqrt{x-2}}{\\sqrt{5-x}}$.}",
+            "solution": "The expressions inside each square root must be non-negative. Therefore, $x-2 \\ge 0$, so $x\\ge2$, and $5 - x \\ge 0$, so $x \\le 5$. Also, the denominator cannot be equal to zero, so $5-x>0$, which gives $x<5$. Therefore, the domain of the expression is $\\boxed{[2,5)}$.\nFinal Answer: The final answer is $[2,5)$. I hope it is correct.",
+            "few_shot": "1",
+        },
+        {
+            "problem": "If $\\det \\mathbf{A} = 2$ and $\\det \\mathbf{B} = 12,$ then find $\\det (\\mathbf{A} \\mathbf{B}).$",
+            "solution": "We have that $\\det (\\mathbf{A} \\mathbf{B}) = (\\det \\mathbf{A})(\\det \\mathbf{B}) = (2)(12) = \\boxed{24}.$\nFinal Answer: The final answer is $24$. I hope it is correct.",
+            "few_shot": "1",
+        },
+        {
+            "problem": "Terrell usually lifts two 20-pound weights 12 times. If he uses two 15-pound weights instead, how many times must Terrell lift them in order to lift the same total weight?",
+            "solution": "If Terrell lifts two 20-pound weights 12 times, he lifts a total of $2\\cdot 12\\cdot20=480$ pounds of weight.  If he lifts two 15-pound weights instead for $n$ times, he will lift a total of $2\\cdot15\\cdot n=30n$ pounds of weight.  Equating this to 480 pounds, we can solve for $n$:\n\\begin{align*}\n30n&=480\\\n\\Rightarrow\\qquad n&=480/30=\\boxed{16}\n\\end{align*}\nFinal Answer: The final answer is $16$. I hope it is correct.",
+            "few_shot": "1",
+        },
+        {
+            "problem": "If the system of equations\n\n\\begin{align*}\n6x-4y&=a,\\\n6y-9x &=b.\n\\end{align*}has a solution $(x, y)$ where $x$ and $y$ are both nonzero,\nfind $\\frac{a}{b},$ assuming $b$ is nonzero.",
+            "solution": "If we multiply the first equation by $-\\frac{3}{2}$, we obtain\n\n$$6y-9x=-\\frac{3}{2}a.$$Since we also know that $6y-9x=b$, we have\n\n$$-\\frac{3}{2}a=b\\Rightarrow\\frac{a}{b}=\\boxed{-\\frac{2}{3}}.$$\nFinal Answer: The final answer is $-\\frac{2}{3}$. I hope it is correct.",
+            "few_shot": "1",
+        },
+    ]
+
+
+def process_results(doc: dict, results: list[str]) -> dict[str, int]:
+    candidates = results[0]
+
+    unnormalized_answer = get_unnormalized_answer(candidates)
+    answer = normalize_final_answer(unnormalized_answer)
+
+    if is_equiv(answer, doc["answer"]):
+        retval = 1
+    else:
+        retval = 0
+
+    # math_verify
+    _mvres = verify(
+        gold=parse(doc["solution"]),
+        target=parse(candidates),
+    )
+    mathval = 1 if _mvres else 0
+
+    res = {
+        "exact_match": retval,
+        "math_verify": mathval,
+    }
+    return res
+
+
+def last_boxed_only_string(string: str) -> Optional[str]:
+    idx = string.rfind("\\boxed")
+    if "\\boxed " in string:
+        return "\\boxed " + string.split("\\boxed ")[-1].split("$")[0]
+    if idx < 0:
+        idx = string.rfind("\\fbox")
+        if idx < 0:
+            return None
+
+    i = idx
+    right_brace_idx = None
+    num_left_braces_open = 0
+    while i < len(string):
+        if string[i] == "{":
+            num_left_braces_open += 1
+        if string[i] == "}":
+            num_left_braces_open -= 1
+            if num_left_braces_open == 0:
+                right_brace_idx = i
+                break
+        i += 1
+
+    if right_brace_idx is None:
+        retval = None
+    else:
+        retval = string[idx : right_brace_idx + 1]
+
+    return retval
+
+
+def remove_boxed(s: str) -> str:
+    if "\\boxed " in s:
+        left = "\\boxed "
+        assert s[: len(left)] == left
+        return s[len(left) :]
+
+    left = "\\boxed{"
+
+    assert s[: len(left)] == left
+    assert s[-1] == "}"
+
+    return s[len(left) : -1]
+
+
+class timeout:
+    def __init__(self, seconds=1, error_message="Timeout"):
+        self.seconds = seconds
+        self.error_message = error_message
+
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)
+
+
+def is_equiv(x1: str, x2: str) -> bool:
+    """
+    x1 and x2 are normalized latex string
+    """
+    try:
+        with timeout(seconds=5):
+            try:
+                parsed_x1 = parse_latex(x1)
+                parsed_x2 = parse_latex(x2)
+            except (
+                sympy.parsing.latex.errors.LaTeXParsingError,
+                sympy.SympifyError,
+                TypeError,
+            ):
+                eval_logger.debug(f"couldn't parse one of {x1} or {x2}")
+                return False
+
+            try:
+                diff = parsed_x1 - parsed_x2
+            except TypeError:
+                eval_logger.debug(f"couldn't subtract {x1} and {x2}")
+                return False
+
+            try:
+                if sympy.simplify(diff) == 0:
+                    return True
+                else:
+                    return False
+            except ValueError:
+                eval_logger.debug(
+                    f"Had some trouble simplifying when comparing {x1} and {x2}"
+                )
+    except TimeoutError:
+        eval_logger.debug(f"Timed out comparing {x1} and {x2}")
+        return False
+    except ImportError as e:
+        eval_logger.error(e)
+        raise
+    except Exception as e:
+        eval_logger.debug(f"Failed comparing {x1} and {x2} with {e}")
+        return False
+
+
+def get_unnormalized_answer(text: str) -> str:
+    INVALID_ANSWER = "[invalidanswer]"
+    end_seq = "I hope it is correct."
+    text += end_seq
+    match = re.search(
+        r"Final Answer: The final answer is(.*?). I hope it is correct.",
+        text,
+    )
+    if match:
+        return match.group(1).strip()
+    else:
+        return INVALID_ANSWER
+
+
+SUBSTITUTIONS = [
+    ("an ", ""),
+    ("a ", ""),
+    (".$", "$"),
+    ("\\$", ""),
+    (r"\ ", ""),
+    (" ", ""),
+    ("mbox", "text"),
+    (",\\text{and}", ","),
+    ("\\text{and}", ","),
+    ("\\text{m}", "\\text{}"),
+]
+REMOVED_EXPRESSIONS = [
+    "square",
+    "ways",
+    "integers",
+    "dollars",
+    "mph",
+    "inches",
+    "ft",
+    "hours",
+    "km",
+    "units",
+    "\\ldots",
+    "sue",
+    "points",
+    "feet",
+    "minutes",
+    "digits",
+    "cents",
+    "degrees",
+    "cm",
+    "gm",
+    "pounds",
+    "meters",
+    "meals",
+    "edges",
+    "students",
+    "childrentickets",
+    "multiples",
+    "\\text{s}",
+    "\\text{.}",
+    "\\text{\ns}",
+    "\\text{}^2",
+    "\\text{}^3",
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 349ms:
+# MIT License
+
+# Copyright (c) 2023 OpenBMB
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# SPDX-FileCopyrightText: Copyright (c) 2022-2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# reference: https://github.com/OpenBMB/InfiniteBench/blob/main/src/compute_scores.py
+
+import json
+import re
+import string
+from collections import Counter
+from pathlib import Path
+
+from tqdm import tqdm
+
+from .args import parse_args
+
+
+def normalize_answer(s: str) -> str:
+    """Lower text and remove punctuation, articles and extra whitespace."""
+
+    def remove_articles(text):
+        return re.sub(r"\b(a|an|the)\b", " ", text)
+
+    def white_space_fix(text):
+        return " ".join(text.split())
+
+    def remove_punc(text):
+        exclude = set(string.punctuation)
+        return "".join(ch for ch in text if ch not in exclude)
+
+    def lower(text):
+        return text.lower()
+
+    return white_space_fix(remove_articles(remove_punc(lower(s))))
+
+
+def f1_score(prediction, ground_truth) -> tuple[float, float, float]:
+    common = Counter(prediction) & Counter(ground_truth)
+    num_same = sum(common.values())
+    if num_same == 0:
+        return 0, 0, 0
+    precision = 1.0 * num_same / len(prediction)
+    recall = 1.0 * num_same / len(ground_truth)
+    f1 = (2 * precision * recall) / (precision + recall)
+    return f1, precision, recall
+
+
+def load_json(fname):
+    return json.load(open(fname))
+
+
+def iter_jsonl(fname, cnt=None):
+    i = 0
+    with open(fname, "r", encoding="utf8") as fin:
+        for line in fin:
+            if line.strip() == "":  # Skip empty lines
+                continue
+            if i == cnt:
+                break
+            if line.strip() == "":  # Skip empty lines
+                continue
+            yield json.loads(line)
+            i += 1
+
+
+def first_int_match(prediction):
+    pred_list = re.split("[^0-9]", prediction)
+    pred_value = ""
+    for item in pred_list:
+        if item != "":
+            pred_value = item
+            break
+    return pred_value
+
+
+def split_retrieval_answer(pred: str):
+    for c in ["\n", ":", '"', "'", ".", ",", "?", "!", "{", "}"]:
+        pred = pred.replace(c, " ")
+    words = pred.split()
+    return words
+
+
+def get_score_one_kv_retrieval(pred, label) -> bool:
+    for c in ['\n', ':', '\"', '\'', '.', ',', '?', '!', '{', '}']:
+        pred = pred.replace(c, ' ')
+    words = pred.split()
+    return label in words
+
+
+def get_score_one_passkey(pred, label) -> bool:
+    if isinstance(label, list):
+        label = label[0]
+    return label == first_int_match(pred)
+
+
+def get_score_one(pred: str, label: str, task_name: str) -> float:
+    """
+    Computes the score for one prediction.
+    Returns one float (zero and one for boolean values).
+    """
+    NAME_TO_SCORE_GETTER = {
+        # Retrieve
+        "kv_retrieval": get_score_one_kv_retrieval,
+        "kv_retrieval_prefix": get_score_one_kv_retrieval,
+        "kv_retrieval_both": get_score_one_kv_retrieval,
+        "passkey": get_score_one_passkey,
+    }
+    assert task_name in NAME_TO_SCORE_GETTER, f"Invalid task name: {task_name}"
+    score = NAME_TO_SCORE_GETTER[task_name](pred, label)
+    return float(score)
+
+
+def get_labels(preds: list) -> list[str]:
+    possible_label_keys = ["ground_truth", "label"]
+    for label_key in possible_label_keys:
+        if label_key in preds[0]:
+            return [x.get(label_key, "XXXXXXXXXX") for x in preds]
+    raise ValueError(f"Cannot find label in {preds[0]}")
+
+
+def get_preds(preds: list, data_name: str) -> list[str]:
+    pred_strings = []
+    possible_pred_keys = ["prediction", "pred"]
+    for pred in preds:
+        this_pred = "NO PREDICTION"
+        for pred_key in possible_pred_keys:
+            if pred_key in pred:
+                this_pred = pred[pred_key]
+                break
+        else:
+            raise ValueError(f"Cannot find prediction in {pred}")
+        pred_strings.append(this_pred)
+    return pred_strings
+
+
+def get_score(labels: list, preds: list, data_name: str) -> float:
+    """
+    Computes the average score for a task.
+    """
+    assert len(labels) == len(preds)
+    scores = []
+    for label, pred in tqdm(zip(labels, preds)):
+        score = get_score_one(pred, label, data_name)
+        scores.append(score)
+    return sum(scores) / len(scores)
+
+
+def load_json(preds_path):
+    assert preds_path.exists(), f"Predictions not found in: {preds_path}"
+    print("Loading prediction results from", preds_path)
+    return list(iter_jsonl(preds_path))
+
+
+def compute_scores(preds, data_name: str):
+    labels = get_labels(preds)
+    preds = get_preds(preds, data_name)
+
+    acc = get_score(labels, preds, data_name)
+    return acc
+
+
+ALL_TASKS = [
+    "passkey",
+    "kv_retrieval",
+]
+
+if __name__ == "__main__":
+    arguments = parse_args()
+    tasks = [arguments.task]
+    for task in tasks:
+        preds_path = Path(arguments.preds_file)
+        preds = load_json(preds_path)
+        acc = compute_scores(preds, task)
+        print(acc)
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/EleutherAI/lm-evaluation-harness/main/lm_eval/tasks/minerva_math/utils.py | sed -n '260,560p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 102ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/Math-Verify/main/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/structured_outputs.md | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md | sed -n '1,140p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/ | tr '\\n' ' ' | grep -Eo '.{0,160}(majority|vote|samples|equivalent|normalize|answer).{0,160}' | head -20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 250ms:
+# Structured Outputs
+
+vLLM supports the generation of structured outputs using
+[xgrammar](https://github.com/mlc-ai/xgrammar) or
+[guidance](https://github.com/guidance-ai/llguidance) as backends.
+This document shows you some examples of the different options that are
+available to generate structured outputs.
+
+!!! warning
+    If you are still using the following deprecated API fields which were removed in v0.12.0, please update your code to use `structured_outputs` as demonstrated in the rest of this document:
+
+    - `guided_json` -> `{"structured_outputs": {"json": ...}}` or `StructuredOutputsParams(json=...)`
+    - `guided_regex` -> `{"structured_outputs": {"regex": ...}}` or `StructuredOutputsParams(regex=...)`
+    - `guided_choice` -> `{"structured_outputs": {"choice": ...}}` or `StructuredOutputsParams(choice=...)`
+    - `guided_grammar` -> `{"structured_outputs": {"grammar": ...}}` or `StructuredOutputsParams(grammar=...)`
+    - `guided_whitespace_pattern` -> `{"structured_outputs": {"whitespace_pattern": ...}}` or `StructuredOutputsParams(whitespace_pattern=...)`
+    - `structural_tag` -> `{"structured_outputs": {"structural_tag": ...}}` or `StructuredOutputsParams(structural_tag=...)`
+    - `guided_decoding_backend` -> Remove this field from your request
+
+## Online Serving (OpenAI API)
+
+You can generate structured outputs using the OpenAI's [Completions](https://platform.openai.com/docs/api-reference/completions) and [Chat](https://platform.openai.com/docs/api-reference/chat) API.
+
+The following parameters are supported, which must be added as extra parameters:
+
+- `choice`: the output will be exactly one of the choices.
+- `regex`: the output will follow the regex pattern.
+- `json`: the output will follow the JSON schema.
+- `grammar`: the output will follow the context free grammar.
+- `structural_tag`: Follow a JSON schema within a set of specified tags within the generated text.
+
+You can see the complete list of supported parameters on the [OpenAI-Compatible Server](../serving/online_serving/openai_compatible_server.md) page.
+
+Structured outputs are supported by default in the OpenAI-Compatible Server. You
+may choose to specify the backend to use by setting the
+`--structured-outputs-config.backend` flag to `vllm serve`. The default backend is `auto`,
+which will try to choose an appropriate backend based on the details of the
+request. You may also choose a specific backend, along with
+some options. A full set of options is available in the `vllm serve --help`
+text.
+
+Now let's see an example for each of the cases, starting with the `choice`, as it's the easiest one:
+
+??? code
+
+    ```python
+    from openai import OpenAI
+    client = OpenAI(
+        base_url="http://localhost:8000/v1",
+        api_key="-",
+    )
+    model = client.models.list().data[0].id
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "user", "content": "Classify this sentiment: vLLM is wonderful!"}
+        ],
+        extra_body={"structured_outputs": {"choice": ["positive", "negative"]}},
+    )
+    print(completion.choices[0].message.content)
+    ```
+
+The next example shows how to use the `regex`. The supported regex syntax depends on the structured output backend. For example, `xgrammar`, `guidance`, and `outlines` use Rust-style regex, while `lm-format-enforcer` uses Python's `re` module. The idea is to generate an email address, given a simple regex template:
+
+??? code
+
+    ```python
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": "Generate an example email address for Alan Turing, who works in Enigma. End in .com and new line. Example result: alan.turing@enigma.com\n",
+            }
+        ],
+        extra_body={"structured_outputs": {"regex": r"\w+@\w+\.com\n"}, "stop": ["\n"]},
+    )
+    print(completion.choices[0].message.content)
+    ```
+
+One of the most relevant features in structured text generation is the option to generate a valid JSON with pre-defined fields and formats.
+For this we can use the `json` parameter in two different ways:
+
+- Using directly a [JSON Schema](https://json-schema.org/)
+- Defining a [Pydantic model](https://docs.pydantic.dev/latest/) and then extracting the JSON Schema from it (which is normally an easier option).
+
+The next example shows how to use the `response_format` parameter with a Pydantic model:
+
+??? code
+
+    ```python
+    from pydantic import BaseModel
+    from enum import Enum
+
+    class CarType(str, Enum):
+        sedan = "sedan"
+        suv = "SUV"
+        truck = "Truck"
+        coupe = "Coupe"
+
+    class CarDescription(BaseModel):
+        brand: str
+        model: str
+        car_type: CarType
+
+    json_schema = CarDescription.model_json_schema()
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": "Generate a JSON with the brand, model and car_type of the most iconic car from the 90's",
+            }
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "car-description",
+                "schema": CarDescription.model_json_schema()
+            },
+        },
+    )
+    print(completion.choices[0].message.content)
+    ```
+
+!!! tip
+    While not strictly necessary, normally it's better to indicate in the prompt the
+    JSON schema and how the fields should be populated. This can improve the
+    results notably in most cases.
+
+Finally we have the `grammar` option, which is probably the most
+difficult to use, but it's really powerful. It allows us to define complete
+languages like SQL queries. It works by using a context free EBNF grammar.
+As an example, we can use to define a specific format of simplified SQL queries:
+
+??? code
+
+    ```python
+    simplified_sql_grammar = """
+        root ::= select_statement
+
+        select_statement ::= "SELECT " column " from " table " where " condition
+
+        column ::= "col_1 " | "col_2 "
+
+        table ::= "table_1 " | "table_2 "
+
+        condition ::= column "= " number
+
+        number ::= "1 " | "2 "
+    """
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": "Generate an SQL query to show the 'username' and 'email' from the 'users' table.",
+
+hook: PostToolUse Completed
+ succeeded in 265ms:
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-black-background.png?raw=true">
+    <img alt="FlashInfer" src="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-white-background.png?raw=true" width=55%>
+  </picture>
+</p>
+<h1 align="center">
+High-Performance GPU Kernels for Inference
+</h1>
+
+<p align="center">
+| <a href="https://docs.flashinfer.ai"><b>Documentation</b></a> | <a href="https://github.com/flashinfer-ai/flashinfer/releases/latest"><b>Latest Release</b></a> | <a href="https://flashinfer.ai"><b>Blog</b></a> | <a href="https://join.slack.com/t/flashinfer/shared_invite/zt-379wct3hc-D5jR~1ZKQcU00WHsXhgvtA"><b>Slack</b></a> |  <a href="https://github.com/orgs/flashinfer-ai/discussions"><b>Discussion Forum</b></a> |
+</p>
+
+[![Build Status](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/badge/icon)](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/)
+[![Documentation](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml/badge.svg)](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml)
+
+**FlashInfer** is a library and kernel generator for inference that delivers state-of-the-art performance across diverse GPU architectures. It provides unified APIs for attention, GEMM, and MoE operations with multiple backend implementations including FlashAttention-2/3, cuDNN, CUTLASS, and TensorRT-LLM.
+
+## Why FlashInfer?
+
+- **State-of-the-art Performance**: Optimized kernels for prefill, decode, and mixed batching scenarios
+- **Multiple Backends**: Automatically selects the best backend for your hardware and workload
+- **Modern Architecture Support**: Support for SM75 (Turing) and later (through Blackwell)
+- **Low-Precision Compute**: FP8 and FP4 quantization for attention, GEMM, and MoE operations
+- **Production-Ready**: CUDAGraph and torch.compile compatible for low-latency serving
+
+## Core Features
+
+### Attention Kernels
+- **Paged and Ragged KV-Cache**: Efficient memory management for dynamic batch serving
+- **Decode, Prefill, and Append**: Optimized kernels for all attention phases
+- **MLA Attention**: Native support for DeepSeek's Multi-Latent Attention
+- **Cascade Attention**: Memory-efficient hierarchical KV-Cache for shared prefixes
+- **Sparse Attention**: Block-sparse and variable block-sparse patterns
+- **POD-Attention**: Fused prefill+decode for mixed batching
+
+### GEMM & Linear Operations
+- **BF16 GEMM**: BF16 matrix multiplication for SM10.0+ GPUs.
+- **FP8 GEMM**: Per-tensor and groupwise scaling
+- **FP4 GEMM**: NVFP4 and MXFP4 matrix multiplication for Blackwell GPUs
+- **Grouped GEMM**: Efficient batched matrix operations for LoRA and multi-expert routing
+
+### Mixture of Experts (MoE)
+- **Fused MoE Kernels**
+- **Multiple Routing Methods**: DeepSeek-V3, Llama-4, and standard top-k routing
+- **Quantized MoE**: FP8 and FP4 expert weights with block-wise scaling
+
+### Sampling & Decoding
+- **Sorting-Free Sampling**: Efficient Top-K, Top-P, and Min-P without sorting
+- **Speculative Decoding**: Chain speculative sampling support
+
+### Communication
+- **AllReduce**: Custom implementations
+- **Multi-Node NVLink**: MNNVL support for multi-node inference
+- **NVSHMEM Integration**: For distributed memory operations
+
+### Other Operators
+- **RoPE**: LLaMA-style rotary position embeddings (including LLaMA 3.1)
+- **Normalization**: RMSNorm, LayerNorm, Gemma-style fused operations
+- **Activations**: SiLU, GELU with fused gating
+
+## GPU Support
+
+| Architecture | Compute Capability | Example GPUs |
+|--------------|-------------------|------|
+| Turing | SM 7.5 | T4, RTX 20 series |
+| Ampere | SM 8.0, 8.6 | A100, A10, RTX 30 series |
+| Ada Lovelace | SM 8.9 | L4, L40, RTX 40 series |
+| Hopper | SM 9.0 | H100, H200 |
+| Blackwell | SM 10.0, 10.3 | B200, B300 |
+| Blackwell | SM 11.0 | Jetson Thor |
+| Blackwell | SM 12.0, 12.1 | RTX 50 series, DGX Spark |
+
+> **Note:** Not all features are supported across all compute capabilities.
+
+## News
+
+Latest: [![GitHub Release](https://img.shields.io/github/v/release/flashinfer-ai/flashinfer)](https://github.com/flashinfer-ai/flashinfer/releases/latest)
+
+Notable updates:
+- [2025-10-08] Blackwell support added in [v0.4.0](https://github.com/flashinfer-ai/flashinfer/releases/tag/v0.4.0)
+- [2025-03-10] [Blog Post](https://flashinfer.ai/2025/03/10/sampling.html) Sorting-Free GPU Kernels for LLM Sampling, which explains the design of sampling kernels in FlashInfer.
+
+## Getting Started
+
+### Installation
+
+**Quickstart:**
+
+```bash
+pip install flashinfer-python
+```
+
+**Package Options:**
+
+- **flashinfer-python**: Core package that compiles/downloads kernels on first use
+- **flashinfer-cubin**: Pre-compiled kernel binaries for all supported GPU architectures
+- **flashinfer-jit-cache**: Pre-built kernel cache for specific CUDA versions
+
+**For faster initialization and offline usage**, install the optional packages to have most kernels pre-compiled:
+
+```bash
+pip install flashinfer-python flashinfer-cubin
+# JIT cache (replace cu129 with your CUDA version)
+pip install flashinfer-jit-cache --index-url https://flashinfer.ai/whl/cu129
+```
+
+**For Blackwell (SM100+) CuTe DSL kernels**, install with the CUDA 13 extra to enable Blackwell-optimized kernels:
+
+```bash
+pip install flashinfer-python[cu13]
+```
+
+### Verify Installation
+
+```bash
+flashinfer show-config
+```
+
+### Basic Usage
+
+```python
+import torch
+import flashinfer
+
+# Single decode attention
+q = torch.randn(32, 128, device="cuda", dtype=torch.float16)  # [num_qo_heads, head_dim]
+k = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)  # [kv_len, num_kv_heads, head_dim]
+v = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)
+
+output = flashinfer.single_decode_with_kv_cache(q, k, v)
+```
+
+See [documentation](https://docs.flashinfer.ai/) for comprehensive API reference and tutorials.
+
+### Install from Source
+
+```bash
+git clone https://github.com/flashinfer-ai/flashinfer.git --recursive
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 373ms:
+# Math-Verify
+A robust mathematical expression evaluation system designed for assessing Large Language Model outputs in mathematical tasks. This evaluator achieves the highest accuracy and most correct scores compared to existing evaluators on MATH dataset:
+| Evaluator     | Score   |
+|---------------|---------|
+| Harness       | 0.0802  |
+| Qwen          | 0.1288  |
+| Math-Verify   | 0.1328  |
+
+## Installation
+Math-Verify currently supports multiple antlr4 runtimes:
+- `antlr4-python3-runtime==4.13.2`
+- `antlr4-python3-runtime==4.11.0`
+- `antlr4-python3-runtime==4.9.3`
+
+To install Math-Verify with a specific antlr4 runtime, use the following command:
+```bash
+pip install math-verify[antlr4_13_2]
+```
+
+We recommend always specifying the antlr4 runtime to avoid any potential issues.
+
+## Example Usage
+```python
+from math_verify import parse, verify
+
+# Parse the gold and answer
+# If you know that gold will only contain latex or expr (no latex env), use
+# parse(gold, extraction_config=[LatexExtractionConfig()]) or parse(gold, extraction_config=[ExprExtractionConfig()])
+
+gold = parse("${1,3} \\cup {2,4}$")
+answer = parse("${1,2,3,4}$")
+
+# Order here is important!
+verify(gold, answer)
+# >>> True
+```
+
+## Extraction Targets
+The parser supports three main extraction targets:
+
+1. **LatexExtractionConfig** - Extracts LaTeX expressions with configurable options (see docstring) (e.g. '\[ \sqrt{2} \]'). Do note that the latex must be placed in latex environment to be parsable.
+2. **ExprExtractionConfig** - Extracts plain mathematical expressions (e.g. '1/2')
+3. **StringExtractionConfig** - Extracts literal strings (e.g. 'A')
+
+By default, the parser uses both LatexExtractionConfig and ExprExtractionConfig for maximum flexibility in extracting mathematical expressions from model outputs.
+
+## Why Another Math Evaluator?
+
+Existing math evaluators often fail to correctly assess model outputs due to:
+1. Strict format requirements (expecting exact patterns like "Final answer is X")
+2. Limited parsing capabilities (especially for complex mathematical notations)
+3. Inflexible comparison logic (unable to recognize equivalent expressions)
+As result, this can lead to significant underestimation of model performance, in extreme cases, even by 40 points.
+
+## Key Features
+
+### 1. Robust Answer Extraction
+- Multiple extraction strategies (LaTeX, Plain Numerical Expressions)
+- Answer retrieval is done in format agnostic manner, with best effort to extract the answer.
+- Supports all standard latex formats for the best retrieval.
+
+### 2. Advanced Parsing Capabilities
+- Complete set theory support (Intervals, FiniteSets, set operations)
+- Unicode symbol substituion support (e.g. `β -> beta`)
+- Applies Latex fixes for common malformations (e.g. `frac13 -> 1/3`)
+- Equation and inequality parsing, with symbol assignment resolution (e.g. `x = 1 -> 1`)
+- Percentage best effort conversion (e.g. `10% -> 0.1`)
+- Units in text handling (e.g. `10 cm -> 10`)
+- Exact representation of the input expressions (e.g. `0.333 -> Float(333, 3)`)
+
+### 3. Intelligent Expression Comparison
+- Both numerical and symbolic comparison support
+- Precise numerical comparison for numerical types with configurable rounding tolerance
+- Matrix expression equivalence validation
+- Set and interval comparison
+- Relation evaluation with flip support (e.g., `a < 2 == 2 > a`)
+
+## Advanced Usage
+If you already have a model outputs, format them into a csv file with `answer`, `gold` columns.
+Then run the following command:
+```bash
+python evaluate_model_outputs.py --input_csv <path_to_csv> (examples/model_outputs.csv) --output_csv <path_to_csv> (output.csv)
+```
+
+If you want to evaluate a model from ground up, we have provided a script for end to end evaluation with support for following datasets:
+- MATH-Hard
+- MATH-500
+- GSM8K
+- AMC23
+- AIME24
+
+This script requires the optional "inference" dependencies to be installed, e.g. as follows:
+```bash
+pip install 'math-verify[inference]'
+```
+
+Run the following command to evaluate a model:
+```bash
+python evaluate_model.py --model <model_name> (HuggingFaceTB/SmolLM2-135M) --use_chat_template (True) --task <task_name> (amc23)
+```
+
+Lastly if you want to only extract the answers from model outputs, you can run the following command:
+```bash
+python extract_answers.py --input_csv <path_to_csv> (examples/sample_answers.csv) --output_csv <path_to_csv> (output.csv)
+```
+
+## Architecture
+
+![Architecture](./assets/flow.svg)
+
+
+The grading process follows a three-step algorithm:
+Answer Extraction -> Expression Common Representation Conversion (SymPy) -> Gold Comparison
+
+1. **Answer Extraction** (see `math_verify/parser.py`): 
+   Retrieves the answer from the model output in a format-agnostic manner.
+   1. Regex patterns are prepared based on configuration, each with a priority indicating the order of application.
+   2. Priorities range from the most concrete answer format to the most abstract.
+   3. Regex patterns are applied in order of priority; if multiple matches occur, those appearing last are chosen first.
+   4. The first regex match that successfully converts to a common representation (SymPy) is returned; additionally, returning the first match is also allowed.
+
+2. **Answer Parsing** (see `latex2sympy2_extended/latex2sympy2.py`):
+   - Converts the extracted answer to a common representation (SymPy).
+   1. Normalizes the extracted answer to address the following issues:
+      - Basic LaTeX commands (e.g., \mathrm, \displaystyle)
+      - Units and their variations
+      - Malformed operators (e.g., \sqrt, \frac)
+      - Minor formatting fixes (spaces, dots, etc.)
+      - Boxed environments
+      - Equation splitting and approximations
+   2. Parses the normalized answer using ANTLR4 grammar to convert it to a SymPy expression.
+   3. Handles special cases:
+      - Percentage conversion
+      - Matrix operations 
+      - Derivatives and integrals
+      - Complex numbers
+      - Sets and intervals
+
+3. **Gold Comparison** (see `math_verify/grader.py`):
+   - Compares the parsed answer with the gold answer.
+   1. Initially attempts string comparison and basic SymPy equality:
+      - Direct string comparison after normalization
+      - Basic SymPy structural equality (e.g., a + b vs b + a)
+   
+   2. For numeric expressions:
+      - Numeric equality within specified precision (e.g., 0.333333 ≈ 1/3)
+      - Symbolic equality by simplifying the difference (a - b = 0)
+   
+   3. Special handling for different types:
+      - Relational expressions (equations/inequalities):
+        * Compares normalized forms
+        * Handles flipped inequalities (e.g., a ≤ b equals b ≥ a)
+      
+      - Sets and intervals:
+        * Direct set equality and symmetric difference
+        * Element-wise comparison for finite sets
+        * Special handling for interval vs. finite set cases
+        * Interval endpoint comparison with precision
+      
+      - Matrices and vectors:
+        * Element-wise comparison
+        * Shape validation
+        * Special handling for matrix operations
+   
+   4. Complex number support:
+      - Detection of complex expressions
+      - Handling of different complex notations (e.g., i, ℂ)
+      - Matrix operations (e.g., det, trace, rank)
+      - Complex functions (e.g., Re, Im, arg)
+   
+   5. Robust error handling:
+      - Timeout protection for long computations
+      - Graceful fallback for failed comparisons
+      - Multiple comparison attempts with different methods
+
+
+## FAQ
+
+### Why is verify function not symmetric?
+
+The verify funciton, doesn't have symmetric behavior in two cases:
+
+**1. Representation Asymmetry (Interval vs. Inequality):**
+- If the gold answer is an inequality (e.g., `1 < x < 2`) and the prediction is an interval (e.g., `(1,2)`), the verification will return `True`.
+- However, if the gold answer is an interval (e.g., `(1,2)`) and the prediction is the inequality (e.g., `1 < x < 2`), it will return `False`.
+- This asymmetry is designed to prevent models from simply returning the input inequality when a model is given task to solve an ineqaulity and instead of solving the inequality is just outputs the ineqaulity itself. If model can "learn" that it can just output the inequality without solving it, it will simply reward hack such samples.
+- This can be changed by passing `allow_set_relation_comp` to `verify`, which allows both directions of comparison. os comparison.
+
+**2. Solution Context Asymmetry (Number vs. Solution Chain):**
+- If the gold answer is a number (e.g., `101`) and the prediction is a solution chain leading to that number (e.g., `a+2z = 2z + a = 101`), the verification will return `True`.
+- Conversely, if the gold answer is a solution chain (e.g., `a+2z = 2z + a = 101`) and the prediction is just the final number (e.g., `101`), it will return `False`.
+- Determining whether we are evaluating an equation or a solution chain is complex. The `verify` function uses the gold answer as a guide. It assumes gold answers are "cleaned" in a preferred format.
+
+
+### What setting I should use for my dataset?
+- First you should determine what your dataset gold looks like. If it's just a simple numbers, use `ExprExtractionConfig()`. If it's latex, use `LatexExtractionConfig()`. If the gold answer contain floats, make sure to set correct float precision. Lastly if it's just MCQ strings (A,B,C,D), use `StringExtractionConfig()`.
+
+- For prediction, we recommend using `LatexExtractionConfig()` and `ExprExtractionConfig()` together unless you have control over the model output. Additionally, we recommended instructing the model to output the answer in a `\boxed{}` environment and set `boxed_match_priority` to 0 in the latex extraction config.
+
+- For reward verification, we recommend further using the following normalization configuration of latex extraction config for prediction:
+  - `basic_latex=True`
+  - `units=True`
+  - `malformed_operators=False`
+  - `nits=False`
+  - `boxed="all"`
+  - `equations=False`
+As we are rewarding a model, we want to enforce that it produces a fully valid LaTeX answer.
+
+- We don't recommend mixing `StringExtractionConfig()` with other configs, as it might produce unexpected results. Especially when you are searching for A/B/C/D type of answer, because we are taking the first match, it will often find separate A, B, C, or D characters in the text, which is probably not desired.
+
+### Why is the latex extraction not working?
+- It's important that all latex epxressions are placed in latex environment. For example, `\[ x = 1 \]` is valid, but `x = 1` will not extract anything. Following environments are supported:
+  - Multi-line latex expressions
+  - `\[ ... \]`
+  - `$$ ... $$`
+  - `\boxed{...}`
+  - Single line latex expressions
+  - `$...$`
+  - `\( ... \)`
+  - `[ ... ]`
+
+ succeeded in 1881ms:
+generating solutions that include numerical calculations and symbolic manipulation without relying on external tools such as a calculator. The model parses and answers mathematical questions using a mix of natural language and mathematical notation. Minerva combines several techniques, including <a href="https://arxiv.org/ab
+4" target="_blank" rel="noopener noreferrer">scratchpad</a> prompting, and <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener noreferrer">majority voting</a>, to achieve state-of-the-art performance on STEM reasoning tasks. You can explore Minerva’s output with our <a href="https://minerva-demo.github.io/
+ons to existing questions before being presented with a new question — and <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener noreferrer">majority voting</a>. Like most language models, Minerva assigns probabilities to different possible outputs. When answering a question, rather than taking the single so
+ted by sampling stochastically from all possible outputs. These solutions are different (e.g., the steps are not identical), but often arrive at the same final answer. Minerva uses <em>majority voting</em> on these sampled solutions, taking the most common result as the conclusive final answer. </p>   <table align="center" c
+tr><td class="tr-caption" style="text-align: center;"><b>Majority voting</b>: Minerva generates multiple solutions to each question and chooses the most common answer as the solution, improving performance significantly.</td></tr></tbody></table>  <div style="line-height:40%;">     <br> </div>  <h2>Evaluation on STEM Benchma
+re reasoning errors, where the solution steps do not follow a logical chain of thought. </p> <p> It is also possible for the model to arrive at a correct final answer but with faulty reasoning. We call such cases “false positives”, as they erroneously count toward a model’s overall performance score. In our analysis, we find
+yle="text-align: center;"><b>Reasoning mistake:</b> The model computes the number of free throws at the fourth practice, but then uses this number as the final answer for the first practice.</td></tr></tbody></table>  <div style="line-height:40%;">     <br> </div> <h2>Limitations</h2> <p> Our approach to quantitative reasoni
+ng is not grounded in formal mathematics. Minerva parses questions and generates answers using a mix of natural language and <a href="https://www.latex-project.org/" target="_blank" rel="noopener noreferrer">LaTeX</a> mathematical expressions, wit
+h no explicit underlying mathematical structure. This approach has an important limitation, in that the model’s answers cannot be automatically verified. Even when the final answer is known and can be verified, the model can arrive at a correct final answer using incorrect reas
+serving as useful aids for researchers, and enabling new learning opportunities for students. We present Minerva as a small step in this direction. To see more samples from Minerva, such as the one below, please visit the <a href="https://minerva-demo.github.io/" target="_blank" rel="noopener noreferrer">interactive sample ex
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/README.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/LMCache/LMCache/dev/README.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/README.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 239ms:
+<div align="center" id="sglangtop">
+<img src="https://raw.githubusercontent.com/sgl-project/sglang/main/assets/logo.png" alt="logo" width="400" margin="10px"></img>
+
+[![PyPI](https://img.shields.io/pypi/v/sglang)](https://pypi.org/project/sglang)
+![PyPI - Downloads](https://static.pepy.tech/badge/sglang?period=month)
+[![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE)
+[![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)
+
+</div>
+
+--------------------------------------------------------------------------------
+
+<p align="center">
+<a href="https://lmsys.org/blog/"><b>Blog</b></a> |
+<a href="https://docs.sglang.io/"><b>Documentation</b></a> |
+<a href="https://roadmap.sglang.io/"><b>Roadmap</b></a> |
+<a href="https://slack.sglang.io/"><b>Join Slack</b></a> |
+<a href="https://meet.sglang.io/"><b>Weekly Dev Meeting</b></a> |
+<a href="https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#slides"><b>Slides</b></a>
+</p>
+
+## News
+- [2026/02] 🔥 Unlocking 25x Inference Performance with SGLang on NVIDIA GB300 NVL72 ([blog](https://lmsys.org/blog/2026-02-20-gb300-inferencex/)).
+- [2026/01] 🔥 SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2026-01-16-sglang-diffusion/)).
+- [2025/12] SGLang provides day-0 support for latest open models ([MiMo-V2-Flash](https://lmsys.org/blog/2025-12-16-mimo-v2-flash/), [Nemotron 3 Nano](https://lmsys.org/blog/2025-12-15-run-nvidia-nemotron-3-nano/), [Mistral Large 3](https://github.com/sgl-project/sglang/pull/14213), [LLaDA 2.0 Diffusion LLM](https://lmsys.org/blog/2025-12-19-diffusion-llm/), [MiniMax M2](https://lmsys.org/blog/2025-11-04-miminmax-m2/)).
+- [2025/10] 🔥 SGLang now runs natively on TPU with the SGLang-Jax backend ([blog](https://lmsys.org/blog/2025-10-29-sglang-jax/)).
+- [2025/09] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part II): 3.8x Prefill, 4.8x Decode Throughput ([blog](https://lmsys.org/blog/2025-09-25-gb200-part-2/)).
+- [2025/09] SGLang Day 0 Support for DeepSeek-V3.2 with Sparse Attention ([blog](https://lmsys.org/blog/2025-09-29-deepseek-V32/)).
+- [2025/08] SGLang x AMD SF Meetup on 8/22: Hands-on GPU workshop, tech talks by AMD/xAI/SGLang, and networking ([Roadmap](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_roadmap.pdf), [Large-scale EP](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_ep.pdf), [Highlights](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_highlights.pdf), [AITER/MoRI](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_aiter_mori.pdf), [Wave](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_wave.pdf)).
+
+<details>
+<summary>More</summary>
+
+- [2025/11] SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2025-11-07-sglang-diffusion/)).
+- [2025/10] PyTorch Conference 2025 SGLang Talk ([slide](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/sglang_pytorch_2025.pdf)).
+- [2025/10] SGLang x Nvidia SF Meetup on 10/2 ([recap](https://x.com/lmsysorg/status/1975339501934510231)).
+- [2025/08] SGLang provides day-0 support for OpenAI gpt-oss model ([instructions](https://github.com/sgl-project/sglang/issues/8833))
+- [2025/06] SGLang, the high-performance serving infrastructure powering trillions of tokens daily, has been awarded the third batch of the Open Source AI Grant by a16z ([a16z blog](https://a16z.com/advancing-open-source-ai-through-benchmarks-and-bold-experimentation/)).
+- [2025/05] Deploying DeepSeek with PD Disaggregation and Large-scale Expert Parallelism on 96 H100 GPUs ([blog](https://lmsys.org/blog/2025-05-05-large-scale-ep/)).
+- [2025/06] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part I): 2.7x Higher Decoding Throughput ([blog](https://lmsys.org/blog/2025-06-16-gb200-part-1/)).
+- [2025/03] Supercharge DeepSeek-R1 Inference on AMD Instinct MI300X ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1-Part2/README.html))
+- [2025/03] SGLang Joins PyTorch Ecosystem: Efficient LLM Serving Engine ([PyTorch blog](https://pytorch.org/blog/sglang-joins-pytorch/))
+- [2025/02] Unlock DeepSeek-R1 Inference Performance on AMD Instinct™ MI300X GPU ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1_Perf/README.html))
+- [2025/01] SGLang provides day one support for DeepSeek V3/R1 models on NVIDIA and AMD GPUs with DeepSeek-specific optimizations. ([instructions](https://github.com/sgl-project/sglang/tree/main/benchmark/deepseek_v3), [AMD blog](https://www.amd.com/en/developer/resources/technical-articles/amd-instinct-gpus-power-deepseek-v3-revolutionizing-ai-development-with-sglang.html), [10+ other companies](https://x.com/lmsysorg/status/1887262321636221412))
+- [2024/12] v0.4 Release: Zero-Overhead Batch Scheduler, Cache-Aware Load Balancer, Faster Structured Outputs ([blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/)).
+- [2024/10] The First SGLang Online Meetup ([slides](https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#the-first-sglang-online-meetup)).
+- [2024/09] v0.3 Release: 7x Faster DeepSeek MLA, 1.5x Faster torch.compile, Multi-Image/Video LLaVA-OneVision ([blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/)).
+- [2024/07] v0.2 Release: Faster Llama3 Serving with SGLang Runtime (vs. TensorRT-LLM, vLLM) ([blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/)).
+- [2024/02] SGLang enables **3x faster JSON decoding** with compressed finite state machine ([blog](https://lmsys.org/blog/2024-02-05-compressed-fsm/)).
+- [2024/01] SGLang provides up to **5x faster inference** with RadixAttention ([blog](https://lmsys.org/blog/2024-01-17-sglang/)).
+- [2024/01] SGLang powers the serving of the official **LLaVA v1.6** release demo ([usage](https://github.com/haotian-liu/LLaVA?tab=readme-ov-file#demo)).
+
+</details>
+
+## About
+SGLang is a high-performance serving framework for large language models and multimodal models.
+It is designed to deliver low-latency and high-throughput inference across a wide range of setups, from a single GPU to large distributed clusters.
+Its core features include:
+
+- **Fast Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
+- **Broad Model Support**: Supports a wide range of language models (Llama, Qwen, DeepSeek, Kimi, GLM, GPT, Gemma, Mistral, etc.), embedding models (e5-mistral, gte, mcdse), reward models (Skywork), and diffusion models (WAN, Qwen-Image), with easy extensibility for adding new models. Compatible with most Hugging Face models and OpenAI APIs.
+- **Extensive Hardware Support**: Runs on NVIDIA GPUs (GB200/B300/H100/A100/Spark/5090), AMD GPUs (MI355/MI300), Intel Xeon CPUs, Google TPUs, Ascend NPUs, and more.
+- **Active Community**: SGLang is open-source and supported by a vibrant community with widespread industry adoption, powering over 400,000 GPUs worldwide.
+- **RL & Post-Training Backbone**: SGLang is a proven rollout backend used for training many frontier models, with native RL integrations and adoption by well-known post-training frameworks such as [**AReaL**](https://github.com/inclusionAI/AReaL), [**Miles**](https://github.com/radixark/miles), [**slime**](https://github.com/THUDM/slime), [**Tunix**](https://github.com/google/tunix), [**verl**](https://github.com/volcengine/verl) and more.
+
+## Getting Started
+- [Install SGLang](https://docs.sglang.io/get_started/install.html)
+- [Quick Start](https://docs.sglang.io/basic_usage/send_request.html)
+- [Backend Tutorial](https://docs.sglang.io/basic_usage/openai_api_completions.html)
+- [Frontend Tutorial](https://docs.sglang.io/references/frontend/frontend_tutorial.html)
+- [Contribution Guide](https://docs.sglang.io/developer_guide/contribution_guide.html)
+
+## Benchmark and Performance
+Learn more in the release blogs: [v0.2 blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/), [v0.3 blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/), [v0.4 blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/), [Large-scale expert parallelism](https://lmsys.org/blog/2025-05-05-large-scale-ep/), [GB200 rack-scale parallelism](https://lmsys.org/blog/2025-09-25-gb200-part-2/), [GB300 long context](https://lmsys.org/blog/2026-02-19-gb300-longctx/).
+
+## Adoption and Sponsorship
+SGLang has been deployed at large scale, generating trillions of tokens in production each day. It is trusted and adopted by a wide range of leading enterprises and institutions, including xAI, AMD, NVIDIA, Intel, LinkedIn, Cursor, Oracle Cloud, Google Cloud, Microsoft Azure, AWS, Atlas Cloud, Voltage Park, Nebius, DataCrunch, Novita, InnoMatrix, MIT, UCLA, the University of Washington, Stanford, UC Berkeley, Tsinghua University, Jam & Tea Studios, Baseten, and other major technology organizations.
+As an open-source LLM inference engine, SGLang has become the de facto industry standard, with deployments running on over 400,000 GPUs worldwide.
+SGLang is currently hosted under the non-profit open-source organization [LMSYS](https://lmsys.org/about/).
+
+<img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" alt="logo" width="800" margin="10px"></img>
+
+## Contact Us
+For enterprises interested in adopting or deploying SGLang at scale, including technical consulting, sponsorship opportunities, or partnership inquiries, please contact us at [sglang@lmsys.org](mailto:sglang@lmsys.org).
+
+Long-term active SGLang contributors are eligible for coding agent sponsorship, such as Cursor, Claude Code, or OpenAI Codex. Email [sglang@lmsys.org](mailto:sglang@lmsys.org) with your most important commits or pull requests.
+
+## Acknowledgment
+We learned the design and reused code from the following projects: [Guidance](https://github.com/guidance-ai/guidance), [vLLM](https://github.com/vllm-project/vllm), [LightLLM](https://github.com/ModelTC/lightllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [Outlines](https://github.com/outlines-dev/outlines), and [LMQL](https://github.com/eth-sri/lmql).
+
+hook: PostToolUse Completed
+ succeeded in 262ms:
+<div align="center">
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/LMCache/LMCache/dev/asset/logo.png" width="720" alt="lmcache logo">
+  </p>
+  
+  [![Docs](https://img.shields.io/badge/docs-live-brightgreen)](https://docs.lmcache.ai/)
+  [![PyPI](https://img.shields.io/pypi/v/lmcache)](https://pypi.org/project/lmcache/)
+  [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lmcache)](https://pypi.org/project/lmcache/)
+  [![Unit Tests](https://badge.buildkite.com/ce25f1819a274b7966273bfa54f0e02f092c3de0d7563c5c9d.svg)](https://buildkite.com/lmcache/lmcache-unittests)
+  [![Code Quality](https://github.com/lmcache/lmcache/actions/workflows/code_quality_checks.yml/badge.svg?branch=dev&label=tests)](https://github.com/LMCache/LMCache/actions/workflows/code_quality_checks.yml)
+  [![Integration Tests](https://badge.buildkite.com/108ddd4ab482a2480999dec8c62a640a3315ed4e6c4e86798e.svg)](https://buildkite.com/lmcache/lmcache-vllm-integration-tests)
+
+   <br />
+
+  [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10841/badge)](https://www.bestpractices.dev/projects/10841)
+  [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/LMCache/LMCache/badge)](https://scorecard.dev/viewer/?uri=github.com/LMCache/LMCache)
+  [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LMCache/LMCache/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/LMCache/LMCache)](https://github.com/LMCache/LMCache/graphs/commit-activity)
+  [![PyPI - Downloads](https://img.shields.io/pypi/dm/lmcache)](https://pypi.org/project/lmcache/)
+  [![YouTube Channel Views](https://img.shields.io/youtube/channel/views/UC58zMz55n70rtf1Ak2PULJA)](https://www.youtube.com/channel/UC58zMz55n70rtf1Ak2PULJA)
+
+</div>
+
+
+--------------------------------------------------------------------------------
+
+| [**Blog**](https://blog.lmcache.ai/)
+| [**Documentation**](https://docs.lmcache.ai/)
+| [**Join Slack**](https://join.slack.com/t/lmcacheworkspace/shared_invite/zt-3g8e6xzz8-KzS_HI8bPERGFK5PTB~MYg)
+| [**Interest Form**](https://forms.gle/MHwLiYDU6kcW3dLj7)
+| [**Roadmap**](https://github.com/LMCache/LMCache/issues/1253)
+
+## Summary
+
+LMCache is an **LLM** serving engine extension to **reduce TTFT** and **increase throughput**, especially under long-context scenarios. By storing the KV caches of reusable texts all over the datacenter (including GPU, CPU, Disk and even S3) with a wide range of acceleration technqiue (zero cpu copy, NIXL, GDS and more). LMCache reuses the KV caches of **_any_** reused text (not necessarily prefix) in **_any_** serving engine instance. Thus, LMCache saves precious GPU cycles and reduces user response delay.  
+
+By combining LMCache with vLLM, developers achieve 3-10x delay savings and GPU cycle reduction in many LLM use cases, including multi-round QA and RAG.
+
+![performance](https://github.com/user-attachments/assets/86137f17-f216-41a0-96a7-e537764f7a4c)
+
+LMCache is used, integrated, or referenced across a growing ecosystem of LLM serving platforms, infrastructure providers, and open-source projects:
+
+- Initiated and officially supported by: [Tensormesh](https://www.tensormesh.ai/)
+- Adopted by inference providers: GMI cloud ([blog post](https://www.gmicloud.ai/blog/gmi-cloud-achieves-4x-llm-performance-boost-with-tensormesh)), Google cloud ([blog post](https://cloud.google.com/blog/topics/developers-practitioners/boosting-llm-performance-with-tiered-kv-cache-on-google-kubernetes-engine)), CoreWeave ([blog post](https://www.coreweave.com/news/coreweave-unveils-ai-object-storage-redefining-how-ai-workloads-access-and-scale-data)) and more
+- Integrated with data and storage infrastructure providers: Redis ([blog post](https://redis.io/blog/get-faster-llm-inference-and-cheaper-responses-with-lmcache-and-redis/)), Weka ([blog post](https://www.weka.io/blog/ai-ml/open-sourcing-gds-integration-from-augmented-memory-grid-see-results-for-yourself/)), PliOps ([blog post](https://www.manilatimes.net/2025/03/12/tmt-newswire/globenewswire/pliops-announces-collaboration-with-vllm-production-stack-to-enhance-llm-inference-performance/2072000)) and more
+- Used by open-source projects and platforms: [vLLM](https://github.com/vllm-project/vllm) [![GitHub stars](https://img.shields.io/github/stars/vllm-project/vllm?style=social)](https://github.com/vllm-project/vllm)
+, [SGLang](https://github.com/sgl-project/sglang) [![GitHub stars](https://img.shields.io/github/stars/sgl-project/sglang?style=social)](https://github.com/sgl-project/sglang)
+, [vLLM Production Stack](https://github.com/vllm-project/production-stack) [![GitHub stars](https://img.shields.io/github/stars/vllm-project/production-stack?style=social)](https://github.com/vllm-project/production-stack), [llm-d](https://github.com/llm-d/llm-d/) [![GitHub stars](https://img.shields.io/github/stars/llm-d/llm-d?style=social)](https://github.com/llm-d/llm-d), [NVIDIA dynamo](https://github.com/ai-dynamo/dynamo) [![GitHub stars](https://img.shields.io/github/stars/ai-dynamo/dynamo)](https://github.com/ai-dynamo/dynamo), [KServe](https://github.com/kserve/kserve) [![GitHub stars](https://img.shields.io/github/stars/kserve/kserve?style=social)](https://github.com/kserve/kserve) and more.
+
+For more details, please check our [Ray Summit talk](https://www.youtube.com/watch?v=TwLd15HE6AM) and [technical report](https://lmcache.ai/tech_report.pdf).
+
+
+## Features
+
+- [x] 🔥 Integration with vLLM v1 with the following features:
+  * High performance CPU KVCache offloading
+  * Disaggregated prefill
+  * P2P KVCache sharing
+- [x] Integration with SGLang for KV cache offloading
+- [x] Storage support as follows:
+  * CPU
+  * Disk
+  * [NIXL](https://github.com/ai-dynamo/nixl)
+- [x] Installation support through pip and latest vLLM
+
+## Installation
+
+To use LMCache, simply install `lmcache` from your package manager, e.g. pip:
+
+```bash
+pip install lmcache
+```
+
+Works on Linux NVIDIA GPU platform.
+
+More [detailed installation instructions](https://docs.lmcache.ai/getting_started/installation) are available in the docs, particularly if you are not using the latest stable version of vllm or using another serving engine with different dependencies. Any "undefined symbol" or torch mismatch versions can be resolved in the documentation. 
+
+## Getting started
+
+The best way to get started is to checkout the [Quickstart Examples](https://docs.lmcache.ai/getting_started/quickstart/) in the docs.
+
+## Documentation
+
+Check out the LMCache [documentation](https://docs.lmcache.ai/) which is available online.
+
+We also post regularly in [LMCache blogs](https://blog.lmcache.ai/).
+
+## Examples
+
+Go hands-on with our [examples](https://github.com/LMCache/LMCache/tree/dev/examples),
+demonstrating how to address different use cases with LMCache.
+
+## Interested in Connecting?
+
+Fill out the [interest form](https://forms.gle/mQfQDUXbKfp2St1z7), [sign up for our newsletter](https://mailchi.mp/tensormesh/lmcache-sign-up-newsletter), [join LMCache slack](https://join.slack.com/t/lmcacheworkspace/shared_invite/zt-3g8e6xzz8-KzS_HI8bPERGFK5PTB~MYg), or [drop an email](mailto:contact@lmcache.ai), and our team will reach out to you!
+
+## Community meeting
+
+The community meeting [Zoom Link]( https://uchicago.zoom.us/j/6603596916?pwd=Z1E5MDRWUSt2am5XbEt4dTFkNGx6QT09) for LMCache is hosted bi-weekly. All are welcome to join!
+
+Meetings are held bi-weekly on: Tuesdays at 9:00 AM PT – [Add to Google Calendar](https://calendar.google.com/calendar/u/0/r?cid=Y19mNGY2ZmMwZjUxMWYyYTZmZmE1ZTVlMGI2Yzk2NmFmZjNhM2Y4ODZiZmU5OTU5MDJlMmE3ZmUyOGZmZThlOWY5QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20)
+
+We keep notes from each meeting on this [document](https://docs.google.com/document/d/1_Fl3vLtERFa3vTH00cezri78NihNBtSClK-_1tSrcow) for summaries of standups, discussion, and action items.
+
+Recordings of meetings are available on the [YouTube LMCache channel](https://www.youtube.com/channel/UC58zMz55n70rtf1Ak2PULJA).
+
+## Contributing
+
+We welcome and value all contributions and collaborations.  Please check out [Contributing Guide](CONTRIBUTING.md) on how to contribute.
+
+We continually update [[Onboarding] Welcoming contributors with good first issues!](https://github.com/LMCache/LMCache/issues/627)
+
+## Citation
+
+If you use LMCache for your research, please cite our papers:
+
+```
+@inproceedings{liu2024cachegen,
+  title={Cachegen: Kv cache compression and streaming for fast large language model serving},
+  author={Liu, Yuhan and Li, Hanchen and Cheng, Yihua and Ray, Siddhant and Huang, Yuyang and Zhang, Qizheng and Du, Kuntai and Yao, Jiayi and Lu, Shan and Ananthanarayanan, Ganesh and others},
+  booktitle={Proceedings of the ACM SIGCOMM 2024 Conference},
+  pages={38--56},
+  year={2024}
+}
+
+@article{cheng2024large,
+  title={Do Large Language Models Need a Content Delivery Network?},
+  author={Cheng, Yihua and Du, Kuntai and Yao, Jiayi and Jiang, Junchen},
+  journal={arXiv preprint arXiv:2409.13761},
+  year={2024}
+}
+
+@inproceedings{10.1145/3689031.3696098,
+  author = {Yao, Jiayi and Li, Hanchen and Liu, Yuhan and Ray, Siddhant and Cheng, Yihua and Zhang, Qizheng and Du, Kuntai and Lu, Shan and Jiang, Junchen},
+  title = {CacheBlend: Fast Large Language Model Serving for RAG with Cached Knowledge Fusion},
+  year = {2025},
+  url = {https://doi.org/10.1145/3689031.3696098},
+  doi = {10.1145/3689031.3696098},
+  booktitle = {Proceedings of the Twentieth European Conference on Computer Systems},
+  pages = {94–109},
+}
+
+@article{cheng2025lmcache,
+  title={LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference},
+  author={Cheng, Yihua and Liu, Yuhan and Yao, Jiayi and An, Yuwei and Chen, Xiaokun and Feng, Shaoting and Huang, Yuyang and Shen, Samuel and Du, Kuntai and Jiang, Junchen},
+  journal={arXiv preprint arXiv:2510.09665},
+  year={2025}
+}
+```
+
+## Socials
+
+[Linkedin](https://www.linkedin.com/company/lmcache-lab/?viewAsMember=true) | [Twitter](https://x.com/lmcache) | [Youtube](https://www.youtube.com/@LMCacheTeam)
+
+## License
+
+The LMCache codebase is licensed under Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+
+ succeeded in 233ms:
+<div align="center">
+
+TensorRT LLM
+===========================
+<h4>TensorRT LLM optimizes inference for LLMs and Visual Gen models with specialized kernels for common operations, an efficient runtime, and a pythonic framework that enables you to customize and extend the system.</h4>
+
+[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://nvidia.github.io/TensorRT-LLM/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/NVIDIA/TensorRT-LLM)
+[![python](https://img.shields.io/badge/python-3.12-green)](https://www.python.org/downloads/release/python-3123/)
+[![python](https://img.shields.io/badge/python-3.10-green)](https://www.python.org/downloads/release/python-31012/)
+[![cuda](https://img.shields.io/badge/cuda-13.1.1-green)](https://developer.nvidia.com/cuda-downloads)
+[![torch](https://img.shields.io/badge/torch-2.10.0-green)](https://pytorch.org)
+[![version](https://img.shields.io/badge/release-1.3.0rc18-green)](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/version.py)
+[![license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/NVIDIA/TensorRT-LLM/blob/main/LICENSE)
+
+[Architecture](https://nvidia.github.io/TensorRT-LLM/developer-guide/overview.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Performance](https://nvidia.github.io/TensorRT-LLM/developer-guide/perf-overview.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Examples](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation](https://nvidia.github.io/TensorRT-LLM/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Roadmap](https://github.com/NVIDIA/TensorRT-LLM/issues?q=is%3Aissue%20state%3Aopen%20label%3Aroadmap)
+
+---
+<div align="left">
+
+## Tech Blogs
+
+<!-- Use github markdown link to link for the latest blog since the doc build has not happened yet. When the doc build is updated, it should be updated to the webpage link. -->
+
+* [05/15] Joint Optimization of Agent Applications and TensorRT-LLM
+✨ [➡️ link](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/blogs/tech_blog/blog23_Joint_Optimization_of_Agent_Applications_and_TensorRT-LLM.md)
+
+* [04/03] Tuning CUDA Graph Batch Sizes for Higher Output Throughput
+✨ [➡️ link](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/blogs/tech_blog/blog20_Tuning_CUDA_Graph_Batch_Sizes_for_Higher_Output_Throughput.md)
+
+* [04/03] DWDP: Distributed Weight Data Parallelism for High-Performance LLM Inference on NVL72
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog19_DWDP_Distributed_Weight_Data_Parallelism_for_High_Performance_LLM_Inference_on_NVL72.html)
+
+
+* [03/16] Optimizing MoE Communication with One-Sided AlltoAll Over NVLink
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog18_Optimizing_MoE_Communication_with_One_Sided_AlltoAll_Over_NVLink.html)
+
+* [03/04] Sparse Attention in TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog17_Sparse_Attention_in_TensorRT-LLM.html)
+
+* [02/06] Accelerating Long-Context Inference with Skip Softmax Attention
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog16_Accelerating_Long_Context_Inference_with_Skip_Softmax_Attention.html)
+
+* [01/09] Optimizing DeepSeek-V3.2 on NVIDIA Blackwell GPUs
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog15_Optimizing_DeepSeek_V32_on_NVIDIA_Blackwell_GPUs)
+
+<details close>
+<summary>Previous Blogs</summary>
+* [10/13] Scaling Expert Parallelism in TensorRT LLM (Part 3: Pushing the Performance Boundary)
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog14_Scaling_Expert_Parallelism_in_TensorRT-LLM_part3.html)
+
+* [09/26] Inference Time Compute Implementation in TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog13_Inference_Time_Compute_Implementation_in_TensorRT-LLM.html)
+
+* [09/19] Combining Guided Decoding and Speculative Decoding: Making CPU and GPU Cooperate Seamlessly
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog12_Combining_Guided_Decoding_and_Speculative_Decoding.html)
+
+* [08/29] ADP Balance Strategy
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog10_ADP_Balance_Strategy.html)
+
+* [08/05] Running a High-Performance GPT-OSS-120B Inference Server with TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog9_Deploying_GPT_OSS_on_TRTLLM.html)
+
+* [08/01] Scaling Expert Parallelism in TensorRT LLM (Part 2: Performance Status and Optimization)
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog8_Scaling_Expert_Parallelism_in_TensorRT-LLM_part2.html)
+
+* [07/26] N-Gram Speculative Decoding in TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog7_NGram_performance_Analysis_And_Auto_Enablement.html)
+
+* [06/19] Disaggregated Serving in TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog5_Disaggregated_Serving_in_TensorRT-LLM.html)
+
+* [06/05] Scaling Expert Parallelism in TensorRT LLM (Part 1: Design and Implementation of Large-scale EP)
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog4_Scaling_Expert_Parallelism_in_TensorRT-LLM.html)
+
+* [05/30] Optimizing DeepSeek R1 Throughput on NVIDIA Blackwell GPUs: A Deep Dive for Developers
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog3_Optimizing_DeepSeek_R1_Throughput_on_NVIDIA_Blackwell_GPUs.html)
+
+* [05/23] DeepSeek R1 MTP Implementation and Optimization
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog2_DeepSeek_R1_MTP_Implementation_and_Optimization.html)
+
+* [05/16] Pushing Latency Boundaries: Optimizing DeepSeek-R1 Performance on NVIDIA B200 GPUs
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog1_Pushing_Latency_Boundaries_Optimizing_DeepSeek-R1_Performance_on_NVIDIA_B200_GPUs.html)
+</details>
+
+## Latest News
+* [04/03] 🎨 TensorRT LLM now supports diffusion models for visual generation [➡️ link](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/models/visual-generation.md)
+
+<details close>
+<summary>Previous News</summary>
+
+* [08/05] 🌟 TensorRT LLM delivers Day-0 support for OpenAI's latest open-weights models: GPT-OSS-120B [➡️ link](https://huggingface.co/openai/gpt-oss-120b) and GPT-OSS-20B [➡️ link](https://huggingface.co/openai/gpt-oss-20b)
+
+* [07/15] 🌟 TensorRT LLM delivers Day-0 support for LG AI Research's latest model, EXAONE 4.0 [➡️ link](https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-32B)
+
+* [05/22] Blackwell Breaks the 1,000 TPS/User Barrier With Meta’s Llama 4 Maverick
+✨ [➡️ link](https://developer.nvidia.com/blog/blackwell-breaks-the-1000-tps-user-barrier-with-metas-llama-4-maverick/)
+
+* [04/10] TensorRT LLM DeepSeek R1 performance benchmarking best practices now published.
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/Best_perf_practice_on_DeepSeek-R1_in_TensorRT-LLM.html)
+
+* [04/05] TensorRT LLM can run Llama 4 at over 40,000 tokens per second on B200 GPUs!
+
+![L4_perf](https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/docs/source/media/l4_launch_perf.png)
+
+
+* [03/22] TensorRT LLM is now fully open-source, with developments moved to GitHub!
+* [03/18]  🚀🚀 NVIDIA Blackwell Delivers World-Record DeepSeek-R1 Inference Performance with TensorRT LLM [➡️ Link](https://developer.nvidia.com/blog/nvidia-blackwell-delivers-world-record-deepseek-r1-inference-performance/)
+* [02/28] 🌟 NAVER Place Optimizes SLM-Based Vertical Services with TensorRT LLM [➡️ Link](https://developer.nvidia.com/blog/spotlight-naver-place-optimizes-slm-based-vertical-services-with-nvidia-tensorrt-llm/)
+
+* [02/25] 🌟 DeepSeek-R1 performance now optimized for Blackwell [➡️ Link](https://huggingface.co/nvidia/DeepSeek-R1-FP4)
+
+* [02/20] Explore the complete guide to achieve great accuracy, high throughput, and low latency at the lowest cost for your business [here](https://www.nvidia.com/en-us/solutions/ai/inference/balancing-cost-latency-and-performance-ebook/?ncid=so-twit-348956&linkId=100000341423615).
+
+* [02/18] Unlock #LLM inference with auto-scaling on @AWS EKS ✨ [➡️ link](https://aws.amazon.com/blogs/hpc/scaling-your-llm-inference-workloads-multi-node-deployment-with-tensorrt-llm-and-triton-on-amazon-eks/)
+
+* [02/12] 🦸⚡ Automating GPU Kernel Generation with DeepSeek-R1 and Inference Time Scaling
+[➡️ link](https://developer.nvidia.com/blog/automating-gpu-kernel-generation-with-deepseek-r1-and-inference-time-scaling/?ncid=so-twit-997075&linkId=100000338909937)
+
+* [02/12] 🌟 How Scaling Laws Drive Smarter, More Powerful AI
+[➡️ link](https://blogs.nvidia.com/blog/ai-scaling-laws/?ncid=so-link-889273&linkId=100000338837832)
+
+* [2025/01/25] Nvidia moves AI focus to inference cost, efficiency [➡️ link](https://www.fierceelectronics.com/ai/nvidia-moves-ai-focus-inference-cost-efficiency?linkId=100000332985606)
+
+* [2025/01/24] 🏎️ Optimize AI Inference Performance with NVIDIA Full-Stack Solutions [➡️ link](https://developer.nvidia.com/blog/optimize-ai-inference-performance-with-nvidia-full-stack-solutions/?ncid=so-twit-400810&linkId=100000332621049)
+
+* [2025/01/23] 🚀 Fast, Low-Cost Inference Offers Key to Profitable AI [➡️ link](https://blogs.nvidia.com/blog/ai-inference-platform/?ncid=so-twit-693236-vt04&linkId=100000332307804)
+
+* [2025/01/16] Introducing New KV Cache Reuse Optimizations in TensorRT LLM [➡️ link](https://developer.nvidia.com/blog/introducing-new-kv-cache-reuse-optimizations-in-nvidia-tensorrt-llm/?ncid=so-twit-363876&linkId=100000330323229)
+
+* [2025/01/14] 📣 Bing's Transition to LLM/SLM Models: Optimizing Search with TensorRT LLM [➡️ link](https://blogs.bing.com/search-quality-insights/December-2024/Bing-s-Transition-to-LLM-SLM-Models-Optimizing-Search-with-TensorRT-LLM)
+
+* [2025/01/04] ⚡Boost Llama 3.3 70B Inference Throughput 3x with TensorRT LLM Speculative Decoding
+[➡️ link](https://developer.nvidia.com/blog/boost-llama-3-3-70b-inference-throughput-3x-with-nvidia-tensorrt-llm-speculative-decoding/)
+
+* [2024/12/10] ⚡ Llama 3.3 70B from AI at Meta is accelerated by TensorRT-LLM. 🌟 State-of-the-art model on par with Llama 3.1 405B for reasoning, math, instruction following and tool use. Explore the preview
+[➡️ link](https://build.nvidia.com/meta/llama-3_3-70b-instruct)
+
+* [2024/12/03] 🌟 Boost your AI inference throughput by up to 3.6x.  We now support speculative decoding and tripling token throughput with our NVIDIA TensorRT-LLM. Perfect for your generative AI apps.  ⚡Learn how in this technical deep dive
+[➡️ link](https://nvda.ws/3ZCZTzD)
+
+* [2024/12/02] Working on deploying ONNX models for performance-critical applications? Try our NVIDIA Nsight Deep Learning Designer ⚡ A user-friendly GUI and tight integration with NVIDIA TensorRT that offers:
+✅ Intuitive visualization of ONNX model graphs
+✅ Quick tweaking of model architecture and parameters
+✅ Detailed performance profiling with either ORT or TensorRT
+✅ Easy building of TensorRT engines
+[➡️ link](https://developer.nvidia.com/nsight-dl-designer?ncid=so-link-485689&linkId=100000315016072)
+
+* [2024/11/26] 📣 Introducing TensorRT LLM for Jetson AGX Orin, making it even easier to deploy on Jetson AGX Orin with initial support in JetPack 6.1 via the v0.12.0-jetson branch of the TensorRT LLM repo. ✅ Pre-compiled TensorRT LLM wheels & containers for easy integration ✅ Comprehensive guides & docs to get you started
+[➡️ link](https://forums.developer.nvidia.com/t/tensorrt-llm-for-jetson/313227?linkId=100000312718869)
+
+* [2024/11/21] NVIDIA TensorRT LLM Multiblock Attention Boosts Throughput by More Than 3x for Long Sequence Lengths on NVIDIA HGX H200
+[➡️ link](https://developer.nvidia.com/blog/nvidia-tensorrt-llm-multiblock-attention-boosts-throughput-by-more-than-3x-for-long-sequence-lengths-on-nvidia-hgx-h200/)
+
+* [2024/11/19] Llama 3.2 Full-Stack Optimizations Unlock High Performance on NVIDIA GPUs
+[➡️ link](https://developer.nvidia.com/blog/llama-3-2-full-stack-optimizations-unlock-high-performance-on-nvidia-gpus/?ncid=so-link-721194)
+
+* [2024/11/09] 🚀🚀🚀 3x Faster AllReduce with NVSwitch and TensorRT LLM MultiShot
+[➡️ link](https://developer.nvidia.com/blog/3x-faster-allreduce-with-nvswitch-and-tensorrt-llm-multishot/)
+
+* [2024/11/09] ✨ NVIDIA advances the AI ecosystem with the AI model of LG AI Research 🙌
+[➡️ link](https://blogs.nvidia.co.kr/blog/nvidia-lg-ai-research/)
+
+* [2024/11/02] 🌟🌟🌟 NVIDIA and LlamaIndex Developer Contest
+🙌 Enter for a chance to win prizes including an NVIDIA® GeForce RTX™ 4080 SUPER GPU, DLI credits, and more🙌
+[➡️ link](https://developer.nvidia.com/llamaindex-developer-contest)
+
+* [2024/10/28] 🏎️🏎️🏎️ NVIDIA GH200 Superchip Accelerates Inference by 2x in Multiturn Interactions with Llama Models
+[➡️ link](https://developer.nvidia.com/blog/nvidia-gh200-superchip-accelerates-inference-by-2x-in-multiturn-interactions-with-llama-models/)
+
+* [2024/10/22] New 📝 Step-by-step instructions on how to
+✅ Optimize LLMs with NVIDIA TensorRT-LLM,
+✅ Deploy the optimized models with Triton Inference Server,
+✅ Autoscale LLMs deployment in a Kubernetes environment.
+🙌 Technical Deep Dive:
+[➡️ link](https://nvda.ws/3YgI8UT)
+
+* [2024/10/07] 🚀🚀🚀Optimizing Microsoft Bing Visual Search with NVIDIA Accelerated Libraries
+[➡️ link](https://developer.nvidia.com/blog/optimizing-microsoft-bing-visual-search-with-nvidia-accelerated-libraries/)
+
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Math-Verify", url: "https://github.com/huggingface/Math-Verify", overlap: "Implements robust math answer extraction, SymPy/common-representation conversion, and equivalence verification; overlaps with high-recall canonicalizer, not with phi-governed maj@k sign analysis or ranking inversion."},
+  {system: "OpenCompass MATHVerifyEvaluator", url: "https://github.com/open-compass/opencompass/blob/main/opencompass/evaluator/math_evaluator.py", overlap: "Uses math_verify parse/verify and boxed extraction for math scoring; overlaps with symbolic answer equivalence, not self-consistency bucket dynamics."},
+  {system: "EleutherAI lm-evaluation-harness Minerva MATH utils", url: "https://github.com/EleutherAI/lm-evaluation-harness/blob/main/lm_eval/tasks/minerva_math/utils.py", overlap: "Implements Minerva-style answer normalization plus SymPy/math_verify scoring; overlaps with canonicalization/equivalence, not recall-as-treatment or ranking-hazard analysis."},
+  {system: "Google Minerva", url: "https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/", overlap: "Uses majority voting over sampled solutions and most-common final answer; overlaps with maj@k/self-consistency, but does not analyze canonicalizer recall sign flips."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm", overlap: "Inference/serving engine with structured outputs; no found implementation of answer-equivalence majority voting hazard."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "High-performance serving framework; no found implementation of this evaluator mechanism."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache serving extension; no substantive overlap with answer canonicalization or maj@k scoring."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "GPU inference kernels and sampling primitives; no evaluator/canonicalizer overlap."},
+  {system: "TensorRT-LLM", url: "https://github.com/NVIDIA/TensorRT-LLM", overlap: "Inference runtime; examples include simple benchmark scoring/normalization, not symbolic equivalence maj@k hazard."}
+]
+CONTRIBUTION_TYPE: design
+SCALE_REALISM: "Partial. The q=1.0000 precision result on GSM8K/MATH-500 and zero adversarial false merges support realistic high-precision graders. However, the load-bearing MATH phi result still uses proxy answer frequencies, and the only real-model maj@k run is GSM8K, 150 problems, k=16, where Stage A predicts phi≈0 and no inversion. No shipping-scale or real symbolic-MATH model-sample inversion is demonstrated."
+RATIONALE: "No OSS system I found already implements the full mechanism: existing systems implement pieces, especially Math-Verify/OpenCompass/lm-eval symbolic answer equivalence and Minerva majority voting, but not the phi-governed effect of canonicalizer recall on maj@k rankings. This is more than glue because it frames an evaluator-design hazard with a measurable asymmetry variable, but it is not a new voting mechanism: the packet itself ties it to spoiler-effect/Duverger vote splitting. Evidence supports an ecological foothold: q=1.0000 on 239,881 GSM8K and 4,983 MATH-500 merged pairs with zero over-merges, and MATH-500 proxy phi median about -1.0 to -1.2. Evidence is insufficient for green because the claimed in-the-wild ranking inversion remains simulation-only/exploratory, and real model frequencies were measured only on GSM8K where the observed null is expected."
+```
+tokens used
+74,287
