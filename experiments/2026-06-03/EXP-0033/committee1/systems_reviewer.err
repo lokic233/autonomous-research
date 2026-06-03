@@ -1,0 +1,252 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8ce3-88dc-7c41-968c-040ffbf00680
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0037 (PROJ-0008), evidence EXP-0033 (L0)
+## MEASUREMENT/CHARACTERIZATION study, effect=weaken (partial-negative). This claim was DELIBERATELY designed to avoid the 2 anti-patterns that killed prior claims (it's NOT a Jensen-floor tuned-knob nor a RoPE-wall KV-reuse play) AND to clear the anti-relabeling test that killed CLAIM-0015. Vote honestly. Anti-circularity HELD (monitor AUC 0.743 < latent-health oracle 0.858, gap 0.115 — reads only emitted observables, never the label).
+
+## L0 KEY FINDINGS:
+(A) LEAD TIME — PARTIAL: the online monitor (EWMA of tool-error + looping - info-gain) fires median +2.32 steps BEFORE the agent's own termination (vs self-confidence ~1.6) — genuine lead time. BUT coverage: only 42% of failed trajectories flagged >=1 step early at 30% matched flag-rate (pre-reg bar was >0.5). Lead time/AUC scale with foreshadowing (frac 0.2->0.8: frac-early 0.37->0.48, AUC 0.69->0.80); collapses when abrupt/unforeseeable failures dominate (honest ceiling).
+(B) ANTI-RELABELING head-to-head (the load-bearing test, with CIs): vs GENERIC DIFFICULTY = WIN, robust: AUC delta +0.095, 95% CI [+0.087,+0.103], all 96/96 seeds positive — the progression signal is NOT a relabeling of intrinsic difficulty (clears the exact test CLAIM-0015 died on). vs AGENT SELF-CONFIDENCE = LOSS/TIE, robust: AUC delta -0.006, 95% CI [-0.011,-0.001] (below 0) — does NOT beat the agent's own signal.
+The claim required beating BOTH -> STRONG CLAIM FALSIFIED. Surviving weak form: 'failure has a progression signature DISTINCT from intrinsic difficulty, with usable lead time' (but not beating the agent's own confidence).
+
+## THE KEY L1 QUESTION (load-bearing, the candidate hook): the L0 MODELS agent self-confidence as a PRIVILEGED DIRECT (noisy) readout of the same latent health that generates failure — so a monitor reconstructing health from indirect proxies CANNOT beat it by construction. If REAL LLM self-confidence is poorly CALIBRATED (as published work strongly suggests — verbalized confidence + logprob miscalibration), the (B)-vs-self-confidence comparison could FLIP. L0 cannot settle this. A real-trace L1 with real (miscalibrated) self-confidence is the only way to know.
+
+## CLAIM
+claim: "In multi-step LLM agent trajectories that ultimately FAIL, the failure is\
+  \ foreshadowed by a CAUSAL, online-observable signature (e.g. rising tool-error/retry\
+  \ rate, repeated near-identical actions = looping, declining new-information-per-step)\
+  \ that a cheap monitor can detect to flag the trajectory as doomed STRICTLY EARLIER\
+  \ (>=N steps before) than the agent's own termination/error \u2014 AND this early-warning\
+  \ signal beats BOTH (a) the agent's own self-reported confidence and (b) a generic\
+  \ per-trajectory difficulty predictor, because impending agentic failure has a structural\
+  \ progression signature distinct from intrinsic task difficulty."
+why_it_matters: "FRESH axis (agentic failure-attribution / early-warning \u2014 untouched\
+
+## L0 RESULTS (EXP-0033)
+# RESULTS — EXP-0033 (CLAIM-0037)
+
+**Researcher:** researcher-0033 | **L0** CPU-only, stdlib-only, SERIAL | wall-clock ~2.6s (budget 15min)
+**Design:** pre-registered in PRE_REGISTRATION.md (committed BEFORE running). Sim/trace L0 modeling study.
+**Sweep:** 12 cells (frac_foreshadowed × sigma × rho) × 8 seeds = 96 rows; 400 trajectories/row.
+Raw: `results/raw_results.csv` · per-cell: `results/agg_by_cell.csv` · global: `results/global_summary.csv`
+
+## VERDICT: PARTIAL → effectively NEGATIVE on the load-bearing test
+
+The online causal monitor passes **2 of 3** required gates but FAILS the one that matters most for the
+claim as written (it must beat BOTH baselines).
+
+| Gate | Result | Pass? |
+|---|---|---|
+| (A) Lead time exists (>=1 step before agent termination) | median lead **+2.32 steps**; but only **42%** of failures flagged >=1 step early at 30% flag-rate (pre-reg bar was >0.5) | PARTIAL |
+| (B1) Beats GENERIC DIFFICULTY (anti-relabeling, the CLAIM-0015 death) | AUC(mon)-AUC(diff) = **+0.095**, 95% CI **[+0.087, +0.103]** (excludes 0); 96/96 rows positive | **YES** |
+| (B2) Beats AGENT SELF-CONFIDENCE | AUC(mon)-AUC(conf) = **-0.006**, 95% CI **[-0.011, -0.001]** (below 0) | **NO** |
+| Anti-circularity: monitor < latent-health ORACLE | mon 0.743 < oracle 0.858 (gap 0.115) | YES |
+
+**Bottom line:** The progression signature is REAL and is NOT merely a relabeling of intrinsic
+difficulty — it decisively beats a generic difficulty predictor with tight CIs, and it carries genuine
+lead time (~2.3 steps median). BUT it does NOT beat the agent's own self-confidence. In this model the
+agent's confidence is a (noisy) readout of the same latent health the failure is generated from, so it is
+structurally privileged: an online observer reconstructing health from indirect noisy proxies cannot do
+better than a direct (noisy) readout of that health. The claim requires beating BOTH (a) and (b); it
+beats (b) but ties/loses to (a). **Per the pre-registered honest-negative branch, this is reported as a
+(partial) NEGATIVE.**
+
+## (A) LEAD-TIME DISTRIBUTION
+- Online monitor median lead = **+2.32 steps** before the agent's own termination (pooled across cells).
+- It is even slightly EARLIER than self-confidence's first-fire (~1.6 steps) at matched 30% flag-rate.
+- HOWEVER, coverage is the catch: only **42.4%** of failed trajectories are flagged >=1 step early
+  (the rest are flagged late or never within budget) — below the pre-registered >0.5 bar.
+- Trend with foreshadowing: as frac_foreshadowed rises 0.2 -> 0.8, frac-early climbs 0.37 -> 0.48 and
+  AUC climbs 0.69 -> 0.80, confirming the signature tracks foreshadowed (not abrupt) failure. When abrupt
+  failures dominate (frac=0.2) the monitor's edge shrinks toward the noise floor, exactly as pre-registered.
+
+## (B) HEAD-TO-HEAD AT MATCHED FLAG-RATE (the anti-relabeling test)
+- vs generic difficulty: **WIN, robust.** d=+0.095, CI [+0.087,+0.103], all 96 rows positive. The online
+  progression signal contains information the static difficulty predictor does not. This is the test
+  CLAIM-0015 failed; here the monitor clears it cleanly.
+- vs self-confidence: **LOSS/TIE, robust.** d=-0.006, CI [-0.011,-0.001]. Small but consistently negative.
+  Self-confidence (direct noisy health readout) >= reconstructed-from-observables monitor.
+
+## ORACLE GAP (anti-circularity, the CLAIM-0008/0013 lesson)
+Monitor AUC 0.743 sits well below the latent-health oracle 0.858 (gap 0.115). The monitor is NOT secretly
+reading the label — it operates on emitted noisy observables only and pays the reconstruction penalty.
+Confidence (0.749) also sits below the oracle. Anti-circularity holds.
+
+## HONEST INTERPRETATION
+The model is built so the agent's OWN confidence is a privileged direct (noisy) view of latent health,
+while the monitor must reconstruct health from indirect proxies (tool-error/loop/info-gain). Under that
+(arguably realistic) assumption, the online monitor cannot beat self-confidence — it can only beat the
+difficulty baseline. The claim's strong form ("beats BOTH") is therefore FALSIFIED in this regime.
+A weaker, still-interesting form survives: **the online progression signature beats a generic difficulty
+baseline and has real lead time** — i.e., impending failure has a structural progression signature
+distinct from intrinsic difficulty (the anti-relabeling claim holds). But it is dominated by the agent's
+own self-report, which undercuts the practical "cheap external monitor beats the agent" pitch.
+
+This conclusion is sensitive to ONE modeling assumption: how good is real-agent self-confidence? Published
+work suggests LLM self-confidence/verbalized-uncertainty is often POORLY calibrated and weakly predictive
+of failure — if real self-confidence is noisier than modeled here (larger sigma_conf, or biased), the
+monitor could flip to beating it. That is the key L1 question, not resolvable at L0.
+
+## WHAT A REAL L1 SHOULD MEASURE
+- Real agent FAILURE trajectories: tau-bench, AppWorld, SWE-agent rollouts (success + failure).
+- Real online features: actual tool-error/retry events, action n-gram self-similarity (true looping),
+  new-entity/new-token info-gain per step, step index — extracted causally (no peeking past step t).
+- Real lead time vs the agent's ACTUAL termination/error step (not a simulated death threshold).
+- Real self-confidence baseline: the agent's verbalized confidence / logprob-derived uncertainty,
+  with its TRUE (mis)calibration — this is the load-bearing comparison and the one L0 cannot settle.
+- Real difficulty baseline: a per-task difficulty predictor trained on task features only (no trajectory).
+- Then re-run (B): does the online monitor beat self-confidence AND difficulty at matched flag-rate with
+  real lead time? L0 says it beats difficulty but not (modeled) confidence.
+
+## PRIOR-ART CAVEAT
+Agent-failure attribution, LLM-as-judge post-hoc trajectory analysis, AgentBoard, and trajectory-eval are
+PUBLISHED — but they are POST-HOC (analyze a finished trajectory). The novelty would be the EARLY ONLINE
+CAUSAL signature with MEASURED lead time beating self-confidence AND difficulty. L0 supports the
+"distinct-from-difficulty + has lead time" half but NOT the "beats the agent's own signal" half. Failure
+analysis itself is well-trodden; honest framing required.
+
+## PRE-REG (committed pre-run 43cd647)
+# PRE-REGISTRATION — EXP-0033 (CLAIM-0037)
+
+**Researcher:** researcher-0033 | **Level:** L0 (CPU-only, stdlib-only, SERIAL, ≤15 min, trace/sim)
+**Claim:** CLAIM-0037 | **Project:** PROJ-0008 | **Task:** TASK-0025
+**Committed BEFORE running any experiment code.**
+
+## THE CLAIM
+In multi-step LLM-agent trajectories that ultimately FAIL, the failure is foreshadowed by a CAUSAL
+online-observable signature (rising tool-error/retry rate, looping = repeated near-identical actions,
+declining new-information-per-step) that a cheap monitor detects to flag the trajectory doomed STRICTLY
+EARLIER (>=N steps before) than the agent's own termination/error — AND this beats BOTH (a) the agent's
+own self-reported confidence and (b) a generic per-trajectory difficulty predictor, because impending
+failure has a structural progression signature distinct from intrinsic task difficulty.
+
+## TWO FALSIFIABLE PARTS
+- **(A) LEAD TIME:** Does the online monitor flag doomed trajectories STRICTLY EARLIER (>= N>=1 steps)
+  than the agent's own error/termination step? (If it only fires at/after the agent already knows → NEGATIVE.)
+- **(B) ANTI-RELABELING / RIGHT-BASELINE:** At matched flag-rate, does the online causal monitor (c) beat
+  BOTH (a) agent self-confidence AND (b) a generic difficulty predictor at predicting eventual failure
+  (AUC) — with bootstrap CIs on (c-a) and (c-b) deltas excluding 0? (If generic-difficulty matches it →
+  it's a relabeling of difficulty = the CLAIM-0015 death = NEGATIVE.)
+
+## METRICS (pre-committed)
+1. **Lead-time distribution** of monitor's first-fire on FAILED trajectories, measured in steps BEFORE
+   the agent's own termination step (positive = earlier = good). Report median + IQR + frac>=1 step early.
+2. **Early-warning AUC** for predicting eventual failure, computed from each predictor's score evaluated
+   at a fixed EARLY observation window (first half of the trajectory only — online, no peeking).
+3. **Head-to-head at matched flag-rate:** set each predictor's threshold to the SAME global flag-rate;
+   compare AUC and lead-time. Primary deltas: AUC(c)-AUC(a) and AUC(c)-AUC(b), bootstrap 95% CI over seeds.
+4. **Oracle gap:** an oracle that reads the LATENT health directly — monitor AUC must sit strictly BELOW it.
+
+## AGENT-TRAJECTORY MODEL (latent, monitor does NOT read it)
+Each trajectory has TWO independent latent scalars drawn per-trajectory:
+- `difficulty d ~ U(0,1)`: intrinsic task hardness. Affects baseline failure probability AND step-0
+  observable noise floor — but is STATIC (no progression).
+- `health h_t`: a latent trajectory-health random walk starting at h0 (h0 anti-correlated with d via a
+  tunable coupling `rho`). Failing trajectories' health DEGRADES over steps via one of 3 mechanisms
+  (tool-error cascade, looping, info-starvation); each mechanism is a drift on h_t.
+Ground-truth failure label = (h_T crosses a death threshold) OR (an abrupt unforeseeable hit with prob
+`p_abrupt` independent of health — these have NO foreshadowing, the honest hard case).
+
+## ORCHESTRATOR NOTE: prior-art (agent-failure-attribution, AgentBoard, LLM-as-judge trajectory eval) is POST-hoc — novelty would be the EARLY ONLINE causal signature with measured lead time. The honest weak form (distinct-from-difficulty + lead time) is real but thin; the candidate-grade question is whether it beats REAL miscalibrated self-confidence on real traces. Weigh: L1 (real agent failure traces + real self-confidence calibration) vs converge the weak form.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling instructions, then check OSS systems for overlapping online agent failure monitors before voting.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,240p' _shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,220p' _committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+sed: _committee_common_v001.md: No such file or directory
+
+ exited 1 in 0ms:
+sed: _shared/TOOLING_v001.md: No such file or directory
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+Those files are not at repo root, so I’m locating the prompt files first and will read the actual paths.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find .. -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed

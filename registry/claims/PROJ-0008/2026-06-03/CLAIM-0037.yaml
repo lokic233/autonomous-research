@@ -1,7 +1,7 @@
 claim_id: CLAIM-0037
 project_id: PROJ-0008
 stage: seed
-status: seed
+status: weakened
 claim: "In multi-step LLM agent trajectories that ultimately FAIL, the failure is\
   \ foreshadowed by a CAUSAL, online-observable signature (e.g. rising tool-error/retry\
   \ rate, repeated near-identical actions = looping, declining new-information-per-step)\
@@ -26,16 +26,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0033
+  summary: 'WEAKEN (partial-negative). Online causal failure-foreshadow monitor (tool-err/loop/info-gain
+    EWMA) BEATS generic-difficulty predictor (AUC delta +0.095, 95%CI[+0.087,+0.103],
+    96/96 seeds positive) AND has real lead time (median +2.32 steps before agent
+    termination) -> passes the anti-relabeling test that killed CLAIM-0015. BUT FAILS
+    to beat agent self-confidence (AUC delta -0.006, 95%CI[-0.011,-0.001]). Claim
+    required beating BOTH baselines -> strong claim FALSIFIED. Anti-circular OK: monitor
+    0.743 < latent-health oracle 0.858 (gap .115). Caveat: modeled self-confidence
+    is a privileged direct (noisy) health readout; real LLM confidence is often miscalibrated
+    -> L1 on tau-bench/AppWorld/SWE-agent real traces could flip the self-confidence
+    comparison. Surviving weak form: failure has a progression signature distinct
+    from intrinsic difficulty with usable lead time.'
+  data_path: experiments/2026-06-03/EXP-0033/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0033 result, then ros exp complete --exp EXP-0033 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0033; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0033
+active_experiments: []
 created_at: '2026-06-03T09:38:26Z'
-last_updated: '2026-06-03T09:38:54Z'
+last_updated: '2026-06-03T09:47:48Z'
