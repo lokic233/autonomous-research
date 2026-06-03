@@ -13,18 +13,26 @@ needs_gpu: false
 dispatched_by: orchestrator-r3-001
 node_lease: devgpu014:EXP-0022
 status: completed
-result_summary: 'researcher-gpu-0022 completed all compute + RESULTS.md but stalled
-  before exp-complete; orchestrator finalized from on-node results. RELABELING/weaken:
-  real quant-degradation IS heavy-tailed (survives) BUT predictive signal is DOMAIN/generic-difficulty
-  not quant-specific (within-domain ppl at chance); generic difficulty router matches
-  it (+0.025 AUC); skip-cheap-decode cost-win negative (prefill dominates); confidence
-  cascade competitive. Novelty collapses to relabeling.'
+result_summary: 'L1 REAL quant-degradation (Qwen2.5-1.5B fp16 vs bnb-NF4-4bit, 160
+  real prompts: GSM8K/CoQA/general). (1) Degradation IS heavy-tailed/request-dependent
+  NOT uniform (objective-ref n=120: kurtosis +3.28, gini 0.833; 79% no-change, 12.5%
+  degrade >0.5) -> the load-bearing assumption committee#1 flagged SURVIVES. BUT:
+  (2) within-domain prompt-perplexity AUC predicting degradation is at CHANCE (arith
+  0.591, longqa 0.456); the 0.838 full-feature AUC is carried entirely by the DOMAIN
+  TAG. (3) A generic difficulty router matches the quant-sensitivity router (+0.025
+  AUC, negligible) -> NOVELTY COLLAPSES TO RELABELING. (4) skip-cheap-decode cost-win
+  is NEGATIVE at measured prompt:decode ratios (prefill=71.6% of a quant pass, dominates
+  71-tok decode; rerouting costs +5.5e11 FLOPs net). (5) real confidence cascade competitive
+  at true cost. VERDICT: relabeling/weaken - novel quant-specific contribution unsupported;
+  only revival paths are long-generation workloads or a 7B-AWQ pair. Caveat: NF4 not
+  AWQ/GPTQ, 1.5B small. ~11min GPU. Artifacts devgpu014:/home/dengcchi/ros-EXP-0022
+  + Mac experiments/2026-06-03/EXP-0022.'
 result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0022/
 reproducibility: ''
 linked_verdicts:
 - VERDICT-0024
 started_at: '2026-06-03T06:54:02Z'
-completed_at: '2026-06-03T08:05:42Z'
+completed_at: '2026-06-03T08:21:35Z'
 prompt_version: ''
 committee_approved: VERDICT-0019
