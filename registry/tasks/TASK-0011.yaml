@@ -6,14 +6,14 @@ session_id: ''
 project_id: PROJ-0002
 claim_id: CLAIM-0010
 exp_id: EXP-0012
-status: open
+status: done
 summary: 'L0 redesign (breaks VERDICT-0009 circularity): noisy causal reference predictor
   vs RT AND H2O/SnapKV-style attention eviction; measure real predictor AUC; win must
   survive realistic AUC<0.85'
 evidence_delta: ''
 opened_at: '2026-06-03T01:03:12Z'
-updated_at: '2026-06-03T01:03:12Z'
-closed_at: ''
+updated_at: '2026-06-03T01:11:03Z'
+closed_at: '2026-06-03T01:11:03Z'
 history:
 - ts: '2026-06-03T01:03:12Z'
   event: open
@@ -21,3 +21,7 @@ history:
   note: 'L0 redesign (breaks VERDICT-0009 circularity): noisy causal reference predictor
     vs RT AND H2O/SnapKV-style attention eviction; measure real predictor AUC; win
     must survive realistic AUC<0.85'
+- ts: '2026-06-03T01:11:03Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0011 completed EXP EXP-0012 (keep-exploring)

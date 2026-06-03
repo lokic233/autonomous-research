@@ -1,0 +1,669 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8b09-e0d4-7d72-8ea1-567cbc83392a
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0010 (PROJ-0002), evidence EXP-0012 (L0)
+## THIS IS A REDESIGN of CLAIM-0008, which YOU (committee) RED'd in VERDICT-0009 for: (1) CIRCULARITY (predictor features = generative params -> tautological oracle-gap-0); (2) RT-only STRAWMAN baseline (no H2O/SnapKV); (3) tool-result-specificity not operationalized; (4) Scissorhands/ACON undistinguished. This L0 was built to fix ALL FOUR. Verify it actually did. Vote HONESTLY+HOSTILELY — this is the instance's best green-candidate, so scrutinize the circularity-break and the H2O baseline hardest. If candidate-grade, name SPECIFIC GPU/real-model required_evidence. novelty_killer: live >=2-source prior-art sweep OWED — MUST distinguish Scissorhands (persistence-of-importance), ACON (real agent compression, AppWorld), H2O/SnapKV, LLMLingua.
+
+## HOW THE 4 PRIOR REDS WERE ADDRESSED (audit these claims):
+1. CIRCULARITY BROKEN: latent reference-propensity theta is read ONLY in generate_trace() + policy_ORACLE (audit: grep theta in sim.py). RT/H2O/CAUSAL never see it. CAUSAL scores from NOISY observables only (0.55*ngram_hit + 0.45*decayed_past_attention + noise) + 10% span-boundary detection error. Predictor AUC is MEASURED not assumed.
+2. RIGHT BASELINE: 3 policies + oracle — recency-trunc, H2O/SnapKV attention-eviction (keep highest accumulated PAST attention), noisy CAUSAL predictor, ORACLE (theta, upper bound only). Token budget matched.
+3. TOOL-RESULT-SPECIFIC: the win is on DELAYED-CALLBACK tool-result spans (cold-when-evicted, hot-later) that H2O's past-attention provably misses — not generic prose.
+4. TWO AUCs reported: overall-ref AUC ~0.49-0.61 (weak, expected — H2O catches those) vs critical-handle AUC ~0.59-0.82 (the decision-relevant axis).
+
+## CLAIM
+claim: "For long-horizon tool-calling agents, a CAUSAL retention policy that predicts\
+  \ which committed tool-result spans will be re-referenced \u2014 using only a NOISY,\
+  \ realizable past-signal proxy (decayed past-attention mass / repeat-substring hits,\
+  \ NOT the ground-truth reference process) with realistic span-boundary detection\
+  \ error \u2014 achieves a strictly better context-length / task-success Pareto than\
+  \ (a) recency-truncation AND (b) attention-based KV eviction (H2O/SnapKV-style),\
+  \ on traces where the predictor's future-reference AUC is measured (not assumed),\
+  \ with the win surviving when predictor AUC is realistically imperfect (<0.85)."
+why_it_matters: 'VERDICT-0009 RED''d CLAIM-0008 because its L0 was CIRCULAR (predictor
+
+## L0 RESULTS (EXP-0012, effect=keep-exploring, PARTIAL-HELD)
+# RESULTS — EXP-0012 (CLAIM-0010, PROJ-0002) — researcher-0011
+L0 CPU-only, stdlib-only, SERIAL trace simulation. 64 seeds. Paired bootstrap (5000) 95% CI.
+On-disk truth: `results/results.csv` (6400 rows). Full table: `RESULTS_TABLE.md`. Repro: `python3 sim.py && python3 analyze.py`.
+
+## VERDICT: PARTIAL-HELD (scope-limited, mechanism-specific, honest)
+The noisy causal predictor **does beat H2O/SnapKV at realistic measured AUC (<0.85)** — but ONLY
+on the sharp task-chain metric (M2), only at moderate-to-large budgets, and the effect decays as
+critical-handle AUC drops. On aggregate availability (M1) it merely **ties** H2O. This is NOT the
+strawman (it genuinely beats H2O, not just RT), and it is NOT circular (predictor never sees the
+latent cause). But it is narrower than a clean "strictly-better-Pareto-everywhere" HELD.
+
+## DID WE BREAK THE CIRCULARITY? YES.
+- The latent reference-propensity `theta` (the GENERATIVE CAUSE of future references) is read ONLY
+  in `generate_trace()` (trace gen) and `policy_ORACLE` (upper bound). Audit:
+  `grep 's\["theta"\]' sim.py` -> appears in generate_trace + oracle only. RT/H2O/CAUSAL never touch it.
+- CAUSAL scores spans from NOISY observables only: `0.55*ngram_hit + 0.45*decayed_past_attention + N(0,sigma)`,
+  plus realistic span-boundary detection error (10% adjacent-span score blending).
+- Predictor quality is MEASURED, not assumed: we report future-reference AUC computed from the noisy
+  observables vs realized references, swept across sigma. NO "oracle gap = 0" tautology.
+
+## DID WE USE THE RIGHT BASELINES? YES — 3 + oracle.
+(P-RT) recency-truncation. (P-H2O) attention-eviction = keep highest accumulated PAST attention
+(H2O/SnapKV heavy-hitter). (P-CAUSAL) noisy reference predictor. (P-ORACLE) sees theta = upper bound only.
+Token budget matched across all four.
+
+## TWO AUCs (the honest x-axis distinction)
+- overall-ref AUC ≈ 0.49–0.61: the noisy proxy is a WEAK predictor of *generic* references. Correct &
+  expected — most generic refs go to non-delayed high-saliency spans that H2O ALSO catches via past
+  attention. There is no edge to be had there.
+- **critical-handle AUC ≈ 0.59–0.82** (the DECISION-RELEVANT axis): the proxy's ability to identify the
+  *delayed-callback tool-result spans* whose re-reference GATES the task. This is what CLAIM-0010 is about
+  ("which committed tool-result spans get re-referenced"). The n-gram/handle signal carries this; H2O's
+  past-attention does NOT (those spans are COLD when evicted, hot only later).
+
+## HEADLINE PARETO (m2_task = all-critical-callbacks-retained; 64 seeds)
+| crit_AUC | budget_frac | CAUSAL | H2O | RT | ORACLE | (CAUSAL−H2O) 95%CI | beats H2O? |
+|---|---|---|---|---|---|---|---|
+| 0.823 | 0.3 | 0.27 | 0.00 | 0.00 | 0.73 | [+0.062,+0.234] | YES |
+| 0.823 | 0.5 | 0.42 | 0.00 | 0.00 | 1.00 | [+0.141,+0.359] | YES |
+| 0.823 | 0.6 | 0.55 | 0.00 | 0.00 | 1.00 | [+0.188,+0.406] | YES |
+| 0.779 | 0.5 | 0.30 | 0.00 | 0.00 | 1.00 | [+0.125,+0.328] | YES |
+| 0.779 | 0.6 | 0.41 | 0.00 | 0.00 | 1.00 | [+0.156,+0.359] | YES |
+| 0.716 | 0.6 | 0.30 | 0.00 | 0.00 | 1.00 | [+0.094,+0.281] | YES |
+| 0.635 | 0.6 | 0.16 | 0.00 | 0.00 | 1.00 | [+0.016,+0.156] | YES |
+| 0.588 | any | 0.00 | 0.00 | 0.00 | varies | [+0.000,+0.000] | no (tie) |
+| <0.72 | frac≤0.4 | 0.00–0.06 | 0.00 | 0.00 | — | CI incl. 0 | no (tie) |
+
+**KEY**: On the task-chain metric, H2O and RT score 0.000 essentially EVERYWHERE — they NEVER retain
+the delayed cold callback handles. CAUSAL is the only realizable policy that does, because it reads the
+n-gram/handle signal H2O ignores. That is the entire, non-circular, tool-result-specific contribution.
+
+## DOES IT BEAT THE ATTENTION-EVICTION BASELINE AT AUC < 0.85? YES, conditionally.
+- Robust win (CI_lo>0) at crit_AUC ∈ {0.823, 0.779} for frac≥0.4; extends to crit_AUC=0.635 at frac=0.6.
+- Decays out: at frac≤0.3 and/or crit_AUC≤0.72, the win shrinks to a tie (CI includes 0).
+- At crit_AUC=0.588 it ties at 0 (both fail). So the win needs crit_AUC ≳ 0.64 AND a non-tight budget.
+
+## WHERE IT DOES *NOT* WIN (honest negatives within the experiment)
+- Aggregate availability (M1): CAUSAL ≈ H2O (beats H2O in only 2/25 cells, both at top AUC). H2O is a
+  genuinely strong baseline for the bulk of references. The causal policy buys you the *critical chain*,
+  not better average recall. If your task cares about average recall, H2O is as good and simpler.
+- Tight budgets (frac=0.2–0.3) at realistic AUC: tie. No free lunch when budget is brutal.
+
+## CLASSIFICATION RATIONALE (vs PREREGISTRATION sec 7)
+Prereg HELD = "strictly beats H2O+RT at AUC<0.85 in SOME regime, and beats RT too." That literally holds
+(9 cells). But prereg also flags PARTIAL if the win is knife-edge or metric-specific. The win is REAL and
+non-circular, beats H2O specifically (not strawman), and survives at clearly-realistic AUC=0.64–0.78 — but
+it is confined to the task-chain metric and decays at tight budgets. We report it as **PARTIAL-HELD** to
+avoid overclaiming: the mechanism works, the regime is bounded, and the headroom-to-oracle is large
+(oracle hits 1.0 where CAUSAL hits 0.3–0.55 — the noisy proxy leaves most of the win on the table).
+
+## PRIOR-ART CAVEAT (sweep owed before any novelty claim)
+This is a SIMULATION, not a model run. It establishes the MECHANISM is sound in principle, not novelty.
+- **H2O (Zhang'23) / SnapKV**: accumulated-attention heavy-hitter eviction = our P-H2O. We beat it ONLY
+  on delayed-cold callbacks; on heavy-hitters they're equal. Differentiator = the COLD-THEN-HOT span.
+- **Scissorhands (Liu'23) "persistence of importance"**: claims token importance is temporally STABLE.
+  Our delayed-callback structure is the explicit COUNTEREXAMPLE (importance is NON-persistent: cold at
+  commit, hot later). The contribution lives EXACTLY in the regime where Scissorhands' assumption breaks.
+  An L1 MUST test whether real tool-agent traces actually violate persistence (if they don't, this dies).
+- **ACON (agent-context compression)**: closest applied work; real agent tool-output compression. Head-to-head owed.
+- **LLMLingua**: prose/prompt compression — different target (not KV, not tool-specific). Lower priority.
+
+## WHAT A REAL-MODEL L1 MUST MEASURE
+1. Use REAL accumulated attention from a real LLM as the H2O signal AND as a predictor input (not synthetic).
+2. Measure REAL future-reference AUC by tracking which committed tool-result tokens actually get
+   attended-to/dereferenced downstream — and specifically the DELAYED-reference subset (the whole edge).
+3. Use a REAL multi-step tool-agent benchmark; report TASK ACCURACY, not a synthetic availability proxy.
+4. Head-to-head at matched KV budget vs H2O / SnapKV / Scissorhands / ACON.
+5. VERIFY the load-bearing assumption empirically: do real tool-result references violate persistence-of-
+   importance (cold-then-hot)? If real traces don't have delayed cold callbacks, the edge over H2O vanishes.
+
+## LIMITATIONS / THREATS TO VALIDITY (brutal)
+- The win is ENGINEERED INTO the generative model (we built delayed cold callbacks H2O can't catch).
+  L0 shows: IF such structure exists AND the n-gram proxy tracks it at AUC≳0.64, THEN causal beats H2O.
+  It does NOT show real tool traces have this structure — that is the single biggest open risk (see L1 #5).
+- crit_AUC=0.823 is borderline (≈0.85). The clean sub-0.78 wins (0.78, 0.72, 0.64 at frac≥0.4–0.6) are
+  the load-bearing realistic-AUC evidence.
+- Synthetic n-gram signal is generous (0.80 hit rate for true handles). Real handle-recurrence may be noisier.
+
+## PRE-REG (committed pre-run)
+# PRE-REGISTRATION — EXP-0012 (CLAIM-0010, PROJ-0002)
+researcher-0011 | L0 CPU-only, stdlib-only, SERIAL, trace simulation (no GPU/model)
+Committed BEFORE running any experiment code. Honest pipeline; negatives are WINS.
+
+## 0. WHY THIS EXISTS (the circularity that killed the predecessor)
+VERDICT-0009 RED'd CLAIM-0008/EXP-0010 because:
+ (C1) CIRCULAR: the causal predictor was handed the EXACT generative features of the
+      reference process -> "oracle gap = 0" was a mathematical tautology, not evidence.
+ (C2) STRAWMAN baseline: only compared vs recency-truncation (RT); omitted attention-based
+      KV eviction (H2O/SnapKV), the real deployed competitor.
+ (C3) tool-result-specificity never operationalized.
+ (C4) didn't distinguish Scissorhands / ACON.
+The INTUITION (tool outputs are verbose + sparsely + predictably re-referenced) survived.
+Only the L0 DESIGN was broken. This experiment tests the SAME intuition WITHOUT the flaws.
+
+## 1. HYPOTHESIS (CLAIM-0010, pre-committed, falsifiable)
+H1: A causal retention policy that predicts which committed TOOL-RESULT spans get
+    re-referenced — using ONLY a NOISY, realizable past-signal proxy (decayed past-attention
+    mass + repeat-substring/n-gram hit counts), with realistic span-boundary detection error,
+    NEVER reading the latent generative cause — achieves a strictly better
+    (context-length, task-success) Pareto than BOTH:
+      (a) recency-truncation (RT), AND
+      (b) attention-based KV eviction (H2O/SnapKV-style: evict lowest accumulated past-attention),
+    on traces where the predictor's FUTURE-reference AUC is MEASURED (not assumed),
+    AND the win SURVIVES at realistically-imperfect predictor AUC (< 0.85).
+
+## 2. DECOUPLING GENERATIVE PROCESS FROM PREDICTOR FEATURES (breaks C1 — the whole point)
+The trace's TRUE future-reference process is generated from a LATENT per-span variable the
+predictor NEVER observes:
+  - Each committed span s has a hidden latent "reference-propensity" theta_s drawn from a
+    structure that depends on (span semantic role, a hidden topic/callback graph). For
+    tool-result spans, theta_s is governed by a latent "callback schedule" — some tool
+    results are structurally destined to be re-queried later (e.g. an ID/handle returned
+    early and dereferenced much later), others are one-shot. This latent schedule is the
+    GENERATIVE CAUSE of future references.
+  - Future references are sampled from theta_s (a Bernoulli/Poisson process over future
+    decode steps). The predictor CANNOT see theta_s.
+  - The predictor observes ONLY noisy OBSERVABLES correlated with theta_s:
+       obs_s = g(decayed_past_attention_mass_s, repeat_substring_hits_s) + noise(sigma)
+    These are realizable at inference time from the past only.
+  - We SWEEP sigma so the predictor's MEASURED future-reference AUC ranges across
+    approximately {0.6, 0.7, 0.8, 0.9}. We REPORT all results as a function of MEASURED AUC.
+  - NO policy ever reads theta_s. The ORACLE (upper bound, headroom only) is the only thing
+    that sees theta_s; it is NOT a competitor, just the ceiling.
+INVARIANT (auditable): grep the policy code — `theta` must appear ONLY in (i) trace generation
+and (ii) the oracle/AUC-measurement, NEVER in RT/H2O/causal policy decision functions.
+
+## 3. TOOL-RESULT-SPECIFICITY (breaks C3/C4 — must be REAL, not collapse into H2O)
+Spans have explicit structural roles: PROSE (model/user turns) vs TOOL_RESULT (appended
+tool-output segments). Two properties make tool-result retention DIFFERENT from generic
+attention-eviction:
+  (S1) Tool-result spans are LONG/verbose (high token count) but their re-reference is SPARSE
+       and DELAYED (long gap between commit and re-reference) — so accumulated PAST attention
+       (what H2O/SnapKV use) is a WEAK signal for them: a tool result can be referenced once at
+       commit, go cold for a long stretch (H2O would evict it), then be re-queried. The latent
+       callback schedule explicitly encodes this delayed re-reference for a subset of TR spans.
+  (S2) The repeat-substring/n-gram signal (IDs, handles, tokens that recur) is INFORMATIVE for
+       tool-result re-reference specifically (handles get dereferenced) but NOT for generic prose.
+  => If tool-result re-reference were just "high past attention", causal would NOT beat H2O.
+     The whole contribution rests on the delayed/sparse callback structure being predictable
+
+## ORCHESTRATOR NOTE: honest bounds the researcher disclosed — ties H2O on AGGREGATE availability (M1, beats H2O in only 2/25 cells); ties at tight budgets (frac<=0.3) and at crit-AUC<=0.588; LARGE oracle headroom (oracle 1.0 where CAUSAL 0.3-0.55). The win is real, non-circular, beats the RIGHT baseline, but is task-chain-metric-specific + regime-bounded. A real-model L1 (real attention as predictor on real tool-agent traces, real task pass@1) is the natural ask if candidate-grade.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling instructions, then do a focused OSS prior-art sweep for KV/cache retention mechanisms in vLLM, SGLang, LMCache, FlashInfer, and TensorRT-LLM before voting.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "rg --files | rg '("'^|/)(_committee_common_v001'"\\.md|TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+zsh:1: command not found: rg
+
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+HANDOFF_r1_to_r2.md
+ORCHESTRATOR_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed in this environment, so I’m falling back to `find`/`grep`. I’m keeping the sweep narrow: committee rules, tooling rules, then direct searches for implemented KV/cache retention or eviction mechanisms in the named systems.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+exec
+/bin/zsh -lc "find . -maxdepth 4 -type d | sed 's#"'^./##'"' | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.
+learning
+learning/roles
+learning/orchestrator
+experiments
+experiments/2026-06-03
+experiments/2026-06-03/EXP-0010
+experiments/2026-06-03/EXP-0010/committee1
+experiments/2026-06-03/EXP-0010/results
+experiments/2026-06-03/EXP-0010/logs
+experiments/2026-06-03/EXP-0010/scripts
+experiments/2026-06-03/EXP-0011
+experiments/2026-06-03/EXP-0011/committee1
+experiments/2026-06-03/EXP-0011/results
+experiments/2026-06-03/EXP-0011/logs
+experiments/2026-06-03/EXP-0007
+experiments/2026-06-03/EXP-0007/committee1
+experiments/2026-06-03/EXP-0007/results
+experiments/2026-06-03/EXP-0007/logs
+experiments/2026-06-03/EXP-0007/scripts
+experiments/2026-06-03/EXP-0009
+experiments/2026-06-03/EXP-0009/committee1
+experiments/2026-06-03/EXP-0009/results
+experiments/2026-06-03/EXP-0009/logs
+experiments/2026-06-03/EXP-0009/scripts
+experiments/2026-06-03/EXP-0012
+experiments/2026-06-03/EXP-0012/committee1
+experiments/2026-06-03/EXP-0012/results
+experiments/2026-06-03/EXP-0012/logs
+experiments/2026-06-02
+experiments/2026-06-02/EXP-0005
+experiments/2026-06-02/EXP-0005/committee1
+experiments/2026-06-02/EXP-0005/results
+experiments/2026-06-02/EXP-0005/logs
+experiments/2026-06-02/EXP-0005/scripts
+experiments/2026-06-02/EXP-0002
+experiments/2026-06-02/EXP-0002/committee1
+experiments/2026-06-02/EXP-0002/results
+experiments/2026-06-02/EXP-0002/logs
+experiments/2026-06-02/EXP-0003
+experiments/2026-06-02/EXP-0003/results
+experiments/2026-06-02/EXP-0003/logs
+experiments/2026-06-02/EXP-0004
+experiments/2026-06-02/EXP-0004/committee1
+experiments/2026-06-02/EXP-0004/results
+experiments/2026-06-02/EXP-0004/logs
+experiments/2026-06-02/EXP-0001
+experiments/2026-06-02/EXP-0001/committee1
+experiments/2026-06-02/EXP-0001/results
+experiments/2026-06-02/EXP-0001/logs
+experiments/2026-06-02/EXP-0006
+experiments/2026-06-02/EXP-0006/committee1
+experiments/2026-06-02/EXP-0006/results
+experiments/2026-06-02/EXP-0006/logs
+experiments/2026-06-02/EXP-0006/scripts
+projects
+projects/PROJ-0001
+projects/PROJ-0004
+projects/PROJ-0003
+projects/PROJ-0002
+prior_art
+runtime
+runtime/locks
+runtime/agents
+runtime/escalation
+runtime/handoffs
+runtime/orchestrator
+runtime/cron
+runtime/cron/.proj_notified
+runtime/cron/.mon_notified
+runtime/cron/.coord_notified
+sessions
+registry
+registry/tasks
+registry/verdicts
+registry/verdicts/PROJ-0001
+registry/verdicts/PROJ-0001/2026-06-03
+registry/verdicts/PROJ-0001/2026-06-02
+registry/verdicts/PROJ-0004
+registry/verdicts/PROJ-0004/2026-06-03
+registry/verdicts/PROJ-0004/2026-06-02
+registry/verdicts/PROJ-0003
+registry/verdicts/PROJ-0003/2026-06-03
+registry/verdicts/PROJ-0003/2026-06-02
+registry/verdicts/PROJ-0002
+registry/verdicts/PROJ-0002/2026-06-03
+registry/verdicts/PROJ-0002/2026-06-02
+registry/cemetery
+registry/cemetery/PROJ-0001
+registry/cemetery/PROJ-0001/2026-06-02
+registry/claims
+registry/claims/PROJ-0001
+registry/claims/PROJ-0001/2026-06-03
+registry/claims/PROJ-0001/2026-06-02
+registry/claims/PROJ-0004
+registry/claims/PROJ-0004/2026-06-03
+registry/claims/PROJ-0004/2026-06-02
+registry/claims/PROJ-0003
+registry/claims/PROJ-0003/2026-06-03
+registry/claims/PROJ-0003/2026-06-02
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -name '*committee*common*' -o -name '*TOOLING*'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -maxdepth 5 -type f | grep -E 'committee|TOOLING|tooling|prompt' | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/area_chair.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/_status.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/area_chair.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/_status.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/area_chair.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/_status.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/area_chair.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/_status.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/area_chair.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/area_chair.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/_status.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/novelty_killer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1/product_realist.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/evaluation_prosecutor.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/theory_skeptic.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/systems_reviewer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/_runner.log
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/.members.txt
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/evaluation_prosecutor.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/theory_skeptic.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/systems_reviewer.err
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/product_realist.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/novelty_killer.out
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1/area_chair.out
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi -path '*_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+codex
+The requested rule files are not under the repo root; a broader filesystem lookup is still running. While that runs, I’m using the packet’s embedded common rules as binding context and checking local prior-art notes plus external sources for shipped overlap.
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "grep -RInE 'H2O|SnapKV|Scissorhands|ACON|LMCache|vLLM|SGLang|FlashInfer|TensorRT' prior_art registry experiments projects learning 2>/dev/null | head -120" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+registry/tasks/TASK-0003.yaml:10:summary: 'GPU L1 on devgpu014/H100: real vLLM enable_prefix_caching, two-typed agentic
+registry/tasks/TASK-0003.yaml:22:  note: 'GPU L1 on devgpu014/H100: real vLLM enable_prefix_caching, two-typed agentic
+registry/tasks/TASK-0007.yaml:10:summary: 'L0 reframe: bounded-W cache-aware admission vs SGLang-greedy AND VTC-fairness
+registry/tasks/TASK-0007.yaml:21:  note: 'L0 reframe: bounded-W cache-aware admission vs SGLang-greedy AND VTC-fairness
+registry/tasks/TASK-0011.yaml:11:  vs RT AND H2O/SnapKV-style attention eviction; measure real predictor AUC; win must
+registry/tasks/TASK-0011.yaml:22:    vs RT AND H2O/SnapKV-style attention eviction; measure real predictor AUC; win
+registry/verdicts/PROJ-0001/2026-06-03/VERDICT-0008.yaml:35:- "L0 baseline is exact-prefix only (vLLM APC) \u2014 true SOTA for non-prefix reuse\
+registry/verdicts/PROJ-0001/2026-06-03/VERDICT-0008.yaml:36:  \ is CacheBlend/LMCache/Prompt Cache"
+registry/verdicts/PROJ-0001/2026-06-03/VERDICT-0008.yaml:51:- LMCache (deployed)
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0001.yaml:30:- TensorRT-LLM already ships prioritized LRU with token-range retention (system=pri100,
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0001.yaml:37:- systems_reviewer independently verified TensorRT-LLM overlap
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0001.yaml:43:- Live >=2-source prior-art sweep vs SGLang/RadixAttention, Prompt Cache (Gim MLSys24),
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0001.yaml:62:- TensorRT-LLM prioritized LRU token-range retention
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0001.yaml:63:- SGLang PriorityStrategy/RadixAttention cache-aware scheduling
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0002.yaml:51:- '7. GPU validation EXP-0003: real vLLM enable_prefix_caching on devgpu014/H100,
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0002.yaml:55:- '8. FRAMING vs CachedAttention(ATC24), SGLang/RadixAttention(NeurIPS24), TRT-LLM
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0002.yaml:56:  retention, Prompt Cache(MLSys24), ARC(FAST03), LIRS(SIGMETRICS02), H2O(NeurIPS23),
+registry/verdicts/PROJ-0001/2026-06-02/VERDICT-0002.yaml:62:  infra (TRT-LLM retention / SGLang priority)''. Contribution = tool-boundary signal
+registry/verdicts/PROJ-0004/2026-06-02/VERDICT-0005.yaml:41:- SGLang + HF Transformers already SHIP runtime adaptive speculative decoding
+registry/verdicts/PROJ-0004/2026-06-02/VERDICT-0005.yaml:66:- SGLang adaptive speculative decoding (shipping)
+registry/verdicts/PROJ-0003/2026-06-03/VERDICT-0007.yaml:33:  \ priority (SGLang)"
+registry/verdicts/PROJ-0003/2026-06-03/VERDICT-0007.yaml:52:- SGLang RadixAttention (used, correct)
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:29:  \ is VERBATIM SGLang RadixAttention cache-aware scheduling (Zheng NeurIPS24, arXiv\
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:31:- corroborated by vLLM APC, Preble (2407.00023), llm-d
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:36:- L0 never compares vs SGLang scheduler or VTC, only vs naive FCFS (strawman, flagged
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:43:  \ fairness/prefill PARETO point than unbounded-greedy cache-aware scheduling (SGLang-style)'\
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:44:  \ \u2014 measured vs SGLang + VTC, NOT FCFS. Re-enter at L0/seed"
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:45:- 'Head-to-head vs SGLang''s ACTUAL cache-aware scheduler (not FCFS) on real vLLM/SGLang+APC:
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:59:  cache-aware admission better fairness/prefill Pareto than unbounded-greedy (SGLang-style)'',
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:60:  measured vs SGLang + VTC not FCFS'
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:61:- prior_art_collision [SGLang-RadixAttention, vLLM-APC, Preble, VTC]
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:65:- "SGLang RadixAttention cache-aware scheduler (Zheng NeurIPS24) \u2014 the direct\
+registry/verdicts/PROJ-0003/2026-06-02/VERDICT-0006.yaml:67:- vLLM with APC enabled, default scheduler
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:35:- SnapKV/H2O/Scissorhands/LLMLingua/ACON all absent
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:37:  indistinguishable from any appended text -> contribution collapses into H2O/SnapKV/StreamingLLM
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:39:- "ACON (arXiv 2510.00615) already does real agent context compression on real benchmarks\
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:44:  \ vs >=1 attention-based KV-eviction baseline (H2O/SnapKV) \u2014 not just RT"
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:52:- explicitly distinguish Scissorhands (persistence-of-importance ~= causal future-reference
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:53:  predictability) and ACON
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:62:  tool outputs. Prior-art owed (Scissorhands, ACON)'
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:64:- "SnapKV / H2O (attention-based KV eviction \u2014 direct competitors)"
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:65:- "Scissorhands (persistence-of-importance \u2014 closest prior framing)"
+registry/verdicts/PROJ-0002/2026-06-03/VERDICT-0009.yaml:66:- ACON (real agent context compression, AppWorld/OfficeBench)
+registry/cemetery/PROJ-0001/2026-06-02/DEAD-0001.yaml:12:  caching + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU
+registry/claims/PROJ-0001/2026-06-03/CLAIM-0007.yaml:11:why_it_matters: "Exact-prefix caching (vLLM APC, RadixAttention) only shares from\
+registry/claims/PROJ-0001/2026-06-02/CLAIM-0002.yaml:38:    regime = cap0.5..1.5. CANDIDATE-GRADE for GPU pass: real vLLM enable_prefix_caching
+registry/claims/PROJ-0001/2026-06-02/CLAIM-0002.yaml:40:    sweep vs SGLang/RadixAttention, Prompt Cache (Gim MLSys24), CachedAttention (Gao
+registry/claims/PROJ-0001/2026-06-02/CLAIM-0002.yaml:41:    ATC24), TensorRT-LLM token-range retention (no egress at L0). Artifacts: experiments/2026-06-02/EXP-0002/{sim.py,RESULTS.md,PRE_REGISTRATION.md,results/results.csv,results/summary.json}.'
+registry/claims/PROJ-0001/2026-06-02/CLAIM-0002.yaml:46:    + real vLLM 0.22 on H100, tool-boundary classifier yields 0 gain over LRU (max
+registry/claims/PROJ-0001/2026-06-02/CLAIM-0001.yaml:14:  \ trace-driven cache simulation; GPU pass validates on real vLLM prefix caching."
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:5:claim: "For agentic LLM serving where cache-aware admission (SGLang RadixAttention\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:6:  \ / vLLM APC) is ALREADY the production default, a fairness-bounded variant that\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:9:  \ scheduling (SGLang-style, which maximizes reuse at unbounded p99 cost) AND VTC-style\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:12:why_it_matters: "VERDICT-0006 RED'd the FCFS-baseline framing (SGLang/vLLM APC already\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:15:  \ (SGLang) AND fairness-only (VTC) on the fairness/prefill Pareto plane \u2014 neither\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:17:  \ (compare vs SGLang+VTC not FCFS, >=20 seeds, FWER-corrected CI, realistic service-time\
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:27:    sim, 3 policies greedy(SGLang)/VTC/bounded-W with service-time feedback. Sweep
+registry/claims/PROJ-0003/2026-06-03/CLAIM-0006.yaml:37:    SGLang+VTC on vLLM/APC, real p99 TTFT, multi-SLO classes.'
+registry/claims/PROJ-0003/2026-06-02/CLAIM-0004.yaml:13:  admission at matched fairness; GPU pass on real vLLM scheduler.'
+registry/claims/PROJ-0003/2026-06-02/CLAIM-0004.yaml:27:    counted as matched win). No matched cell ever favored FCFS. GPU pass: real vLLM/SGLang
+registry/claims/PROJ-0003/2026-06-02/CLAIM-0004.yaml:28:    scheduler+APC/RadixAttention, real TTFT p99. Prior-art caveat (no egress): SGLang
+registry/claims/PROJ-0003/2026-06-02/CLAIM-0004.yaml:29:    cache-aware scheduling + vLLM prefix-cache scheduling likely related; contribution
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0008.yaml:16:  \ Pareto vs truncation baseline. NOVELTY RISK: context compression (LLMLingua, H2O,\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0008.yaml:34:    predictor + real tool-agent task-accuracy + prior-art isolation (LLMLingua/H2O/SnapKV/StreamingLLM)
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:10:  \ (a) recency-truncation AND (b) attention-based KV eviction (H2O/SnapKV-style),\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:17:  NOISY proxy, measure real predictor AUC, and add the RIGHT baseline (H2O/SnapKV
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:18:  attention-eviction), explicitly distinguishing Scissorhands (persistence-of-importance)
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:19:  + ACON (real agent compression). Directly answers VERDICT-0009 required_evidence.
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:21:  predictor doesn''t beat H2O/SnapKV at realistic AUC.'
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:27:  summary: "PARTIAL-HELD (non-circular, H2O-baselined). Noisy causal reference predictor\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:28:    \ BEATS H2O/SnapKV at REALISTIC measured AUC<0.85 \u2014 robust at critical-handle\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:29:    \ AUC 0.64-0.82, frac>=0.4-0.6 (CAUSAL-H2O paired 95%CI_lo>0, 64 seeds) \u2014\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:30:    \ but ONLY on the sharp task-chain metric where H2O/RT score 0.000 everywhere\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:32:    \ merely TIES H2O. Circularity BROKEN: latent theta read only in trace-gen+oracle\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:34:    \ error; AUC MEASURED. NOT strawman (beats H2O specifically). Big oracle headroom.\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:36:    \ (Scissorhands counterexample). L1 owed: real attention, real tool-agent task\
+registry/claims/PROJ-0002/2026-06-03/CLAIM-0010.yaml:37:    \ accuracy, verify real delayed-callback structure, head-to-head vs H2O/SnapKV/Scissorhands/ACON."
+experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.out:5:  - {name: "SnapKV / H2O", why: "State-of-the-art attention-based KV-cache eviction/compression that already retains high-attention tokens across long contexts. The proposed method's use of 'attention/citation signal' directly competes with this.", repo_or_cite: "https://arxiv.org/abs/2404.14469 (SnapKV) / https://arxiv.org/abs/2306.14048 (H2O)"}
+experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.out:15:  - Run a real multi-step tool-use benchmark (e.g., τ-bench) with a real LLM. Compare the proposed extractive compressor directly against SnapKV and LLMLingua at strictly matched context/KV token budgets, measuring end-to-end task success and empirical attention-to-future-reference predictive AUC.
+experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.out:17:  - The evaluation is currently a circular synthetic exercise comparing against a toy baseline. You cannot claim an "attention/citation signal" compressor is effective without testing real attention on real tool outputs against the actual state-of-the-art in attention-based compression (SnapKV/H2O). The "make-or-break" negative (N3) is not refuted; it is merely hardcoded to succeed by the synthetic data generator.
+experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out:27:    StreamingLLM/H2O/SnapKV operate on generic context.
+experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out:28:  - No comparison against KV-eviction baselines (H2O, SnapKV) or prompt-compression
+experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out:64:  (LLMLingua/H2O/SnapKV) is OWED by the packet's own admission and absent. The
+experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out:70:  (ii) span-boundary mismatch, (iii) H2O/SnapKV-style baselines, (iv) generative-
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:3:  {system: "ACON", url: "https://github.com/microsoft/acon / https://arxiv.org/abs/2510.00615", overlap: "High: long-horizon LLM agent context compression of observations/history, evaluated on AppWorld/OfficeBench/Multi-objective QA; reports 26-54% peak-token reduction and task-success gains. Does not appear to use this packet's exact extractive future-reference predictor/oracle-gap framing."},
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:5:  {system: "H2O", url: "https://github.com/FMInference/H2O", overlap: "Medium: attention-heavy-hitter KV eviction retaining recent + high-attention tokens; overlaps with attention-based retention, not agent transcript/tool-result extraction."},
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:6:  {system: "SnapKV", url: "https://arxiv.org/abs/2404.14469", overlap: "Medium: KV compression by selecting important positions from attention features; reports 3.6x generation speed and 8.2x memory efficiency at 16K tokens; not committed tool-result compression."},
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:8:  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "Low: shipping KV prefix reuse with LRU block eviction; reduces recompute, does not compress transcript by future utility."},
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:9:  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "Low: shipping KV reuse/offload for reused text across GPU/CPU/disk/S3 and vLLM/SGLang integrations; cache reuse, not extractive content selection."},
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:10:  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "Low: serving-system KV reuse; not tool-output semantic compression."}
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:13:SCALE_REALISM: Does not yet hold at realistic workload. Evidence is a deterministic L0 trace simulation with synthetic salience and success=referenced-span availability, not real attention/citation prediction or task accuracy. ACON already demonstrates real agent benchmarks and token reductions, so this packet must show real tool-output sparsity/predictability and matched real-model task accuracy before promotion.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out:14:RATIONALE: PROMPT_VERSION v001. The packet gives strong simulated support for the narrow mechanism: EC beats RT in 633/648 cells with CI [+0.275,+0.307], and EO-EC gap is 0 in sparse+high-predictability. That is a useful mechanism result, not mere glue. But the systems claim is not green because the premise is constructed: ref sparsity, predictability, and salience are synthetic, and task success is availability rather than model accuracy. Prior art is crowded and includes ACON, which directly targets long-horizon agent context compression on AppWorld/OfficeBench/Multi-objective QA and reports 26-54% peak-token reduction plus task-success improvements (https://arxiv.org/abs/2510.00615). H2O/SnapKV/StreamingLLM/LLMLingua cover attention/token/KV selection mechanisms with real models, while vLLM/LMCache/TensorRT-LLM cover shipping cache infrastructure. No located shipping system exactly implements "tool-result-specific extractive retention via causal future-reference prediction with oracle-gap accounting", but closest OSS already covers most surrounding systems surface. Required evidence: real attention/citation predictor AUC for future tool-output references, real tool-agent benchmark accuracy at matched budgets, comparison to ACON/LLMLingua/H2O/SnapKV/StreamingLLM-style baselines, and reproducible GPU traces showing latency/memory/token effects.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:23:MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:24:LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:54:## This is the first HELD L0 (effect=support). The make-or-break control (oracle vs causal predictor) came back FOR the claim: causal predictor MATCHES the oracle in the sparse+predictable regime (gap CI [0,0]), beats recency-truncation in 633/648 cells (CI [+0.275,+0.307] excludes 0), honest-negative N3 ('needs oracle') REFUTED. Vote HONESTLY and HOSTILELY — this is a green-candidate, so scrutinize hard. If candidate-grade, name SPECIFIC GPU/real-model required_evidence (researcher: real attention/citation signal as the causal predictor + real task accuracy on a tool-agent benchmark + verify sparsity/predictability hold on REAL tool outputs). novelty_killer: context/KV compression is CROWDED (LLMLingua, H2O, SnapKV, StreamingLLM=the RT arm) — live >=2-source sweep OWED; the ONLY distinct angle claimed is (a) tool-result-specific + (b) retention-as-causal-future-reference-prediction with the oracle gap quantified. Isolate our contribution vs the compression mechanism itself.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:158:- A GPU/real pass should: (1) use **real attention or citation signal** (e.g. H2O/SnapKV-style
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:165:  prior work — **LLMLingua** (prompt compression), **H2O** & **SnapKV** (attention-based
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:283:Context compression is a CROWDED field: LLMLingua (prompt compression), H2O / SnapKV
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:687:/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/LMCache/LMCache/dev/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:701:    <img src="https://raw.githubusercontent.com/LMCache/LMCache/dev/asset/logo.png" width="720" alt="lmcache logo">
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:708:  [![Code Quality](https://github.com/lmcache/lmcache/actions/workflows/code_quality_checks.yml/badge.svg?branch=dev&label=tests)](https://github.com/LMCache/LMCache/actions/workflows/code_quality_checks.yml)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:714:  [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/LMCache/LMCache/badge)](https://scorecard.dev/viewer/?uri=github.com/LMCache/LMCache)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:715:  [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LMCache/LMCache/)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:716:  [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/LMCache/LMCache)](https://github.com/LMCache/LMCache/graphs/commit-activity)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:729:| [**Roadmap**](https://github.com/LMCache/LMCache/issues/1253)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:733:LMCache is an **LLM** serving engine extension to **reduce TTFT** and **increase throughput**, especially under long-context scenarios. By storing the KV caches of reusable texts all over the datacenter (including GPU, CPU, Disk and even S3) with a wide range of acceleration technqiue (zero cpu copy, NIXL, GDS and more). LMCache reuses the KV caches of **_any_** reused text (not necessarily prefix) in **_any_** serving engine instance. Thus, LMCache saves precious GPU cycles and reduces user response delay.  
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:735:By combining LMCache with vLLM, developers achieve 3-10x delay savings and GPU cycle reduction in many LLM use cases, including multi-round QA and RAG.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:739:LMCache is used, integrated, or referenced across a growing ecosystem of LLM serving platforms, infrastructure providers, and open-source projects:
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:744:- Used by open-source projects and platforms: [vLLM](https://github.com/vllm-project/vllm) [![GitHub stars](https://img.shields.io/github/stars/vllm-project/vllm?style=social)](https://github.com/vllm-project/vllm)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:745:, [SGLang](https://github.com/sgl-project/sglang) [![GitHub stars](https://img.shields.io/github/stars/sgl-project/sglang?style=social)](https://github.com/sgl-project/sglang)
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:746:, [vLLM Production Stack](https://github.com/vllm-project/production-stack) [![GitHub stars](https://img.shields.io/github/stars/vllm-project/production-stack?style=social)](https://github.com/vllm-project/production-stack), [llm-d](https://github.com/llm-d/llm-d/) [![GitHub stars](https://img.shields.io/github/stars/llm-d/llm-d?style=social)](https://github.com/llm-d/llm-d), [NVIDIA dynamo](https://github.com/ai-dynamo/dynamo) [![GitHub stars](https://img.shields.io/github/stars/ai-dynamo/dynamo)](https://github.com/ai-dynamo/dynamo), [KServe](https://github.com/kserve/kserve) [![GitHub stars](https://img.shields.io/github/stars/kserve/kserve?style=social)](https://github.com/kserve/kserve) and more.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:753:- [x] 🔥 Integration with vLLM v1 with the following features:
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:757:- [x] Integration with SGLang for KV cache offloading
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:762:- [x] Installation support through pip and latest vLLM
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:766:To use LMCache, simply install `lmcache` from your package manager, e.g. pip:
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:782:Check out the LMCache [documentation](https://docs.lmcache.ai/) which is available online.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:784:We also post regularly in [LMCache blogs](https://blog.lmcache.ai/).
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:788:Go hands-on with our [examples](https://github.com/LMCache/LMCache/tree/dev/examples),
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:789:demonstrating how to address different use cases with LMCache.
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.err:793:Fill out the [interest form](https://forms.gle/mQfQDUXbKfp2St1z7), [sign up for our newsletter](https://mailchi.mp/tensormesh/lmcache-sign-up-newsletter), [join LMCache slack](https://join.slack.com/t/lmcacheworkspace/shared_invite/zt-3g8e6xzz8-KzS_HI8bPERGFK5PTB~MYg), or [drop an email](mailto:contact@lmcache.ai), and our team will reach out to you!
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
