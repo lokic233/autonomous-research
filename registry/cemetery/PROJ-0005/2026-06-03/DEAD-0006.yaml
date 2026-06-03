@@ -1,0 +1,29 @@
+dead_id: DEAD-0006
+original_claim_id: CLAIM-0016
+original_claim: "In multi-agent LLM systems, an EXTRACTIVE inter-agent message compressor\
+  \ that keeps only the spans the RECEIVING agent will actually act on (predicted\
+  \ from the receiver's role+task, NOT the full message) cuts total multi-agent token\
+  \ cost by a non-trivial fraction at matched task-success, AND beats BOTH (a) recency/length\
+  \ truncation and (b) a generic role-agnostic prompt compressor (LLMLingua-style)\
+  \ at matched compression ratio \u2014 because inter-agent messages carry role-irrelevant\
+  \ verbosity that a receiver-role-conditioned filter can drop but a generic compressor\
+  \ cannot."
+reason_killed: committee KILL (backfill BUG-84) VERDICT-0021
+killing_verdict: VERDICT-0021
+killing_experiments: []
+duplicate_patterns:
+- "In multi-agent LLM systems, an EXTRACTIVE inter-agent message compressor that keeps\
+  \ only the spans the RECEIVING agent will actually act on (predicted from the receiver's\
+  \ role+task, NOT the full message) cuts total multi-agent token cost by a non-trivial\
+  \ fraction at matched task-success, AND beats BOTH (a) recency/length truncation\
+  \ and (b) a generic role-agnostic prompt compressor (LLMLingua-style) at matched\
+  \ compression ratio \u2014 because inter-agent messages carry role-irrelevant verbosity\
+  \ that a receiver-role-conditioned filter can drop but a generic compressor cannot."
+- act actually agent agnostic beats because both but can cannot carry compression
+  compressor conditioned cost cuts drop extractive filter fraction from full generic
+  inter irrelevant keeps length llm llmlingua matched message messages multi non not
+  only predicted prompt ratio receiver receiving recency role spans style success
+  systems task token total trivial truncation verbosity will
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T09:27:55Z'

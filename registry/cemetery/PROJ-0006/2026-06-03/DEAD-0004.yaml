@@ -1,0 +1,31 @@
+dead_id: DEAD-0004
+original_claim_id: CLAIM-0026
+original_claim: "In long multi-turn agentic sessions, speculative-decoding draft-model\
+  \ acceptance rate DRIFTS materially as the running context grows (the token distribution\
+  \ shifts from early conversational prose to deep tool-call/JSON/structured context),\
+  \ such that a session-phase-ADAPTIVE draft policy (adjust draft length / draft model\
+  \ by a cheap detected context-phase signal) achieves strictly higher net tokens/sec\
+  \ than the BEST-TUNED FIXED draft policy on agentic traffic \u2014 because the per-phase\
+  \ optimal draft configuration differs enough that one fixed setting is mistuned\
+  \ for a non-trivial fraction of the session."
+reason_killed: committee KILL (backfill BUG-84) VERDICT-0028
+killing_verdict: VERDICT-0028
+killing_experiments: []
+duplicate_patterns:
+- "In long multi-turn agentic sessions, speculative-decoding draft-model acceptance\
+  \ rate DRIFTS materially as the running context grows (the token distribution shifts\
+  \ from early conversational prose to deep tool-call/JSON/structured context), such\
+  \ that a session-phase-ADAPTIVE draft policy (adjust draft length / draft model\
+  \ by a cheap detected context-phase signal) achieves strictly higher net tokens/sec\
+  \ than the BEST-TUNED FIXED draft policy on agentic traffic \u2014 because the per-phase\
+  \ optimal draft configuration differs enough that one fixed setting is mistuned\
+  \ for a non-trivial fraction of the session."
+- acceptance achieves adaptive adjust agentic because best call cheap configuration
+  context conversational decoding deep detected differs distribution draft drifts
+  early enough fixed fraction from grows higher json length long materially mistuned
+  model multi net non one optimal per phase policy prose rate running sec session
+  sessions setting shifts signal speculative strictly structured such than token tokens
+  tool traffic trivial tuned turn
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T09:27:55Z'

@@ -1,0 +1,28 @@
+dead_id: DEAD-0005
+original_claim_id: CLAIM-0014
+original_claim: For agentic LLM serving with bursty per-session KV pressure, a tiered
+  KV-offload policy that proactively demotes a session's COLD prefix blocks to CPU/host
+  memory (and prefetches them back on the session's next turn, overlapping fetch with
+  the inter-turn idle gap) achieves a strictly better effective-batch-size / TTFT
+  Pareto than evict-and-recompute, because agent inter-turn gaps are long enough to
+  hide PCIe fetch latency AND the demoted blocks are re-referenced with high probability
+  on resume.
+reason_killed: committee KILL (backfill BUG-84) VERDICT-0020
+killing_verdict: VERDICT-0020
+killing_experiments: []
+duplicate_patterns:
+- For agentic LLM serving with bursty per-session KV pressure, a tiered KV-offload
+  policy that proactively demotes a session's COLD prefix blocks to CPU/host memory
+  (and prefetches them back on the session's next turn, overlapping fetch with the
+  inter-turn idle gap) achieves a strictly better effective-batch-size / TTFT Pareto
+  than evict-and-recompute, because agent inter-turn gaps are long enough to hide
+  PCIe fetch latency AND the demoted blocks are re-referenced with high probability
+  on resume.
+- achieves agent agentic back batch because better blocks bursty cold cpu demoted
+  demotes effective enough evict fetch gap gaps hide high host idle inter latency
+  llm long memory next offload overlapping pareto pcie per policy prefetches prefix
+  pressure proactively probability recompute referenced resume serving session size
+  strictly than them tiered ttft turn
+revival_conditions: ''
+related_prior_work: []
+date_killed: '2026-06-03T09:27:55Z'
