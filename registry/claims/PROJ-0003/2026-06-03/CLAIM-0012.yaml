@@ -1,0 +1,33 @@
+claim_id: CLAIM-0012
+project_id: PROJ-0003
+stage: seed
+status: seed
+claim: "In agentic LLM serving, a non-trivial fraction (>15%) of generated decode\
+  \ tokens are WASTED on agent turns that are subsequently abandoned (tool errors,\
+  \ early-stop, branch pruning, retries), and a cheap online abandonment-risk signal\
+  \ (available BEFORE the turn completes) can identify a meaningful share of these\
+  \ early enough to deprioritize them in the batch \u2014 reclaiming served compute\
+  \ WITHOUT harming completed-turn latency at matched fairness."
+why_it_matters: "New axis (cancellation/abandonment economics \u2014 untouched by\
+  \ the 10 dead claims). Two falsifiable parts: (1) measure wasted-decode fraction\
+  \ in real agent traces; (2) whether a cheap early signal predicts abandonment with\
+  \ usable lead time. L0: characterize abandonment in agent traces + a causal (non-oracle)\
+  \ abandonment predictor AUC. Honest-negative if waste is small OR no early signal\
+  \ predicts it. Topic: llm-serving + agent-infra."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r2-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0015 result, then ros exp complete --exp EXP-0015 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0015
+created_at: '2026-06-03T01:53:05Z'
+last_updated: '2026-06-03T01:53:23Z'
