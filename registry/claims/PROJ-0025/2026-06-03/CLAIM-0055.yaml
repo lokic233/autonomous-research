@@ -72,13 +72,22 @@ supporting_evidence:
     \ far, scoped to curve, leaks at near-miss). No falsifier triggered."
   data_path: experiments/2026-06-03/EXP-0062/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0053
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
 lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0062; convene committee if candidate-grade
+next_action: 'HELD/YELLOW pending a make-or-break real-LM L1 (VERDICT-0053). L0 =
+  definitions+bounds NOT behavior (R1/R3/R4 tautological; conceptual novelty survives:
+  support-removal=GAD-irrecoverable failure class + monitorability-collapse framing
+  + gap vs 2409.00113). L1 (carries ALL empirical weight, must be FALSIFIABLE): real
+  LMs+real constrained backend on BFCL/ToolBench OOS + (2) unconstrained causal baseline
+  + (3) semantic monitor + (4) real-logit monotonicity + (5) complete prior-art. HANDED
+  TO r6.'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T23:09:39Z'
-last_updated: '2026-06-03T23:15:51Z'
+last_updated: '2026-06-03T23:38:19Z'

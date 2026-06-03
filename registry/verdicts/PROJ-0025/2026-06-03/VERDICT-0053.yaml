@@ -1,0 +1,110 @@
+verdict_id: VERDICT-0053
+claim_id: CLAIM-0055
+project_id: PROJ-0025
+date: '2026-06-03'
+experiment_ids:
+- EXP-0062
+experiment_paths:
+- experiments/2026-06-03/EXP-0062
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: abstain
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE fatal, but GREEN blocked + the L0 headline RECATEGORIZED. theory_skeptic (unrebutted,\
+  \ decisive): the L0 'results' are largely TAUTOLOGICAL \u2014 R1 stream-misroute=P(OOS)=(144-K)/144\
+  \ is an IDENTITY (matches reported to 3 decimals)"
+- the 'kernel-INDEPENDENT geometric law' is independent of the kernel because it NEVER
+  REFERENCES the kernel = the SIGNATURE OF A TAUTOLOGY, not a robust law (inverts
+  the packet's 'strongest anti-tuned-knob' framing)
+- R3 (validity-recall=0) + R4 (GAD-recovery=0) are true BY CONSTRUCTION/DEFINITION
+  (one line of probability, no experiment needed)
+- "R2/R5 are generic softmax-over-distance. The L0 COULD NOT FAIL given the construction\
+  \ \u2014 no risky prediction. So L0 established DEFINITIONS + STRUCTURAL BOUNDS,\
+  \ NOT behavioral predictions. ALSO: novelty_killer API-ERROR (no vote) -> dedicated\
+  \ prior-art search INCOMPLETE -> blocks GREEN per standing rules (COMMITTEE_INCOMPLETE\
+  \ never counts as a green vote"
+- 'rendered 4-real-YELLOW + chair). evaluation_prosecutor (most consequential for
+  L1): (i) NO unconstrained baseline -> ''the decoder mechanically coerces'' is UNGROUNDED
+  (if the base model ALSO emits the near-miss WITHOUT the mask via semantic priming/parametric
+  confusion, the constraint is NOT the causal agent)'
+- (ii) 'monitorability collapse' only tested vs a SCHEMA PARSER (trivially blind by
+  definition) = a strawman monitor
+- the production-relevant adversary is a SEMANTIC monitor (reflection/LLM-as-judge),
+  untested.
+required_evidence:
+- L1 (ALL empirical weight now falls here
+- "must produce GENUINELY RISKY predictions that could FALSIFY): (1) real LMs (Llama-3.1-8B/Qwen2.5-7B)\
+  \ + real constrained backends (Outlines/XGrammar/vLLM guided JSON) on BFCL/ToolBench\
+  \ OOS slices \u2014 real-LM misroute rates that COULD falsify the (K, neighbor-gap)\
+  \ law on real logit geometry"
+- "(2) UNCONSTRAINED COUNTERFACTUAL baseline (paired A/B on identical OOS prompts\
+  \ with vs without the hard grammar mask \u2014 if the unconstrained model ALSO emits\
+  \ the near-miss tool, the constraint is NOT the causal culprit -> claim's causal\
+  \ framing collapses)"
+- "(3) SEMANTIC MONITOR baseline (LLM-as-judge/reflection recall on the misrouted\
+  \ outputs \u2014 if a reflection step CATCHES the near-miss, the monitorability-collapse\
+  \ claim collapses"
+- defeating only a syntactic validator is trivial)
+- "(4) real-LM LOGIT MONOTONICITY check (verify real LM logits over tool-name tokens\
+  \ are actually monotone in semantic distance \u2014 the (K,gap) law has no empirical\
+  \ anchor beyond the geometric proxy without this)"
+- "(5) COMPLETE the novelty_killer prior-art search (the API-error left it missing\
+  \ \u2014 confirm no prior work articulates support-removal coercion + monitorability\
+  \ collapse in constrained decoding). DECISION: if real-LM misroute survives + unconstrained\
+  \ baseline shows the CONSTRAINT is causal + a semantic monitor STILL fails + real\
+  \ logits are monotone -> GREEN. If the unconstrained model also misroutes, OR real\
+  \ logits non-monotone, OR a reflection step catches the near-miss -> the causal+safety\
+  \ framing collapses regardless of the clean structural argument."
+map_delta_proposals:
+- CLAIM-0055 -> YELLOW/pending-L1 (committee#1, 4 real YELLOW + chair
+- "novelty_killer API-error = prior-art search incomplete = a required-evidence gate,\
+  \ NOT a fabricated vote). RECATEGORIZED: the L0 established DEFINITIONS + STRUCTURAL\
+  \ BOUNDS, NOT behavior \u2014 theory_skeptic showed R1/R3/R4 are tautologies of\
+  \ the construction + R2/R5 generic softmax"
+- 'the ''kernel-independence'' I praised is the SIGNATURE OF A TAUTOLOGY (the headline
+  could not fail). The SURVIVING load-bearing contribution is CONCEPTUAL + genuinely
+  novel: support-removal as a GAD-IRRECOVERABLE failure class (outside GAD + the abstention
+  lit, theory_skeptic concurs ''not in GAD or the abstention literature''), the monitorability-collapse
+  FRAMING (schema-validate+retry+GAD+escape-hatch all fail), + the clean gap vs 2409.00113
+  (UNconstrained MCQ retains the choice'
+- "hard-constrained REMOVES it). Substrate real+dominant (vLLM/SGLang/TRT-LLM). The\
+  \ L1 must carry ALL empirical weight w/ 3 RISKY tests (unconstrained-causal-baseline\
+  \ + semantic-monitor + real-logit-monotonicity) + complete prior-art. risk_tags:\
+  \ L0-tautological-not-behavioral, causal-baseline-missing, semantic-monitor-untested,\
+  \ novelty-search-incomplete. ORCHESTRATOR LESSON: a 'structural-core-L0-settled'\
+  \ claim whose headline numbers are CONSTRUCTION TAUTOLOGIES (can't-fail) is NOT\
+  \ empirical support \u2014 kernel/parameter-INDEPENDENCE is a RED FLAG (tautology\
+  \ signature), not a robustness strength. Screen at DESIGN: 'could this L0 have produced\
+  \ a DIFFERENT/failing number?' If no, it establishes definitions not behavior"
+- the behavioral test must be the L1. Alive toward L1 (the conceptual novelty + real
+  safety relevance justify it), but the L1 is now genuinely make-or-break + must include
+  the causal + semantic-monitor controls.
+baseline_requirements:
+- "Unconstrained generation on the same OOS prompts (isolate constraint-induced coercion\
+  \ from base-model parametric confusion \u2014 the causal control)"
+- Semantic monitor / reflection-based LLM-as-judge detector (the production-relevant
+  adversary, NOT a schema parser)
+- Real-LM abstention/refusal rate without the grammar mask (what RLHF abstention buys
+  before the mask erases it)
+- GAD/ASAp real implementation (out-of-set gap-recovery on real logits)
+- real-LM logit-vs-semantic-distance monotonicity
+committee_run_dir: experiments/2026-06-03/EXP-0062/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T23:37:17Z'
