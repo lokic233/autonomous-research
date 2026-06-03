@@ -1,0 +1,91 @@
+verdict_id: VERDICT-0049
+claim_id: CLAIM-0051
+project_id: PROJ-0021
+date: '2026-06-03'
+experiment_ids:
+- EXP-0056
+experiment_paths:
+- experiments/2026-06-03/EXP-0056
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "evaluation_prosecutor RED (UNREBUTTED, the load-bearing gap): L0 modeled a PURELY\
+  \ SEQUENTIAL single-shard pipeline with NO INTERLEAVING \u2014 but tf.data.interleave(cycle_length),\
+  \ WebDataset multi-shard interleaving, MosaicML num_canonical_nodes are the STANDARD\
+  \ practitioner mitigation and they reduce EFFECTIVE run-length L WITHOUT growing\
+  \ B. So the claim's 'ONLY by B growing with L' is OVERCLAIMED (interleaving is the\
+  \ omitted primary competitor)"
+- the mechanism (B/L governs inflation) likely survives but must be reframed as 'only
+  by reducing EFFECTIVE same-source run-length L_eff (via B/L scaling OR source interleaving
+  OR shard pre-shuffle)'
+- "PRIOR-ART search DENIED (no web) -> reservoir/sliding-window-over-blocks rho(B,L)\
+  \ combinatorial collision UNRESOLVED + the QUALITATIVE takeaway ('buffer must scale\
+  \ with data structure not batch') is already in >=2 systems sources (tf.data/WebDataset/MosaicML\
+  \ docs) \u2014 novel surface is NARROWER (quantifying documented folklore, not new\
+  \ phenomenon)"
+- 'THEORY near-tautology: b doesn''t enter the buffer mixing (only B,L do) so ''B/L
+  not B/b'' is geometrically FORCED once stated'
+- "the ceiling is arithmetic (when L>>B the buffer literally can't contain a 2nd source\
+  \ for the first L-B items) \u2014 low theoretical surprise, value is empirical precision"
+- 'NO DOWNSTREAM EVIDENCE: variance inflation != convergence harm (momentum/Adam/grad-accum
+  may absorb transient correlation variance)'
+- the 15.1x is an intermediate quantity of unknown practical consequence
+required_evidence:
+- "L1-CONTESTED (NOT confirmatory \u2014 gated): (1) INTERLEAVING baseline (MANDATORY,\
+  \ the unrebutted RED): add concurrent shard interleave cycle_length C in {1,2,4,8,16}\
+  \ BEFORE the bounded buffer, measure inflation(B,L,C). If inflation collapses to\
+  \ ~1x at small B with moderate C -> 'ONLY by B growing with L' FALSIFIED, reframe\
+  \ to L_eff"
+- if it persists with interleaving (plausible when C small vs L/B) -> claim strengthened.
+  CHEAP L0-level. (2) real per-domain gradient correlation on a real tiny transformer
+  on multi-domain shards (the 0.80 within-source corr is load-bearing
+- if real corr is 0.2-0.3 the >=1.5x bar may not hold) OR the cheaper L0 rho_within
+  sensitivity sweep {0.2,0.5,0.8}
+- "(3) DOWNSTREAM convergence harm \u2014 loss-spike frequency / final-accuracy degradation\
+  \ at production B vs oracle full-shuffle (without this it's 'precise measurement\
+  \ of an arithmetically expected effect' with no demonstrated consequence)"
+- '(4) reservoir/sliding-window-over-blocks lit search for a prior rho(B,L) derivation.
+  ALSO: per-shard-shuffle baseline (vs the favorable oracle-full-shuffle denominator).'
+map_delta_proposals:
+- "CLAIM-0051 -> YELLOW / L0-HELD, advance to L1-CONTESTED (NOT confirmatory \u2014\
+  \ committee downgraded my framing). Two-axis asymmetry cleanly demonstrated (genuine\
+  \ non-textbook content), sim-assumed-shape trap avoided (rho algorithmic), 15.1x\
+  \ at common practitioner point real \u2014 BUT GREEN blocked by: unrebutted interleaving-omission\
+  \ RED (claim's 'ONLY B-with-L' overclaimed"
+- "interleaving reduces L_eff without growing B), inadequate prior-art (reservoir\
+  \ collision unsearched + folklore documented), near-tautology (b absent from buffer\
+  \ mixing -> axis result geometrically forced), no downstream-harm evidence. REFRAME\
+  \ 'ONLY by B growing with L' -> 'ONLY by reducing EFFECTIVE run-length L_eff (B/L\
+  \ scaling OR interleaving OR pre-shuffle)'. Orchestrator next: cheap L0-level follow-up\
+  \ (interleaving cycle_length sweep + rho_within sweep) FIRST \u2014 both CPU, decisive\
+  \ on the overclaim, before any real-model L1. risk_tags: interleaving-omitted, downstream-harm-unmeasured,\
+  \ folklore-quantification. Alive, not killed."
+baseline_requirements:
+- "Concurrent shard interleaving (tf.data interleave / WebDataset multi-shard / MosaicML\
+  \ num_canonical_nodes) \u2014 the PRIMARY competing mitigation, its absence is the\
+  \ unrebutted RED"
+- per-shard-shuffle baseline (denominator alternative to the favorable oracle-full-shuffle)
+- rho_within sensitivity {0.2,0.5,0.8}
+- RR/GraB (2205.10733, CD-GraB 2302.00845) full-permutation regime
+- reservoir/sliding-window-over-blocks combinatorial rho(B,L) lit (unsearched)
+committee_run_dir: experiments/2026-06-03/EXP-0056/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T21:12:39Z'
