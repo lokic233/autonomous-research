@@ -1,0 +1,83 @@
+verdict_id: VERDICT-0048
+claim_id: CLAIM-0050
+project_id: PROJ-0020
+date: '2026-06-03'
+experiment_ids:
+- EXP-0054
+experiment_paths:
+- experiments/2026-06-03/EXP-0054
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- 'evaluation_prosecutor RED (grounded but managed, gated not dismissed): the M/G/1
+  NON-PREEMPTIVE model structurally misrepresents continuous batching (iteration-level
+  decode, preemption/swapping, batched prefill)'
+- the HOL blocking driving the 1.4-5.8x p99 ratio MAY COLLAPSE under processor-sharing-like
+  dynamics. The mechanism (proxy-class-anticorrelation -> SJF<FCFS, distinguished
+  from trivial SJF-starvation by the C1 oracle control) is established WITHIN the
+  M/G/1 model
+- "the MAGNITUDE is model-dependent and ungated. Also: p99 is a high-variance estimator\
+  \ \u2014 5.37x with unknown CI is not yet actionable"
+- "and consistency/robustness theory (Purohit NeurIPS2018, Lykouris ICML2018) already\
+  \ establishes 'bad-enough predictor => worse than prediction-free baseline' as a\
+  \ KNOWN qualitative regime \u2014 contribution must be positioned as quantitative+VLM-ecology\
+  \ extension, NOT regime discovery."
+required_evidence:
+- "L1 (4 gates, all required before promotion): GATE-1 (load-bearing): measure ACTUAL\
+  \ Kendall-tau(input_tokens, realized_decode_length) on real VLM traces (Qwen-VL/LLaVA\
+  \ perception+reasoning mix) \u2014 if real tau is NOT below the simulated tau*,\
+  \ the ecological claim COLLAPSES (reduces to 'known robustness-theory regime quantified\
+  \ in a toy model')"
+- "GATE-2: reproduce FCFS vs input-length-SJF under a CONTINUOUS-BATCHING simulator\
+  \ (Vidur) or real vLLM/SGLang iteration-level scheduling + preemption \u2014 confirm\
+  \ the p99 regression survives (if magnitude <1.2x, headline killed)"
+- 'GATE-3: bootstrap/batch-means CIs on ALL headline ratios AND on tau* itself'
+- 'GATE-4: sigma_d sensitivity sweep (is the 1.4-5.8x conditional on the heavy tail
+  sigma_d=1.0? state if it vanishes at sigma_d<=0.5). CITATION-GATE: add Purohit/Svitkina/Kumar
+  2018 + Lykouris/Vassilvitskii 2018 (consistency/robustness theory) + Fu 2408.15792
+  + S3 2306.06000 (already treat input-length as inadequate proxy)'
+- 'position as quantitative+ecology extension not regime discovery. MANDATORY BASELINES:
+  FastServe Skip-Join MLFQ (2305.05920), vLLM FCFS-with-preemption, oracle-proxy SJF
+  (extend C1 to continuous-batching).'
+map_delta_proposals:
+- "CLAIM-0050 -> YELLOW-CONDITIONAL (committee#1, 4y+1r). MECHANISM ESTABLISHED within\
+  \ M/G/1 (proxy-class-anticorrelation -> SJF<FCFS, distinguished from trivial SJF-starvation\
+  \ by C1 oracle + C2 tau-invariance). MAGNITUDE + ECOLOGICAL VALIDITY UNGATED ->\
+  \ conditional on a 4-gate L1: real-VLM-tau<tau* (GATE-1, load-bearing \u2014 SAME\
+  \ structure as CLAIM-0048's real-model-phi, the premise MUST be measured on real\
+  \ data) + survives continuous-batching/preemption (GATE-2) + CIs (GATE-3) + sigma_d\
+  \ sweep (GATE-4). If GATE-1 AND GATE-2 pass -> SUPPORTED"
+- "if either fails -> HONEST-NEGATIVE (known robustness regime, no ecological foothold\
+  \ in real VLM serving). NOT a kill \u2014 alive toward L1. risk_tags: M/G/1-vs-continuous-batching,\
+  \ real-tau-vs-tau*-premise-unmeasured. LESSON (from CLAIM-0048): the load-bearing\
+  \ premise (real tau<tau*) is a distributional/system quantity ASSUMED by the sim\
+  \ \u2014 must measure it on the REAL system EARLY (cost-aware: GATE-1 real-trace\
+  \ tau measurement is cheap-ish + decisive, gate GATE-2 behind it)."
+baseline_requirements:
+- FastServe Skip-Join MLFQ (2305.05920) preemptive LLM scheduler
+- vLLM FCFS-with-preemption (continuous-batching production default, NOT M/G/1)
+- oracle-proxy SJF (C1, extend to continuous-batching)
+- Purohit2018/Lykouris2018 consistency-robustness theory (bad-predictor-worse-than-baseline
+  known regime)
+- Fu 2408.15792 + S3 2306.06000 (input-length already known inadequate proxy)
+committee_run_dir: experiments/2026-06-03/EXP-0054/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T20:31:49Z'

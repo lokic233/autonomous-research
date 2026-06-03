@@ -64,13 +64,16 @@ supporting_evidence:
     (verified). L1: real vLLM/SGLang VLM trace, measure actual Kendall-tau(input-tokens,decode-len).'
   data_path: experiments/2026-06-03/EXP-0054/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0048
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0054; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0048=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T19:03:29Z'
-last_updated: '2026-06-03T20:19:15Z'
+last_updated: '2026-06-03T20:31:49Z'
