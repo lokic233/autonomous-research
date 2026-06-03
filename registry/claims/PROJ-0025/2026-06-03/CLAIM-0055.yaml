@@ -1,0 +1,77 @@
+claim_id: CLAIM-0055
+project_id: PROJ-0025
+stage: seed
+status: seed
+claim: "In agentic tool/action routing with HARD grammar-constrained decoding over\
+  \ an enum of valid actions, when a request's correct action is NOT a member of the\
+  \ enum (out-of-set intent), the decoder does not error or abstain \u2014 it mechanically\
+  \ forces emission of the NEAREST in-enum member, producing a 100pct-schema-valid\
+  \ confidently-wrong action call. The silent-misroute rate RISES as enum cardinality\
+  \ falls and as the semantic gap between the true intent and its nearest in-enum\
+  \ neighbor shrinks (a near-miss distractor is MORE dangerous than a far one). This\
+  \ failure class has ZERO recall under the standard production mitigation (schema-validation\
+  \ + retry \u2014 validity is 100pct by construction), is NOT recoverable by the\
+  \ strongest distribution-faithful decoder (Grammar-Aligned Decoding) because the\
+  \ failure is SUPPORT-REMOVAL (true target has zero grammar support) not within-support\
+  \ distortion, and even an explicit 'other'/ASK_USER escape-hatch member has escape-recall\
+  \ that DECREASES as the nearest wrong member gets semantically closer (so it leaks\
+  \ at the dangerous near-miss params)."
+why_it_matters: "FRESH AREA (eval-and-safety x agentic: constrained-decoding silent-error\
+  \ monitorability). EMPIRICAL-phenomenon. BEST-POSITIONED for green \u2014 cleanly\
+  \ clears killer-#9 (mechanism-novelty): the core mechanism (support-removal monitorability\
+  \ collapse + the K x neighbor-gap law) is NOT a named classical result, and the\
+  \ seminal incumbent GAD (Park/Geng NeurIPS2024 2405.21047) EXPLICITLY assumes desired\
+  \ output in-language -> silent on the zero-support case -> does NOT acknowledge\
+  \ it (its high novelty ceiling). Passes all 9: NOT metric-validity (causal behavioral\
+  \ effect \u2014 forced wrong ACTION); NOT closed-form (the trivial part is 'mass\
+  \ goes to nearest in-support'; the NON-derivable claims are the empirical misroute\
+  \ RATE vs (K, neighbor-gap) + the escape-recall-decreases-with-proximity curve \u2014\
+  \ depend on the pre-mask logit landscape x masking); foundational incumbent ADDRESSED\
+  \ + VERIFIED (GAD repairs within-support distortion not support-removal; shown irrecoverable);\
+  \ NOT known-mechanism-costume + STRONGEST-BASELINE (tests the STRONGEST decoder\
+  \ GAD-style faithful resampling as Baseline B, NOT a lexical strawman; + escape-hatch\
+  \ mitigation); NOT wrong-currency (silently-executed wrong action + monitor recall,\
+  \ deployment-relevant; validity-monitor-recall=0 is load-bearing); NOT trivially-small/assumed-shape\
+  \ (large at realistic params \u2014 production routers use narrow enums 5-20 tools\
+  \ + open-world traffic routinely has out-of-set intents; anchored on K + neighbor-gap,\
+  \ not assumed traffic); NOT omitted-mitigation (standard schema-validate+retry modeled\
+  \ = recall 0 by construction; strongest escape-hatch modeled = leaks at near-miss);\
+  \ citations VERIFIED (GAD read), no IID. Falsifiable: synthetic intent space = points\
+  \ in a low-dim lattice; each request has a true target cell; enum = chosen K-subset\
+  \ of cells; GT = true-target-in-enum-or-not + which-action-correct (harness-owned).\
+  \ Model the LM pre-mask preference as a softmax over a FIXED similarity kernel (request\
+  \ vs candidate tokens, temp+calibrated-noise). Tested signal reads ONLY the emitted\
+  \ masked-argmax/sampled token + schema-validity bit, NEVER the GT label. Baseline\
+  \ A greedy-mask; Baseline B STRONGEST = GAD-style faithful renorm over in-grammar\
+  \ support (shown still wrong-but-valid when true target not-in-enum); Mitigation\
+  \ C escape-hatch 'other'/ASK_USER (measure escape-recall vs nearest-distractor gap);\
+  \ Monitor = schema-validate+retry (recall=0 by construction). Sweeps: K in {3,5,10,20,50};\
+  \ neighbor-gap low->high; out-of-set fraction. PREDICT: misroute-rate up as K down\
+  \ + neighbor-gap down; validity-monitor-recall=0; GAD recovers ~0 of the out-of-set\
+  \ gap; escape-recall decreasing in proximity. ORCHESTRATOR GUARDS: (1) anti-tuned-knob\
+  \ \u2014 derive K-dependence from a FIXED kernel + report robustness across kernel\
+  \ temps/noise (don't manufacture the cardinality effect); (2) keep the escape-hatch\
+  \ claim SCOPED to the proximity-dependence curve, NOT 'escape hatch useless'. HONEST-NEGATIVE:\
+  \ misroute flat in K/gap, OR GAD recovers it, OR escape-recall high+proximity-independent\
+  \ -> falsified. Topic: eval-and-safety x agentic-systems. L1: real LMs (Llama-3.1-8B/Qwen2.5-7B)\
+  \ + real constrained backend (Outlines/XGrammar/vLLM guided JSON) on a BFCL/ToolBench\
+  \ slice + held-out out-of-set requests -> misroute-rate vs K + vs embedding-distance,\
+  \ validity-monitor recall (~0), real GAD/ASAp gap-recovery (~0 out-of-set), escape-hatch\
+  \ recall vs distractor proximity."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0062 result, then ros exp complete --exp EXP-0062 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0062
+created_at: '2026-06-03T23:09:39Z'
+last_updated: '2026-06-03T23:10:05Z'

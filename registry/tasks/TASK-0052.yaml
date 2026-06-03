@@ -1,0 +1,35 @@
+task_id: TASK-0052
+kind: research
+parent: orchestrator-r5-001
+assignee: researcher-0060
+session_id: ''
+project_id: PROJ-0025
+claim_id: CLAIM-0055
+exp_id: EXP-0062
+status: open
+summary: 'L0: constrained-decoding support-removal misroute. Synthetic lattice intent
+  space; enum=K-subset; out-of-set requests forced to nearest in-enum member. Baseline
+  A greedy-mask, B STRONGEST=GAD-style faithful renorm (must STILL misroute when target
+  not-in-enum), C escape-hatch (escape-recall vs proximity). Monitor schema-validate+retry=recall0
+  by construction. Sweep K{3,5,10,20,50} x neighbor-gap x out-of-set-frac. PREDICT
+  misroute up as K down + gap down; GAD recovers ~0; escape-recall decreasing in proximity.
+  GUARDS: FIXED kernel + robustness across temps (anti-tuned-knob); escape claim SCOPED
+  to proximity curve. anti-circular (monitor sees emitted token+validity only, never
+  GT). PERSISTENT-SEEDER loop'
+evidence_delta: ''
+opened_at: '2026-06-03T23:10:05Z'
+updated_at: '2026-06-03T23:10:05Z'
+closed_at: ''
+history:
+- ts: '2026-06-03T23:10:05Z'
+  event: open
+  by: orchestrator-r5-001
+  note: 'L0: constrained-decoding support-removal misroute. Synthetic lattice intent
+    space; enum=K-subset; out-of-set requests forced to nearest in-enum member. Baseline
+    A greedy-mask, B STRONGEST=GAD-style faithful renorm (must STILL misroute when
+    target not-in-enum), C escape-hatch (escape-recall vs proximity). Monitor schema-validate+retry=recall0
+    by construction. Sweep K{3,5,10,20,50} x neighbor-gap x out-of-set-frac. PREDICT
+    misroute up as K down + gap down; GAD recovers ~0; escape-recall decreasing in
+    proximity. GUARDS: FIXED kernel + robustness across temps (anti-tuned-knob); escape
+    claim SCOPED to proximity curve. anti-circular (monitor sees emitted token+validity
+    only, never GT). PERSISTENT-SEEDER loop'
