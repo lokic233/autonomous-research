@@ -1,0 +1,71 @@
+verdict_id: VERDICT-0034
+claim_id: CLAIM-0037
+project_id: PROJ-0008
+date: '2026-06-03'
+experiment_ids:
+- EXP-0033
+experiment_paths:
+- experiments/2026-06-03/EXP-0033
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- (none fatal) strong form FALSIFIED (monitor ties/loses to agent self-confidence
+  -0.006 CI[-0.011,-0.001])
+- weak form (failure progression signature DISTINCT from intrinsic difficulty +0.095
+  AUC + real lead time) SURVIVES but novelty UNVERIFIED
+- "the entire (B)-vs-self-confidence falsification rests on a SINGLE unchosen sigma_conf\
+  \ value (theory_skeptic) \u2014 a cheap L0 sweep could move the flip-point"
+- "prior-art sweep INCOMPLETE (novelty_killer egress-blocked): AgentBoard progress-rate\
+  \ / step-level PRMs / online-LLM-as-Judge may already do online lead-time trajectory\
+  \ scoring \u2014 if so the weak form degrades to RELABELING/red"
+- "matched-flag-rate comparison omits the dominant production online-trajectory-eval\
+  \ baseline (PRM / online LLM-as-Judge) \u2014 beating static difficulty is necessary\
+  \ but insufficient"
+required_evidence:
+- '1. CHEAP L0 sigma_conf sensitivity sweep (highest-value, L0-budget): find the flip-point
+  where monitor equals/beats self-confidence'
+- "is it within published LLM-miscalibration ranges? \u2014 BLOCKER before any L1"
+- "2. Live >=2-source prior-art check: does AgentBoard progress-rate / step-level\
+  \ PRM / online-LLM-as-Judge already do online lead-time-measured trajectory scoring?\
+  \ If yes -> weak form is relabeling -> RED \u2014 BLOCKER before any L1"
+- "3. L1 real-trace validation w/ REAL (miscalibrated) self-confidence (the only load-bearing\
+  \ novel claim \u2014 currently a hypothesis): real agent failure traces (tau-bench/AppWorld/SWE-agent)\
+  \ + real verbalized/logprob confidence w/ its true miscalibration + difficulty baseline"
+- 4. PRM + online-LLM-as-Judge early-stopping baselines at matched flag-rate
+map_delta_proposals:
+- CLAIM-0037 -> WEAKENED-PARTIAL-NEGATIVE
+- strong form FALSIFIED (does not beat self-confidence)
+- "weak form (distinct-from-difficulty + lead time) SURVIVES but novelty UNVERIFIED.\
+  \ L1 candidate IFF (a) cheap sigma_conf sweep shows flip-point within published\
+  \ miscalibration ranges AND (b) live prior-art clears PRM/AgentBoard/online-judge.\
+  \ Two CHEAP L0-budget blockers gate the GPU L1 \u2014 do the cheap follow-up FIRST.\
+  \ Anti-pattern screening WORKED (cleared the relabeling test that killed CLAIM-0015)"
+baseline_requirements:
+- "Process Reward Models / step-level PRMs (Lightman 2023) \u2014 industry online\
+  \ trajectory scorer"
+- Online LLM-as-Judge early-stopping (Zheng 2023)
+- "AgentBoard progress-rate (Ma NeurIPS24) \u2014 closest published online progression\
+  \ signal"
+- generic per-trajectory difficulty (already beaten +0.095)
+- agent self-confidence (already ties/wins)
+committee_run_dir: experiments/2026-06-03/EXP-0033/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T10:00:00Z'
