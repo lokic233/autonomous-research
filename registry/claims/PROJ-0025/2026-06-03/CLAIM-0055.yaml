@@ -79,15 +79,12 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: 'HELD/YELLOW pending a make-or-break real-LM L1 (VERDICT-0053). L0 =
-  definitions+bounds NOT behavior (R1/R3/R4 tautological; conceptual novelty survives:
-  support-removal=GAD-irrecoverable failure class + monitorability-collapse framing
-  + gap vs 2409.00113). L1 (carries ALL empirical weight, must be FALSIFIABLE): real
-  LMs+real constrained backend on BFCL/ToolBench OOS + (2) unconstrained causal baseline
-  + (3) semantic monitor + (4) real-logit monotonicity + (5) complete prior-art. HANDED
-  TO r6.'
+lifecycle_state: experiment_running
+next_action: "L1 EXP-0063 dispatched (GT-0004, researcher-0061 on H100): cost-aware\
+  \ staged \u2014 unconstrained-causal baseline FIRST, then semantic-monitor, then\
+  \ (K,gap)+monotonicity. GREEN if all survive, honest cap if any fails"
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0063
 created_at: '2026-06-03T23:09:39Z'
-last_updated: '2026-06-03T23:38:19Z'
+last_updated: '2026-06-03T23:48:12Z'
