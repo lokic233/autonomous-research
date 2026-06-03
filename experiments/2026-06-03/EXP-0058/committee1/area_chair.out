@@ -1,0 +1,38 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE:
+  - Dense-encoder stronger-stage-1 arm (e.g., BGE/Instructor/text-embedding-3) on real or realistic registry — the ONE thing that would resolve killer #4 in its strong form and separate this from Xiao 1806.10869's recovery mechanism. ALL FIVE reviewers flagged this independently; it is the unanimous load-bearing gap.
+  - Ecological coverage measurement on real MCP/ToolBench registries: what is the empirical distribution of c (editorial-description-vs-member coverage) in shipping registries? If c≈1 (member-pooled schemas are standard), the ceiling does not bite in deployment and the contribution collapses to a synthetic curiosity.
+  - Explicit formal positioning vs. collection-selection theory (Kulkarni&Callan selective search, Si&Callan ReDDE big-document model, Callan&Connell query-based sampling): the "editorial-aggregate coverage gap" must be shown to be structurally distinct from "lossy/sampled shard representation incompleteness," not merely renamed. The novelty_killer and theory_skeptic both identify this as the primary novelty risk, and neither could confirm or kill it to the ≥2-source standard.
+  - TOST/equivalence-test on the STRONG_S1-vs-2STG null (theory_skeptic): failure-to-reject ≠ equivalence; report an equivalence bound and power analysis at L1.
+
+MANDATORY_BASELINES:
+  - Dense embedding stage-1 router (BGE, Instructor, or text-embedding-3) in two-stage pipeline (evaluation_prosecutor, novelty_killer, theory_skeptic)
+  - Pooled-member-schema stage-1 router (concatenate/pool member tool schemas as server representation — the ReDDE "big-document" regime) vs. editorial-blurb router vs. flat (systems_reviewer, product_realist)
+  - Real MCP/ToolBench registry with as-written editorial descriptions, not synthetic (systems_reviewer, product_realist)
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0052", change: "status HELD/L0 -> YELLOW/conditional-on-L1; add required_L1_conditions: [dense-encoder-arm, ecological-coverage-audit, collection-selection-positioning, TOST-equivalence]; retain L0 result as valid-synthetic-support"}
+
+PRIOR_ART_ADEQUATE: no
+  Three sources verified by fetch (Xiao 1806.10869, MCP-Zero 2506.01056, ToolRerank 2403.06551). However: (i) the load-bearing collection-selection collision (Kulkarni&Callan, ReDDE, query-based sampling) was asserted from background knowledge, NOT confirmed in ≥2 independent live sources — WebSearch egress was blocked during the novelty_killer's session; (ii) no sweep was run for dense-encoder tool-routing work beyond the named papers. Per committee rules, prior-art adequacy requires ≥2-source verification of claimed collisions; this threshold was not met for the single most important overlap (collection-selection). This alone prevents GREEN.
+
+RATIONALE:
+Unanimous 5/5 YELLOW. The L0 experiment is unusually clean for this pipeline — honest pre-registration, boundary controls (c=1.0→gap=0, m=S→gap=0), 100% mechanism attribution, and the load-bearing killer #4 was tested (not deferred). That earns respect and is why no reviewer voted RED.
+
+But the committee converges on THREE independent reasons the claim cannot be GREEN at L0:
+
+(1) THE LEXICAL-ONLY #4 ARM IS THE DEFINING WEAKNESS. Every reviewer flagged it. The claim's differentiator from Xiao 1806.10869 (recoverable vocab-mismatch) is "NOT closed by a stronger stage-1 representation." But the L0 tests only lexical (IDF + query expansion) stronger-stage-1. As the theory_skeptic notes, a lexical matcher failing to recover a literally-absent token is algebraically forced — it is a tautology of the test design, not evidence about representational power in general. Xiao 1806.10869 (verified by fetch) is precisely the result showing neural representations recover recall that lexical indices miss by exploiting semantic neighbors. The L0 therefore defeats a strawman (evaluation_prosecutor's term), not the alternative hypothesis that defines the recovery claim. The differentiator is ASSERTED, not earned, until a dense encoder is tested and still fails. This is the single most important L1 requirement.
+
+(2) THE COLLECTION-SELECTION OVERLAP IS SERIOUS AND UNRESOLVED. The novelty_killer identifies that "top-m of S shards with lossy/sampled shard representations caps recall independent of scoring function" is the classical selective-search/resource-selection phenomenon. The theory_skeptic independently derives that the "unbounded in S" scaling is basic top-k combinatorics (P ∝ m/S under zero discriminative signal). The packet provides no closed-form distinction (by its own admission) and no formal separation from the ReDDE big-document model or query-based sampling. The "editorial AGGREGATE" may simply be the "sampled shard representation" of collection-selection theory with agentic-systems vocabulary applied. This overlap was not verified to the ≥2-source standard (egress blocked), preventing a definitive collision call — but it equally prevents a clean-novelty call.
+
+(3) ECOLOGICAL VALIDITY IS ZERO. The product_realist and systems_reviewer both note: no evidence that real MCP/agent registries route on under-covered editorial blurbs. The systems_reviewer's OSS sweep found mcp-tool-search (shipping MCP proxy) pools all member tool definitions flat — implementing the packet's own mitigation as default behavior. If real routing is member-pooled (the ReDDE big-document regime), coverage→1 and the ceiling does not bite. The packet's own stress-test questions (a) and (c) flag this honestly, but do not resolve it. The +0.467 gap at c=0.5 is a property of the synthetic generator's coverage regime, not a measured property of any real system.
+
+WHAT YELLOW MEANS FOR THE PIPELINE: The L0 is RETAINED as valid synthetic support — it demonstrates the mechanism cleanly in its regime. The claim advances to L1 with three hard gates: (i) dense-encoder arm that still fails to close the gap; (ii) empirical coverage audit on real MCP/ToolBench registries showing c<1 in practice; (iii) formal positioning vs. collection-selection that identifies what is structurally new beyond vocabulary and application domain. If all three pass, this is GREEN-promotable. If (i) fails (dense encoder closes the gap), the claim is KILLED as recoverable vocab-mismatch per Xiao. If (ii) fails (c≈1 in practice), the claim is WEAKENED to a synthetic-only result with no deployment relevance. If (iii) fails (no formal distinction from selective-search), the claim is DOWNGRADED to application-novelty (known mechanism, new domain).
+
+The packet is one of the cleanest L0s in the v3 expansion. The committee is not punishing quality — it is requiring that the strongest claim ("NOT closed by a stronger stage-1") be tested against its strongest alternative (dense encoders), not its weakest (lexical reweighting). v001.
+```
