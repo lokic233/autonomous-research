@@ -1,0 +1,60 @@
+Web/external search tools are not permission-granted in this environment, so I could not run a live query. I'm grounding the prior-art citations in retrievable arXiv IDs / public leaderboards from my own knowledge and flagging this limitation honestly.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Huang et al., MetaTool Benchmark: Deciding Whether to Use Tools and Which to Use, 2023",
+   url: "https://arxiv.org/abs/2310.03128",
+   why_close: "Has an explicit 'similar tools' selection subset showing LLMs reliably mis-select among
+   semantically-overlapping tool descriptions. This IS the claim's core descriptive phenomenon
+   (overlap of tool name/desc -> selection error) already named, measured, and benchmarked."}
+- {cite: "Berkeley Function-Calling Leaderboard (BFCL), Gorilla team, 2024",
+   url: "https://gorilla.cs.berkeley.edu/leaderboard.html",
+   why_close: "'multiple-function' / 'parallel-multiple' categories exist precisely because choosing the
+   correct tool from a confusable candidate set is a distinct, measured failure mode; accuracy drops as
+   the candidate set grows/overlaps — the K-dependence EXP-0035 rediscovers (worse at K>=6)."}
+- {cite: "Patil et al., Gorilla, 2023", url: "https://arxiv.org/abs/2305.15334"} and
+  {cite: "Qin et al., ToolLLM/ToolBench, 2023", url: "https://arxiv.org/abs/2307.16789",
+   why_close: "Tool RETRIEVAL via semantic embedding similarity of tool docs — the exact 'schema
+   geometry' representation, used to RANK/select tools. Schema cosine as a tool-confusability signal is
+   reused machinery, not a new representation. (Packet concedes this.)"}
+- {cite: "Kadavath et al., Language Models (Mostly) Know What They Know, 2022",
+   url: "https://arxiv.org/abs/2207.05221",
+   why_close: "Establishes self-logprob/self-eval as a strong correctness predictor — the exact baseline
+   the claim's load-bearing novelty had to beat, and didn't."}
+
+NAMING_VS_MECHANISM: Almost entirely NAMING. "Tool-selection confusability from schema geometry" renames
+the already-published 'similar tools cause selection errors' phenomenon (MetaTool similar-tool subset +
+BFCL multiple-function). The ONLY genuine mechanism delta claimed was "cheap pre-call schema-overlap adds
+predictive signal BEYOND the agent's own tool-choice logprob." EXP-0035 falsifies that delta directly:
+delta-AUC(logprob+schema vs logprob) <=0 in 11/12 cells, strictly <0 (schema HURTS) in 7/12, only touches
+0 when logprob is artificially noised. Remove the failed delta and nothing novel remains — it is a noisier
+re-expression of (a) a generic difficulty predictor (CI<0 in all 12 cells) and (b) self-logprob.
+
+FATAL_COLLISIONS:
+- The descriptive claim "schema/description overlap predicts wrong-tool selection above chance" collides
+  with MetaTool (2310.03128, similar-tool subset) AND BFCL multiple-function category — TWO independent
+  sources, collision verified per the ≥2-source bar.
+- The representation ("pairwise cosine of tool name+desc+params as a confusability geometry") collides
+  with embedding-based tool retrieval in Gorilla (2305.15334) and ToolLLM (2307.16789).
+- No exact prior-art collision exists for the narrow "adds beyond self-logprob" delta — but that is moot:
+  it is the one piece L0 empirically killed (relabeling). There is no surviving novel mechanism to defend.
+
+MANDATORY_RELATED_WORK: MetaTool (2310.03128); BFCL/Gorilla leaderboard; Gorilla (2305.15334);
+ToolLLM/ToolBench (2307.16789); Kadavath et al. (2207.05221). An L1 author MUST cite all five and state
+explicitly what is left after subtracting them — currently nothing.
+
+RATIONALE: The mandate is to kill weak novelty. The intended contribution decomposes into (1) a
+descriptive phenomenon that is already named/benchmarked in >=2 independent sources (MetaTool similar-tool
+subset + BFCL multiple-function), and (2) a single incremental mechanism delta — "schema overlap adds
+beyond self-logprob" — which EXP-0035 falsifies cleanly (delta-AUC CI<=0 in 11/12 cells, <0 in 7/12;
+self-logprob, per Kadavath 2207.05221, already integrates confusability + difficulty). The representation
+itself is recycled tool-retrieval machinery (Gorilla/ToolLLM). Post-subtraction novelty = naming only. The
+proposed L1 (real sentence-embeddings) cannot resurrect novelty: it would, at best, recover more of the
+descriptive (already-published) signal, while the load-bearing 'beyond-logprob' delta is exactly the part a
+better schema feature is least likely to win, since the agent's logprob sees the same confusability. RED:
+no defensible mechanism novelty survives. (Caveat: live web search was permission-blocked; collisions are
+cited to retrievable arXiv IDs / public leaderboard from prior knowledge, not a fresh query — the two
+load-bearing collisions, MetaTool + BFCL, are independent and verifiable.)
+```
