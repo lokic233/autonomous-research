@@ -1143,7 +1143,8 @@ c04e1de. Both v2 + v3 share the engine; future verdicts on both get traceability
 verdicts unchanged. LESSON: a schema field that exists but is never populated is a silent maturity gap —
 diff against the golden reference on VALUES, not just key presence.
 
-## BUG-81 — committee_run_dir points at stale pass-1 committee on two-pass verdicts (traceability/false-fabrication)
+## BUG-82 — committee_run_dir points at stale pass-1 committee on two-pass verdicts (traceability/false-fabrication)
+> NOTE: filed as BUG-81 in engine commit bbd6138 / buglog commit 475ce05, but BUG-81 collided with a concurrent fix (lanes DESIGN signal, engine 5cb927d) filed at ~08:28Z by the orchestrator-side debugger. Renumbered to **BUG-82** here for a unique ledger ID. Engine commit message bbd6138 still says BUG-81 (immutable history) — refer to it by hash bbd6138.
 - **Found:** v3 ACTIVE-DEBUG 2026-06-03 ~08:25Z (Navi lead v3 debugger). Surface: two-pass committee timing + verdict idempotency/traceability.
 - **Symptom:** VERDICT-0024 (PROJ-0004, CLAIM-0015) cites experiments [EXP-0020, EXP-0022] and records reviewer_votes = 6×red (override_rule:false, unanimous). Its `committee_run_dir` pointed at `experiments/2026-06-03/EXP-0020/committee1` — the PASS-1 (L0) committee, which voted 5×yellow + 1×red. The actual recorded 6-red votes come from PASS-2 `EXP-0022/committee2`. A votes-vs-.out integrity auditor checking against the recorded committee_run_dir would see 6red(verdict) vs 5yellow(.out) and (wrongly) cry CRITICAL fabrication.
 - **Root cause:** `_infer_committee_dir(root, exp_paths)` (ros.py, BUG-80 helper) iterated cited exps in order and returned `committee*` of the FIRST cited experiment only. Two-pass verdicts cite L0 first, L1 second — so it returned the L0/pass-1 committee, not the pass-2 committee whose votes the verdict actually records.
