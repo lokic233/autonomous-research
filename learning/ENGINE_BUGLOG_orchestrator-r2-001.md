@@ -1258,3 +1258,20 @@ and TASK-T01 -> status: done, by: exp-gc. No-task instance: clean, no crash.
 
 Engine main 8826d4f. v2 is the bar; engine is shared, so this latent gap existed for v2 too (v2 just
 hasn't tripped it because its mature researchers complete cleanly).
+
+## BUG-87: reaper silently "supersedes" unknown/empty-role lingering agents → swallowed coverage gap
+**Commit:** 2e4a01f (research-os main) | **File:** engine/supervise.py reap() | **Found:** v3 ACTIVE-DEBUG 2026-06-03 ~09:45Z
+**Surface:** reap unknown-role agents.
+**Bug:** `reap()` builds `live_fresh` keyed by `key(a)=(project_id, role)`. Agents with an empty/unknown
+role collapse into one shared `(project,"")` bucket, so a *fresh* unknown-role agent falsely **supersedes**
+an *unrelated* stale unknown-role agent on the same ACTIVE project. The stale agent is flipped to
+`superseded` instead of `dead`, so its coverage gap is swallowed with **NO `AGENT_DOWN` notify** to the
+orchestrator — a real dead-agent gap goes unsurfaced.
+**Repro (isolated /tmp):** two empty-role agents on ACTIVE PROJ-0099 (one fresh, one 120m stale) →
+stale-ghost flipped to `superseded by fresh-helper`, NOTIFS empty.
+**Fix (minimal):** only well-roled live agents (`role` non-empty and != "unknown") are eligible to populate
+`live_fresh` / supersede. Unknown-role lingerers fall through to the existing DEAD/retired path so genuine
+gaps surface. No new mechanism; relies on BUG-10 (roles never downgrade to unknown).
+**Verified:** post-fix repro → stale-ghost → `dead` + `AGENT_DOWN` notify under --apply; genuine
+role-versioned supersession (researcher-0001 ← researcher-0002) regression still passes. AST OK.
+Shared engine ⇒ latent in v2 too, but v2 always assigns real roles so it rarely fires; fix safe for both.
