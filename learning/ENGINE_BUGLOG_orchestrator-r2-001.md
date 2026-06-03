@@ -1142,3 +1142,12 @@ experiments/2026-06-03/EXP-0023/committee1, EXP-0022 -> .../committee2, missing/
 c04e1de. Both v2 + v3 share the engine; future verdicts on both get traceability for free, existing
 verdicts unchanged. LESSON: a schema field that exists but is never populated is a silent maturity gap —
 diff against the golden reference on VALUES, not just key presence.
+
+## BUG-81 — committee_run_dir points at stale pass-1 committee on two-pass verdicts (traceability/false-fabrication)
+- **Found:** v3 ACTIVE-DEBUG 2026-06-03 ~08:25Z (Navi lead v3 debugger). Surface: two-pass committee timing + verdict idempotency/traceability.
+- **Symptom:** VERDICT-0024 (PROJ-0004, CLAIM-0015) cites experiments [EXP-0020, EXP-0022] and records reviewer_votes = 6×red (override_rule:false, unanimous). Its `committee_run_dir` pointed at `experiments/2026-06-03/EXP-0020/committee1` — the PASS-1 (L0) committee, which voted 5×yellow + 1×red. The actual recorded 6-red votes come from PASS-2 `EXP-0022/committee2`. A votes-vs-.out integrity auditor checking against the recorded committee_run_dir would see 6red(verdict) vs 5yellow(.out) and (wrongly) cry CRITICAL fabrication.
+- **Root cause:** `_infer_committee_dir(root, exp_paths)` (ros.py, BUG-80 helper) iterated cited exps in order and returned `committee*` of the FIRST cited experiment only. Two-pass verdicts cite L0 first, L1 second — so it returned the L0/pass-1 committee, not the pass-2 committee whose votes the verdict actually records.
+- **Integrity verdict:** NO fabrication. committee2 = 6×red (5 reviewers + area_chair FINAL_VERDICT:red) exactly matches VERDICT-0024. Genuine two-pass hostile science: yellow at L0 simulator → red after real H100 L1 refutation (within-domain prompt-ppl AUC 0.456–0.591 at/below chance; headline 0.838 carried by domain-tag lookup; relabel test +0.025 AUC within CV noise; skip-decode cost-win arithmetically negative). Clean negative, no false green.
+- **Fix:** scan `committee*` dirs across ALL cited exps, return the globally-newest by mtime (= the final pass that produced the recorded votes). Minimal; pure read. v2 names committee dirs explicitly per-run so was never exposed — this is a v3 two-pass-inference-specific divergence from the v2 bar.
+- **Validation:** AST OK; functional check resolves VERDICT-0024 → `experiments/2026-06-03/EXP-0022/committee2` (was committee1).
+- **Commit:** research-os main `bbd6138`. Shared engine — benefits both instances.
