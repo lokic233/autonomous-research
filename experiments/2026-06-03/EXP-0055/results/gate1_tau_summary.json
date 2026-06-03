@@ -1,0 +1,41 @@
+{
+  "base_cap512": {
+    "n": 220,
+    "tau_b": 0.21400542042365017,
+    "p": 2.4861864582579373e-05,
+    "ci95": [
+      0.09546078708698864,
+      0.326235440392641
+    ],
+    "spearman": 0.31533276337403743,
+    "n_censored": 92
+  },
+  "hicap_cap4096": {
+    "n": 220,
+    "tau_b": 0.27584300441168397,
+    "p": 1.4041933004554368e-08,
+    "ci95": [
+      0.1658080496737366,
+      0.38535123928810283
+    ],
+    "spearman": 0.397061294675609,
+    "n_censored": 47
+  },
+  "hicap_drop_censored": {
+    "n": 173,
+    "tau_b": 0.15109998468592786,
+    "ci95": [
+      0.02031216454765645,
+      0.27279065988982953
+    ]
+  },
+  "tau_star_L0_band": [
+    0.43,
+    0.8
+  ],
+  "model": "Qwen3-VL-4B-Instruct",
+  "option": "A (real VLM, synthetic perception+reasoning mix)",
+  "decision_rule_prereg": "GATE-1 PASSES iff measured tau CI-upper < +0.43",
+  "gate1_ci_upper_hicap": 0.38535123928810283,
+  "gate1_literal_pass": true
+}

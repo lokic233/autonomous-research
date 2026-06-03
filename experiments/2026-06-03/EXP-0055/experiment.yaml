@@ -12,12 +12,27 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "L1 staged 4-gate. GATE-1 (load-bearing, Option A real Qwen3-VL-4B,\
+  \ n=220 perception+reasoning mix): measured Kendall-tau_b(input_tokens,decode)=+0.276\
+  \ [+0.166,+0.385] (p=1.4e-8, B=5000) -> PASSES pre-reg rule (CI-upper 0.385<tau*=0.43;\
+  \ real tau in L0 harmful region). BUT honest caveat: tau is POSITIVE not the assumed\
+  \ ~0/negative; input-length is a moderately informative proxy on real VLM mixes,\
+  \ weakening the claim's spirit. GATE-2 (continuous-batching iteration-level sim\
+  \ at real tau, empirical decode marginals): SJF/FCFS p99 regression COLLAPSES at\
+  \ realistic batch (B>=32-64: ratio ~1.0; B=128 rho0.9=0.99); SURVIVES >=1.2x ONLY\
+  \ at small batch (B<=16 hi-load; B<=48 at rho0.95). Confirms committee concern (a):\
+  \ M/G/1 OVERSTATED HOL blocking. GATE-3: all ratios+tau bootstrap CI'd. GATE-4:\
+  \ effect ENTIRELY conditional on heavy decode tail (sigma=1.0->1.19x; sigma<=0.75->1.00).\
+  \ Disposition: keep-exploring leaning weaken \u2014 marginal regime-bounded foothold\
+  \ (small-batch+heavy-tail+hi-load), NOT robust at realistic vLLM serving params.\
+  \ Known robustness regime (Lykouris-Vassilvitskii/Purohit) not regime discovery.\
+  \ Artifacts: experiments/2026-06-03/EXP-0055/results/{REPORT.md,gate1_tau_summary.json,gate234_results.json,gate_refine.json};\
+  \ raw on devgpu014:~/exp0055/."
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0055/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T21:22:38Z'
 prompt_version: ''
