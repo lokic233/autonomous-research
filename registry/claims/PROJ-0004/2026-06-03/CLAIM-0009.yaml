@@ -37,13 +37,16 @@ negative_evidence:
     \ with early-exit overhead. Prior art: CALM, LayerSkip, SkipDecode, Depth-Adaptive\
     \ Transformer."
   data_path: experiments/2026-06-03/EXP-0011/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0010
+  date: '2026-06-03'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r1-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0011; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0010=red: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T00:12:03Z'
-last_updated: '2026-06-03T00:21:22Z'
+last_updated: '2026-06-03T01:01:42Z'

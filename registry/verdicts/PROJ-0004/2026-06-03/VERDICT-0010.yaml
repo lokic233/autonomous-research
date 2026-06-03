@@ -1,0 +1,65 @@
+verdict_id: VERDICT-0010
+claim_id: CLAIM-0009
+project_id: PROJ-0004
+date: '2026-06-03'
+experiment_ids:
+- EXP-0011
+experiment_paths:
+- experiments/2026-06-03/EXP-0011
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "Part B (structure-aware per-class threshold \u2014 the ONLY novel contribution)\
+  \ DEAD by the experiment's own pre-registered honest-negative N1: +0.46pp over best-tuned-global\
+  \ at realistic f, 0/90 clear the 5pp bar (Jensen floor). Unanimous"
+- "Part A (agentic>reasoning ~4.6pp) HELD but delivered ENTIRELY by the GLOBAL policy\
+  \ \u2014 published early-exit applied to agentic traces, not the claimed structure-aware\
+  \ mechanism"
+- rebranding Part A as deliverable is a goalpost shift
+- "Mechanism is NAMING-only vs CALM (Schuster22, per-token confidence threshold \u2014\
+  \ per-class tau is a strictly coarser discretization) + Depth-Adaptive Transformer\
+  \ (Elbayad20)"
+- collision verified >=2 sources AND reproduced in-experiment (Jensen floor)
+- Constrained/guided decoding (Outlines, Willard&Louf23
+- "jsonformer) UNCITED and undercuts the premise \u2014 grammar-forced scaffolding\
+  \ tokens need ZERO adaptive-depth tuning (compute-free under structured generation)"
+required_evidence:
+- "Real-model L1 per-class intermediate-LM-head confidence saturation depth on real\
+  \ agentic traces (testing whether CALM continuous thresholds already capture the\
+  \ full benefit \u2014 Jensen-floor + EXP-0006 precedent make reversal unlikely)"
+- Empirical boilerplate fraction f on production tool-calling traces (assumed 0.2-0.35,
+  never measured)
+- Sequence-level matched quality (tool-call pass@1/exact-match), not token-level error
+  budget
+- GPU wall-clock incl intermediate-head overhead + ragged batching + KV effects
+map_delta_proposals:
+- 'CLAIM-0009 -> NEGATIVE (red): Part B (novel per-class threshold) dead at pre-registered
+  bar by own honest verdict (Jensen floor, reproduces EXP-0006 grammar-region failure
+  mode)'
+- Part A (agentic>reasoning) real but delivered by GLOBAL policy = application of
+  published methods, not a mechanism contribution
+- CALM subsumes per-class tau
+- Outlines undercuts boilerplate premise. Converged, no L1 under current claim
+baseline_requirements:
+- "CALM (Schuster22 arXiv 2207.07061) \u2014 continuous-threshold baseline that subsumes\
+  \ per-class tau"
+- LayerSkip (Elhoushi24 arXiv 2404.16710)
+- Depth-Adaptive Transformer (Elbayad20 arXiv 1910.10073)
+- "Constrained decoding/Outlines (Willard&Louf23) \u2014 grammar-forced tokens already\
+  \ compute-free, must cite before any boilerplate-efficiency claim"
+created_at: '2026-06-03T01:01:42Z'

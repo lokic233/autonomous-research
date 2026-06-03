@@ -1,0 +1,43 @@
+```
+ROLE: area_chair
+PROMPT_VERSION: v001
+
+FINAL_VERDICT: red
+
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: red, product_realist: red}
+
+FATAL_OBJECTIONS:
+- Part B (structure-aware per-class threshold — the ONLY novel contribution under test) is DEAD by the experiment's own pre-registered honest-negative branch N1: +0.46pp over best-tuned global at realistic f, 0/90 configs clear the 5pp bar, Jensen floor. This is unanimous across all 5 reviewers and confirmed by the packet's own VERDICT. No reviewer rebuts this; no evidence exists to rebut it.
+- Part A (agentic > reasoning, ~4.6pp) is HELD in the model but is delivered entirely by the GLOBAL policy — i.e., it is "published early-exit method applied to agentic traces," not the claimed structure-aware mechanism. Rebranding Part A as the deliverable is a goalpost shift from the pre-registered hypothesis (theory_skeptic, novelty_killer). Part A cannot rescue a GREEN or YELLOW for CLAIM-0009 as stated.
+- Mechanism is NAMING-only, not a delta over CALM (Schuster 2022) / Depth-Adaptive Transformer (Elbayad 2020): per-class tau is a strictly coarser discretization of CALM's continuous per-token confidence threshold (novelty_killer). Collision verified in ≥2 independent published sources AND reproduced in-experiment (Jensen floor). Anti-hallucination bar met.
+- Constrained/guided decoding (Outlines — Willard & Louf 2023; jsonformer) is UNCITED and directly undercuts the premise that boilerplate scaffolding tokens are where savings live — grammar-forced tokens need zero adaptive-depth tuning (novelty_killer). This is an unrebutted collision.
+
+REQUIRED_EVIDENCE:
+- Real-model L1 measurement of per-class intermediate-LM-head confidence saturation depth on actual agentic traces (all reviewers agree this is owed; packet concedes it in LIMITATIONS #1)
+- Empirical boilerplate fraction f on production tool-calling traces (assumed 0.2–0.35, never measured; theory_skeptic, product_realist)
+- Sequence-level matched quality (tool-call pass@1 / exact match), not token-level error budget (evaluation_prosecutor, theory_skeptic)
+- GPU wall-clock speedup including intermediate-head overhead, ragged batching, KV-cache effects (evaluation_prosecutor, product_realist, systems_reviewer)
+
+MANDATORY_BASELINES:
+- CALM (Schuster et al. 2022, arXiv:2207.07061) — calibrated per-token confidence early-exit; the continuous-threshold baseline that subsumes per-class tau
+- LayerSkip (Elhoushi et al. 2024, arXiv:2404.16710) — self-speculative early-exit with real GPU implementation
+- Depth-Adaptive Transformer (Elbayad et al. 2020, arXiv:1910.10073) — per-token adaptive depth
+- Constrained decoding / Outlines (Willard & Louf 2023, arXiv:2307.09702) — grammar-forced tokens are already compute-free under structured generation; must be cited before any boilerplate-efficiency claim
+
+MAP_DELTA_PROPOSAL:
+  node: CLAIM-0009
+  change: status -> NEGATIVE (red). Part B (the novel structure-aware per-class threshold) is dead at pre-registered bar by experiment's own honest verdict; Part A (agentic > reasoning comparative) is real but delivered by global policy and is an application of published methods, not a mechanism contribution. Record as honest negative reproducing EXP-0006 grammar-region failure mode. If a follow-up is pursued, it must be a real-model L1 measurement of per-class confidence separation on agentic traces (LIMITATIONS #1), testing whether CALM-style continuous thresholds already capture the full benefit — but the Jensen-floor argument and the EXP-0006 precedent make a reversal unlikely.
+
+PRIOR_ART_ADEQUATE: no
+  Packet acknowledges CALM, Depth-Adaptive, SkipDecode, LayerSkip — good.
+  MISSING: constrained/guided decoding for structured output (Outlines / Willard & Louf 2023; jsonformer) — directly relevant because it nullifies compute cost for the exact token class (boilerplate scaffolding) that CLAIM-0009 targets as the savings lever. Cannot issue GREEN without this citation resolved.
+
+RATIONALE:
+Four RED votes and one YELLOW; no RED is rebutted by evidence. The committee is unanimous that Part B — the only novel contribution — is dead. The experiment is WELL-EXECUTED and the honest negative is a genuine contribution to the research log (the pre-registration, the Jensen-floor analysis, and the EXP-0006 reproduction are all methodologically sound). But methodological soundness does not override a negative result.
+
+The evaluation_prosecutor's YELLOW rests on Part A being potentially worth a real-model follow-up, but does not dispute Part B's death. I weigh this as a minority position that does not prevent a RED verdict: Part A is an observation ("agentic workloads benefit more from early-exit than reasoning workloads"), not the tested hypothesis. The tested hypothesis is Part B ("structure-aware per-class threshold beats best-tuned global"), which fails at the pre-registered bar by a factor of 10× (0.46pp vs 5pp).
+
+The theory_skeptic's analysis that the ~0.5pp result is a near-algebraic consequence of the model's own functional form (sigmoid confidence + confidence-tied error → Jensen floor is mechanically tight) further reduces the probability that a real-model pass would reverse the finding.
+
+Verdict: RED. CLAIM-0009 is an honest, well-documented negative. Record it, credit the methodology, close the claim.
+```

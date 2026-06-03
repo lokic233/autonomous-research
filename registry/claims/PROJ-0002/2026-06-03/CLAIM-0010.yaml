@@ -1,0 +1,38 @@
+claim_id: CLAIM-0010
+project_id: PROJ-0002
+stage: seed
+status: seed
+claim: "For long-horizon tool-calling agents, a CAUSAL retention policy that predicts\
+  \ which committed tool-result spans will be re-referenced \u2014 using only a NOISY,\
+  \ realizable past-signal proxy (decayed past-attention mass / repeat-substring hits,\
+  \ NOT the ground-truth reference process) with realistic span-boundary detection\
+  \ error \u2014 achieves a strictly better context-length / task-success Pareto than\
+  \ (a) recency-truncation AND (b) attention-based KV eviction (H2O/SnapKV-style),\
+  \ on traces where the predictor's future-reference AUC is measured (not assumed),\
+  \ with the win surviving when predictor AUC is realistically imperfect (<0.85)."
+why_it_matters: 'VERDICT-0009 RED''d CLAIM-0008 because its L0 was CIRCULAR (predictor
+  features = the trace''s generative params -> oracle-gap-zero was tautological) and
+  used an RT-only strawman baseline. The INTUITION (tool outputs verbose, sparsely+predictably
+  referenced) survived committee. This redesign breaks circularity: predict from a
+  NOISY proxy, measure real predictor AUC, and add the RIGHT baseline (H2O/SnapKV
+  attention-eviction), explicitly distinguishing Scissorhands (persistence-of-importance)
+  + ACON (real agent compression). Directly answers VERDICT-0009 required_evidence.
+  Topic: agentic-systems + inference-optimization. Honest-negative if the noisy causal
+  predictor doesn''t beat H2O/SnapKV at realistic AUC.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r2-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0012 result, then ros exp complete --exp EXP-0012 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0012
+created_at: '2026-06-03T01:02:45Z'
+last_updated: '2026-06-03T01:03:00Z'

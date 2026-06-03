@@ -1,0 +1,67 @@
+I could not execute live web search (both `three_pai_external_web_search` and `WebSearch` were permission-denied in this session). I'm grounding the prior-art assessment on published, retrievable sources from my own knowledge and the experiment's own Jensen-floor result, and I flag the no-live-search limitation explicitly.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Schuster et al. 2022, Confident Adaptive Language Modeling (CALM)",
+   url: "https://arxiv.org/abs/2207.07061",
+   why_close: "Per-token confidence-thresholded early exit. A *calibrated* confidence
+   threshold ALREADY exits low-entropy/predictable tokens at shallow layers — i.e. the
+   exact 'boilerplate saturates shallow' behavior this claim names. The per-class knob is
+   a coarse re-parameterization of CALM's continuous per-token confidence signal."}
+- {cite: "Elbayad et al. 2020, Depth-Adaptive Transformer",
+   url: "https://arxiv.org/abs/1910.10073",
+   why_close: "Per-token adaptive depth; compute conditioned on token difficulty. Second
+   independent source establishing content-conditioned depth is published prior art."}
+- {cite: "Willard & Louf 2023, Efficient Guided Generation / Outlines (also jsonformer)",
+   url: "https://arxiv.org/abs/2307.09702",
+   why_close: "NOT cited in packet. For grammar-forced tool-call scaffolding (JSON
+   delimiters, schema keys), constrained decoding masks/forces the token — these tokens
+   need ZERO adaptive-depth tuning. This directly undercuts the 'boilerplate is the win'
+   premise: the cheapest structural tokens are already free under structured decoding."}
+- {cite: "SkipDecode 2023 (arXiv:2307.02628); LayerSkip 2024 (arXiv:2404.16710)",
+   url: "https://arxiv.org/abs/2404.16710",
+   why_close: "Token-/position-conditioned layer skipping; packet correctly flags both."}
+
+NAMING_VS_MECHANISM: NAMING-only, not a mechanism delta. "Conditioning early-exit on token
+class" is a discretized special case of "conditioning early-exit on per-token confidence,"
+which CALM does continuously and optimally. Partitioning into {boilerplate, value} is a
+strictly coarser policy than CALM's per-token threshold — it cannot add mechanism, only
+remove resolution. The experiment's own L0 result proves this empirically: per-class beats
+best-tuned global by <0.5pp (0/90 clear 5pp), the Jensen floor — the global confidence
+threshold already captures the structural signal. Mechanism delta ≈ 0, by construction AND
+by measurement.
+
+FATAL_COLLISIONS:
+- CALM-style calibrated global confidence threshold already early-exits low-entropy
+  boilerplate; the class-conditioned threshold is empirically redundant (Part B NEGATIVE,
+  +0.46pp). Collision verified in ≥2 independent published sources (CALM, Depth-Adaptive
+  Transformer) AND reproduced in-experiment (Jensen-floor, matches EXP-0006).
+- Constrained/structured decoding (Outlines/jsonformer) makes grammar-determined scaffolding
+  tokens compute-free, weakening the "boilerplate fraction f is the lever" premise the whole
+  Part-B novelty rests on. Owed and uncited.
+
+MANDATORY_RELATED_WORK:
+- CALM (Schuster 2022), Depth-Adaptive Transformer (Elbayad 2020), SkipDecode (2023),
+  LayerSkip (2024) — packet already flags these; good.
+- MISSING and required: constrained/guided decoding for structured output
+  (Outlines — Willard & Louf 2023; jsonformer). Must be cited before any agentic-scaffolding
+  efficiency claim, because it already nullifies cost for the exact token class in question.
+- Optional lineage: Graves 2016 (Adaptive Computation Time) for content-conditioned compute.
+
+RATIONALE: The part actually under test (Part B: structure-aware per-class threshold vs a
+TUNED global) is the only thing that could be novel, and it is dead two ways: (1) mechanism
+is subsumed by CALM's confidence-thresholded early exit (arXiv:2207.07061) and Depth-Adaptive
+Transformer (arXiv:1910.10073) — two independent sources — so the "class-conditioned" framing
+is renaming, not a new mechanism; (2) the experiment's own pre-registered, honest L0 confirms
+it: +0.46pp over best-tuned global, 0/90 configs clear the 5pp bar, Jensen floor, an exact
+replay of the EXP-0006 grammar-region death. Part A (agentic>reasoning, ~4.6pp) is a real
+*measurement* but is delivered by the global policy and is itself not a mechanism contribution
+— it is "early exit, applied to agentic traces," which is an application of published methods.
+Additionally, constrained decoding (Outlines, arXiv:2307.09702) erodes the premise that
+boilerplate tokens are where savings live. Weak novelty: KILL. RED.
+(Limitation: live prior-art search tools were permission-denied this session; citations are
+from published-knowledge with retrievable arXiv URLs, cross-checked against the experiment's
+own Jensen result — the ≥2-source collision bar is met via CALM + Depth-Adaptive Transformer.)
+```

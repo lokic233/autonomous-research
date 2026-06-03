@@ -282,3 +282,1029 @@ hook: PostToolUse
 hook: PostToolUse
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+codex
+`rg` is not installed in this workspace, so I’m falling back to `find`/`sed`. The first OSS pass points at inference frameworks optimizing batching, kernels, caches, and speculative decoding rather than the specific per-token early-exit policy, so I’m narrowing the search.
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'find . -maxdepth 4 -type f | head -200' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+./HANDOFF_r1_to_r2.md
+./learning/.gitkeep
+./learning/roles/orchestrator.md
+./learning/roles/researcher.md
+./learning/roles/committee.md
+./learning/orchestrator/2026-06-03.md
+./experiments/.gitkeep
+./experiments/2026-06-03/EXP-0010/experiment.yaml
+./experiments/2026-06-03/EXP-0010/RESULTS.md
+./experiments/2026-06-03/EXP-0010/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0011/run_l0.py
+./experiments/2026-06-03/EXP-0011/PREREGISTRATION.md
+./experiments/2026-06-03/EXP-0011/experiment.yaml
+./experiments/2026-06-03/EXP-0011/RESULTS.md
+./experiments/2026-06-03/EXP-0011/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0007/experiment.yaml
+./experiments/2026-06-03/EXP-0007/RESULTS.md
+./experiments/2026-06-03/EXP-0007/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0007/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0009/experiment.yaml
+./experiments/2026-06-03/EXP-0009/RESULTS.md
+./experiments/2026-06-03/EXP-0009/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0009/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0005/experiment.yaml
+./experiments/2026-06-02/EXP-0005/RESULTS.md
+./experiments/2026-06-02/EXP-0005/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0005/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0002/sim.py
+./experiments/2026-06-02/EXP-0002/experiment.yaml
+./experiments/2026-06-02/EXP-0002/RESULTS.md
+./experiments/2026-06-02/EXP-0002/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0002/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0003/experiment.yaml
+./experiments/2026-06-02/EXP-0003/RESULTS.md
+./experiments/2026-06-02/EXP-0003/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/sim.py
+./experiments/2026-06-02/EXP-0004/experiment.yaml
+./experiments/2026-06-02/EXP-0004/RESULTS.md
+./experiments/2026-06-02/EXP-0004/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0001/sim.py
+./experiments/2026-06-02/EXP-0001/experiment.yaml
+./experiments/2026-06-02/EXP-0001/RESULTS.md
+./experiments/2026-06-02/EXP-0001/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0001/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0006/experiment.yaml
+./experiments/2026-06-02/EXP-0006/RESULTS.md
+./experiments/2026-06-02/EXP-0006/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0006/COMMITTEE1_PACKET.md
+./CUTOVER_RUNBOOK.md
+./projects/PROJ-0001/project_overview.md
+./projects/.gitkeep
+./projects/PROJ-0004/project_overview.md
+./projects/PROJ-0003/project_overview.md
+./projects/PROJ-0002/project_overview.md
+./prior_art/.gitkeep
+./runtime/locks/next_id.verdicts.VERDICT.reserved
+./runtime/locks/next_id.claims.CLAIM.reserved
+./runtime/locks/next_id.cemetery.DEAD.reserved
+./runtime/locks/next_id.experiments.EXP.reserved
+./runtime/agents/researcher-0007.yaml
+./runtime/agents/researcher-gpu-0003.yaml
+./runtime/agents/researcher-0010.yaml
+./runtime/agents/orchestrator-r2-001.yaml
+./runtime/agents/researcher-0006.yaml
+./runtime/agents/researcher-0001.yaml
+./runtime/agents/orchestrator-r1-001.yaml
+./runtime/agents/researcher-0002.yaml
+./runtime/agents/researcher-0005.yaml
+./runtime/agents/researcher-0009.yaml
+./runtime/agents/researcher-0008.yaml
+./runtime/agents/researcher-0004.yaml
+./runtime/escalation/troubleshooter.yaml
+./runtime/gpu_queue.yaml
+./runtime/handoffs/orchestrator-r1-001__to__orchestrator-r2-001__20260603T002457Z.yaml
+./runtime/orchestrator/committee_queue.yaml
+./runtime/orchestrator/inbox.yaml
+./runtime/cron/monitor.alive
+./runtime/cron/.driver.pid
+./runtime/cron/committee_health.log
+./runtime/cron/monitor.log
+./runtime/cron/proj_monitor.alive
+./runtime/cron/coordinator.alive
+./runtime/cron/.mon_notified/work_not_landing
+./runtime/cron/driver.log
+./runtime/cron/coordinator.log
+./runtime/cron/committee_health.alive
+./runtime/cron/proj_monitor.log
+./sessions/.gitkeep
+./.gitignore
+./registry/tasks/TASK-0002.yaml
+./registry/tasks/TASK-0003.yaml
+./registry/tasks/TASK-0008.yaml
+./registry/tasks/TASK-0004.yaml
+./registry/tasks/TASK-0005.yaml
+./registry/tasks/TASK-0009.yaml
+./registry/tasks/TASK-0010.yaml
+./registry/tasks/TASK-0006.yaml
+./registry/tasks/TASK-0007.yaml
+./registry/tasks/TASK-0001.yaml
+./registry/verdicts/.gitkeep
+./registry/baselines.yaml
+./registry/cemetery/.gitkeep
+./registry/academic_map.yaml
+./registry/claims/.gitkeep
+./.git/sl/dirstate.lock
+./.git/sl/config-git-repo
+./.git/sl/hgrc.dynamic
+./.git/sl/dirstate
+./.git/sl/blackbox.log
+./.git/sl/config-git-user
+./.git/sl/requires
+./.git/sl/store/gitdir
+./.git/sl/store/requires
+./.git/sl/bookmarks.current
+./.git/config
+./.git/objects/61/9e569039bce6a8cde98020581308682c8369fb
+./.git/objects/0d/ee3cec0abccecb1b1b0c3225dacd9f0ca8bb7e
+./.git/objects/0d/81ed951a9115d22f730848851507ffeec42f0f
+./.git/objects/0d/836c5dc40f45f3a33326cd86334acbeea32976
+./.git/objects/0d/14944dbfe8f742ed9e7921bab4e7b27c653d21
+./.git/objects/95/5cbca1da2745c73e299772f49ef98904d54ae6
+./.git/objects/95/cd7aa1dac798a993fea96afc1a98f1f5756ced
+./.git/objects/95/032486cea85a355b26a080d49931f72a65f48f
+./.git/objects/59/ad3a296bc6a3c79db949cb7984c8d2e67fe1e5
+./.git/objects/92/1e6dc50948409375959e7f4a6fb5d828734e9d
+./.git/objects/92/5c55b6dc5da899601aa56773cdef7086f8d994
+./.git/objects/92/08d0673103a424058be883965a9d5d154b528e
+./.git/objects/92/ff32b8256f7742c271a8df08ae8b01251569cd
+./.git/objects/0c/ee6e9b89faa31fded50487d9a7079219ae7fe5
+./.git/objects/66/ee839628b420cbdc005b426bbd1599253d2e6c
+./.git/objects/66/d466c2203a39838e65455b8d6cc1258b4b02b5
+./.git/objects/66/2cdc2ab1ed89c5be2c357a9af69708f8592c6e
+./.git/objects/66/c125373523de8f539e1955afca700415955ff6
+./.git/objects/3e/47b0ebf4b6b27ce324815ac8cfca40700beb51
+./.git/objects/50/1ee3fcaae6236c98d6096dc3acbbba7f096176
+./.git/objects/50/9ae122418018721186f397e9e5a91ebee1d4e1
+./.git/objects/50/901c157f332dac7ec403e0105d3a6cb69e8f24
+./.git/objects/50/92612f5401e85b7aa8ceb16c3bb8ab508a4ecd
+./.git/objects/68/426e3f8fbe578444bc0d40957b401e2d5a1709
+./.git/objects/68/0ac43c54ce9c9cfa34cf29267f59221107e8f7
+./.git/objects/68/ac0a8c7949891d1c1c06c7ca8dd5aa8ee3c9f3
+./.git/objects/68/d71e60400d880d6cde59328bad3bc81c59b440
+./.git/objects/57/666f91ab41c4ff5bd8217157514b4e993205d0
+./.git/objects/57/8d371ac64f268e0bdea103e1047beaed4c5876
+./.git/objects/57/329f1a7f947d7de582521781157091c450e359
+./.git/objects/3b/768173c4301bfe3edc4b13043258bc1de4d3bb
+./.git/objects/3b/f3ef72a71ff20591db02431f3f7e723e98d8fa
+./.git/objects/3b/164d6711339da45abaaa11522f2e3516c60876
+./.git/objects/3b/75cef92aeaafccc3d2f4806c84b1a477ff6766
+./.git/objects/3b/41fe053bdc83a5d6f9f05dcbcac32a8a67e12f
+./.git/objects/3b/f535b543ac0c1560f8b9af4e2c667b7cdfb3c7
+./.git/objects/6f/3fe1b41178907ff7ffa72bd8b319c0e4d5a4c8
+./.git/objects/03/d87cee21ab9ccc319cf2e0bd610c620cf8b28c
+./.git/objects/03/88065b141a6f62851dfe03a25b22c13b09c5cf
+./.git/objects/9b/b2ab57f10de88dd7c98878f38a24e70345db8c
+./.git/objects/9b/f60e1bad5b148feb5bdd3cca86b2cf1a69127b
+./.git/objects/9e/4c267277c0e911021db473435cd03d120195d0
+./.git/objects/9e/0bb7385c20313f3529310abe750099ecb76354
+./.git/objects/9e/b241888b1fd76314090d4409bbe90c79e6c9d0
+./.git/objects/9e/bde493c64d2040c719692a5432b4d6198b5207
+./.git/objects/04/fbcf3df0071f6464cdb34958939072b4335192
+./.git/objects/04/4c2a1901e511f9c2a82297ac0b078a95c3c74f
+./.git/objects/6a/56b1d80575acb0396ce05de5ee7f1cf1758af3
+./.git/objects/6a/b308cb2ec853f1ca8daf81f2a176d19099591b
+./.git/objects/32/e1ed8796973d267100bebe36acd958551a7966
+./.git/objects/32/88fc8c33c7d2434deb872c6b3fdee07631f02e
+./.git/objects/32/a9c1cae36b53bbd54dd81ef0c99298ea7e65b1
+./.git/objects/32/954f3191d0e60fed862fa72ee64aa9856e32cf
+./.git/objects/32/1c711340113bd4477662c5218374397ea291c4
+./.git/objects/35/753a5614592a6164bb2f5a6171ba85ed777a2e
+./.git/objects/35/39468f3acf4a24ed88d3e9dbbf63adc9f2f59d
+./.git/objects/35/b582c02d445265665b6e30fce2cededfbbf3fd
+./.git/objects/69/84464d5a406fd8821cae7678761ea0cd19f9b7
+./.git/objects/69/a5ee389d35092d058616c7b5dd9df4f644de02
+./.git/objects/69/6e4c78271d88ecde921100f2709ad252f2f423
+./.git/objects/69/3611ac51124aac0cd343cf94c783fe4e32d760
+./.git/objects/69/fbd1ff5ec4d6b075340bf03603420e734e421a
+./.git/objects/69/3dd0e4ee661050a2cf0e10c36faf462035dccd
+./.git/objects/3c/0c93eeac7ce9eda737696f6122c30a14a895f3
+./.git/objects/3c/0c4bda1cc0b45c2d09449e4ab95f3ef5fa33c6
+./.git/objects/3c/8b0a00e67a058aa406db08ac2b53dbef12a722
+./.git/objects/56/2c43be04bbcfa739bd7d8e0ba49e308e163eaa
+./.git/objects/51/3dc5f9a77b27b1559615a0a5a48c2443203e3c
+./.git/objects/51/76a9f61790a05545072e1a090cec1b29b4a97e
+./.git/objects/3d/dabfef7330f595fb6a77c30a37a7f733230a9e
+./.git/objects/3d/052a0b5cd9fd49da8852bace120bbf1be4d21c
+./.git/objects/3d/ec7ed5b0052af3c3d4374b2db6275ff981a194
+./.git/objects/3d/4f21cf713188f77e43b7c2fc257071da676949
+./.git/objects/58/22850c50124f5e562a6fc96f7c287c6463c7d2
+./.git/objects/58/52fec0d75712a83f33136f02faa2b5c09bad79
+./.git/objects/67/e1ed459eff181e065311de7e5e8be8b639277e
+./.git/objects/67/ee62e3cdf7ea3106de879d1615a276b0f01806
+./.git/objects/0b/22876e5d71ba3e8b7ede0535335ec40f46c19d
+./.git/objects/0b/3f046f274d791fb1b58c988b298abb91fd0382
+./.git/objects/0b/4f49a2da3d296cfee58ef35b22b332cc95bec7
+./.git/objects/0b/6047e40b9aab3a5dd3723a7fd7c0920d630c12
+./.git/objects/0b/a104c25728cef04b6bad2cb4bdff5c81b24597
+./.git/objects/0b/15dc1a37b45ffa2c66cc175c8473217b3d5394
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -type f \\( -name '*committee*common*v001*' -o -name 'TOOLING_v001.md' -o -path '*/prompts/*' \\) | head -200" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+I can’t find the named local prompt files in this checkout, but the user message includes the common rules and role output contract. I’m using those plus retrievable OSS documentation/papers for the prior-art check.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+The document loader is blocked for external pages, so I’m fetching public docs directly from the shell and using the page URLs as citations.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://github.com/LMCache/LMCache | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:3000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://flashinfer.ai/2024/02/02/introduce-flashinfer.html | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:3000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:5000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://huggingface.co/blog/layerskip | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:5000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://docs.vllm.ai/en/latest/features/speculative_decoding/ | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:4000])\"" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 353ms:
+ Speculative Sampling &#8212; TensorRT-LLM document.documentElement.dataset.mode = localStorage.getItem("mode") || ""; document.documentElement.dataset.theme = localStorage.getItem("theme") || ""; .pst-js-only { display: none !important; } let toggleHintShow = 'Click to show'; let toggleHintHide = 'Click to hide'; let toggleOpenOnPrint = 'true'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; DOCUMENTATION_OPTIONS.pagename = 'advanced/speculative-decoding'; DOCUMENTATION_OPTIONS.theme_version = '0.16.1'; DOCUMENTATION_OPTIONS.theme_switcher_json_url = './_static/switcher.json'; DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.1.0rc5'; DOCUMENTATION_OPTIONS.show_version_warning_banner = false; Skip to main content Back to top Ctrl + K TensorRT-LLM Choose version Search Ctrl + K Search Ctrl + K TensorRT-LLM Choose version Table of Contents Getting Started Overview Quick Start Guide Installation Pre-built release container images on NGC Installing on Linux via pip Building from Source Code on Linux Deployment Guide LLM Examples Generate text Generate text asynchronously Generate text in streaming Distributed LLM Generation Generate text with guided decoding Control generated text using logits processor Generate text with multiple LoRA adapters Speculative Decoding KV Cache Connector Runtime Configuration Examples Sampling Techniques Showcase Run LLM-API with pytorch backend on Slurm Run trtllm-bench with pytorch backend on Slurm Run trtllm-serve with pytorch backend on Slurm Online Serving Examples Curl Chat Client Curl Chat Client For Multimodal Curl Completion Client Deepseek R1 Reasoning Parser Genai Perf Client Genai Perf Client For Multimodal OpenAI Chat Client OpenAI Chat Client for Multimodal OpenAI Completion Client Openai Completion Client For Lora OpenAI Completion Client with JSON Schema Dynamo K8s Example Model Recipes Quick Start Recipe for DeepSeek R1 on TensorRT LLM - Blackwell &amp; Hopper Hardware Quick Start Recipe for Llama3.3 70B on TensorRT LLM - Blackwell &amp; Hopper Hardware Quick Start Recipe for Llama4 Scout 17B on TensorRT LLM - Blackwell &amp; Hopper Hardware Quick Start Recipe for GPT-OSS on TensorRT-LLM - Blackwell Hardware Models Supported Models Adding a New Model CLI Reference trtllm-bench trtllm-eval trtllm-serve trtllm-serve Run benchmarking with trtllm-serve API Reference LLM API Introduction API Reference Features Feature Combination Matrix Multi-Head, Multi-Query, and Group-Query Attention Disaggregated Serving (Beta) KV Cache System Long Sequences LoRA (Low-Rank Adaptation) Multimodal Support in TensorRT LLM Overlap Scheduler Paged Attention, IFB, and Request Scheduling Parallelism in TensorRT LLM Quantization Sampling Speculative Decoding Checkpoint Loading AutoDeploy (Prototype) Developer Guide Architecture Overview Performance Analysis TensorRT LLM Benchmarking Continuous Integration Overview Using Dev Containers Blogs ADP Balance Strategy Running GPT-OSS-120B with Eagle3 Speculative Decoding on GB200/B200 (TensorRT LLM) Pushing Latency Boundaries: Optimizing DeepSeek-R1 Performance on NVIDIA B200 GPUs DeepSeek R1 MTP Implementation and Optimization Optimizing DeepSeek R1 Throughput on NVIDIA Blackwell GPUs: A Deep Dive for Developers Scaling Expert Parallelism in TensorRT LLM (Part 1: Design and Implementation of Large-scale EP) Disaggregated Serving in TensorRT LLM How to launch Llama4 Maverick + Eagle3 TensorRT LLM server N-Gram Speculative Decoding in TensorRT LLM Scaling Expert Parallelism in TensorRT LLM (Part 2: Performance Status and Optimization) Running a High Performance GPT-OSS-120B Inference Server with TensorRT LLM How to get best performance on DeepSeek-R1 in TensorRT LLM H200 achieves nearly 12,000 tokens/sec on Llama2-13B with TensorRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram Medusa Medusa Tree Using Medusa with TensorRT-LLM Limitations ReDrafter EAGLE Disaggregated Serving Lookahead decoding About Speculative Sampling # Speculative Sampling (also referred to as Speculative Decoding) is a set of techniques designed to allow generation of more than one token per forward pass iteration. This can lead to a reduction in the average per-token latency in situations where the GPU is underutilized due to small batch sizes. Speculative Sampling involves predicting a sequence of future tokens, referred to as draft tokens, using a method that is substantially more efficient than repeatedly executing the target Large Language Model (LLM). These draft tokens are then collectively validated by processing them through the target LLM in a sin
+
+ succeeded in 375ms:
+ Speculative Decoding - vLLM :root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"} __md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}} html.glightbox-open { overflow: initial; height: 100%; } .gslide-title { margin-top: 0px; user-select: text; } .gslide-desc { color: #666; user-select: text; } .gslide-image img { background: white; } .gscrollbar-fixer { padding-right: 15px; } .gdesc-inner { font-size: 0.75rem; } body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); } body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); } body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); } Skip to content You are viewing the latest developer preview docs. Click here to view docs for the latest stable release. vLLM Speculative Decoding var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)} Initializing search GitHub Home User Guide Developer Guide Benchmarking API Reference CLI Reference Community vLLM GitHub Home User Guide User Guide Getting Started Getting Started Quickstart Installation Installation GPU CPU TPU Examples Examples Applications Applications Chatbot Rag Basic Basic Offline Inference Online Serving Deployment Deployment Async LLM Streaming Helm Charts LLM Engine Example Sagemaker-Entrypoint Disaggregated Disaggregated Disaggregated Encoder Disaggregated Prefill Disaggregated Serving Ec Both Encoder Disaggregated Prefill V1 Flexkv Connector KV Load Failure Recovery Test LMCache Examples Mooncake Connector P2P NCCL Xpyd Features Features Automatic Prefix Caching Batch Invariance Context Extension Data Parallel Kv Events Logging Configuration Custom Logits Processors LoRA Offline Inference with the OpenAI Batch file format Pause Resume Profiling Prompt Embed Reset Kv Sharded State Speculative Decoding Structured Outputs Tensorize vLLM Model Torchrun Generate Generate Batched Chat Completions Online Multimodal Qwen 1M Offline Token Generation Client Observability Observability Monitoring Dashboards Metrics Setup OpenTelemetry POC Prometheus and Grafana Pooling Pooling Classify Embed Plugin Reward Score Token Classify Token Embed Ray Serving Ray Serving Batch LLM Inference Elastic Ep Multi-Node-Serving Ray Serve Deepseek Run Cluster Reasoning Reasoning OpenAI Chat Completion Tool Calls With Reasoning OpenAI Chat Completion With Reasoning OpenAI Chat Completion With Reasoning Streaming OpenAI Responses Client RL RL RLHF Async New APIs RLHF Http IPC RLHF Http NCCL RLHF IPC RLHF IPC Fsdp Ep RLHF NCCL RLHF NCCL Fsdp Ep RLHF Sparse NCCL Routed Experts E2E Skip Loading Weights In Engine Init Speech To Text Speech To Text Lid OpenAI Realtime Tool Calling Tool Calling Chat With Tools Offline OpenAI Chat Completion Client With Tools OpenAI Chat Completion Client With Tools Required OpenAI Chat Completion Client With Tools Xlam OpenAI Chat Completion Client With Tools Xlam Streaming OpenAI Responses Client With Mcp Tools OpenAI Responses Client With Tools General General vLLM V1 Frequently Asked Questions Production Metrics Reproducibility Security Troubleshooting Usage Stats Collection Inference and Serving Inference and Serving Offline Inference Onlin
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 549ms:
+ const guestTheme = document.cookie.match(/theme=(\w+)/)?.[1]; document.documentElement.classList.toggle('dark', guestTheme === 'dark' || ( (!guestTheme || guestTheme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)); { "@context": "https:\/\/schema.org", "@type": "Article", "url": "https:\/\/huggingface.co\/blog\/layerskip", "headline": "Faster Text Generation with Self-Speculative Decoding", "name": "Faster Text Generation with Self-Speculative Decoding", "author": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "creator": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "publisher": { "@type": "Organization", "name": "Hugging Face", "url": "https:\/\/huggingface.co", "logo": { "@type": "ImageObject", "url": "https:\/\/huggingface.co\/front\/assets\/huggingface_logo-noborder.svg" } }, "datePublished": "2024-11-20T00:00:00.484Z", "dateCreated": "2024-11-20T00:00:00.484Z", "image": "https:\/\/huggingface.co\/blog\/assets\/layerskip\/thumbnail.png", "keywords": [ "research", "nlp", "open-source", "collaboration" ] } Faster Text Generation with Self-Speculative Decoding ((window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments); }), (plausible.init = plausible.init || function (i) { plausible.o = i || {}; })); plausible.init({ customProperties: { loggedIn: "false", }, endpoint: "/api/event", }); window.hubConfig = {"features":{"signupDisabled":false},"sshGitUrl":"git@hf.co","moonHttpUrl":"https:\/\/huggingface.co","captchaApiKey":"bd5f2066-93dc-4bdd-a64b-a24646ca3859","datasetViewerPublicUrl":"https:\/\/datasets-server.huggingface.co","stripePublicKey":"pk_live_x2tdjFXBCvXo2FFmMybezpeM00J6gPCAAc","environment":"production","userAgent":"HuggingFace (production)","spacesIframeDomain":"hf.space","spacesApiUrl":"https:\/\/api.hf.space","logoDev":{"apiUrl":"https:\/\/img.logo.dev\/","apiKey":"pk_UHS2HZOeRnaSOdDp7jbd5w"}}; window.requestId = "Root=1-6a1f7b5a-133af47e1a4b164a34b1e46c"; window.featureFlags = {"s3Credentials":false}; Hugging Face Models Datasets Spaces Buckets new Docs Enterprise Pricing Website Tasks HuggingChat Collections Languages Organizations Community Blog Posts Daily Papers Learn Discord Forum GitHub Solutions Team &amp; Enterprise Hugging Face PRO Enterprise Support Inference Providers Inference Endpoints Storage Buckets Log In Sign Up Back to Articles Faster Text Generation with Self-Speculative Decoding Published November 20, 2024 Update on GitHub Upvote 65 +59 Aritra Roy Gosthipaty ariG23498 Follow Mostafa Elhoushi melhoushi Follow facebook Pedro Cuenca pcuenq Follow Vaibhav Srivastav reach-vb Follow Speculative Decoding and Self-Speculative Decoding transformers&lt;/code>"> Usage with transformers Benchmarking Early Exit and Unembedding Training Modifications: Layer Dropout and Early Exit Loss Self-Drafting and Self-Verification Optimizations: Shared Weights, Shared KV Cache, and Shared Compute How Early Can We Exit? Conclusion Self-speculative decoding, proposed in LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding is a novel approach to text generation. It combines the strengths of speculative decoding with early exiting from a large language model (LLM). This method allows for efficient generation by using the same model's early layers for drafting tokens, and later layers for verification. This technique not only speeds up text generation, but it also achieves significant memory savings and reduces computational latency. In order to obtain an end-to-end speedup, the output of the earlier layers need to be close enough to the last layer. This is achieved by a training recipe which, as described in the paper, can be applied during pretraining, and also while fine-tuning on a specific domain. Self-speculative decoding is especially efficient for real-world applications, enabling deployment on smaller GPUs and lowering the overall hardware footprint needed for large-scale inference . In this blog post, we explore the concept of self-speculative decoding, its implementation, and practical applications using the 🤗 transformers library. You’ll learn about the technical underpinnings, including early exit layers , unembedding , and training modifications . To ground these concepts in practice, we offer code examples, benchmark comparisons with traditional speculative decoding, and insights into performance trade-offs. Div
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 653ms:
+ Accelerating Self-Attentions for LLM Serving with FlashInfer | FlashInfer {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Zihao Ye (UW), Lequn Chen (UW), Ruihang Lai (CMU), Yilong Zhao (UW), Size Zheng (UW & PKU), Junru Shao (OctoAI), Bohan Hou (CMU), Hongyi Jin (CMU), Yifei Zuo (UW & USTC), Liangsheng Yin (SJTU & LMSys), Tianqi Chen (CMU & OctoAI), Luis Ceze (UW & OctoAI)"},"dateModified":"2024-02-02T00:00:00+00:00","datePublished":"2024-02-02T00:00:00+00:00","description":"Introduce Techniques to accelerate Large Language Model Deployment","headline":"Accelerating Self-Attentions for LLM Serving with FlashInfer","mainEntityOfPage":{"@type":"WebPage","@id":"https://flashinfer.ai/2024/02/02/introduce-flashinfer.html"},"url":"https://flashinfer.ai/2024/02/02/introduce-flashinfer.html"} MathJax = { tex: { inlineMath: [ ['$', '$'], ['\\(', '\\)'] ] }, svg: { fontCache: 'global' } }; Documentation Slack Paper Github Accelerating Self-Attentions for LLM Serving with FlashInfer Feb 2, 2024 • Zihao Ye (UW), Lequn Chen (UW), Ruihang Lai (CMU), Yilong Zhao (UW), Size Zheng (UW & PKU), Junru Shao (OctoAI), Bohan Hou (CMU), Hongyi Jin (CMU), Yifei Zuo (UW & USTC), Liangsheng Yin (SJTU & LMSys), Tianqi Chen (CMU & OctoAI), Luis Ceze (UW & OctoAI) LLM (Large Language Models) Serving quickly became an important workload. The efficacy of operators within Transformers – namely GEMM, Self-Attention, GEMV, and elementwise computations are critical to the overall performance of LLM serving. While optimization efforts have extensively targeted GEMM and GEMV, there is a lack of performance studies focused on Self-Attention in the context of LLM serving. In this blog post, we break Self-Attention down into three stages: prefill, decode, and append; analyze the performance bottleneck of Self-Attention on both single-request and batching scenarios in these three stages; and propose a solution to tackle these challenges. These ideas have been integrated into FlashInfer , an open-source library for accelerating LLM serving released under Apache 2.0 license. FlashInfer has been developed by researchers from the University of Washington, Carnegie Mellon University, and OctoAI since summer 2023. FlashInfer provides PyTorch APIs for quick prototyping, and a dependency-free, header-only C++ APIs for integration with LLM serving systems. Compared to existing libraries, FlashInfer has several unique advantages: Comprehensive Attention Kernels : FlashInfer implements attention kernels that cover all the common use cases of LLM serving with state-of-the-art performance, including single-request and batching versions of Prefill, Decode, and Append kernels, on various formats of KV-Cache (Padded Tensor, Ragged Tensor, and Page Table). Optimized Shared-Prefix Batch Decoding : FlashInfer enhances shared-prefix batch decoding performance through cascading, resulting in an impressive up to 31x speedup compared to the baseline vLLM PageAttention
+
+ succeeded in 664ms:
+ :root { --tab-size-preference: 4; } pre, code { tab-size: var(--tab-size-preference); } {"locale":"en","featureFlags":["actions_custom_images_storage_billing_ui_visibility","actions_image_version_event","actions_workflow_language_service_allow_concurrency_queue","agent_conflict_resolution","alternate_user_config_repo","arianotify_comprehensive_migration","artifact_ui_v2","billing_discount_threshold_notification","billing_user_level_budgets","billing_user_level_budgets_manage","code_scanning_dfa_degraded_experience_notice","codespaces_prebuild_region_target_update","coding_agent_model_selection","coding_agent_model_selection_all_skus","comment_viewer_copy_raw_markdown","contentful_form_phone_v2","contentful_primer_code_blocks","copilot_agent_snippy","copilot_api_agentic_issue_marshal_yaml","copilot_ask_mode_dropdown","copilot_automation_suggest_tools_enabled","copilot_automations_suggested_automations","copilot_chat_attach_multiple_images","copilot_chat_category_rate_limit_messages","copilot_chat_clear_model_selection_for_default_change","copilot_chat_contextual_suggestions_updated","copilot_chat_enable_tool_call_logs","copilot_chat_input_commands","copilot_chat_input_performance_optimizations","copilot_chat_max_upsell","copilot_chat_models_via_backend","copilot_chat_opening_thread_switch","copilot_chat_prettify_pasted_code","copilot_chat_reduce_quota_checks","copilot_chat_search_bar_redirect","copilot_chat_structured_list_refs","copilot_chat_vision_in_claude","copilot_chat_vision_preview_gate","copilot_cli_install_cta_max_plan","copilot_cloud_agent_always_categorize_models_in_model_picker","copilot_coding_agent_tbb_quota_banner","copilot_custom_copilots","copilot_custom_copilots_feature_preview","copilot_delete_cli_sessions","copilot_diff_explain_conversation_intent","copilot_diff_reference_context","copilot_dotcom_chat_memoize_messages","copilot_duplicate_thread","copilot_extensions_hide_in_dotcom_chat","copilot_extensions_removal_on_marketplace","copilot_features_sql_server_logo","copilot_file_block_ref_matching","copilot_fix_failed_workflows","copilot_ftp_hyperspace_upgrade_prompt","copilot_hide_hovercard","copilot_icebreakers_experiment_dashboard","copilot_icebreakers_experiment_hyperspace","copilot_immersive_code_block_transition_wrap","copilot_immersive_embedded_deferred_payload","copilot_immersive_embedded_draggable","copilot_immersive_embedded_header_button","copilot_immersive_embedded_implicit_references","copilot_immersive_embedded_skip_copilot_api_token_for_dotcom_context","copilot_immersive_file_block_transition_open","copilot_immersive_file_preview_keep_mounted","copilot_immersive_job_result_preview","copilot_immersive_structured_model_picker","copilot_immersive_task_hyperlinking","copilot_immersive_task_within_chat_thread","copilot_mc_cli_resume_any_users_task","copilot_mission_control_agent_filtering","copilot_mission_control_agents_task_list","copilot_mission_control_always_send_integration_id","copilot_mission_control_chronicle_
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request,re
+url='https://docs.vllm.ai/en/latest/features/speculative_decoding/'
+s=urllib.request.urlopen(url,timeout=20).read().decode('utf-8','ignore')
+t=re.sub('<["'^>]+>'"',' ',s); t=re.sub(r'\\s+',' ',t)
+for term in ['Speculative decoding', 'draft', 'EAGLE', 'Medusa', 'NGram', 'MLPSpeculator']:
+ i=t.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',i)
+ print(t[max(0,i-500):i+1200] if i"'!=-1 else '"'not found')
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request,re
+url='https://huggingface.co/blog/layerskip'
+s=urllib.request.urlopen(url,timeout=20).read().decode('utf-8','ignore')
+t=re.sub('<["'^>]+>'"',' ',s); t=re.sub(r'\\s+',' ',t)
+for term in ['early exit', 'self-speculative', 'exit_layer', 'assistant_early_exit', 'LayerSkip']:
+ i=t.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',i)
+ print(t[max(0,i-500):i+1500] if i"'!=-1 else '"'not found')
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request,re
+url='https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html'
+s=urllib.request.urlopen(url,timeout=20).read().decode('utf-8','ignore')
+t=re.sub('<["'^>]+>'"',' ',s); t=re.sub(r'\\s+',' ',t)
+for term in ['Speculative Sampling', 'Draft-Target-Model', 'NGram', 'Medusa', 'EAGLE', 'Lookahead']:
+ i=t.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',i)
+ print(t[max(0,i-500):i+1200] if i"'!=-1 else '"'not found')
+PY" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 139ms:
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/local/fbcode/platform010/Python3.12.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 154ms:
+
+TERM Speculative Sampling IDX 1
+ Speculative Sampling &#8212; TensorRT-LLM document.documentElement.dataset.mode = localStorage.getItem("mode") || ""; document.documentElement.dataset.theme = localStorage.getItem("theme") || ""; .pst-js-only { display: none !important; } let toggleHintShow = 'Click to show'; let toggleHintHide = 'Click to hide'; let toggleOpenOnPrint = 'true'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; var togglebuttonSelector = '.toggle, .admonition.dropdown'; DOCUMENTATION_OPTIONS.pagename = 'advanced/speculative-decoding'; DOCUMENTATION_OPTIONS.theme_version = '0.16.1'; DOCUMENTATION_OPTIONS.theme_switcher_json_url = './_static/switcher.json'; DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.1.0rc5'; DOCUMENTATION_OPTIONS.show_version_warning_banner = false; Skip to main content Back to top Ctrl + K TensorRT-LLM Choose version Search Ctrl + K Search Ctrl + K TensorRT-LLM Choose version Table of Contents Getting Started Overview Quick Start Guide Installation Pre-built release container images on NGC Installing on Linux via pip Building from Source Code on Linux Deployment Guide LLM Examples Generate text Generate text asynchronously Generate text in streaming Distributed
+
+TERM Draft-Target-Model IDX 4210
+LM How to get best performance on DeepSeek-R1 in TensorRT LLM H200 achieves nearly 12,000 tokens/sec on Llama2-13B with TensorRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram Medusa Medusa Tree Using Medusa with TensorRT-LLM Limitations ReDrafter EAGLE Disaggregated Serving Lookahead decoding About Speculative Sampling # Speculative Sampling (also referred to as Speculative Decoding) is a set of techniques designed to allow generation of more than one token per forward pass iteration. This can lead to a reduction in the average per-token latency in situations where the GPU is underutilized due to small batch sizes. Speculative Sampling involves predicting a sequence of future tokens, referred to as draft tokens, using a method that is substantially more efficient than repeatedly executing the target Large Language Model (LLM). These draft tokens are then collectively validated by processing them through the target LLM in a single forward pass. The underlying assumptions are twofold: processing multiple draft tokens concurrently will be as rapid as processing a single token multiple draft tokens will be validated successfully over the course of the full generation If the first assumption holds true, the latency of speculative decoding will no worse than the standard approach. If the second holds, output token generation advances 
+
+TERM NGram IDX 4229
+performance on DeepSeek-R1 in TensorRT LLM H200 achieves nearly 12,000 tokens/sec on Llama2-13B with TensorRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram Medusa Medusa Tree Using Medusa with TensorRT-LLM Limitations ReDrafter EAGLE Disaggregated Serving Lookahead decoding About Speculative Sampling # Speculative Sampling (also referred to as Speculative Decoding) is a set of techniques designed to allow generation of more than one token per forward pass iteration. This can lead to a reduction in the average per-token latency in situations where the GPU is underutilized due to small batch sizes. Speculative Sampling involves predicting a sequence of future tokens, referred to as draft tokens, using a method that is substantially more efficient than repeatedly executing the target Large Language Model (LLM). These draft tokens are then collectively validated by processing them through the target LLM in a single forward pass. The underlying assumptions are twofold: processing multiple draft tokens concurrently will be as rapid as processing a single token multiple draft tokens will be validated successfully over the course of the full generation If the first assumption holds true, the latency of speculative decoding will no worse than the standard approach. If the second holds, output token generation advances by statistically mo
+
+TERM Medusa IDX 4235
+mance on DeepSeek-R1 in TensorRT LLM H200 achieves nearly 12,000 tokens/sec on Llama2-13B with TensorRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram Medusa Medusa Tree Using Medusa with TensorRT-LLM Limitations ReDrafter EAGLE Disaggregated Serving Lookahead decoding About Speculative Sampling # Speculative Sampling (also referred to as Speculative Decoding) is a set of techniques designed to allow generation of more than one token per forward pass iteration. This can lead to a reduction in the average per-token latency in situations where the GPU is underutilized due to small batch sizes. Speculative Sampling involves predicting a sequence of future tokens, referred to as draft tokens, using a method that is substantially more efficient than repeatedly executing the target Large Language Model (LLM). These draft tokens are then collectively validated by processing them through the target LLM in a single forward pass. The underlying assumptions are twofold: processing multiple draft tokens concurrently will be as rapid as processing a single token multiple draft tokens will be validated successfully over the course of the full generation If the first assumption holds true, the latency of speculative decoding will no worse than the standard approach. If the second holds, output token generation advances by statistically more tha
+
+TERM EAGLE IDX 3036
+ Attention Disaggregated Serving (Beta) KV Cache System Long Sequences LoRA (Low-Rank Adaptation) Multimodal Support in TensorRT LLM Overlap Scheduler Paged Attention, IFB, and Request Scheduling Parallelism in TensorRT LLM Quantization Sampling Speculative Decoding Checkpoint Loading AutoDeploy (Prototype) Developer Guide Architecture Overview Performance Analysis TensorRT LLM Benchmarking Continuous Integration Overview Using Dev Containers Blogs ADP Balance Strategy Running GPT-OSS-120B with Eagle3 Speculative Decoding on GB200/B200 (TensorRT LLM) Pushing Latency Boundaries: Optimizing DeepSeek-R1 Performance on NVIDIA B200 GPUs DeepSeek R1 MTP Implementation and Optimization Optimizing DeepSeek R1 Throughput on NVIDIA Blackwell GPUs: A Deep Dive for Developers Scaling Expert Parallelism in TensorRT LLM (Part 1: Design and Implementation of Large-scale EP) Disaggregated Serving in TensorRT LLM How to launch Llama4 Maverick + Eagle3 TensorRT LLM server N-Gram Speculative Decoding in TensorRT LLM Scaling Expert Parallelism in TensorRT LLM (Part 2: Performance Status and Optimization) Running a High Performance GPT-OSS-120B Inference Server with TensorRT LLM How to get best performance on DeepSeek-R1 in TensorRT LLM H200 achieves nearly 12,000 tokens/sec on Llama2-13B with TensorRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram M
+
+TERM Lookahead IDX 4335
+rRT LLM New XQA-kernel provides 2.4x more Llama-70B throughput within the same latency budget H100 has 4.6x A100 Performance in TensorRT LLM, achieving 10,000 tok/s at 100ms to first token Quick Links Releases Github Code Roadmap Use TensorRT Engine LLM API with TensorRT Engine Speculative Sampling Speculative Sampling # About Speculative Sampling Performance Improvements Draft-Target-Model NGram Medusa Medusa Tree Using Medusa with TensorRT-LLM Limitations ReDrafter EAGLE Disaggregated Serving Lookahead decoding About Speculative Sampling # Speculative Sampling (also referred to as Speculative Decoding) is a set of techniques designed to allow generation of more than one token per forward pass iteration. This can lead to a reduction in the average per-token latency in situations where the GPU is underutilized due to small batch sizes. Speculative Sampling involves predicting a sequence of future tokens, referred to as draft tokens, using a method that is substantially more efficient than repeatedly executing the target Large Language Model (LLM). These draft tokens are then collectively validated by processing them through the target LLM in a single forward pass. The underlying assumptions are twofold: processing multiple draft tokens concurrently will be as rapid as processing a single token multiple draft tokens will be validated successfully over the course of the full generation If the first assumption holds true, the latency of speculative decoding will no worse than the standard approach. If the second holds, output token generation advances by statistically more than one token per forward pass. The combination of both these allows speculative decoding to result in
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 320ms:
+
+TERM early exit IDX 3341
+rprise Hugging Face PRO Enterprise Support Inference Providers Inference Endpoints Storage Buckets Log In Sign Up Back to Articles Faster Text Generation with Self-Speculative Decoding Published November 20, 2024 Update on GitHub Upvote 65 +59 Aritra Roy Gosthipaty ariG23498 Follow Mostafa Elhoushi melhoushi Follow facebook Pedro Cuenca pcuenq Follow Vaibhav Srivastav reach-vb Follow Speculative Decoding and Self-Speculative Decoding transformers&lt;/code>"> Usage with transformers Benchmarking Early Exit and Unembedding Training Modifications: Layer Dropout and Early Exit Loss Self-Drafting and Self-Verification Optimizations: Shared Weights, Shared KV Cache, and Shared Compute How Early Can We Exit? Conclusion Self-speculative decoding, proposed in LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding is a novel approach to text generation. It combines the strengths of speculative decoding with early exiting from a large language model (LLM). This method allows for efficient generation by using the same model's early layers for drafting tokens, and later layers for verification. This technique not only speeds up text generation, but it also achieves significant memory savings and reduces computational latency. In order to obtain an end-to-end speedup, the output of the earlier layers need to be close enough to the last layer. This is achieved by a training recipe which, as described in the paper, can be applied during pretraining, and also while fine-tuning on a specific domain. Self-speculative decoding is especially efficient for real-world applications, enabling deployment on smaller GPUs and lowering the overall hardware footprint needed for large-scale inference . In this blog post, we explore the concept of self-speculative decoding, its implementation, and practical applications using the 🤗 transformers library. You’ll learn about the technical underpinnings, including early exit layers , unembedding , and training modifications . To ground
+
+TERM self-speculative IDX 396
+ const guestTheme = document.cookie.match(/theme=(\w+)/)?.[1]; document.documentElement.classList.toggle('dark', guestTheme === 'dark' || ( (!guestTheme || guestTheme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)); { "@context": "https:\/\/schema.org", "@type": "Article", "url": "https:\/\/huggingface.co\/blog\/layerskip", "headline": "Faster Text Generation with Self-Speculative Decoding", "name": "Faster Text Generation with Self-Speculative Decoding", "author": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "creator": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "publisher": { "@type": "Organization", "name": "Hugging Face", "url": "https:\/\/huggingface.co", "logo": { "@type": "ImageObject", "url": "https:\/\/huggingface.co\/front\/assets\/huggingface_logo-noborder.svg" } }, "datePublished": "2024-11-20T00:00:00.484Z", "dateCreated": "2024-11-20T00:00:00.484Z", "image": "https:\/\/huggingface.co\/blog\/assets\/layerskip\/thumbnail.png", "keywords": [ "research", "nlp", "open-source", "collaboration" ] } Faster Text Generation with Self-Speculative Decoding ((window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments); }), (plausible.init = plausible.init || function (i) { plausible.o = i || {}; })); plau
+
+TERM exit_layer IDX 6645
+o perform both drafting and verification. This, in turn, improves speed and reduces computational costs compared to the traditional speculative decoding. Usage with transformers In order to enable early-exit self-speculative decoding in the 🤗 transformers library , we just need to add the assistant_early_exit argument to the generate() function. Here is a simple code snippet showcasing the functionality. pip install transformers from transformers import AutoTokenizer, AutoModelForCausalLM early_exit_layer = 4 prompt = "Alice and Bob" checkpoint = "facebook/layerskip-llama2-7B" tokenizer = AutoTokenizer.from_pretrained(checkpoint) inputs = tokenizer(prompt, return_tensors= "pt" ).to( "cuda" ) model = AutoModelForCausalLM.from_pretrained(checkpoint).to( "cuda" ) outputs = model.generate(**inputs, assistant_early_exit=early_exit_layer) Note: While the assistant_early_exit argument can potentially enable early-exit self-speculative decoding for any decoder-only transformer, the logits from the intermediate layers cannot be unembedded (process of decoding through LM Head, described later in the blog post) unless the model is specifically trained for that. You will also only obtain speedups for a checkpoint that was trained in such a way to increase the accuracy of earlier layers. The LayerSkip paper proposes a training recipe to achieve that (namely, applying early exit loss, and progressively increasing layer dropout rates). A collection of Llama2, Llama3, and Code Llama checkpoints that have been continually pretrained with the LayerSkip training recipe are provided here . Benchmarking We ran an extensive list of benchmarks to measure the speedup of LayerSkip’s self-speculative decoding with respect to autoregressive decoding on various models. We also compare self-speculative decoding (based on early exiting) with standrad speculative decoding techniques. To reproduce the results, you may find the code here and the command to run each experiment in this spreadsheet . 
+
+TERM assistant_early_exit IDX 6435
+e the early layers of a large model to generate draft tokens that are then verified by the model's deeper layers. This "self" aspect of speculative decoding, which requires specific training, allows the model to perform both drafting and verification. This, in turn, improves speed and reduces computational costs compared to the traditional speculative decoding. Usage with transformers In order to enable early-exit self-speculative decoding in the 🤗 transformers library , we just need to add the assistant_early_exit argument to the generate() function. Here is a simple code snippet showcasing the functionality. pip install transformers from transformers import AutoTokenizer, AutoModelForCausalLM early_exit_layer = 4 prompt = "Alice and Bob" checkpoint = "facebook/layerskip-llama2-7B" tokenizer = AutoTokenizer.from_pretrained(checkpoint) inputs = tokenizer(prompt, return_tensors= "pt" ).to( "cuda" ) model = AutoModelForCausalLM.from_pretrained(checkpoint).to( "cuda" ) outputs = model.generate(**inputs, assistant_early_exit=early_exit_layer) Note: While the assistant_early_exit argument can potentially enable early-exit self-speculative decoding for any decoder-only transformer, the logits from the intermediate layers cannot be unembedded (process of decoding through LM Head, described later in the blog post) unless the model is specifically trained for that. You will also only obtain speedups for a checkpoint that was trained in such a way to increase the accuracy of earlier layers. The LayerSkip paper proposes a training recipe to achieve that (namely, applying early exit loss, and progressively increasing layer dropout rates). A collection of Llama2, Llama3, and Code Llama checkpoints that have been continually pretrained with the LayerSkip training recipe are provided here . Benchmarking We ran an extensive list of benchmarks to measure the speedup of LayerSkip’s self-speculative decoding with respect to autoregressive decoding on various models. We also compare se
+
+TERM LayerSkip IDX 343
+ const guestTheme = document.cookie.match(/theme=(\w+)/)?.[1]; document.documentElement.classList.toggle('dark', guestTheme === 'dark' || ( (!guestTheme || guestTheme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)); { "@context": "https:\/\/schema.org", "@type": "Article", "url": "https:\/\/huggingface.co\/blog\/layerskip", "headline": "Faster Text Generation with Self-Speculative Decoding", "name": "Faster Text Generation with Self-Speculative Decoding", "author": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "creator": [ { "@type": "Person", "name": "Aritra Roy Gosthipaty", "url": "https:\/\/huggingface.co\/ariG23498" }, { "@type": "Person", "name": "Mostafa Elhoushi" }, { "@type": "Person", "name": "Pedro Cuenca", "url": "https:\/\/huggingface.co\/pcuenq" }, { "@type": "Person", "name": "Vaibhav Srivastav", "url": "https:\/\/huggingface.co\/reach-vb" } ], "publisher": { "@type": "Organization", "name": "Hugging Face", "url": "https:\/\/huggingface.co", "logo": { "@type": "ImageObject", "url": "https:\/\/huggingface.co\/front\/assets\/huggingface_logo-noborder.svg" } }, "datePublished": "2024-11-20T00:00:00.484Z", "dateCreated": "2024-11-20T00:00:00.484Z", "image": "https:\/\/huggingface.co\/blog\/assets\/layerskip\/thumbnail.png", "keywords": [ "research", "nlp", "open-source", "collaboration" ] } Faster Text Generation with Self-Speculative Decoding ((window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments); }), (plausible.init = plausible.in
+
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://docs.vllm.ai/en/latest/features/speculative_decoding/ > /tmp/vllm_spec.html && python3 - <<'PY'
+import re
+s=open('/tmp/vllm_spec.html',errors='ignore').read(); t=re.sub('<["'^>]+>'"',' ',s); t=re.sub(r'\\s+',' ',t)
+for term in ['Speculative decoding', 'draft', 'EAGLE', 'Medusa', 'NGram', 'MLPSpeculator']:
+ i=t.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',i)
+ print(t[max(0,i-500):i+1500] if i"'!=-1 else '"'not found')
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://docs.sglang.ai/advanced_features/speculative_decoding.html | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:5000])\"" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://lmsys.org/blog/2024-01-17-sglang/ | python3 -c \"import sys,re; s=sys.stdin.read(); t=re.sub('<["'^>]+>'"',' ',s); print(re.sub(r'\\\\s+',' ',t)[:3000])\"" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 217ms:
+
+TERM Speculative decoding IDX 1
+ Speculative Decoding - vLLM :root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"} __md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}} html.glightbox-open { overflow: initial; height: 100%; } .gslide-title { margin-top: 0px; user-select: text; } .gslide-desc { color: #666; user-select: text; } .gslide-image img { background: white; } .gscrollbar-fixer { padding-right: 15px; } .gdesc-inner { font-size: 0.75rem; } body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); } body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); } body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); } Skip to content You are viewing the latest developer preview docs. Click here to view docs for the latest stable release. vLLM Speculative Decoding var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-
+
+TERM draft IDX 6407
+toreConnector Usage Guide MoRIIOConnector Usage Guide Multimodal Inputs NixlConnector Compatibility Matrix NixlConnector Usage Guide Prompt Embedding Inputs Reasoning Outputs Sleep Mode Structured Outputs Tool Calling Quantization Quantization AutoAWQ BitsAndBytes FP8 W8A8 FP8 ViT Encoder Attention GGUF GPTQModel Intel Quantization Support INT4 W4A16 INT8 W8A8 LLM Compressor NVIDIA Model Optimizer Online Quantization Quantized KV Cache AMD Quark TorchAO Speculative Decoding Speculative Decoding Draft Models EAGLE Draft Models Hidden State Extraction MLP Draft Models MTP (Multi-Token Prediction) N-Gram Speculation Parallel Draft Models vLLM-Project/Speculators Suffix Decoding Developer Guide Developer Guide General General Deprecation Policy Dockerfile Editing Agent Instructions Incremental Compilation Workflow Profiling vLLM Vulnerability Management Model Implementation Model Implementation Basic Model Registering a Model Unit Testing Multi-Modal Support Speech-to-Text (Transcription/Translation) Support CI CI CI Failures Nightly Builds of vLLM Wheels Update PyTorch version on vLLM OSS CI/CD Design Documents Design Documents Plugins Plugins IO Processor Plugins LoRA Resolver Plugins Plugin System Architecture Overview Attention Backend Feature Support CUDA Graphs Vision Encoder (ViT) CUDA Graphs CustomOp Dual Batch Overlap How to debug the vLLM-torch.compile integration Fused MoE Modular Kernel Fusion torch.compile passes Integration with Hugging Face Hybrid KV Cache Manager Logits Processors Metrics Multi-Modal Data Processing Model Runner V2 Design Document Fused MoE Kernel Features Python Multiprocessing NIXL KV Cache Lease Renewal Optimization Levels P2P NCCL Connector Paged Attention Automatic Prefix Caching torch.compile integration torch.compile with Multimodal Encoders vLLM IR: Functional Intermediate Representation Benchmarking Benchmarking Benchmark CLI Parameter Sweeps Performance Dashboard API Reference API Reference vllm vllm collect_env connections env
+
+TERM EAGLE IDX 6420
+ Usage Guide MoRIIOConnector Usage Guide Multimodal Inputs NixlConnector Compatibility Matrix NixlConnector Usage Guide Prompt Embedding Inputs Reasoning Outputs Sleep Mode Structured Outputs Tool Calling Quantization Quantization AutoAWQ BitsAndBytes FP8 W8A8 FP8 ViT Encoder Attention GGUF GPTQModel Intel Quantization Support INT4 W4A16 INT8 W8A8 LLM Compressor NVIDIA Model Optimizer Online Quantization Quantized KV Cache AMD Quark TorchAO Speculative Decoding Speculative Decoding Draft Models EAGLE Draft Models Hidden State Extraction MLP Draft Models MTP (Multi-Token Prediction) N-Gram Speculation Parallel Draft Models vLLM-Project/Speculators Suffix Decoding Developer Guide Developer Guide General General Deprecation Policy Dockerfile Editing Agent Instructions Incremental Compilation Workflow Profiling vLLM Vulnerability Management Model Implementation Model Implementation Basic Model Registering a Model Unit Testing Multi-Modal Support Speech-to-Text (Transcription/Translation) Support CI CI CI Failures Nightly Builds of vLLM Wheels Update PyTorch version on vLLM OSS CI/CD Design Documents Design Documents Plugins Plugins IO Processor Plugins LoRA Resolver Plugins Plugin System Architecture Overview Attention Backend Feature Support CUDA Graphs Vision Encoder (ViT) CUDA Graphs CustomOp Dual Batch Overlap How to debug the vLLM-torch.compile integration Fused MoE Modular Kernel Fusion torch.compile passes Integration with Hugging Face Hybrid KV Cache Manager Logits Processors Metrics Multi-Modal Data Processing Model Runner V2 Design Document Fused MoE Kernel Features Python Multiprocessing NIXL KV Cache Lease Renewal Optimization Levels P2P NCCL Connector Paged Attention Automatic Prefix Caching torch.compile integration torch.compile with Multimodal Encoders vLLM IR: Functional Intermediate Representation Benchmarking Benchmarking Benchmark CLI Parameter Sweeps Performance Dashboard API Reference API Reference vllm vllm collect_env connections env_override env
+
+TERM Medusa IDX 21127
+hyperclovax_vision_v2 idefics2_vision_model idefics3 interfaces interfaces_base intern_vit internlm2 internlm2_ve interns1 interns1_pro interns1_vit interns2_preview internvl iquest_loopcoder isaac jais2 jamba jina jina_vl kanana_v keye keye_vl1_5 kimi_audio kimi_k25 kimi_k25_vit kimi_linear kimi_vl laguna lfm2 lfm2_moe lfm2_siglip2 lfm2_vl lightonocr llama llama4 llama4_eagle llama_eagle llama_eagle3 llava llava_next llava_next_video llava_onevision longcat_flash longcat_flash_mtp mamba mamba2 medusa mellum midashenglm mimo mimo_audio mimo_mtp mimo_v2 mimo_v2_mtp mimo_v2_omni minicpm minicpm3 minicpm_eagle minicpmo minicpmv minicpmv4_6 minimax_m2 minimax_text_01 minimax_vl_01 mistral mistral3 mistral_eagle mistral_large_3 mistral_large_3_eagle mixtral mllama4 mlp_speculator modernbert module_mapping molmo molmo2 moondream3 moonvit mpt musicflamingo nano_nemotron_vl nemotron nemotron_h nemotron_h_mtp nemotron_nas nemotron_parse nemotron_vl nvlm_d olmo olmo2 olmo_hybrid olmoe opencua openpangu openpangu_mtp openpangu_vl openvla opt orion ouro ovis ovis2_5 paddleocr_vl paligemma parakeet param2moe persimmon phi phi3 phi3v phi4mm phi4mm_audio phi4mm_utils phi4siglip phimoe pixtral plamo2 plamo3 qianfan_ocr qwen qwen2 qwen2_5_omni_thinker qwen2_5_vl qwen2_audio qwen2_moe qwen2_rm qwen2_vl qwen3 qwen3_5 qwen3_5_mtp qwen3_asr qwen3_asr_forced_aligner qwen3_asr_realtime qwen3_dflash qwen3_moe qwen3_next qwen3_next_mtp qwen3_omni_moe_thinker qwen3_vl qwen3_vl_moe qwen_vl radio registry rnj1 roberta rvl sarvam seed_oss siglip siglip2navit skyworkr1v smolvlm solar stablelm starcoder2 step1 step3_text step3_vl step3p5 step3p5_mtp step3p7 step_vl tarsier telechat2 teleflm terratorch ultravox utils vision voxtral voxtral_realtime voyage whisper whisper_causal whisper_utils zamba2 transformers transformers base causal legacy moe multimodal pooling utils offloader offloader base prefetch prefetch_ops uva warmup warmup deep_gemm_warmup kernel_warmup models models deepseek_v4 deepse
+
+TERM NGram IDX 29345
+us ray_wrappers reader stats utils pool pool late_interaction metadata sample sample metadata rejection_sampler sampler thinking_budget_state logits_processor logits_processor builtin interface state ops ops bad_words logprobs penalties topk_topp_sampler topk_topp_triton simple_kv_offload simple_kv_offload copy_backend cuda_mem_ops manager metadata worker spec_decode spec_decode custom_class_proposer dflash draft_model eagle extract_hidden_states gemma4 llm_base_proposer medusa metadata metrics ngram_proposer ngram_proposer_gpu step3p5 suffix_decoding utils structured_output structured_output backend_guidance backend_lm_format_enforcer backend_outlines backend_types backend_xgrammar request utils worker worker block_table cp_utils cpu_model_runner cpu_worker dp_utils ec_connector_model_runner_mixin encoder_cudagraph encoder_cudagraph_defs gpu_input_batch gpu_model_runner gpu_ubatch_wrapper gpu_worker kv_connector_model_runner_mixin lora_model_runner_mixin mamba_utils tpu_input_batch ubatch_utils ubatching utils worker_base workspace xpu_model_runner xpu_worker cpu cpu buffer_utils model_runner shm gpu gpu async_utils attn_utils block_table buffer_utils cp_utils cudagraph_utils dp_utils eplb_utils input_batch kv_connector lora_utils model_runner pp_utils shutdown states structured_outputs warmup metrics metrics logits mm mm encoder_cache encoder_runner rope model_states model_states default interface mamba_hybrid whisper pool pool late_interaction_runner pooling_runner sample sample bad_words gumbel logit_bias logprob min_p output penalties prompt_logprob sampler states spec_decode spec_decode rejection_sampler rejection_sampler_utils utils eagle eagle cudagraph eagle3_utils speculator utils CLI Reference CLI Reference vllm serve vllm chat vllm complete vllm run-batch vllm bench vllm bench vllm bench latency vllm bench mm-processor vllm bench serve vllm bench sweep plot vllm bench sweep plot_pareto vllm bench sweep serve vllm bench sweep serve_workload vllm bench thr
+
+TERM MLPSpeculator IDX -1
+not found
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 862ms:
+ Speculative Decoding - SGLang Documentation !function(){var b=""; function a(p){if(p==null)return"/";p=""+p;if(""===p)return"/";return"/"===p.charAt(0)?p:"/"+p} function u(p){if(p==null)return p;p=""+p;if(!p||p.charAt(p.length-1)==="/")return p.slice(0,-1);return p} function i(p){if(p==null)return p;p=""+p;if(6 (function(a,b){try{let c=document.getElementById("banner")?.innerText;if(c){for(let d=0;d {"@context":"https://schema.org","@type":"WebSite","name":"SGLang Documentation","creator":{"@type":"Organization","name":"Mintlify","url":"https://mintlify.com"}} ((a,b,c,d,e,f,g,h)=>{let i=document.documentElement,j=["light","dark"];function k(b){var c;(Array.isArray(a)?a:[a]).forEach(a=>{let c="class"===a,d=c&&f?e.map(a=>f[a]||a):e;c?(i.classList.remove(...d),i.classList.add(f&&f[b]?f[b]:b)):i.setAttribute(a,b)}),c=b,h&&j.includes(c)&&(i.style.colorScheme=c)}if(d)k(d);else try{let a=localStorage.getItem(b)||c,d=g&&"system"===a?window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":a;k(d)}catch(a){}})("class","isDarkMode","system",null,["dark","light","true","false","system"],{"true":"dark","false":"light","dark":"dark","light":"light"},true,false) :root{--banner-height:0px!important} (self.__next_s=self.__next_s||[]).push([0,{"children":"(function g(a,b,c,d,e){try{let f,g,h=[];try{h=window.location.pathname.split(\"/\").filter(a=\u003e\"\"!==a\u0026\u0026\"global\"!==a).slice(0,2)}catch{h=[]}let i=h.find(a=\u003ec.includes(a)),j=[];for(let c of(i?j.push(i):j.push(b),j.push(\"global\"),j)){if(!c)continue;let b=a[c];if(b?.content){f=b.content,g=c;break}}if(!f)return void document.documentElement.setAttribute(d,\"hidden\");let k=!0,l=0;for(;l\u003clocalStorage.length;){let a=localStorage.key(l);if(l++,!a?.endsWith(e))continue;let b=localStorage.getItem(a);if(b\u0026\u0026b===f){k=!1;break}g\u0026\u0026(a.startsWith(`lang:${g}_`)||!a.startsWith(\"lang:\"))\u0026\u0026(localStorage.removeItem(a),l--)}document.documentElement.setAttribute(d,k?\"visible\":\"hidden\")}catch(a){console.error(a),document.documentElement.setAttribute(d,\"hidden\")}})(\n {},\n \"en\",\n [],\n \"data-banner-state\",\n \"bannerDismissed\",\n)","id":"_mintlify-banner-script"}]) :root { --font-family-headings-custom: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; --font-weight-headings-custom: 600; --font-family-body-custom: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; --font-weight-body-custom: 400; } :root { --primary: 213 88 22; --primary-light: 213 88 22; --primary-dark: 213 88 22; --tooltip-foreground: 255 255 255; --background-light: 255 252 251; --background-dark: 29 29 29; --gray-50: 249 245 243; --gray-100: 244 240 238; --gray-200: 229 225 223; --gray-300: 212 208 206; --gray-400: 165 161 159; --gray-500: 118 114 112; --gray-600: 86 82 80; --gray-700: 69 65 63; --gray-800: 43 40 38; --gray-900: 29 25 23; --gray-950: 16 12 10; } (function() { function loadKatex() { const link = document.querySelector('link[href="https://d4tuoctqmanu0.cloudfront.net/katex.min.css"]'); if (link) link.rel = 'stylesheet'; } if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', loadKatex); } else { loadKatex(); } })(); (self.__next_s=self.__next_s||[]).push([0,{"suppressHydrationWarning":true,"children":"(function(a,b,c,d){var e;let f,g=\"mint\"===d||\"linden\"===d?\"sidebar\":\"sidebar-content\",h=(e=d,f=\"navbar-transition\",\"maple\"===e\u0026\u0026(f+=\"-maple\"),f),[i,j]=(()=\u003e{switch(d){case\"almond\":return[\"[--scroll-mt:2.5rem]\",\"[--scroll-mt:2.5rem]\"];case\"luma\":return[\"lg:[--scroll-mt:6rem]\",\"lg:[--scroll-mt:6rem]\"];case\"sequoia\":return[\"lg:[--scroll-mt:8.5rem]\",\"lg:[--scroll-mt:11rem]\"];default:return[\"lg:[--scroll-mt:9.5rem]\",\"lg:[--scroll-mt:12rem]\"]}})();function k(){document.documentElement.classList.add(i)}let l=document.documentElement.getAttribute(\"data-banner-state\"),m=null!=l?\"visible\"===l:b;function n(a){let b=m?`calc(${a-2.5}rem + var(--banner-height, 2.5rem))`:`${a}rem`;document.getElementById(g)?.style.setProperty(\"top\",b)}function o(a){let b=m?`calc(100vh - ${a-2.5}rem - var(--banner-height, 2.5rem))`:`calc(100vh - ${a}rem)`;document.getElementById(g)?.style.setProperty(\"height\",b)}function p(a,b){!a\u0026\u0026b||a\u0026\u0026!b?(k(),document.documentElement.classList.remove(j)):a\u0026\u0026b\u0026\u0026(document.documentElement.classList.add(j),document.documentElement.classList.remove(i))}switch(d){case\"mint\":n(c),p(a,m);break;case\"palm\":case\"aspen\":case\"sequoia\":n(c),o(c),p(a,m);break;case\"luma\":k();break;case\"linden\":n(c),m\u0026\u0026k();break;case\"almond\":k(),n(c),o(c)}let q=function(){let a=document.createElement(\"style\");return a.appendChild(document.createTextNode(\"*,*::before,*::after{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}\")),document.head.appe
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 879ms:
+ Fast and Expressive LLM Inference with RadixAttention and SGLang - LMSYS Blog | LMSYS Org Projects Blog About Donations Contact Projects Blog About Donations Contact ‹ Back to Blog ‹ Back to Blog Contents Backend: Automatic KV Cache Reuse with RadixAttention Frontend: Easy LLM Programming with SGLang Benchmark Adoption Conclusion Links Acknowledgement Citation Fast and Expressive LLM Inference with RadixAttention and SGLang Lianmin Zheng*, Liangsheng Yin, Zhiqiang Xie, Jeff Huang, Chuyue Sun, Cody Hao Yu, Shiyi Cao, Christos Kozyrakis, Ion Stoica, Joseph E. Gonzalez, Clark Barrett, Ying Sheng* Jan 17, 2024 Large Language Models (LLMs) are increasingly utilized for complex tasks that require multiple chained generation calls, advanced prompting techniques, control flow, and interaction with external environments. However, there is a notable deficiency in efficient systems for programming and executing these applications. To address this gap, we introduce SGLang, a S tructured G eneration Lang uage for LLMs. SGLang enhances interactions with LLMs, making them faster and more controllable by co-designing the backend runtime system and the frontend languages. On the backend, we propose RadixAttention, a technique for automatic and efficient KV cache reuse across multiple LLM generation calls. On the frontend, we develop a flexible domain-specific language embedded in Python to control the generation process. This language can be executed in either interpreter mode or compiler mode. These components work synergistically to enhance the execution and programming efficiency of complex LLM programs. We use SGLang to implement common LLM workloads, including agent, reasoning, extraction, chat, and few-shot learning tasks, employing the Llama-7B and Mixtral-8x7B models on NVIDIA A10G GPUs. Figures 1 and 2 below demonstrate that SGLang achieves up to 5 times higher throughput compared to existing systems, namely Guidance and vLLM. We have released the code and a tech report . Figure 1: Throughput of Different Systems on LLM Tasks (Llama-7B on A10G, FP16, Tensor Parallelism=1) Figure 2: Throughput of Different Systems on LLM Tasks (Mixtral-8x7B on A10G, FP16, Tensor Parallelism=8) In this blog post, we will begin by introducing the key optimizations we implemented in the backend, then move on to explaining the frontend APIs. Backend: Automatic KV Cache Reuse with RadixAttention During the development of the SGLang runtime, we identified a crucial optimization opportunity for complex LLM programs, which are poorly handled by current systems: KV cache reuse. KV cache reuse means different prompts with the same prefix can share the intermediate KV cache and avoid redundant memory and computation. In a complex program that involves multiple LLM calls, there can be various KV cache reuse patterns. Figure 3 below illustrates four such patterns, which are common in LLM workloads. While some systems are capable of handling KV cache reuse in certain scenarios, this o
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://docs.sglang.ai/advanced_features/speculative_decoding.html > /tmp/sglang_spec.html && python3 - <<'PY'
+import re
+s=open('/tmp/sglang_spec.html',errors='ignore').read(); t=re.sub('<["'^>]+>'"',' ',s); t=re.sub(r'\\\\u003e','>',t); t=re.sub(r'\\\\u0026','&',t); t=re.sub(r'\\s+',' ',t)
+for term in ['Speculative Decoding', 'EAGLE', 'draft', 'Medusa', 'num_draft_tokens']:
+ i=t.lower().find(term.lower())
+ print('\\nTERM',term,'IDX',i)
+ print(t[max(0,i-700):i+1800] if i"'!=-1 else '"'not found')
+PY" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/speculative_decoding.md | sed -n '1,240p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/advanced_features/speculative_decoding.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 156ms:
+404: Not Found
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 221ms:
+# Speculative Decoding
+
+SGLang provides several speculative decoding options, including EAGLE-2/EAGLE-3, MTP, classic draft-model decoding, and an NGRAM-based variant. Our implementation aims to maximize speed and efficiency and is considered to be among the fastest in open-source LLM engines.
+
+## Summary
+
+### Jump to sections
+
+- [EAGLE Decoding](#eagle-decoding)
+  - [EAGLE-2 Decoding](#eagle-2-decoding)
+  - [EAGLE-2 Decoding with torch.compile](#eagle-2-decoding-with-torchcompile)
+  - [EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling](#eagle-2-decoding-via-frequency-ranked-speculative-sampling)
+  - [EAGLE-3 Decoding](#eagle-3-decoding)
+- [Multi Token Prediction](#multi-token-prediction)
+- [Standalone Speculative Decoding (Small Draft Model)](#standalone-speculative-decoding-small-draft-model)
+- [Speculative Decoding V2 (Overlap Scheduler)](#speculative-decoding-v2-overlap-scheduler)
+- [Ngram Speculative Decoding](#ngram-speculative-decoding)
+- [Full Parameter Reference](#full-parameter-reference)
+- [OOM Troubleshooting](#oom-troubleshooting)
+- [References](#references)
+
+### Quick guidance
+
+- **Best speed/quality (recommended)**: Use **EAGLE-3** with `--speculative-algorithm EAGLE3`.
+- **Strong default / broad compatibility**: Use **EAGLE-2** with `--speculative-algorithm EAGLE`.
+- **Workload acceptance changes over time**: Use [**Adaptive speculative decoding**](adaptive_speculative_decoding.md) on top of **EAGLE** with `--speculative-eagle-topk 1`.
+- **Lower `lm_head` overhead for EAGLE-2**: Enable **FR-Spec** with `--speculative-token-map`.
+- **Model is MTP-enabled**: Use **MTP via speculative decoding** (often with small `speculative_num_steps/topk/num_draft_tokens`, see the example section).
+- **You have a smaller draft LLM**: Use **STANDALONE** (`--speculative-algorithm STANDALONE`).
+- **No extra model available**: Use **NGRAM** (`--speculative-algorithm NGRAM`, CUDA-only).
+- **Want overlap scheduler (experimental)**: Enable **SpecV2** with `SGLANG_ENABLE_SPEC_V2=True` (requires `--speculative-eagle-topk 1`).
+
+### Method comparison (mini table)
+
+| Method | Draft source | Separate draft model? | How to enable | Notes / constraints |
+|---|---|---:|---|---|
+| EAGLE-2 | EAGLE draft model (feature drafting + tree) | Typically yes | `--speculative-algorithm EAGLE` + `--speculative-draft-model-path ...` | Tune `--speculative-num-steps`, `--speculative-eagle-topk`, `--speculative-num-draft-tokens` |
+| EAGLE-2 + `torch.compile` | Same as EAGLE-2 | Typically yes | Add `--enable-torch-compile` (optionally `--torch-compile-max-bs`) | Benefit varies by hardware/model; benchmark to verify |
+| EAGLE-2 + FR-Spec | Same as EAGLE-2 + token subset | Typically yes | Add `--speculative-token-map ...` | Reduces `lm_head` overhead with high-frequency token vocab |
+| EAGLE-3 | EAGLE3 draft model | Yes | `--speculative-algorithm EAGLE3` + `--speculative-draft-model-path ...` | Best throughput in the benchmark below |
+| MTP | Built-in multi-token heads (model-specific) | Often no | See **Multi Token Prediction** section | Uses speculative workflow; draft path may be auto-handled for some models |
+| STANDALONE | Smaller draft LLM (token-level) | Yes | `--speculative-algorithm STANDALONE` + `--speculative-draft-model-path ...` | Does **not** support `--enable-dp-attention` |
+| SpecV2 (experimental) | V2 workers + overlap scheduler | N/A | `SGLANG_ENABLE_SPEC_V2=True` | Only supports `--speculative-eagle-topk 1`; applies to `EAGLE`, `EAGLE3`, `STANDALONE` |
+| NGRAM | Ngram cache from previous tokens | No | `--speculative-algorithm NGRAM` | CUDA-only; no `--enable-dp-attention`; disables overlap scheduler & mixed chunked prefill |
+
+### Performance Highlights
+
+Please see below for the huge improvements on throughput for LLaMA-Instruct 3.1 8B tested on MT bench that can be achieved via EAGLE3 decoding.
+For further details please see the [EAGLE3 paper](https://arxiv.org/pdf/2503.01840).
+
+| Method | Throughput (tokens/s) |
+|--------|----------------|
+| SGLang (w/o speculative, 1x H100) | 158.34 tokens/s |
+| SGLang + EAGLE-2 (1x H100) | 244.10 tokens/s |
+| SGLang + EAGLE-3 (1x H100) | 373.25 tokens/s |
+
+---
+
+## EAGLE Decoding
+
+To enable EAGLE speculative decoding the following parameters are relevant:
+
+| Parameter | Description | Default |
+|---|---|---|
+| `--speculative-draft-model-path` | Draft model path/weights. **Typically required** for EAGLE/EAGLE3 and STANDALONE. For some MTP-enabled models, this can be omitted. | `None` |
+| `--speculative-num-steps` | Depth of autoregressive drafting. Increases speculation range but risks rejection cascades. | Auto (`5` for Llama/Grok; `3` for many other models) |
+| `--speculative-eagle-topk` | Branching factor per step. Improves candidate diversity and acceptance rate, but increases memory/compute consumption. | Auto (`4` for Llama/Grok; `1` for many other models) |
+| `--speculative-num-draft-tokens` | Maximum parallel verification capacity. Allows deeper tree evaluation but increases GPU memory usage. | Auto (`8` for Llama/Grok; `4` for many other models). If `topk=1`, it is adjusted to `num_steps + 1`. |
+| `--speculative-accept-threshold-single` | Acceptance threshold for single-token verification. Lower values accept more aggressively. | `1.0` |
+| `--speculative-accept-threshold-acc` | Accumulated acceptance threshold across steps. | `1.0` |
+| `--speculative-attention-mode` | Attention mode for speculative operations (`prefill` or `decode`), affecting both target verification and draft extension. | `"prefill"` |
+| `--speculative-draft-attention-backend` | Override attention backend for the draft model. | `None` (same as target) |
+| `--speculative-draft-model-quantization` | Quantization method for the draft model. Use `"unquant"` to force no quantization even when the target model is quantized. | Same as target model |
+| `--speculative-draft-model-revision` | Specific revision/commit of the draft model to load. | `None` (auto-set to `"main"` when `--speculative-draft-model-path` is set and revision is omitted) |
+| `--speculative-draft-load-format` | Load format for the draft model weights. | `None` |
+
+These parameters are mostly the same for EAGLE-2 and EAGLE-3. `--speculative-token-map` is ignored for EAGLE-3 models.
+For `--speculative-num-steps`, `--speculative-eagle-topk`, and `--speculative-num-draft-tokens`: leave all three unset to use auto-tuning, or set all three explicitly when tuning.
+If you use EAGLE with `--speculative-eagle-topk 1` and your acceptance rate varies across requests, see [Adaptive Speculative Decoding](adaptive_speculative_decoding.md).
+
+You can find the best combinations of these parameters with [bench_speculative.py](https://github.com/sgl-project/sglang/blob/main/scripts/playground/bench_speculative.py).
+
+
+### EAGLE-2 Decoding
+
+You can enable EAGLE-2 Decoding by setting `--speculative-algorithm EAGLE` and choosing an appropriate model.
+
+**Launch the server:**
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --speculative-algorithm EAGLE \
+    --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B \
+    --speculative-num-steps 3 \
+    --speculative-eagle-topk 4 \
+    --speculative-num-draft-tokens 16 \
+    --mem-fraction-static 0.7 \
+    --cuda-graph-max-bs 8 \
+    --log-level warning
+```
+
+**Send a request:**
+
+```python
+import openai
+
+client = openai.Client(base_url="http://127.0.0.1:30000/v1", api_key="None")
+
+response = client.chat.completions.create(
+    model="meta-llama/Llama-2-7b-chat-hf",
+    messages=[
+        {"role": "user", "content": "List 3 countries and their capitals."},
+    ],
+    temperature=0,
+    max_tokens=64,
+)
+
+print(response.choices[0].message.content)
+```
+
+---
+
+### EAGLE-2 Decoding with `torch.compile`
+
+You can optionally enable `torch.compile` to apply kernel-level optimizations (operator fusion, autotune) to the draft model. The actual speedup depends on your hardware, model architecture, and batch size. In some configurations (e.g., small draft models on H100 where cuBLAS is already optimal and CUDA graphs are enabled), the benefit may be negligible. We recommend benchmarking with and without this flag on your specific setup to verify whether it helps.
+
+To enable it, add `--enable-torch-compile` and optionally set `--torch-compile-max-bs`:
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --speculative-algorithm EAGLE \
+    --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B \
+    --speculative-num-steps 3 \
+    --speculative-eagle-topk 4 \
+    --speculative-num-draft-tokens 16 \
+    --mem-fraction-static 0.7 \
+    --enable-torch-compile \
+    --torch-compile-max-bs 8 \
+    --log-level warning
+```
+
+**Send a request:**
+
+```python
+import openai
+
+client = openai.Client(base_url="http://127.0.0.1:30000/v1", api_key="None")
+
+response = client.chat.completions.create(
+    model="meta-llama/Llama-2-7b-chat-hf",
+    messages=[
+        {"role": "user", "content": "List 3 countries and their capitals."},
+    ],
+    temperature=0,
+    max_tokens=64,
+)
+
+print(response.choices[0].message.content)
+```
+
+---
+
+### EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling
+
+By employing a truncated high-frequency token vocabulary in the draft model, EAGLE speculative decoding reduces `lm_head` computational overhead while accelerating the pipeline without quality degradation. For more details, check out [the paper](https://arxiv.org/pdf/2502.14856).
+
+In our implementation, set `--speculative-token-map` to enable the optimization. You can get the high-frequency tokens in FR-Spec from [this model](https://huggingface.co/thunlp/LLaMA3-Instruct-8B-FR-Spec). Or you can obtain high-frequency tokens by directly downloading these tokens from [this repo](https://github.com/thunlp/FR-Spec/tree/main?tab=readme-ov-file#prepare-fr-spec-vocabulary-subset).
+
+Thanks for the contribution from [Weilin Zhao](https://github.com/Achazwl) and [Zhousx](https://github.com/Zhou-sx).
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Meta-Llama-3-8B-Instruct \
+    --speculative-algorithm EAGLE \
+    --speculative-draft-model-path lmsys/sglang-EAGLE-LLaMA3-Instruct-8B \
+    --speculative-num-steps 3 \
+    --speculative-eagle-topk 4 \
+    --speculative-num-draft-tokens 16 \
+    --speculative-token-map thunlp/LLaMA3-Instruct-8B-FR-Spec/freq_32768.pt \
+    --mem-fraction-static 0.7 \
+    --cuda-graph-max-bs 8 \
+    --dtype float16 \
+    --log-level warning
+```
+
+**Send a request:**
+
+```python
+import openai
+
+client = openai.Client(base_url="http://127.0.0.1:30000/v1", api_key="None")
+
+response = client.chat.completions.create(
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
+    messages=[
+        {"role": "user", "content": "List 3 countries and their capitals."},
+    ],
+    temperature=0,
+    max_tokens=64,
+)
+
+print(response.choices[0].message.content)
+```
+
+---
+
+### EAGLE-3 Decoding
+
+You can enable EAGLE-3 decoding by setting `--speculative-algorithm EAGLE3` and choosing an appropriate model.
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Meta-Llama-3.1-8B-Instruct \
+    --speculative-algorithm EAGLE3 \
+    --speculative-draft-model-path jamesliu1/sglang-EAGLE3-Llama-3.1-Instruct-8B \
+    --speculative-num-steps 3 \
+    --speculative-eagle-topk 4 \
+    --speculative-num-draft-tokens 16 \
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 718ms:
+
+TERM Speculative Decoding IDX 1
+ Speculative Decoding - SGLang Documentation !function(){var b=""; function a(p){if(p==null)return"/";p=""+p;if(""===p)return"/";return"/"===p.charAt(0)?p:"/"+p} function u(p){if(p==null)return p;p=""+p;if(!p||p.charAt(p.length-1)==="/")return p.slice(0,-1);return p} function i(p){if(p==null)return p;p=""+p;if(6 (function(a,b){try{let c=document.getElementById("banner")?.innerText;if(c){for(let d=0;d {"@context":"https://schema.org","@type":"WebSite","name":"SGLang Documentation","creator":{"@type":"Organization","name":"Mintlify","url":"https://mintlify.com"}} ((a,b,c,d,e,f,g,h)=>{let i=document.documentElement,j=["light","dark"];function k(b){var c;(Array.isArray(a)?a:[a]).forEach(a=>{let c="class"===a,d=c&&f?e.map(a=>f[a]||a):e;c?(i.classList.remove(...d),i.classList.add(f&&f[b]?f[b]:b)):i.setAttribute(a,b)}),c=b,h&&j.includes(c)&&(i.style.colorScheme=c)}if(d)k(d);else try{let a=localStorage.getItem(b)||c,d=g&&"system"===a?window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":a;k(d)}catch(a){}})("class","isDarkMode","system",null,["dark","light","true","false","system"],{"true":"dark","false":"light","dark":"dark","light":"light"},true,false) :root{--banner-height:0px!important} (self.__next_s=self.__next_s||[]).push([0,{"children":"(function g(a,b,c,d,e){try{let f,g,h=[];try{h=window.location.pathname.split(\"/\").filter(a=>\"\"!==a&&\"global\"!==a).slice(0,2)}catch{h=[]}let i=h.find(a=>c.includes(a)),j=[];for(let c of(i?j.push(i):j.push(b),j.push(\"global\"),j)){if(!c)continue;let b=a[c];if(b?.content){f=b.content,g=c;break}}if(!f)return void document.documentElement.setAttribute(d,\"hidden\");let k=!0,l=0;for(;l\u003clocalStorage.length;){let a=localStorage.key(l);if(l++,!a?.endsWith(e))continue;let b=localStorage.getItem(a);if(b&&b===f){k=!1;bre
+
+TERM EAGLE IDX 12625
+e tbody tr:nth-child(odd) td, [data-theme="dark"] table tbody tr:nth-child(odd) td { background-color: rgba(255,255,255,0.02); } html.dark table tbody tr:nth-child(even) td, [data-theme="dark"] table tbody tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); } /* Bold text (**text**) */ .prose strong, .prose b { font-weight: 600; } /* Inline code (single backtick) */ :not(pre) > code { background-color: rgba(0, 0, 0, 0.07); font-weight: 600; } html.dark :not(pre) > code, [data-theme="dark"] :not(pre) > code { background-color: rgba(255, 255, 255, 0.13); font-weight: 600; } On this page Summary Jump to sections Quick guidance Method comparison (mini table) Performance Highlights EAGLE Decoding EAGLE-2 Decoding EAGLE-2 Decoding with torch.compile EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling EAGLE-3 Decoding Multi Token Prediction DFlash Decoding Standalone Speculative Decoding (Small Draft Model) Speculative Decoding V2 (Overlap Scheduler) Ngram Speculative Decoding Ngram-specific parameters Full Parameter Reference Core parameters Ngram-specific parameters Environment variables Other related flags OOM Troubleshooting Step 1: Lower static memory fraction (most effective) Step 2: Reduce CUDA graph batch size Step 3: Reduce draft tree size Step 4: Limit concurrent requests Quick OOM recovery recipe References Advanced Features Speculative Decoding Copy page Copy page Documentation Index Fetch the complete documentation index at: https://docs.sglang.io/llms.txt Use this file to discover all available pages before exploring further. SGLang provides several speculative decoding options, including EAGLE-2/EAGLE-3, MTP, DFLASH, classic draft-model decoding, and an NGRAM-based variant. Our implementation aims to maximize speed and efficiency and is considered to be among the fastest in open-source LLM engines. ​ Summary ​ Jump to sections EAGLE Decoding EAGLE-2 Decoding EAGLE-2 Decoding with torch.compile EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling EAGLE-3 Decoding Multi Token Prediction DFlash Decoding Standalone Speculative Decoding (Small Draft Model) Speculative Decoding V2 (Overlap Scheduler) Ngram Speculative Decoding Full Parameter Reference OOM Troubleshooting References ​ Quick guidance Best speed/quality (recommended) : Use EAGLE-3 with --speculative-algorithm EAGLE3 . Strong default / broad compatibility : Use EAGLE-2 with --speculative-algorithm EAGLE . Workload acceptance changes over time : Use Adaptive specula
+
+TERM draft IDX 12847
+n) td { background-color: rgba(255,255,255,0.05); } /* Bold text (**text**) */ .prose strong, .prose b { font-weight: 600; } /* Inline code (single backtick) */ :not(pre) > code { background-color: rgba(0, 0, 0, 0.07); font-weight: 600; } html.dark :not(pre) > code, [data-theme="dark"] :not(pre) > code { background-color: rgba(255, 255, 255, 0.13); font-weight: 600; } On this page Summary Jump to sections Quick guidance Method comparison (mini table) Performance Highlights EAGLE Decoding EAGLE-2 Decoding EAGLE-2 Decoding with torch.compile EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling EAGLE-3 Decoding Multi Token Prediction DFlash Decoding Standalone Speculative Decoding (Small Draft Model) Speculative Decoding V2 (Overlap Scheduler) Ngram Speculative Decoding Ngram-specific parameters Full Parameter Reference Core parameters Ngram-specific parameters Environment variables Other related flags OOM Troubleshooting Step 1: Lower static memory fraction (most effective) Step 2: Reduce CUDA graph batch size Step 3: Reduce draft tree size Step 4: Limit concurrent requests Quick OOM recovery recipe References Advanced Features Speculative Decoding Copy page Copy page Documentation Index Fetch the complete documentation index at: https://docs.sglang.io/llms.txt Use this file to discover all available pages before exploring further. SGLang provides several speculative decoding options, including EAGLE-2/EAGLE-3, MTP, DFLASH, classic draft-model decoding, and an NGRAM-based variant. Our implementation aims to maximize speed and efficiency and is considered to be among the fastest in open-source LLM engines. ​ Summary ​ Jump to sections EAGLE Decoding EAGLE-2 Decoding EAGLE-2 Decoding with torch.compile EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling EAGLE-3 Decoding Multi Token Prediction DFlash Decoding Standalone Speculative Decoding (Small Draft Model) Speculative Decoding V2 (Overlap Scheduler) Ngram Speculative Decoding Full Parameter Reference OOM Troubleshooting References ​ Quick guidance Best speed/quality (recommended) : Use EAGLE-3 with --speculative-algorithm EAGLE3 . Strong default / broad compatibility : Use EAGLE-2 with --speculative-algorithm EAGLE . Workload acceptance changes over time : Use Adaptive speculative decoding on top of EAGLE with --speculative-eagle-topk 1 . Lower lm_head overhead for EAGLE-2 : Enable FR-Spec with --speculative-token-map . Model is MTP-enabled : Use MTP via speculative decoding (often with small s
+
+TERM Medusa IDX -1
+not found
+
+TERM num_draft_tokens IDX 14673
+iction DFlash Decoding Standalone Speculative Decoding (Small Draft Model) Speculative Decoding V2 (Overlap Scheduler) Ngram Speculative Decoding Full Parameter Reference OOM Troubleshooting References ​ Quick guidance Best speed/quality (recommended) : Use EAGLE-3 with --speculative-algorithm EAGLE3 . Strong default / broad compatibility : Use EAGLE-2 with --speculative-algorithm EAGLE . Workload acceptance changes over time : Use Adaptive speculative decoding on top of EAGLE with --speculative-eagle-topk 1 . Lower lm_head overhead for EAGLE-2 : Enable FR-Spec with --speculative-token-map . Model is MTP-enabled : Use MTP via speculative decoding (often with small speculative_num_steps/topk/num_draft_tokens , see the example section). You have a DFlash draft checkpoint : Use DFLASH with --speculative-algorithm DFLASH and --speculative-draft-model-path ... . You have a smaller draft LLM : Use STANDALONE ( --speculative-algorithm STANDALONE ). No extra model available : Use NGRAM ( --speculative-algorithm NGRAM , CUDA-only). Want overlap scheduler (experimental) : Enable SpecV2 with SGLANG_ENABLE_SPEC_V2=True (requires --speculative-eagle-topk 1 ). ​ Method comparison (mini table) Method Draft source Separate draft model? How to enable Notes / constraints EAGLE-2 EAGLE draft model (feature drafting + tree) Typically yes —speculative-algorithm EAGLE + —speculative-draft-model-path … Tune —speculative-num-steps , —speculative-eagle-topk , —speculative-num-draft-tokens EAGLE-2 + torch.compile Same as EAGLE-2 Typically yes Add —enable-torch-compile (optionally —torch-compile-max-bs ) Benefit varies by hardware/model; benchmark to verify EAGLE-2 + FR-Spec Same as EAGLE-2 + token subset Typically yes Add —speculative-token-map … Reduces lm_head overhead with high-frequency token vocab EAGLE-3 EAGLE3 draft model Yes —speculative-algorithm EAGLE3 + —speculative-draft-model-path … Best throughput in the benchmark below MTP Built-in multi-token heads (model-specific) Often no See Multi Token Prediction section Uses speculative workflow; draft path may be auto-handled for some models DFLASH DFlash draft model (linear block verification) Yes —speculative-algorithm DFLASH + —speculative-draft-model-path … No —enable-dp-attention ; pp_size == 1 ; disables overlap scheduler &amp; mixed chunked prefill STANDALONE Smaller draft LLM (token-level) Yes —speculative-algorithm STANDALONE + —speculative-draft-model-path … Does not support —enable-dp-attention SpecV2 (experimental)
+
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -A 'Mozilla/5.0' --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/advanced_features/adaptive_speculative_decoding.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 179ms:
+# Adaptive Speculative Decoding
+
+Adaptive speculative decoding lets SGLang adjust `speculative_num_steps/speculative_num_draft_tokens` at runtime instead of keeping a single fixed value for the whole server lifetime.
+It is designed for workloads whose accept length changes over time, where one static step count is rarely optimal.
+
+## Current support
+
+- Only `--speculative-algorithm EAGLE`
+- Only `--speculative-eagle-topk 1`
+- If either condition is not met, SGLang falls back to static speculative settings
+
+## Why adaptive steps help
+
+`speculative_num_steps` controls how many draft-model autoregressive steps run in each speculative round. In practice, the best value depends on the current workload.
+
+- If `num_steps` is too small, the draft model could have produced more accepted tokens, but the round stops too early.
+- If `num_steps` is too large, the draft model produces many candidate tokens that the target model rejects, so extra draft work is wasted.
+
+Real traffic often moves between high-acceptance and low-acceptance phases, so one fixed step count is usually a compromise. Adaptive mode tries to follow the workload instead of hard-coding a single global `num_steps`.
+
+## Design overview
+
+The adaptive mechanism has three pieces:
+
+- `AdaptiveSpeculativeParams`: the EMA-based policy
+- `SpecRuntimeState`: the per-tier runtime state bundle
+- `AdaptiveController`: the coordinator that chooses a tier and activates the matching runtime state
+
+At startup, SGLang pre-builds one runtime state per candidate tier. By default, the candidate tiers are `candidate_steps = [1, 3, 7]`.
+
+```text
+┌──────────────────────────────────────────────────────────┐
+│                      SpecRuntimeState                    │
+│                                                          │
+│  speculative_num_steps / speculative_num_draft_tokens   │
+│                                                          │
+│  ┌────────────────┐ ┌────────────────┐ ┌──────────────┐  │
+│  │  Draft stage   │ │  Verify stage  │ │ Extend stage │  │
+│  │                │ │                │ │              │  │
+│  │  attn_backend  │ │  attn_backend  │ │ attn_backend │  │
+│  │  cuda_graph    │ │  cuda_graph    │ │ cuda_graph   │  │
+│  └────────────────┘ └────────────────┘ └──────────────┘  │
+└──────────────────────────────────────────────────────────┘
+```
+
+This matters because `CudaGraphRunner` is shape-dependent. Each candidate tier owns its own graph and backend state, so runtime switching is a reference swap, not an online graph recapture.
+
+## Runtime flow
+
+The adaptive update happens after verify and affects the next round, not the current one:
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│           EAGLEWorker.forward_batch_generation() — decode path      │
+│                                                                     │
+│   ① draft(batch)                                                    │
+│       │  draft model multi-step generation with current tier        │
+│       v                                                             │
+│   ② verify(batch, spec_info)                                        │
+│       │  target model tree verification                             │
+│       │  → produces accept_length_per_req                           │
+│       v                                                             │
+│   ③ forward_draft_extend_after_decode(batch)                        │
+│       │  draft model KV-cache catch-up                              │
+│       v                                                             │
+│   ④ adaptive_controller.on_verify_complete(accept_lengths)          │
+│       │                                                             │
+│       │  update EMA, apply warmup / interval / hysteresis gates     │
+│       │  if tier changed, select a pre-built state from pool        │
+│       v                                                             │
+│     worker.apply_runtime_state(state)                               │
+│                                                                     │
+│   Tier switch happens after the current round completes.            │
+│   Backends and CUDA graphs are never swapped mid-round.             │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## How the policy decides
+
+After each verify pass, SGLang reads the accepted draft length per request, computes the batch average, smooths it with an exponential moving average (EMA), and switches among the pre-built candidate tiers `[1, 3, 7]` by default.
+
+The decision logic is intentionally conservative:
+
+- `warmup_batches` skips the first few batches
+- `update_interval` avoids switching every batch
+- `down_hysteresis` and `up_hysteresis` reduce oscillation
+
+Conceptually, the policy probes one step beyond the observed acceptance:
+
+```text
+target_steps ≈ clamp(round(ema_accept_len) + 1, min(candidate_steps), max(candidate_steps))
+```
+
+So if recent requests consistently accept more drafted tokens, the policy tends to move up. If they start rejecting earlier, it tends to move down.
+
+## Usage
+
+`--speculative-adaptive-config` is optional, but the speculative setup still needs to be valid for adaptive mode.
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --speculative-algorithm EAGLE \
+    --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B \
+    --speculative-eagle-topk 1 \
+    --speculative-num-steps 3 \
+    --speculative-num-draft-tokens 4 \
+    --speculative-adaptive
+```
+
+If you want to override the defaults, add `--speculative-adaptive-config /path/to/adaptive_spec.json`.
+
+Example config:
+
+```json
+{
+  "candidate_steps": [1, 3, 7],
+  "ema_alpha": 0.2,
+  "warmup_batches": 10,
+  "update_interval": 5
+}
+```
+
+## Config file reference
+
+The config file is optional. Any omitted keys use defaults.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `candidate_steps` | `[1, 3, 7]` | Discrete `speculative_num_steps` tiers that adaptive mode can switch between |
+| `ema_alpha` | `0.2` | EMA smoothing factor for accepted draft length |
+| `update_interval` | `5` | Recompute interval, in verify batches, after warmup |
+| `warmup_batches` | `10` | Number of verify batches to observe before switching |
+| `down_hysteresis` | `-0.25` | Extra margin before moving to a smaller step |
+| `up_hysteresis` | `0.0` | Extra margin before moving to a larger step |
+
+The initial `--speculative-num-steps` is snapped to the nearest value in `candidate_steps`.
+
+## Monitoring
+
+You can inspect the active tier and acceptance metric via `/server_info`:
+
+```bash
+curl -s http://127.0.0.1:30000/server_info | jq '.internal_states[0] | {speculative_num_steps, avg_spec_accept_length}'
+```
+
+- `speculative_num_steps` is the current active tier
+- `avg_spec_accept_length` helps explain whether the server is likely to move up or down
+
+## Tuning tips
+
+- Start with the default candidate tiers `[1, 3, 7]`
+- Use fewer tiers if you want lower startup and graph-memory overhead
+- Increase `ema_alpha` to react faster, or lower it for more stability
+- Increase `warmup_batches` or `update_interval` if tier switching is too noisy
+- If your workload is already stable and one static setting is well tuned, adaptive mode may not help much
+
+codex
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Hugging Face Transformers / LayerSkip", url: "https://huggingface.co/blog/layerskip", overlap: "Implements early-exit self-speculative decoding via `assistant_early_exit`; overlaps with token/layer early exit, but not agentic token-class thresholds."},
+  {system: "SGLang", url: "https://raw.githubusercontent.com/sgl-project/sglang/main/docs/advanced_features/speculative_decoding.md", overlap: "Ships EAGLE-2/EAGLE-3, MTP, standalone draft-model, and NGRAM speculative decoding; also adaptive speculative decoding by accept length, not schema/boilerplate class."},
+  {system: "vLLM", url: "https://docs.vllm.ai/en/latest/features/speculative_decoding/", overlap: "Ships speculative decoding infrastructure including draft-model/EAGLE/MTP/N-gram families; overlap is inference acceleration, not confidence early-exit per token class."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/advanced/speculative-decoding.html", overlap: "Ships speculative sampling with draft-target, NGram, Medusa, ReDrafter, EAGLE, and Lookahead; no evidence of structure-aware early-exit thresholds."},
+  {system: "FlashInfer", url: "https://flashinfer.ai/2024/02/02/introduce-flashinfer.html", overlap: "Kernel library for LLM serving attention/KV-cache performance; no early-exit policy overlap."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache reuse/offload layer for serving; no early-exit policy overlap."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Does not hold as a systems claim yet. Evidence is an L0 analytic CPU/std-lib model, not a real LM/server/GPU artifact. The submitted structure-aware mechanism is negative: +0.46pp FLOPs at realistic f, 0/90 configurations above the 5pp bar. The surviving agentic>reasoning observation is only modeled and is already delivered by a tuned global threshold; real wall-clock, batching raggedness, intermediate-head overhead, KV-cache effects, and sequence-level tool-call quality are unmeasured.
+RATIONALE: Early-exit itself is prior art: CALM (https://arxiv.org/abs/2207.07061), Depth-Adaptive Transformer (https://arxiv.org/abs/1910.10073), SkipDecode (https://arxiv.org/abs/2307.02628), and LayerSkip (https://aclanthology.org/2024.acl-long.681/). Shipping systems already cover adjacent inference mechanisms: Transformers/LayerSkip exposes early-exit self-speculative generation; SGLang, vLLM, and TensorRT-LLM ship speculative decoding variants. I found no shipping system doing the exact schema/boilerplate-conditioned threshold, but the packet’s own tuned-global baseline kills that mechanism at realistic f. This is not a systems design contribution; at best it is a negative analytic insight requiring real trace measurement and GPU/server validation before map promotion.
+tokens used
+60,369

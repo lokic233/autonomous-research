@@ -1,0 +1,7 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [{"name": "LayerSkip / CALM", "why": "An L0 analytic model cannot simulate realistic confidence saturation or auto-regressive error compounding; a production early-exit model is required.", "repo_or_cite": "LayerSkip (Elhoushi et al., 2024); CALM (Schuster et al., 2022)"}]
+STRAWMAN_RISKS: ["Using token-level error budgets for agentic workloads, where a single early-exit failure on a boilerplate JSON token invalidates the entire sequence", "Equating theoretical token-level FLOPs with wall-clock speedup, ignoring GPU ragged batching and intermediate head overhead"]   MISSING_METRICS: ["Sequence-level tool-call pass@1 / Exact Match", "GPU wall-clock speedup", "Empirical measurement of real boilerplate fraction (f) on production agent traces"]
+KILLER_EXPERIMENT: Run a production early-exit model (e.g., LayerSkip) on an agentic dataset (e.g., Berkeley Function Calling Leaderboard) versus a reasoning dataset (GSM8K) to measure sequence-level pass@1 against actual GPU wall-clock speedup.
+RATIONALE: (v001) While the honest negative on Part B is well-documented, Part A's 'held' status relies entirely on a flawed L0 analytic model. For agentic generation, using a token-level error budget is a strawman metric: a single early-exit error on a boilerplate token compounds auto-regressively and destroys the tool call's syntax. The comparative FLOPs claim is structurally invalid until sequence-level matched quality and wall-clock overheads are evaluated on a real production model like LayerSkip.
+```
