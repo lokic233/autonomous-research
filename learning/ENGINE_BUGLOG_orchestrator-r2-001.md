@@ -1079,3 +1079,36 @@ to GUESS the path), disposition, key_structural_finding, verbatim_votes_summary.
 --flags on ros verdict write (orchestrator already generates this content). Also: v2 has operational/
 (per-project metrics.jsonl) + README/CONTRIBUTING that v3 lacks — operational metrics noted as a future
 nicety, not blocking. Engine HEAD post-commit. BUG tally now BUG-67..76 (10 via live debug+bugbash+v2-diff).
+
+## BUG-77 — area_chair aggregation folded stale/orphan .out via blind *.out glob (committee packet staging)
+**Surface:** committee packet staging (area_chair two-pass aggregation).
+**Symptom:** `run_committee.sh` built the area_chair's "REVIEWER VOTES TO AGGREGATE" block by globbing
+`"$OUT"/*.out` (minus area_chair). If the OUT dir contained a stale `.out` from a removed/renamed role —
+e.g. a committee-config change, or a resubmit/retry into a dirty OUT dir — that orphan vote was silently
+folded into the chair's packet as a phantom committee member. Same integrity hole BUG-21/22 closed for the
+*completion gate* (which iterates the configured ALL_ROLES), left open in chair aggregation.
+**Repro:** OUT dir with the 5 configured reviewers + a stale `old_reviewer.out` ("VOTE: green"). Blind glob
+fed `old_reviewer` to the chair; configured-role iteration does not.
+**Fix (minimal):** aggregate ONLY the configured reviewer roles from MEMBERS_FILE (the source of truth),
+not a blind `*.out` glob. The chair now sees exactly the real committee, never an orphan .out.
+**Validated:** `bash -n` clean; repro confirms stale .out excluded post-fix.
+**v2-parity:** v2 uses the same single-source discipline for committee membership; v3 now matches.
+
+## BUG-78 — corrupt-config integrity floor: torn YAML could SHRINK the committee green-gate (single-reviewer green)
+**Surface:** config-missing/corrupt-yaml resilience (v3 ACTIVE-DEBUG bugbash, cycle 06:11→ watch).
+**Symptom:** A syntactically-corrupt `research-os.config.yaml` YAML-salvages (per BUG-10's parse-tolerant
+load) into a PARTIAL committee — e.g. `members=[{role: x}]`, `green_rule=None`. The green/promote gate
+(BUG-3/56/57) treated that degraded set as the source of truth, so a `--final green --votes "x:green"`
+slate passed as a **1/1 genuine green with `override_rule:false`** — indistinguishable from a real 6/6.
+The existing empty-list fallback only fired when `member_roles` was *empty*; a partial garbage list bypassed it.
+**Repro (isolated /tmp instance):** corrupt config → seed → exp register → `verdict write --final green
+--votes "x:green"` → `✅ VERDICT-0001 (green) votes: 1/1 override_rule:false`. Confirmed exploitable.
+**Fix (minimal):** in `cmd_verdict_write`, before applying the green-gate, treat the committee config as
+suspect if (empty member list) OR (fewer members than the canonical 6) OR (green_rule missing/None) — all
+fingerprints of a torn config — and fall back to the canonical 6-member unanimous quorum. A corrupt config
+can no longer SHRINK the gate below the battle-tested floor; a legitimately smaller committee must be
+configured with an explicit valid green_rule AND >= canon members.
+**Validated:** AST/`ast.parse` clean; post-fix the same single-reviewer green is REFUSED (demands all 6),
+a legit 6/6 green still passes. Live v3 + v2 configs are valid 6-member unanimous → UNAFFECTED (floor only
+triggers on degraded configs).
+**v2-parity:** v2 shares this engine and was equally exposed; both now enforce the floor.
