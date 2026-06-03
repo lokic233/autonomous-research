@@ -1,2 +1,54 @@
 MetaCode at Meta (https://fburl.com/metacode)
 --dangerously-disable-osx-sandbox flag is enabled, please use caution!
+[93mWARNING: 2 skill(s) in /Users/dengcchi/.claude/ not available for MetaCode.[0m
+Run `metacode migrate-from-claude` (to migrate existing installs) or `agent-market skill <name> install --agent metacode` (to install specific skills), or open MetaCode TUI and run `/legacy-skills` to see the list.
+
+[0m
+> build · avocado-code-latest
+[0m
+[0m→ [0mRead .
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md"}
+[0m→ [0mRead registry
+[0m→ [0mRead projects
+[0m→ [0mRead projects/PROJ-0003
+[0m→ [0mRead experiments
+[0m→ [0mRead experiments/2026-06-02
+[0m→ [0mRead experiments/2026-06-03
+[0m→ [0mRead experiments/2026-06-03/EXP-0007
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001"}
+[0m→ [0mRead runtime
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/TOOLING_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/_shared/**"[90m 0 matches[0m
+[0m→ [0mRead learning
+[0m→ [0mRead learning/roles
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "_committee_common_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/ | head -30
+total 32
+drwxr-xr-x  14 dengcchi  staff   448 Jun  2 14:57 .
+drwxr-x---+ 91 dengcchi  staff  2912 Jun  2 17:22 ..
+drwxr-xr-x  14 dengcchi  staff   448 Jun  2 17:21 .git
+-rw-r--r--   1 dengcchi  staff    56 Jun  2 11:39 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:01 experiments
+drwxr-xr-x   4 dengcchi  staff   128 Jun  2 12:04 learning
+-rw-r--r--   1 dengcchi  staff  3036 Jun  2 15:48 ORCHESTRATOR_CHARTER.md
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x   7 dengcchi  staff   224 Jun  2 16:22 projects
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3553 Jun  2 11:39 research-os.config.yaml
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 16:53 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m→ [0mRead ../autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md

@@ -1,0 +1,18 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: red
+MANDATORY_BASELINES:
+  - {name: "SnapKV / H2O", why: "State-of-the-art attention-based KV-cache eviction/compression that already retains high-attention tokens across long contexts. The proposed method's use of 'attention/citation signal' directly competes with this.", repo_or_cite: "https://arxiv.org/abs/2404.14469 (SnapKV) / https://arxiv.org/abs/2306.14048 (H2O)"}
+  - {name: "LLMLingua", why: "Standard baseline for extractive prompt compression in long-context scenarios.", repo_or_cite: "https://arxiv.org/abs/2310.05736"}
+STRAWMAN_RISKS:
+  - Comparing an attention/salience-guided retention policy exclusively to naive recency-truncation (RT) is a structural strawman. RT is known to catastrophically fail on tasks requiring early-turn recall.
+  - The L0 simulation is purely tautological: it manually injects a synthetic "salience" proxy into the data generation that dictates future references, and then "discovers" that exploiting this proxy yields high task success. This proves the code works, not the hypothesis.
+MISSING_METRICS:
+  - True predictive AUC of *real* LLM attention/citation signals for future references (synthetic salience bypasses the actual modeling problem).
+  - End-to-end task completion rate on a real tool-use benchmark (e.g., τ-bench, SWE-bench), replacing the synthetic "referenced-span availability" proxy.
+  - Computational overhead/latency of running the extraction policy versus native KV eviction.
+KILLER_EXPERIMENT:
+  - Run a real multi-step tool-use benchmark (e.g., τ-bench) with a real LLM. Compare the proposed extractive compressor directly against SnapKV and LLMLingua at strictly matched context/KV token budgets, measuring end-to-end task success and empirical attention-to-future-reference predictive AUC.
+RATIONALE:
+  - The evaluation is currently a circular synthetic exercise comparing against a toy baseline. You cannot claim an "attention/citation signal" compressor is effective without testing real attention on real tool outputs against the actual state-of-the-art in attention-based compression (SnapKV/H2O). The "make-or-break" negative (N3) is not refuted; it is merely hardcoded to succeed by the synthetic data generator.
+```

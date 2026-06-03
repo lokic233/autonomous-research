@@ -1,0 +1,9 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: [{"name": "CacheBlend", "why": "State-of-the-art for prefix-independent KV reuse; directly targets the RoPE re-anchoring and position-shifted KV reuse problem.", "repo_or_cite": "CacheBlend (2024)"}, {"name": "LMCache", "why": "Dominant baseline for cross-request KV deduplication and reuse.", "repo_or_cite": "LMCache"}]
+STRAWMAN_RISKS: ["Comparing against exact-prefix (vLLM APC) as the ONLY baseline, ignoring prior work that already tackles position-shifted KV reuse.", "Using a synthetic word-level tokenizer which completely misrepresents real subword (BPE) chunk boundary fragmentation and offset alignment.", "Ignoring the runtime compute overhead of CDC (content-defined chunking) rolling hashes in a latency-critical serving path."]
+MISSING_METRICS: ["Compute overhead of CDC chunking vs standard block hashing", "CUDA kernel profiling of Re-RoPE transform vs standard forward pass recomputation", "End-to-end TTFT (Time To First Token) latency impact"]
+KILLER_EXPERIMENT: Profile the GPU execution time of a Re-RoPE transform R(Δ) on a cached K-block versus the cost of simply recomputing the block via a standard forward pass. If the memory-bandwidth-bound re-rotation is slower than or comparable to recompute, the proposed revival path is completely falsified.
+RATIONALE: The L0 correctly yields an honest negative, but the evaluation methodology is a toy simulation (word-level tokens, CPU-only) that fails to benchmark against dominant position-independent baselines like CacheBlend. The revival path assumes modifying cached K-blocks is viable, but without measuring the raw compute overhead of the Re-RoPE transform against standard recompute, the core mechanism remains unproven in a production setting.
+```

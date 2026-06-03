@@ -1,0 +1,14 @@
+```text
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "shipping exact-prefix/block-hash KV reuse; only full blocks; parent-hash chain makes it prefix-scoped"},
+  {system: "SGLang RadixAttention", url: "https://arxiv.org/html/2312.07104v1", overlap: "radix-tree KV cache reuse across calls via prefix matching and cache-aware scheduling"},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "shipping KV cache layer for sharing prefix KV across vLLM instances"},
+  {system: "CacheBlend / LMCache", url: "https://arxiv.org/html/2405.16444v3", overlap: "directly targets non-prefix KV reuse; handles reused chunks by positional adjustment plus selective KV recompute; reports TTFT 2.2-3.3x and throughput 2.8-5x vs full recompute"},
+  {system: "PromptCache as described by CacheBlend", url: "https://arxiv.org/html/2405.16444v3", overlap: "reuses chunks at different positions by preserving positional information with buffers, but loses cross-attention quality"}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold for the claimed realistic shifted workload. Packet evidence reports position-aware CDC beyond exact-prefix only 0.35-1.46% for shifted N=16..128, below the pre-registered >10% HELD rule and below the claimed memory/batching relevance. Artifact is CPU-only, synthetic, stdlib word-token proxy, no real tokenizer/model/GPU KV equality, no end-to-end preemption or batch-size measurement. The L0 is reproducible as a negative artifact but not a realistic serving demonstration.
+RATIONALE: The claimed mechanism is raw-KV dedup of identical content at different offsets. The packet’s own position-aware check shows RoPE makes shifted identical spans non-identical as raw K tensors, collapsing the token-level 4-7% opportunity to 0.35-1.46% position-aware gain. Existing systems already cover the useful adjacent mechanisms: vLLM APC and SGLang RadixAttention implement prefix-scoped KV reuse; LMCache ships cross-instance KV sharing; CacheBlend directly addresses non-prefix reuse by positional recovery/selective recompute and reports system-scale TTFT/throughput results. The CDC part is therefore glue around a failing raw-KV equality assumption, and the identified revival path is essentially CacheBlend-adjacent rather than established by this artifact.
+```

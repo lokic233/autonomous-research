@@ -1,0 +1,33 @@
+Note: live web-search egress was **denied** in this session (both `three_pai_external_web_search` and `WebSearch` permission-blocked), so I could not complete a fresh retrievable ≥2-source sweep. Per the rule that a KILL collision must be verified in ≥2 independent sources, I cannot issue a *verified* RED kill. I reason below from prior-art knowledge and flag the owed sweep explicitly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Zheng et al., 'Efficiently Programming LLMs with SGLang / RadixAttention', NeurIPS 2024",
+   url: "https://arxiv.org/abs/2312.07104",
+   why_close: "IS baseline (a). The 'greedy' cache-aware admission extreme. Establishes that maximizing prefix reuse is the recompute-prefill floor — exactly the structural wall the negative hits (greedy = floor in 32/36 cells)."}
+- {cite: "Sheng et al., 'Fairness in Serving Large Language Models' (VTC), OSDI 2024",
+   url: "https://arxiv.org/abs/2401.00588",
+   why_close: "IS baseline (b). The fairness extreme. The PARTIAL 'bounded-W dominates VTC on a reuse metric' is largely subsumed: VTC is explicitly cache-blind by design, so a cache-aware policy beating it on recomputed-prefill is near-tautological, not a new finding."}
+- {cite: "Srivatsa et al., 'Preble: Efficient Distributed Prompt Scheduling for LLM Serving', 2024",
+   url: "https://arxiv.org/abs/2407.00023",
+   why_close: "Prefix-aware scheduling that already balances reuse vs load/fairness. Mandatory to position against; overlaps the 'cache-aware but not purely greedy' design point bounded-W occupies."}
+- {cite: "Classic OS/queueing: aging / bounded-bypass / starvation-capped priority scheduling (Silberschatz OS; bounded-bypass queueing disciplines)",
+   url: "n/a (textbook); e.g. https://en.wikipedia.org/wiki/Aging_(scheduling)",
+   why_close: "'A high-priority job loses priority / must be admitted after being skipped >= W times' IS aging / bounded-bypass. bounded-W is this mechanism applied to a cache-residency priority."}
+
+NAMING_VS_MECHANISM: NAMING, predominantly. 'bounded-W' = cache-residency-greedy priority + a classic anti-starvation/aging cap (admit any request skipped >= W times). The mechanism delta over greedy is "add aging"; over VTC is "add cache-awareness". Neither is a new mechanism — both are decades-old scheduling primitives composed. W=0 -> FCFS, W=inf -> greedy is admitted in-packet, confirming bounded-W is a continuous knob ALONG a known frontier, not a new operating point. No novel mechanism is established; and since the result is NEGATIVE (0/36 joint-dom), there is no novel positive contribution that needs protecting.
+
+FATAL_COLLISIONS:
+- None VERIFIABLE to KILL standard in this session (egress denied; cannot produce 2 retrievable sources for a specific bounded-reorder-cache-LLM paper). I therefore do NOT assert a fatal collision — but flag a STRONG suspected collision: the bounded-W mechanism is anti-starvation aging applied to cache-aware priority, a composition that is near-certainly prior-disclosed in 2024-2025 SLO/fairness-aware LLM scheduling work. This must be sweep-verified before any external claim.
+
+MANDATORY_RELATED_WORK:
+- SGLang/RadixAttention (NeurIPS24); VTC (OSDI24); Preble (2024) — all three already named in packet; cite as the two extremes + the existing middle-ground.
+- Classic aging / bounded-bypass / starvation-bounded priority scheduling — to correctly attribute the bounded-W mechanism and avoid claiming it as new.
+- SLO/fairness-aware LLM serving the GPU-pivot would land in: Llumnix (OSDI24), Sarathi-Serve chunked prefill (OSDI24), Parrot (OSDI24). The researcher's pivot (metric -> SLO-attainment-at-fixed-prefill) enters THIS crowded space; a fresh novelty re-sweep is mandatory before a GPU pass, not after.
+
+RATIONALE: The experiment is an honest, well-controlled NEGATIVE (0/36 joint-dominance under Bonferroni FWER, 24 seeds, service-time feedback) and correctly closes the VERDICT-0006 reframe — that is a legitimate outcome and I do not penalize it. But on the novelty axis specifically: (1) bounded-W is a renaming/composition of aging + cache-aware priority (SGLang 2312.07104 for the cache-priority half, classic aging for the cap), not a new mechanism; (2) the surviving PARTIAL (beats VTC) is largely entailed by VTC being cache-blind by construction (2401.00588), so it is not a novel finding; (3) the negative result means no novel positive mechanism is being advanced anyway. I vote YELLOW rather than RED only because I could not complete the rule-required live ≥2-source verification of a specific fatal collision (egress denied). REQUIRED_EVIDENCE before any GPU/L1 pass: a completed prior-art sweep (≥2 retrievable sources) against (i) bounded-bypass/aging scheduling and (ii) 2024-2025 SLO-aware LLM schedulers, demonstrating that the multi-SLO/priority-class pivot is not already covered by Llumnix/Sarathi-Serve/Preble — otherwise the pivot inherits the same weak-novelty problem.
+
+PROMPT_VERSION: v001
+```

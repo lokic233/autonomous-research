@@ -1,0 +1,31 @@
+I attempted the mandated live ≥2-source prior-art sweep but external search (both `three_pai_external_web_search` and `WebSearch`) was permission-blocked this session. The referenced `_committee_common_v001.md` / `TOOLING_v001.md` are also absent from the repo. Per the committee role brain, an egress-blocked sweep is an honest YELLOW with a scoping fix — not a fabricated green/red. I reason below from established prior art (training knowledge, cutoff Jan 2026); the *live* collision verification is recorded as OWED.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Liu et al., Scissorhands: Exploiting the Persistence of Importance Hypothesis for LLM KV Cache Compression (NeurIPS 2023)",
+   url: "arxiv.org/abs/2305.17118",
+   why_close: "DIRECT threat to this packet's *only* claimed-distinct mechanism (b). Scissorhands' core thesis IS 'tokens important in the past stay important in the future' — i.e. future-reference is predictable from PAST attention. That is exactly EC's causal predictor (salience+repeat-reference+recency) and exactly the oracle-vs-causal gap being quantified, just at KV-token granularity instead of tool-span granularity."}
+- {cite: "Zhang et al., H2O: Heavy-Hitter Oracle for Efficient Generative Inference (NeurIPS 2023)",
+   url: "arxiv.org/abs/2306.14048",
+   why_close: "Causal retention by accumulated past attention mass = EC's salience term. Note the literal name 'Oracle' and its causal heavy-hitter approximation — the oracle/causal split is not new framing."}
+- {cite: "Xu et al., RECOMP: Improving Retrieval-Augmented LMs with Compression and Selective Augmentation (ICLR 2024)",
+   url: "arxiv.org/abs/2310.04408",
+   why_close: "Extractive compression of retrieved text segments, keeping only spans the downstream task references. EC's 'extractively keep referenced spans' is RECOMP applied to tool outputs instead of retrieved passages."}
+- {cite: "Xiao et al., StreamingLLM / Attention Sinks (ICLR 2024)", url: "arxiv.org/abs/2309.17453", why_close: "The RT arm, explicitly acknowledged by authors."}
+- {cite: "Jiang et al., LongLLMLingua (ACL 2024) + Li et al., SnapKV (NeurIPS 2024)", url: "arxiv.org/abs/2310.06839 ; arxiv.org/abs/2404.14469", why_close: "Question/attention-aware compression — the crowded field the authors concede."}
+
+NAMING_VS_MECHANISM:
+Mostly RENAMING, not a mechanism delta. The retention mechanism (predict future reference from past attention/salience + recency + repeat) is H2O + Scissorhands; extractive span-keeping is RECOMP; the recency arm is StreamingLLM. The authors HONESTLY disclaim novelty over compression itself and scope their delta to (a) tool-result-specific + (b) causal-prediction-with-oracle-gap. But (b) is substantially Scissorhands' persistence-of-importance + H2O's oracle/causal split — a clean measurement framing, NOT a new mechanism. The genuinely thin slice is (a) the tool-output-specific *empirical premise* (references are sparse + predictable in real tool transcripts) — and that premise is ASSUMED BY CONSTRUCTION in this L0, not demonstrated. So the novelty currently rests entirely on an unvalidated empirical claim.
+
+FATAL_COLLISIONS:
+- None verified to KILL standard (≥2 *independent live* sources) because egress was blocked this round — so I do NOT cast red. Candidate fatal collision to verify before any green: Scissorhands (persistence-of-importance == causal future-reference predictability) at minimum subsumes mechanism (b); if any prior work also targets TOOL/observation outputs in agent transcripts (search terms: "observation compression agent", "tool-output summarization ReAct", MemGPT/Letta paging, CompAct) the remaining slice (a) collapses too.
+
+MANDATORY_RELATED_WORK (must be cited + distinguished before L1+):
+- Scissorhands (persistence of importance — the key threat), H2O (heavy-hitter oracle/causal), SnapKV, StreamingLLM, LongLLMLingua, RECOMP/Provence (extractive RAG compression), MemGPT/Letta (agent memory paging), and a targeted sweep for "tool/observation-output compression in agents."
+
+RATIONALE:
+Vote = YELLOW, not green and not red. Not green: the contribution-vs-prior-art isolation is explicitly OWED (authors say so), the live ≥2-source sweep mandated for any "only distinct angle" claim was egress-blocked, and the one non-subsumed slice (tool-result sparsity/predictability) is assumed-by-construction in a synthetic trace, not shown on real tool outputs. Not red: authors do not overclaim novelty over the mechanism, and a clean empirical characterization of reference-sparsity on REAL agent traces could still be a modest genuine contribution — but I cannot verify a fatal collision in ≥2 sources without egress, so a red would be fabricated.
+REQUIRED_EVIDENCE before green/L1+: (1) live ≥2-source prior-art sweep specifically for tool/observation-output compression in agent transcripts, with Scissorhands explicitly distinguished (why span-level causal prediction on tool outputs ≠ token-level persistence-of-importance); (2) demonstrate the sparsity+predictability premise on REAL tool outputs (τ-bench / SWE / multi-tool ReAct traces) rather than assuming it; (3) use a REAL attention/citation signal as the causal predictor and report its TRUE predictive AUC for future references vs. the H2O/Scissorhands baseline at matched budget. Cite source version: v001 (egress-blocked sweep — scoping fix attached, per committee rule).
+```

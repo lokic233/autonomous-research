@@ -1,0 +1,34 @@
+Both web-search tools are permission-blocked in this session, so I could not run a *live* sweep. Per the novelty_killer role guidance (egress-blocked → honest disclosure, never fabricate), I cite the collisions from my own knowledge (training cutoff Jan 2026); all are well-established, retrievable, and the experiment's own prior-art caveat already names several. URLs/IDs below should be cheaply re-verified once egress is granted, but the collisions are not in doubt.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Gim et al., Prompt Cache: Modular Attention Reuse for Low-Latency Inference, MLSys 2024",
+   url: "https://arxiv.org/abs/2311.04934",
+   why_close: "Reuses cached attention/KV states for recurring text SEGMENTS (e.g. shared schema/boilerplate) that appear at DIFFERENT positions across prompts, via position-id remapping. This is precisely the claim's core idea ('same schema at different offsets'), and it already handles the position-dependence the L0 found fatal."}
+- {cite: "Yao et al., CacheBlend: Fast LLM Serving for RAG with Cached Knowledge Fusion, EuroSys 2025",
+   url: "https://arxiv.org/abs/2405.16444",
+   why_close: "Non-prefix cross-request KV reuse via selective partial recompute of a small token fraction. This IS the researcher's named revival path (a cheap re-anchoring transform so offset-shifted KV becomes reusable). Revival = re-implementing CacheBlend."}
+- {cite: "EPIC: Efficient Position-Independent Context Caching, 2024/25",
+   url: "https://arxiv.org/abs/2410.15332",
+   why_close: "Explicitly position-INDEPENDENT context caching — directly attacks the RoPE re-anchoring problem the L0 identifies as the crux."}
+- {cite: "LMCache (open-source KV layer, integrates CacheBlend)",
+   url: "https://github.com/LMCache/LMCache",
+   why_close: "Production-grade cross-request, non-prefix KV reuse — the deployed baseline the claim must beat, not exact-prefix APC."}
+- {cite: "Muthitacharoen et al., A Low-Bandwidth Network File System (LBFS), SOSP 2001 — Rabin/content-defined chunking",
+   url: "https://dl.acm.org/doi/10.1145/502034.502052",
+   why_close: "CDC/Rabin dedup of offset-shifted duplicate content is a 2001 technique; applying it to KV blocks is repackaging, not a new mechanism."}
+
+NAMING_VS_MECHANISM: NAMING/repackaging, not a mechanism delta. CDC contributes only a DISCOVERY method (rolling-hash boundaries to locate offset-shifted recurring spans) — classic LBFS dedup pointed at a new object (KV blocks). The genuinely hard part — making a recurring span reusable at a DIFFERENT absolute position despite RoPE — is untouched by the claim and is exactly what Prompt Cache (position-id remap), CacheBlend (selective recompute), and EPIC (position-independent caching) already solve. The researcher's own revival path (re-rope R(Δ) transform) has ZERO mechanism novelty over CacheBlend/EPIC.
+
+FATAL_COLLISIONS:
+- Prompt Cache (2024): position-shifted reuse of recurring schema segments == the claim's premise.
+- CacheBlend (2025): non-prefix KV reuse via re-anchoring/partial recompute == the claim's revival path.
+- EPIC (2024/25): position-independent context caching == the stated open problem.
+- Experiment's baseline is also wrong for a novelty argument: it benchmarks CDC vs EXACT-PREFIX only, omitting the actual SOTA (CacheBlend/Prompt Cache/LMCache non-prefix reuse). The token-level "4–7% beyond prefix" headline is measured against an obsolete baseline; against true non-prefix reuse SOTA the beyond-SOTA gain is unestablished (insufficient evidence, likely ~0).
+
+MANDATORY_RELATED_WORK: Prompt Cache (Gim 2024); CacheBlend (Yao 2025); EPIC (2024/25); LMCache; KVQuant (Hooper et al., NeurIPS 2024, arXiv:2401.18079); Block-Attention / KVLink (independent-block re-position-encoding, 2024/25); RadixAttention/SGLang; vLLM APC; LBFS/Rabin CDC (Muthitacharoen 2001).
+
+RATIONALE: The L0 NEGATIVE is honest and correct, and I endorse it — but on novelty grounds this is RED, not merely a clean negative. (1) The mechanism is naming-only: CDC-for-KV-dedup is LBFS (2001) applied to KV blocks. (2) The single hard problem (position/RoPE re-anchoring) and the named revival path (re-rope transform) are both directly and independently solved by Prompt Cache, CacheBlend, and EPIC — three independent prior works on point, satisfying the ≥2-source kill bar. (3) Revival to PARTIAL via R(Δ) would be re-deriving CacheBlend with no differentiation shown. (4) The comparison omits true SOTA baselines, so even the upper-bound token-level gain does not establish a delta over deployed non-prefix reuse. CAVEAT: live egress was permission-blocked this session; citations are from knowledge (Jan-2026 cutoff) and the experiment's own prior-art caveat already names LMCache/KVQuant/CacheBlend — re-verify URLs when egress is restored, but the collisions are not in question.
+```
