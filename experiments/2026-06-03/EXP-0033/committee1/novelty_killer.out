@@ -1,0 +1,33 @@
+Both external web-search tools (`three_pai_external_web_search` and `WebSearch`) are permission-blocked this session, so I cannot complete a live ≥2-source sweep. Per the committee rule ("egress-blocked sweep = honest YELLOW with a scoping fix, not a fabricated green; a KILL collision must be verified in ≥2 independent sources"), I cannot cast a fatal-collision RED. Below is my knowledge-based prior-art assessment (cutoff Jan 2026), flagged as NOT live-verified this session.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Ma et al., AgentBoard: An Analytical Evaluation Board of Multi-turn LLM Agents, NeurIPS 2024",
+   url: "https://arxiv.org/abs/2401.13178",
+   why_close: "Introduces fine-grained ONLINE 'progress rate' across multi-turn agent trajectories — an incremental, online signal of how a trajectory is going. The weak surviving form ('online progression signature distinct from static difficulty') overlaps heavily with progress-rate; difference is early-WARNING/lead-time framing, not the signal itself. UNVERIFIED THIS SESSION."},
+  {cite: "Process Reward Models for agents (e.g. AgentPRM / step-level PRMs for tool-use trajectories, 2024-2025)",
+   url: "https://arxiv.org/abs/2502.xxxxx (family; not live-retrieved)",
+   why_close: "PRMs score PARTIAL trajectories step-by-step online to predict eventual success/failure — exactly the 'online monitor predicts doom before termination' mechanism, just trained rather than cheap-heuristic. Direct mechanism overlap with claim (c). UNVERIFIED THIS SESSION."},
+  {cite: "Zhang et al., Which Agent Causes Task Failures? Automated Failure Attribution, ICML 2025",
+   url: "https://arxiv.org/abs/2505.00212 (approx)",
+   why_close: "Packet's own cited prior art; POST-HOC failure attribution. Distinct from online, but defines the surrounding axis."},
+  {cite: "LLM self-confidence (mis)calibration: Kadavath 2022 'LMs (Mostly) Know What They Know' (arxiv 2207.05221); Xiong 2024 'Can LLMs Express Their Uncertainty?' (arxiv 2306.13063); Tian 2023 'Just Ask for Calibration' (arxiv 2305.14975)",
+   url: "https://arxiv.org/abs/2306.13063",
+   why_close: "Establishes that verbalized/logprob self-confidence is poorly calibrated — this is the entire load-bearing premise of the candidate L1 flip; it is PUBLISHED, so the 'self-confidence is unreliable' motivation is not itself novel."}
+]
+
+NAMING_VS_MECHANISM: Mostly NAMING. "Failure-foreshadowing signature / cheap early-warning monitor" is a relabel of the well-trodden 'score the partial trajectory online to predict the outcome' family (AgentBoard progress-rate, step-level PRMs, agent runtime monitors). The genuine MECHANISM/protocol delta is narrow: a cheap stdlib heuristic (EWMA tool-error + n-gram looping + info-gain decline) plus a MEASURED lead-time-vs-agent's-own-termination and a head-to-head that must beat self-confidence AND difficulty. That delta is an evaluation-protocol contribution, not a new mechanism — and its load-bearing half (beats self-confidence) is ALREADY FALSIFIED at L0 (AUC delta -0.006, CI [-0.011,-0.001]). What survives ('distinct from difficulty + ~2.3-step lead time') is precisely the part most covered by progress-rate/PRM prior art, so the survivor is the LEAST novel half.
+
+FATAL_COLLISIONS: NONE VERIFIED (egress blocked; cannot meet the ≥2-independent-source bar for a kill). Candidate collisions to verify: (1) AgentBoard progress-rate vs the 'distinct-from-difficulty online progression' weak form; (2) step-level PRMs vs claim (c) 'online monitor predicts eventual failure from partial trajectory'. If either is confirmed online-and-predictive, the surviving weak form is a relabeling and warrants RED.
+
+MANDATORY_RELATED_WORK: [
+  "AgentBoard (Ma 2024) — must position lead-time/early-warning against progress-rate explicitly",
+  "Step-level / Process Reward Models for agent trajectories — must distinguish cheap-heuristic monitor from trained PRM and show the lead-time/early-warning delta",
+  "Automated Failure Attribution (Zhang ICML 2025) — online vs post-hoc framing",
+  "LLM confidence calibration line (Kadavath 2022; Xiong 2024; Tian 2023) — required to justify the L1 self-confidence-flip hypothesis"
+]
+
+RATIONALE: The strong claim is already dead at L0 (does not beat self-confidence), so the only novelty left to defend is the weak form, which sits squarely on top of published online-progress / PRM scoring — the most-trodden ground, not the freshest. The truly novel, undefeated hook is conditional: does a cheap monitor beat REAL miscalibrated self-confidence on real traces (the L1 question)? That is not settled by prior art and would be a real delta IF demonstrated, but it is currently a hypothesis, not a result. I cannot cast RED because the fatal collisions (AgentBoard/PRM) could not be live-verified to the ≥2-source standard this session (web-search egress blocked). I cannot cast GREEN because the surviving contribution is thin and overlaps named prior art. Honest YELLOW. SCOPING FIX TO CLEAR: a real ≥2-source sweep confirming (a) no existing online agent-trajectory scorer already reports lead-time-vs-agent-termination AND (b) none already does the matched-flag-rate head-to-head vs self-confidence; plus an L1 on real traces with real miscalibrated self-confidence to test the flip. Sources cited above are from training knowledge and were NOT retrievable/verified in this session.
+```

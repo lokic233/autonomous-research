@@ -596,3 +596,1273 @@ hook: PostToolUse Completed
 hook: PreToolUse
 hook: PreToolUse Completed
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+Direct document loading is blocked by input filtering, so I’m using targeted web results plus raw/docs endpoints where available to verify overlap rather than relying on snippets alone.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/langfuse/langfuse/main/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/references/production_request_trace.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/AgentOps-AI/agentops/main/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/references/production_metrics.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 220ms:
+# Production Metrics
+
+SGLang exposes the following metrics via Prometheus. You can enable it by adding `--enable-metrics` when you launch the server.
+
+An example of the monitoring dashboard is available in [examples/monitoring/grafana.json](https://github.com/sgl-project/sglang/blob/main/examples/monitoring/grafana/dashboards/json/sglang-dashboard.json).
+
+Here is an example of the metrics:
+
+```
+$ curl http://localhost:30000/metrics
+# HELP sglang:prompt_tokens_total Number of prefill tokens processed.
+# TYPE sglang:prompt_tokens_total counter
+sglang:prompt_tokens_total{model_name="meta-llama/Llama-3.1-8B-Instruct"} 8.128902e+06
+# HELP sglang:generation_tokens_total Number of generation tokens processed.
+# TYPE sglang:generation_tokens_total counter
+sglang:generation_tokens_total{model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.557572e+06
+# HELP sglang:token_usage The token usage
+# TYPE sglang:token_usage gauge
+sglang:token_usage{model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.28
+# HELP sglang:cache_hit_rate The cache hit rate
+# TYPE sglang:cache_hit_rate gauge
+sglang:cache_hit_rate{model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.007507552643049313
+# HELP sglang:time_to_first_token_seconds Histogram of time to first token in seconds.
+# TYPE sglang:time_to_first_token_seconds histogram
+sglang:time_to_first_token_seconds_sum{model_name="meta-llama/Llama-3.1-8B-Instruct"} 2.3518979474117756e+06
+sglang:time_to_first_token_seconds_bucket{le="0.001",model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.0
+sglang:time_to_first_token_seconds_bucket{le="0.005",model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.0
+sglang:time_to_first_token_seconds_bucket{le="0.01",model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.0
+sglang:time_to_first_token_seconds_bucket{le="0.02",model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.0
+sglang:time_to_first_token_seconds_bucket{le="0.04",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1.0
+sglang:time_to_first_token_seconds_bucket{le="0.06",model_name="meta-llama/Llama-3.1-8B-Instruct"} 3.0
+sglang:time_to_first_token_seconds_bucket{le="0.08",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:time_to_first_token_seconds_bucket{le="0.1",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:time_to_first_token_seconds_bucket{le="0.25",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:time_to_first_token_seconds_bucket{le="0.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:time_to_first_token_seconds_bucket{le="0.75",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:time_to_first_token_seconds_bucket{le="1.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 27.0
+sglang:time_to_first_token_seconds_bucket{le="2.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 140.0
+sglang:time_to_first_token_seconds_bucket{le="5.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 314.0
+sglang:time_to_first_token_seconds_bucket{le="7.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 941.0
+sglang:time_to_first_token_seconds_bucket{le="10.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1330.0
+sglang:time_to_first_token_seconds_bucket{le="15.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1970.0
+sglang:time_to_first_token_seconds_bucket{le="20.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 2326.0
+sglang:time_to_first_token_seconds_bucket{le="25.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 2417.0
+sglang:time_to_first_token_seconds_bucket{le="30.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 2513.0
+sglang:time_to_first_token_seconds_bucket{le="+Inf",model_name="meta-llama/Llama-3.1-8B-Instruct"} 11008.0
+sglang:time_to_first_token_seconds_count{model_name="meta-llama/Llama-3.1-8B-Instruct"} 11008.0
+# HELP sglang:e2e_request_latency_seconds Histogram of End-to-end request latency in seconds
+# TYPE sglang:e2e_request_latency_seconds histogram
+sglang:e2e_request_latency_seconds_sum{model_name="meta-llama/Llama-3.1-8B-Instruct"} 3.116093850019932e+06
+sglang:e2e_request_latency_seconds_bucket{le="0.3",model_name="meta-llama/Llama-3.1-8B-Instruct"} 0.0
+sglang:e2e_request_latency_seconds_bucket{le="0.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="0.8",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="1.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="1.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="2.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="2.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 6.0
+sglang:e2e_request_latency_seconds_bucket{le="5.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.0
+sglang:e2e_request_latency_seconds_bucket{le="10.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 10.0
+sglang:e2e_request_latency_seconds_bucket{le="15.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 11.0
+sglang:e2e_request_latency_seconds_bucket{le="20.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 14.0
+sglang:e2e_request_latency_seconds_bucket{le="30.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 247.0
+sglang:e2e_request_latency_seconds_bucket{le="40.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 486.0
+sglang:e2e_request_latency_seconds_bucket{le="50.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 845.0
+sglang:e2e_request_latency_seconds_bucket{le="60.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1513.0
+sglang:e2e_request_latency_seconds_bucket{le="+Inf",model_name="meta-llama/Llama-3.1-8B-Instruct"} 11228.0
+sglang:e2e_request_latency_seconds_count{model_name="meta-llama/Llama-3.1-8B-Instruct"} 11228.0
+# HELP sglang:time_per_output_token_seconds Histogram of time per output token in seconds.
+# TYPE sglang:time_per_output_token_seconds histogram
+sglang:time_per_output_token_seconds_sum{model_name="meta-llama/Llama-3.1-8B-Instruct"} 866964.5791549598
+sglang:time_per_output_token_seconds_bucket{le="0.005",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1.0
+sglang:time_per_output_token_seconds_bucket{le="0.01",model_name="meta-llama/Llama-3.1-8B-Instruct"} 73.0
+sglang:time_per_output_token_seconds_bucket{le="0.015",model_name="meta-llama/Llama-3.1-8B-Instruct"} 382.0
+sglang:time_per_output_token_seconds_bucket{le="0.02",model_name="meta-llama/Llama-3.1-8B-Instruct"} 593.0
+sglang:time_per_output_token_seconds_bucket{le="0.025",model_name="meta-llama/Llama-3.1-8B-Instruct"} 855.0
+sglang:time_per_output_token_seconds_bucket{le="0.03",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1035.0
+sglang:time_per_output_token_seconds_bucket{le="0.04",model_name="meta-llama/Llama-3.1-8B-Instruct"} 1815.0
+sglang:time_per_output_token_seconds_bucket{le="0.05",model_name="meta-llama/Llama-3.1-8B-Instruct"} 11685.0
+sglang:time_per_output_token_seconds_bucket{le="0.075",model_name="meta-llama/Llama-3.1-8B-Instruct"} 433413.0
+sglang:time_per_output_token_seconds_bucket{le="0.1",model_name="meta-llama/Llama-3.1-8B-Instruct"} 4.950195e+06
+sglang:time_per_output_token_seconds_bucket{le="0.15",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.039435e+06
+sglang:time_per_output_token_seconds_bucket{le="0.2",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.171662e+06
+sglang:time_per_output_token_seconds_bucket{le="0.3",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.266055e+06
+sglang:time_per_output_token_seconds_bucket{le="0.4",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.296752e+06
+sglang:time_per_output_token_seconds_bucket{le="0.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.312226e+06
+sglang:time_per_output_token_seconds_bucket{le="0.75",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.339675e+06
+sglang:time_per_output_token_seconds_bucket{le="1.0",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.357747e+06
+sglang:time_per_output_token_seconds_bucket{le="2.5",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.389414e+06
+sglang:time_per_output_token_seconds_bucket{le="+Inf",model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.400757e+06
+sglang:time_per_output_token_seconds_count{model_name="meta-llama/Llama-3.1-8B-Instruct"} 7.400757e+06
+# HELP sglang:func_latency_seconds Function latency in seconds
+# TYPE sglang:func_latency_seconds histogram
+sglang:func_latency_seconds_sum{name="generate_request"} 4.514771912145079
+sglang:func_latency_seconds_bucket{le="0.05",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.07500000000000001",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.1125",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.16875",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.253125",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.3796875",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.56953125",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="0.8542968750000001",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="1.2814453125",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="1.9221679687500002",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="2.8832519531250003",name="generate_request"} 14006.0
+sglang:func_latency_seconds_bucket{le="4.3248779296875",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="6.487316894531251",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="9.730975341796876",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="14.596463012695313",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="21.89469451904297",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="32.84204177856446",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="49.26306266784668",name="generate_request"} 14007.0
+sglang:func_latency_seconds_bucket{le="+Inf",name="generate_request"} 14007.0
+sglang:func_latency_seconds_count{name="generate_request"} 14007.0
+# HELP sglang:num_running_reqs The number of running requests
+# TYPE sglang:num_running_reqs gauge
+sglang:num_running_reqs{model_name="meta-llama/Llama-3.1-8B-Instruct"} 162.0
+# HELP sglang:num_used_tokens The number of used tokens
+# TYPE sglang:num_used_tokens gauge
+sglang:num_used_tokens{model_name="meta-llama/Llama-3.1-8B-Instruct"} 123859.0
+# HELP sglang:gen_throughput The generate throughput (token/s)
+# TYPE sglang:gen_throughput gauge
+sglang:gen_throughput{model_name="meta-llama/Llama-3.1-8B-Instruct"} 86.50814177726902
+# HELP sglang:num_queue_reqs The number of requests in the waiting queue
+# TYPE sglang:num_queue_reqs gauge
+sglang:num_queue_reqs{model_name="meta-llama/Llama-3.1-8B-Instruct"} 2826.0
+```
+
+## Setup Guide
+
+This section describes how to set up the monitoring stack (Prometheus + Grafana) provided in the `examples/monitoring` directory.
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- SGLang server running with metrics enabled
+
+### Usage
+
+1.  **Start your SGLang server with metrics enabled:**
+
+    ```bash
+    python -m sglang.launch_server \
+      --model-path <your_model_path> \
+      --port 30000 \
+      --enable-metrics \
+      --enable-mfu-metrics
+    ```
+    Replace `<your_model_path>` with the actual path to your model (e.g., `meta-llama/Meta-Llama-3.1-8B-Instruct`). Ensure the server is accessible from the monitoring stack (you might need `--host 0.0.0.0` if running in Docker). By default, the metrics endpoint will be available at `http://<sglang_server_host>:30000/metrics`.
+
+2.  **Navigate to the monitoring example directory:**
+    ```bash
+    cd examples/monitoring
+    ```
+
+3.  **Start the monitoring stack:**
+    ```bash
+    docker compose up -d
+    ```
+    This command will start Prometheus and Grafana in the background.
+
+4.  **Access the monitoring interfaces:**
+    *   **Grafana:** Open your web browser and go to [http://localhost:3000](http://localhost:3000).
+    *   **Prometheus:** Open your web browser and go to [http://localhost:9090](http://localhost:9090).
+
+5.  **Log in to Grafana:**
+    *   Default Username: `admin`
+    *   Default Password: `admin`
+    You will be prompted to change the password upon your first login.
+
+6.  **View the Dashboard:**
+    The SGLang dashboard is pre-configured and should be available automatically. Navigate to `Dashboards` -> `Browse` -> `SGLang Monitoring` folder -> `SGLang Dashboard`.
+
+### Troubleshooting
+
+*   **Port Conflicts:** If you encounter errors like "port is already allocated," check if other services (including previous instances of Prometheus/Grafana) are using ports `9090` or `3000`. Use `docker ps` to find running containers and `docker stop <container_id>` to stop them, or use `lsof -i :<port>` to find other processes using the ports. You might need to adjust the ports in the `docker-compose.yaml` file if they permanently conflict with other essential services on your system.
+
+To modify Grafana's port to the other one(like 3090) in your Docker Compose file, you need to explicitly specify the port mapping under the grafana service.
+
+    Option 1: Add GF_SERVER_HTTP_PORT to the environment section:
+    ```
+      environment:
+    - GF_AUTH_ANONYMOUS_ENABLED=true
+    - GF_SERVER_HTTP_PORT=3090  # <-- Add this line
+    ```
+    Option 2: Use port mapping:
+    ```
+    grafana:
+      image: grafana/grafana:latest
+      container_name: grafana
+      ports:
+      - "3090:3000"  # <-- Host:Container port mapping
+    ```
+*   **Connection Issues:**
+    *   Ensure both Prometheus and Grafana containers are running (`docker ps`).
+    *   Verify the Prometheus data source configuration in Grafana (usually auto-configured via `grafana/datasources/datasource.yaml`). Go to `Connections` -> `Data sources` -> `Prometheus`. The URL should point to the Prometheus service (e.g., `http://prometheus:9090`).
+    *   Confirm that your SGLang server is running and the metrics endpoint (`http://<sglang_server_host>:30000/metrics`) is accessible *from the Prometheus container*. If SGLang is running on your host machine and Prometheus is in Docker, use `host.docker.internal` (on Docker Desktop) or your machine's network IP instead of `localhost` in the `prometheus.yaml` scrape configuration.
+*   **No Data on Dashboard:**
+    *   Generate some traffic to your SGLang server to produce metrics. For example, run a benchmark:
+        ```bash
+        python3 -m sglang.bench_serving --backend sglang --dataset-name random --num-prompts 100 --random-input 128 --random-output 128
+        ```
+    *   Check the Prometheus UI (`http://localhost:9090`) under `Status` -> `Targets` to see if the SGLang endpoint is being scraped successfully.
+    *   Verify the `model_name` and `instance` labels in your Prometheus metrics match the variables used in the Grafana dashboard. You might need to adjust the Grafana dashboard variables or the labels in your Prometheus configuration.
+
+### Configuration Files
+
+The monitoring setup is defined by the following files within the `examples/monitoring` directory:
+
+*   `docker-compose.yaml`: Defines the Prometheus and Grafana services.
+*   `prometheus.yaml`: Prometheus configuration, including scrape targets.
+*   `grafana/datasources/datasource.yaml`: Configures the Prometheus data source for Grafana.
+*   `grafana/dashboards/config/dashboard.yaml`: Tells Grafana to load dashboards from the specified path.
+*   `grafana/dashboards/json/sglang-dashboard.json`: The actual Grafana dashboard definition in JSON format.
+
+You can customize the setup by modifying these files. For instance, you might need to update the `static_configs` target in `prometheus.yaml` if your SGLang server runs on a different host or port.
+
+#### Check if the metrics are being collected
+
+Run:
+```
+
+ succeeded in 233ms:
+<div align="center">
+  <a href="https://agentops.ai?ref=gh">
+    <img src="docs/images/external/logo/github-banner.png" alt="Logo">
+  </a>
+</div>
+
+<div align="center">
+  <em>Observability and DevTool platform for AI Agents</em>
+</div>
+
+<br />
+
+<div align="center">
+  <a href="https://pepy.tech/project/agentops">
+    <img src="https://static.pepy.tech/badge/agentops/month" alt="Downloads">
+  </a>
+  <a href="https://github.com/agentops-ai/agentops/issues">
+  <img src="https://img.shields.io/github/commit-activity/m/agentops-ai/agentops" alt="git commit activity">
+  </a>
+  <img src="https://img.shields.io/pypi/v/agentops?&color=3670A0" alt="PyPI - Version">
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg?&color=3670A0" alt="License: MIT">
+  </a>
+  <a href="https://smithery.ai/server/@AgentOps-AI/agentops-mcp">
+    <img src="https://smithery.ai/badge/@AgentOps-AI/agentops-mcp"/>
+  </a>
+</div>
+
+<p align="center">
+  <a href="https://twitter.com/agentopsai/">
+    <img src="https://img.shields.io/twitter/follow/agentopsai?style=social" alt="Twitter" style="height: 20px;">
+  </a>
+  <a href="https://discord.gg/FagdcwwXRR">
+    <img src="https://img.shields.io/badge/discord-7289da.svg?style=flat-square&logo=discord" alt="Discord" style="height: 20px;">
+  </a>
+  <a href="https://app.agentops.ai/?ref=gh">
+    <img src="https://img.shields.io/badge/Dashboard-blue.svg?style=flat-square" alt="Dashboard" style="height: 20px;">
+  </a>
+  <a href="https://docs.agentops.ai/introduction">
+    <img src="https://img.shields.io/badge/Documentation-orange.svg?style=flat-square" alt="Documentation" style="height: 20px;">
+  </a>
+  <a href="https://entelligence.ai/AgentOps-AI&agentops">
+    <img src="https://img.shields.io/badge/Chat%20with%20Docs-green.svg?style=flat-square" alt="Chat with Docs" style="height: 20px;">
+  </a>
+</p>
+
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/dfb4fa8d-d8c4-4965-9ff6-5b8514c1c22f" width="650" autoplay loop muted></video>
+</div>
+
+<br/>
+
+AgentOps helps developers build, evaluate, and monitor AI agents. From prototype to production.
+
+## Open Source
+
+The AgentOps app is open source under the MIT license. Explore the code in our [app directory](https://github.com/AgentOps-AI/agentops/tree/main/app).
+
+## Key Integrations 🔌
+
+<div align="center" style="background-color: white; padding: 20px; border-radius: 10px; margin: 0 auto; max-width: 800px;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px;">
+    <a href="https://docs.agentops.ai/v2/integrations/openai_agents_python"><img src="docs/images/external/openai/agents-sdk.svg" height="45" alt="OpenAI Agents SDK"></a>
+    <a href="https://docs.agentops.ai/v1/integrations/crewai"><img src="docs/v1/img/docs-icons/crew-banner.png" height="45" alt="CrewAI"></a>
+    <a href="https://docs.ag2.ai/docs/ecosystem/agentops"><img src="docs/images/external/ag2/ag2-logo.svg" height="45" alt="AG2 (AutoGen)"></a>
+    <a href="https://docs.agentops.ai/v1/integrations/microsoft"><img src="docs/images/external/microsoft/microsoft_logo.svg" height="45" alt="Microsoft"></a>
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px;">
+    <a href="https://docs.agentops.ai/v1/integrations/langchain"><img src="docs/images/external/langchain/langchain-logo.svg" height="45" alt="LangChain"></a>
+    <a href="https://docs.agentops.ai/v1/integrations/camel"><img src="docs/images/external/camel/camel.png" height="45" alt="Camel AI"></a>
+    <a href="https://docs.llamaindex.ai/en/stable/module_guides/observability/?h=agentops#agentops"><img src="docs/images/external/ollama/ollama-icon.png" height="45" alt="LlamaIndex"></a>
+    <a href="https://docs.agentops.ai/v1/integrations/cohere"><img src="docs/images/external/cohere/cohere-logo.svg" height="45" alt="Cohere"></a>
+  </div>
+</div>
+
+|                                       |                                                               |
+| ------------------------------------- | ------------------------------------------------------------- |
+| 📊 **Replay Analytics and Debugging** | Step-by-step agent execution graphs                           |
+| 💸 **LLM Cost Management**            | Track spend with LLM foundation model providers               |
+| 🤝 **Framework Integrations**         | Native Integrations with CrewAI, AG2 (AutoGen), Agno, LangGraph, & more         |
+| ⚒️ **Self-Host**                      | Want to run AgentOps on your own cloud? You're covered        |
+
+## Quick Start ⌨️
+
+```bash
+pip install agentops
+```
+
+
+#### Session replays in 2 lines of code
+
+Initialize the AgentOps client and automatically get analytics on all your LLM calls.
+
+[Get an API key](https://app.agentops.ai/settings/projects)
+
+```python
+import agentops
+
+# Beginning of your program (i.e. main.py, __init__.py)
+agentops.init( < INSERT YOUR API KEY HERE >)
+
+...
+
+# End of program
+agentops.end_session('Success')
+```
+
+All your sessions can be viewed on the [AgentOps dashboard](https://app.agentops.ai?ref=gh)
+<br/>
+
+## Self-Hosting
+
+Looking to run the full AgentOps app (Dashboard + API backend) on your machine? Follow the setup guide in `app/README.md`:
+
+- [Run the App and Backend (Dashboard + API)](app/README.md)
+
+
+<details>
+  <summary>Agent Debugging</summary>
+  <a href="https://app.agentops.ai?ref=gh">
+    <img src="docs/images/external/app_screenshots/session-drilldown-metadata.png" style="width: 90%;" alt="Agent Metadata"/>
+  </a>
+  <a href="https://app.agentops.ai?ref=gh">
+    <img src="docs/images/external/app_screenshots/chat-viewer.png" style="width: 90%;" alt="Chat Viewer"/>
+  </a>
+  <a href="https://app.agentops.ai?ref=gh">
+    <img src="docs/images/external/app_screenshots/session-drilldown-graphs.png" style="width: 90%;" alt="Event Graphs"/>
+  </a>
+</details>
+
+<details>
+  <summary>Session Replays</summary>
+  <a href="https://app.agentops.ai?ref=gh">
+    <img src="docs/images/external/app_screenshots/session-replay.png" style="width: 90%;" alt="Session Replays"/>
+  </a>
+</details>
+
+<details>
+  <summary>Summary Analytics</summary>
+  <a href="https://app.agentops.ai?ref=gh">
+   <img src="docs/images/external/app_screenshots/overview.png" style="width: 90%;" alt="Summary Analytics"/>
+  </a>
+  <a href="https://app.agentops.ai?ref=gh">
+   <img src="docs/images/external/app_screenshots/overview-charts.png" style="width: 90%;" alt="Summary Analytics Charts"/>
+  </a>
+</details>
+
+
+### First class Developer Experience
+Add powerful observability to your agents, tools, and functions with as little code as possible: one line at a time.
+<br/>
+Refer to our [documentation](http://docs.agentops.ai)
+
+```python
+# Create a session span (root for all other spans)
+from agentops.sdk.decorators import session
+
+@session
+def my_workflow():
+    # Your session code here
+    return result
+```
+
+```python
+# Create an agent span for tracking agent operations
+from agentops.sdk.decorators import agent
+
+@agent
+class MyAgent:
+    def __init__(self, name):
+        self.name = name
+        
+    # Agent methods here
+```
+
+```python
+# Create operation/task spans for tracking specific operations
+from agentops.sdk.decorators import operation, task
+
+@operation  # or @task
+def process_data(data):
+    # Process the data
+    return result
+```
+
+```python
+# Create workflow spans for tracking multi-operation workflows
+from agentops.sdk.decorators import workflow
+
+@workflow
+def my_workflow(data):
+    # Workflow implementation
+    return result
+```
+
+```python
+# Nest decorators for proper span hierarchy
+from agentops.sdk.decorators import session, agent, operation
+
+@agent
+class MyAgent:
+    @operation
+    def nested_operation(self, message):
+        return f"Processed: {message}"
+        
+    @operation
+    def main_operation(self):
+        result = self.nested_operation("test message")
+        return result
+
+@session
+def my_session():
+    agent = MyAgent()
+    return agent.main_operation()
+```
+
+All decorators support:
+- Input/Output Recording
+- Exception Handling
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 256ms:
+# Production Request Tracing
+
+SGLang exports request trace data based on the OpenTelemetry Collector. You can enable tracing by adding the `--enable-trace` and configure the OpenTelemetry Collector endpoint using `--otlp-traces-endpoint` when launching the server.
+
+You can find example screenshots of the visualization in https://github.com/sgl-project/sglang/issues/8965.
+
+## Setup Guide
+This section explains how to configure the request tracing and export the trace data.
+1. Install the required packages and tools
+    * install Docker and Docker Compose
+    * install the dependencies
+    ```bash
+    # enter the SGLang root directory
+    pip install -e "python[tracing]"
+
+    # or manually install the dependencies using pip
+    pip install opentelemetry-sdk opentelemetry-api opentelemetry-exporter-otlp opentelemetry-exporter-otlp-proto-grpc
+    ```
+
+2. Launch OpenTelemetry collector and Jaeger
+    ```bash
+    docker compose -f examples/monitoring/tracing_compose.yaml up -d
+    ```
+
+3. Start your SGLang server with tracing enabled
+    ```bash
+    # set env variables
+    export SGLANG_OTLP_EXPORTER_SCHEDULE_DELAY_MILLIS=500
+    export SGLANG_OTLP_EXPORTER_MAX_EXPORT_BATCH_SIZE=64
+    # start the prefill and decode server
+    python -m sglang.launch_server --enable-trace --otlp-traces-endpoint 0.0.0.0:4317 <other option>
+    # start the model-gate-way
+    python -m sglang_router.launch_router --enable-trace --otlp-traces-endpoint 0.0.0.0:4317 <other option>
+    ```
+
+    Replace `0.0.0.0:4317` with the actual endpoint of the OpenTelemetry collector. If you launched the openTelemetry collector with tracing_compose.yaml, the default receiving port is 4317.
+
+    To use the HTTP/protobuf span exporter, set the following environment variable and point to an HTTP endpoint, for example, `http://0.0.0.0:4318/v1/traces`.
+    ```bash
+    export OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
+    ```
+
+
+4. Raise some requests
+5. Observe whether trace data is being exported
+    * Access port 16686 of Jaeger using a web browser to visualize the request traces.
+    * The OpenTelemetry Collector also exports trace data in JSON format to /tmp/otel_trace.json. In a follow-up patch, we will provide a tool to convert this data into a Perfetto-compatible format, enabling visualization of requests in the Perfetto UI.
+
+6. Dynamically adjust trace level
+    The trace level accepts configurable values from `0` to `3`. The meanings of different trace level values are as follows:
+    ```
+    0: disable tracing
+    1: Trace important slices
+    2: Trace all slices except nested ones
+    3: Trace all slices (default)
+    ```
+    **At startup** — set `SGLANG_TRACE_LEVEL` before launching the server:
+    ```bash
+    SGLANG_TRACE_LEVEL=2 python -m sglang.launch_server --enable-trace --otlp-traces-endpoint 0.0.0.0:4317 <other options>
+    ```
+
+    **At runtime** — dynamically adjust via HTTP API without restarting:
+    ```bash
+    curl http://0.0.0.0:30000/set_trace_level?level=2
+    ```
+    Replace `0.0.0.0:30000` with your actual server address, and replace `level=2` with the level you want to set.
+
+    **Note**: You must set the parameter `--enable-trace`; otherwise, the trace capability will not be enabled regardless of any dynamic adjustments to the trace level.
+
+## How to add Tracing for slices you're interested in?(API introduction)
+We have already inserted instrumentation points in the tokenizer and scheduler main threads. If you wish to trace additional request execution segments or perform finer-grained tracing, please use the APIs from the tracing package as described below.
+
+**All of the following implementations are done in python/sglang/srt/observability/req_time_stats.py. If you want to add another slice, please do it here.**
+
+1. Initialization
+
+    Every process involved in tracing during the initialization phase should execute:
+    ```python
+    process_tracing_init(otlp_traces_endpoint, server_name)
+    ```
+    The otlp_traces_endpoint is obtained from the arguments, and you can set server_name freely, but it should remain consistent across all processes.
+
+    Every thread involved in tracing during the initialization phase should execute:
+    ```python
+    trace_set_thread_info("thread label", tp_rank, dp_rank)
+    ```
+    The "thread label" can be regarded as the name of the thread, used to distinguish different threads in the visualization view.
+
+2. Create a trace context for a request
+    Each request needs to call `TraceReqContext()` to initialize a request context, which is used to generate slice spans and record request stage info. You can either store it within the request object or maintain it as a global variable.
+
+3. Mark the beginning and end of a request
+    ```
+    trace_ctx.trace_req_start().
+    trace_ctx.trace_req_finish()
+    ```
+    trace_req_start() and trace_req_finish() must be called within the same process, for example, in the tokenizer.
+
+4. Add tracing for a slice
+
+    * Add slice tracing normally:
+        ```python
+        trace_ctx.trace_slice_start(RequestStage.TOKENIZER.stage_name)
+        trace_ctx.trace_slice_end(RequestStage.TOKENIZER.stage_name)
+
+        or
+        trace_ctx.trace_slice(slice: TraceSliceContext)
+        ```
+
+    - The end of the last slice in a thread must be marked with thread_finish_flag=True, or explicitly call trace_ctx.abort(); otherwise, the thread's span will not be properly generated.
+        ```python
+        trace_ctx.slice_end(RequestStage.D.stage_name, thread_finish_flag = True)
+        trace_ctx.abort()
+        ```
+
+5. When the request execution flow transfers to another thread, the thread context needs to be explicitly rebuilt.
+    - receiver: Execute the following code after receiving the request via ZMQ
+        ```python
+        trace_ctx.rebuild_thread_context()
+        ```
+
+## How to Extend the Tracing Framework to Support Complex Tracing Scenarios
+
+The currently provided tracing package still has potential for further development. If you wish to build more advanced features upon it, you must first understand its existing design principles.
+
+The core of the tracing framework's implementation lies in the design of the span structure and the trace context. To aggregate scattered slices and enable concurrent tracking of multiple requests, we have designed a three-level trace context structure or span structure: `TraceReqContext`, `TraceThreadContext` and `TraceSliceContext`. Their relationship is as follows:
+```
+TraceReqContext (req_id="req-123")
+├── TraceThreadContext(thread_label="scheduler", tp_rank=0)
+|     └── TraceSliceContext(slice_name="prefill")
+|
+└── TraceThreadContext(thread_label="scheduler", tp_rank=1)
+      └── TraceSliceContext(slice_name="prefill")
+```
+
+Each traced request maintains a global `TraceReqContext` and creates a corresponding request span. For every thread that processes the request, a `TraceThreadContext` is recorded and a thread span is created. The `TraceThreadContext` is nested within the `TraceReqContext`, and each currently traced code slice—potentially nested—is stored in its associated `TraceThreadContext`.
+
+In addition to the above hierarchy, each slice also records its previous slice via Span.add_link(), which can be used to trace the execution flow.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 287ms:
+<img width="2400" height="600" alt="hero-b (1)" src="https://github.com/user-attachments/assets/5810ae13-15d6-4b60-afd2-927adc501861" />
+
+<div align="center">
+   <div>
+      <h3>
+         <a href="https://cloud.langfuse.com">
+            <strong>Langfuse Cloud</strong>
+         </a> · 
+         <a href="https://langfuse.com/docs/deployment/self-host">
+            <strong>Self Host</strong>
+         </a> · 
+         <a href="https://langfuse.com/demo">
+            <strong>Demo</strong>
+         </a>
+      </h3>
+   </div>
+
+   <div>
+      <a href="https://langfuse.com/docs"><strong>Docs</strong></a> ·
+      <a href="https://langfuse.com/issues"><strong>Report Bug</strong></a> ·
+      <a href="https://langfuse.com/ideas"><strong>Feature Request</strong></a> ·
+      <a href="https://langfuse.com/changelog"><strong>Changelog</strong></a> ·
+      <a href="https://langfuse.com/roadmap"><strong>Roadmap</strong></a> ·
+   </div>
+   <br/>
+   <span>Langfuse uses <a href="https://github.com/orgs/langfuse/discussions"><strong>GitHub Discussions</strong></a>  for Support and Feature Requests.</span>
+   <br/>
+   <span><b>We're hiring.</b> <a href="https://langfuse.com/careers"><strong>Join us</strong></a> in product engineering and technical go-to-market roles.</span>
+   <br/>
+   <br/>
+   <div>
+   </div>
+</div>
+
+<p align="center">
+   <a href="https://github.com/langfuse/langfuse/blob/main/LICENSE">
+   <img src="https://img.shields.io/badge/License-MIT-E11311.svg" alt="MIT License">
+   </a>
+   <a href="https://www.ycombinator.com/companies/langfuse"><img src="https://img.shields.io/badge/Y%20Combinator-W23-orange" alt="Y Combinator W23"></a>
+   <a href="https://hub.docker.com/u/langfuse" target="_blank">
+   <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/langfuse/langfuse?labelColor=%20%23FDB062&logo=Docker&labelColor=%20%23528bff"></a>
+   <a href="https://pypi.python.org/pypi/langfuse"><img src="https://img.shields.io/pypi/dm/langfuse?logo=python&logoColor=white&label=pypi%20langfuse&color=blue" alt="langfuse Python package on PyPi"></a>
+   <a href="https://www.npmjs.com/package/langfuse"><img src="https://img.shields.io/npm/dm/langfuse?logo=npm&logoColor=white&label=npm%20langfuse&color=blue" alt="langfuse npm package"></a>
+   <br/>
+   <a href="https://discord.com/invite/7NXusRtqYU" target="_blank">
+   <img src="https://img.shields.io/discord/1111061815649124414?logo=discord&labelColor=%20%235462eb&logoColor=%20%23f5f5f5&color=%20%235462eb"
+      alt="chat on Discord"></a>
+   <a href="https://twitter.com/intent/follow?screen_name=langfuse" target="_blank">
+   <img src="https://img.shields.io/twitter/follow/langfuse?logo=X&color=%20%23f5f5f5"
+      alt="follow on X(Twitter)"></a>
+   <a href="https://www.linkedin.com/company/langfuse/" target="_blank">
+   <img src="https://custom-icon-badges.demolab.com/badge/LinkedIn-0A66C2?logo=linkedin-white&logoColor=fff"
+      alt="follow on LinkedIn"></a>
+   <a href="https://github.com/langfuse/langfuse/graphs/commit-activity" target="_blank">
+   <img alt="Commits last month" src="https://img.shields.io/github/commit-activity/m/langfuse/langfuse?labelColor=%20%2332b583&color=%20%2312b76a"></a>
+   <a href="https://github.com/langfuse/langfuse/" target="_blank">
+   <img alt="Issues closed" src="https://img.shields.io/github/issues-search?query=repo%3Alangfuse%2Flangfuse%20is%3Aclosed&label=issues%20closed&labelColor=%20%237d89b0&color=%20%235d6b98"></a>
+   <a href="https://github.com/langfuse/langfuse/discussions/" target="_blank">
+   <img alt="Discussion posts" src="https://img.shields.io/github/discussions/langfuse/langfuse?labelColor=%20%239b8afb&color=%20%237a5af8"></a>
+</p>
+
+<p align="center">
+  <a href="./README.md"><img alt="README in English" src="https://img.shields.io/badge/English-d9d9d9"></a>
+  <a href="./README.cn.md"><img alt="简体中文版自述文件" src="https://img.shields.io/badge/简体中文-d9d9d9"></a>
+  <a href="./README.ja.md"><img alt="日本語のREADME" src="https://img.shields.io/badge/日本語-d9d9d9"></a>
+  <a href="./README.kr.md"><img alt="README in Korean" src="https://img.shields.io/badge/한국어-d9d9d9"></a>
+</p>
+
+Langfuse is an **open source LLM engineering** platform. It helps teams collaboratively
+**develop, monitor, evaluate,** and **debug** AI applications. Langfuse can be **self-hosted in minutes** and is **battle-tested**. Proudly made with [ClickHouse open source database](https://github.com/ClickHouse/ClickHouse).
+
+## ✨ Core Features
+
+<img width="2400" height="1040" alt="features" src="https://github.com/user-attachments/assets/0fad3dee-f3ad-423c-9f0d-7ccd0f26cc2d" />
+
+- [LLM Application Observability](https://langfuse.com/docs/tracing): Instrument your app and start ingesting traces to Langfuse, thereby tracking LLM calls and other relevant logic in your app such as retrieval, embedding, or agent actions. Inspect and debug complex logs and user sessions. Try the interactive [demo](https://langfuse.com/docs/demo) to see this in action.
+
+- [Prompt Management](https://langfuse.com/docs/prompt-management/get-started) helps you centrally manage, version control, and collaboratively iterate on your prompts. Thanks to strong caching on server and client side, you can iterate on prompts without adding latency to your application.
+
+- [Evaluations](https://langfuse.com/docs/evaluation/overview) are key to the LLM application development workflow, and Langfuse adapts to your needs. It supports LLM-as-a-judge, Code evaluators, user feedback collection, manual labeling, and custom evaluation pipelines via APIs/SDKs.
+
+- [Datasets](https://langfuse.com/docs/evaluation/dataset-runs/datasets) enable test sets and benchmarks for evaluating your LLM application. They support continuous improvement, pre-deployment testing, structured experiments, flexible evaluation, and seamless integration with frameworks like LangChain and LlamaIndex.
+
+- [LLM Playground](https://langfuse.com/docs/playground) is a tool for testing and iterating on your prompts and model configurations, shortening the feedback loop and accelerating development. When you see a bad result in tracing, you can directly jump to the playground to iterate on it.
+
+- [Comprehensive API](https://langfuse.com/docs/api): Langfuse is frequently used to power bespoke LLMOps workflows while using the building blocks provided by Langfuse via the API. OpenAPI spec, Postman collection, and typed SDKs for Python, JS/TS are available.
+
+## 📦 Deploy Langfuse
+
+<img width="2400" height="880" alt="deploy" src="https://github.com/user-attachments/assets/cf72e7f8-db7f-4e11-a2a1-ecfbe46f262c" />
+
+### Langfuse Cloud
+
+Managed deployment by the Langfuse team, generous free-tier, no credit card required.
+
+<div align="center">
+    <a href="https://cloud.langfuse.com" target="_blank">
+        <img alt="Static Badge" src="https://img.shields.io/badge/»%20Sign%20up%20for%20Langfuse%20Cloud-8A2BE2?&color=black">
+    </a>
+</div>
+
+### Self-Host Langfuse
+
+Run Langfuse on your own infrastructure:
+
+- [Local (docker compose)](https://langfuse.com/self-hosting/local): Run Langfuse on your own machine in 5 minutes using Docker Compose.
+
+  ```bash
+  # Get a copy of the latest Langfuse repository
+  git clone --depth=1 https://github.com/langfuse/langfuse.git
+  cd langfuse
+
+  # Run the langfuse docker compose
+  docker compose up
+  ```
+
+- [VM](https://langfuse.com/self-hosting/docker-compose): Run Langfuse on a single Virtual Machine using Docker Compose.
+- [Kubernetes (Helm)](https://langfuse.com/self-hosting/kubernetes-helm): Run Langfuse on a Kubernetes cluster using Helm. This is the preferred production deployment.
+- Terraform Templates: [AWS](https://langfuse.com/self-hosting/aws), [Azure](https://langfuse.com/self-hosting/azure), [GCP](https://langfuse.com/self-hosting/gcp)
+
+See [self-hosting documentation](https://langfuse.com/self-hosting) to learn more about architecture and configuration options.
+
+## 🔌 Integrations
+
+<img width="2400" height="980" alt="integrations" src="https://github.com/user-attachments/assets/b85c9a45-68f0-4f76-b545-0e8632abef9f" />
+
+### Main Integrations:
+
+| Integration                                                                  | Supports                   | Description                                                                                                                                      |
+| ---------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [SDK](https://langfuse.com/docs/sdk)                                         | Python, JS/TS              | Manual instrumentation using the SDKs for full flexibility.                                                                                      |
+| [OpenAI](https://langfuse.com/integrations/model-providers/openai-py)        | Python, JS/TS              | Automated instrumentation using drop-in replacement of OpenAI SDK.                                                                               |
+| [Langchain](https://langfuse.com/docs/integrations/langchain)                | Python, JS/TS              | Automated instrumentation by passing callback handler to Langchain application.                                                                  |
+| [LlamaIndex](https://langfuse.com/docs/integrations/llama-index/get-started) | Python                     | Automated instrumentation via LlamaIndex callback system.                                                                                        |
+| [Haystack](https://langfuse.com/docs/integrations/haystack)                  | Python                     | Automated instrumentation via Haystack content tracing system.                                                                                   |
+| [LiteLLM](https://langfuse.com/docs/integrations/litellm)                    | Python, JS/TS (proxy only) | Use any LLM as a drop in replacement for GPT. Use Azure, OpenAI, Cohere, Anthropic, Ollama, VLLM, Sagemaker, HuggingFace, Replicate (100+ LLMs). |
+| [Vercel AI SDK](https://langfuse.com/docs/integrations/vercel-ai-sdk)        | JS/TS                      | TypeScript toolkit designed to help developers build AI-powered applications with React, Next.js, Vue, Svelte, Node.js.                          |
+| [Mastra](https://langfuse.com/docs/integrations/mastra)                      | JS/TS                      | Open source framework for building AI agents and multi-agent systems.                                                                            |
+| [API](https://langfuse.com/docs/api)                                         |                            | Directly call the public API. OpenAPI spec available.                                                                                            |
+
+### Packages integrated with Langfuse:
+
+| Name                                                                    | Type               | Description                                                                                                             |
+| ----------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| [Instructor](https://langfuse.com/docs/integrations/instructor)         | Library            | Library to get structured LLM outputs (JSON, Pydantic)                                                                  |
+| [DSPy](https://langfuse.com/docs/integrations/dspy)                     | Library            | Framework that systematically optimizes language model prompts and weights                                              |
+| [Mirascope](https://langfuse.com/docs/integrations/mirascope)           | Library            | Python toolkit for building LLM applications.                                                                           |
+| [Ollama](https://langfuse.com/docs/integrations/ollama)                 | Model (local)      | Easily run open source LLMs on your own machine.                                                                        |
+| [Amazon Bedrock](https://langfuse.com/docs/integrations/amazon-bedrock) | Model              | Run foundation and fine-tuned models on AWS.                                                                            |
+| [AutoGen](https://langfuse.com/docs/integrations/autogen)               | Agent Framework    | Open source LLM platform for building distributed agents.                                                               |
+| [Flowise](https://langfuse.com/docs/integrations/flowise)               | Chat/Agent&nbsp;UI | JS/TS no-code builder for customized LLM flows.                                                                         |
+| [Langflow](https://langfuse.com/docs/integrations/langflow)             | Chat/Agent&nbsp;UI | Python-based UI for LangChain, designed with react-flow to provide an effortless way to experiment and prototype flows. |
+| [Dify](https://langfuse.com/docs/integrations/dify)                     | Chat/Agent&nbsp;UI | Open source LLM app development platform with no-code builder.                                                          |
+| [OpenWebUI](https://langfuse.com/docs/integrations/openwebui)           | Chat/Agent&nbsp;UI | Self-hosted LLM Chat web ui supporting various LLM runners including self-hosted and local models.                      |
+| [Promptfoo](https://langfuse.com/docs/integrations/promptfoo)           | Tool               | Open source LLM testing platform.                                                                                       |
+| [LobeChat](https://langfuse.com/docs/integrations/lobechat)             | Chat/Agent&nbsp;UI | Open source chatbot platform.                                                                                           |
+| [Vapi](https://langfuse.com/docs/integrations/vapi)                     | Platform           | Open source voice AI platform.                                                                                          |
+| [Inferable](https://langfuse.com/docs/integrations/other/inferable)     | Agents             | Open source LLM platform for building distributed agents.                                                               |
+| [Gradio](https://langfuse.com/docs/integrations/other/gradio)           | Chat/Agent&nbsp;UI | Open source Python library to build web interfaces like Chat UI.                                                        |
+| [Goose](https://langfuse.com/docs/integrations/goose)                   | Agents             | Open source LLM platform for building distributed agents.                                                               |
+| [smolagents](https://langfuse.com/docs/integrations/smolagents)         | Agents             | Open source AI agents framework.                                                                                        |
+| [CrewAI](https://langfuse.com/docs/integrations/crewai)                 | Agents             | Multi agent framework for agent collaboration and tool use.                                                             |
+
+## 🚀 Quickstart
+
+Instrument your app and start ingesting traces to Langfuse, thereby tracking LLM calls and other relevant logic in your app such as retrieval, embedding, or agent actions. Inspect and debug complex logs and user sessions.
+
+### 1️⃣ Create new project
+
+1.  [Create Langfuse account](https://cloud.langfuse.com/auth/sign-up) or [self-host](https://langfuse.com/self-hosting)
+2.  Create a new project
+3.  Create new API credentials in the project settings
+
+### 2️⃣ Log your first LLM call
+
+The [`@observe()` decorator](https://langfuse.com/docs/sdk/python/decorators) makes it easy to trace any Python LLM application. In this quickstart we also use the Langfuse [OpenAI integration](https://langfuse.com/integrations/model-providers/openai-py) to automatically capture all model parameters.
+
+> [!TIP]
+> Not using OpenAI? Visit [our documentation](https://langfuse.com/docs/get-started#log-your-first-llm-call-to-langfuse) to learn how to log other models and frameworks.
+
+```bash
+pip install langfuse openai
+```
+
+```bash filename=".env"
+LANGFUSE_SECRET_KEY="sk-lf-..."
+LANGFUSE_PUBLIC_KEY="pk-lf-..."
+LANGFUSE_BASE_URL="https://cloud.langfuse.com" # 🇪🇺 EU region
+# LANGFUSE_BASE_URL="https://us.cloud.langfuse.com" # 🇺🇸 US region
+```
+
+```python /@observe()/ /from langfuse.openai import openai/ filename="main.py"
+from langfuse import observe
+from langfuse.openai import openai # OpenAI integration
+
+@observe()
+def story():
+    return openai.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "What is Langfuse?"}],
+    ).choices[0].message.content
+
+@observe()
+def main():
+    return story()
+
+main()
+```
+
+### 3️⃣ See traces in Langfuse
+
+See your language model calls and other application logic in Langfuse.
+
+<img width="1600" height="833" alt="example-trace-for-github" src="https://github.com/user-attachments/assets/8f6995b7-285f-441a-b52f-1331d13ceb45" />
+
+_[Public example trace in Langfuse](https://cloud.langfuse.com/project/cloramnkj0002jz088vzn1ja4/traces/db22d0a442216b485abd83cc9df6d9ee)_
+
+## 💭 Support
+
+Finding an answer to your question:
+
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/serving/metrics.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/docs/source/performance/perf-benchmarking.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 178ms:
+404: Not Found
+hook: PreToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 211ms:
+404: Not Found
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/LMCache/LMCache/main/README.md | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 262ms:
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-black-background.png?raw=true">
+    <img alt="FlashInfer" src="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-white-background.png?raw=true" width=55%>
+  </picture>
+</p>
+<h1 align="center">
+High-Performance GPU Kernels for Inference
+</h1>
+
+<p align="center">
+| <a href="https://docs.flashinfer.ai"><b>Documentation</b></a> | <a href="https://github.com/flashinfer-ai/flashinfer/releases/latest"><b>Latest Release</b></a> | <a href="https://flashinfer.ai"><b>Blog</b></a> | <a href="https://join.slack.com/t/flashinfer/shared_invite/zt-379wct3hc-D5jR~1ZKQcU00WHsXhgvtA"><b>Slack</b></a> |  <a href="https://github.com/orgs/flashinfer-ai/discussions"><b>Discussion Forum</b></a> |
+</p>
+
+[![Build Status](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/badge/icon)](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/)
+[![Documentation](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml/badge.svg)](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml)
+
+**FlashInfer** is a library and kernel generator for inference that delivers state-of-the-art performance across diverse GPU architectures. It provides unified APIs for attention, GEMM, and MoE operations with multiple backend implementations including FlashAttention-2/3, cuDNN, CUTLASS, and TensorRT-LLM.
+
+## Why FlashInfer?
+
+- **State-of-the-art Performance**: Optimized kernels for prefill, decode, and mixed batching scenarios
+- **Multiple Backends**: Automatically selects the best backend for your hardware and workload
+- **Modern Architecture Support**: Support for SM75 (Turing) and later (through Blackwell)
+- **Low-Precision Compute**: FP8 and FP4 quantization for attention, GEMM, and MoE operations
+- **Production-Ready**: CUDAGraph and torch.compile compatible for low-latency serving
+
+## Core Features
+
+### Attention Kernels
+- **Paged and Ragged KV-Cache**: Efficient memory management for dynamic batch serving
+- **Decode, Prefill, and Append**: Optimized kernels for all attention phases
+- **MLA Attention**: Native support for DeepSeek's Multi-Latent Attention
+- **Cascade Attention**: Memory-efficient hierarchical KV-Cache for shared prefixes
+- **Sparse Attention**: Block-sparse and variable block-sparse patterns
+- **POD-Attention**: Fused prefill+decode for mixed batching
+
+### GEMM & Linear Operations
+- **BF16 GEMM**: BF16 matrix multiplication for SM10.0+ GPUs.
+- **FP8 GEMM**: Per-tensor and groupwise scaling
+- **FP4 GEMM**: NVFP4 and MXFP4 matrix multiplication for Blackwell GPUs
+- **Grouped GEMM**: Efficient batched matrix operations for LoRA and multi-expert routing
+
+### Mixture of Experts (MoE)
+- **Fused MoE Kernels**
+- **Multiple Routing Methods**: DeepSeek-V3, Llama-4, and standard top-k routing
+- **Quantized MoE**: FP8 and FP4 expert weights with block-wise scaling
+
+### Sampling & Decoding
+- **Sorting-Free Sampling**: Efficient Top-K, Top-P, and Min-P without sorting
+- **Speculative Decoding**: Chain speculative sampling support
+
+### Communication
+- **AllReduce**: Custom implementations
+- **Multi-Node NVLink**: MNNVL support for multi-node inference
+- **NVSHMEM Integration**: For distributed memory operations
+
+### Other Operators
+- **RoPE**: LLaMA-style rotary position embeddings (including LLaMA 3.1)
+- **Normalization**: RMSNorm, LayerNorm, Gemma-style fused operations
+- **Activations**: SiLU, GELU with fused gating
+
+## GPU Support
+
+| Architecture | Compute Capability | Example GPUs |
+|--------------|-------------------|------|
+| Turing | SM 7.5 | T4, RTX 20 series |
+| Ampere | SM 8.0, 8.6 | A100, A10, RTX 30 series |
+| Ada Lovelace | SM 8.9 | L4, L40, RTX 40 series |
+| Hopper | SM 9.0 | H100, H200 |
+| Blackwell | SM 10.0, 10.3 | B200, B300 |
+| Blackwell | SM 11.0 | Jetson Thor |
+| Blackwell | SM 12.0, 12.1 | RTX 50 series, DGX Spark |
+
+> **Note:** Not all features are supported across all compute capabilities.
+
+## News
+
+Latest: [![GitHub Release](https://img.shields.io/github/v/release/flashinfer-ai/flashinfer)](https://github.com/flashinfer-ai/flashinfer/releases/latest)
+
+Notable updates:
+- [2025-10-08] Blackwell support added in [v0.4.0](https://github.com/flashinfer-ai/flashinfer/releases/tag/v0.4.0)
+- [2025-03-10] [Blog Post](https://flashinfer.ai/2025/03/10/sampling.html) Sorting-Free GPU Kernels for LLM Sampling, which explains the design of sampling kernels in FlashInfer.
+
+## Getting Started
+
+### Installation
+
+**Quickstart:**
+
+```bash
+pip install flashinfer-python
+```
+
+**Package Options:**
+
+- **flashinfer-python**: Core package that compiles/downloads kernels on first use
+- **flashinfer-cubin**: Pre-compiled kernel binaries for all supported GPU architectures
+- **flashinfer-jit-cache**: Pre-built kernel cache for specific CUDA versions
+
+**For faster initialization and offline usage**, install the optional packages to have most kernels pre-compiled:
+
+```bash
+pip install flashinfer-python flashinfer-cubin
+# JIT cache (replace cu129 with your CUDA version)
+pip install flashinfer-jit-cache --index-url https://flashinfer.ai/whl/cu129
+```
+
+**For Blackwell (SM100+) CuTe DSL kernels**, install with the CUDA 13 extra to enable Blackwell-optimized kernels:
+
+```bash
+pip install flashinfer-python[cu13]
+```
+
+### Verify Installation
+
+```bash
+flashinfer show-config
+```
+
+### Basic Usage
+
+```python
+import torch
+import flashinfer
+
+# Single decode attention
+q = torch.randn(32, 128, device="cuda", dtype=torch.float16)  # [num_qo_heads, head_dim]
+k = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)  # [kv_len, num_kv_heads, head_dim]
+v = torch.randn(2048, 32, 128, device="cuda", dtype=torch.float16)
+
+output = flashinfer.single_decode_with_kv_cache(q, k, v)
+```
+
+See [documentation](https://docs.flashinfer.ai/) for comprehensive API reference and tutorials.
+
+### Install from Source
+
+```bash
+git clone https://github.com/flashinfer-ai/flashinfer.git --recursive
+cd flashinfer
+python -m pip install -v .
+```
+
+**For development**, install in editable mode:
+
+```bash
+python -m pip install --no-build-isolation -e . -v
+```
+
+> **Note:** When using `--no-build-isolation`, pip does not automatically install build dependencies. FlashInfer requires `setuptools>=77`. If you encounter an error like `AttributeError: module 'setuptools.build_meta' has no attribute 'prepare_metadata_for_build_editable'`, upgrade pip and setuptools first:
+> ```bash
+> python -m pip install --upgrade pip setuptools
+> ```
+
+Build optional packages:
+
+```bash
+# flashinfer-cubin
+cd flashinfer-cubin
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 208ms:
+# LMCache core library
+
+## Installation
+
+**Prerequisite:** Python >= 3.10
+
+```bash
+pip install -e .
+```
+
+## Demos
+Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).
+
+## Quickstart: 
+
+**Prerequisites**: To run the quickstart demo, your server should have 1 GPU and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start vLLM + LMCache 
+```bash
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface access token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.6 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example-local.yaml
+```
+Please fill `Huggingface cache dir on your local machine` and `Your huggingface access token` in the above command. 
+
+You can also change the `model` variable to use different models.
+
+The vLLM engine is ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 3:** Run demo application
+
+You can now run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+
+# Start the demo chat application
+python openai_chat_completion_client.py 8000
+```
+
+This demo is a QA application based on a long context (`examples/f.txt`). The TTFT should be drastically reduced since the second round of QA.
+
+
+
+## Use case 1: share prefix KV between different vLLM instance through LMCache
+The following instructions help deploy LMCache backend + multile vLLM instance by docker containers. The architecture of the demo application looks like this:
+
+<img width="817" alt="image" src="https://github.com/LMCache/LMCache/assets/25103655/ab64f84d-26e1-46ce-a503-e7e917b618bc">
+
+
+**Prerequisites**: To run the quickstart demo, your server must have 2 GPUs and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/lmcache-server:0.1.0
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start LMCache backend server 
+```bash
+docker run --name lmcache-server --network host -d apostacyh/lmcache-server:0.1.0 0.0.0.0 65432
+```
+
+**Step 3:** start 2 vLLM instances
+```bash
+# The first vLLM instance listens at port 8000
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Now, open another terminal and start another vLLM instance
+```bash
+# The second vLLM instance listens at port 8001
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=1"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8001:8001 \
+    --env "HF_TOKEN=<Your huggingface token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.7 --port 8001 \
+    --lmcache-config-file /lmcache/LMCache/examples/example.yaml
+```
+
+Remember to replace the `Huggingface cache dir on your local machine` and `Your huggingface token` in the commandline.
+
+The vLLM engines are ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 4:** Run demo application
+You can run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+```
+
+In one terminal:
+```
+# Connect to the first vLLM engine
+python openai_chat_completion_client.py 8000
+```
+
+In another terminal
+```
+# Connect to the second vLLM engine
+python openai_chat_completion_client.py 8001
+```
+
+You should be able to see the second vLLM engine has much lower response delay.
+This is because the KV cache of the long context can be shared across both vLLM engines by using LMCache.
+
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1 | grep -i 'metrics.*\\.md' | head -20" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1' | grep -i 'metrics.*\\.md' | head -20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 356ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1' | head -40" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 119ms:
+{"message":"API rate limit exceeded for 163.114.132.6. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SGLang", url: "https://docs.sglang.ai/references/production_metrics.html", overlap: "Prometheus metrics and request tracing for serving latency/cache/queue/request spans; no online doomed-agent trajectory predictor or lead-time baseline test."},
+  {system: "Langfuse", url: "https://github.com/langfuse/langfuse", overlap: "Open-source LLM application tracing, monitoring, evaluation, and debugging for agent actions; overlaps instrumentation/artifact layer, not the claimed causal early-warning mechanism."},
+  {system: "AgentOps", url: "https://github.com/AgentOps-AI/agentops", overlap: "Open-source agent observability with step-by-step execution graphs, exceptions, session replay, and analytics; no evidence of matched-flag-rate early failure prediction beating confidence/difficulty."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache reuse layer for vLLM instances; serving/cache mechanism only, no agent trajectory failure monitor."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "GPU inference kernels for attention/GEMM/MoE/sampling; no overlap beyond LLM serving substrate."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: Does not yet hold at realistic workload. Evidence is L0 synthetic CPU-only simulation over 96 cells / 400 trajectories per row, not real tau-bench/AppWorld/SWE-agent traces. The strong claim fails its own baseline gate: monitor loses/ties agent self-confidence by AUC delta -0.006, 95% CI [-0.011,-0.001], and early coverage is 42.4% below the pre-registered >0.5 bar. Realistic scale gaps: real tool-error semantics, real loop detection, real information-gain extraction, actual termination timing, and real LLM confidence calibration.
+RATIONALE: Prompt version v001. I found shipping OSS observability systems that already collect many required signals: SGLang exposes Prometheus metrics and OpenTelemetry request tracing; Langfuse tracks LLM calls, retrieval, embeddings, and agent actions; AgentOps provides agent execution graphs/session replay/exception handling. These make the proposed artifact partly an integration over existing telemetry, but I did not find an OSS system that already implements the exact online causal doomed-trajectory monitor with measured lead time and matched-flag-rate comparisons against self-confidence and difficulty. The surviving evidence supports only a weak measurement insight: progression observables beat generic difficulty by AUC +0.095, 95% CI [+0.087,+0.103], but the claim as written required beating both baselines and does not. Reproducibility is acceptable for L0 because pre-registration and CSV artifacts are cited, but systems contribution remains unproven until L1 real traces.
+```
+tokens used
+43,378

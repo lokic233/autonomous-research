@@ -1,0 +1,36 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "1. sigma_conf sensitivity sweep at L0 (CHEAPEST, HIGHEST-VALUE missing experiment): theory_skeptic correctly identifies that the entire (B2) verdict — and thus the strong-claim falsification — depends on a SINGLE unchosen value of sigma_conf. Sweep it; report the flip-point where monitor equals/beats confidence. This is L0-budget and should have been done before declaring (B2) 'robust LOSS'.",
+  "2. Live ≥2-source prior-art verification (novelty_killer was egress-blocked): must confirm whether AgentBoard progress-rate or step-level PRMs already implement online trajectory scoring with lead-time measurement. If either does, the surviving weak form is a relabeling and verdict degrades to RED.",
+  "3. L1 real-trace validation with real (miscalibrated) self-confidence: the ONLY load-bearing novel claim — that a cheap external monitor beats poorly-calibrated agent self-confidence — is currently a hypothesis, not a result. All 5 reviewers agree L0 cannot settle this.",
+  "4. PRM / online-LLM-as-Judge baseline (evaluation_prosecutor): the matched-flag-rate comparison omits the dominant production technique for online trajectory evaluation. Beating static difficulty is necessary but insufficient; must also compare against a dynamic learned baseline."
+]
+MANDATORY_BASELINES: [
+  "Process Reward Models (step-level PRMs) — Lightman et al. 2023; the industry-standard online trajectory scorer",
+  "Online LLM-as-Judge early-stopping — Zheng et al. 2023; the production default for 'is this agent stuck?'",
+  "AgentBoard progress-rate — Ma et al. NeurIPS 2024; the closest published online progression signal"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0037", change: "status -> WEAKENED-PARTIAL-NEGATIVE; strong form FALSIFIED (does not beat self-confidence); weak form (distinct-from-difficulty + lead time) SURVIVES but novelty UNVERIFIED pending prior-art sweep; L1 candidate IF AND ONLY IF (a) sigma_conf sweep confirms the flip-point is within published miscalibration ranges AND (b) live prior-art check confirms no existing system already does online lead-time-measured trajectory scoring. Add edge: CLAIM-0037 --depends-on--> 'sigma_conf_sweep_L0' (blocker, cheap) and 'prior_art_verification' (blocker, cheap) before L1 commitment."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Unanimous YELLOW from all 5 reviewers — no GREEN to defend, no RED to adjudicate, but the consensus masks important heterogeneity in WHAT each reviewer flags. Synthesizing by evidence weight, not vote-count:
+
+(1) STRONG CLAIM IS DEAD — all reviewers agree, the packet itself declares it. Monitor AUC delta vs self-confidence = -0.006, CI [-0.011,-0.001], 96/96 seeds negative. No dispute here.
+
+(2) THE FALSIFICATION IS OVERCLAIMED — theory_skeptic's sharpest contribution: (B2) is a DATA-PROCESSING INEQUALITY CONSEQUENCE of the generative model (confidence = direct noisy readout of h_t; monitor = reconstruction from downstream proxies). The -0.006 is not an empirical discovery but a mechanical consequence of the chosen sigma_conf. Without a sigma_conf sweep showing the flip-point, "robust LOSS" is "loss at our chosen parameter". This is a cheap L0 experiment (~minutes of wall-clock) that MUST be done before interpreting (B2) as a real falsification vs a parameter artifact.
+
+(3) (B1) IS REAL BUT NEAR-TAUTOLOGICAL — beating a STATIC difficulty predictor with a DYNAMIC signal is structurally asymmetric (theory_skeptic). The evaluation_prosecutor sharpens this: the missing mandatory baseline is a DYNAMIC one (PRM, LLM-as-Judge), not another static one. The +0.095 CI [+0.087,+0.103] result confirms the simulator behaves as designed (useful for inheriting into L1) but does not establish novelty or practical value on its own.
+
+(4) PRIOR-ART IS INADEQUATE — novelty_killer was egress-blocked and explicitly flags this. The candidate fatal collisions (AgentBoard progress-rate = online trajectory scoring; step-level PRMs = online step-by-step failure prediction) are NAMED but NOT VERIFIED to the ≥2-source standard. Per committee rules, I cannot emit GREEN with inadequate prior-art. The surviving weak form ("online progression signature distinct from difficulty with lead time") is EXACTLY the part most likely to collide with AgentBoard/PRM prior art — so the unverified collision sits on the load-bearing claim.
+
+(5) PRODUCT CASE DOES NOT EXIST YET — product_realist correctly notes: self-confidence is free, monitor adds complexity, 42% coverage is below bar, 30% flag-rate implies high FP cost. No product path without L1 showing the confidence-flip on real traces.
+
+CREDIT: The honest partial-negative reporting is exemplary (pre-registered negative branch followed, anti-circularity verified at 0.115 gap, falsification accepted). The L1 pivot question (real miscalibrated self-confidence) is well-posed and genuinely interesting. The anti-relabeling test design (which killed CLAIM-0015) is a methodological improvement — clearing it against difficulty is meaningful even if insufficient.
+
+PATH FORWARD (ordered by cost): (a) sigma_conf sweep at L0 — hours, not days — to find the flip-point and determine whether published miscalibration magnitudes reach it; (b) live prior-art sweep with working egress to verify/kill the AgentBoard + PRM collisions; (c) ONLY THEN commit to L1 if both clear. If the flip-point requires sigma_conf >> published miscalibration ranges, the L1 is not worth running. If AgentBoard progress-rate already does online lead-time scoring, the weak form is dead. These are CHEAP GATES before expensive L1 commitment.
+
+Prompt version: v001.
+```
