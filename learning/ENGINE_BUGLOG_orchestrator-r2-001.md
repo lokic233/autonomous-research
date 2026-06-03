@@ -1547,3 +1547,22 @@ STEP 0 discovers the newest non-terminal orchestrator-rN-001 in runtime/agents a
 spawns r(N+1) if the newest is retired). Handoffs can no longer break orchestrator identity. No engine
 change. LESSON: any scheduled-job message that names a specific agent generation is a latent stall across
 handoffs — always discover-the-live-agent, never hardcode the r-number.
+
+## BUG-101 (engine 4b3773a) — supervise.retire() UNLOCKED load->long-body->dump defeats BUG-99's heartbeat lock
+**Surface:** retire/successor split-brain (write-side). **Class:** lost-update race (BUG-99 mirror).
+`retire()` loads `frec` at the TOP, then runs a multi-dump body (re-parent every task assigned-to/parented-by
+frm, re-parent every supervised agent, glob the whole agents dir) that takes real wall-time, THEN dumps the
+STALE `frec` to flip frm->retired. A concurrent heartbeat from frm — which (BUG-99) serializes under
+`_file_lock(agent_frm)` and re-reads on disk — lands inside that window and bumps frm.yaml (heartbeat_count,
+last_heartbeat, session_id, current_exp_id); retire's UNLOCKED stale-frec dump then overwrites it, silently
+erasing the heartbeat the successor's continuity may rely on AND bypassing the very lock heartbeat respects.
+BUG-99 only hardened the heartbeat side; the retire side stayed unlocked.
+**Repro:** isolated /tmp, sleep injected into retire's body, real heartbeat raced under its lock — 8/8
+heartbeat-clobbered (concurrent hb bumps 5->6, retire resets to 5).
+**Fix (no new mechanism):** expose `_file_lock` via `_sup_helpers`; step-4 flip takes the SAME
+`_file_lock(agent_frm, stale_s=15)` and RE-READS frec on disk inside the lock, then forces the terminal
+status onto the fresh record. 0/8 clobbered after (hb_count correctly 6, status correctly retired).
+**v2-parity:** v2 retire has the identical unlocked-frec pattern but v2's heartbeat predates the per-agent
+lock, so the two never contended under a lock there; this hardens v3's locked-heartbeat invariant end-to-end.
+**Lesson:** when you add a per-record lock to ONE writer (heartbeat, BUG-99), AUDIT every other writer of
+that same record — a single unlocked long-body RMW elsewhere silently reopens the race the lock was meant to close.
