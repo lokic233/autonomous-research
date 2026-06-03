@@ -1,0 +1,79 @@
+verdict_id: VERDICT-0046
+claim_id: CLAIM-0048
+project_id: PROJ-0018
+date: '2026-06-03'
+experiment_ids:
+- EXP-0050
+experiment_paths:
+- experiments/2026-06-03/EXP-0050
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (no fatal objections, no RED \u2014 unanimous YELLOW). Core diagnosis: the\
+  \ MECHANISM IS REAL BUT NOT NEW \u2014 it is the classical SPOILER EFFECT / Duverger's\
+  \ Law / vote-splitting (consolidating a fragmented faction under plurality flips\
+  \ the winner"
+- "IIA violation in social choice). The packet addressed CJT/plurality generically\
+  \ but NEVER NAMED the spoiler effect = the true mechanistic incumbent (prior-art\
+  \ gap). The variable-recall knob applies a KNOWN mechanism to a new domain (eval\
+  \ canonicalization) \u2014 novel domain application, not a new mechanism. Answer-equivalence\
+  \ precision/recall construct pre-exists: Bulian2022 'Tomayto Tomahto' BEM"
+- Kuhn2023/Farquhar2024 semantic-entropy clustering granularity. Inversion retuning
+  (0.42/0.46 failed -> 0.50/0.28 succeeded) is POST-HOC = exploratory not confirmatory,
+  must be flagged with the full search denominator.
+required_evidence:
+- 'L1 (real-data, the load-bearing ecological test): (1) measure empirical phi (fragmentation
+  asymmetry) on REAL free-form QA (GSM8K/MATH/GPQA) + show the sign-flip survives
+  with REAL canonicalizer pairs (exact-match vs Minerva/sympy vs LLM-judge)'
+- "(2) report the high-recall canonicalizer's empirical PRECISION q \u2014 if q degrades\
+  \ enough to wash out the effect (L0 predicts death at q<=0.6) the ecological case\
+  \ COLLAPSES"
+- "(3) a REAL model pair whose maj@k ranking inverts under two REAL canonicalizers\
+  \ on a fixed benchmark (the constructed L0 inversion is a corollary of the mechanism,\
+  \ NOT evidence of ecological plausibility) \u2014 or an honest null"
+- (4) DOM_FRAC sensitivity sweep (the negative-slope branch is load-bearing on the
+  single DOM_FRAC=0.7
+- sweep toward 1/M_INC to bound where the effect dies)
+- (5) flag the inversion construction as EXPLORATORY with full search denominator.
+map_delta_proposals:
+- "CLAIM-0048 -> HELD/YELLOW (5/5 unanimous, NO fatal/RED \u2014 strongest standing\
+  \ of the v3 expansion). Mechanism REAL + well-controlled (sign-flip z=-19.8/+41.6\
+  \ at fixed precision = pure recall"
+- "inversion |z|=48/53) but the mechanism = classical SPOILER EFFECT/vote-splitting\
+  \ applied to eval-canonicalization (NOVEL DOMAIN APPLICATION, not a new mechanism).\
+  \ GATED required_before_validation = a REAL-DATA L1 (measured phi + real canonicalizer\
+  \ pairs + real model-pair inversion-or-null + precision-q + DOM_FRAC sweep). Add\
+  \ mandatory_citations: spoiler-effect/Duverger, Bulian2022-BEM, Kuhn2023/Farquhar2024-semantic-entropy,\
+  \ Biderman2024. Inversion retuning flagged EXPLORATORY (post-hoc). This is a candidate-grade\
+  \ YELLOW alive toward L1 \u2014 NOT a kill. Orchestrator handing to r5 (76.6% ceiling)\
+  \ to drive the real-data L1 + committee#2 with fresh budget."
+baseline_requirements:
+- "SPOILER EFFECT / Duverger's Law / vote-splitting (social choice \u2014 the TRUE\
+  \ mechanistic incumbent, MUST cite + differentiate)"
+- Bulian2022 'Tomayto Tomahto' BEM (answer-equivalence precision/recall pre-exists)
+- Kuhn2023/Farquhar2024 semantic-entropy (variable-grain equivalence over free-form
+  outputs)
+- Biderman2024 (2405.14782) + Minerva SymPy + HF Open-LLM-Leaderboard parsing-sensitivity
+  (grader/extraction differences shift rankings)
+- exact-match vs SymPy vs LLM-judge at measured empirical q,r on L1 benchmarks
+committee_run_dir: experiments/2026-06-03/EXP-0050/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T17:22:01Z'
