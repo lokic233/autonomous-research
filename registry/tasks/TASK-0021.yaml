@@ -1,6 +1,6 @@
 task_id: TASK-0021
 kind: gpu
-parent: orchestrator-r5-001
+parent: orchestrator-r6-001
 assignee: researcher-gpu-0022
 session_id: ''
 project_id: PROJ-0004
@@ -12,7 +12,7 @@ summary: 'L1 quant-router: real GPTQ/AWQ-4bit vs full per-request degradation (h
   features; true FLOPs/$ cost; real quant-model logprob confidence baseline. Per VERDICT-0019.'
 evidence_delta: ''
 opened_at: '2026-06-03T06:54:02Z'
-updated_at: '2026-06-03T17:26:03Z'
+updated_at: '2026-06-03T23:39:45Z'
 closed_at: ''
 history:
 - ts: '2026-06-03T06:54:02Z'
@@ -30,3 +30,7 @@ history:
   event: reparent
   by: orchestrator-r4-001
   note: supervisor orchestrator-r4-001->orchestrator-r5-001
+- ts: '2026-06-03T23:39:45Z'
+  event: reparent
+  by: orchestrator-r5-001
+  note: supervisor orchestrator-r5-001->orchestrator-r6-001
