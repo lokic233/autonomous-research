@@ -132,3 +132,34 @@ NOT a bug — it is correct overshoot-deadweight behavior; the prereg's calibrat
 v1 also reported +3000% penalties at alpha≥0.005 without flagging that these were divergence/cap artifacts
 (DNC_A 50–60%). v2 fixes the reporting: DNC rate is first-class, completion-conditional waste is reported, and a
 clean finite regime (c=10) is identified. No fabrication in either version; v2 is the trustworthy result.
+
+---
+
+## RECONCILIATION WITH EXP-0049 (researcher r4-001) — HONEST DOWNGRADE TO HONEST-NEGATIVE
+
+A parallel independent corrected re-run (EXP-0049, researcher r4-001) reached **HONEST-NEGATIVE /
+weaken** on the SAME claim, and the engine has marked **PROJ-0017 CONVERGED** with **CLAIM-0047 →
+weakened**. On review, **r4-001 is right and my `support` framing over-claimed.** The facts of both
+experiments AGREE; the verdict turns on accounting currency:
+
+- **The positive token-penalty is BOUND-DEPENDENT.** It exists only because A's non-completing rollouts
+  are charged the CAP value (50k tokens). My own §3 flagged this; r4-001 made it the headline. The
+  penalty magnitude (here +184% to +4664%; r4-001: 91–886%) is an artifact of the chosen cap, not an
+  intrinsic ≥25%.
+- **Completion-conditional waste is non-comparable / can FAVOR A.** A's "completed" runs are a survivorship
+  -biased subset; under a fair retry-bounded accounting (r4-001) the completion-conditional cost FAVORS A
+  by 45–61%. My token-cap conditioning made A look worse, but that's the cap leaking in again.
+- **The real, robust phenomenon is RELIABILITY, not token-cost.** Deviation-aware rollback keeps DNC ~1%
+  while memoryless restart's DNC explodes to 37–62% under rising hazard. That is a genuine, large, honest
+  effect — but it is a **completion-rate / reliability** win, NOT the pre-registered "≥25% fewer wasted
+  TOKENS" claim. **WRONG-CURRENCY anti-pattern** (r4-001's distillation): the claim indicted the wrong
+  metric. Under the claim's own currency (expected wasted tokens, fairly accounted), the ≥25% token
+  threshold is NOT robustly supported.
+
+**CORRECTED VERDICT: HONEST-NEGATIVE.** alpha=0 calibration passes (B never beats A under memoryless).
+The mechanism (rising hazard makes restart-at-checkpoint re-fail) is real. But the headline token-cost
+claim is bound-dependent and does not survive fair accounting — the deviation-aware policy's true benefit
+is reliability/completion, not a ≥25% token saving. This matches PROJ-0017 convergence. My initial
+`support` completion leaned on the cap artifact I had myself flagged; this note records the honest
+downgrade. Negatives are wins: "memoryless restart is already token-competitive when fairly accounted;
+its weakness is reliability, and THAT is what deviation-aware rollback fixes."
