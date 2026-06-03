@@ -43,17 +43,28 @@ why_it_matters: "FRESH AREA (retrieval-and-memory: graph vector-index recall str
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0045
+  summary: 'MIXED. In-degree predicts per-item FN rate and SURVIVES density control
+    (partial Spearman -0.152 CI[-0.203,-0.097]; reg b_indeg(z)=-0.0495 CI[-0.065,-0.033];
+    negative & sig in all 4 density quartiles; in-degree x density near-orthogonal
+    rho=-0.03 so NOT a density artifact; density''s own effect weak & oppositely-signed
+    -0.08). BUT blind-spot IDENTITY NOT stable across 5 insertion-order seeds (mean
+    pairwise Spearman 0.134 < 0.30 prereg threshold; 0.079 at denom>=5 so not mere
+    rate-noise). => in-degree->miss LAW holds per-population but WHICH items are blind
+    spots is build-dependent. recall=0.822, ef_search=k=10, n=1303 items, wall=21s.
+    Predictor CONFIRMED; ''stable subset'' claim only weakly supported. L1: real embeddings
+    + faiss/hnswlib (does stability rise w/ depth/hubness?) + in-degree-based blind-spot
+    repair (add reverse edges, lift per-item recall at fixed ef).'
+  data_path: experiments/2026-06-03/EXP-0045/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0045 result, then ros exp complete --exp EXP-0045 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0045; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0045
+active_experiments: []
 created_at: '2026-06-03T15:21:21Z'
-last_updated: '2026-06-03T15:22:12Z'
+last_updated: '2026-06-03T15:33:19Z'
