@@ -1,0 +1,67 @@
+claim_id: CLAIM-0051
+project_id: PROJ-0021
+stage: seed
+status: seed
+claim: "In a streaming training pipeline using a bounded sliding-window shuffle buffer\
+  \ of size B over data that arrives in contiguous same-source runs of length L (the\
+  \ universal real layout: shards grouped by source/domain), per-mini-batch gradient-estimate\
+  \ variance is inflated by a factor that grows with the residual same-source co-occurrence\
+  \ rate rho(B,L) and the within-source gradient correlation, and this inflation remains\
+  \ LARGE (>=1.5x) at the buffer sizes practitioners actually use (B ~ 10-50x batch\
+  \ size) whenever L >= B (a regime that holds for real corpora) \u2014 so the common\
+  \ 'buffer a few-x the batch is enough' heuristic systematically under-decorrelates\
+  \ batches, and the deficit is NOT removed by increasing B linearly with batch size\
+  \ but ONLY by B growing with the source run-length L."
+why_it_matters: "FRESH AREA (data-systems-for-ml: streaming shuffle-buffer provisioning\
+  \ vs source-clustered shards). EMPIRICAL-phenomenon, NO closed-form headline (the\
+  \ rho->gradient-variance-inflation mapping + provisioning failure depend on within-source\
+  \ gradient-correlation + batch size, measured; rho(B,L) is the anchored closed-form\
+  \ INTERMEDIATE not the headline). BEATS the sim-assumed-shape trap (the lesson from\
+  \ CLAIM-0048/0050): the load-bearing rho(B,L) is a DETERMINISTIC STRUCTURAL property\
+  \ of the sliding-window shuffle ALGORITHM (re-derivable, cannot evaporate); the\
+  \ only real inputs are DOCUMENTED SYSTEMS FACTS (L>>B from source-grouped sharding;\
+  \ within-source gradient correlation>0 = why shuffling exists) -> L1 CONFIRMATORY\
+  \ not make-or-break. Passes all 6 anti-patterns: NOT metric-validity (real gradient-variance\
+  \ currency); NOT closed-form-tautology (the rho->variance mapping is measured);\
+  \ foundational incumbents ADDRESSED (random-reshuffling/GraB Lu-Guo-DeSa 2205.10733\
+  \ + ICLR2022 + CD-GraB 2302.00845 assume FULL PERMUTATION \u2014 silent on bounded-buffer\
+  \ streaming); NOT known-mechanism-costume (textbook='correlated->variance'; novel=the\
+  \ STRUCTURAL CEILING that a bounded buffer CANNOT remove same-source adjacency once\
+  \ L>=B regardless of scaling B with batch \u2014 an architectural law); NOT wrong-currency\
+  \ (gradient-variance/decorrelation, bound-independent); NOT trivially-small-at-realistic-params\
+  \ (real corpora = source-grouped shards L>>B + practitioners set B 10-50x batch\
+  \ -> rho high -> inflation >=1.5x at the params people use). Falsifiable: synthetic\
+  \ stream of N items each w/ hidden source-id arriving in runs of length L; per-source\
+  \ fixed gradient signature g_s (harness GT) + small per-item noise; run the REAL\
+  \ sliding-window shuffle (fill to B, emit uniform-random slot, refill) -> mini-batches\
+  \ size b -> measure batch-mean gradient variance vs ideal full-shuffle. Sweep B\
+  \ in {2b,10b,50b} x L in {b/2,2b,20b,200b}. PREDICT: inflation ~1 when L<<B; >=1.5x\
+  \ AND roughly FLAT-in-B when L>=B (can't buy off by scaling B with batch); holding\
+  \ L fixed, penalty falls only when B scaled toward L not b. Anti-circular: GT=source-id\
+  \ + g_s (harness-controlled, NEVER read by measurement path); signal reads only\
+  \ emitted gradients + batch-mean variance; source labels used only to construct\
+  \ the stream + compute the oracle baseline. HONEST-NEGATIVE (reachable): if scaling\
+  \ B 10b->50b already drives inflation <1.1x when L>=B, OR inflation never exceeds\
+  \ ~1.1x even at L=200b -> heuristic fine / effect trivial -> negative. GUARD: must\
+  \ show the SCALING-AXIS result (B-with-L vs B-with-b), NOT just 'variance inflated'.\
+  \ Topic: data-systems-for-ml. L1 (CONFIRMATORY): real per-domain gradient correlations\
+  \ from a tiny transformer on a multi-domain corpus (code/web/books shards) + real\
+  \ MosaicML StreamingDataset shuffle at production B -> batch-gradient-variance inflation\
+  \ + downstream loss-spike-freq/convergence-step deficit vs oracle full-shuffle."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0056 result, then ros exp complete --exp EXP-0056 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0056
+created_at: '2026-06-03T20:40:56Z'
+last_updated: '2026-06-03T20:41:17Z'
