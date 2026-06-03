@@ -1,0 +1,37 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: red, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: [
+  "evaluation_prosecutor RED — M/G/1 non-preemptive model structurally misrepresents continuous batching (iteration-level decode, preemption/swapping, batched prefill). The head-of-line blocking that drives the 1.4-5.8x p99 ratio may collapse under processor-sharing-like dynamics. This is NOT fully rebutted at L0; it IS explicitly gated by the pre-reg's L1 requirement. Disposition: MANAGEABLE — the RED is grounded but overstated for an L0 that self-declares its model limitations and gates promotion on exactly the real-system validation the prosecutor demands. The controls (C1 oracle, C2 tau-invariance) are informative WITHIN the M/G/1 model and establish the mechanism; the MAGNITUDE is what is model-dependent. Partial rebuttal, not dismissal — L1 must close this gap or the RED stands."
+]
+
+REQUIRED_EVIDENCE: [
+  "L1-GATE-1: Measure ACTUAL Kendall-tau(input_tokens, realized_decode_length) on real VLM traces (Qwen-VL/LLaVA, perception+reasoning mix). This is the single most load-bearing premise — if real tau is NOT below the simulated tau*, the ecological claim collapses and the result reduces to 'known regime of robustness theory, quantified in a toy model'.",
+  "L1-GATE-2: Reproduce FCFS vs input-length-biased scheduling under a continuous-batching simulator (Vidur) or real vLLM/SGLang with iteration-level scheduling. Confirm the p99 regression survives preemption and batching dynamics. If magnitude collapses to <1.2x, the headline is effectively killed.",
+  "L1-GATE-3: Report CIs (bootstrap or batch-means) on ALL headline ratios and on tau* itself. theory_skeptic correctly notes p99 is a high-variance estimator; 5.37x with unknown CI is not an actionable number.",
+  "L1-GATE-4: sigma_d sensitivity sweep — the 1.4-5.8x magnitude is conditional on sigma_d=1.0 (heavy tail). If it vanishes at sigma_d<=0.5, the result is regime-conditional, which must be stated.",
+  "CITATION-GATE: Add Purohit/Svitkina/Kumar (NeurIPS 2018), Lykouris/Vassilvitskii (ICML 2018) — consistency/robustness theory that 'bad-enough predictor => worse than prediction-free baseline' is a KNOWN qualitative regime. Position contribution as quantitative extension + VLM ecology, NOT as discovering the regime. Add Fu 2408.15792 and S3 2306.06000 as works that ALREADY treat input-length as inadequate proxy."
+]
+
+MANDATORY_BASELINES: [
+  "FastServe Skip-Join MLFQ (arXiv:2305.05920) — state-of-art preemptive LLM scheduler; evaluation_prosecutor's requirement, valid",
+  "vLLM FCFS with preemption (production default) — under continuous batching, not M/G/1",
+  "Oracle-proxy SJF (already present as C1 — retain and extend to continuous-batching model)"
+]
+
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0050",
+  change: "status: SUPPORTED(L0) -> YELLOW-CONDITIONAL. Verdict: L0 evidence establishes the mechanism (proxy-class-anticorrelation causes SJF < FCFS, distinguished from trivial SJF-starvation by oracle control) within the M/G/1 model. Magnitude and ecological validity are UNGATED — conditional on L1 closing all 4 gates above. If L1-GATE-1 (real VLM tau < tau*) AND L1-GATE-2 (effect survives continuous batching) both pass, promote to SUPPORTED. If either fails, demote to HONEST-NEGATIVE (known regime, no ecological foothold in real VLM serving). Do NOT promote to GREEN without L1."
+}
+
+PRIOR_ART_ADEQUATE: no
+RATIONALE: v001. Four yellows, one red. The red (evaluation_prosecutor) raises the strongest objection: the M/G/1 non-preemptive model structurally misrepresents continuous batching, and input-length-SJF may be a strawman nobody deploys. This is partially rebutted — the packet self-declares M/G/1 as an L0 approximation, gates L1 on exactly real-system validation, and the C1 oracle control is informative regardless of queueing model (it proves a correct proxy helps, so the harm is the proxy, not SJF per se). But "partially rebutted" is not "dismissed": the 1.4-5.8x magnitude is INSEPARABLE from the non-preemptive head-of-line blocking that continuous batching mitigates, so the headline number may not transfer. I cannot justify upgrading to GREEN with an unrebutted structural-mismatch concern at the core of the evaluation.
+
+The novelty assessment converges across novelty_killer and theory_skeptic: the mechanism (anti-correlated proxy makes SJF worse than FCFS in heavy-tailed queues) is a KNOWN REGIME of learning-augmented scheduling robustness (Purohit/Lykouris NeurIPS/ICML 2018; Mitzenmacher 1902.00732), and "input-length is a bad proxy" is the assumed motivation of the output-length-prediction subfield (Fu 2408.15792, S3 2306.06000). The genuinely new pieces — (1) the tau* crossover quantification with magnitudes and (2) the VLM ecological claim that realistic mixes sit below tau* — are respectively (1) a quantitative extension of a known qualitative regime and (2) an unmeasured hypothesis (tau imposed via Gaussian copula, not measured on real traces). Neither piece, at L0, reaches the bar for GREEN without the robustness-theory prior art being cited (it is currently absent — prior-art search INADEQUATE on this axis) and without L1 validating the ecological premise.
+
+The product_realist correctly notes the result is defensive (FCFS is already the production default; no evidence of deployed input-length-SJF), which limits operational significance to "avoid a bad optimization" rather than "adopt a better one." This is still valuable IF the ecology holds.
+
+VERDICT LOGIC: Cannot emit GREEN — prior-art search inadequate (Purohit/Lykouris uncited), evaluation_prosecutor RED unrebutted on structural mismatch, ecological premise unmeasured. Cannot emit RED — no verified >=2-source fatal collision, controls are well-designed and informative within their model, the mechanism is real (not fabricated or trivial), and the L0 explicitly gates on L1 for the issues raised. YELLOW with four hard gates for promotion. The L1 that would change this verdict is exactly the one the packet already prescribes: real VLM trace tau measurement + vLLM/SGLang replay + CIs + baselines.
+```

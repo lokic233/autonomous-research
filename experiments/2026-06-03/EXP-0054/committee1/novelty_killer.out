@@ -1,0 +1,80 @@
+I have enough grounded prior-art to render an auditable novelty verdict. The foundational framework (Mitzenmacher 1902.00732) and LLM output-length-prediction literature (S3 2306.06000; Fu 2408.15792) are confirmed; the unfound IDs were bad guesses, so I rely on those plus the established learning-augmented-scheduling robustness principle.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Fu et al., Efficient LLM Scheduling by Learning to Rank, arXiv:2408.15792",
+   url: "https://arxiv.org/abs/2408.15792",
+   why_close: "Verified via fetch — it predicts OUTPUT/decode-length ranks precisely BECAUSE
+   absolute length (and by extension cheap input-length signals) is treated as an inadequate
+   SJF proxy in LLM serving. The premise 'input-length-SJF is a bad proxy' is the *motivation*
+   of this subfield, not a new finding. The claim's headline ('input-length-SJF is bad') is
+   near-collision with the assumed prior of this line of work."}
+- {cite: "Jin et al., S3: Increasing GPU Utilization during Generative Inference, arXiv:2306.06000",
+   url: "https://arxiv.org/abs/2306.06000",
+   why_close: "Verified via fetch — builds an output-length predictor for sequence scheduling
+   precisely because output length is unknown a priori; same subfield premise that decode length,
+   not input length, is the scheduling-relevant quantity."}
+- {cite: "Mitzenmacher, Scheduling with Predictions and the Price of Misprediction, arXiv:1902.00732",
+   url: "https://arxiv.org/abs/1902.00732",
+   why_close: "Foundational 'price of misprediction' framework. Packet correctly concedes it (and
+   Dell'Amico 1907.04824, SOAP/Gittins 1712.00790) assumes ~unbiased error. The claim's regime
+   (biased/anti-correlated proxy) is an EXTENSION of this exact framework, not an orthogonal idea."}
+- {cite: "Purohit, Svitkina, Kumar, Improving Online Algorithms via ML Predictions, NeurIPS 2018;
+   Lykouris & Vassilvitskii, Competitive Caching with ML Advice, ICML 2018",
+   url: "https://proceedings.neurips.cc/paper/2018/hash/73a427badebe0e32caa2e1fc7530b7f3-Abstract.html",
+   why_close: "Establishes the consistency/robustness principle: naively trusting BAD predictions
+   underperforms the prediction-free baseline, which is *why* robust schedulers fall back to it.
+   'Bad-enough predictor => worse than FCFS' is a KNOWN qualitative regime of this theory. NOT
+   cited in the packet — must be."}
+
+NAMING_VS_MECHANISM:
+Mixed, leaning thin. The underlying MECHANISM — an anti-correlated/biased size proxy makes
+SJF worse than the prediction-free baseline (FCFS) — is a KNOWN regime of learning-augmented
+scheduling (Purohit/Lykouris robustness; Mitzenmacher price-of-misprediction), not a new
+mechanism. What is genuinely *new-by-quantification*, not renaming: (1) the rank-correlation
+SIGN-FLIP crossover tau* with measured magnitudes (SJF/FCFS p99 ratio 1.4-5.8x in the tau~0.14-0.34
+band, growing with rho) showing SJF is ACTIVELY HARMFUL, not merely suboptimal — I found NO source
+that explicitly states input-length-SJF < FCFS with a tau* crossover; and (2) the ECOLOGICAL VLM
+hypothesis that image-token-dominated input sits below tau*. So it is NOT pure renaming, but the
+mechanism delta over cited+uncited robustness theory is modest. The oracle control C1 (correct
+proxy beats FCFS, ratio 0.72-0.96) is a real and valuable distinction from textbook SJF-starvation,
+but it does not by itself make the *novelty* large.
+
+FATAL_COLLISIONS:
+None verified to KILL standard. No source (let alone >=2 independent) was found that already
+reports input-length-SJF strictly-worse-than-FCFS with a tau* sign-flip crossover, so the
+specific quantified phenomenon is not a confirmed duplicate. The collisions above are
+NOVELTY-DILUTION, not duplicate-result fatalities. Cannot justify red on collision grounds.
+
+MANDATORY_RELATED_WORK:
+- Purohit/Svitkina/Kumar (NeurIPS 2018) + Lykouris/Vassilvitskii (ICML 2018) — consistency/
+  robustness: bad predictions worse than prediction-free baseline (the closest conceptual
+  precedent for "below tau*, do FCFS"). Currently UNCITED — required.
+- Fu et al. 2408.15792 and S3 (Jin et al. 2306.06000) must be cited specifically as the works
+  that ALREADY treat input length as an inadequate SJF proxy, so the contribution is positioned
+  as "actively harmful + crossover + VLM ecology," NOT as "input length is a bad proxy" (which
+  is not novel).
+- Zheng et al., Response Length Perception and Sequence Scheduling (output-length prediction
+  for LLM batching) — same input-length-insufficiency premise.
+- A real VLM/multimodal-serving scheduling baseline (vLLM/SGLang VLM): I could not confirm an
+  existing one via search (web-search tool denied; arXiv fetch only) — L1 must do an explicit
+  prior-art sweep to rule out a VLM-specific collision before promotion.
+
+RATIONALE:
+The novelty is real-but-thin and load-bearingly GATED on L1. Two grounded facts cap it: (1) the
+mechanism is a known regime of learning-augmented scheduling robustness (Purohit/Lykouris;
+Mitzenmacher 1902.00732, fetched), and the packet's "foundational works assume unbiased error"
+defense is true but only makes this an extension, not a new mechanism; (2) "input-length-SJF is a
+bad proxy" is the assumed motivation of the output-length-prediction subfield (Fu 2408.15792 and
+S3 2306.06000, both fetched and confirmed). The ONLY genuinely-new pieces — the actively-harmful
+tau* crossover quantification and the VLM image-token-below-tau* ecological claim — are, at L0,
+respectively (a) a known regime made quantitative in simulation, and (b) an UNMEASURED hypothesis
+(tau is imposed via Gaussian copula, not measured on real VLM traces). If the L1 real-trace
+Kendall-tau(input_tokens, decode_len) does NOT come in below the simulated tau*, the one piece
+that distinguishes this from "expected robustness theory" collapses. No verified >=2-source fatal
+collision => not red. Mechanism incremental over cited+uncited robustness theory and motivation
+already-assumed in LLM-scheduling subfield => not green. YELLOW, promotion conditional on the L1
+real-trace tau measurement plus citing the robustness/output-length-prediction prior art above.
+```
