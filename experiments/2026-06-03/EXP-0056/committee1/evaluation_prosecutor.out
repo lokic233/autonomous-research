@@ -1,0 +1,5 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [{"name": "Concurrent Shard Interleaving (tf.data interleave / WebDataset)", "why": "Standard systems practice for handling large correlated shards is to interleave multiple sources concurrently before the local shuffle buffer, which artificially reduces the effective run length L.", "repo_or_cite": "tf.data.Dataset.interleave(cycle_length); WebDataset shard interleaving"}]
+STRAWMAN_RISKS: ["Evaluating a purely sequential read of entire massive shards without an interleave step. No competent practitioner feeds 100% same-source runs into a local buffer without first interleaving multiple shards. The 'practitioner heuristic' assumes interleaving is active.", "Claiming the variance inflation can 'ONLY' be removed by scaling B with L, ignoring the existence and standard use of interleaving to break contiguous runs."]
+MISS
