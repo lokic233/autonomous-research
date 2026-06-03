@@ -1,0 +1,26 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The "structural ceiling" is mechanically forced by the sliding-window FIFO over run-length-L blocks: when L>>B the buffer literally CANNOT contain a second source for the first (L-B) items of each run, so any batch drawn from it is ~single-source. This is arithmetic, not an emergent phenomenon.
+- "Axis is B/L, not B/b" is near-tautological: b is the read-out window from the buffer, downstream of B; b does not enter the buffer's color-mixing dynamics at all. The only scales in the buffer process are B and L, so of course the governing ratio is B/L. Calling this a "discovery" oversells what is a restatement of the problem geometry.
+- rho_buf(B,L) is a standard sliding-window-over-blocks combinatorial quantity; the rho->variance map is the textbook Var(mean of correlated draws) = (1/b)(sigma^2)(1 + (b-1) rho_eff). Once rho(B,L) is known, the inflation magnitudes follow with no surprise.
+
+CONFOUNDS:
+- Within-source per-component grad correlation hard-coded at 0.80 (sigma_sig=1.0, sigma_noise=0.5). 0.80 sits near the top of the achievable inflation range; lower realistic correlations would shrink the ">=1.5x at practitioner B" headline. The 1.5x bar inherits its meaning entirely from this knob.
+- d=32 toy with single-vector per-source signature (no within-source signature variation) maximizes the correlated-component count; richer per-source structure would reduce effective rho_eff and dilute inflation.
+- "Oracle full-shuffle" as denominator is favorable; comparing to per-shard-shuffle (a realistic baseline practitioners actually use) would shrink the headline ratio.
+
+ASSUMPTIONS_UNTESTED:
+- That real per-domain gradient correlations are anywhere near 0.80 (explicitly deferred to L1 — but the 1.5x claim is conditional on this).
+- That real shards arrive as contiguous L-length runs with no pre-shuffle / interleave from the data team (the actionability caveat the packet itself flags).
+- No closed-form rho(B,L) derivation shown in the packet to verify that measured rho_buf matches the algorithm's analytic property — claim asserts re-derivability but doesn't exhibit it for cross-check.
+
+STATISTICAL_GAPS:
+- Pre-registered CONFIRM (iv) was the <=1.2x threshold; the run reached only ~2.17x at B=10L. Author honestly downgraded to "direction confirmed." One of four pre-reg conditions is partial, not met.
+- 5 seeds (3 on the axis sweep) is minimal; CIs are tight but no power analysis or sensitivity-to-rho-input study is reported.
+- No sensitivity sweep over the load-bearing within-source-correlation parameter (0.80 only). A 1-D sweep over rho_within in {0.2, 0.5, 0.8} would show how fragile the >=1.5x bar is.
+- "Inflation" is summed over d components; per-component variance behavior and the validity of summing are asserted, not shown.
+
+RATIONALE: Result HELD as measured; math is clean and the L0 is honestly executed. But the load-bearing "non-textbook" content — B/L vs B/b asymmetry and the ceiling — is largely forced by the sliding-window geometry once stated, not a surprising mechanism (mundane explanation #1, #2). Novelty therefore rests entirely on whether the *stated provisioning rule* is absent from the streaming-shuffle systems literature (per orchestrator note: plausibly yes vs RR/GraB which assume full permutation; MosaicML/WebDataset docs are qualitative) — that is a literature-novelty argument, not a theoretical-surprise argument, and committee#3 (prior-art) is the right reviewer for it. Additional concerns: pre-reg <=1.2x not met (partial confirm), no sensitivity to the load-bearing rho_within=0.80 knob, and the actionability gap the packet itself raises (real L can be a full shard, so "grow B to L" is impractical — the real lever is interleave/pre-shuffle, which is a different intervention than the claim states). YELLOW: advance to L1 ONLY if (a) literature search confirms the B-vs-L rule is not folklore, (b) L1 measures real per-domain grad correlation and shows inflation remains >=1.5x at realistic rho_within (not just at 0.80), and (c) downstream convergence harm at production B is shown — without (c) the contribution risks being a precise statement of an arithmetically expected effect.
+```

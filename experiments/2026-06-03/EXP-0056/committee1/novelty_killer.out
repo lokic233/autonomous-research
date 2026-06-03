@@ -1,0 +1,34 @@
+Both web-search tools are permission-gated in this session and were denied, so I cannot run live retrieval. I'll be transparent about that and ground my prior-art assessment in (a) the works already cited in the packet, (b) my training knowledge (cutoff Jan 2026), reasoning hostilely about whether the quantitative contribution survives.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lu, Guo, De Sa — GraB: Gradient Balancing for Permutation-based Example Ordering (NeurIPS 2022)",
+   url: "https://arxiv.org/abs/2205.10733",
+   why_close: "Canonical work on how example ORDER controls gradient-estimate quality/variance. But operates in the FULL per-epoch permutation regime; says nothing about a bounded sliding-window streaming buffer. Adjacent mechanism, different regime — NOT a collision."}
+- {cite: "CD-GraB — Cao et al. (2023)",
+   url: "https://arxiv.org/abs/2302.00845",
+   why_close: "Distributed GraB; same full-permutation assumption. Same non-collision as above."}
+- {cite: "tf.data performance / shuffle documentation (TensorFlow) + WebDataset / MosaicML StreamingDataset shuffle docs",
+   url: "https://www.tensorflow.org/guide/data ; https://github.com/webdataset/webdataset ; https://docs.mosaicml.com/projects/streaming/",
+   why_close: "ALL THREE explicitly warn that a bounded shuffle buffer under-decorrelates when data is ordered/blocked by source/class, and that buffer_size must be 'large relative to the structure of the data' — not relative to the batch. This is the documented QUALITATIVE folklore the claim quantifies. This is the load-bearing prior art for the novelty assessment."}
+- {cite: "Random-reshuffling / non-IID ordering SGD variance literature (Mishchenko-Khaled-Richtárik 2020 RR analysis; HaoChen & Sra; Safran & Shamir)",
+   url: "https://arxiv.org/abs/2006.05988",
+   why_close: "Establishes the 'correlated/structured ordering inflates the gradient estimator' baseline. The textbook fact the packet's guard is designed to exceed."}
+
+NAMING_VS_MECHANISM:
+Mixed. The labels "structural CEILING" and "provisioning LAW" are partly dress — the QUALITATIVE takeaway ("buffer must scale with the block/source structure of your data, not with the batch") is already documented in ≥2 independent systems sources (tf.data + WebDataset/MosaicML). The genuine MECHANISM delta is narrower but real: (1) rho(B,L) as an explicit, re-derivable closed-form for the sliding-window buffer, and (2) the TWO-AXIS ASYMMETRY made quantitative — inflation is monotone in B/L and ~flat in B/b, with magnitudes (15.1x at the common 10b-buffer/20b-run point). That precise B/L-vs-B/b separation + inflation magnitudes is NOT something I can locate in any single prior source. So: not pure renaming, but the novel surface is "quantify + sharpen documented folklore," not a new phenomenon.
+
+FATAL_COLLISIONS:
+None that I can verify to the RED bar (≥2 independent sources for the SAME specific quantitative contribution). The qualitative claim collides with tf.data + WebDataset/MosaicML docs (2 sources) — but the packet already concedes those are qualitative and scopes its novelty to the quantitative B/L law, which I could not collide against any source. No KILL-grade collision established.
+
+MANDATORY_RELATED_WORK (authors MUST cite + position against):
+- tf.data shuffle/buffer_size guidance AND WebDataset/MosaicML StreamingDataset shuffle algorithm docs — quote their qualitative buffer-vs-data-structure guidance and state precisely what the quantitative B/L law adds.
+- GraB (2205.10733) + CD-GraB (2302.00845) — explicitly delimit the full-permutation vs bounded-streaming-buffer boundary.
+- RR/non-IID-ordering SGD variance theory (Mishchenko et al. 2020; HaoChen & Sra; Safran & Shamir) — to fence off the textbook restatement.
+- Reservoir / online-shuffle sampling literature — rho(B,L) is structurally a reservoir/sliding-window residual-co-occurrence quantity; a prior derivation may exist and must be searched.
+
+RATIONALE:
+Cannot KILL: no ≥2-source collision exists for the specific quantitative contribution (rho(B,L) closed form + B/L-vs-B/b asymmetry + inflation magnitudes); RED is unjustified by my own rule. Cannot GREEN: the qualitative actionable takeaway ('provision against data structure, not batch') is documented folklore in ≥2 independent systems sources (tf.data, WebDataset/MosaicML), so the contribution is a quantification/sharpening, not a new phenomenon — and the actionability is genuinely limited (real L = a full source/shard can be enormous; the >=1.2x crossing sits beyond B=10L, so 'grow B to L' is often infeasible and the real lever is 'interleave/pre-shuffle shards'). The novel content survives only as the quantitative two-axis law, which is real but thin. Honest verdict: YELLOW — proceed to L1 ONLY if the writeup (a) explicitly positions rho(B,L) against the reservoir/online-shuffle literature, (b) cites and exceeds the tf.data/WebDataset/MosaicML qualitative guidance rather than ignoring it, and (c) reframes the actionable takeaway around source-interleaving/shard-pre-shuffle, not 'grow B', given L's real magnitude. CAVEAT: live prior-art retrieval tools were permission-denied this session; the reservoir-sampling collision check (a) is unresolved and could move this to RED if a quantitative rho(B,L) derivation already exists.
+```
