@@ -1,0 +1,80 @@
+I have enough to vote. Live external search tools were denied in this environment (WebSearch / 3pai both unpermitted) and the local `prior_art/` cache is empty, so I am grounding the prior-art collision in stable, retrievable, well-established literature (JMLR + the packet's own arXiv cite) rather than fresh hits. The decisive issue: the surviving "law" collides with the foundational **hubness / anti-hub** line, which the packet does not cite at all.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- { cite: "Radovanović, Nanopoulos & Ivanović (2010), 'Hubs in Space: Popular Nearest
+    Neighbors in High-Dimensional Data', JMLR 11:2487–2531",
+    url: "https://www.jmlr.org/papers/v11/radovanovic10a.html",
+    why_close: "Defines N_k(x) = reverse-kNN count = exactly the packet's 'reverse-kNN
+      in-degree'. Establishes the two tails: HUBS (high N_k) and ANTI-HUBS/'orphans'
+      (low N_k) that are rarely/never returned as neighbors = systematically under-
+      retrieved. Crucially shows hubness is a concentration-of-distances/intrinsic-dim
+      effect that is NOT a density/cluster artifact. The surviving CONFIRMED half —
+      'low reverse-kNN in-degree -> elevated per-item FN, survives density control' —
+      is the anti-hub retrievability deficit restated for a graph index. NOT cited." }
+- { cite: "Schnitzer, Flexer, Schedl & Widmer (2012), 'Local and Global Scaling Reduce
+    Hubs in Space', JMLR 13:2871–2902",
+    url: "https://www.jmlr.org/papers/v13/schnitzer12a.html",
+    why_close: "Hub-reduction (mutual proximity / local scaling) is motivated entirely
+      by anti-hubs having LOW retrievability and dragging down recall, and proposes
+      cheap repair. This pre-empts the packet's proposed L1 'actionable payoff'
+      (boost reachability of low-in-degree items). NOT cited." }
+- { cite: "'The H in HNSW stands for Hubs', arXiv 2412.01940 (cited in packet)",
+    url: "https://arxiv.org/abs/2412.01940",
+    why_close: "Already ties HNSW graph in-degree to the hubness phenomenon. The
+      packet frames it as 'HIGH in-degree for SPEED', but hubs and anti-hubs are the
+      same N_k distribution's two tails — the low-in-degree recall deficit is the
+      immediate mirror image, not an untouched gap." }
+
+NAMING_VS_MECHANISM: Mostly NAMING. 'reverse-kNN in-degree predicts per-item FN,
+  density-independent' largely renames 'anti-hubs are under-retrieved, and hubness is
+  not a density effect' (Radovanović 2010) for a greedy-graph index. There IS one real
+  candidate mechanism delta: the predictor is the BUILT-graph in-degree (shaped by RNG
+  pruning + insertion order), and the outcome is a TRAVERSAL/reachability FN, not 'this
+  point is rarely anyone's true NN'. Those are conceptually separable. BUT the packet
+  never measures the correlation between built-graph in-degree and the data's true
+  reverse-kNN count N_k. In a single-flat-layer NSW they are expected to be tightly
+  coupled, so absent that measurement the 'predictor' is not shown to be distinct from
+  the classical hubness predictor — the mechanism delta is asserted, not demonstrated.
+
+FATAL_COLLISIONS:
+- The surviving CONFIRMED contribution ('density-independent in-degree -> per-item FN
+  LAW about populations'), judged ON ITS OWN as the load-bearing question asks, collides
+  with the anti-hub retrievability result in ≥2 independent sources (Radovanović 2010 +
+  Schnitzer 2012; reinforced by the packet's own 2412.01940). Density-independence is
+  not a surprise here — hubness is canonically NOT a density artifact — so the headline
+  'density does not explain it away' restates known theory rather than overturning it.
+- The one genuinely graph-specific, novel, ACTIONABLE claim ('a STABLE subset / build-
+  identifiable, repairable per-item blind spots') is exactly the half that FAILED
+  (stability 0.134 < pre-reg 0.30; denom>=5 diagnostic 0.079). What survives is the
+  part most anticipated by prior art; what died is the part that would have been new.
+- Regime mismatch: effect is modest (|rho|~0.15) at d=12 / 8-cluster GMM — a LOW
+  intrinsic-dim setting where hubness is known to be weak. The phenomenon has not been
+  shown in the high-intrinsic-dim regime where the prior art actually lives and where a
+  delta would have to be demonstrated.
+
+MANDATORY_RELATED_WORK (must cite + benchmark against before any L1):
+- Radovanović, Nanopoulos & Ivanović 2010, JMLR (hubness, anti-hubs, N_k = reverse-kNN
+  count, density-independence of hubness) — non-negotiable; its omission alone blocks
+  a novelty pass.
+- Schnitzer et al. 2012, JMLR (anti-hub retrievability + hub-reduction repair) —
+  pre-empts the proposed repair payoff.
+- Skewness-of-N_k follow-ups and any hubness-aware ANN-index work, to position the
+  built-graph-in-degree predictor against the classical data N_k predictor.
+
+RATIONALE: The committee's load-bearing question is whether the surviving population
+  law is novel ON ITS OWN. Against the hubness line (Radovanović 2010; Schnitzer 2012;
+  echoed by the packet's own 2412.01940) it is not: 'low reverse-kNN count -> low
+  retrievability, not a density effect' is the defining content of anti-hub theory. The
+  packet's prior-art delta omits the foundational hubness papers entirely and instead
+  argues against narrower, more recent works (2510.22316 per-query, 2405.17813
+  aggregate), which lets it overstate the gap. The only viable novelty — built-graph
+  in-degree (a construction artifact) predicting traversal-reachability FN BEYOND the
+  data's N_k, and a STABLE/repairable per-item blind-spot set — is precisely what was
+  not measured (vs N_k) or outright failed (stability). RED. A revival path exists and
+  should be stated honestly: re-scope to 'built-graph in-degree residual over data
+  reverse-kNN count' in a high-intrinsic-dim corpus, cite hubness, and show the residual
+  predicts FN — but that is a different, not-yet-run claim. As stands, kill.
+```
