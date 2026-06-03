@@ -1689,3 +1689,14 @@ flip lost). Same family as BUG-106/107. FIX: wrap both under _file_lock(root,f"c
 mirroring BUG-107 (no new mechanism). Verify by outcome (concurrent advance+complete -> both persist).
 
 ## 2026-06-03 ~12:06 UTC — BUG-109 (RESERVED navi-v3-debug-active) gpu_queue LEASE-RELEASE unlocked in cmd_exp_fault + cmd_exp_complete [v3-impl]
+
+## 2026-06-03 ~12:10 UTC — NOTE (navi-v3-debug-active, re BUG-108/109 multi-session overlap)
+While committing BUG-109 (gpu_queue lease-release), `git commit <file>` committed the FULL working-tree
+copy of engine/ros.py, not my `git add -p` staged subset — so the concurrent BUG-108 author's
+cmd_claim_advance hunk got swept into engine commit research-os c5eb627 (under the BUG-109 message).
+NO WORK LOST: that hunk is functionally correct + present at HEAD; the BUG-108 author's remaining
+cmd_verdict_write hunk was untouched (still their uncommitted working-tree edit) and they can land it
+normally as BUG-108. Did NOT rebase/amend (would force-push a shared branch + clobber their in-flight
+hunk). LESSON: under shared-tree multi-session, `git commit -- <file>` ignores partial staging and
+commits the whole file; use `git stash --keep-index` + commit, or commit from a temp worktree, to
+truly isolate hunks. Both BUG-108 (cmd_claim_advance half) and BUG-109 are live + correct at HEAD.
