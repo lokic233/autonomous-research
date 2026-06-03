@@ -1,0 +1,47 @@
+dead_id: DEAD-0002
+original_claim_id: CLAIM-0010
+original_claim: "For long-horizon tool-calling agents, a CAUSAL retention policy that\
+  \ predicts which committed tool-result spans will be re-referenced \u2014 using\
+  \ only a NOISY, realizable past-signal proxy (decayed past-attention mass / repeat-substring\
+  \ hits, NOT the ground-truth reference process) with realistic span-boundary detection\
+  \ error \u2014 achieves a strictly better context-length / task-success Pareto than\
+  \ (a) recency-truncation AND (b) attention-based KV eviction (H2O/SnapKV-style),\
+  \ on traces where the predictor's future-reference AUC is measured (not assumed),\
+  \ with the win surviving when predictor AUC is realistically imperfect (<0.85)."
+reason_killed: 'L1 REFUTES the load-bearing assumption on REAL Qwen2.5-1.5B-Instruct
+  tool-agent traces (HF transformers eager attn, 40 seeds x 2 designs, 806 tool-result
+  spans, devgpu014/H100). cold-then-hot delayed-callback frequency = 0.000 (pre-reg
+  <5%=rare). The critical handle span is a HEAVY-HITTER from commit (attention rank
+  rises 0.50->1.00 monotonically), so H2O RETAINS it: real future-ref AUC H2O=0.999/0.819
+  overall and 1.000 for crit-handle ID (the noisy lexical proxy is WEAKER at 0.86/0.65).
+  pass@1 at matched KV budget: CAUSAL-H2O = +0.00 [CI 0,0] at every budget; only RT
+  loses (=0.00). L0''s ''H2O=0 on delayed callbacks'' is an artifact of engineered
+  sim structure that does NOT exist in real attention; real graded H2O crit-retention=1.00
+  at bf>=0.5. Prior-art: residual novelty subsumed (A2SF same diagnosis; ArkVale recallable-eviction
+  + Quest query-aware already recover cold-then-hot via geometry w/o lexical signal;
+  Apple ''Learning to Evict'' identical ''past-attn is indirect future proxy'' framing).
+  Honest-negative branches N1+N2+N3+N4 all triggered. Recommend KILL.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0013
+duplicate_patterns:
+- "For long-horizon tool-calling agents, a CAUSAL retention policy that predicts which\
+  \ committed tool-result spans will be re-referenced \u2014 using only a NOISY, realizable\
+  \ past-signal proxy (decayed past-attention mass / repeat-substring hits, NOT the\
+  \ ground-truth reference process) with realistic span-boundary detection error \u2014\
+  \ achieves a strictly better context-length / task-success Pareto than (a) recency-truncation\
+  \ AND (b) attention-based KV eviction (H2O/SnapKV-style), on traces where the predictor's\
+  \ future-reference AUC is measured (not assumed), with the win surviving when predictor\
+  \ AUC is realistically imperfect (<0.85)."
+- achieves agents assumed attention auc based better boundary calling causal committed
+  context decayed detection error eviction future ground h2o hits horizon imperfect
+  length long mass measured noisy not only pareto past policy predictor predicts process
+  proxy realistic realistically realizable recency reference referenced repeat result
+  retention signal snapkv span spans strictly style substring success surviving task
+  than tool traces truncation truth using when where which will win
+revival_conditions: Revive only if (a) a REAL installed multi-tool benchmark (tau-bench/AppWorld/OfficeBench)
+  on a LARGER instruct model exhibits cold-then-hot at >=15% frequency AND (b) the
+  lexical handle signal beats H2O on real pass@1 at matched KV budget (CI_lo>0) AND
+  (c) ArkVale/Quest query-aware recall demonstrably MISS those spans.
+related_prior_work: []
+date_killed: '2026-06-03T01:40:20Z'

@@ -12,13 +12,25 @@ resource_budget:
 needs_gpu: true
 dispatched_by: orchestrator-r2-001
 node_lease: devgpu014:EXP-0013
-status: running
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L1 REFUTES the load-bearing assumption on REAL Qwen2.5-1.5B-Instruct
+  tool-agent traces (HF transformers eager attn, 40 seeds x 2 designs, 806 tool-result
+  spans, devgpu014/H100). cold-then-hot delayed-callback frequency = 0.000 (pre-reg
+  <5%=rare). The critical handle span is a HEAVY-HITTER from commit (attention rank
+  rises 0.50->1.00 monotonically), so H2O RETAINS it: real future-ref AUC H2O=0.999/0.819
+  overall and 1.000 for crit-handle ID (the noisy lexical proxy is WEAKER at 0.86/0.65).
+  pass@1 at matched KV budget: CAUSAL-H2O = +0.00 [CI 0,0] at every budget; only RT
+  loses (=0.00). L0''s ''H2O=0 on delayed callbacks'' is an artifact of engineered
+  sim structure that does NOT exist in real attention; real graded H2O crit-retention=1.00
+  at bf>=0.5. Prior-art: residual novelty subsumed (A2SF same diagnosis; ArkVale recallable-eviction
+  + Quest query-aware already recover cold-then-hot via geometry w/o lexical signal;
+  Apple ''Learning to Evict'' identical ''past-attn is indirect future proxy'' framing).
+  Honest-negative branches N1+N2+N3+N4 all triggered. Recommend KILL.'
+result_effect: kill
 artifacts_path: experiments/2026-06-03/EXP-0013/
 reproducibility: ''
 linked_verdicts: []
 started_at: '2026-06-03T01:22:25Z'
-completed_at: ''
+completed_at: '2026-06-03T01:40:20Z'
 prompt_version: ''
 committee_approved: VERDICT-0011

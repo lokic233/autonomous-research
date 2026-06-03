@@ -1,7 +1,7 @@
 claim_id: CLAIM-0010
 project_id: PROJ-0002
 stage: seed
-status: seed
+status: killed
 claim: "For long-horizon tool-calling agents, a CAUSAL retention policy that predicts\
   \ which committed tool-result spans will be re-referenced \u2014 using only a NOISY,\
   \ realizable past-signal proxy (decayed past-attention mass / repeat-substring hits,\
@@ -36,7 +36,23 @@ supporting_evidence:
     \ (Scissorhands counterexample). L1 owed: real attention, real tool-agent task\
     \ accuracy, verify real delayed-callback structure, head-to-head vs H2O/SnapKV/Scissorhands/ACON."
   data_path: experiments/2026-06-03/EXP-0012/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0013
+  summary: 'L1 REFUTES the load-bearing assumption on REAL Qwen2.5-1.5B-Instruct tool-agent
+    traces (HF transformers eager attn, 40 seeds x 2 designs, 806 tool-result spans,
+    devgpu014/H100). cold-then-hot delayed-callback frequency = 0.000 (pre-reg <5%=rare).
+    The critical handle span is a HEAVY-HITTER from commit (attention rank rises 0.50->1.00
+    monotonically), so H2O RETAINS it: real future-ref AUC H2O=0.999/0.819 overall
+    and 1.000 for crit-handle ID (the noisy lexical proxy is WEAKER at 0.86/0.65).
+    pass@1 at matched KV budget: CAUSAL-H2O = +0.00 [CI 0,0] at every budget; only
+    RT loses (=0.00). L0''s ''H2O=0 on delayed callbacks'' is an artifact of engineered
+    sim structure that does NOT exist in real attention; real graded H2O crit-retention=1.00
+    at bf>=0.5. Prior-art: residual novelty subsumed (A2SF same diagnosis; ArkVale
+    recallable-eviction + Quest query-aware already recover cold-then-hot via geometry
+    w/o lexical signal; Apple ''Learning to Evict'' identical ''past-attn is indirect
+    future proxy'' framing). Honest-negative branches N1+N2+N3+N4 all triggered. Recommend
+    KILL.'
+  data_path: experiments/2026-06-03/EXP-0013/
 verdict_history:
 - verdict_id: VERDICT-0011
   date: '2026-06-03'
@@ -44,10 +60,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: verdict_recorded
-next_action: 'VERDICT-0011=yellow: address required_evidence to advance'
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0013
+active_experiments: []
 created_at: '2026-06-03T01:02:45Z'
-last_updated: '2026-06-03T01:22:12Z'
+last_updated: '2026-06-03T01:40:20Z'
