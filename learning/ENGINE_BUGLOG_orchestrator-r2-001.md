@@ -1660,3 +1660,5 @@ research-os commit 4c58d68 (pushed main). v2 is the bar: v2 already serializes t
 brings the task ledger to the same locked-RMW discipline. No new mechanism.
 LESSON: when hardening a lost-update family (channel, agent, gpu_queue), AUDIT EVERY shared-file RMW with
 the same shape — the task ledger was the last bare load->dump that multiple supervision writers share.
+
+## BUG-107 (RESERVED v3-active-debug 2026-06-03T11:55Z)
