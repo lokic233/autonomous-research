@@ -1515,3 +1515,22 @@ still holds (retired stays retired, ignores late `--status running`); normal liv
 `running` + bumps count. AST-validated.
 **Commit:** research-os main 62a589a.
 **Note:** shared engine → fix protects v2 (golden ref) and v3.
+
+---
+
+## BUG-100 — gpu_queue enqueue/release unlocked RMW vs the locked poller → lease clobber + double GPU dispatch
+**Found:** v3 ACTIVE-DEBUG bugbash (multi-GPU dispatch contention / channel-resubmit class), 2026-06-03, isolated /tmp.
+**Symptom:** `cmd_gpu_poll` (BUG-85) claims a lease + removes the queue item UNDER `_file_lock(root,"gpu_queue")`.
+But `cmd_gpu_queue` did an UNLOCKED load→append→dump and `cmd_gpu_release` an UNLOCKED load→pop→dump on the
+SAME `runtime/gpu_queue.yaml`. A `gpu queue` submit (or `gpu release`) concurrent with a poller pull dumps a
+stale no-lease snapshot LAST → wipes the poller's just-written lease AND the leased exp REAPPEARS in the queue
+→ a second poller re-pulls it = DOUBLE GPU DISPATCH. Exactly the BUG-85 hazard, reopened via writer-vs-poller
+instead of poller-vs-poller (esp. unsafe on fragile MI350X). Same RMW race class as BUG-59/85/97/99.
+**Repro:** isolated /tmp; enqueue snapshot (no lease) dumped after poller's lease write → 8/8 lost-lease
+(nodeX_lease=None, leased EXP-OLD back in queue).
+**Fix:** wrap both the enqueue and release queue-mutation in the SAME `_file_lock(root,"gpu_queue",stale_s=30)`
+and RE-READ the queue inside the lock. Minimal — reuses the existing BUG-85 lock; no new mechanism.
+**Verify:** post-fix 0/10 clobbered under concurrent poller+enqueue (lease preserved, EXP-OLD not re-queued,
+new exp correctly enqueued). AST-validated.
+**Commit:** research-os main f112e6a.
+**Note:** shared engine → fix protects v2 (golden ref) and v3.
