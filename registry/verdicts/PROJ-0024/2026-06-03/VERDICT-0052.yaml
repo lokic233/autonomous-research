@@ -1,0 +1,87 @@
+verdict_id: VERDICT-0052
+claim_id: CLAIM-0054
+project_id: PROJ-0024
+date: '2026-06-03'
+experiment_ids:
+- EXP-0061
+experiment_paths:
+- experiments/2026-06-03/EXP-0061
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED \u2014 L0 well-executed: clean controls, exact-vs-LSH\
+  \ decomposition, honest boundary-flagging, anti-circular GT). GREEN blocked on 3:\
+  \ (1) MECHANISM NOVELTY DEAD (>=2 sources): CC = single-linkage clustering, chaining\
+  \ is a 60+yr textbook pathology (Jain&Dubes1988, ESL 14.3.12), and Lee2021 (2107.06499)\
+  \ EXPLICITLY acknowledges CC non-transitivity in-text \u2014 'we discovered CC deletes\
+  \ non-dups' is false priority"
+- "(2) the 0.724 HEADLINE IS A SYNTHETIC CONSTRUCTION \u2014 dominated by how many\
+  \ drift-chains the generator injects at (T=0.8,consec=0.82)"
+- the harness measures what it CONSTRUCTED, proving the mechanism but sidestepping
+  real-corpus PREVALENCE
+- '(3) COMPLETE-LINKAGE=0.000 is DEFINITIONAL (all-pairs-above-T is its definition
+  since the 1960s), not a mitigation discovery. Residual novelty is narrow-but-legitimate:
+  first clean innocent-removal quantification + CC-vs-SemDeDup-vs-complete-linkage
+  head-to-head in the LLM-dedup context.'
+required_evidence:
+- "L1 (the contribution's practical significance rests ENTIRELY here): (1) REAL-CORPUS\
+  \ chain prevalence at T~0.8 on C4/RedPajama/The-Stack via actual google-research/deduplicate-text-datasets\
+  \ NearDup or HF datatrove \u2014 THE load-bearing number all 5 reviewers agree is\
+  \ missing (if real graphs are predominantly cliquey at T~0.8, effect ~0 -> RED)"
+- "(2) DOWNSTREAM model quality (eval-loss/perplexity on ~100M-1B LM) CC-deduped vs\
+  \ SemDeDup-deduped equal-token-budget training sets \u2014 the killer experiment"
+- if the deleted docs are semantically redundant -> innocent deletion is operationally
+  harmless -> RED
+- (3) rep-selection sensitivity (lowest-id is worst-case for chain endpoints
+- "centroid/medoid could change innocent-removal under CC w/o changing the graph \u2014\
+  \ claim conflates CC-merge with rep-selection)"
+- "(4) non-linear chain topologies (branching trees, pendant-chains off near-cliques,\
+  \ overlapping bundles \u2014 only linear chains tested). UPGRADE to GREEN only if\
+  \ chain-prevalence >= moderate AND downstream harm measurable (reframed contribution)"
+- DOWNGRADE to RED if cliquey OR no downstream harm.
+map_delta_proposals:
+- "CLAIM-0054 -> YELLOW (structural-core L0-HELD, mechanism-novelty DEAD [single-linkage\
+  \ chaining is textbook + Lee2021 acknowledges it], quantification-novelty CONDITIONAL\
+  \ on a heavy real-corpus L1). Reframed contribution: NOT 'CC transitively deletes\
+  \ non-dups' (known) but 'first clean innocent-removal quantification + non-transitive-mitigation\
+  \ head-to-head in LLM dedup' \u2014 contingent on L1 real-corpus chain-prevalence\
+  \ >= moderate AND downstream training harm. ORCHESTRATOR DECISION: accept the reframed\
+  \ yellow + CONVERGE rather than spend a heavy real-corpus+LM-training L1 on a modest-ceiling\
+  \ measurement contribution gated on uncertain real-world prevalence (cost-aware/lightweight\
+  \ at 62pct ceiling). The structural finding + the CC-vs-SemDeDup mitigation comparison\
+  \ is the recorded honest contribution"
+- "the real-corpus-prevalence + downstream-harm is owed-but-not-pursued. No false\
+  \ green. LESSON: a 'structural-core-L0-settled' claim can have its MECHANISM be\
+  \ textbook (single-linkage) \u2014 'settled at L0' protects against sim-evaporation\
+  \ but NOT against the mechanism being known"
+- screen mechanism-novelty (vs textbook clustering/stats) at DESIGN, not just at committee.
+baseline_requirements:
+- "Lee2021 (2107.06499) \u2014 must QUOTE its own cluster-heuristic non-transitivity\
+  \ caveat (contribution = quantification NOT discovery)"
+- "single-linkage chaining (Jain&Dubes1988, ESL 14.3.12) \u2014 disclose the graph-theoretic\
+  \ core is textbook"
+- "SemDeDup (2303.09540) \u2014 correct original framing (semantic-vs-surface dedup),\
+  \ not recast as 'the standard chaining fix'"
+- "production CC-dedup (BigCode/Stack, datatrove, NeMo Curator, RefinedWeb/FineWeb)\
+  \ \u2014 where real chain-prevalence evidence lives"
+committee_run_dir: experiments/2026-06-03/EXP-0061/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T23:02:16Z'
