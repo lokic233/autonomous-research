@@ -1,0 +1,13 @@
+ROLE: systems_reviewer  VOTE: red
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "A-RAG Context Tracker", url: "https://arxiv.org/html/2602.03442", overlap: "Direct overlap: records read chunks C^read and, when a chunk was read before, returns a notification instead of full text to prevent redundant retrieval and token consumption."},
+  {system: "GPTCache", url: "https://github.com/zilliztech/GPTCache", overlap: "Shipping semantic cache for LLM queries using embeddings/vector similarity; matches the load-bearing semantic query-cache baseline that erased the claimed live-window advantage."},
+  {system: "SGLang RadixAttention", url: "https://www.lmsys.org/blog/2024-01-17-sglang/", overlap: "Adjacent inference-layer KV/prefix reuse for repeated prompt structure, not RAG retrieval suppression."},
+  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching/", overlap: "Adjacent hashed token-block KV reuse for matching prefixes, not semantic in-context retrieval gating."},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "Adjacent KV page reuse for requests sharing prompt prefixes, not live-window residency checks."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "Adjacent reusable-text KV cache across serving instances; reduces TTFT for long-context/RAG but does not establish the claimed pre-retrieval live-window gate."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold as claimed on the L1 realistic substitute: 4,764 real CoQA turns, MiniLM embeddings, Qwen2.5-1.5B-Instruct via vLLM on H100. Main gap is that CoQA-as-RAG is not native production agent logs, but the gate-vs-cache failure and A-RAG prior-art collision are sufficient for systems rejection.
+RATIONALE: The core mechanism is already present in A-RAG: its Context Tracker records chunks already read and suppresses re-reading them to avoid redundant retrieval/token cost. The claimed systems distinction also fails empirically: at matched ~29% skip on 1,868 paired LLM-in-loop turns, gate F1=0.4505 and semantic cache F1=0.4501, gate-cache Δ=+0.0004 with 95% CI [-0.0045,+0.0053]. At deployment-relevant skip rates >=20%, precision deltas vs cache have CIs crossing 0, and the cheap signal is near chance: MiniLM gate AUC=0.570 vs lexical=0.554. This is not a systems insight/design; it is an application-level glue variant of existing context tracking/caching, and the artifact reproducibly refutes the positive claim while preserving only the measurement methodology and negative result.

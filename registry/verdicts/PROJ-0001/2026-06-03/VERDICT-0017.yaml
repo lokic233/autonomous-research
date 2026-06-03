@@ -1,0 +1,62 @@
+verdict_id: VERDICT-0017
+claim_id: CLAIM-0013
+project_id: PROJ-0001
+date: '2026-06-03'
+experiment_ids:
+- EXP-0017
+- EXP-0018
+experiment_paths:
+- experiments/2026-06-03/EXP-0017
+- experiments/2026-06-03/EXP-0018
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+fatal_objections:
+- "N4 PRIOR-ART KILL (unanimous, dataset-independent): A-RAG 'Context Tracker' (arXiv\
+  \ 2602.03442 \xA73) verbatim 'records which chunks have been READ ... to prevent\
+  \ redundant information retrieval' \u2014 direct mechanism collision on the claim's\
+  \ narrow novelty (live-window-residency retrieval gating)"
+- corroborated by 'To Retrieve or To Think?' (2601.08747)
+- "N1 OPERATIONAL EQUIVALENCE: in-context gate vs semantic query cache @ matched ~29%\
+  \ skip on 1868 real LLM-in-loop turns -> F1 \u0394=+0.0004 CI[-0.0045,+0.0053],\
+  \ precision \u0394 straddles 0 at every skip>=20% \u2014 a query cache does it just\
+  \ as well (theory_skeptic notes this may be CoQA-confounded \u2014 single-doc W~=history\
+  \ \u2014 but N4 kills INDEPENDENTLY)"
+- 'Cheap signal collapse: AUC 0.570 embedding / 0.554 lexical vs oracle 1.0 = near-chance
+  on real data'
+- the L0's 0.84-1.0 was generator-tautological (item-id-seeded text)
+required_evidence:
+- "None rescues the gate CONCEPT \u2014 refuted by independent prior-art collision\
+  \ (A-RAG) AND operational equivalence to a deployed semantic query cache. What survives\
+  \ is ONLY the measurement methodology (anti-circular item-id GT + matched-skip-rate-vs-cache\
+  \ control). Any revival would need a genuinely distinct mechanism not covered by\
+  \ A-RAG/GPTCache, on multi-doc long-horizon agents (where N1's CoQA confound wouldn't\
+  \ apply) \u2014 judged unlikely to clear novelty"
+map_delta_proposals:
+- CLAIM-0013 -> RED / refuted (two-pass closure). L0 unanimous-yellow HELD-conditional
+  was an artifact of the constructed generator
+- "real-data L1 (CoQA, real embedding, real LLM-in-loop) shows the in-context-redundancy\
+  \ gate = a semantic query cache (F1 \u0394+0.0004) AND A-RAG already ships the live-window\
+  \ gate. Gate concept operationally dead. Surviving value = measurement methodology\
+  \ + the clean negative. Demonstrates two-pass value: a unanimous-yellow L0 candidate\
+  \ honestly refuted on real data. No false green"
+baseline_requirements:
+- "Semantic query cache (GPTCache) \u2014 operationally equivalent on real CoQA"
+- "A-RAG Context Tracker (2602.03442) \u2014 prior-art mechanism collision"
+- always-retrieve / oracle skip (bounds)
+- real MiniLM embedding + real Qwen2.5-1.5B LLM-in-loop
+created_at: '2026-06-03T04:57:40Z'

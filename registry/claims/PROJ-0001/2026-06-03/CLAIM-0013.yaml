@@ -52,12 +52,16 @@ verdict_history:
 - verdict_id: VERDICT-0016
   date: '2026-06-03'
   result: yellow
+- verdict_id: VERDICT-0017
+  date: '2026-06-03'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0018; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal: VERDICT-0017 red (gate concept refuted on real data \u2014\
+  \ = semantic query cache + A-RAG prior-art); measurement methodology survives"
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T03:57:25Z'
-last_updated: '2026-06-03T04:49:26Z'
+last_updated: '2026-06-03T04:57:57Z'

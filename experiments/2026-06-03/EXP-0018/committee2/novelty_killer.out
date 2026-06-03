@@ -1,0 +1,53 @@
+Live web search is not permitted in this session, so I'm grounding my prior-art verification in (a) the packet's verbatim citations and (b) my own training-knowledge of the pre-2026 adaptive-RAG / semantic-caching literature, which I can confirm independently. I flag the one source I could NOT independently re-verify (A-RAG, Feb 2026) as packet-sourced only.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "GPTCache (Zilliz, 2023)", url: "github.com/zilliztech/GPTCache",
+   why_close: "Semantic query cache — embed query, vector-search past queries, skip the call on a
+   cosine hit. The L1's load-bearing result shows the in-context gate is STATISTICALLY
+   INDISTINGUISHABLE from exactly this (real-LLM F1 Δ=+0.0004, 95% CI [-0.0045,+0.0053]; precision
+   Δ CI straddles 0 at every skip≥20%). Once that equivalence holds, the claim's mechanism collapses
+   into deployed semantic caching. INDEPENDENTLY VERIFIABLE (pre-2026, widely known)."}
+- {cite: "Self-RAG / FLARE / Adaptive-RAG / SKR (2310.05002)", url: "arxiv.org/abs/2310.05002",
+   why_close: "Established adaptive-retrieval-gating family (decide WHETHER to retrieve before
+   issuing the call). The claim is a sibling on the in-context axis rather than the parametric axis;
+   the genus 'cheap pre-retrieval skip gate' is crowded prior art. INDEPENDENTLY VERIFIABLE."}
+- {cite: "A-RAG 'Context Tracker' (arXiv 2602.03442)", url: "arxiv.org/html/2602.03442",
+   why_close: "Packet-quoted verbatim: maintains a tracker of which chunks have been READ to prevent
+   redundant retrieval = the live-window-residency gate the claim called its narrow novelty. DIRECT
+   mechanism collision. NOTE: Feb-2026; I could NOT independently re-verify (no live egress this
+   session) — relied on packet PRIOR_ART.md verbatim quote + offered as corroboration, not the sole
+   pillar of the kill."}
+
+NAMING_VS_MECHANISM: NAMING ONLY. The L1 empirically dissolves the one distinction the claim staked
+its novelty on — "gate on live-window content vs gate on past queries (cache)." At matched skip-rate
+they capture the SAME redundant retrievals at equal Pareto efficiency (F1 Δ ~0). So "live-window
+residency gate" is a rename of semantic query caching, not a new mechanism. The remaining axis
+(in-context vs parametric self-knowledge) is already occupied by A-RAG's Context Tracker.
+
+FATAL_COLLISIONS:
+- N1 (operational): in-context gate ≡ semantic query cache (GPTCache) on real data → the narrow
+  mechanism delta is measurement-zero. Verifiable via the L1's own pre-registered result.
+- N4 (prior-art): A-RAG Context Tracker already gates retrieval on read/in-context residency
+  (packet-sourced; corroborated in spirit by "To Retrieve or To Think?" 2601.08747).
+- Both pre-registered kill-branches fired as designed. The mechanism novelty is dead two ways.
+
+MANDATORY_RELATED_WORK: GPTCache + GPT Semantic Cache (2411.05276); A-RAG (2602.03442); To Retrieve
+or To Think? (2601.08747); SKR (2310.05002), SeaKR (2406.19215), Self-RAG, FLARE, Adaptive-RAG,
+Self-Routing RAG (2504.01018); Learning When to Retrieve in Conversational QA (2409.15515).
+
+RATIONALE: My role is novelty, and the claim's NARROW novelty ("gate specifically on in-context
+live-window residency, distinct from query caching and from parametric self-knowledge") fails on its
+own pre-registered terms. The kill does NOT rest solely on the one source I couldn't re-verify
+(A-RAG): even setting A-RAG aside, the L1 proves the gate is operationally identical to GPTCache-style
+semantic caching (verifiable prior art) — so the mechanism reduces to a renaming, and the genus
+sits inside the established adaptive-retrieval-gating literature (Self-RAG/FLARE/Adaptive-RAG/SKR).
+That is a fatal novelty collision, not a punitive RED: this is exactly the dead-on-arrival mechanism
+my role exists to flag. What survives is the MEASUREMENT METHODOLOGY (anti-circular item-id GT +
+matched-skip-rate-vs-cache control) and the clean negative result — both genuinely useful and, to my
+knowledge, not previously published as a head-to-head, but neither is novelty of the claim's
+mechanism. RED on novelty; the researcher's honest pre-registered refutation is commendable and
+should be credited as a publishable negative, not penalized.
+```
