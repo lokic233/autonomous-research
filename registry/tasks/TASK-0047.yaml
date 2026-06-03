@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0021
 claim_id: CLAIM-0051
 exp_id: EXP-0057
-status: open
+status: done
 summary: "L1-contested CPU follow-up (resolves committee#1 unrebutted RED): (1) INTERLEAVING\
   \ \u2014 add concurrent shard interleave cycle_length C{1,2,4,8,16} before the bounded\
   \ buffer, measure inflation(B,L,C); does moderate C collapse inflation at small\
@@ -16,8 +16,8 @@ summary: "L1-contested CPU follow-up (resolves committee#1 unrebutted RED): (1) 
   \ reuse EXP-0056 harness"
 evidence_delta: ''
 opened_at: '2026-06-03T21:13:23Z'
-updated_at: '2026-06-03T21:13:23Z'
-closed_at: ''
+updated_at: '2026-06-03T21:21:25Z'
+closed_at: '2026-06-03T21:21:25Z'
 history:
 - ts: '2026-06-03T21:13:23Z'
   event: open
@@ -29,3 +29,7 @@ history:
     \ (2) rho_within sensitivity {0.2,0.5,0.8} (does >=1.5x survive realistic correlation?);\
     \ (3) per-shard-shuffle baseline (vs the favorable oracle-full-shuffle denominator);\
     \ reuse EXP-0056 harness"
+- ts: '2026-06-03T21:21:25Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0055 completed EXP EXP-0057 (keep-exploring)

@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "Committee#1 follow-up: INTERLEAVING (cycle_length C, round-robin\
+  \ shards->buffer) COLLAPSES inflation at moderate C \u2014 realistic point (B=10b,L=20b)\
+  \ 14.8x->3.0x(C=8)->1.43x(C=16); large-L (L=200b) ->0.97x(C=16). FALSIFIES 'deficit\
+  \ removed ONLY by B growing with L'. L_eff=L/C is a CONSERVATIVE bound (interleave\
+  \ over-delivers vs seq(L/C), rel_err up to 90%); true unified variable is residual\
+  \ same-source co-occurrence rho_buf, which C drives down (0.59->0.06). RHO_WITHIN:\
+  \ >=1.5x SURVIVES low corr \u2014 4.36x at achieved rho=0.19 (vs 15.1x at 0.79),\
+  \ bar does NOT need high correlation. PER-SHARD baseline: buffer is NOT worse \u2014\
+  \ buf/per-shard=0.58-0.95 (buffer BEATS naive per-shard since per-shard keeps blocks\
+  \ intact, rho=1.0); oracle-full-shuffle denom was favorable. Disposition: REFRAME\
+  \ to rho_buf/L_eff-governed law (mechanism survives: inflation real 4-24x vs oracle,\
+  \ robust to low corr); but 'grow B only' framing WRONG \u2014 interleaving (standard\
+  \ in tf.data/WebDataset/MosaicML) is the cheaper lever and the buffer already beats\
+  \ per-shard. 84.6s, 5 seeds, anti-circular preserved."
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0057/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T21:21:25Z'
 prompt_version: ''
