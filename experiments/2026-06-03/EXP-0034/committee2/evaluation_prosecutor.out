@@ -1,0 +1,10 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: 
+- {name: "Stepwise Confidence Estimation", why: "Provides online step-by-step failure detection at AUC ~0.9. The L0 explicitly shows the monitor loses at this calibration level.", repo_or_cite: "Mavi et al., arXiv:2511.07364"}
+- {name: "LLM Critic Failure Predictor", why: "Demonstrates AUROC 0.94 for failure prediction; represents the strong-calibration regime of self-evaluation.", repo_or_cite: "Vasudev et al., arXiv:2602.03338"}
+STRAWMAN_RISKS: ["Pitting the monitor against naive 'verbalized self-confidence' (AUROC ~0.5-0.7) while ignoring existing stepwise self-evaluation techniques (AUROC ~0.9) that the monitor mathematically cannot beat.", "Using static task difficulty as a baseline for an online/stepwise monitor (a trivially weak baseline comparison)."]
+MISSING_METRICS: ["Lead-time coverage distribution against the Mavi et al. stepwise baseline.", "False positive rate / precision at the specific step the lead-time is claimed (cost of premature termination)."]
+KILLER_EXPERIMENT: A live L1 head-to-head on real agent trajectories (e.g., WebArena) evaluating the proposed causal signature monitor STRICTLY against Mavi et al.'s Stepwise Confidence Estimator. If the proposed monitor cannot exceed the ~0.9 AUC of the stepwise estimator or provide vastly superior lead-time coverage (which already failed at 42% in L0), the claim is dead.
+RATIONALE: The evaluation hinges on a strawman comparison. The L0 flip-point sweep (EXP-0034) explicitly proves the monitor only wins if the agent's self-confidence baseline is poorly calibrated (AUROC < 0.72). While naive verbalized confidence sits in this band, published SOTA online stepwise estimators (Mavi et al. 2511.07364) achieve AUROC ~0.9. Against this mandatory baseline, the packet's own model dictates the monitor loses. Compounding this, the one metric that could save the claim—lead time—failed its own pre-registered >0.5 coverage threshold (yielding only 42.4%). Proceeding to L1 against a weak verbalized baseline would be evaluating a solved problem against an artificially handicapped opponent.
+```

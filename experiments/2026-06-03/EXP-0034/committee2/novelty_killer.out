@@ -1,0 +1,26 @@
+All three cited collision papers verified live and independently:
+- **Mavi et al. 2511.07364** — VERIFIED (Mavi, Jaroria, Sun; NeurIPS'25 Workshop): stepwise confidence estimation for failure detection on multi-step tasks, +15% rel AUC-ROC over holistic. *Caveat: abstract says "reasoning" not "agent" tasks, reports +15% relative (not absolute ~0.9), and does not explicitly say "online/streaming."*
+- **Vasudev et al. 2602.03338** — VERIFIED: binary LLM critic predicts agent failure at AUROC **0.94** (offline).
+- **Lightman 2305.20050 "Let's Verify Step by Step"** — VERIFIED: step-level PRM / process supervision.
+
+The kill is corroborated in ≥2 independent, retrievable sources.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Mavi, Jaroria, Sun — Self-Evaluating LLMs for Multi-Step Tasks: Stepwise Confidence Estimation for Failure Detection (NeurIPS'25 Workshop)", url: "https://arxiv.org/abs/2511.07364", why_close: "LIVE-VERIFIED. Step-by-step (per-step) confidence scoring for FAILURE DETECTION on multi-step tasks, +15% rel AUC-ROC over holistic. This is the 'online stepwise self-eval of impending failure' that CLAIM-0037's strong form must out-do — and EXP-0033's own model says the monitor LOSES to strong-calibration self-confidence (d=-0.006)."}
+- {cite: "Vasudev, Russak, Bikel, Alshikh — Accurate Failure Prediction in Agents Does Not Imply Effective Failure Prevention (Feb 2026)", url: "https://arxiv.org/abs/2602.03338", why_close: "LIVE-VERIFIED. Binary LLM critic predicts AGENT failure at AUROC 0.94 offline. Independently occupies the 'predict agent-trajectory failure' space at calibration far above CLAIM-0037's monitor (0.743)."}
+- {cite: "Lightman et al. — Let's Verify Step by Step (PRM800K)", url: "https://arxiv.org/abs/2305.20050", why_close: "LIVE-VERIFIED. Step-level process reward scoring (score step <= t) — the 'online progression score' territory; the +0.095-vs-difficulty win is implicit here."}
+- {cite: "Ma et al. — AgentBoard (NeurIPS 2024), progress-rate", url: "https://openreview.net/forum?id=09Y7J22N9c", why_close: "Per-trajectory subgoal progression metric — occupies 'online progression score' conceptually (though post-hoc, annotation-dependent)."}
+
+NAMING_VS_MECHANISM: There IS a real mechanism delta on paper — a CHEAP EXTERNAL behavioral monitor (tool-error/retry rate, action-looping, declining info-gain) is NOT the same mechanism as an LLM self-evaluator/critic (Mavi/Vasudev) or a trained PRM (Lightman). So this is NOT pure renaming. BUT the delta is performance-DOMINATED and its distinguishing claims are unsupported by the project's OWN evidence: (a) "beats self-confidence" is FALSIFIED (d=-0.006; published self-evaluators hit ~0.9 → strong-calibration regime where the monitor's own model says it LOSES); (b) the genuinely-unoccupied sliver, "measured LEAD TIME," is unsupported at L0 (only 42% flagged >=1 step early, below the pre-registered 0.5 bar); (c) the one robust positive (+0.095 vs static difficulty) is the LEAST-novel half — implicit in any PRM/progress-rate work. Net: the supported-AND-novel contribution = none; the distinctive load-bearing claim collapses to RELABELING of online stepwise failure detection in a lead-time framing the experiment cannot back.
+
+FATAL_COLLISIONS:
+- Online/stepwise scoring of impending failure on multi-step LLM trajectories is OCCUPIED — verified in >=2 independent sources (Mavi 2511.07364 + Vasudev 2602.03338; PRM/Lightman adjacent). At the ~0.9–0.94 calibration those systems achieve, CLAIM-0037's own model predicts the monitor LOSES to self-confidence.
+- "Distinct from difficulty" win is non-novel: process/progression-vs-difficulty separation is implicit in PRM (2305.20050) and AgentBoard progress-rate.
+
+MANDATORY_RELATED_WORK: Mavi et al. 2511.07364; Vasudev et al. 2602.03338; Lightman et al. 2305.20050 (PRM/Let's Verify); Ma et al. AgentBoard NeurIPS'24; plus the calibration corpus that defines the only favorable axis (Agentic Overconfidence 2602.06948; Confidence Dichotomy 2601.07264; Mind the Confidence Gap 2502.11028).
+
+RATIONALE: I independently LIVE-VERIFIED the kill in >=2 retrievable sources (WebFetch on 2511.07364 and 2602.03338, plus 2305.20050). Honest correction to the packet: the absolute "~0.9 online agent AUC" framing of Mavi overstates its abstract (it reports "+15% relative," says "multi-step *reasoning*" not "agent," and doesn't explicitly claim streaming/online) — but Vasudev (0.94 critic ON AGENTS, offline) and PRM step-scoring backfill the agent + high-AUC + per-step dimensions, so the collision survives the correction. The strong claim's only truly-unoccupied novelty (external-signal monitor with MEASURED lead time that beats the agent's own signal) is precisely the part EXP-0033/0034 FALSIFY (loses to self-confidence) or fail to support (42% lead-time coverage). What survives is the least-novel half. The pre-registered ELSE branch fired correctly. Concur with CONVERGE/RED; do NOT spend a GPU L1.
+```
