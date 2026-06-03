@@ -1,0 +1,30 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- Predictor AUC=0.77–0.99 is mechanical signal-recovery: predictor reads x_i = s_i + N(0,sigma_obs); d_i is a monotone function of s_i. Recovering a latent from its own noisy linear observables is textbook — AUC is a monotone function of SNR (1/sigma_obs^2), not an emergent finding. The "uniform-regime AUC → 0.52" null is likewise a tautology (no signal in s_i → no recoverable signal in x_i).
+- Router-beats-random@matched-b is trivial: any ranker with AUC>0.5 dominates random at matched escalation. The +0.02..+0.09 gap is a direct algebraic consequence of AUC, not evidence for the claim's specific mechanism.
+- Router-vs-confidence crossover (tie @sigma=0.15, win @sigma>=0.3) is a SNR comparison between two noisy correlates of the SAME latent s_i. Whichever channel has the lower noise wins; the result reduces to "we set sigma_obs<sigma_conf in some cells." No quant-specific mechanism is demonstrated — same dynamics would hold for ANY latent-with-noisy-observables setup.
+- "Router dominates all-quant and all-full" is a definitional consequence of mixing two endpoints with a better-than-random selector; not a Pareto discovery.
+
+CONFOUNDS:
+- The strong baseline's noise level (sigma for c_i = g(s_i)+noise) was CHOSEN to be "comparable" to pre-decode noise. The conditional win is therefore engineered by a modeling choice; real post-decode logprob/entropy may be substantially MORE informative than pre-decode features (collapsing the router's edge to zero) or substantially LESS (inflating it). The L0 cannot adjudicate.
+- d_i = base * s_i^gamma with gamma>1 bakes in the heavy tail that the claim NEEDS; the "request-dependent regime" is identical to the claim's premise. The "win" is conditioned on its own assumption.
+- Quant-specificity is asserted but not modeled: the simulation is generic latent-recovery; nothing in the math distinguishes "quantization sensitivity" from "any latent task-difficulty." Novelty over RouteLLM/FrugalGPT is therefore unsubstantiated by this L0 — they would win identically against random in this simulator.
+- Router inference cost is absent from the x-axis; "skipping the cheap decode" — the framed real win — is asserted, not measured.
+
+ASSUMPTIONS_UNTESTED:
+- Single scalar latent s_i: real quant-sensitivity is plausibly multi-dimensional (arithmetic precision, long-context attention, rare-token retrieval) — collapsing to a scalar makes recovery artificially easy.
+- Linear-Gaussian observation model x_i = s_i + N(0,sigma). Real prompt-perplexity / domain tags are non-linear, non-Gaussian, and correlated; AUC under realistic structure unknown.
+- Heavy-tail exponent gamma is unparameterized in the reported sweep — sensitivity to gamma not shown; the entire "request-dependent" regime collapses to "uniform" as gamma→1.
+- Confidence channel g(s_i)+noise functional form arbitrary; no calibration to a real quant model's logprob distribution.
+- "Predictor never reads s_i" controls one circularity but does not control for shared-latent collinearity between training and eval (same DGP both sides).
+
+STATISTICAL_GAPS:
+- 5 seeds only; predictability table reports "range" not CI/SE. Bootstrap CI exists for router-vs-conf @b=0.2 only — not at b=0.05/0.10/0.30/0.50, where small effects (e.g. +0.0009 @b=0.05) are reported as wins without uncertainty.
+- "Router NEVER loses" is asserted across (5 budgets x 5 sigmas x 2 regimes x 5 seeds); with ~250 comparison cells and no multiple-comparison correction, at least some apparent ties/wins are noise.
+- Oracle gap (0.023–0.033) is the same order as several reported router-vs-conf deltas — the predictor is far from the achievable ceiling, and "wins" sit inside the predictor's own slack.
+- No power analysis for the modest deltas; N=2000 with 5 seeds may not separate +0.001 from 0.
+
+RATIONALE: The L0 is methodologically clean (pre-registered, anti-circular w.r.t. CLAIM-0008's failure mode, honest PARTIAL verdict, strong-baseline named not strawmanned) and the researcher's self-framing — "modest, conditional, real win is cost not quality, routing itself not novel" — is the correct read. But on the theory/modeling axis the "results" are largely algebraic consequences of the chosen DGP: a latent + noisy linear observables + monotone target ⇒ recoverability scales with SNR; ranker-beats-random ⇒ Pareto-better at matched budget; two noisy channels for the same latent ⇒ lower-noise channel wins. Nothing in the simulator is QUANT-specific — the same code with the same outputs would describe any latent-difficulty routing problem (RouteLLM/FrugalGPT/Tabi included), so the L0 cannot speak to the narrow claimed novelty (quant-sensitivity-specific pre-decode prediction). YELLOW (not RED) because: (i) the pre-registration and anti-circularity are honest, (ii) the PARTIAL verdict is appropriately conservative, (iii) the work correctly identifies the L1 measurements (real GPTQ/AWQ delta heavy-tailedness; real logprob baseline; real FLOPs accounting) that could actually distinguish artifact from signal. Advance to L1 ONLY if real per-request quant-degradation is shown heavy-tailed AND real pre-decode features beat real quant-model logprobs at matched cost — otherwise the contribution collapses to "skipped a cheap decode," which needs explicit cost-model justification, not a simulator.
+```

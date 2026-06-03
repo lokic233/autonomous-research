@@ -40,13 +40,17 @@ negative_evidence:
     cheap decode) not quality. Prior art (FrugalGPT/RouteLLM/hybrid-precision serving)
     published; only candidate novelty = quant-sensitivity-specific pre-decode prediction.'
   data_path: experiments/2026-06-03/EXP-0020/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0019
+  date: '2026-06-03'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0020; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0019=yellow: address required_evidence to advance'
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0022
 created_at: '2026-06-03T05:58:07Z'
-last_updated: '2026-06-03T06:06:23Z'
+last_updated: '2026-06-03T06:19:43Z'

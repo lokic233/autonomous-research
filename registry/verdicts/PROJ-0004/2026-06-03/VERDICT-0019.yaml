@@ -1,0 +1,66 @@
+verdict_id: VERDICT-0019
+claim_id: CLAIM-0015
+project_id: PROJ-0004
+date: '2026-06-03'
+experiment_ids:
+- EXP-0020
+experiment_paths:
+- experiments/2026-06-03/EXP-0020
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- (no fatal
+- eval_prosecutor RED on insufficient real-cost grounding) L0 logic conditionally
+  held (predictability + Pareto vs WEAK baselines) but the quality edge over the STRONG
+  confidence-cascade baseline is modest/conditional (bootstrap CI includes 0 at low
+  noise)
+- the claim's strong form is not robustly supported
+- "every reviewer flags the load-bearing assumption is ASSUMED not measured: real\
+  \ per-request quant-degradation must be heavy-tailed/request-dependent \u2014 claim\
+  \ DIES if uniform"
+- 'the reframed core contribution (COST: skip the cheap decode) is currently unquantified
+  even in principle (the prompt-perplexity feature itself needs a prefill pass)'
+required_evidence:
+- 'Real per-request quant-degradation distribution (GPTQ/AWQ 4-bit vs full on SAME
+  prompts): is it heavy-tailed/request-dependent? (claim dies if uniform)'
+- Real pre-decode feature AUC for predicting REAL quant-degradation + oracle gap on
+  real prompts (not synthetic latent recovery)
+- 'HEAD-TO-HEAD vs a GENERIC pre-decode router (Hybrid-LLM/RouteLLM) given IDENTICAL
+  pre-decode features: does quant-sensitivity-specific signal add AUC/Pareto BEYOND
+  generic difficulty prediction? If not, novelty collapses to relabeling'
+- True end-to-end FLOPs/$ cost accounting, explicitly pricing the prefill pass needed
+  for prompt-perplexity extraction (the 'skip cheap decode' win is currently unquantified)
+- Real quant-model logprob/entropy confidence as the post-decode baseline (calibrated,
+  not synthetically noise-matched)
+map_delta_proposals:
+- 'CLAIM-0015 PARTIAL/yellow: L0 conditionally held (predictability + Pareto vs weak
+  baselines) but quality edge over strong baseline modest/conditional (CI includes
+  0 at low noise). REFRAME contribution to COST (skip cheap decode), pending real
+  FLOPs/$ validation. Advance to L1 ONLY w/ real quant-degradation distribution +
+  Hybrid-LLM/RouteLLM head-to-head (show quant-specific signal beats generic difficulty).
+  Add related work: Hybrid LLM, RouteLLM, FrugalGPT, LLM.int8/SmoothQuant/AWQ'
+baseline_requirements:
+- "Hybrid LLM (Ding ICLR24) w/ cheap=quantized on SAME pre-decode features \u2014\
+  \ nearest published pre-decode quality-gap router"
+- must show quant-specific signal adds value beyond generic gap prediction
+- "RouteLLM (Ong 2024) \u2014 canonical pre-decode difficulty router"
+- FrugalGPT-style post-decode cascade at matched TRUE FLOPs/$ (not matched escalation
+  rate)
+- Real quant-model logprob/entropy confidence-threshold cascade at matched TRUE cost
+created_at: '2026-06-03T06:19:43Z'

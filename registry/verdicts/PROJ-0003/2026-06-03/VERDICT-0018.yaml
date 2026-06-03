@@ -1,0 +1,74 @@
+verdict_id: VERDICT-0018
+claim_id: CLAIM-0014
+project_id: PROJ-0003
+date: '2026-06-03'
+experiment_ids:
+- EXP-0019
+experiment_paths:
+- experiments/2026-06-03/EXP-0019
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "Prior-art gap: the TWO NEAREST works were missed \u2014 AttentionStore/CachedAttention\
+  \ (Gao ATC24, hierarchical KV save-to-host between turns + layer-wise pre-load overlapped\
+  \ w/ scheduling) + Pensieve (stateful multi-turn KV tiering) implement turn-gap-timed\
+  \ proactive demote+prefetch MECHANISTICALLY IDENTICAL to the claim"
+- SGLang HiCache / vLLM-v1 KV offload / LMCache async_loading / TRT-LLM host offload
+  also overlap
+- "No baseline isolates the CLAIMED novelty (gap-timing) from 'prefetch exists + DMA\
+  \ is fast' \u2014 needs reactive-fetch-on-demand + prefix-cached-recompute baselines"
+- Headline 93.5%/89.7% are GRID-counting artifacts over an independent parameter cross-product
+  w/ no workload prior (grid biased to long gaps)
+- traffic-weighted, the loss region could be >50% of real traffic
+required_evidence:
+- "Live >=2-source sweep vs AttentionStore/CachedAttention + Pensieve w/ a mechanism-delta\
+  \ table (what agent-gap-timed does that conversation-turn-timed pre-loading does\
+  \ NOT) \u2014 gates GREEN"
+- "Reactive fetch-on-demand baseline (prefetch ON RESUME not proactively) \u2014 isolates\
+  \ the gap-timing contribution"
+- if reactive performs comparably (wastes zero BW on p_rr<1 misses) the proactive
+  win-region shrinks/vanishes
+- "Prefix-cached recompute baseline (RadixAttention/vLLM APC \u2014 recompute only\
+  \ UNIQUE suffix"
+- current full-O(N)-recompute baseline is a strawman)
+- Real agent inter-turn gap distribution from a live trace (not LogNormal)
+- sub-second mass + p_rr-vs-gap correlation decide the kill-corner
+- "Real concurrent PCIe/NVLink-C2C BW under D2H+H2D+decode (not nameplate fair-share\
+  \ \u2014 fair-share is BEST case for losses)"
+- "Joint workload prior over (BW,C,prefix,gap,p_rr) \u2014 correlated in reality (long\
+  \ gap->lower p_rr"
+- high C->degraded prefill_tps)
+- independent sweep inflates win-region
+- Wasted-PCIe-BW metric + P99 TTFT-on-resume (not just mean/median)
+map_delta_proposals:
+- "CLAIM-0014 PARTIAL/yellow: DEMOTE novelty framing from 'first to demote+prefetch\
+  \ across inter-turn gap' to 'contention-aware admission boundary for gap-timed KV\
+  \ prefetch' \u2014 the demote+prefetch loop is PRIOR ART (AttentionStore, Pensieve,\
+  \ SGLang HiCache). Surviving contribution = the PCIe-contention kill-corner characterization\
+  \ (C/p_rr*bytes vs B_total*gap) + honest win-region scoping = a MEASUREMENT contribution,\
+  \ not a mechanism one. L1 gate: reactive-fetch + prefix-cached-recompute baselines\
+  \ + live AttentionStore/Pensieve mechanism-delta + real gap dist + real concurrent\
+  \ PCIe BW before any promotion"
+baseline_requirements:
+- Reactive fetch-on-demand (vLLM CPU block swap on resume)
+- "Prefix-cached recompute (SGLang RadixAttention / vLLM APC \u2014 unique-suffix\
+  \ only)"
+- AttentionStore/CachedAttention turn-timed KV save+pre-load (nearest prior art, mechanism-equivalent)
+- Pensieve (stateful multi-turn KV tiering)
+created_at: '2026-06-03T06:18:47Z'

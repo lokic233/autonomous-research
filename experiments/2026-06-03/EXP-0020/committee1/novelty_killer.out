@@ -1,0 +1,65 @@
+Live external web search was blocked (permission not granted for both `three_pai_external_web_search` and `WebSearch`) — I could not run a fresh ≥2-source sweep this session. Per my mandate I will NOT manufacture a fatal collision I cannot live-verify; I vote from well-established, individually retrievable prior art and flag the retrievability honestly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Ding et al., Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing (ICLR 2024)",
+   url: "https://arxiv.org/abs/2404.14618",
+   why_close: "A PRE-decode (pre-generation) router that predicts per-QUERY whether the cheap/small model
+   is good enough vs the expensive model, trained on the small-vs-large quality GAP, routing on cheap
+   query features before any decode. When 'small model' = low-bit-quantized(large model), the predicted
+   'quality gap' IS 'predicted quantization degradation'. This is the claim's exact mechanism minus the
+   quant-specific framing — and it already routes pre-decode, so the packet's headline cost novelty
+   ('route before any decode') is NOT novel."}
+- {cite: "Ong et al., RouteLLM (2024)",
+   url: "https://arxiv.org/abs/2406.18665",
+   why_close: "Canonical PRE-generation router between a strong and a weak model on predicted difficulty/
+   preference. Pre-decode by construction. Same mechanism family; gates on generic difficulty not quant."}
+- {cite: "Chen et al., FrugalGPT (2023)",
+   url: "https://arxiv.org/abs/2305.05176",
+   why_close: "Cheap->expensive cascade with a learned scorer. Post-decode (scores cheap output), so it
+   does NOT skip the cheap decode — this is the one axis where the proposal is genuinely differentiated."}
+
+NAMING_VS_MECHANISM:
+Mostly a RE-SPECIALIZATION, not a new mechanism. 'Predict pre-decode whether the cheap model suffices,
+route the hard ones to the expensive model' is exactly Hybrid LLM / RouteLLM. Setting cheap := quantized(model)
+makes 'predicted quant degradation' a relabeling of Hybrid LLM's 'predicted quality gap'. Two of the three
+claimed deltas collapse: (a) 'pre-decode routing' is already standard (Hybrid LLM, RouteLLM route before
+generation); (b) 'route on predicted degradation' is Hybrid LLM's label. The ONLY residual mechanism delta
+is that the degradation signal is QUANTIZATION error specifically (potentially more structured/heavy-tailed,
+driven by activation outliers a la LLM.int8/SmoothQuant/AWQ) AND that it dodges even the cheap decode (vs
+FrugalGPT's post-decode scorer). That residual is real but THIN, and the L0 itself shows the quality edge
+over the strong confidence baseline is modest and noise-conditional (CI∋0 at sigma=0.15).
+
+FATAL_COLLISIONS:
+None I can verify to the ≥2-independent-source KILL bar for the NARROW claim ("router gating specifically on
+predicted quantization-sensitivity pre-decode"). I found NO retrievable paper doing exactly that — so I do
+not RED it. BUT the GENERAL mechanism (pre-decode quality-gap routing, cheap=quantized) collides hard with
+Hybrid LLM + RouteLLM (≥2 sources), and the 'route before any decode' cost framing is fully anticipated by
+both. So there is no fatal collision on the narrow claim, but the broad framing is not novel.
+
+MANDATORY_RELATED_WORK:
+- Hybrid LLM (Ding et al. 2024) — MUST cite; nearest pre-decode quality-gap router; authors must show the
+  quant-specific delta over instantiating Hybrid LLM with cheap=quantized(model) on the SAME pre-decode features.
+- RouteLLM (Ong et al. 2024) — pre-decode strong/weak router.
+- FrugalGPT (Chen et al. 2023) — cascade; the post-decode baseline the cost story is differentiated against.
+- LLM-Blender (Jiang et al. 2023, arXiv 2306.02561), Tabi (EuroSys 2023, dl.acm.org/doi/10.1145/3552326.3587438)
+  — ensembling/multi-level serving prior art.
+- Quantization-difficulty literature (LLM.int8 2208.07339; SmoothQuant 2211.10438; AWQ 2306.00978) — to ground
+  WHY per-request quant error might be heavy-tailed/predictable (outlier-driven), the load-bearing premise.
+
+RATIONALE:
+Routing + pre-decode prediction is published, not novel (RouteLLM, Hybrid LLM both route before generation;
+FrugalGPT cascades) — sources above, individually retrievable. The proposal's only surviving novelty is the
+QUANT-SENSITIVITY-SPECIFIC degradation target, which I could not find a verified prior collision for (hence
+not a RED) but which is a thin specialization of Hybrid LLM's quality-gap router, and the L0 already concedes
+the quality win over the strong baseline is small/conditional and reframes the contribution to COST. That is
+not enough novelty to GREEN, not a verified fatal collision to RED -> YELLOW. To survive L1, the authors MUST
+(1) cite Hybrid LLM and benchmark against a Hybrid-LLM-style GENERIC difficulty/quality-gap router given the
+SAME pre-decode features (not only vs confidence-threshold) and show the QUANT-SPECIFIC signal adds AUC/Pareto
+beyond generic difficulty, and (2) show real per-request 4-bit-vs-full degradation is heavy-tailed (claim dies
+if uniform) and predictable from pre-decode features. CAVEAT: live ≥2-source sweep was unavailable this
+session (web-search permission denied); citations are from established, retrievable prior art, not a fresh pull.
+PROMPT_VERSION: v001
+```

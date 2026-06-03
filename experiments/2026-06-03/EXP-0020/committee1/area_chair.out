@@ -1,0 +1,42 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: red, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE: [
+  "Real per-request quant-degradation distribution (GPTQ/AWQ 4-bit vs full on same prompts): is it heavy-tailed/request-dependent? Claim dies if uniform — every reviewer flags this, L0 assumes it.",
+  "Real pre-decode feature AUC for predicting real quant-degradation, with oracle gap, on real prompts — not synthetic latent recovery.",
+  "Head-to-head against a GENERIC pre-decode router (Hybrid LLM / RouteLLM) given identical pre-decode features on quant-vs-full task: does quant-sensitivity-specific signal add AUC/Pareto beyond generic difficulty prediction? If not, novelty collapses to relabeling.",
+  "True end-to-end FLOPs/$ cost accounting, explicitly pricing the prefill pass required for prompt-perplexity extraction. The 'skip the cheap decode' cost win is the reframed core contribution and it is currently unquantified even in principle.",
+  "Real quant-model output confidence (logprob/entropy) as the post-decode baseline — calibrated, not synthetically noise-matched."
+]
+
+MANDATORY_BASELINES: [
+  "Hybrid LLM (Ding et al. ICLR 2024) instantiated with cheap=quantized(model) on the SAME pre-decode features — the nearest published pre-decode quality-gap router; must show quant-specific signal adds value beyond generic gap prediction.",
+  "RouteLLM (Ong et al. 2024) — canonical pre-decode difficulty router; same comparison.",
+  "FrugalGPT-style post-decode cascade at matched TRUE FLOPs/$ (not matched escalation rate b) — the cost baseline.",
+  "Real quant-model logprob/entropy confidence-threshold cascade at matched TRUE cost."
+]
+
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0015",
+  change: "status: PARTIAL/yellow; L0 logic conditionally held (predictability + Pareto vs weak baselines), but quality edge over strong baseline is modest/conditional (CI∋0 at low noise). Reframe contribution to COST (skip cheap decode), pending real FLOPs/$ validation. Advance to L1 ONLY with real quant-model degradation distribution + Hybrid-LLM/RouteLLM head-to-head. Add mandatory related work: Hybrid LLM, RouteLLM, FrugalGPT, quantization-difficulty literature (LLM.int8, SmoothQuant, AWQ)."
+}
+
+PRIOR_ART_ADEQUATE: no
+
+RATIONALE:
+One RED (evaluation_prosecutor), four YELLOWs. I do NOT elevate to RED because the prosecutor's strongest objections — missing real FLOPs/$ accounting, missing RouteLLM/Hybrid-LLM head-to-head, unproven heavy-tail assumption — are all L1-level demands applied to an L0 that explicitly scopes itself as "testing the LOGIC, not real-world magnitude" and already self-verdicts PARTIAL with those exact L1 gaps named. The L0's internal logic IS conditionally valid: given a heavy-tailed latent, a noisy-linear observation model, and matched-budget comparison, the router dominates weak baselines and ties-or-modestly-beats the confidence cascade. That is what an L0 should establish.
+
+However, the prosecutor raises one point that IS load-bearing even at L0: computing prompt perplexity requires a prefill forward pass, so "skip the cheap decode" may not save as much as implied if prefill dominates (long-context, short-generation workloads). The L0 uses escalation rate b as a cost proxy and never prices feature extraction. This does not invalidate the L0's quality-side results but it weakens the cost-reframing that the researcher pivoted to as the "real win." This concern is unrebutted and warrants YELLOW, not GREEN.
+
+I do NOT GREEN because: (1) prior-art search was incomplete — novelty_killer was blocked from running a live ≥2-source web sweep (permission denied), so the "no fatal collision on the narrow claim" finding is provisional, not verified to protocol standard; (2) theory_skeptic correctly identifies that nothing in the L0 simulator is quant-specific — the same code with identical outputs would describe any latent-difficulty routing (RouteLLM, Hybrid LLM), so the L0 cannot speak to the narrow claimed novelty; (3) four reviewers independently converge on the same structural gap: Hybrid LLM (Ding et al. 2024) does pre-decode quality-gap routing between cheap and expensive models — instantiating it with cheap=quantized is the claim's exact mechanism minus the quant-specific framing, and it is uncited and unbenchmarked; (4) the quality edge over the strong baseline is modest (≤2.4%) and noise-conditional (CI∋0 at sigma=0.15), and the reframed cost contribution is unquantified.
+
+The L0 is methodologically exemplary: pre-registered (commit 1a6652b before run), anti-circular (heeding CLAIM-0008's lesson), honest PARTIAL verdict, strong baseline named not strawmanned, and researcher self-framing correctly identifies the claim's limits. This is how L0s should be done. But methodology quality does not substitute for evidence strength — the PARTIAL is real, the gaps are real, and the novelty question (quant-specific vs generic difficulty routing) is unanswered by this simulator.
+
+Path forward: advance to L1 ONLY if the team can (a) demonstrate real per-request 4-bit-vs-full degradation is heavy-tailed on a meaningful prompt distribution, AND (b) benchmark against Hybrid-LLM/RouteLLM-style generic pre-decode routers on the same task to isolate the quant-specific signal contribution. If (a) fails (degradation is ~uniform), kill the claim. If (b) fails (generic router matches), reframe as "quantization is just another difficulty axis for existing routers" — publishable as an empirical finding, not a novel mechanism.
+
+PROMPT_VERSION: v001
+```

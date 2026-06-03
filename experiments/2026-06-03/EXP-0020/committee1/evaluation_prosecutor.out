@@ -1,0 +1,18 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [
+  {name: "RouteLLM / Generic Pre-decode Router", why: "RouteLLM already routes based on pre-decode prompt features. Applying it to a Quant vs. Full model pair is just a specific use-case. The proposed router must show it beats standard RouteLLM, not just random or post-decode.", repo_or_cite: "RouteLLM (LMSYS)"},
+  {name: "FLOP-aware Post-Decode Cascade", why: "Computing 'prompt perplexity' requires running a prefill pass. A fair cost baseline must account for the FLOPs used to extract the 'cheap' pre-decode features.", repo_or_cite: "FrugalGPT"}
+]
+STRAWMAN_RISKS: [
+  "Treating 'escalation rate b' as a proxy for true cost, entirely ignoring the prefill FLOP cost required to compute 'prompt perplexity'.",
+  "Comparing a tuned pre-decode router against generic post-decode confidence without evaluating against established generic pre-decode routers (RouteLLM).",
+  "Assuming quant degradation is highly request-dependent (heavy-tailed) without empirical real-world validation."
+]
+MISSING_METRICS: [
+  "True end-to-end inference FLOPs/$ (explicitly accounting for feature extraction overhead).",
+  "AUC and Pareto comparison against standard off-the-shelf RouteLLM on the exact same dataset."
+]
+KILLER_EXPERIMENT: Train a standard RouteLLM pre-decode predictor on real Quant vs. Full degradation data. Evaluate the cost/quality Pareto curve using TRUE FLOPs/$ (explicitly pricing the prefill pass required to calculate prompt perplexity). If standard RouteLLM matches the proposed router's AUC, or if the feature-extraction FLOPs negate the savings over simply running the cheap model to get post-decode confidence, the claim is fully falsified.
+RATIONALE: The simulation relies on a severe strawman cost metric (escalation rate `b`) that hides the true cost of pre-decode feature extraction. Computing prompt perplexity requires a forward prefill pass, which for many workloads (long context, short generation) dominates the total inference cost. Furthermore, pre-decode routing is an established paradigm (RouteLLM); the claim of "quant-sensitivity specific" novelty only holds if it empirically beats existing pre-decode routers on this specific task, measured in actual FLOPs/$, rather than just narrowly edging out a generic post-decode cascade.
+```
