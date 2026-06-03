@@ -1,0 +1,41 @@
+claim_id: CLAIM-0042
+project_id: PROJ-0013
+stage: seed
+status: seed
+claim: "Document-level near-dedup of training corpora (the standard practice) systematically\
+  \ UNDER-COUNTS eval-benchmark contamination, because benchmark items frequently\
+  \ appear as SHORT embedded spans inside training documents that are NOT document-level\
+  \ near-duplicates of the benchmark \u2014 so a non-trivial fraction (>20%) of true\
+  \ passage-level benchmark contamination is INVISIBLE to document-level dedup but\
+  \ caught by passage/n-gram-level span matching, AND this gap is large enough to\
+  \ materially change reported contamination rates (passage-level finds substantially\
+  \ more contaminated eval items than document-level)."
+why_it_matters: "FRESH AREA (eval-and-safety + data-systems-for-ml). LIGHTWEIGHT:\
+  \ one sharp claim. Screened vs all 3 anti-patterns: NOT a tuned-knob, NOT KV-reuse,\
+  \ NOT predictor-vs-own-logprob \u2014 it's a data/eval MEASUREMENT claim (a contamination-detection-granularity\
+  \ gap). Falsifiable: (1) what fraction of true passage-level benchmark contamination\
+  \ is INVISIBLE to document-level near-dedup but caught by passage/n-gram span matching?\
+  \ (2) is that gap >20% AND large enough to change reported contamination rates?\
+  \ L0: model a corpus with benchmark spans embedded at varying densities inside otherwise-distinct\
+  \ documents + paraphrase; doc-level near-dup detector vs passage/n-gram span detector;\
+  \ measure the MISS gap. Anti-circular (GT = actual embedded benchmark span; detectors\
+  \ read text, not the label). Honest-negative if doc-level already catches it OR\
+  \ the gap is small OR passage-level just over-flags (false positives). Topic: eval-and-safety.\
+  \ Distinguish from known n-gram contamination tooling (the contribution is the MEASURED\
+  \ doc-vs-passage granularity gap + its effect on reported contamination, not 'contamination\
+  \ exists')."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-03T14:18:00Z'
+last_updated: '2026-06-03T14:18:00Z'

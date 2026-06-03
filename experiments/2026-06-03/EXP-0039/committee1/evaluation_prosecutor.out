@@ -1,0 +1,11 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [
+  {name: "Importance-Weighted Eviction", why: "State-of-the-art agent memory (e.g., Generative Agents) evicts based on an importance/relevance score, not just age. A pure FIFO/recency cap is a strawman.", repo_or_cite: "Park et al. 2023 (Generative Agents)"},
+  {name: "Tiered Memory Management", why: "Agents like MemGPT page memories between working context and archival storage using LLM-directed OS-like interrupts, rather than a flat size-cap eviction.", repo_or_cite: "Packer et al. 2023 (MemGPT)"}
+]
+STRAWMAN_RISKS: ["Comparing a content-aware dedup gate to a 'dumb' FIFO recency size-cap is a severe strawman. Real agents do not blindly evict their oldest memories if they are foundational (e.g., core persona traits).", "Treating 'no-dedup uncapped' as a baseline is trivial, as acknowledged in the L0."]
+MISSING_METRICS: ["Organic re-store rates from real agent conversation logs (L0 just injects a synthetic P=0.2-0.6).", "Latency and token-cost overhead of the pre-write embedding/cosine-similarity gate versus the cost of simply expanding the size-cap."]
+KILLER_EXPERIMENT: <Evaluate on the MemGPT or Generative Agents dataset using a matched memory-size budget: compare [Pre-write Embedding Dedup + Recency Eviction] against [No Dedup + Importance/LRU Eviction]. If the importance-based eviction retains critical old facts without the false-positive (false-dedup) drops of the tuned threshold gate, the claim's core advantage is falsified.>
+RATIONALE: <The L0 results already show the pre-write dedup is highly brittle (fails at threshold 0.3 due to false-dedup, requires a 'tuned knob' $\ge0.5$). The entire purported advantage is that it saves 'still-needed old memories' that a recency cap drops. But a standard importance-based eviction baseline already solves this without the risk of false-deduplication. The evaluation tests against a strawman (FIFO) to secure a conditional win.>
+```

@@ -31,17 +31,34 @@ why_it_matters: "FRESH AREA (retrieval-and-memory \u2014 first claim in the expa
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0039
+  summary: "PARTIAL/keep-exploring: (A) write-amplification >25% is CONDITIONAL \u2014\
+    \ it tracks the re-store rate; with a non-saturated fact universe amplification=0.20\
+    \ (BELOW 25%) at restore=0.2, 0.40 at 0.4, 0.60 at 0.6. >25% needs restore>=0.25\
+    \ OR universe saturation. Not universally true. (B) pre-write LEXICAL dedup beats\
+    \ SIZE-CAP at matched cap ONLY with a tuned threshold>=0.5: dedup-minus-sizecap\
+    \ recall delta +0.103 [boot CI +0.076,+0.130] at thr0.5, +0.113 [+0.084,+0.144]\
+    \ at thr0.7; but thr0.3 delta CI [-0.048,+0.072] INCLUDES 0 and dedup LOSES in\
+    \ short-horizon (false-dedup collapses distinct facts; gate precision only 0.37\
+    \ at thr0.3). dedup loses to size-cap in 18/108 configs (loose gate / short-horizon\
+    \ / high-paraphrase). Gate precision 0.75 / recall 0.84 overall; oracle(reads\
+    \ fact_id)-minus-dedup recall gap mean +0.12 (max +0.80) = large content-signal\
+    \ headroom, lexical never reaches oracle. NET: content-dedup CAN beat age-eviction\
+    \ at matched size but only knob-tuned + horizon-dependent, not a robust free win;\
+    \ size-cap is a stronger baseline than the claim assumed. The threshold IS a knob\
+    \ (prereg screened against tuned-knob). L1 needs real MemGPT/Letta traces + real\
+    \ embedding gate to test if real amplification clears 25% and if embeddings close\
+    \ the oracle gap."
+  data_path: experiments/2026-06-03/EXP-0039/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0039 result, then ros exp complete --exp EXP-0039 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0039; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0039
+active_experiments: []
 created_at: '2026-06-03T14:03:44Z'
-last_updated: '2026-06-03T14:04:36Z'
+last_updated: '2026-06-03T14:13:53Z'

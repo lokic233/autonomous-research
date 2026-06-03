@@ -1,0 +1,69 @@
+MetaCode at Meta (https://fburl.com/metacode)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+[0m
+> build · avocado-code-latest
+[0m
+[93m[1m! [0m MCP server "plugin_source_control_at_meta_devmate_code_review" failed to start: Operation timed out after 30000ms
+[93m[1m! [0m --- last stderr ---
+[93m[1m! [0m 5   mux#native-main#bundle-runtime#pyth 0x000000010083ec68 PyThread_acquire_lock_timed + 184
+[93m[1m! [0m 6   mux#native-main#bundle-runtime#pyth 0x000000010083e8e4 lock_PyThread_acquire_lock + 424
+[93m[1m! [0m 7   mux#native-main#bundle-runtime#pyth 0x00000001008d40dc method_vectorcall_VARARGS_KEYWORDS + 164
+[93m[1m! [0m 8   mux#native-main#bundle-runtime#pyth 0x000000010081a108 PyObject_Vectorcall + 92
+[93m[1m! [0m 9   mux#native-main#bundle-runtime#pyth 0x0000000100864968 _PyEval_EvalFrameDefault + 34516
+[93m[1m! [0m 10  mux#native-main#bundle-runtime#pyth 0x0000000100896998 gen_send_ex2 + 192
+[93m[1m! [0m 11  _asyncio.cpython-312-darwin.so      0x00000001132a27dc task_step_impl + 516
+[93m[1m! [0m 12  _asyncio.cpython-312-darwin.so      0x00000001132a2480 task_step + 68
+[93m[1m! [0m 13  mux#native-main#bundle-runtime#pyth 0x00000001008217d4 _PyObject_MakeTpCall + 124
+[93m[1m! [0m 14  mux#native-main#bundle-runtime#pyth 0x00000001008a8c34 context_run + 280
+[93m[1m! [0m 15  mux#native-main#bundle-runtime#pyth 0x0000000100a3977c cfunction_vectorcall_FASTCALL_KEYWORDS + 92
+[93m[1m! [0m 16  mux#native-main#bundle-runtime#pyth 0x000000010086627c _PyEval_EvalFrameDefault + 40936
+[93m[1m! [0m 17  mux#native-main#bundle-runtime#pyth 0x00000001008bc804 PyEval_EvalCode + 132
+[93m[1m! [0m 18  mux#native-main#bundle-runtime#pyth 0x00000001008117e0 run_mod + 168
+[93m[1m! [0m 19  mux#native-main#bundle-runtime#pyth 0x00000001008f77bc _PyRun_SimpleFileObject + 492
+[93m[1m! [0m 20  mux#native-main#bundle-runtime#pyth 0x0000000100859274 _PyRun_AnyFileObject + 80
+[93m[1m! [0m 21  mux#native-main#bundle-runtime#pyth 0x0000000100855a30 Py_RunMain + 1020
+[93m[1m! [0m 22  mux#native-main#bundle-runtime#pyth 0x0000000100ab3894 main + 1008
+[93m[1m! [0m 23  dyld                                0x000000018a7dfda4 start + 6992
+[93m[1m! [0m (safe mode, symbolizer not available)
+[0m✗ [0mread failed
+[91m[1mError: [0mFile not found: /Users/dengcchi/autonomous-research-v3/_committee_common_v001.md
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md","engine":"FILENAME"}
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "**/TOOLING_v001.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/prompts/**"[90m 0 matches[0m
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*committee*" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0034/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0033/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0035/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0029/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0037/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0039/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0038/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0036/committee1
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "TOOLING_v001.md" 2>/dev/null
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/*.md 2>/dev/null
+-rw-r--r--  1 dengcchi  staff  3106 Jun  2 12:22 /Users/dengcchi/autonomous-research-v3/CUTOVER_RUNBOOK.md
+-rw-r--r--  1 dengcchi  staff  1221 Jun  3 06:46 /Users/dengcchi/autonomous-research-v3/DECISION_expand_lightweight.md
+-rw-r--r--  1 dengcchi  staff  2699 Jun  2 17:24 /Users/dengcchi/autonomous-research-v3/HANDOFF_r1_to_r2.md
+-rw-r--r--  1 dengcchi  staff  2516 Jun  2 23:21 /Users/dengcchi/autonomous-research-v3/HANDOFF_r2_to_r3.md
+-rw-r--r--  1 dengcchi  staff  2856 Jun  3 03:22 /Users/dengcchi/autonomous-research-v3/HANDOFF_r3_to_r4.md
+-rw-r--r--  1 dengcchi  staff  3594 Jun  3 00:15 /Users/dengcchi/autonomous-research-v3/ORCHESTRATOR_CHARTER.md
+-rw-r--r--  1 dengcchi  staff  2222 Jun  3 04:48 /Users/dengcchi/autonomous-research-v3/QUIESCENCE_r4_001.SUPERSEDED.md
+-rw-r--r--  1 dengcchi  staff  3123 Jun  3 05:33 /Users/dengcchi/autonomous-research-v3/QUIESCENCE_r4_002.SUPERSEDED.md
+[0m

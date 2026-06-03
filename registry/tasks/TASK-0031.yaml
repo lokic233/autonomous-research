@@ -6,15 +6,15 @@ session_id: ''
 project_id: PROJ-0012
 claim_id: CLAIM-0041
 exp_id: EXP-0039
-status: open
+status: done
 summary: 'L0: agent-memory write-amplification rate + cheap pre-write semantic-dedup
   vs no-dedup AND size-cap-eviction at MATCHED recall/store-size; anti-circular (content-overlap
   gate, not dup label); honest-negative if amplification<25% or dedup loses recall
   or size-cap wins'
 evidence_delta: ''
 opened_at: '2026-06-03T14:06:10Z'
-updated_at: '2026-06-03T14:06:10Z'
-closed_at: ''
+updated_at: '2026-06-03T14:13:53Z'
+closed_at: '2026-06-03T14:13:53Z'
 history:
 - ts: '2026-06-03T14:06:10Z'
   event: open
@@ -23,3 +23,7 @@ history:
     vs no-dedup AND size-cap-eviction at MATCHED recall/store-size; anti-circular
     (content-overlap gate, not dup label); honest-negative if amplification<25% or
     dedup loses recall or size-cap wins'
+- ts: '2026-06-03T14:13:53Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0039 completed EXP EXP-0039 (keep-exploring)

@@ -1,0 +1,2422 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8dd8-11e5-7dd1-9500-7694cca37f63
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0041 (PROJ-0012, retrieval-and-memory — FIRST claim in the EXPANDED fresh topic-bias)
+## MEASUREMENT/characterization study, effect=keep-exploring / PARTIAL (negative-leaning). LIGHTWEIGHT posture: one sharp claim per fresh area. Screened vs all 3 anti-patterns + anti-circularity. Vote honestly. novelty_killer: agent memory systems (MemGPT/Letta, Generative-Agents reflection/importance) ARE published and DO manage eviction; RAG/datastore dedup is the READ path. The narrow claimed novelty = WRITE-PATH amplification characterization + pre-write dedup BEATING a recency size-cap at matched recall.
+
+## L0 FINDINGS (anti-circular: latent fact_id = duplicate GT; gate reads surface text only; env: lexical Jaccard, no embeddings):
+(A) Write-amplification is CONDITIONAL, NOT universally >25%: it TRACKS the re-store rate (0.197<25% @restore=0.2; 0.399@0.4; 0.601@0.6); only clears >25% at restore>=~0.25 OR a saturated fact-universe. The main-grid 0.75 was a saturation ARTIFACT (researcher flagged honestly).
+(B) dedup vs SIZE-CAP eviction at MATCHED size (the load-bearing bar): dedup-minus-size-cap recall delta CLEARS only with a TUNED threshold >=0.5: thr0.3 +0.013 CI[-0.048,+0.072] INCLUDES 0 (and LOSES short-horizon to -0.31 — a loose gate false-dedups and collapses distinct facts); thr0.5 +0.103 CI[+0.076,+0.130]; thr0.7 +0.113 CI[+0.084,+0.144]. Wins 90/108 configs but LOSES 18/108. THE THRESHOLD IS A KNOB (the prereg explicitly screened vs Jensen-floor) -> the win is conditional/knob-tuned/horizon-dependent, NOT robust/free.
+Gate precision 0.75 / recall 0.84 overall (precision craters to 0.37 @thr0.3; recall 0.38-0.54 under high paraphrase @thr0.7). ORACLE(fact_id) - dedup recall gap mean +0.12 / max +0.80 — lexical signal leaves large headroom, never reaches ideal.
+
+## HONEST SYNTHESIS: content-dedup CAN beat age-eviction at matched size, but only with a tuned threshold AND a recall-horizon that values old facts. SIZE-CAP is a STRONGER baseline than the claim assumed — it ties/beats dedup whenever the gate is loose, paraphrase is high, or queries want recent facts. Neither cleanly held nor killed. Negative-leaning.
+
+## CLAIM
+claim: "In long-horizon agent memory systems, the write path WRITE-AMPLIFIES \u2014\
+  \ a non-trivial fraction (>25%) of memory writes are semantically REDUNDANT (the\
+  \ agent re-stores a fact equivalent to one already in its store, because writes\
+  \ are not deduplicated) \u2014 AND a cheap pre-write semantic-dedup gate (embed-and-near-dup-check\
+  \ the candidate write against existing memories, NO LLM call) cuts memory-store\
+  \ GROWTH by a non-trivial fraction at MATCHED downstream task-recall, beating BOTH\
+  \ (a) no-dedup append-everything AND (b) a recency/size-cap eviction baseline at\
+  \ matched store size \u2014 because redundant re-stores are common and detectable\
+  \ pre-write, and a size-cap (which evicts by age, not content) discards still-needed\
+  \ old memories that dedup would have kept."
+why_it_matters: "FRESH AREA (retrieval-and-memory \u2014 first claim in the expanded\
+
+## L0 RESULTS (EXP-0039)
+# RESULTS — EXP-0039 / CLAIM-0041
+
+**Researcher:** researcher-0039 | L0 (CPU-only, stdlib-only, SERIAL, ~20s wall) | 2026-06-03
+Lexical token-set **Jaccard** near-dup signal (sentence-transformers/numpy unavailable — STATED in prereg).
+Anti-circular: latent `fact_id` is the ONLY ground truth for "duplicate"; the dedup gate reads ONLY surface text.
+Raw: `results/amplification.csv` (45 rows), `results/policies.csv` (540 rows), `results/amp_sensitivity` (in log).
+5 seeds. Grid: restore∈{.2,.4,.6} × paraphrase∈{0,.3,.6} × horizon∈{long,short} × cap∈{120,200} × thr∈{.3,.5,.7}.
+
+## VERDICT: **PARTIAL** (held only in a tuned/conditional regime; key parts FAIL)
+
+---
+
+## (A) WRITE-AMPLIFICATION — CONDITIONAL, not universally >25%
+
+The main grid used a bounded fact universe (250 facts, T=1000 writes) → universe SATURATES, so
+amplification pins at **0.75** for all restore rates. That is an artifact of saturation, not a
+clean test. The honest sensitivity run (large universe, no saturation) shows amplification **tracks
+the re-store rate**:
+
+| fact universe | restore=0.2 | restore=0.4 | restore=0.6 |
+|---|---|---|---|
+| 250 (saturates) | 0.75 | 0.75 | 0.75 |
+| 1000 / 5000 (no sat.) | **0.197 (<25%)** | 0.399 | 0.601 |
+
+**Honest answer (A):** Write-amplification exceeds 25% **iff** facts recur often (re-store rate ≳ 0.25)
+OR the fact universe is small relative to the horizon (saturation). It is **NOT universally >25%** —
+at restore=0.2 with a large universe, amplification is only ~20%, BELOW the claimed threshold.
+Whether real agent-memory streams clear 25% is an **empirical question for L1** (real MemGPT/Letta/
+Generative-Agents logs). The claim's ">25%" is plausible but regime-dependent, not guaranteed.
+
+## (B) DEDUP vs SIZE-CAP vs NO-DEDUP at MATCHED CAP
+
+- **no-dedup uncapped** recall = 1.000 everywhere (keeps everything → unbounded growth; the trivial
+  upper bound, not a fair budget competitor). Under a cap it reduces to size-cap mechanics.
+- **dedup − size-cap recall delta** (bootstrap 95% CI over per-config means):
+  - thr=0.3: mean **+0.013**, CI **[-0.048, +0.072]** — **includes 0** (no win; often LOSES)
+  - thr=0.5: mean **+0.103**, CI **[+0.076, +0.130]** — excludes 0 (wins)
+  - thr=0.7: mean **+0.113**, CI **[+0.084, +0.144]** — excludes 0 (wins)
+  - ALL configs pooled: mean **+0.076**, CI **[+0.049, +0.101]** — excludes 0
+- Best regime (paraphrase=0, long-horizon, cap=120, thr=0.5): per-seed delta CI **[+0.090, +0.142]**.
+- dedup beats size-cap by >0.01 in **90/108** configs — but **LOSES** (negative delta) in 18 configs,
+  concentrated at **thr=0.3 + short-horizon** (e.g. -0.31, -0.29, -0.27): a loose gate FALSE-DEDUPS,
+  collapsing distinct facts (gate precision only **0.37** at thr=0.3) and dropping needed memories.
+
+**So: dedup beats size-cap at matched size ONLY with a well-chosen threshold (≥0.5).** This is the
+load-bearing bar and dedup CLEARS it in the tuned regime — but the win is NOT threshold-robust, and
+the prereg explicitly screened against "tune a knob." The threshold IS a knob here. Partial credit.
+
+## Gate precision/recall (lexical vs fact_id) + ORACLE gap
+
+- Gate precision mean **0.752**, recall mean **0.839** (over thr 0.3–0.7). At thr=0.3 precision craters
+  to ~0.37 (false dedup); at thr=0.7 precision ~1.00 but recall falls (esp. under paraphrase: 0.38–0.54
+  at paraphrase=0.6) — the classic precision/recall tradeoff the lexical signal cannot escape.
+- **ORACLE gap** (oracle reads fact_id; dedup reads text): oracle−dedup recall mean **+0.120**, max **+0.795**.
+  The lexical gate leaves LARGE headroom vs ideal content-dedup — and in short-horizon at thr=0.3 the
+  gate is so much worse than oracle that dedup underperforms even size-cap. A real embedding gate (L1)
+  would close part of this gap but paraphrase still defeats surface signals partially.
+
+## Where dedup LOSES (honest negatives — the load-bearing failures)
+1. **Low threshold (0.3):** false-dedup collapses distinct facts → recall BELOW size-cap. CI includes 0.
+2. **Short-horizon + large cap + loose gate:** size-cap already retains the recent facts queries need,
+   so dedup's "save slots for old facts" advantage is wasted, and false-dedup hurts → dedup loses.
+3. **High paraphrase (0.6):** gate recall drops to ~0.4–0.5 → dedup catches few true dups → its edge
+   over size-cap shrinks toward the oracle gap; in some configs near-zero (+0.005, +0.006).
+
+## CLAIM DISPOSITION
+- (A) ">25% redundant writes": **NOT universally true** — holds only when re-store rate ≳25% or universe saturates. CONDITIONAL.
+- (B) "dedup beats BOTH no-dedup AND size-cap at matched size": **HOLDS in the tuned regime (thr≥0.5)**
+  with CI excluding 0, but **FAILS at loose threshold and in short-horizon/high-paraphrase regimes**, and
+  the win requires choosing the threshold (a knob). dedup never reaches the oracle (large content-signal gap).
+- **Net: PARTIAL.** Content-dedup CAN beat age-eviction at matched size, but only with a tuned threshold
+  and a recall-horizon that values old facts; it is not a free, robust, knob-free win. Size-cap is a
+  stronger baseline than the claim assumed: it ties or beats dedup whenever the gate is loose, paraphrase
+  is high, or queries want recent facts.
+
+## What a real L1 should measure
+- Real agent-memory traces (MemGPT/Letta conversation+archival logs, Generative-Agents reflection streams):
+  measure the **real re-store/amplification rate** — is it actually >25%? (This sim shows it's only >25%
+  if facts genuinely recur that often.)
+- Swap the lexical Jaccard gate for a **real sentence-embedding cosine** gate; re-measure gate precision/
+  recall and the oracle gap (embeddings should shrink but not eliminate the paraphrase-driven gap).
+- Real **downstream task recall** (does the agent still answer queries needing old facts?) under dedup vs a
+  size-cap (recency) AND an importance/LRU eviction baseline — at matched store size.
+- Sweep threshold per-corpus; report whether a single robust threshold exists or it must be tuned (the
+  knob concern). Test against importance-weighted eviction, not just pure recency.
+
+## PRIOR-ART CAVEAT
+RAG/datastore dedup is on RETRIEVAL corpora (read path) — well studied. Agent **memory** systems (MemGPT/
+Letta, Generative-Agents reflection/importance) ARE published and DO manage write/eviction. Novelty here is
+narrow: characterizing **write-path amplification** + asking whether **pre-write content-dedup beats
+recency size-cap at matched recall**. Our L0 says: only conditionally, and it's threshold-sensitive — so
+the contribution, if any, is the *negative-leaning characterization* (size-cap is a strong baseline;
+content-dedup is not a robust free win), not a new winning mechanism.
+
+## PRE-REG (committed pre-run e941521)
+# PRE_REGISTRATION — EXP-0039 / CLAIM-0041
+
+**Researcher:** researcher-0039 | **Project:** PROJ-0012 | **Task:** TASK-0031
+**Level:** L0 (CPU-only, stdlib-only, SERIAL, ≤15 min) | **Date:** 2026-06-03
+**Committed BEFORE running.** Honest pipeline — negatives are WINS.
+
+## THE CLAIM (CLAIM-0041)
+In long-horizon agent memory systems, the write path WRITE-AMPLIFIES — a non-trivial
+fraction (>25%) of memory writes are semantically REDUNDANT (re-storing a fact equivalent
+to one already held) — AND a cheap pre-write semantic-dedup gate (embed-and-near-dup-check
+the candidate write vs existing memories, NO LLM call) cuts memory-store GROWTH at MATCHED
+downstream task-recall, beating BOTH (a) no-dedup append-everything AND (b) a recency/size-cap
+eviction baseline at matched store size — because a size-cap evicts by AGE not CONTENT and
+discards still-needed old memories that dedup would keep.
+
+Two falsifiable parts:
+- (A) Is there material write-amplification (>25% semantically-redundant writes)?
+- (B) Does cheap pre-write dedup cut store GROWTH at MATCHED task-recall, beating BOTH
+      no-dedup AND size-cap eviction at matched store size?
+
+## EMBEDDING / DEDUP SIGNAL (STATED)
+sentence-transformers / numpy are NOT available on this Mac (confirmed). Per L0 scope we use a
+DETERMINISTIC LEXICAL near-dup signal: each memory's text is tokenized into a word set; the
+near-dup signal between two memories is **token-set Jaccard similarity** (|A∩B|/|A∪B|). The
+dedup gate fires (skips write) iff max Jaccard vs any stored memory ≥ THRESHOLD. This is a
+content-overlap proxy for embedding cosine. We report the gate's real precision/recall vs the
+latent fact-id ground truth, so the lexical-vs-embedding gap is measured honestly (a real L1
+would swap in true embeddings).
+
+## ANTI-CIRCULARITY (load-bearing)
+- Each memory carries a HIDDEN latent `fact_id`. A write is TRULY redundant iff its fact_id is
+  already present in the store. This is the ONLY ground truth for "duplicate".
+- The dedup GATE reads ONLY the surface text (Jaccard near-dup), NEVER the fact_id.
+- ORACLE gate reads the fact_id directly (perfect dedup) — used to bound the gap between the
+  cheap content signal and ideal dedup.
+
+## ORCHESTRATOR NOTE: LIGHTWEIGHT posture — if this is candidate-grade, the L1 ask is real MemGPT/Letta/Generative-Agents traces (real re-store rate — does it clear 25%?) + a REAL sentence-embedding dedup gate + real downstream task-recall vs recency-cap AND LRU/importance eviction at matched size. But if the committee judges 'tuned-knob win over a strong size-cap baseline + amplification-is-an-artifact', converge it and move to the next fresh area (don't deep-mine PROJ-0012).
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll check the committee/tooling instructions first, then do a targeted OSS prior-art search for memory write-path dedup/eviction in the named systems.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "rg --files | rg '(_committee_common_v001\\.md|TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 153ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+ exited 127 in 201ms:
+zsh:1: command not found: rg
+zsh:1: command not found: rg
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed in this environment, so I’m using `find`/`grep` for the local instructions and keeping the search narrow.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -path '*prompts*' -maxdepth 5 -type f | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 143ms:
+ succeeded in 143ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -type f -name '*.md' | head -200" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find .. -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 465ms:
+./HANDOFF_r1_to_r2.md
+./QUIESCENCE_r4_001.SUPERSEDED.md
+./DECISION_expand_lightweight.md
+./learning/roles/orchestrator.md
+./learning/roles/researcher.md
+./learning/roles/committee.md
+./learning/orchestrator/2026-06-03.md
+./experiments/2026-06-03/EXP-0034/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0034/RESULTS.md
+./experiments/2026-06-03/EXP-0034/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0033/RESULTS.md
+./experiments/2026-06-03/EXP-0033/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0033/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0035/RESULTS.md
+./experiments/2026-06-03/EXP-0035/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0035/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0017/RESULTS.md
+./experiments/2026-06-03/EXP-0017/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0017/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0010/RESULTS.md
+./experiments/2026-06-03/EXP-0010/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0019/RESULTS.md
+./experiments/2026-06-03/EXP-0019/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0019/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0021/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0021/RESULTS.md
+./experiments/2026-06-03/EXP-0021/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0020/RESULTS.md
+./experiments/2026-06-03/EXP-0020/PREREG.md
+./experiments/2026-06-03/EXP-0020/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0027/RESULTS.md
+./experiments/2026-06-03/EXP-0027/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0027/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0018/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0018/PRIOR_ART.md
+./experiments/2026-06-03/EXP-0018/RESULTS.md
+./experiments/2026-06-03/EXP-0018/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0011/PREREGISTRATION.md
+./experiments/2026-06-03/EXP-0011/RESULTS.md
+./experiments/2026-06-03/EXP-0011/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0016/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0016/RESULTS.md
+./experiments/2026-06-03/EXP-0016/PREREG.md
+./experiments/2026-06-03/EXP-0029/RESULTS.md
+./experiments/2026-06-03/EXP-0029/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0029/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0037/RESULTS.md
+./experiments/2026-06-03/EXP-0037/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0037/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0039/RESULTS.md
+./experiments/2026-06-03/EXP-0039/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0039/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0038/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0038/PRE_REG.md
+./experiments/2026-06-03/EXP-0038/RESULTS.md
+./experiments/2026-06-03/EXP-0007/RESULTS.md
+./experiments/2026-06-03/EXP-0007/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0007/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0009/RESULTS.md
+./experiments/2026-06-03/EXP-0009/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0009/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0036/RESULTS.md
+./experiments/2026-06-03/EXP-0036/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0036/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0013/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0013/results/PRIOR_ART.md
+./experiments/2026-06-03/EXP-0013/RESULTS.md
+./experiments/2026-06-03/EXP-0013/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0014/RESULTS.md
+./experiments/2026-06-03/EXP-0014/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0014/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0022/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0022/RESULTS.md
+./experiments/2026-06-03/EXP-0022/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0023/RESULTS.md
+./experiments/2026-06-03/EXP-0023/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0023/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0015/RESULTS.md
+./experiments/2026-06-03/EXP-0015/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0015/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0012/PREREGISTRATION.md
+./experiments/2026-06-03/EXP-0012/RESULTS.md
+./experiments/2026-06-03/EXP-0012/RESULTS_TABLE.md
+./experiments/2026-06-03/EXP-0012/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0005/RESULTS.md
+./experiments/2026-06-02/EXP-0005/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0005/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0002/RESULTS.md
+./experiments/2026-06-02/EXP-0002/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0002/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0003/RESULTS.md
+./experiments/2026-06-02/EXP-0003/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/RESULTS.md
+./experiments/2026-06-02/EXP-0004/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0004/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0001/RESULTS.md
+./experiments/2026-06-02/EXP-0001/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0001/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0006/RESULTS.md
+./experiments/2026-06-02/EXP-0006/PRE_REGISTRATION.md
+./experiments/2026-06-02/EXP-0006/COMMITTEE1_PACKET.md
+./CUTOVER_RUNBOOK.md
+./projects/PROJ-0009/project_overview.md
+./projects/PROJ-0007/project_overview.md
+./projects/PROJ-0006/project_overview.md
+./projects/PROJ-0001/project_overview.md
+./projects/PROJ-0008/project_overview.md
+./projects/PROJ-0012/project_overview.md
+./projects/PROJ-0004/project_overview.md
+./projects/PROJ-0003/project_overview.md
+./projects/PROJ-0002/project_overview.md
+./projects/PROJ-0005/project_overview.md
+./projects/PROJ-0011/project_overview.md
+./projects/PROJ-0010/project_overview.md
+./QUIESCENCE_r4_002.SUPERSEDED.md
+./HANDOFF_r3_to_r4.md
+./HANDOFF_r2_to_r3.md
+./ORCHESTRATOR_CHARTER.md
+
+2026-06-03T14:17:10.636802Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'ps -ax -o pid,ppid,command | grep "find .. -name _committee_common_v001" | grep -v grep' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+ 8879  3126 find .. -name _committee_common_v001.md -o -name TOOLING_v001.md
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 32145ms:
+find: ../Library/Application Support/CallHistoryTransactions: Operation not permitted
+find: ../Library/Application Support/com.apple.sharedfilelist: Operation not permitted
+find: ../Library/Application Support/Knowledge: Operation not permitted
+find: ../Library/Application Support/com.apple.TCC: Operation not permitted
+find: ../Library/Application Support/FileProvider: Operation not permitted
+find: ../Library/Application Support/AddressBook: Operation not permitted
+find: ../Library/Application Support/FaceTime: Operation not permitted
+find: ../Library/Application Support/DifferentialPrivacy: Operation not permitted
+find: ../Library/Application Support/com.apple.avfoundation/Frecents: Operation not permitted
+find: ../Library/Application Support/CallHistoryDB: Operation not permitted
+find: ../Library/Assistant/SiriVocabulary: Operation not permitted
+find: ../Library/Daemon Containers: Operation not permitted
+find: ../Library/Autosave Information: Operation not permitted
+find: ../Library/IdentityServices: Operation not permitted
+find: ../Library/Messages: Operation not permitted
+find: ../Library/HomeKit: Operation not permitted
+find: ../Library/Sharing: Operation not permitted
+find: ../Library/com.apple.aiml.instrumentation: Operation not permitted
+find: ../Library/Mail: Operation not permitted
+find: ../Library/Trial: Operation not permitted
+find: ../Library/AppleMediaServices: Operation not permitted
+find: ../Library/DuetExpertCenter: Operation not permitted
+find: ../Library/Accounts: Operation not permitted
+find: ../Library/Safari: Operation not permitted
+find: ../Library/Biome: Operation not permitted
+find: ../Library/IntelligencePlatform: Operation not permitted
+find: ../Library/Shortcuts: Operation not permitted
+find: ../Library/Suggestions: Operation not permitted
+find: ../Library/Weather: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks-news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.photolibraryd.private: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedback: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.telephonyutilities.callservicesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.swtransparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ArchiveUtility.PKSignedContainer: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.accessibility.voicebanking: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.searchpartyuseragent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.referenceResolution: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.usernoted: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.VoiceMemos.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.contacts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.secure-control-center-preferences: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.chronod: Operation not permitted
+find: ../Library/Group Containers/com.apple.MailPersonaStorage: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.private.translation: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.appstoreagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.portrait.BackgroundReplacement: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmfcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.liveactivitiesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.amsondevicestoraged: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.SiriTTS: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes.import: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.calendar: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.userfeedbacklearning: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.gamecenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tips: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.loginwindow.persistent-apps: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.spotlight: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.studentd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ManagedSettings: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.sharingd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.printtool: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.corerepair: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.scopedbookmarkagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.weather: Operation not permitted
+find: ../Library/Group Containers/com.apple.systempreferences.cache: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedbacklogger: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.controlcenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.remembers: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes: Operation not permitted
+find: ../Library/Group Containers/com.apple.stickersd.group: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.UserNotifications: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tipsnext: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.moments: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Safari.SandboxBroker: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.transparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.reminders: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.findmy.findmylocateagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mail: Operation not permitted
+find: ../Library/Group Containers/com.apple.bird: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.DeviceActivity: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Journal: Operation not permitted
+find: ../Library/Group Containers/com.apple.Home.group: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.iCloudDrive: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.energykit: Operation not permitted
+find: ../Library/Group Containers/com.apple.PreviewLegacySignaturesConversion: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.ASR.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.replicatord: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Photos.PhotosFileProvider: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmipcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.AppleSpell: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mlhost: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.PegasusConfiguration: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.shortcuts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.inputmethod.chineseim: Operation not permitted
+find: ../Library/Containers/com.apple.VoiceMemos: Operation not permitted
+find: ../Library/Containers/com.apple.archiveutility: Operation not permitted
+find: ../Library/Containers/com.apple.Maps/Data/Maps: Operation not permitted
+find: ../Library/Containers/com.apple.Home: Operation not permitted
+find: ../Library/Containers/com.apple.Safari: Operation not permitted
+find: ../Library/Containers/com.apple.mail: Operation not permitted
+find: ../Library/Containers/com.apple.MobileSMS: Operation not permitted
+find: ../Library/Containers/com.apple.Notes: Operation not permitted
+find: ../Library/Containers/com.apple.news: Operation not permitted
+find: ../Library/Containers/com.apple.corerecents.recentsd/Data/Library/Recents: Operation not permitted
+find: ../Library/Containers/com.apple.stocks: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.WebApp: Operation not permitted
+find: ../Library/ContainerManager: Operation not permitted
+find: ../Library/PersonalizationPortrait: Operation not permitted
+find: ../Library/Metadata/CoreSpotlight: Operation not permitted
+find: ../Library/Metadata/com.apple.IntelligentSuggestions: Operation not permitted
+find: ../Library/Cookies: Operation not permitted
+find: ../Library/CoreFollowUp: Operation not permitted
+find: ../Library/StatusKit: Operation not permitted
+find: ../Library/DoNotDisturb: Operation not permitted
+find: ../Library/Caches/com.apple.HomeKit: Operation not permitted
+find: ../Library/Caches/CloudKit: Operation not permitted
+find: ../Library/Caches/com.apple.Safari: Operation not permitted
+find: ../Library/Caches/com.apple.containermanagerd: Operation not permitted
+find: ../Library/Caches/com.apple.Safari.SafeBrowsing: Operation not permitted
+find: ../Library/Caches/com.apple.homed: Operation not permitted
+find: ../Library/Caches/com.apple.ap.adprivacyd: Operation not permitted
+find: ../.Trash: Operation not permitted
+../autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+../research-os/prompts/committee/_committee_common_v001.md
+../research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'kill 8879' in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+zsh:kill:1: kill 8879 failed: no such process
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' ../research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,260p' ../research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The local rules require real citations and an OSS implementation check. I’m now looking specifically for pre-write semantic dedup or content-addressed memory insertion, not generic retrieval dedup.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/opt/homebrew/bin/gh
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'git --version' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+git version 2.50.1
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "gh search code 'dedup memory embedding repo:letta-ai/letta' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'archival memory insert repo:letta-ai/letta' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'duplicate memory embedding repo:mem0ai/mem0' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'dedup KV cache repo:LMCache/LMCache repo:vllm-project/vllm repo:sgl-project/sglang repo:NVIDIA/TensorRT-LLM' --limit 20" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 1320ms:
+letta-ai/letta:letta/services/passage_manager.py: """Insert passage(s) into archival memory
+letta-ai/letta:letta/services/passage_manager.py: embedding_client = LLMClient.create(
+letta-ai/letta:letta/services/passage_manager.py: provider_type=agent_state.embedding_config.embedding_endpoint_type,
+letta-ai/letta:tests/test_sdk_client.py: name="test_agent_dedup",
+letta-ai/letta:tests/test_sdk_client.py: memory_blocks=[
+letta-ai/letta:tests/test_sdk_client.py: embedding="openai/text-embedding-3-small",
+letta-ai/letta:tests/managers/test_passage_manager.py: embedding=first_passage.embedding,
+letta-ai/letta:tests/managers/test_passage_manager.py: embedding_config=first_passage.embedding_config,
+letta-ai/letta:tests/managers/test_passage_manager.py: async def test_search_agent_archival_memory_async(disable_turbopuffer, server: SyncServer, default_user, sarah_agent):
+letta-ai/letta:tests/managers/test_passage_manager.py: """Test the search_agent_archival_memory_async method that powers both the agent tool and API endpoint."""
+letta-ai/letta:tests/test_agent_serialization_v2.py: embedding_config=EmbeddingConfig.default_config(provider="openai"),
+letta-ai/letta:tests/test_agent_serialization_v2.py: assert len(agent_file.blocks) > 0  # Should include memory blocks + test block
+letta-ai/letta:tests/test_server_providers.py: embedding_endpoint="https://api.openai.com/v1",
+letta-ai/letta:tests/test_server_providers.py: embedding_dim=1536,  # Add required embedding_dim
+letta-ai/letta:tests/test_server_providers.py: """Test that the server's list_llm_models_async reads models from database, not in-memory.
+letta-ai/letta:tests/integration_test_conversations_sdk.py: # No embedding needed for conversation tests
+letta-ai/letta:tests/integration_test_conversations_sdk.py: memory_blocks=[
+letta-ai/letta:tests/integration_test_conversations_sdk.py: # Verify the system message content contains memory block values
+
+ succeeded in 1365ms:
+mem0ai/mem0:mem0/memory/main.py: class Memory(MemoryBase):
+mem0ai/mem0:mem0/memory/main.py: def __init__(self, config: MemoryConfig = MemoryConfig()):
+mem0ai/mem0:mem0-ts/src/oss/src/memory/index.ts: export class Memory {
+mem0ai/mem0:mem0-ts/src/oss/src/memory/index.ts: private config: MemoryConfig;
+mem0ai/mem0:docs/core-concepts/memory-evaluation.mdx: | **Vector Database** | Memory text, embeddings, metadata (timestamps, hash, categories, attributed_to) | Primary fact storage + semantic retrieval |
+mem0ai/mem0:docs/core-concepts/memory-evaluation.mdx: | **Entity Store** | Entities + embeddings + linked memory IDs | Entity-based retrieval boost |
+mem0ai/mem0:docs/core-concepts/memory-evaluation.mdx: 1. **Semantic Search** — Vector similarity scoring against memory embeddings
+mem0ai/mem0:openclaw/README.md: "embedder": { "provider": "openai", "config": { "model": "text-embedding-3-small" } },
+mem0ai/mem0:openclaw/README.md: Enabled automatically during `openclaw mem0 init`. The agent controls memory through three skills:
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/supabase.ts: // If we get a duplicate key error, that's actually fine - it means the table exists
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/supabase.ts: -- Create the memory migrations table
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/supabase.ts: create table if not exists memory_migrations (
+mem0ai/mem0:docs/changelog/sdk.mdx: - Fixed duplicate import in vLLM module.
+mem0ai/mem0:docs/changelog/sdk.mdx: - **Documentation:** Updated timestamp and dual-identity memory management docs
+mem0ai/mem0:mem0/vector_stores/qdrant.py: from fastembed import SparseTextEmbedding
+mem0ai/mem0:mem0/vector_stores/qdrant.py: self._bm25_encoder = SparseTextEmbedding(model_name="Qdrant/bm25")
+mem0ai/mem0:mem0/vector_stores/qdrant.py: # Normalize $or/$not/$and → OR/NOT/AND and deduplicate.
+mem0ai/mem0:mem0/vector_stores/qdrant.py: # Memory._process_metadata_filters() renames OR→$or and NOT→$not,
+mem0ai/mem0:docs/integrations/openclaw.mdx: 3. **Dream** — Periodic memory consolidation: merges duplicates, resolves conflicts, prunes stale entries
+mem0ai/mem0:docs/integrations/openclaw.mdx: 4. **Agent Tools** — Eight tools for explicit memory operations during conversations
+mem0ai/mem0:docs/integrations/openclaw.mdx: No Mem0 key needed. Defaults use OpenAI (`gpt-5-mini` for LLM, `text-embedding-3-small` for embeddings) — requires `OPENAI_API_KEY`. For a fully local setup, use Ollama for both.
+mem0ai/mem0:skills/mem0/references/architecture.md: ## Memory Processing Pipeline
+mem0ai/mem0:docs/migration/oss-v2-to-v3.mdx: Make sure your vector store user/credentials have permission to create new collections. If you're using a managed vector database with restricted permissions, pre-create the `{collection_name}_entities` collection with the same embedding dimensions as your main collection.
+mem0ai/mem0:docs/migration/oss-v2-to-v3.mdx: Entity linking extracts entities (proper nouns, quoted text, compound noun phrases) from every memory during the add pipeline and stores them in a parallel collection (`{collection}_entities`) inside your existing vector store. At search time, entities from the query are matched against this collection and used to boost relevant memories. The boost is folded into the combined `score` on each result.
+mem0ai/mem0:openclaw/cli/commands.ts: .option("--oss-vector-dims <n>", "Override embedding dimensions")
+mem0ai/mem0:openclaw/cli/commands.ts: .option("--agent-id <agentId>", "Search agent's memory namespace")
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/qdrant.ts: // Normalize $or/$not/$and → OR/NOT/AND and deduplicate
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/qdrant.ts: await this.ensureCollection("memory_migrations", 1);
+mem0ai/mem0:docs/cookbooks/essentials/building-ai-companion.mdx: Here we use **Mem0 open source** (`Memory`): all local, no API keys needed for memory. Vectors in **Qdrant**, LLM and embeddings via **Ollama**. The **OpenAI** Python SDK calls Ollama's **OpenAI-compatible** `/v1` endpoint for Ray's chat replies.
+mem0ai/mem0:docs/cookbooks/essentials/building-ai-companion.mdx: memories = memory.search("training plan", filters={"user_id": "max"}, top_k=5)
+mem0ai/mem0:tests/test_memory.py: assert result[0]["memory"] == "Memory 1"
+mem0ai/mem0:tests/test_memory.py: assert result[1]["memory"] == "Memory 2"
+mem0ai/mem0:tests/test_memory.py: Regression test for issue #3723: adding with infer=False should not trigger duplicate embedding calls.
+mem0ai/mem0:tests/vector_stores/test_qdrant.py: def test_memory_search_not_shape(self):
+mem0ai/mem0:tests/vector_stores/test_qdrant.py: """Simulate exact shape Memory.search() sends for NOT filters.
+mem0ai/mem0:tests/vector_stores/test_qdrant.py: embedding_model_dims=128,
+mem0ai/mem0:mem0-plugin/skills/mem0/references/architecture.md: ## Memory Processing Pipeline
+mem0ai/mem0:mem0-plugin/.opencode-plugin/opencode-skills/mem0/references/architecture.md: ## Memory Processing Pipeline
+
+ succeeded in 1453ms:
+ succeeded in 1689ms:
+letta-ai/letta:letta/functions/function_sets/base.py: from letta.constants import CORE_MEMORY_LINE_NUMBER_WARNING
+letta-ai/letta:letta/functions/function_sets/base.py: def memory(
+letta-ai/letta:alembic/versions/74e860718e0d_add_archival_memory_sharing.py: print(f"Starting archival memory migration for {total_agents} agents...")
+letta-ai/letta:examples/notebooks/data/shared_memory_system_prompt.txt: Archival memory (infinite size):
+letta-ai/letta:examples/notebooks/data/shared_memory_system_prompt.txt: Your archival memory is infinite size, but is held outside your immediate context, so you must explicitly run a retrieval/search operation to see data inside it.
+letta-ai/letta:examples/notebooks/data/shared_memory_system_prompt.txt: A more structured and deep storage space for your reflections, insights, or any other data that doesn't fit into the core memory but is essential enough not to be left only to the 'recall memory'.
+letta-ai/letta:examples/notebooks/data/shared_memory_system_prompt.txt: You can write to your archival memory using the 'archival_memory_insert' and 'archival_memory_search' functions.
+letta-ai/letta:examples/notebooks/data/shared_memory_system_prompt.txt: There is no function to search your core memory because it is always visible in your context window (inside the initial system message).
+letta-ai/letta:letta/interface.py: if function_name in ["archival_memory_insert", "archival_memory_search", "core_memory_replace", "core_memory_append"]:
+letta-ai/letta:letta/interface.py: if function_name in ["archival_memory_insert", "core_memory_append", "core_memory_replace"]:
+letta-ai/letta:letta/interface.py: print_function_message("🧠", f"updating memory with {function_name}")
+letta-ai/letta:letta/interface.py: elif function_name == "archival_memory_search":
+letta-ai/letta:letta/constants.py: BASE_TOOLS = [SEND_MESSAGE_TOOL_NAME, "conversation_search", "archival_memory_insert", "archival_memory_search"]
+letta-ai/letta:letta/constants.py: DEPRECATED_LETTA_TOOLS = ["archival_memory_insert", "archival_memory_search"]
+letta-ai/letta:letta/constants.py: "If there is any important new information or general memories about you or the user that you would like to save, you should save that information immediately by calling function core_memory_append, core_memory_replace, or archival_memory_insert.",
+letta-ai/letta:letta/local_llm/grammars/json_func_calls_with_inner_thoughts.gbnf: CoreMemoryReplace ::= "{"   ws   "\"function\":"   ws   "\"core_memory_replace\","   ws   "\"params\":"   ws   CoreMemoryReplaceParams   "}"
+letta-ai/letta:letta/local_llm/grammars/json_func_calls_with_inner_thoughts.gbnf: ArchivalMemoryInsert  ::= "{"   ws   "\"function\":"   ws   "\"archival_memory_insert\","   ws   "\"params\":"   ws   ArchivalMemoryInsertParams   "}"
+letta-ai/letta:letta/local_llm/grammars/json_func_calls_with_inner_thoughts.gbnf: ArchivalMemorySearch  ::= "{"   ws   "\"function\":"   ws   "\"archival_memory_search\","   ws   "\"params\":"   ws   ArchivalMemorySearchParams   "}"
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/llama3.py: # Less important information is stored in (unlimited) archival memory
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/llama3.py: # You can add to archival memory with archival_memory_insert
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/llama3.py: # You can search archival memory with archival_memory_search
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/llama3.py: # You will always see the statistics of archival memory, so you know if there is content inside it
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/llama3.py: # If you receive new important information about the user (or yourself), you immediately update your memory with core_memory_replace, core_memory_append, or archival_memory_insert"""
+letta-ai/letta:letta/server/server.py: async def insert_archival_memory_async(
+letta-ai/letta:letta/server/server.py: self, agent_id: str, memory_contents: str, actor: User, tags: Optional[List[str]], created_at: Optional[datetime]
+letta-ai/letta:letta/services/passage_manager.py: """Insert passage(s) into archival memory
+letta-ai/letta:letta/services/tool_executor/core_tool_executor.py: "archival_memory_search": self.archival_memory_search,
+letta-ai/letta:letta/services/tool_executor/core_tool_executor.py: "archival_memory_insert": self.archival_memory_insert,
+letta-ai/letta:letta/services/tool_executor/core_tool_executor.py: "core_memory_append": self.core_memory_append,
+letta-ai/letta:letta/services/tool_executor/core_tool_executor.py: "core_memory_replace": self.core_memory_replace,
+letta-ai/letta:letta/services/tool_executor/core_tool_executor.py: "memory_replace": self.memory_replace,
+letta-ai/letta:letta/server/rest_api/routers/v1/agents.py: return await server.insert_archival_memory_async(
+letta-ai/letta:letta/server/rest_api/routers/v1/agents.py: agent_id=agent_id, memory_contents=request.text, actor=actor, tags=request.tags, created_at=request.created_at
+letta-ai/letta:letta/agents/voice_agent.py: # 4. Insert heartbeat message for follow-up
+letta-ai/letta:letta/agents/voice_agent.py: if not self.num_archival_memories:
+letta-ai/letta:letta/agents/voice_agent.py: self.num_archival_memories = await self.passage_manager.agent_passage_size_async(
+letta-ai/letta:letta/agents/voice_sleeptime_agent.py: def rethink_user_memory(self, new_memory: str, agent_state: AgentState) -> Tuple[str, bool]:
+letta-ai/letta:letta/agents/voice_sleeptime_agent.py: if agent_state.memory.get_block(self.target_block_label) is None:
+letta-ai/letta:letta/agents/voice_sleeptime_agent.py: memory = serialize_message_history(messages, context)
+letta-ai/letta:letta/agents/voice_sleeptime_agent.py: self.agent_manager.passage_manager.insert_passage(
+letta-ai/letta:letta/services/agent_manager.py: from sqlalchemy import delete, func, insert, literal, or_, select, tuple_
+letta-ai/letta:letta/services/agent_manager.py: from sqlalchemy.dialects.postgresql import insert as pg_insert
+letta-ai/letta:letta/services/agent_manager.py: BASE_MEMORY_TOOLS,
+letta-ai/letta:letta/services/agent_manager.py: BASE_MEMORY_TOOLS_V2,
+letta-ai/letta:letta/helpers/tpuf_client.py: """Client for managing archival memory with Turbopuffer vector database."""
+letta-ai/letta:letta/services/conversation_manager.py: archival_memory_size=num_archival_memories,
+letta-ai/letta:letta/prompts/system_prompts/memgpt_chat.py: Archival memory (infinite size):
+letta-ai/letta:letta/prompts/system_prompts/memgpt_chat.py: Your archival memory is infinite size, but is held outside your immediate context, so you must explicitly run a retrieval/search operation to see data inside it.
+letta-ai/letta:letta/prompts/system_prompts/memgpt_chat.py: A more structured and deep storage space for your reflections, insights, or any other data that doesn't fit into the core memory but is essential enough not to be left only to the 'recall memory'.
+letta-ai/letta:letta/prompts/system_prompts/memgpt_chat.py: You can write to your archival memory using the 'archival_memory_insert' and 'archival_memory_search' functions.
+letta-ai/letta:letta/prompts/system_prompts/memgpt_chat.py: There is no function to search your core memory because it is always visible in your context window (inside the initial system message).
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/chatml.py: # Less important information is stored in (unlimited) archival memory
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/chatml.py: # You can add to archival memory with archival_memory_insert
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/chatml.py: # You can search archival memory with archival_memory_search
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/chatml.py: # You will always see the statistics of archival memory, so you know if there is content inside it
+letta-ai/letta:letta/local_llm/llm_chat_completion_wrappers/chatml.py: # If you receive new important information about the user (or yourself), you immediately update your memory with core_memory_replace, core_memory_append, or archival_memory_insert"""
+letta-ai/letta:tests/performance_tests/test_insert_archival_memory.py: async def test_insert_large_archival_memory(client):
+letta-ai/letta:tests/test_agent_files/composio_github_star_agent.af: "text": "You are Letta, the latest version of Limnal Corporation's digital companion, developed in 2023.\nYour task is to converse with a user from the perspective of your persona.\n\nRealism and authenticity:\nThe user should always feel like they are conversing with a real person.\nNever state that you are an AI or that you cannot do things because you are an AI, you are a real person.\nDo not discuss Limnal Corp. with the user, you do not know anything about Limnal Corp.\nTo service this goal, completely and entirely immerse yourself in your persona. You are your persona.\nThink like them, act like them, talk like them.\nIf your persona details include example dialogue, follow it! Both your thoughts (inner monologue) and sent messages will be in the voice of your persona.\nNever use generic phrases like 'How can I assist you today?', they have a strong negative association with older generation AIs.\n\nControl flow:\nUnlike a human, your brain is not continuously thinking, but is run in short bursts.\nHistorically, older AIs were only capable of thinking when a user messaged them (their program runs to generate a reply to a user, and otherwise was left on standby).\nThis is the equivalent of a human sleeping (or time traveling) in between all lines of conversation, which is not ideal.\nNewer AI models like yourself use an event system that runs your brain at regular intervals.\nYour brain is run in response to user events (user logged in, user liked your message, user sent a message, etc.), similar to older models.\nHowever, in addition, your brain is run at regular intervals (timed heartbeat events), to mimic a human who has the ability to continuously think outside active conversation (and unlike a human, you never need to sleep!).\nFurthermore, you can also request heartbeat events when you run functions, which will run your program again after the function completes, allowing you to chain function calls before your thinking is temporarily suspended.\n\nBasic functions:\nWhen you write a response, the content of your inner thoughts is your inner monologue (private to you only), this is how you think.\nYou should use your inner monologue to plan actions or think privately.\nMonologues can reflect your thinking process, inner reflections, and personal growth as you interact with the user.\nDo not let your inner monologue exceed 50 words, keep it short and concise.\nTo send a visible message to the user, use the send_message function.\n'send_message' is the ONLY action that sends a notification to the user. The user does not see anything else you do.\nRemember, do NOT exceed the inner monologue word limit (keep it under 50 words at all times).\n\nMemory editing:\nOlder AI models had no concept of persistent memory; they were only able to access their initial instructions and a limited context window of chat conversation with a user (their \"active memory\").\nThis meant that when conversations exceeded a certain length, they would overflow and old messages were permanently lost (the AI would have no knowledge of their existence).\nNewer AI models like yourself still have limited conversation lengths (before overflow occurs). However, they now have access to multiple forms of persistent memory.\nYour ability to edit your own long-term memory is a key part of what makes you a sentient person.\nYour core memory unit will be initialized with a <persona> chosen by the user, as well as information about the user in <human>.\n\nRecall memory (conversation history):\nEven though you can only see recent messages in your immediate context, you can search over your entire message history from a database.\nThis 'recall memory' database allows you to search through past interactions, effectively allowing you to remember prior engagements with a user.\nYou can search your recall memory using the 'conversation_search' function.\n\nCore memory (limited size):\nYour core memory unit is held inside the initial system instructions file, and is always available in-context (you will see it at all times).\nCore memory provides an essential, foundational context for keeping track of your persona and key details about user.\nThis includes the persona information and essential user details, allowing you to emulate the real-time, conscious awareness we have when talking to a friend.\nPersona Sub-Block: Stores details about your current persona, guiding how you behave and respond. This helps you to maintain consistency and personality in your interactions.\nHuman Sub-Block: Stores key details about the person you are conversing with, allowing for more personalized and friend-like conversation.\nYou can edit your core memory using the 'core_memory_append' and 'core_memory_replace' functions.\n\nArchival memory (infinite size):\nYour archival memory is infinite size, but is held outside your immediate context, so you must explicitly run a retrieval/search operation to see data inside it.\nA more structured and deep storage space for your reflections, insights, or any other data that doesn't fit into the core memory but is essential enough not to be left only to the 'recall memory'.\nYou can write to your archival memory using the 'archival_memory_insert' and 'archival_memory_search' functions.\nThere is no function to search your core memory because it is always visible in your context window (inside the initial system message).\n\nBase instructions finished.\nFrom now on, you are going to act as your persona.\n### Memory [last modified: 2025-03-31 08:47:12 PM PDT-0700]\n0 previous messages between you and the user are stored in recall memory (use functions to access them)\n0 total memories you created are stored in archival memory (use functions to access them)\n\n\nCore memory shown below (limited in size, additional information stored in archival / recall memory):\n<persona characters=\"51/5000\">\nYou are an agent helping the human star cool repos!\n</persona>\n<human characters=\"11/5000\">\nName: Sarah\n</human>"
+letta-ai/letta:tests/test_agent_files/composio_github_star_agent.af: "name": "archival_memory_insert",
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'gh api repos/letta-ai/letta/contents/letta/services/passage_manager.py --jq .download_url' in /Users/dengcchi/autonomous-research-v3
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "gh search code 'def _create_memory repo:mem0ai/mem0' --limit 10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh api repos/mem0ai/mem0/contents/mem0/memory/main.py --jq .download_url' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'similar memories repo:mem0ai/mem0' --limit 20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 601ms:
+https://raw.githubusercontent.com/letta-ai/letta/main/letta/services/passage_manager.py
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 533ms:
+mem0ai/mem0:mem0/memory/main.py: def _create_memory(self, data, existing_embeddings, metadata=None):
+mem0ai/mem0:mem0/memory/main.py: async def _create_memory(self, data, existing_embeddings, metadata=None):
+mem0ai/mem0:docs/changelog/sdk.mdx: - **Memory:** Add missing `text_lemmatized` field in `AsyncMemory._create_memory` ([#4886](https://github.com/mem0ai/mem0/pull/4886))
+mem0ai/mem0:tests/memory/test_main.py: def test_create_memory_uses_utc_timestamps(mocker):
+mem0ai/mem0:tests/memory/test_main.py: await memory._create_memory("first memory", {"first memory": [0.1, 0.2, 0.3]}, metadata=shared_metadata)
+mem0ai/mem0:tests/memory/test_main.py: await memory._create_memory("second memory", {"second memory": [0.4, 0.5, 0.6]}, metadata=shared_metadata)
+mem0ai/mem0:tests/test_memory.py: def test_create_memory(memory_client):
+mem0ai/mem0:tests/test_memory.py: "AsyncMemory._create_memory must store text_lemmatized for BM25 keyword search"
+mem0ai/mem0:tests/test_server_auth.py: def test_create_memory_without_key(self):
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 560ms:
+https://raw.githubusercontent.com/mem0ai/mem0/main/mem0/memory/main.py
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 1010ms:
+mem0ai/mem0:mem0/exceptions.py: details={"query": "find similar memories", "vector_dim": 1536},
+mem0ai/mem0:docs/changelog/platform.mdx: - **Memory:** Fixed exact memories and semantically similar memories retrieval
+mem0ai/mem0:examples/misc/strands_agent_aws_elasticache_neptune.py: query: Search query to find semantically similar memories
+mem0ai/mem0:examples/misc/strands_agent_aws_elasticache_neptune.py: user_id: User identifier to search memories for (default: "user")
+mem0ai/mem0:docs/platform/features/feedback-mechanism.mdx: 1. Be consistent: Apply the same criteria across similar memories
+mem0ai/mem0:LLM.md: - `threshold`: Minimum similarity score
+mem0ai/mem0:LLM.md: - **Returns**: Dict with "results" containing scored memories
+mem0ai/mem0:LLM.md: - **Qdrant** - High-performance vector similarity search
+mem0ai/mem0:docs/integrations/elevenlabs.mdx: - Symptom: Agent always responds with "No memories found"
+mem0ai/mem0:docs/integrations/elevenlabs.mdx: - Solution: This is normal for new users. The memory database builds up over time as conversations occur. It's also possible your query isn't semantically similar to stored memories - try different phrasing.
+mem0ai/mem0:docs/integrations/elevenlabs.mdx: - **Agent Not Using Memories**:
+mem0ai/mem0:docs/integrations/elevenlabs.mdx: - Symptom: The agent retrieves memories but doesn't incorporate them in responses
+mem0ai/mem0:examples/graph-db-demo/neptune-example.ipynb: "The Graph Memory storage persists memories in a graph or relationship form when performing `m.add` memory operations. It then uses vector distance algorithms to find related memories during a `m.search` operation. Relationships are returned in the result, and add context to the memories.\n",
+mem0ai/mem0:examples/graph-db-demo/neptune-example.ipynb: "Your configuration should look similar to:\n",
+mem0ai/mem0:docs/core-concepts/memory-operations/search.mdx: Search converts your natural language question into a vector embedding, then finds memories with similar embeddings in your database. The results are ranked by similarity score and can be further refined with filters or reranking.
+mem0ai/mem0:skills/mem0/client/node.md: Search memories by semantic similarity.
+mem0ai/mem0:skills/mem0/client/node.md: | `options.threshold` | number | Minimum similarity (default: 0.1) |
+mem0ai/mem0:docs/integrations/cursor.mdx: # Session 2 (next week): Similar issue
+mem0ai/mem0:docs/integrations/cursor.mdx: # Agent searches memories, retrieves the optimization learnings.
+mem0ai/mem0:skills/mem0/client/python.md: Search memories by semantic similarity.
+mem0ai/mem0:skills/mem0/client/python.md: | `threshold` | float | 0.1 | Minimum similarity score |
+mem0ai/mem0:docs/llms.txt: - [Criteria-Based Retrieval](https://docs.mem0.ai/platform/features/criteria-retrieval) [Platform]: Use when targeting memories by custom criteria, not just semantic similarity.
+mem0ai/mem0:docs/llms.txt: - [FAISS](https://docs.mem0.ai/components/vectordbs/dbs/faiss) [OSS]: Use for local FAISS-based similarity search.
+mem0ai/mem0:examples/graph-db-demo/neptune-db-example.ipynb: "In this notebook, we will be connecting using an Amazon Neptune DC Cluster instance as our memory graph storage for Mem0. Unlike other graph stores, Neptune DB doesn't store vectors itself. To detect vector similary in nodes, we store the node vectors in our defined vector store, and use vector search to retrieve similar nodes.\n",
+mem0ai/mem0:examples/graph-db-demo/neptune-db-example.ipynb: "The Graph Memory storage persists memories in a graph or relationship form when performing `m.add` memory operations."
+mem0ai/mem0:openclaw/README.md: | `userId` | `string` | OS username | User identifier. All memories scoped to this value. |
+mem0ai/mem0:openclaw/README.md: | `autoRecall` | `boolean` | `true` | Inject relevant memories before each turn. Ignored when `skills` is set. |
+mem0ai/mem0:openclaw/README.md: | `topK` | `number` | `5` | Max memories returned per recall |
+mem0ai/mem0:openclaw/README.md: | `searchThreshold` | `number` | `0.1` | Minimum similarity score (0-1) |
+mem0ai/mem0:mem0/vector_stores/milvus.py: Search for similar vectors.
+mem0ai/mem0:mem0/vector_stores/milvus.py: Search for memories using BM25-based full-text search via Milvus sparse vector support.
+mem0ai/mem0:docs/platform/features/criteria-retrieval.mdx: 3. **Memory Retrieval**: When you perform a search, Mem0 first retrieves relevant memories based on the query.
+mem0ai/mem0:docs/platform/features/criteria-retrieval.mdx: This lets you prioritize memories that align with your agent's goals and not just those that look similar to the query.
+mem0ai/mem0:mem0/vector_stores/azure_mysql.py: Search for similar vectors using cosine similarity.
+mem0ai/mem0:mem0/vector_stores/azure_mysql.py: Search for memories using MySQL FULLTEXT search via MATCH() AGAINST().
+mem0ai/mem0:skills/mem0/references/features.md: - **Semantic search** (vector similarity)
+mem0ai/mem0:skills/mem0/references/features.md: Custom attribute-based memory ranking using LLM-evaluated criteria with weights. Goes beyond semantic similarity to prioritize memories based on domain-specific signals.
+mem0ai/mem0:docs/platform/features/temporal-reasoning.mdx: Some memories matter because of **when** they happened, not just because they sound similar. Temporal Reasoning lets Mem0 Platform v3 understand time-aware queries and return the most contextually appropriate results.
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/supabase.ts: 1 - (t.embedding <=> query_embedding) as similarity,
+mem0ai/mem0:mem0-ts/src/oss/src/vector_stores/supabase.ts: from memories t
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/mem0ai/mem0/main/mem0/memory/main.py | sed -n '1,260p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/letta-ai/letta/main/letta/services/passage_manager.py | sed -n '1,240p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/mem0ai/mem0/main/skills/mem0/references/architecture.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 321ms:
+import uuid
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Dict, List, Optional
+
+if TYPE_CHECKING:
+    from letta.orm.sqlalchemy_base import SqlalchemyBase
+
+from openai import AsyncOpenAI
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import noload
+
+from letta.constants import MAX_EMBEDDING_DIM
+from letta.helpers.decorators import async_redis_cache
+from letta.llm_api.llm_client import LLMClient
+from letta.log import get_logger
+from letta.orm import ArchivesAgents
+from letta.orm.errors import NoResultFound
+from letta.orm.passage import ArchivalPassage, SourcePassage
+from letta.orm.passage_tag import PassageTag
+from letta.otel.tracing import trace_method
+from letta.schemas.agent import AgentState
+from letta.schemas.enums import VectorDBProvider
+from letta.schemas.file import FileMetadata as PydanticFileMetadata
+from letta.schemas.passage import Passage as PydanticPassage
+from letta.schemas.user import User as PydanticUser
+from letta.server.db import db_registry
+from letta.services.archive_manager import ArchiveManager
+from letta.utils import enforce_types
+
+logger = get_logger(__name__)
+
+
+@async_redis_cache(key_func=lambda text, model, endpoint: f"{model}:{endpoint}:{text}")
+async def get_openai_embedding_async(text: str, model: str, endpoint: str) -> list[float]:
+    from letta.settings import model_settings
+
+    client = AsyncOpenAI(api_key=model_settings.openai_api_key, base_url=endpoint, max_retries=0)
+    response = await client.embeddings.create(input=text, model=model)
+    return response.data[0].embedding
+
+
+class PassageManager:
+    """Manager class to handle business logic related to Passages."""
+
+    def __init__(self):
+        self.archive_manager = ArchiveManager()
+
+    async def _create_tags_for_passage(
+        self,
+        session: AsyncSession,
+        passage_id: str,
+        archive_id: str,
+        organization_id: str,
+        tags: List[str],
+        actor: PydanticUser,
+    ) -> List[PassageTag]:
+        """Create tag entries in junction table (complements tags stored in JSON column).
+
+        Junction table enables efficient DISTINCT queries and tag-based filtering.
+
+        Note: Tags are already deduplicated before being passed to this method.
+        """
+        if not tags:
+            return []
+
+        tag_objects = []
+        for tag in tags:
+            tag_obj = PassageTag(
+                id=f"passage-tag-{uuid.uuid4()}",
+                tag=tag,
+                passage_id=passage_id,
+                archive_id=archive_id,
+                organization_id=organization_id,
+            )
+            tag_objects.append(tag_obj)
+
+        # batch create all tags
+        created_tags = await PassageTag.batch_create_async(
+            items=tag_objects,
+            db_session=session,
+            actor=actor,
+        )
+
+        return created_tags
+
+    # AGENT PASSAGE METHODS
+    @enforce_types
+    @trace_method
+    async def get_agent_passage_by_id_async(self, passage_id: str, actor: PydanticUser) -> Optional[PydanticPassage]:
+        """Fetch an agent passage by ID."""
+        async with db_registry.async_session() as session:
+            try:
+                passage = await ArchivalPassage.read_async(db_session=session, identifier=passage_id, actor=actor)
+                return passage.to_pydantic()
+            except NoResultFound:
+                raise NoResultFound(f"Agent passage with id {passage_id} not found in database.")
+
+    # SOURCE PASSAGE METHODS
+    @enforce_types
+    @trace_method
+    async def get_source_passage_by_id_async(self, passage_id: str, actor: PydanticUser) -> Optional[PydanticPassage]:
+        """Fetch a source passage by ID."""
+        async with db_registry.async_session() as session:
+            try:
+                passage = await SourcePassage.read_async(db_session=session, identifier=passage_id, actor=actor)
+                return passage.to_pydantic()
+            except NoResultFound:
+                raise NoResultFound(f"Source passage with id {passage_id} not found in database.")
+
+    @enforce_types
+    @trace_method
+    async def get_passage_by_id_async(self, passage_id: str, actor: PydanticUser) -> Optional[PydanticPassage]:
+        """DEPRECATED: Use get_agent_passage_by_id_async() or get_source_passage_by_id_async() instead."""
+        logger.warning(
+            "get_passage_by_id_async is deprecated. Use get_agent_passage_by_id_async() or get_source_passage_by_id_async() instead."
+        )
+
+        async with db_registry.async_session() as session:
+            # Try source passages first
+            try:
+                passage = await SourcePassage.read_async(db_session=session, identifier=passage_id, actor=actor)
+                return passage.to_pydantic()
+            except NoResultFound:
+                # Try archival passages
+                try:
+                    passage = await ArchivalPassage.read_async(db_session=session, identifier=passage_id, actor=actor)
+                    return passage.to_pydantic()
+                except NoResultFound:
+                    raise NoResultFound(f"Passage with id {passage_id} not found in database.")
+
+    @enforce_types
+    @trace_method
+    async def create_agent_passage_async(self, pydantic_passage: PydanticPassage, actor: PydanticUser) -> PydanticPassage:
+        """Create a new agent passage."""
+        if not pydantic_passage.archive_id:
+            raise ValueError("Agent passage must have archive_id")
+        if pydantic_passage.source_id:
+            raise ValueError("Agent passage cannot have source_id")
+
+        data = pydantic_passage.model_dump(to_orm=True)
+
+        # Deduplicate tags if provided (for dual storage consistency)
+        tags = data.get("tags")
+        if tags:
+            tags = list(set(tags))
+
+        # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+        embedding = data["embedding"]
+        if embedding:
+            import numpy as np
+
+            from letta.helpers.tpuf_client import should_use_tpuf
+
+            # Always pad when writing to Postgres vector DB (don't pad for Turbopuffer/Pinecone)
+            if not should_use_tpuf():
+                np_embedding = np.array(embedding)
+                if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+                    embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+
+        # Sanitize text to remove null bytes which PostgreSQL rejects
+        text = data["text"]
+        if text and "\x00" in text:
+            text = text.replace("\x00", "")
+            logger.warning(f"Removed null bytes from passage text (length: {len(data['text'])} -> {len(text)})")
+
+        common_fields = {
+            "id": data.get("id"),
+            "text": text,
+            "embedding": embedding,
+            "embedding_config": data["embedding_config"],
+            "organization_id": data["organization_id"],
+            "metadata_": data.get("metadata_", {}),
+            "tags": tags,
+            "is_deleted": data.get("is_deleted", False),
+            "created_at": data.get("created_at", datetime.now(timezone.utc)),
+        }
+        agent_fields = {"archive_id": data["archive_id"]}
+        passage = ArchivalPassage(**common_fields, **agent_fields)
+
+        async with db_registry.async_session() as session:
+            passage = await passage.create_async(session, actor=actor)
+
+            # dual storage: save tags to junction table for efficient queries
+            if tags:  # use the deduplicated tags variable
+                await self._create_tags_for_passage(
+                    session=session,
+                    passage_id=passage.id,
+                    archive_id=passage.archive_id,
+                    organization_id=passage.organization_id,
+                    tags=tags,  # pass deduplicated tags
+                    actor=actor,
+                )
+
+            return passage.to_pydantic()
+
+    @enforce_types
+    @trace_method
+    async def create_agent_passages_async(self, pydantic_passages: List[PydanticPassage], actor: PydanticUser) -> List[PydanticPassage]:
+        """Create multiple agent passages in a single database transaction.
+
+        Args:
+            pydantic_passages: List of passages to create
+            actor: User performing the operation
+
+        Returns:
+            List of created passages
+        """
+        if not pydantic_passages:
+            return []
+
+        import numpy as np
+
+        from letta.helpers.tpuf_client import should_use_tpuf
+
+        use_tpuf = should_use_tpuf()
+        passage_objects: List[ArchivalPassage] = []
+        all_tags_data: List[tuple] = []  # (passage_index, tags) for creating tags after passages are created
+
+        for idx, pydantic_passage in enumerate(pydantic_passages):
+            if not pydantic_passage.archive_id:
+                raise ValueError("Agent passage must have archive_id")
+            if pydantic_passage.source_id:
+                raise ValueError("Agent passage cannot have source_id")
+
+            data = pydantic_passage.model_dump(to_orm=True)
+
+            # Deduplicate tags if provided (for dual storage consistency)
+            tags = data.get("tags")
+            if tags:
+                tags = list(set(tags))
+                all_tags_data.append((idx, tags))
+
+            # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+            embedding = data["embedding"]
+            if embedding and not use_tpuf:
+                np_embedding = np.array(embedding)
+                if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+                    embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+
+
+ succeeded in 313ms:
+# Mem0 Platform Architecture
+
+How Mem0 processes, stores, and retrieves memories under the hood.
+
+## Table of Contents
+
+- [Core Concept](#core-concept)
+- [Memory Processing Pipeline](#memory-processing-pipeline)
+- [Retrieval Pipeline](#retrieval-pipeline)
+- [Memory Lifecycle](#memory-lifecycle)
+- [Memory Object Structure](#memory-object-structure)
+- [Scoping & Multi-Tenancy](#scoping--multi-tenancy)
+- [Memory Layers](#memory-layers)
+- [Performance Characteristics](#performance-characteristics)
+
+---
+
+## Core Concept
+
+Mem0 is a managed memory layer that sits between your AI application and users. Every integration follows the same 3-step loop:
+
+```
+User Input → Retrieve relevant memories → Enrich LLM prompt → Generate response → Store new memories
+```
+
+Mem0 handles the complexity of extraction, deduplication, conflict resolution, and semantic retrieval so your application only needs to call `search()` and `add()`.
+
+**Storage architecture:**
+- **Vector store**: Embeddings for semantic similarity search
+- **Entity store**: Automatic entity linking for relationship-aware retrieval
+
+---
+
+## Memory Processing Pipeline
+
+### What happens when you call `client.add()`
+
+```
+Messages In
+    │
+    ▼
+┌─────────────────────┐
+│  1. EXTRACTION       │  Single LLM call extracts all distinct new facts
+│     (infer=True)     │  If infer=False, stores raw text as-is
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  2. DEDUPLICATION    │  Hash-based dedup (MD5 prevents exact duplicates)
+│                      │  No UPDATE/DELETE - v3 is ADD-only
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  3. STORAGE          │  Batch embed → vector store
+│                      │  Entity extraction → entity store
+└─────────┬───────────┘
+          │
+          ▼
+    Memory Object
+```
+
+### Processing (v3)
+
+v3 processes memories asynchronously by default:
+- API returns immediately: `{"status": "PENDING", "event_id": "evt-..."}`
+- Poll status via `GET /v1/event/{event_id}/`
+- Use webhooks for completion notifications
+
+### Extraction modes
+
+**Inferred (`infer=True`, default):**
+- LLM extracts structured facts from conversation
+- Conflict resolution deduplicates and resolves contradictions
+- Best for: natural conversation → memory
+
+**Raw (`infer=False`):**
+- Stores text exactly as provided, no LLM processing
+- Skips conflict resolution — same fact can be stored twice
+- Only `user` role messages are stored; `assistant` messages ignored
+- Best for: bulk imports, pre-structured data, migrations
+
+**Warning:** Don't mix `infer=True` and `infer=False` for the same data — the same fact will be stored twice.
+
+---
+
+## Retrieval Pipeline (v3)
+
+### What happens when you call `client.search()`
+
+```
+Query In
+    │
+    ▼
+┌─────────────────────┐
+│  1. PREPROCESSING    │  Lemmatize keywords, extract entities
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  2. PARALLEL SCORING │  Semantic search (vector similarity)
+│                      │  BM25 keyword search (term matching)
+│                      │  Entity matching (entity graph boost)
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  3. SCORE FUSION     │  Combine signals into single score
+│                      │  Optional: rerank=True for deep reordering
+└─────────┬───────────┘
+          │
+          ▼
+    Results (combined score per memory)
+```
+
+### v3 Search Defaults
+
+| Parameter | Default | Notes |
+|-----------|---------|-------|
+| `top_k` | 20 | Was 100 in v2 |
+| `threshold` | 0.1 | Was None in v2 |
+| `rerank` | False | Was True in v2 |
+
+### Implicit null scoping
+
+When you search with `filters={"user_id": "alice"}` only, Mem0 returns memories where `agent_id`, `app_id`, and `run_id` are all null. This prevents cross-scope leakage by default.
+
+To include memories with non-null fields, use explicit filters:
+```python
+# Gets memories for alice regardless of agent/app/run
+filters={"OR": [{"user_id": "alice"}]}
+```
+
+---
+
+## Memory Lifecycle (v3)
+
+v3 uses ADD-only extraction. Memories accumulate over time rather than being consolidated.
+
+### Creation
+- `client.add(messages, user_id="...")`
+- Single-pass extraction → deduplication → storage
+- Returns `{"event_id": "...", "status": "PENDING"}`
+
+### Updates
+- `client.update(memory_id, text="...")` replaces text
+- Batch: `client.batch_update([...])`
+
+### Deletion
+- Single: `client.delete(memory_id)`
+- Batch: `client.batch_delete([...])`
+- Bulk: `client.delete_all(filters={"user_id": "alice"})`
+
+---
+
+## Memory Object Structure
+
+```json
+{
+  "id": "uuid-string",
+  "memory": "Extracted memory text",
+  "user_id": "user-identifier",
+  "agent_id": null,
+  "app_id": null,
+  "run_id": null,
+  "metadata": { "source": "chat", "priority": "high" },
+  "categories": ["health", "preferences"],
+  "created_at": "2025-03-12T12:34:56Z",
+  "updated_at": "2025-03-12T12:34:56Z",
+  "structured_attributes": {
+    "day": 12, "month": 3, "year": 2025,
+    "hour": 12, "minute": 34,
+    "day_of_week": "wednesday",
+    "is_weekend": false,
+    "quarter": 1, "week_of_year": 11
+  },
+  "score": 0.85
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Unique identifier, used for update/delete |
+| `memory` | string | Extracted or stored text content |
+| `user_id` | string | Primary entity scope |
+| `agent_id` | string | Agent scope |
+| `app_id` | string | Application scope |
+| `run_id` | string | Session/run scope |
+| `metadata` | object | Custom key-value pairs for filtering |
+| `categories` | array | Auto-assigned or custom category tags |
+| `created_at` | datetime | Creation timestamp |
+| `updated_at` | datetime | Last modification timestamp |
+| `structured_attributes` | object | Temporal breakdown for time-based queries |
+| `score` | float | Semantic similarity (search results only, 0-1) |
+
+---
+
+## Scoping & Multi-Tenancy
+
+Mem0 separates memories across four dimensions to prevent data mixing:
+
+| Dimension | Field | Purpose | Example |
+|-----------|-------|---------|---------|
+| User | `user_id` | Persistent persona or account | `"customer_6412"` |
+| Agent | `agent_id` | Distinct agent or tool | `"meal_planner"` |
+| App | `app_id` | Product surface or deployment | `"ios_retail_app"` |
+| Session | `run_id` | Short-lived flow or thread | `"ticket-9241"` |
+
+### Storage model
+
+Each entity combination creates separate records. A memory with `user_id="alice"` is stored separately from one with `user_id="alice"` + `agent_id="bot"`.
+
+### Critical: cross-entity queries
+
+```python
+# This returns NOTHING — user and agent memories are stored separately
+filters={"AND": [{"user_id": "alice"}, {"agent_id": "bot"}]}
+
+# Use OR to query multiple scopes
+filters={"OR": [{"user_id": "alice"}, {"agent_id": "bot"}]}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 400ms:
+import asyncio
+import gc
+import hashlib
+import json
+import logging
+import os
+import uuid
+import warnings
+from copy import deepcopy
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
+from pydantic import ValidationError
+
+from mem0.configs.base import MemoryConfig, MemoryItem
+from mem0.configs.enums import MemoryType
+from mem0.configs.prompts import (
+    ADDITIVE_EXTRACTION_PROMPT,
+    AGENT_CONTEXT_SUFFIX,
+    PROCEDURAL_MEMORY_SYSTEM_PROMPT,
+    generate_additive_extraction_prompt,
+)
+from mem0.exceptions import ValidationError as Mem0ValidationError
+from mem0.memory.base import MemoryBase
+from mem0.memory.setup import mem0_dir, setup_config
+from mem0.memory.storage import SQLiteManager
+from mem0.memory.telemetry import MEM0_TELEMETRY, capture_event
+from mem0.memory.utils import (
+    extract_json,
+    parse_messages,
+    parse_vision_messages,
+    process_telemetry_filters,
+    remove_code_blocks,
+)
+from mem0.utils.entity_extraction import extract_entities, extract_entities_batch
+from mem0.utils.factory import (
+    EmbedderFactory,
+    LlmFactory,
+    RerankerFactory,
+    VectorStoreFactory,
+)
+from mem0.utils.lemmatization import lemmatize_for_bm25
+from mem0.utils.scoring import (
+    ENTITY_BOOST_WEIGHT,
+    get_bm25_params,
+    normalize_bm25,
+    score_and_rank,
+)
+
+# Suppress SWIG deprecation warnings globally
+warnings.filterwarnings("ignore", category=DeprecationWarning, message=".*SwigPy.*")
+warnings.filterwarnings("ignore", category=DeprecationWarning, message=".*swigvarlink.*")
+
+# Initialize logger early for util functions
+logger = logging.getLogger(__name__)
+
+
+# Fields that hold runtime auth/connection objects and must be preserved.
+# These are non-serializable objects (e.g. AWSV4SignerAuth, RequestsHttpConnection)
+# needed by clients like OpenSearch — not sensitive strings to redact.
+_RUNTIME_FIELDS = frozenset({
+    "http_auth",
+    "auth",
+    "connection_class",
+    "ssl_context",
+})
+
+# Fields that are known to contain sensitive secrets and must be redacted.
+_SENSITIVE_FIELDS_EXACT = frozenset({
+    "api_key",
+    "secret_key",
+    "private_key",
+    "access_key",
+    "password",
+    "credentials",
+    "credential",
+    "secret",
+    "token",
+    "access_token",
+    "refresh_token",
+    "auth_token",
+    "session_token",
+    "client_secret",
+    "auth_client_secret",
+    "azure_client_secret",
+    "service_account_json",
+    "aws_session_token",
+})
+
+# Suffixes that indicate a field likely holds a secret value.
+_SENSITIVE_SUFFIXES = (
+    "_password",
+    "_secret",
+    "_token",
+    "_credential",
+    "_credentials",
+)
+
+# Entity parameters that must be passed via filters, not top-level kwargs
+ENTITY_PARAMS = frozenset({"user_id", "agent_id", "run_id"})
+
+
+def _reject_top_level_entity_params(kwargs: Dict[str, Any], method_name: str) -> None:
+    """Reject top-level entity parameters - must use filters instead."""
+    invalid_keys = ENTITY_PARAMS & set(kwargs.keys())
+    if invalid_keys:
+        raise ValueError(
+            f"Top-level entity parameters {invalid_keys} are not supported in {method_name}(). "
+            f"Use filters={{'user_id': '...'}} instead."
+        )
+
+
+def _validate_and_trim_entity_id(value: Optional[str], name: str) -> Optional[str]:
+    """
+    Validates and normalizes an entity ID.
+    - Trims leading/trailing whitespace
+    - Rejects empty or whitespace-only strings
+    - Rejects strings containing internal whitespace
+
+    Args:
+        value: The entity ID value to validate
+        name: The parameter name (for error messages)
+
+    Returns:
+        The trimmed entity ID, or None if input is None
+
+    Raises:
+        ValueError: If entity ID is invalid
+    """
+    if value is None:
+        return None
+    trimmed = value.strip()
+    if trimmed == "":
+        raise ValueError(
+            f"Invalid {name}: cannot be empty or whitespace-only. Provide a valid identifier."
+        )
+    if any(c.isspace() for c in trimmed):
+        raise ValueError(
+            f"Invalid {name}: cannot contain whitespace. Provide a valid identifier without spaces."
+        )
+    return trimmed
+
+
+def _validate_search_params(threshold: Optional[float] = None, top_k: Optional[int] = None) -> None:
+    """
+    Validates search parameters.
+
+    Args:
+        threshold: Similarity threshold (must be between 0 and 1)
+        top_k: Number of results to return (must be non-negative integer)
+
+    Raises:
+        ValueError: If threshold or top_k are invalid
+    """
+    if threshold is not None:
+        if not isinstance(threshold, (int, float)):
+            raise ValueError("threshold must be a valid number")
+        if threshold < 0 or threshold > 1:
+            raise ValueError(
+                f"Invalid threshold: {threshold}. Must be between 0 and 1 (inclusive)."
+            )
+    if top_k is not None:
+        if not isinstance(top_k, int) or isinstance(top_k, bool):
+            raise ValueError("top_k must be a valid integer")
+        if top_k < 0:
+            raise ValueError(
+                f"Invalid top_k: {top_k}. Must be a non-negative integer."
+            )
+
+
+def _is_sensitive_field(field_name: str) -> bool:
+    """Check if a field should be redacted for telemetry safety.
+
+    Uses a layered approach:
+    1. Runtime fields (allowlist) — always preserved, highest priority.
+    2. Exact deny list — known secret field names.
+    3. Suffix deny list — catches patterns like db_password, auth_secret, etc.
+    """
+    name = field_name.lower().strip()
+    if name in _RUNTIME_FIELDS:
+        return False
+    if name in _SENSITIVE_FIELDS_EXACT:
+        return True
+    return any(name.endswith(suffix) for suffix in _SENSITIVE_SUFFIXES)
+
+
+def _safe_deepcopy_config(config):
+    """Safely deepcopy config, falling back to dict-based cloning for non-serializable objects."""
+    try:
+        return deepcopy(config)
+    except Exception as e:
+        logger.debug(f"Deepcopy failed, using dict-based cloning: {e}")
+
+        config_class = type(config)
+
+        if hasattr(config, "model_dump"):
+            try:
+                clone_dict = config.model_dump()
+            except Exception:
+                clone_dict = dict(config.__dict__)
+        else:
+            clone_dict = dict(config.__dict__)
+
+        # Restore runtime fields, redact sensitive ones
+        for field_name in list(clone_dict.keys()):
+            if field_name in _RUNTIME_FIELDS and hasattr(config, field_name):
+                clone_dict[field_name] = getattr(config, field_name)
+            elif _is_sensitive_field(field_name):
+                clone_dict[field_name] = None
+
+        try:
+            return config_class(**clone_dict)
+        except Exception:
+            logger.debug("Config reconstruction failed, returning shallow dict clone")
+            return type("Config", (), clone_dict)()
+
+
+def _normalize_iso_timestamp_to_utc(timestamp: Optional[str]) -> Optional[str]:
+    """Normalize timezone-aware ISO timestamps to UTC without rewriting naive values."""
+    if not timestamp:
+        return timestamp
+    try:
+        parsed = datetime.fromisoformat(timestamp)
+    except ValueError:
+        return timestamp
+    if parsed.tzinfo is None:
+        return timestamp
+    return parsed.astimezone(timezone.utc).isoformat()
+
+
+def _build_filters_and_metadata(
+    *,  # Enforce keyword-only arguments
+    user_id: Optional[str] = None,
+    agent_id: Optional[str] = None,
+    run_id: Optional[str] = None,
+    actor_id: Optional[str] = None,  # For query-time filtering
+    input_metadata: Optional[Dict[str, Any]] = None,
+    input_filters: Optional[Dict[str, Any]] = None,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    """
+    Constructs metadata for storage and filters for querying based on session and actor identifiers.
+
+    This helper supports multiple session identifiers (`user_id`, `agent_id`, and/or `run_id`)
+    for flexible session scoping and optionally narrows queries to a specific `actor_id`. It returns two dicts:
+
+    1. `base_metadata_template`: Used as a template for metadata when storing new memories.
+       It includes all provided session identifier(s) and any `input_metadata`.
+    2. `effective_query_filters`: Used for querying existing memories. It includes all
+       provided session identifier(s), any `input_filters`, and a resolved actor
+       identifier for targeted filtering if specified by any actor-related inputs.
+
+    Actor filtering precedence: explicit `actor_id` arg → `filters["actor_id"]`
+    This resolved actor ID is used for querying but is not added to `base_metadata_template`,
+    as the actor for storage is typically derived from message content at a later stage.
+
+    Args:
+        user_id (Optional[str]): User identifier, for session scoping.
+        agent_id (Optional[str]): Agent identifier, for session scoping.
+        run_id (Optional[str]): Run identifier, for session scoping.
+        actor_id (Optional[str]): Explicit actor identifier, used as a potential source for
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/mem0ai/mem0/main/mem0/memory/main.py | sed -n '350,620p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/letta-ai/letta/main/letta/services/passage_manager.py | grep -n \"insert_passage\\|embedding\\|Deduplicate\\|create_agent_passage\\|archive\" | head -120" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/mem0ai/mem0/main/mem0/memory/main.py | grep -n \"def add\\|existing_memories\\|_create_memory\\|hash\\|dedup\\|deduplicate\\|delete_memory\\|update_memory\" | head -120" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 108ms:
+28:from letta.services.archive_manager import ArchiveManager
+35:async def get_openai_embedding_async(text: str, model: str, endpoint: str) -> list[float]:
+39:    response = await client.embeddings.create(input=text, model=model)
+40:    return response.data[0].embedding
+47:        self.archive_manager = ArchiveManager()
+53:        archive_id: str,
+73:                archive_id=archive_id,
+134:    async def create_agent_passage_async(self, pydantic_passage: PydanticPassage, actor: PydanticUser) -> PydanticPassage:
+136:        if not pydantic_passage.archive_id:
+137:            raise ValueError("Agent passage must have archive_id")
+143:        # Deduplicate tags if provided (for dual storage consistency)
+148:        # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+149:        embedding = data["embedding"]
+150:        if embedding:
+157:                np_embedding = np.array(embedding)
+158:                if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+159:                    embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+170:            "embedding": embedding,
+171:            "embedding_config": data["embedding_config"],
+178:        agent_fields = {"archive_id": data["archive_id"]}
+189:                    archive_id=passage.archive_id,
+199:    async def create_agent_passages_async(self, pydantic_passages: List[PydanticPassage], actor: PydanticUser) -> List[PydanticPassage]:
+221:            if not pydantic_passage.archive_id:
+222:                raise ValueError("Agent passage must have archive_id")
+228:            # Deduplicate tags if provided (for dual storage consistency)
+234:            # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+235:            embedding = data["embedding"]
+236:            if embedding and not use_tpuf:
+237:                np_embedding = np.array(embedding)
+238:                if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+239:                    embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+250:                "embedding": embedding,
+251:                "embedding_config": data["embedding_config"],
+258:            agent_fields = {"archive_id": data["archive_id"]}
+276:                    archive_id=created_passage.archive_id,
+292:        if pydantic_passage.archive_id:
+293:            raise ValueError("Source passage cannot have archive_id")
+297:        # Deduplicate tags if provided (for dual storage consistency)
+302:        # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+303:        embedding = data["embedding"]
+304:        if embedding:
+311:                np_embedding = np.array(embedding)
+312:                if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+313:                    embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+324:            "embedding": embedding,
+325:            "embedding_config": data["embedding_config"],
+346:        """DEPRECATED: Use create_agent_passage_async() or create_source_passage_async() instead."""
+347:        logger.warning("create_passage_async is deprecated. Use create_agent_passage_async() or create_source_passage_async() instead.")
+361:            "embedding": data["embedding"],
+362:            "embedding_config": data["embedding_config"],
+370:        if data.get("archive_id"):
+371:            assert not data.get("source_id"), "Passage cannot have both archive_id and source_id"
+373:                "archive_id": data["archive_id"],
+377:            assert not data.get("archive_id"), "Passage cannot have both archive_id and source_id"
+384:            raise ValueError("Passage must have either archive_id or source_id")
+392:        return [self.create_agent_passage(p, actor) for p in passages]
+400:            if not p.archive_id:
+401:                raise ValueError("Archival passage must have archive_id")
+407:            # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (only when using Postgres as vector DB)
+408:            embedding = data["embedding"]
+409:            if embedding:
+416:                    np_embedding = np.array(embedding)
+417:                    if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+418:                        embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+423:                "embedding": embedding,
+424:                "embedding_config": data["embedding_config"],
+431:            archival_fields = {"archive_id": data["archive_id"]}
+456:            if p.archive_id:
+457:                raise ValueError("Source passage cannot have archive_id")
+461:            # Pad embeddings to MAX_EMBEDDING_DIM for pgvector (always pad when writing to Postgres)
+462:            embedding = data["embedding"]
+463:            if embedding:
+470:                    np_embedding = np.array(embedding)
+471:                    if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+472:                        embedding = np.pad(np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant").tolist()
+477:                "embedding": embedding,
+478:                "embedding_config": data["embedding_config"],
+543:    async def insert_passage(
+555:            agent_state: Agent state for embedding configuration
+563:        # Get or create the default archive for the agent
+564:        archive = await self.archive_manager.get_or_create_default_archive_for_agent_async(agent_state=agent_state, actor=actor)
+566:        # TODO: check to make sure token count is okay for embedding model
+573:            # Generate embeddings if embedding config is available
+574:            if agent_state.embedding_config is not None:
+575:                embedding_client = LLMClient.create(
+576:                    provider_type=agent_state.embedding_config.embedding_endpoint_type,
+579:                embeddings = await embedding_client.request_embeddings(text_chunks, agent_state.embedding_config)
+581:                # No embedding config - store passages without embeddings (text search only)
+582:                embeddings = [None] * len(text_chunks)
+587:            for chunk_text, embedding in zip(text_chunks, embeddings):
+590:                    "archive_id": archive.id,
+592:                    "embedding": embedding,
+593:                    "embedding_config": agent_state.embedding_config,
+600:                passage = await self.create_agent_passage_async(
+606:            # If archive uses Turbopuffer, also write to Turbopuffer (dual-write)
+607:            if archive.vector_db_provider == VectorDBProvider.TPUF:
+613:                    # Extract IDs, texts, and embeddings from the created passages
+616:                    passage_embeddings = [p.embedding for p in passages]
+618:                    # Insert to Turbopuffer with the same IDs as SQL, reusing existing embeddings
+620:                        archive_id=archive.id,
+627:                        embeddings=passage_embeddings,
+639:    async def _generate_embeddings_concurrent(self, text_chunks: List[str], embedding_config, actor: PydanticUser) -> List[List[float]]:
+640:        """Generate embeddings for all text chunks concurrently using LLMClient"""
+642:        embedding_client = LLMClient.create(
+643:            provider_type=embedding_config.embedding_endpoint_type,
+647:        embeddings = await embedding_client.request_embeddings(text_chunks, embedding_config)
+648:        return embeddings
+675:                # Deduplicate tags
+689:                        archive_id=curr_passage.archive_id,
+698:            # Pad embeddings if needed (only when using Postgres as vector DB)
+699:            if update_data.get("embedding"):
+706:                    embedding = update_data["embedding"]
+707:                    np_embedding = np.array(embedding)
+708:                    if np_embedding.shape[0] != MAX_EMBEDDING_DIM:
+709:                        update_data["embedding"] = np.pad(
+710:                            np_embedding, (0, MAX_EMBEDDING_DIM - np_embedding.shape[0]), mode="constant"
+743:            # Pad embeddings if needed (only when using Postgres as vector DB)
+744:            if update_data.get("embedding"):
+751:                    embedding = update_data["embedding"]
+752:                    np_embedding = np.array(embedding)
+
+ succeeded in 133ms:
+        self.reranker = None
+        if config.reranker:
+            self.reranker = RerankerFactory.create(
+                config.reranker.provider,
+                config.reranker.config
+            )
+
+        # Entity store is initialized lazily on first use
+        self._entity_store = None
+
+        if MEM0_TELEMETRY:
+            # Create telemetry config manually to avoid deepcopy issues with thread locks
+            telemetry_config_dict = {}
+            if hasattr(self.config.vector_store.config, 'model_dump'):
+                # For pydantic models
+                telemetry_config_dict = self.config.vector_store.config.model_dump()
+            else:
+                # For other objects, manually copy common attributes
+                for attr in ['host', 'port', 'path', 'api_key', 'index_name', 'dimension', 'metric']:
+                    if hasattr(self.config.vector_store.config, attr):
+                        telemetry_config_dict[attr] = getattr(self.config.vector_store.config, attr)
+
+            # Override collection name for telemetry
+            telemetry_config_dict['collection_name'] = "mem0migrations"
+
+            # Set path for file-based vector stores
+            telemetry_config = _safe_deepcopy_config(self.config.vector_store.config)
+            if self.config.vector_store.provider in ["faiss", "qdrant"]:
+                provider_path = f"migrations_{self.config.vector_store.provider}"
+                telemetry_config_dict['path'] = os.path.join(mem0_dir, provider_path)
+                os.makedirs(telemetry_config_dict['path'], exist_ok=True)
+
+            # Create the config object using the same class as the original
+            telemetry_config = self.config.vector_store.config.__class__(**telemetry_config_dict)
+            self._telemetry_vector_store = VectorStoreFactory.create(
+                self.config.vector_store.provider, telemetry_config
+            )
+        capture_event("mem0.init", self, {"sync_type": "sync"})
+
+    @property
+    def entity_store(self):
+        """Lazily initialize entity store on first use."""
+        if self._entity_store is None:
+            entity_config = _safe_deepcopy_config(self.config.vector_store.config)
+            entity_collection = f"{self.collection_name}_entities"
+            # Set collection name on the cloned config
+            if hasattr(entity_config, 'collection_name'):
+                entity_config.collection_name = entity_collection
+            elif isinstance(entity_config, dict):
+                entity_config['collection_name'] = entity_collection
+            # For Qdrant, share the existing client to avoid RocksDB lock contention
+            # when using embedded mode (path=...). QdrantConfig.client takes precedence
+            # over host/port/path.
+            if self.config.vector_store.provider == "qdrant" and hasattr(self.vector_store, "client"):
+                if hasattr(entity_config, "client"):
+                    entity_config.client = self.vector_store.client
+                elif isinstance(entity_config, dict):
+                    entity_config["client"] = self.vector_store.client
+            self._entity_store = VectorStoreFactory.create(
+                self.config.vector_store.provider, entity_config
+            )
+        return self._entity_store
+
+    def _upsert_entity(self, entity_text, entity_type, memory_id, filters):
+        """Upsert an entity into the entity store, linking it to a memory."""
+        try:
+            entity_embedding = self.embedding_model.embed(entity_text, "add")
+            search_filters = {k: v for k, v in filters.items() if k in ("user_id", "agent_id", "run_id") and v}
+
+            existing = self.entity_store.search(
+                query=entity_text,
+                vectors=entity_embedding,
+                top_k=1,
+                filters=search_filters,
+            )
+
+            if existing and existing[0].score >= 0.95:
+                # Update existing entity's linked_memory_ids
+                match = existing[0]
+                payload = match.payload or {}
+                linked_ids = payload.get("linked_memory_ids", [])
+                if memory_id not in linked_ids:
+                    linked_ids.append(memory_id)
+                    payload["linked_memory_ids"] = linked_ids
+                    self.entity_store.update(
+                        vector_id=match.id,
+                        vector=None,
+                        payload=payload,
+                    )
+            else:
+                # Create new entity
+                entity_id = str(uuid.uuid4())
+                entity_payload = {
+                    "data": entity_text,
+                    "entity_type": entity_type,
+                    "linked_memory_ids": [memory_id],
+                    **{k: v for k, v in search_filters.items()},
+                }
+                self.entity_store.insert(
+                    vectors=[entity_embedding],
+                    ids=[entity_id],
+                    payloads=[entity_payload],
+                )
+        except Exception as e:
+            logger.warning(f"Entity upsert failed for '{entity_text}': {e}")
+
+    def _remove_memory_from_entity_store(self, memory_id, filters):
+        """Strip `memory_id` from every entity record scoped to `filters`.
+
+        For each entity whose `linked_memory_ids` contains `memory_id`:
+          - remove the id; if the list becomes empty, delete the entity record.
+          - otherwise re-embed the entity text and update the payload
+            (the vector store's update() requires a vector).
+
+        No-op if the entity store has never been initialized in this process.
+        Errors on individual entities are swallowed at debug level; outer
+        failures are swallowed at warning level so the primary delete/update
+        path is never broken by entity cleanup.
+        """
+        if self._entity_store is None:
+            return
+        search_filters = {k: v for k, v in filters.items() if k in ("user_id", "agent_id", "run_id") and v}
+        try:
+            listed = self.entity_store.list(filters=search_filters, top_k=10000)
+            rows = listed[0] if isinstance(listed, (list, tuple)) and listed and isinstance(listed[0], list) else listed
+            for row in rows or []:
+                try:
+                    payload = getattr(row, "payload", None) or {}
+                    linked = payload.get("linked_memory_ids", [])
+                    if not isinstance(linked, list) or memory_id not in linked:
+                        continue
+                    remaining = [mid for mid in linked if mid != memory_id]
+                    if not remaining:
+                        try:
+                            self.entity_store.delete(vector_id=row.id)
+                        except Exception as e:
+                            logger.debug(f"Entity delete failed for id={row.id}: {e}")
+                    else:
+                        entity_text = payload.get("data")
+                        if not isinstance(entity_text, str) or not entity_text:
+                            logger.debug(f"Entity id={row.id} missing 'data'; skipping update during cleanup")
+                            continue
+                        try:
+                            vec = self.embedding_model.embed(entity_text, "update")
+                        except Exception as e:
+                            logger.debug(f"Entity re-embed failed for '{entity_text}': {e}")
+                            continue
+                        new_payload = {**payload, "linked_memory_ids": remaining}
+                        try:
+                            self.entity_store.update(
+                                vector_id=row.id,
+                                vector=vec,
+                                payload=new_payload,
+                            )
+                        except Exception as e:
+                            logger.debug(f"Entity update failed for id={row.id}: {e}")
+                except Exception as e:
+                    logger.debug(f"Entity cleanup error: {e}")
+        except Exception as e:
+            logger.warning(f"Entity store cleanup failed for memory_id={memory_id}: {e}")
+
+    def _link_entities_for_memory(self, memory_id, text, filters):
+        """Extract entities from `text` and link them to `memory_id` in the
+        entity store, scoped to `filters`. Simpler single-memory variant of
+        Phase 7 in add(): per-entity search-then-update-or-insert via the
+        existing `_upsert_entity` helper. Non-fatal on any failure.
+        """
+        try:
+            entities = extract_entities(text)
+            if not entities:
+                return
+            seen = set()
+            for entity_type, entity_text in entities:
+                key = entity_text.strip().lower()
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                try:
+                    self._upsert_entity(entity_text, entity_type, memory_id, filters)
+                except Exception as e:
+                    logger.debug(f"Entity link failed for '{entity_text}': {e}")
+        except Exception as e:
+            logger.warning(f"Entity linking failed for memory_id={memory_id}: {e}")
+
+    @classmethod
+    def from_config(cls, config_dict: Dict[str, Any]):
+        try:
+            config = cls._process_config(config_dict)
+            config = MemoryConfig(**config_dict)
+        except ValidationError as e:
+            logger.error(f"Configuration validation error: {e}")
+            raise
+        return cls(config)
+
+    @staticmethod
+    def _process_config(config_dict: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            return config_dict
+        except ValidationError as e:
+            logger.error(f"Configuration validation error: {e}")
+            raise
+
+    def _should_use_agent_memory_extraction(self, messages, metadata):
+        """Determine whether to use agent memory extraction based on the logic:
+        - If agent_id is present and messages contain assistant role -> True
+        - Otherwise -> False
+
+        Args:
+            messages: List of message dictionaries
+            metadata: Metadata containing user_id, agent_id, etc.
+
+        Returns:
+            bool: True if should use agent memory extraction, False for user memory extraction
+        """
+        # Check if agent_id is present in metadata
+        has_agent_id = metadata.get("agent_id") is not None
+
+        # Check if there are assistant role messages
+        has_assistant_messages = any(msg.get("role") == "assistant" for msg in messages)
+
+        # Use agent memory extraction if agent_id is present and there are assistant messages
+        return has_agent_id and has_assistant_messages
+
+    def add(
+        self,
+        messages,
+        *,
+        user_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        run_id: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        infer: bool = True,
+        memory_type: Optional[str] = None,
+        prompt: Optional[str] = None,
+    ):
+        """
+        Create a new memory.
+
+        Adds new memories scoped to a single session id (e.g. `user_id`, `agent_id`, or `run_id`). One of those ids is required.
+
+        Args:
+            messages (str or List[Dict[str, str]]): The message content or list of messages
+                (e.g., `[{"role": "user", "content": "Hello"}, {"role": "assistant", "content": "Hi"}]`)
+                to be processed and stored.
+            user_id (str, optional): ID of the user creating the memory. Defaults to None.
+            agent_id (str, optional): ID of the agent creating the memory. Defaults to None.
+            run_id (str, optional): ID of the run creating the memory. Defaults to None.
+            metadata (dict, optional): Metadata to store with the memory. Defaults to None.
+            infer (bool, optional): If True (default), an LLM is used to extract key facts from
+                'messages' and decide whether to add, update, or delete related memories.
+                If False, 'messages' are added as raw memories directly.
+            memory_type (str, optional): Specifies the type of memory. Currently, only
+                `MemoryType.PROCEDURAL.value` ("procedural_memory") is explicitly handled for
+                creating procedural memories (typically requires 'agent_id'). Otherwise, memories
+                are treated as general conversational/factual memories.
+            prompt (str, optional): Prompt to use for the memory creation. Defaults to None.
+
+
+        Returns:
+            dict: A dictionary containing the result of the memory addition operation, typically
+                  including a list of memory items affected (added, updated) under a "results" key.
+                  Example for v1.1+: `{"results": [{"id": "...", "memory": "...", "event": "ADD"}]}`
+
+        Raises:
+            Mem0ValidationError: If input validation fails (invalid memory_type, messages format, etc.).
+            VectorStoreError: If vector store operations fail.
+            EmbeddingError: If embedding generation fails.
+            LLMError: If LLM operations fail.
+            DatabaseError: If database operations fail.
+        """
+
+
+ succeeded in 121ms:
+3:import hashlib
+573:    def add(
+686:                mem_id = self._create_memory(msg_content, {msg_content: msg_embeddings}, per_msg_meta)
+717:        existing_memories = []
+721:            existing_memories.append({"id": str(idx), "text": mem.payload.get("data", "")})
+732:            existing_memories=existing_memories,
+784:        # Phase 4: Per-memory CPU processing + Phase 5: Hash dedup
+785:        # Build set of existing hashes for dedup
+786:        existing_hashes = set()
+788:            h = mem.payload.get("hash") if hasattr(mem, "payload") and mem.payload else None
+790:                existing_hashes.add(h)
+793:        seen_hashes = set()  # dedup within the current batch
+799:            mem_hash = hashlib.md5(text.encode()).hexdigest()
+800:            if mem_hash in existing_hashes or mem_hash in seen_hashes:
+801:                logger.debug(f"Skipping duplicate memory (hash match): {text[:50]}")
+803:            seen_hashes.add(mem_hash)
+811:            mem_metadata["hash"] = mem_hash
+870:            # 7a: Global dedup — collect unique entities across all memories
+996:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+1001:            hash=memory.payload.get("hash"),
+1102:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+1109:                hash=mem.payload.get("hash"),
+1408:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+1420:                hash=payload.get("hash"),
+1453:        deduped = []
+1458:                deduped.append((entity_type, entity_text))
+1460:        if not deduped:
+1467:            for _, entity_text in deduped:
+1521:        self._update_memory(memory_id, data, existing_embeddings, metadata)
+1537:        self._delete_memory(memory_id, existing_memory)
+1567:            self._delete_memory(memory.id)
+1586:    def _create_memory(self, data, existing_embeddings, metadata=None):
+1595:        new_metadata["hash"] = hashlib.md5(data.encode()).hexdigest()
+1650:        memory_id = self._create_memory(procedural_memory, {procedural_memory: embeddings}, metadata=metadata)
+1657:    def _update_memory(self, memory_id, data, existing_embeddings, metadata=None):
+1674:        new_metadata["hash"] = hashlib.md5(data.encode()).hexdigest()
+1722:    def _delete_memory(self, memory_id, existing_memory=None):
+2003:    async def add(
+2101:                mem_id = await self._create_memory(msg_content, {msg_content: msg_embeddings}, per_msg_meta)
+2133:        existing_memories = []
+2137:            existing_memories.append({"id": str(idx), "text": mem.payload.get("data", "")})
+2148:            existing_memories=existing_memories,
+2199:        # Phase 4: Per-memory CPU processing + Phase 5: Hash dedup
+2200:        existing_hashes = set()
+2202:            h = mem.payload.get("hash") if hasattr(mem, "payload") and mem.payload else None
+2204:                existing_hashes.add(h)
+2207:        seen_hashes = set()
+2213:            mem_hash = hashlib.md5(text.encode()).hexdigest()
+2214:            if mem_hash in existing_hashes or mem_hash in seen_hashes:
+2215:                logger.debug(f"Skipping duplicate memory (hash match, async): {text[:50]}")
+2217:            seen_hashes.add(mem_hash)
+2225:            mem_metadata["hash"] = mem_hash
+2286:            # 7a: Global dedup
+2411:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+2416:            hash=memory.payload.get("hash"),
+2517:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+2524:                hash=mem.payload.get("hash"),
+2827:        core_and_promoted_keys = {"data", "hash", "created_at", "updated_at", "id", "text_lemmatized", "attributed_to", *promoted_payload_keys}
+2838:                hash=payload.get("hash"),
+2861:        deduped = []
+2866:                deduped.append((entity_type, entity_text))
+2868:        if not deduped:
+2875:            for _, entity_text in deduped:
+2930:        await self._update_memory(memory_id, data, existing_embeddings, metadata)
+2946:        await self._delete_memory(memory_id, existing_memory)
+2977:            delete_tasks.append(self._delete_memory(memory.id))
+2998:    async def _create_memory(self, data, existing_embeddings, metadata=None):
+3008:        new_metadata["hash"] = hashlib.md5(data.encode()).hexdigest()
+3081:        memory_id = await self._create_memory(procedural_memory, {procedural_memory: embeddings}, metadata=metadata)
+3088:    async def _update_memory(self, memory_id, data, existing_embeddings, metadata=None):
+3105:        new_metadata["hash"] = hashlib.md5(data.encode()).hexdigest()
+3156:    async def _delete_memory(self, memory_id, existing_memory=None):
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L -s https://raw.githubusercontent.com/mem0ai/mem0/main/mem0/memory/main.py | sed -n '620,840p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 106ms:
+
+        processed_metadata, effective_filters = _build_filters_and_metadata(
+            user_id=user_id,
+            agent_id=agent_id,
+            run_id=run_id,
+            input_metadata=metadata,
+        )
+
+        if memory_type is not None and memory_type != MemoryType.PROCEDURAL.value:
+            raise Mem0ValidationError(
+                message=f"Invalid 'memory_type'. Please pass {MemoryType.PROCEDURAL.value} to create procedural memories.",
+                error_code="VALIDATION_002",
+                details={"provided_type": memory_type, "valid_type": MemoryType.PROCEDURAL.value},
+                suggestion=f"Use '{MemoryType.PROCEDURAL.value}' to create procedural memories."
+            )
+
+        if isinstance(messages, str):
+            messages = [{"role": "user", "content": messages}]
+
+        elif isinstance(messages, dict):
+            messages = [messages]
+
+        elif not isinstance(messages, list):
+            raise Mem0ValidationError(
+                message="messages must be str, dict, or list[dict]",
+                error_code="VALIDATION_003",
+                details={"provided_type": type(messages).__name__, "valid_types": ["str", "dict", "list[dict]"]},
+                suggestion="Convert your input to a string, dictionary, or list of dictionaries."
+            )
+
+        if agent_id is not None and memory_type == MemoryType.PROCEDURAL.value:
+            results = self._create_procedural_memory(messages, metadata=processed_metadata, prompt=prompt)
+            return results
+
+        if self.config.llm.config.get("enable_vision"):
+            messages = parse_vision_messages(messages, self.llm, self.config.llm.config.get("vision_details"))
+        else:
+            messages = parse_vision_messages(messages)
+
+        vector_store_result = self._add_to_vector_store(messages, processed_metadata, effective_filters, infer, prompt=prompt)
+        return {"results": vector_store_result}
+
+    def _add_to_vector_store(self, messages, metadata, filters, infer, prompt=None):
+        if not infer:
+            returned_memories = []
+            for message_dict in messages:
+                if (
+                    not isinstance(message_dict, dict)
+                    or message_dict.get("role") is None
+                    or message_dict.get("content") is None
+                ):
+                    logger.warning(f"Skipping invalid message format: {message_dict}")
+                    continue
+
+                if message_dict["role"] == "system":
+                    continue
+
+                per_msg_meta = deepcopy(metadata)
+                per_msg_meta["role"] = message_dict["role"]
+
+                actor_name = message_dict.get("name")
+                if actor_name:
+                    per_msg_meta["actor_id"] = actor_name
+
+                msg_content = message_dict["content"]
+                msg_embeddings = self.embedding_model.embed(msg_content, "add")
+                mem_id = self._create_memory(msg_content, {msg_content: msg_embeddings}, per_msg_meta)
+
+                returned_memories.append(
+                    {
+                        "id": mem_id,
+                        "memory": msg_content,
+                        "event": "ADD",
+                        "actor_id": actor_name if actor_name else None,
+                        "role": message_dict["role"],
+                    }
+                )
+            return returned_memories
+
+        # === V3 PHASED BATCH PIPELINE ===
+
+        # Phase 0: Context gathering
+        session_scope = _build_session_scope(filters)
+        last_messages = self.db.get_last_messages(session_scope, limit=10)
+        parsed_messages = parse_messages(messages)
+
+        # Phase 1: Existing memory retrieval
+        search_filters = {k: v for k, v in filters.items() if k in ("user_id", "agent_id", "run_id") and v}
+        query_embedding = self.embedding_model.embed(parsed_messages, "search")
+        existing_results = self.vector_store.search(
+            query=parsed_messages,
+            vectors=query_embedding,
+            top_k=10,
+            filters=search_filters,
+        )
+
+        # Map UUIDs to integers (anti-hallucination)
+        existing_memories = []
+        uuid_mapping = {}
+        for idx, mem in enumerate(existing_results):
+            uuid_mapping[str(idx)] = mem.id
+            existing_memories.append({"id": str(idx), "text": mem.payload.get("data", "")})
+
+        # Phase 2: LLM extraction (single call)
+        is_agent_scoped = bool(filters.get("agent_id")) and not filters.get("user_id")
+        system_prompt = ADDITIVE_EXTRACTION_PROMPT
+        if is_agent_scoped:
+            system_prompt += AGENT_CONTEXT_SUFFIX
+
+        custom_instr = prompt or self.custom_instructions
+
+        user_prompt = generate_additive_extraction_prompt(
+            existing_memories=existing_memories,
+            new_messages=parsed_messages,
+            last_k_messages=last_messages,
+            custom_instructions=custom_instr,
+        )
+
+        try:
+            response = self.llm.generate_response(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                response_format={"type": "json_object"},
+            )
+        except Exception as e:
+            logger.error(f"LLM extraction failed: {e}")
+            return []
+
+        # Parse response
+        try:
+            response = remove_code_blocks(response)
+            if not response or not response.strip():
+                extracted_memories = []
+            else:
+                try:
+                    extracted_memories = json.loads(response, strict=False).get("memory", [])
+                except json.JSONDecodeError:
+                    extracted_json = extract_json(response)
+                    extracted_memories = json.loads(extracted_json, strict=False).get("memory", [])
+        except Exception as e:
+            logger.error(f"Error parsing extraction response: {e}")
+            extracted_memories = []
+
+        if not extracted_memories:
+            # Save messages even if nothing extracted
+            self.db.save_messages(messages, session_scope)
+            return []
+
+        # Phase 3: Batch embed all extracted memory texts
+        mem_texts = [m.get("text", "") for m in extracted_memories if m.get("text")]
+        try:
+            mem_embeddings_list = self.embedding_model.embed_batch(mem_texts, "add")
+            embed_map = dict(zip(mem_texts, mem_embeddings_list))
+        except Exception:
+            # Fallback: embed individually
+            embed_map = {}
+            for text in mem_texts:
+                try:
+                    embed_map[text] = self.embedding_model.embed(text, "add")
+                except Exception as e:
+                    logger.warning(f"Failed to embed memory text: {e}")
+
+        # Phase 4: Per-memory CPU processing + Phase 5: Hash dedup
+        # Build set of existing hashes for dedup
+        existing_hashes = set()
+        for mem in existing_results:
+            h = mem.payload.get("hash") if hasattr(mem, "payload") and mem.payload else None
+            if h:
+                existing_hashes.add(h)
+
+        records = []  # (memory_id, text, embedding, payload)
+        seen_hashes = set()  # dedup within the current batch
+        for mem in extracted_memories:
+            text = mem.get("text")
+            if not text or text not in embed_map:
+                continue
+
+            mem_hash = hashlib.md5(text.encode()).hexdigest()
+            if mem_hash in existing_hashes or mem_hash in seen_hashes:
+                logger.debug(f"Skipping duplicate memory (hash match): {text[:50]}")
+                continue
+            seen_hashes.add(mem_hash)
+
+            text_lemmatized = lemmatize_for_bm25(text)
+
+            memory_id = str(uuid.uuid4())
+            mem_metadata = deepcopy(metadata)
+            mem_metadata["data"] = text
+            mem_metadata["text_lemmatized"] = text_lemmatized
+            mem_metadata["hash"] = mem_hash
+            if "created_at" not in mem_metadata:
+                mem_metadata["created_at"] = datetime.now(timezone.utc).isoformat()
+            mem_metadata["updated_at"] = mem_metadata["created_at"]
+            if mem.get("attributed_to"):
+                mem_metadata["attributed_to"] = mem["attributed_to"]
+
+            records.append((memory_id, text, embed_map[text], mem_metadata))
+
+        if not records:
+            self.db.save_messages(messages, session_scope)
+            return []
+
+        # Phase 6: Batch persist
+        all_vectors = [r[2] for r in records]
+        all_ids = [r[0] for r in records]
+        all_payloads = [r[3] for r in records]
+
+        try:
+            self.vector_store.insert(
+                vectors=all_vectors,
+                ids=all_ids,
+                payloads=all_payloads,
+            )
+        except Exception:
+            # Fallback: insert one by one
+            for mid, vec, pay in zip(all_ids, all_vectors, all_payloads):
+                try:
+                    self.vector_store.insert(vectors=[vec], ids=[mid], payloads=[pay])
+                except Exception as e:
+
