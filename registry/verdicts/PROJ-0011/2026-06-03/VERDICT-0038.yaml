@@ -1,0 +1,81 @@
+verdict_id: VERDICT-0038
+claim_id: CLAIM-0040
+project_id: PROJ-0011
+date: '2026-06-03'
+experiment_ids:
+- EXP-0037
+experiment_paths:
+- experiments/2026-06-03/EXP-0037
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "(none fatal \u2014 unanimous yellow"
+- 'the inverse-of-EXP-0004 break-even is real algebra, model-internal triggers held)
+  GREEN blocked by: (1) PRIOR-ART INADEQUATE (novelty_killer egress-blocked): missing
+  citations to LLMCompiler (closest agent-latency-overlap), CALM (confidence-thresholded
+  early-commit lineage), Leviathan 2023 spec-decoding cost model (the algebraic ancestor
+  of p*)'
+- 'theory_skeptic: ''low p* in the lucrative regime'' is a tautology of gain-vs-penalty
+  algebra (textbook Smith1981/Lipasti1996), the only structural addition is the W
+  semantic-redo term'
+- "(2) ALL load-bearing EMPIRICAL premises unmeasured \u2014 hand-picked Beta content-position\
+  \ priors (no corpus calibration), (f_fl,rho,W) treated as independent grid (likely\
+  \ adversarially correlated \u2014 long log tails = low f_fl AND high rho AND high\
+  \ W together), zero-cost detector assumed, detector errors i.i.d."
+- (3) detectability proven NECESSARY not EXISTENT above chance
+- headline +12.1%/+47.9% are 7-seed point estimates w/ no CIs
+required_evidence:
+- "GATE the L1 with a CHEAP CORPUS-ONLY measurement FIRST (cost-aware gating \u2014\
+  \ NO detector training, NO GPU): real front-loading rate f_fl + real rho=T_stream/T_step\
+  \ on ACTUAL tool-result logs (API/JSON, search/RAG, code-exec, DB, log tails). IF\
+  \ real (f_fl,rho) do NOT land in the lucrative cells (f_fl>=0.3 AND rho>=1) -> KILL\
+  \ before any detector work"
+- "THEN if it clears: real partial-stream detector P(correct|fire) + fire-position\
+  \ d vs the (low) p* \u2014 does detectability EXIST above chance?"
+- "DUMB-TRUNCATION baseline showdown (drop stream at position X, never redo) \u2014\
+  \ if equivalent correctness, the early-commit/redo apparatus is unjustified complexity"
+- "INCREMENTAL-PREFILL baseline (vLLM chunked prefill / Orca \u2014 production does\
+  \ NOT block on EOF"
+- the serialize-then-read baseline is a strawman)
+- 'real W distribution + REVERSIBILITY (bimodal: most cheap, some catastrophic/irreversible
+  -> gate to side-effect-free steps)'
+- joint (f_fl,rho,W,reversibility) distribution
+- detector wall-time cost (tightens effective p*)
+- CIs on headline effects
+map_delta_proposals:
+- 'CLAIM-0040/PROJ-0011 -> HELD-PARTIAL/yellow. The FIRST fresh-axis survivor of L0
+  (inverse-of-EXP-0004 break-even, model-internal triggers held). GATE L1 with a CHEAP
+  corpus-only (f_fl, rho) measurement per cost-aware-gating: if real workload not
+  in lucrative cells (f_fl>=0.3, rho>=1) -> kill before detector/GPU work. If it clears
+  -> detector-feasibility + dumb-truncation showdown + incremental-prefill baseline
+  + missing citations (LLMCompiler/CALM/spec-decode). Genuine mechanism delta (detectability-conditioned
+  SEMANTIC early-commit on a streaming tool RESULT) is narrow but unmatched to a published
+  source under incomplete search'
+baseline_requirements:
+- Hard-truncation / max-tokens cap (zero-overhead alt if tails are boilerplate)
+- "Incremental/chunked prefill (vLLM/Orca \u2014 real production baseline, not wait-for-EOF)"
+- "Leviathan 2023 spec-decoding cost model (algebraic ancestor \u2014 state the only\
+  \ addition is W)"
+- LLMCompiler (Kim 2023, agent latency-overlap via DAG-parallel calls)
+- CALM (Schuster 2022, confidence-thresholded early-commit)
+committee_run_dir: experiments/2026-06-03/EXP-0037/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T11:49:19Z'

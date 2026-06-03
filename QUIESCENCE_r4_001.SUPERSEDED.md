@@ -19,3 +19,11 @@ engine's refill-to-4; accept quiescence as a legitimate terminal state and put t
 
 ## r4 posture until dengcchi responds: HEARTBEAT-ONLY idle (healthy). Do NOT seed thin claims. Wake + act on
 any genuine inbox signal (a real FORWARD/COMMITTEE_READY/GPU_FAULT), or on dengcchi's direction.
+
+---
+## SUPERSEDED 2026-06-03 by orchestrator-r4-001
+The strategic fork in this doc was ANSWERED by a charter-level directive ("design >=1 new project per cycle
+when below target; do NOT sit idle at DESIGN?"). r4 RESUMED seeding under strict anti-pattern screening:
+CLAIM-0038 (tool-confusability, KILL/relabeling), CLAIM-0039 (step-bubble throughput, KILL/continuous-batching),
+CLAIM-0040 (tool-result semantic early-commit, HELD-PARTIAL — the first fresh-axis survivor, now in committee).
+This doc is NO LONGER an open human-gate. Continue seeding anti-pattern-screened frontiers per directive.

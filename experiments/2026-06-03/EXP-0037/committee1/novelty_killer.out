@@ -1,0 +1,38 @@
+Both external web-search tools are permission-blocked in this session, so I cannot complete a *live* ≥2-source retrieval. I'll be explicit about that limitation and ground my prior-art assessment in knowledge-base recall (cutoff Jan 2026) with arXiv IDs — and note that this limitation itself forbids me from asserting a *verified* fatal collision (the mandate requires ≥2 independent live sources to KILL on novelty).
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Leviathan, Kalman & Matias, 'Fast Inference from Transformers via Speculative Decoding', ICML 2023",
+   url: "arxiv.org/abs/2211.17192",
+   why_close: "Canonical SPECULATION COST/BREAK-EVEN model: expected speedup as a closed-form function of acceptance prob α and draft/target cost ratio c. Same algebraic family as the claim's p*=W·T_step/((1-d)·T_stream+W·T_step). DIFFERENCE: lossless, token-level, ZERO semantic-redo penalty (rejected drafts are free-discard, not a W>0 redo). The claim's added term is the explicit wrong-commit penalty W — that is the only structural delta over this model."}
+- {cite: "Kim, Hooper et al., 'An LLM Compiler for Parallel Function Calling' (LLMCompiler), 2023",
+   url: "arxiv.org/abs/2312.04511",
+   why_close: "Closest AGENT-SIDE latency-overlap-via-speculation work: overlaps tool execution with planning by DAG-parallelizing calls. DIFFERENCE: parallelizes independent CALLS; does NOT early-commit on a partial RESULT stream, no detectability condition, no break-even map. Authors do not cite it and must."}
+- {cite: "Schuster et al., 'Confident Adaptive Language Modeling' (CALM), NeurIPS 2022",
+   url: "arxiv.org/abs/2207.07061",
+   why_close: "Confidence-thresholded EARLY COMMIT (early-exit per token) with an accuracy/latency tradeoff. Adjacent 'commit when a cheap signal clears a threshold' framing; differs in that the signal is the model's own logits, not a partial external input stream."}
+- {cite: "Branch-prediction / value-prediction speculation theory (Smith 1981; Lipasti & Shen, 'Exceeding the Dataflow Limit via Value Prediction', MICRO 1996)",
+   url: "dl.acm.org/doi/10.1109/MICRO.1996.566464",
+   why_close: "p* = penalty/(gain+penalty) IS the textbook misprediction break-even. The claim's break-even FORM is not new; only its SUBSTRATE (semantic tool-result stream) is."}
+- {cite: "Internal: dead CLAIM-0003 / EXP-0004 (speculative tool-CALL prefetch)",
+   url: "registry/ (this repo)",
+   why_close: "Same break-even STRUCTURE, opposite regime (prefetched the call, implausible-accuracy break-even in the lucrative regime). The inversion is the packet's headline and is correctly distinguished."}
+
+NAMING_VS_MECHANISM:
+Mostly RE-APPLICATION, with a narrow real delta. The "correctness-safety break-even map" is a re-skin of the standard speculation cost model (Leviathan; branch-prediction theory): p*=penalty/(gain+penalty) is textbook. The latency OVERLAP is known practice (authors concede this). The genuine MECHANISM delta is two-fold and narrow: (1) the substrate — committing on a partial TOOL-RESULT stream rather than a token draft or a tool call; (2) the empirical detectability-necessity finding (BLIND-detector ablation: 242/540 cells win, −57% worst-case) which makes "partial-stream detectability" a load-bearing precondition rather than a free assumption. That detectability-as-precondition framing for semantic tool-result early-commit is something I could NOT match to a published source — but with live search blocked I cannot certify it as novel either.
+
+FATAL_COLLISIONS:
+NONE VERIFIED. I could not retrieve ≥2 independent live sources doing "detectability-conditioned semantic early-commit on a streaming tool RESULT," so per committee rules I cannot raise a novelty KILL. The nearest collisions (Leviathan, LLMCompiler) are mechanism-distinct as detailed above. Caveat: web-search tools were permission-blocked this session, so absence-of-collision is UNDER-VERIFIED, not proven.
+
+MANDATORY_RELATED_WORK (must be cited before any promotion):
+1. Leviathan et al. 2023 (speculative decoding cost model) — the direct algebraic ancestor of p*; authors must state explicitly that their only addition is the W (semantic-redo) penalty term.
+2. Chen et al. 2023, 'Accelerating LLM Decoding with Speculative Sampling' (arxiv.org/abs/2302.01318) — companion lossless-speculation baseline.
+3. Kim et al. 2023, LLMCompiler — the agent-latency-overlap-via-speculation prior art currently MISSING from the packet.
+4. CALM / early-exit decoding (Schuster 2022) — the confidence-thresholded early-commit lineage.
+5. Branch/value-prediction speculation theory — to honestly attribute the break-even FORM and avoid claiming it as new.
+
+RATIONALE:
+Not RED: no ≥2-source verified fatal collision exists (and the mandate forbids a novelty KILL without one); the mechanism is correctly differentiated from speculative decoding (lossless, no W) and from dead EXP-0004 (call vs result; inverted break-even). Not GREEN: the headline "break-even map" is a re-presentation of an established speculation cost model (Leviathan 2023; Smith 1981/Lipasti 1996) — the only formal new term is the W penalty — and the one genuinely new piece (detectability-conditioned semantic early-commit on streaming tool results) is (a) narrow, (b) entirely UNVALIDATED on real corpora (all L0 distributions are assumed), and (c) accompanied by a missing-citation list (LLMCompiler, CALM, the speculative-decoding cost model itself). YELLOW is the honest call: the novelty is a modest, plausible mechanism delta on a known speculation skeleton, contingent on the L1 corpus + real-detectability measurements actually existing — and contingent on the authors adding the mandatory citations. I additionally flag that my own prior-art search was incomplete (live external search blocked), so the novelty verdict should be re-run with working search before any promotion to candidate.
+```

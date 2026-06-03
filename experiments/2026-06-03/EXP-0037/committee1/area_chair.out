@@ -1,0 +1,35 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "1. Real front-loading rate (f_fl) measured on actual tool-result corpora (API/JSON, search/RAG, code-exec, DB, log tails) — the #1 gate; if real f_fl < 0.3 the mechanism collapses regardless of detector quality",
+  "2. Real partial-stream detector P(correct|fire) and fire position d — feasibility of detectability itself is undemonstrated; L0 only proved it is NECESSARY, not that it EXISTS above chance",
+  "3. Real rho (T_stream/T_step) distribution across production agent loops — win lives at rho>=1; if tool results stream fast relative to reasoning, addressable gain shrinks below noise",
+  "4. Real redo cost W distribution and reversibility — L0 swept W as a scalar (0.5/1/2); real distribution is bimodal (most steps cheap, some catastrophic/irreversible); means hide tail risk",
+  "5. Joint distribution of (f_fl, rho, W, reversibility) — L0 treats these as an independent crossed grid; real tool classes likely couple them adversarially (long log tails = low f_fl AND high rho AND high W simultaneously)",
+  "6. Dumb-truncation baseline comparison (evaluation_prosecutor's killer experiment) — if simply dropping the stream at position X achieves equivalent correctness, the entire early-commit/redo apparatus is unjustified complexity",
+  "7. Incremental-prefill baseline — production systems do not block on EOF; they stream tokens into KV cache continuously; the 'serialize-then-read' strawman inflates the gap",
+  "8. Standard errors / CIs on headline effects (+12.1%, +47.9%) — 7 seeds reported as point estimates with no uncertainty quantification",
+  "9. Detector cost in wall time — L0 assumes zero-cost detector; a real classifier/probe consumes latency that competes with T_step and tightens effective p*"
+]
+MANDATORY_BASELINES: [
+  "Hard-truncation / max-tokens cap (drop stream after N tokens, never redo — the zero-overhead alternative if tails are boilerplate)",
+  "Incremental prefill / chunked streaming (vLLM chunked prefill / Orca — the real production baseline, not synchronous wait-for-EOF)",
+  "Leviathan et al. 2023 speculative decoding cost model (algebraic ancestor — must state explicitly that the only formal addition is the W penalty term)",
+  "LLMCompiler (Kim et al. 2023) — agent-side latency-overlap via DAG-parallelized calls; currently MISSING from packet citations",
+  "CALM (Schuster et al. 2022) — confidence-thresholded early-commit lineage"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0040 / PROJ-0011", change: "Remain HELD-PARTIAL. Gate L1 with a CHEAP corpus-only measurement (real f_fl and real rho on actual tool-result logs, NO detector training) per cost-aware-gating lesson. If real (f_fl, rho) do not place the workload in the lucrative cells (f_fl >= 0.3, rho >= 1), kill before any detector work. If they do, proceed to detector feasibility + dumb-truncation baseline showdown. Add mandatory citations (LLMCompiler, CALM, speculative decoding cost model, branch-prediction theory) before any promotion."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Unanimous YELLOW across all five reviewers. The L0 artifact is conscientiously pre-registered, the failure-mode screens are honest, and the two model-internal negative triggers (wrong-commit dominance, implausible-accuracy break-even) genuinely did not fire — the inverse-of-EXP-0004 finding is real algebra. However, GREEN is blocked on three independent grounds:
+
+(1) PRIOR-ART SEARCH INADEQUATE. The novelty_killer's live web search was permission-blocked; absence-of-collision is under-verified, not proven. The packet is missing mandatory citations to LLMCompiler (the closest agent-latency-overlap prior art), CALM (confidence-thresholded early-commit lineage), and the speculative decoding cost model itself (Leviathan 2023) which is the direct algebraic ancestor of the p* formula. The theory_skeptic correctly identifies that "low p* in the lucrative regime" is a tautology of the gain-vs-penalty algebra (as rho grows, p* must shrink) — the formula form is textbook (Smith 1981, Lipasti 1996), and the only structural addition is the W (semantic-redo) penalty term. The genuine mechanism delta — detectability-conditioned semantic early-commit on a streaming tool RESULT — is narrow but could not be matched to a published source; however, with incomplete search this is an absence-of-evidence finding, not evidence-of-absence.
+
+(2) ALL LOAD-BEARING EMPIRICAL PREMISES UNMEASURED. Every reviewer flags this independently. The L0 simulator uses hand-picked Beta priors for content position (no calibration to any corpus), treats (f_fl, rho, W) as an independent grid (almost certainly correlated adversarially in real tool classes), assumes a zero-cost detector, and treats detector errors as i.i.d. (real detectors fail systematically on certain content types). Two of four pre-registered negative triggers are explicitly unresolved at L0. The packet correctly holds on these grounds, and the committee concurs.
+
+(3) MISSING KILLER BASELINES. The evaluation_prosecutor identifies the dominant threat: if real tool results are heavily front-loaded (the hypothesis), then dumb truncation (drop after N tokens, never redo) is the zero-overhead baseline that must be beaten. Additionally, the "serialize-then-read" comparison baseline may be a strawman — production systems already stream tokens into KV cache continuously (incremental prefill). The L1 must enforce both baselines or the win claim is hollow.
+
+The HELD-PARTIAL disposition is correct and well-reasoned. The right next step is a CHEAP corpus-only L1 gate: measure real f_fl and real rho on actual tool-result logs across the five claimed tool classes (API/JSON, search/RAG, code-exec/test, DB results, log tails). This requires no GPU, no detector training, and no model access — just corpus analysis. If real (f_fl, rho) don't place the workload in the lucrative cells, kill before spending on detector feasibility. If they do, the detector feasibility + dumb-truncation showdown becomes the binding L1. Prompt version: v001.
+```
