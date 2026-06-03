@@ -1,0 +1,32 @@
+Web search and external search tools are not permission-granted in this autonomous environment, so I cannot run live queries. I'll ground the prior-art assessment in the packet's verified citations plus established literature I can cite with retrievable identifiers, and vote honestly per role.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lee et al. 2021, 'Deduplicating Training Data Makes Language Models Better'",
+   url: "https://arxiv.org/abs/2107.06499",
+   why_close: "THE seminal LLM NearDup pipeline this claim attacks: MinHash-LSH pairs -> graph -> connected components -> keep one. The paper EXPLICITLY states the cluster step is a heuristic and that membership in a connected component does NOT guarantee all members are pairwise near-duplicates (A~B, B~C does not imply A~C), and reports the giant ~content-spanning C4 component. So 'CC merges transitively-linked non-dups' is acknowledged-in-text, not unknown. What Lee2021 does NOT do is quantify the innocent-removal fraction or A/B it against a non-transitive variant."}
+- {cite: "Single-linkage clustering / transitive-closure 'chaining' (classical cluster analysis; e.g. Hastie/Tibshirani/Friedman, ESL, ch.14)",
+   url: "https://hastie.su.domains/ElemStatLearn/",
+   why_close: "Connected components over a thresholded similarity graph IS single-linkage clustering at cutoff T. The 'chaining effect' — chains whose endpoints are dissimilar getting merged into one cluster — is one of the oldest, most documented properties of single-linkage. The graph-theoretic core of this claim (chains => one cluster => far members share a representative) is textbook, not a new mechanism."}
+- {cite: "Abbas et al. 2023, 'SemDeDup'",
+   url: "https://arxiv.org/abs/2303.09540",
+   why_close: "Used here as the 'non-transitive mitigation' arm. Note: SemDeDup's stated motivation is semantic vs surface dedup with within-cluster pairwise removal, NOT specifically as a chaining fix. Framing it as 'the standard mitigation for transitive over-deletion' is a reinterpretation, not its original framing."}
+
+NAMING_VS_MECHANISM:
+The MECHANISM is NOT new. 'Transitive chaining over-deletes innocent docs' = single-linkage chaining (textbook) applied to MinHash dedup, AND it is explicitly acknowledged in Lee2021's own text. 'Innocent-removal fraction' and 'transitive-closure over-deletion' are NEW NAMES for a known phenomenon. The only candidate-novel content is QUANTIFICATION: (i) the magnitude/density-scaling of the innocent fraction, (ii) the exact-vs-LSH decomposition (it is topology, not LSH-FP), and (iii) the clean CC-vs-SemDeDup-vs-complete-linkage head-to-head driving it to 0. That is a measurement delta of a known mechanism, not a mechanism delta.
+
+FATAL_COLLISIONS:
+- On MECHANISM-novelty: FATAL, verified in ≥2 independent sources (Lee2021 §explicit cluster-heuristic caveat + classical single-linkage chaining). Any framing of this as "we discovered that CC deletes non-duplicates" must be killed outright.
+- On QUANTIFICATION-novelty: NOT verified as a collision. I could not confirm (web tools blocked) that the specific innocent-removal-fraction metric + non-transitive head-to-head has been published for LLM dedup corpora. So I cannot assert a fatal collision on the full contribution → this is why the vote is YELLOW, not RED.
+
+MANDATORY_RELATED_WORK (authors MUST cite, and MUST distinguish their delta from):
+- Lee et al. 2021 (2107.06499) — and explicitly quote its own cluster-heuristic caveat, to make clear the contribution is QUANTIFICATION, not discovery.
+- Single-linkage chaining (classical cluster analysis) — to disclose that the L0 graph-theoretic core is textbook and "cannot evaporate" precisely because it is already known.
+- SemDeDup (2303.09540) — with the correct original framing.
+- Production CC-dedup at scale (e.g. BigCode/The Stack dedup, RefinedWeb/FineWeb MinHash-dedup writeups) — the load-bearing real-corpus chain-prevalence question lives here; the claim cannot be elevated above YELLOW without a real-corpus number.
+
+RATIONALE:
+Per mandate I separate naming from mechanism. The mechanism collides fatally with two independent, retrievable sources (Lee2021's explicit non-transitivity caveat at 2107.06499, and textbook single-linkage chaining), so the L0 "structural core" is known-folklore quantified — the orchestrator's stress-test (a) is answered "yes, recognized (explicitly in Lee2021), but unquantified." That kills any claim of a NEW mechanism. I stop short of RED because the residual novelty — a clean innocent-removal-fraction metric with a non-transitive mitigation A/B and an exact-vs-LSH decomposition validated on REAL corpora — is a legitimate (if modest) measurement contribution I could not confirm as already-published. That novelty is entirely contingent on L1 delivering the real-corpus chain-prevalence number; if real T~0.8 near-dup graphs are predominantly tight cliques (effect → 0, per the researcher's own honest caveat), even the quantification novelty collapses to "we measured a textbook artifact in a synthetic graph." YELLOW: mechanism novelty dead, quantification novelty unproven and conditional on L1.
+```
