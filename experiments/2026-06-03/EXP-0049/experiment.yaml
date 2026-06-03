@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HONEST-NEGATIVE. CORRECTED RE-RUN of EXP-0046. Calibration gate PASSES
+  (alpha=0 penalty=-2.6pct B1/-1.6pct B2, |pen|<5pct, CI excludes B-advantage) ->
+  EXP-0046 bugs FIXED via evidence-gated policy B + MAX_ATTEMPTS=50 finite give-up.
+  BUT under FAIR finite accounting the >=25pct WASTED-TOKEN penalty is NOT established:
+  marginal penalty (+27..+94pct) is a non-completion artifact (dnc_A=0.50-0.70 vs
+  dnc_B~0.01, NOT comparable; diverges 91->886pct as MAX_ATTEMPTS 50->1000), and the
+  only apples-to-apples token metric (completion-conditional) FAVORS A by 45-61pct.
+  Also non-monotone (peaks alpha=0.02 then falls 0.04). REAL effect=COMPLETION-RATE/reliability
+  advantage for deviation-aware rollback, NOT a token-cost advantage. HPC restart-from-last-ckpt
+  near-optimal for agent TOKEN economics. Both dnc rates reported. R=4000 serial 22s.
+  L1 should measure real agent-trace hazard curves + re-pose claim in completion-rate
+  currency.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0049/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T16:24:24Z'
 prompt_version: ''

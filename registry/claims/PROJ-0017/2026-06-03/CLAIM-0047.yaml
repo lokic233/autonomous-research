@@ -1,7 +1,7 @@
 claim_id: CLAIM-0047
 project_id: PROJ-0017
 stage: seed
-status: seed
+status: weakened
 claim: In long-horizon agentic rollouts whose per-step failure hazard is path-dependent
   and RISING after a deviation (an agent that drifts off the canonical path becomes
   monotonically more failure-prone the longer it stays off-path), the token-cost-optimal
@@ -59,16 +59,28 @@ supporting_evidence:
     + fair non-completion accounting + B no-overshoot at alpha=0). Researcher completed
     compute then went stale; orchestrator recorded honestly from committed CSV.'
   data_path: experiments/2026-06-03/EXP-0046/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0049
+  summary: 'HONEST-NEGATIVE. CORRECTED RE-RUN of EXP-0046. Calibration gate PASSES
+    (alpha=0 penalty=-2.6pct B1/-1.6pct B2, |pen|<5pct, CI excludes B-advantage) ->
+    EXP-0046 bugs FIXED via evidence-gated policy B + MAX_ATTEMPTS=50 finite give-up.
+    BUT under FAIR finite accounting the >=25pct WASTED-TOKEN penalty is NOT established:
+    marginal penalty (+27..+94pct) is a non-completion artifact (dnc_A=0.50-0.70 vs
+    dnc_B~0.01, NOT comparable; diverges 91->886pct as MAX_ATTEMPTS 50->1000), and
+    the only apples-to-apples token metric (completion-conditional) FAVORS A by 45-61pct.
+    Also non-monotone (peaks alpha=0.02 then falls 0.04). REAL effect=COMPLETION-RATE/reliability
+    advantage for deviation-aware rollback, NOT a token-cost advantage. HPC restart-from-last-ckpt
+    near-optimal for agent TOKEN economics. Both dnc rates reported. R=4000 serial
+    22s. L1 should measure real agent-trace hazard curves + re-pose claim in completion-rate
+    currency.'
+  data_path: experiments/2026-06-03/EXP-0049/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0049 result, then ros exp complete --exp EXP-0049 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0049; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0049
+active_experiments: []
 created_at: '2026-06-03T15:21:58Z'
-last_updated: '2026-06-03T16:16:57Z'
+last_updated: '2026-06-03T16:24:24Z'
