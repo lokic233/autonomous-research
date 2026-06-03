@@ -75,12 +75,11 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: "HELD/yellow VERDICT-0046 (5/5, no RED) \u2014 alive toward a REAL-DATA\
-  \ L1 (measured phi + real canonicalizer pairs exact-match/Minerva/LLM-judge on GSM8K/MATH/GPQA\
-  \ + real model-pair inversion-or-null + precision-q + DOM_FRAC sweep; add spoiler-effect/Bulian2022/Kuhn2023\
-  \ citations; flag inversion exploratory). HANDED TO r5 for the L1."
+lifecycle_state: experiment_running
+next_action: await EXP-0051 result, then ros exp complete --exp EXP-0051 --effect
+  ...
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0051
 created_at: '2026-06-03T16:35:08Z'
-last_updated: '2026-06-03T17:22:49Z'
+last_updated: '2026-06-03T17:32:00Z'
