@@ -1,0 +1,44 @@
+claim_id: CLAIM-0038
+project_id: PROJ-0009
+stage: seed
+status: seed
+claim: "In multi-tool LLM agents, wrong-tool-selection errors are PREDICTABLE from\
+  \ the SCHEMA GEOMETRY of the available tool set alone (pairwise semantic overlap\
+  \ of tool name+description+params, computed BEFORE the call, NO model rollout) \u2014\
+  \ specifically, selection-error rate rises with the max pairwise tool-description\
+  \ cosine similarity in the active toolset \u2014 AND this cheap schema-overlap signal\
+  \ predicts which toolsets/calls are error-prone strictly better than (a) random\
+  \ and (b) a generic prompt-difficulty predictor, AND adds signal BEYOND the agent's\
+  \ own tool-choice logprob/confidence \u2014 because confusability is a structural\
+  \ property of the toolset distinct from task difficulty and from the agent's self-reported\
+  \ uncertainty."
+why_it_matters: "FRESH axis (tool-selection confusability from schema geometry \u2014\
+  \ untouched by the 22 prior claims). DELIBERATELY anti-pattern-screened: NOT a tuned-knob\
+  \ (Jensen-floor), NOT KV-reuse (RoPE-wall) \u2014 it's a CHARACTERIZATION/measurement\
+  \ claim (the surviving shape). Anti-circular (predict from schema-only geometry,\
+  \ NOT the error label/oracle) + anti-relabeling (must beat generic difficulty AND\
+  \ add signal beyond the agent's own tool-choice logprob \u2014 the test that killed\
+  \ CLAIM-0015 + CLAIM-0037). Falsifiable parts: (1) does schema-overlap predict selection\
+  \ error with real lead/AUC? (2) does it beat random + difficulty + add beyond self-logprob?\
+  \ L0: model multi-tool selection w/ latent confusability, schema-overlap predictor\
+  \ vs baselines + oracle gap. Honest-negative if not schema-predictable OR relabels\
+  \ difficulty/self-logprob. Topic: agentic-systems. Distinguish from tool-retrieval\
+  \ (ToolLLM/Gorilla, which RETRIEVE relevant tools) + LLM-as-judge \u2014 novelty\
+  \ is the pre-call SCHEMA-GEOMETRY confusability signal as an error predictor."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0035 result, then ros exp complete --exp EXP-0035 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0035
+created_at: '2026-06-03T11:07:34Z'
+last_updated: '2026-06-03T11:08:10Z'
