@@ -1634,3 +1634,29 @@ after (a dispatched, b refused SAFETY, leases has exactly 1 node). Completes the
 (85 poll / 100 enqueue+release / 104 dispatch per-node / 105 dispatch cross-node). Engine commit next.
 LESSON: a "locked the RMW" fix can still miss the SECOND invariant on the same data — re-test the actual
 double-outcome, not just "is it locked now".
+
+---
+## BUG-106 (v3 active-debug, orchestrator-r2-001 watch): task_update — UNLOCKED load->mutate->dump on the task ledger -> lost concurrent updates
+SURFACE: engine/supervise.py task_update(). SEVERITY: data-loss (silent), supervision-tree integrity.
+RACE CLASS: identical to BUG-59/97 (channel inbox) and BUG-99/100/101 (agent heartbeat / gpu_queue / retire flip)
+— the lost-update RMW family — now found on the TASK record. task_update was a bare load_yaml -> mutate ->
+dump_yaml with NO lock. The task ledger is mutated concurrently by FOUR independent writers, all routed
+through this one function: the reaper (close/orphan/reassign — BUG-86/88/96/102), exp-complete (close the
+owner's task — BUG-60b), handoff (transfer assignee), and the researcher itself (status active/blocked/done).
+Two overlapping calls each read the SAME on-disk record, mutate their in-memory copy, and the LAST dump wins
+— silently erasing the other writer's status flip AND reassignment AND every history entry appended in
+between. Real-world failure: the reaper's BUG-86 close (orphan exp gc -> task done) racing a researcher's
+status update -> one clobbers the other -> a task that should be done/orphaned stays 'active' FOREVER
+(orphan-task accumulation, the exact thing BUG-86/96 were closing) OR a reaper reassignment to a successor
+is lost (work hangs off a dead owner). REPRO (isolated /tmp): 20 concurrent task_update calls on one task ->
+only 2 survived, 18/20 history entries lost.
+FIX (no new mechanism): wrap the load->mutate->dump in the SAME per-object H["_file_lock"](root, f"task_{tid}",
+stale_s=15) + O_EXCL discipline as BUG-99/101, and RE-READ the record on disk INSIDE the lock so each writer
+composes on the latest committed state instead of a stale snapshot. Falls back to the old unlocked path only
+if H lacks _file_lock (older helper bundle) so behavior is unchanged where the lock is unavailable. AST-validated.
+VERIFY: 0/20 lost after (all 20 writers recorded); BUG-47 terminal-task-immutability and BUG-46 invalid-status
+guards both still enforced under the lock (regression-tested). Live `ros task list` on the v3 instance loads+runs.
+research-os commit 4c58d68 (pushed main). v2 is the bar: v2 already serializes the channel/agent RMWs; this
+brings the task ledger to the same locked-RMW discipline. No new mechanism.
+LESSON: when hardening a lost-update family (channel, agent, gpu_queue), AUDIT EVERY shared-file RMW with
+the same shape — the task ledger was the last bare load->dump that multiple supervision writers share.
