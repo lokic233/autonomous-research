@@ -1,0 +1,42 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: yellow, evaluation_prosecutor: red, theory_skeptic: red, product_realist: yellow}
+FATAL_OBJECTIONS:
+- [UNREBUTTED, from novelty_killer] Chroma Research "Evaluating Chunking Strategies for Retrieval" (2024, trychroma.com/research/evaluating-chunking) explicitly built token-level recall/IoU/Precision_Ω BECAUSE "relevant excerpts may be split across chunks" — the verbatim mechanism CLAIM-0043 asserts. Completeness@k (whole span in one chunk) is a thresholded binary special case of their continuous token-level recall. Second independent source: Joren et al. "Sufficient Context" (arXiv:2411.06037, ICLR 2025) formalizes recall-hit ≠ answerable. Two retrievable, independent sources occupy the mechanism → collision verified at KILL bar per committee rules.
+- [UNREBUTTED, from theory_skeptic] The L0 result is a tautological identity, not an empirical finding. With recall@k pinned at 1.000 in every cell by construction (unique gold tokens → lexical retriever always ranks fragment in top-1), the measured over-count == split_rate by definition. Split_rate is a closed-form combinatorial function P(split) ≈ max(0, (span_len − overlap − 1) / (chunk_size − overlap)). The experiment re-derives its own definitions under a degenerate corner-case retriever, producing no new empirical fact. The headline "96.5 points score distortion" is the worst case of this artifact.
+- [PARTIALLY VALID, from evaluation_prosecutor] The baseline operationalization (≥1 token overlap = hit) is one reasonable RAG-chunking definition but is NOT the universal standard the claim frames it as. Open-domain QA eval (DPR, Karpukhin 2020; NQ; DrQA) defines a hit as passage CONTAINS the full answer string — i.e., already containment/completeness-flavored for short answers. The packet's framing that recall@k universally credits fragments is overstated.
+
+REQUIRED_EVIDENCE:
+- Break the recall@k=1.0 degeneracy: run a real dense retriever (e.g., bge/e5/MiniLM bi-encoder) on a real QA corpus (NQ, HotpotQA) where the retriever sometimes MISSES fragment chunks. Only then does the gap become an empirical measurement rather than a definitional identity.
+- Show the empirical split-rate DIVERGES from the closed-form combinatorial prediction, or honestly reframe as "here is the closed form" (which Chroma's token-level framework already subsumes).
+- Literature pass on RAGAS context_recall, DPR answer-recall/has-answer, Chroma token-IoU, and Sufficient Context to establish what is genuinely unreported vs. already addressed by existing metrics.
+- Downstream reader EM/F1 under recall@k-selected vs. completeness@k-selected chunks — the only test that converts metric-validity into downstream-cost, which is the sole surviving potential contribution.
+
+MANDATORY_BASELINES:
+- Chroma token-level recall/IoU/Precision_Ω (the direct predecessor; completeness@k must be differentiated from the thresholded binary case of their metric)
+- DPR exact-string-match answer recall / has-answer (the actual open-domain QA standard)
+- RAGAS context_recall (the deployed RAG metric that evaluates claim-level attribution across retrieved chunks)
+- Joren et al. "Sufficient Context" framework (the published formalization of recall-hit ≠ answerable)
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0043", change: "status: RED. mechanism_occupied_by: [Chroma_token_recall, Sufficient_Context]. measurement_status: tautological_under_L0_design. Do NOT promote to L1 without addressing all REQUIRED_EVIDENCE items. If REQUIRED_EVIDENCE items (a)-(d) all resolve favorably, the surviving contribution would be narrow: an empirical quantification of the recall-completeness gap under realistic conditions, positioned as a practitioner diagnostic complementing Chroma's continuous framework — NOT a novel mechanism. Recommend: converge PROJ-0014; pivot to next fresh area rather than deep-mining this one, per orchestrator instruction."}
+
+PRIOR_ART_ADEQUATE: no — Chroma "Evaluating Chunking Strategies" (the direct mechanism collision), Joren et al. "Sufficient Context" (arXiv:2411.06037), RAGAS context_recall, and DPR answer-recall are all absent from the packet's prior-art section. The packet's prior-art caveat mentions only chunking-STRATEGY work and lost-in-the-middle, missing the metric-validity predecessors entirely.
+
+RATIONALE:
+Three reds, two yellows. I resolve by EVIDENCE, not vote count — but here the evidence aligns with the majority.
+
+The novelty killer's Chroma collision is the load-bearing finding: Chroma explicitly built token-level recall and IoU metrics because "relevant excerpts may be split across chunks." That IS this claim's mechanism. Completeness@k (binary: whole span in one chunk) is a thresholded special case of Chroma's continuous token-level recall. The collision is verified by a second independent source (Sufficient Context, ICLR 2025). Neither is cited or addressed in the packet.
+
+The theory skeptic's tautology argument is mathematically correct and independently fatal: with recall@k=1.000 in every cell, the "measured over-count" is algebraically identical to the split rate, which itself follows a closed-form combinatorial formula. The experiment confirms a definition, not an empirical fact. The k-invariance, the dramatic headline magnitudes (96.5 pts), and the "always-retrievable fragment" — all are artifacts of the unique-gold-token construction, not properties of real RAG systems. The researcher's own caveat #1 concedes this.
+
+The evaluation prosecutor's baseline concern is partially valid: the ≥1 token overlap operationalization is reasonable for chunk-level RAG eval but is NOT the universal standard. Short-answer QA eval (DPR, NQ) already uses answer-string containment — i.e., completeness-flavored. The product realist partially rebuts this: recall@k/hit@k IS the headline RAG retrieval metric in practice (LlamaIndex, evaluation guides). I weigh this as a draw on framing (i), which means the claim's "standard practice" framing is defensible but not airtight.
+
+On framing (ii) — "is completeness@k the obvious fix?" — I find a split verdict informative. The product realist searched and found no citation for completeness@k as a named metric in RAGAS or standard harnesses (supporting the claim). But the novelty killer found Chroma's token-level recall, which IS the published fix for the same problem under a continuous (not binary) formulation. So: the exact name "completeness@k" may be novel, but the solution space (token-coverage / span-coverage metrics to replace binary chunk-level recall) is occupied. This is the CLAIM-0042 pattern again: the "obvious competitor metric" exists, it's just named differently (Chroma token-recall vs. this claim's completeness@k).
+
+The two YELLOW votes (systems, product realist) correctly note the mechanism is real, the baseline is standard, and the conditional finding (overlap < span → over-count) is honest science. I credit the researcher's intellectual honesty: the caveats, the overlap control, and the conditional framing are well-done. But honest science about a tautological identity of an already-published mechanism does not reach GREEN.
+
+Do NOT emit GREEN: prior-art search was inadequate (Chroma, Sufficient Context, RAGAS context_recall all unaddressed), and three reviewers' REDs are unrebutted by evidence. The novelty killer's collision (2+ sources) and the theory skeptic's tautology are each independently fatal. Per orchestrator instruction: converge PROJ-0014 and pivot to the next fresh area rather than deep-mining this claim further.
+
+(prompt v001)
+```
