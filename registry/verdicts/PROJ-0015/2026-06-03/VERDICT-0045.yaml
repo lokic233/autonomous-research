@@ -1,0 +1,84 @@
+verdict_id: VERDICT-0045
+claim_id: CLAIM-0045
+project_id: PROJ-0015
+date: '2026-06-03'
+experiment_ids:
+- EXP-0044
+- EXP-0047
+- EXP-0048
+experiment_paths:
+- experiments/2026-06-03/EXP-0044
+- experiments/2026-06-03/EXP-0047
+- experiments/2026-06-03/EXP-0048
+committee_version: v002
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "GENERAL CLAIM FAILED ECOLOGICAL VALIDITY at GPU L1: both bge-base-en-v1.5 and e5-base-v2\
+  \ hold rank 1.00 (CI 0) at every template length L under REALISTIC query-bearing\
+  \ templates \u2014 the corpus-hygiene-risk-for-retrieval-broadly framing is dead\
+  \ by the packet's own evidence"
+- the surviving BM25-only recovery arm IS pivoted length normalization (Singhal-Buckley-Mitra
+  1996
+- "Robertson-Walker 1994) BY THE CLAIM'S OWN ADMISSION ('recovery is length-norm-dominated,\
+  \ abolished at b=0') \u2014 verified vs >=2 canonical sources by 4 reviewers"
+- no new retrieval mechanism
+- the inverted-U is the rank-space projection of a KNOWN closed-form property along
+  a synthetic template-length axis (Lv-Zhai 2011 documents the score-vs-length non-monotonicity
+  explicitly)
+- the only L1 displacement regime requires VERBATIM-QUERY INJECTION into every distractor
+  = adversarial attack in the Zhong 2023 corpus-poisoning family -> the 'corpus-hygiene'
+  framing is a category error (realistic hygiene drift = FLAT)
+- "BM25L persistence does NOT rebut the length-norm collision (BM25L lifts long-doc\
+  \ floors via +delta, doesn't remove the |D|/avgdl scaling driving asymptotic recovery\
+  \ \u2014 persistence is EXPECTED not a surprise)"
+required_evidence:
+- "None \u2014 terminal RED. General claim failed L1 ecological validity"
+- BM25-only survivor is naming-novelty over pivoted-length-normalization (Singhal
+  1996) with no mechanism delta
+- displacement regime is adversarial (Zhong 2023) not hygiene. The validated NEGATIVE
+  (dense retrieval is ROBUST to realistic template drift) is worth recording in the
+  academic map as a validated negative but does not meet the bar for a novel positive
+  claim.
+map_delta_proposals:
+- CLAIM-0045 -> RED (terminal, committee#2 final). General claim FAILED L1 ecological
+  validity (dense bge/e5 FLAT under realistic templates)
+- BM25-only survivor = pivoted-length-norm (Singhal1996) restated, no mechanism delta
+- "displacement requires adversarial query-injection (Zhong2023), not hygiene. PROJ-0015\
+  \ CONVERGED (both CLAIM-0044 DEAD-0011 + CLAIM-0045 terminal). VALIDATED NEGATIVE\
+  \ recorded: dense retrieval is ROBUST to realistic query-bearing template drift\
+  \ (operators can deprioritize hygiene-driven rank-collapse) \u2014 a clean negative\
+  \ finding, not a positive claim. ZERO FALSE GREENS held: the closest-to-green candidate\
+  \ of the expansion (L0 HELD-STRONG -> committee#1 -> remediation -> GPU L1 -> committee#2)\
+  \ died honestly at the final gate because the general reading didn't survive ecological\
+  \ validity. DISTILL: a HELD-STRONG L0 with a clean MECHANISM can STILL be a known-mechanism\
+  \ (pivoted-length-norm) dressed in a new axis (template-length) \u2014 the b-sweep/BM25L\
+  \ 'robustness' confirmed a KNOWN mechanism, it didn't discover a new one"
+- "AND the L1 ecological-validity gate is ESSENTIAL \u2014 a lexical-retrieval effect\
+  \ need not transfer to dense. Two-pass design (L0->c1->L1->c2) earned its keep."
+baseline_requirements:
+- Singhal-Buckley-Mitra 1996 pivoted length normalization (THE recovery mechanism)
+- Robertson-Walker 1994 / Robertson-Zaragoza 2009 BM25 b-derivation
+- Lv-Zhai 2011 BM25L (length-norm non-monotonicity already documented)
+- Zhong 2023 corpus poisoning (the displacement regime)
+- Gospodinov 2023 Doc2Query-- (query-term injection harms expansion)
+committee_run_dir: experiments/2026-06-03/EXP-0048/committee2
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T16:21:54Z'
