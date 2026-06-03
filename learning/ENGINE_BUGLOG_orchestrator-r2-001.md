@@ -1492,3 +1492,26 @@ and a live agent still sets `running` normally.
 **Commit:** code landed in accb57f (folded with BUG-97 by parallel sessions sharing the index);
 attributed as BUG-98 in 15c4538 (research-os main).
 **Note:** shared engine → fix protects v2 (golden ref) and v3.
+
+---
+
+## BUG-99 — concurrent heartbeat clobbers a retire/reap terminal flip → split-brain
+**Found:** v3 ACTIVE-DEBUG bugbash (retire/successor split-brain under load), 2026-06-03, isolated /tmp.
+**Symptom:** `cmd_heartbeat` is an unlocked load→mutate→dump. The BUG-98 terminal-state guard only
+inspects the IN-MEMORY status read at the TOP of the call. If a `ros retire`/`ros reap` flips this
+agent `frm`→`retired` AFTER the heartbeat's load but BEFORE its dump, the heartbeat re-writes the stale
+(`running`) record over the terminal flip — wiping `retired_to`/`retired_at` and leaving BOTH `frm`
+and its live successor `running`. This is the exact split-brain BUG-98 prevents for a strictly-LATER
+heartbeat, reopened under CONCURRENCY (heartbeat loaded before retire committed). Same RMW race class
+as BUG-59 (Channel) / BUG-97 (per-agent inbox ack).
+**Repro:** isolated /tmp inst; heartbeat loads running, retire commits frm→retired+successor, heartbeat
+writes back → 8/8 split-brain (A.status=running, A.retired_to=None, B.status=running).
+**Fix:** serialize the heartbeat RMW under a per-agent `_file_lock(root, f"agent_{agent}", stale_s=15)`
+(same O_EXCL + stale-reclaim discipline as BUG-85/next_id) and RE-READ the on-disk record INSIDE the
+lock (`_heartbeat_locked`) so a terminal flip that landed during the compute window is honored before
+write. Minimal — no new mechanism; reuses existing `_file_lock`.
+**Verify:** post-fix 0/12 split-brain under concurrent retire+heartbeat; BUG-98 late-hb terminal-preserve
+still holds (retired stays retired, ignores late `--status running`); normal live heartbeat still sets
+`running` + bumps count. AST-validated.
+**Commit:** research-os main 62a589a.
+**Note:** shared engine → fix protects v2 (golden ref) and v3.
