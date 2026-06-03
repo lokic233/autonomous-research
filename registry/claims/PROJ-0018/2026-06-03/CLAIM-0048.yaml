@@ -1,0 +1,69 @@
+claim_id: CLAIM-0048
+project_id: PROJ-0018
+stage: seed
+status: seed
+claim: "Increasing an answer-equivalence canonicalizer's RECALL (how aggressively\
+  \ it merges truly-equivalent free-form answers before a self-consistency majority\
+  \ vote) does NOT monotonically improve maj@k accuracy: its sign is governed by the\
+  \ correct-vs-incorrect FRAGMENTATION ASYMMETRY of the model's answer distribution.\
+  \ When incorrect mass is concentrated on one dominant wrong attractor while correct\
+  \ mass is fragmented across equivalent surface forms, raising canonicalizer recall\
+  \ RAISES accuracy; but when the asymmetry is reversed (correct near-canonical, errors\
+  \ fragmented), raising recall LOWERS maj@k accuracy and can INVERT the maj@k ranking\
+  \ of two models that a lower-recall canonicalizer ranked the other way \u2014 a\
+  \ harness-induced ranking hazard with the model and samples held fixed."
+why_it_matters: "FRESH AREA (eval-and-safety: self-consistency x answer-extraction\
+  \ stage). EMPIRICAL-phenomenon, NO closed form (sign-flip/inversion region under\
+  \ a partially-merged fragmented multinomial = empirical, not an algebraic identity).\
+  \ Passes all 8 failure modes: NOT metric-validity (causal intervention \u2014 sweep\
+  \ canonicalizer recall, observe SIGN of Daccuracy + ranking flips, not 'metric miscounts');\
+  \ foundational incumbent ADDRESSED (CJT Condorcet1785 binary+monotone, plurality\
+  \ vote-splitting assume FIXED atoms \u2014 the novel knob is a measurement-stage\
+  \ RECALL with sign tied to fragmentation asymmetry, unstated by CJT/plurality/Wang2022);\
+  \ NOT known-mechanism-costume (textbook vote-splitting = merging helps the split\
+  \ side; novel = the ASYMMETRIC sign flip where fragmented-ERRORS make higher recall\
+  \ demote the correct answer + invert rankings); NOT wrong-currency (maj@k accuracy\
+  \ + pairwise rank, apples-to-apples same samples/k); NOT 3 anti-patterns (recall\
+  \ is the swept independent var; no KV-reuse; no logprobs). Falsifiable: generative\
+  \ harness OWNS the GT (which surface strings are the correct equivalence class);\
+  \ sample k answer STRINGS from a categorical over surface forms with tunable correct-mass\
+  \ p_C + fragmentation-asymmetry phi=(entropy of correct surface forms)-(entropy\
+  \ of dominant incorrect class); a canonicalizer (configurable string-normalizer:\
+  \ case/whitespace/symbol/numeric/fraction-decimal) with swept RECALL r (fraction\
+  \ of truly-equivalent pairs merged) + controllable PRECISION operates ONLY on strings,\
+  \ NEVER sees GT; plurality vote on merged buckets, scored vs GT only at scoring\
+  \ time. PRIMARY: d(maj@k acc)/d(r) changes SIGN as phi crosses threshold (negative\
+  \ in errors-fragmented regime). SECONDARY (ranking hazard): construct fixed models\
+  \ A,B where rank(A,B) under low-recall canonicalizer is OPPOSITE to under high-recall\
+  \ (model+samples fixed). HONEST-NEGATIVE (informative): if d(acc)/d(r)>=0 everywhere\
+  \ + no inversion under MATCHED-PRECISION canonicalizers -> monotone merge-more=better\
+  \ HOLDS, self-consistency robust to extraction recall. Precision-control rules out\
+  \ over-merge artifact (if inversions only appear when high-recall ALSO over-merges,\
+  \ it's a precision artifact not a recall phenomenon). Anti-circular: GT=correct-class\
+  \ string membership (generative); canonicalizer reads strings only. Topic: eval-and-safety.\
+  \ PRIOR-ART: Wang2022 self-consistency (2203.11171, pre-canonicalized atoms, monotone);\
+  \ CJT/plurality social-choice (fixed atoms); Representation-Consistency 2506.21590\
+  \ / Semantic-SC / Mirror-Consistency 2410.10857 / Ranked-Voting-SC 2505.10772 (ALL\
+  \ frame more-merging as monotonically helpful). Delta = canonicalizer recall as\
+  \ a NEGATIVE-capable causal knob tied to fragmentation asymmetry + harness-induced\
+  \ leaderboard ranking inversion. L1: real MATH/GSM8K/GPQA + real checkpoints k=8-64,\
+  \ two graders differing in equivalence recall (exact-match vs Minerva/sympy), show\
+  \ a real model whose maj@k DROPS under the higher-recall grader + a real pairwise\
+  \ leaderboard inversion from swapping ONLY grader recall."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r4-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0050 result, then ros exp complete --exp EXP-0050 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0050
+created_at: '2026-06-03T16:35:08Z'
+last_updated: '2026-06-03T16:35:24Z'
