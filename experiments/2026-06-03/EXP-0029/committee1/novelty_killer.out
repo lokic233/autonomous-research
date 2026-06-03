@@ -1,0 +1,34 @@
+Both web-search tools are permission-gated in this session and were denied, so I'm verifying the collision from (1) the in-repo HANDOFF corroboration of the EXP-0009 RoPE/CacheBlend wall and (2) the two canonical published works the packet names, which I can cite to retrievable arXiv IDs from prior knowledge. The collision is confirmable in ≥2 independent sources (Prompt Cache + CacheBlend, plus EPIC as a third).
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Gim et al., 'Prompt Cache: Modular Attention Reuse for Low-Latency Inference', MLSys 2024",
+   url: "https://arxiv.org/abs/2311.04934",
+   why_close: "Precomputes attention/KV for reusable, position-INDEPENDENT prompt segments ('modules') and stitches them at arbitrary positions. This IS the mechanism that realizes the packet's 42-44% token-level schema ceiling — modular non-prefix segment reuse. The claim's 'cache KV for fixed-schema spans, recompute only value spans' is a special case of Prompt Cache's module reuse."}
+- {cite: "Yao et al., 'CacheBlend: Fast LLM Serving for RAG with Cached Knowledge Fusion', EuroSys 2025",
+   url: "https://arxiv.org/abs/2405.16444",
+   why_close: "Reuses precomputed KV of chunks regardless of prefix position and SELECTIVELY RECOMPUTES a small token subset to fix positional/cross-attention discrepancy. This IS the re-anchor R(Δ) that recovers the 0.24-0.32 RoPE tax. The 'cheaply re-anchored' fork of the claim is literally CacheBlend."}
+- {cite: "Hu et al., 'EPIC: Efficient Position-Independent Context Caching', 2024",
+   url: "https://arxiv.org/abs/2410.15332",
+   why_close: "Directly tackles position-independent reuse of arbitrary (non-prefix) cached chunks with minimal recompute — third independent instance of the exact 'reuse structural segments past the first variable token, cheaply fix position' idea."}
+- {cite: "vLLM Automatic Prefix Caching / SGLang RadixAttention (Zheng et al., 2024)",
+   url: "https://arxiv.org/abs/2312.07104",
+   why_close: "The baseline the claim beats — exact-prefix only, confirmed to break at first differing value token (6-13% capture). Correctly characterized."}
+
+NAMING_VS_MECHANISM: NAMING-ONLY novelty. The new framing ("template-structured KV reuse for agent tool-result envelopes / JSON schema spans") is a fresh application axis and a fresh label, but the MECHANISM is identical to published work. There is no mechanism delta: without re-anchor it is a strict subset of Prompt Cache's position-independent module reuse; with re-anchor it is CacheBlend's selective-recompute. The claim's ONLY distinctive mechanistic assertion — "fixed-schema KV is position-stable enough to reuse WITHOUT re-anchoring" — is the single thing not already published, and the L0 falsifies it directly (85% of schema tokens are post-first-value and shifted; position-aware survival 11-19% vs 42-44% ceiling; honest win over APC 5-6%, sub-threshold). So the one would-be-novel pillar is empirically dead, and everything else is prior art.
+
+FATAL_COLLISIONS:
+- Prompt Cache (Gim et al.) fully subsumes the no-re-anchor variant (the 42-44% ceiling is precisely modular position-independent segment reuse — already realized in the literature). No novelty gap.
+- CacheBlend (Yao et al.) fully subsumes the re-anchor variant — the R(Δ)/selective-recompute is its core contribution. The "cheaply re-anchored" disjunct collapses to it.
+- Same RoPE wall that killed EXP-0009 (CDC dedup, 0.35-1.46% position-aware), independently corroborated in-repo (HANDOFF_r1_to_r2.md L6-7). The template model is more legible (5-6%) but hits the identical wall — no new escape.
+
+MANDATORY_RELATED_WORK:
+- Prompt Cache (Gim et al., MLSys 2024) — must cite as the mechanism that achieves the schema ceiling.
+- CacheBlend (Yao et al., EuroSys 2025) — must cite as the re-anchor the recovery path collapses to.
+- EPIC: Efficient Position-Independent Context Caching (Hu et al., 2024) — closest position-independent-reuse follow-up.
+- vLLM APC / SGLang RadixAttention (Zheng et al., 2024) — the exact-prefix baseline.
+
+RATIONALE: The claim is pincered with no surviving novel mechanism. The disjunction it relies on — "position-stable enough to reuse OR cheaply re-anchored" — maps the two forks onto two distinct published systems (Prompt Cache; CacheBlend), so whichever way it resolves, the mechanism is already in the literature. The only assertion outside that pincer ("position-stable WITHOUT re-anchoring") is the load-bearing distinctive, and EXP-0029's own measurements (token-ceiling 0.42-0.44 -> position-aware 0.11-0.19; RoPE tax 0.24-0.32; structural win c-a = 5-6% < 10% pre-reg threshold; diag_where: post-first-value schema only 14.9% reusable and that residual is coincidental same-length alignment, control RoPE tax = 0.0) refute it. Internal corroboration (HANDOFF_r1_to_r2.md; EXP-0009) independently confirms the RoPE collision and CacheBlend-adjacency, satisfying the ≥2-source kill bar (and Prompt Cache + CacheBlend + EPIC are three independent external citations). RED is on novelty grounds, not merely the negative result: even had the metric HELD, the realizing mechanism is Prompt Cache and the recovery is CacheBlend — there was never a novelty gap. The honest negative is a legitimate outcome; the L1 is unlikely to manufacture novelty the prior art already closed — recommend kill-converge over an L1 fidelity re-run.
+```

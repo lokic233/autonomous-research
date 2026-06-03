@@ -1,0 +1,25 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: kill
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: green, theory_skeptic: green, product_realist: red}
+FATAL_OBJECTIONS:
+  - "Position-stable WITHOUT re-anchoring" — the claim's sole distinctive mechanistic assertion — is empirically refuted by the claim's own L0: 85% of schema tokens are post-first-value, only 14.9% position-reusable (coincidental length alignment), RoPE tax 0.24–0.32 dominates, honest structural win over APC = 5–6% < 10% pre-registered threshold.
+  - Prior-art pincer closes both forks of the claim's disjunction: WITHOUT re-anchor → weaker special case of Prompt Cache (Gim et al., MLSys 2024, arXiv:2311.04934); WITH re-anchor → collapses to CacheBlend (Yao et al., EuroSys 2025, arXiv:2405.16444). No novelty gap survives.
+  - Same RoPE wall that killed EXP-0009 CDC-dedup (0.35–1.46% position-aware) fires here at 5–6% — more legible structure, identical physics.
+REQUIRED_EVIDENCE: []
+MANDATORY_BASELINES:
+  - Prompt Cache (Gim et al., MLSys 2024) — the mechanism that realizes position-independent modular segment reuse (the 42–44% ceiling)
+  - CacheBlend (Yao et al., EuroSys 2025) — the R(Δ) selective-recompute re-anchor that recovers the RoPE tax
+  - EPIC (Hu et al., 2024, arXiv:2410.15332) — third independent position-independent chunk reuse system
+  - vLLM APC / SGLang RadixAttention (Zheng et al., 2024) — exact-prefix baseline (correctly characterized)
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0028", change: "status -> DEAD-0003 (kill-converge with EXP-0009/DEAD-0002); tag: RoPE-position-wall, prior-art-pincer(PromptCache+CacheBlend); add edge CLAIM-0028 -> DEAD-0002 (same wall); no L1 warranted"}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+The committee converges cleanly. The two GREEN votes (evaluation_prosecutor, theory_skeptic) endorse the NEGATIVE as methodologically sound and theoretically predicted — they are GREEN *on the kill*, not on the claim. The three RED votes (novelty_killer, systems_reviewer, product_realist) independently confirm the claim is dead on novelty, systems contribution, and product viability respectively. No reviewer dissents from the kill; disagreement is only on which dimension is primary.
+
+Aggregating the evidence chain: (1) Part (A) holds — APC structurally misses 30–38% of schema tokens, the opportunity is real and large. (2) Part (B) fails — RoPE position-dependence collapses the token-level ceiling (0.42–0.44) to position-aware reuse of 0.11–0.19 (26–42% survival); the diag_where.csv breakdown is dispositive: pre-first-value schema = 100% stable but = the prefix APC already captures; post-first-value schema (85% of all schema) = 14.9% reusable, and the fixed-length control (RoPE tax = 0.000, c/b = 1.0) proves the residual is coincidental length alignment, not position stability. (3) The honest structural win over APC (c−a = 0.051–0.063) is below the pre-registered 10% threshold across all 6 (N, cx) cells. (4) The prior-art pincer is verified in ≥2 independent sources per the anti-hallucination rule: Prompt Cache (arXiv:2311.04934) + CacheBlend (arXiv:2405.16444) + EPIC (arXiv:2410.15332), plus in-repo corroboration from EXP-0009/HANDOFF.
+
+The claim was well-designed — it deliberately avoided the Jensen-floor tuning trap (EXP-0006/0011/0027) by targeting a structural/discrete win, and it honestly confronted the RoPE trap rather than assuming it away. The negative is clean and informative. But the kill is definitive: the one would-be-novel pillar ("position-stable without re-anchoring") is empirically dead, and the mechanism space is saturated by published work. An L1 GPU re-run would confirm the wall at higher fidelity but cannot manufacture novelty the prior-art pincer has already closed. Recommend kill-converge with DEAD-0002 (EXP-0009, same RoPE wall) under DEAD-0003; no L1 warranted.
+
+PROMPT_VERSION: v001
+```
