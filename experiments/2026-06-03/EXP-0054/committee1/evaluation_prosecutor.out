@@ -1,0 +1,19 @@
+```
+ROLE: evaluation_prosecutor  VOTE: red
+MANDATORY_BASELINES: [
+  {name: "FastServe (Skip-Join MLFQ)", why: "State-of-the-art LLM serving scheduler that handles unknown/predicted output lengths using preemptive MLFQ, rather than non-preemptive SJF.", repo_or_cite: "arXiv:2305.05920"},
+  {name: "vLLM FCFS with Preemption", why: "Production default. Continuous batching allows iteration-level preemption (swapping/recomputation), fundamentally altering queueing dynamics compared to the simulated non-preemptive queue.", repo_or_cite: "vLLM / arXiv:2309.06180"}
+]
+STRAWMAN_RISKS: [
+  "Input-length SJF is presented as a target policy, but it is a strawman. Production systems default to FCFS or use preemptive multi-level feedback queues (MLFQ) because predicting decode length is known to be hard. Attacking a naive, non-deployed proxy policy is attacking a strawman.",
+  "M/G/1 non-preemptive queue completely misrepresents continuous batching. Continuous batching operates at the token (iteration) level, behaving closer to processor sharing or preemptive SRPT. A non-preemptive queue artificially inflates the penalty of scheduling mistakes via strict head-of-line blocking, which production batching avoids."
+]
+MISSING_METRICS: [
+  "Time-To-First-Token (TTFT)",
+  "Inter-Token Latency (ITL)",
+  "Mean Job Completion Time (JCT)",
+  "Throughput (req/s)"
+]
+KILLER_EXPERIMENT: Replicate the evaluation in a true continuous-batching simulator (e.g., Vidur or vLLM's benchmark suite) with iteration-level preemption and batching enabled, comparing FCFS vs FastServe MLFQ vs Input-Length SJF. If preemption masks the head-of-line blocking, the predicted p99 regression for the bad proxy will collapse.
+RATIONALE: The evaluation rests on a structural mismatch. Continuous batching mitigates head-of-line blocking through iteration-level scheduling (and preemption/swapping), whereas the L0 evidence relies on a non-preemptive M/G/1 queue where scheduling order strictly dictates blocking. Furthermore, treating 'input-length SJF' as a competitive baseline is a strawman unless there is proof that practitioners actually deploy it over preemptive FCFS. The effect size here is likely an artifact of the toy queueing model rather than a robust phenomenon in real serving systems.
+```

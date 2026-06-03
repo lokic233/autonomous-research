@@ -1,0 +1,29 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- Anti-correlated priority signal = effective Longest-Job-First. LJF on heavy-tailed M/G/1 (sigma_d=1.0, CV>1) being worse than FCFS on p99 is textbook queueing — Harchol-Balter "Performance Modeling" Ch.30; the tail-latency penalty of size-based scheduling under sign-flipped size estimates is a direct corollary, not an emergent phenomenon.
+- The "tau* crossover" is mechanically the point where rank(proxy) correlation with rank(true_svc) flips sign of the induced priority order; it is the rank-correlation analog of "predictor MSE > Var(size)" in Mitzenmacher 1902.00732. Calling it "emergent" overstates novelty: any monotone-in-tau interpolation between LJF (tau=-1) and SJF (tau=+1) crosses FCFS somewhere; that the crossing sits at HIGH positive tau under heavy-tailed decode is a quantitative restatement of "you need a quite-good predictor before SJF beats FCFS on p99", which is exactly the Mitzenmacher/Dell'Amico message.
+- "Realistic VLM tau ~ 0.14-0.34" is asserted from a narrative (OCR-short / reasoning-long); no measured Kendall-tau from a real VLM trace is in the packet. This is the load-bearing ecological premise and it is currently a story, not data.
+
+CONFOUNDS:
+- Heavy-tailed lognormal sigma_d=1.0 is doing much of the work. The p99 blow-up under bad-proxy SJF is well known to vanish at sigma_d<=0.5; the sweep does not vary sigma_d, so the magnitude (1.4-5.8x) is conditional on a tail assumption that is itself unmeasured for real VLM decode lengths.
+- Single-server NON-PREEMPTIVE M/G/1 is NOT continuous batching. Continuous batching admits multiple in-flight requests with per-step token budgets — the head-of-line dynamic is fundamentally different (decode is iteration-level, not job-level). The claim's mechanism may not transfer; the model excludes the very thing whose name is in the claim.
+- Gaussian-copula coupling between proxy and true_svc imposes a specific dependence structure; the exact tau* and ratios will move under a t-copula or mixture (bimodal perception/reasoning regimes). No copula-family sensitivity reported.
+- c_prefill "small, decode dominates" is a regime, not a universal — short-decode OCR/caption (the realistic-tau-low case the narrative leans on) is exactly where the decode-dominance assumption weakens.
+
+ASSUMPTIONS_UNTESTED:
+- sigma_d (decode-length tail heaviness) fixed at 1.0; no sensitivity sweep.
+- Single sigma_d, single copula family, single c_decode/c_prefill ratio.
+- Non-preemptive single-server == continuous-batching VLM dynamics (asserted in pre-reg, not validated).
+- Real-world Kendall-tau(input_tokens, decode_length) lies in (0.14, 0.34) — narrative only; no trace measurement; this is the same load-bearing real-world premise the orchestrator flags.
+- Poisson arrivals (real serving traffic is bursty / MMPP-like); burstiness alone can dominate scheduling effects on p99.
+
+STATISTICAL_GAPS:
+- Headline ratios reported as point estimates (1.42x, 3.04x, ...) with no CIs, no seed count, no bootstrap. p99 is a high-variance estimator; a 5.37x ratio with unknown CI could plausibly be 3x or 9x.
+- Control C2 correlations (-0.70..-0.94, +0.02..+0.20) reported without sample size or CI; the "noise band" for FCFS-vs-tau is asserted from a single sweep.
+- No replication across independent seeds reported; reproducibility of tau* localization (+0.43..+0.8) across seeds is unstated. tau* itself has a CI that is not given.
+- No reporting of whether p99 estimator has stabilized (steady-state burn-in, batch-means CI) — at rho=0.95 with heavy tail, p99 convergence requires very large N.
+
+RATIONALE: Result is real and the controls are the right ones — C1 (oracle SJF beats FCFS) genuinely distinguishes this from "SJF is bad here" trivia, and C2 (FCFS tau-invariant) localizes the effect to the proxy. That earns a yellow not a red. But the framing oversells: the prediction "biased/anti-correlated size estimate makes SJF worse than FCFS on p99 in heavy-tailed M/G/1" is a direct corollary of Mitzenmacher 1902.00732 + classical LJF tail-latency results (Harchol-Balter), with the proxy-class-anticorrelation regime being a quantitative extension, not an unpredicted phenomenon. Combined with (a) the M/G/1 model not actually modeling continuous batching, (b) sigma_d / copula / c_decode held fixed at favorable values, (c) no CIs on the headline ratios or on tau*, and (d) the realistic-VLM-tau~0 premise being narrative-only, the L0 cannot promote on its own. The orchestrator's proposed L1 gate (measure real Kendall-tau on Qwen-VL/LLaVA traces under vLLM/SGLang, run FCFS vs input-len-SJF, confirm measured tau < simulated tau* and the predicted p99 magnitude reproduces) is the correct gate; without it, the model-to-reality bridge is unverified.
+```
