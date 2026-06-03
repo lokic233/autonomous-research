@@ -1,0 +1,85 @@
+verdict_id: VERDICT-0041
+claim_id: CLAIM-0042
+project_id: PROJ-0013
+date: '2026-06-03'
+experiment_ids:
+- EXP-0040
+experiment_paths:
+- experiments/2026-06-03/EXP-0040
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "STRAWMAN BASELINE (fatal, 3 reviewers independent): the claim premises 'document-level\
+  \ near-dedup is the standard contamination practice' \u2014 FALSE. GPT-3 (Brown\
+  \ 2020) uses 13-gram overlap"
+- "PaLM (Chowdhery 2022) uses 8-gram >=70% containment. Standard contamination detection\
+  \ IS ALREADY passage/n-gram-level. Document-level Jaccard near-dedup is a CORPUS-DEDUP\
+  \ tool (different task). '0% reported vs true 20%' compares a corpus-dedup tool\
+  \ vs a contamination-detection tool \u2014 a category error, not a gap"
+- "ALGEBRAIC TAUTOLOGY: the ~100% miss gap is closed-form \u2014 Jaccard(doc,item)~s/(s+D)=span_ratio\
+  \ for disjoint vocab"
+- 50-in-500 ~0.09 < any threshold. RESULTS.md derives 43/490~0.09 then 'measures'
+  exactly that. Confirming textbook set-arithmetic to 3 decimals = calibration, not
+  discovery
+- "MISSING CONTAINMENT BASELINE (killer exp): Containment=|A&B|/|item| yields 1.0\
+  \ for any fully-embedded item regardless of doc length \u2014 trivially closes the\
+  \ gap. Omitting it inflates apparent novelty"
+- the result shows only that ONE doc-level metric (union-Jaccard) is blind, which
+  is analytically predicted
+- "FULL PRIOR-ART OCCUPATION (>=2 sources): Lee 2021 (2107.06499) introduced NearDup-vs-ExactSubstr\
+  \ PRECISELY because doc-level near-dedup misses short shared substrings \u2014 the\
+  \ mechanism IS the published motivation. Paraphrase fragility = Yang 2023 (2311.04850)"
+- 2024 surveys (Xu 2406.04244, Ravaut 2404.00699) taxonomize string/n-gram vs embedding
+  + paraphrase fragility. Every axis (mechanism, rate-distortion, paraphrase boundary)
+  occupied
+required_evidence:
+- "None terminal \u2014 strawman premise (real contamination detection already uses\
+  \ passage/n-gram, not doc-level Jaccard) + algebraic tautology + omitted Containment\
+  \ baseline that trivially closes the gap + full prior-art occupation (Lee 2021 ExactSubstr\
+  \ is the direct antecedent). The one novel bit (precision boundary @span_thresh0.95\
+  \ under partial-quote confound) is a calibration knob, not the foregrounded claim,\
+  \ synthetic-only, insufficient for a 'granularity gap' contribution."
+map_delta_proposals:
+- 'CLAIM-0042 -> RED/DEAD (fresh-area eval-and-safety, 2nd expansion claim). STRAWMAN
+  BASELINE: framed doc-level near-dedup as ''standard contamination practice'' but
+  real detection is ALREADY passage/n-gram (GPT-3/PaLM)'
+- the gap is algebraically predicted (Jaccard~span_ratio)
+- omitted Containment metric trivially closes it
+- "full prior-art occupation (Lee 2021 ExactSubstr). PROJ-0013 converged (lightweight:\
+  \ no deep-mine). No false green. DISTILL-WORTHY LESSON: prior-art at design time\
+  \ is NOT enough \u2014 must ALSO verify the chosen BASELINE is the real standard\
+  \ practice, not a strawman tool-purpose-mismatch. I front-loaded prior-art (good)\
+  \ but mis-specified the baseline (bad) \u2014 the caveat I wrote even helped convict\
+  \ it."
+baseline_requirements:
+- "Lee et al. 2021 NearDup-vs-ExactSubstr (2107.06499) \u2014 direct antecedent for\
+  \ the mechanism"
+- "GPT-3 13-gram (Brown 2020 2005.14165) / PaLM 8-gram>=70% containment (Chowdhery\
+  \ 2022 2204.02311) \u2014 the ACTUAL standard practice the claim mischaracterized\
+  \ as doc-level"
+- "Document-level Containment |A&B|/|item| \u2014 obvious competitor metric omitted,\
+  \ would trivially close the gap"
+- "Yang 2023 rephrased-sample decontamination (2311.04850) \u2014 prior art on the\
+  \ paraphrase boundary"
+- contamination surveys Xu 2406.04244 / Ravaut 2404.00699
+committee_run_dir: experiments/2026-06-03/EXP-0040/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T14:49:56Z'
