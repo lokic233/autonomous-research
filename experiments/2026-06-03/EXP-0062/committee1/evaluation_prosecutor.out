@@ -1,0 +1,14 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "Unconstrained Base LM Generation", why: "To prove the hard constraint *mechanically forces* the misroute, we must know the counterfactual: does the unconstrained model correctly abstain or hallucinate the true out-of-set tool, or does it naturally fall back to the near-miss anyway?", repo_or_cite: "Standard standard generation (e.g., standard HF generate without XGrammar/Outlines)"}
+  - {name: "Semantic Reflection Monitor", why: "Schema-validate + retry is a syntactic monitor. Production agentic systems often use an LLM-as-a-judge or reflection step to verify if the emitted tool functionally aligns with the user's intent. Claiming zero monitorability requires defeating semantic monitors, not just parsers.", repo_or_cite: "Self-Refine / Reflexion (Shinn et al. 2023)"}
+STRAWMAN_RISKS: 
+  - Claiming "monitorability collapse" by exclusively evaluating a syntax/schema validator, which is trivially blind to semantic misroutes by definition.
+  - Using a geometric L0 proxy that implicitly guarantees the unconstrained model would perfectly hit the out-of-set `t*`, thereby artificially attributing 100% of the near-miss error to the decoder constraint.
+MISSING_METRICS: 
+  - Unconstrained Counterfactual Accuracy/Abstention (delta between constrained misroute rate and unconstrained misroute rate on the exact same prompt).
+  - Semantic Monitor Recall (rate at which a reflection step catches the near-miss).
+KILLER_EXPERIMENT: A paired logit-level A/B test (Unconstrained vs. Hard-Constrained) on real LMs for identical out-of-set requests. If the unconstrained model also emits the near-miss tool (due to semantic priming or in-context bias from the tool prompt), then the hard constraint did not *mechanically coerce* the error, the LM simply failed at out-of-distribution reasoning. The claim only survives if unconstrained succeeds/abstains while constrained misroutes.
+RATIONALE: The L0 proxy successfully demonstrates the geometric inevitability of support-removal under strict constraints, but its definition of `t*` assumes the base model possesses perfect out-of-set intent resolution. Real LMs do not. For the L1 to claim the *decoder* is the causal culprit for silent near-miss misroutes, it must empirically isolate the constraint's mechanical coercion from the base model's intrinsic parametric confusion via an unconstrained baseline.
+```
