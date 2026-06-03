@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'WEAKEN (partial-negative). Online causal failure-foreshadow monitor
+  (tool-err/loop/info-gain EWMA) BEATS generic-difficulty predictor (AUC delta +0.095,
+  95%CI[+0.087,+0.103], 96/96 seeds positive) AND has real lead time (median +2.32
+  steps before agent termination) -> passes the anti-relabeling test that killed CLAIM-0015.
+  BUT FAILS to beat agent self-confidence (AUC delta -0.006, 95%CI[-0.011,-0.001]).
+  Claim required beating BOTH baselines -> strong claim FALSIFIED. Anti-circular OK:
+  monitor 0.743 < latent-health oracle 0.858 (gap .115). Caveat: modeled self-confidence
+  is a privileged direct (noisy) health readout; real LLM confidence is often miscalibrated
+  -> L1 on tau-bench/AppWorld/SWE-agent real traces could flip the self-confidence
+  comparison. Surviving weak form: failure has a progression signature distinct from
+  intrinsic difficulty with usable lead time.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0033/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T09:47:48Z'
 prompt_version: ''
