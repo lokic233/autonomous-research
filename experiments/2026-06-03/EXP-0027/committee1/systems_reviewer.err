@@ -1,0 +1,1484 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e8c9e-5cbe-7000-99b8-3ce2ec776131
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0026 (PROJ-0006), evidence EXP-0027 (L0)
+## MEASUREMENT/MODELING study, effect=weaken / NEGATIVE (Jensen-floor). The researcher PRE-BAKED the exact control that sank EXP-0006 (grammar-region spec-decode) + EXP-0011 (early-exit): the BEST-TUNED FIXED draft policy (k swept to the per-workload optimum), NOT a strawman. Vote honestly — a clean honest negative that closes the question is a legitimate outcome. novelty_killer: draft-length adaptation is PUBLISHED (EAGLE/EAGLE-2/Medusa/SpecDec++/Dynamic-Speculation-Lookahead); the only candidate novelty was the session-phase-DRIFT characterization on long agentic sessions + beating best-tuned-fixed — and it does NOT beat tuned-fixed, so weigh whether any contribution survives.
+
+## L0 KEY FINDINGS (analytic+sim, 3024 configs):
+(A) Acceptance drift is REAL + material: per-phase optimal draft length k_opt swings 1->15 as per-phase acceptance shifts; both directions of the structured-context gap modeled. The claim's PREMISE holds.
+(B) Phase-adaptive does NOT beat BEST-TUNED-FIXED (the entire bar): a single best-tuned fixed k captures ~93% MEDIAN of the adaptive gain at the realistic deep-session mix (exceeds the committee's >=80% 'empty' threshold). With realistic phase-detection error + switching tax, adaptive LOSES -2.2% net tok/s at the realistic operating point. Adaptive reaches +7-9% ONLY under extreme drift (gap=+-0.30, one ~95%-accept phase dominating 55% of the session) AND zero overhead — and even there tuned-fixed captures ~85%. Not realistic.
+Mechanism: net-tok/s-vs-k is a broad concave plateau; the plateaus overlap, so the session-weighted single k lands inside every phase's near-optimum = the Jensen floor. SAME failure mode as EXP-0006 + EXP-0011. All 3 pre-committed negative triggers fired.
+
+## CLAIM
+claim: "In long multi-turn agentic sessions, speculative-decoding draft-model acceptance\
+  \ rate DRIFTS materially as the running context grows (the token distribution shifts\
+  \ from early conversational prose to deep tool-call/JSON/structured context), such\
+  \ that a session-phase-ADAPTIVE draft policy (adjust draft length / draft model\
+  \ by a cheap detected context-phase signal) achieves strictly higher net tokens/sec\
+  \ than the BEST-TUNED FIXED draft policy on agentic traffic \u2014 because the per-phase\
+  \ optimal draft configuration differs enough that one fixed setting is mistuned\
+  \ for a non-trivial fraction of the session."
+why_it_matters: "NEW axis (draft-model STALENESS/drift across agentic session phases\
+
+## L0 RESULTS (EXP-0027)
+# RESULTS — EXP-0027 (CLAIM-0026)
+**Spec-decode session-phase-adaptive vs BEST-TUNED-FIXED draft policy.**
+L0 CPU-only, stdlib, SERIAL, analytic core + stochastic detection sim. 3,024 configs, 5 seeds.
+Verdict pre-committed in PRE_REGISTRATION.md (committed 5c17b34 BEFORE running).
+
+## VERDICT: NEGATIVE (Jensen-floor) — this is a WIN (honest pipeline)
+A single best-tuned fixed draft length k\* captures ~93% (median, realistic+overhead) of the
+adaptive gain. Once realistic phase-detection error + switching tax are included, phase-adaptive
+**loses** to best-tuned-fixed in the realistic operating regime (mean gain −2.2%). Same failure mode
+as EXP-0006 (grammar-region spec-decode) and EXP-0011 (early-exit): per-phase optimum collapses to
+the Jensen floor that a single tuned k already sits near.
+
+## (A) Is the acceptance drift real and material? — YES, the drift is real.
+Per-phase **optimal draft length k_opt diverges** as acceptance shifts across phases. Sample
+(a_prose=0.65, r=0.1, realistic deep-session mix prose/tool/mixed = .25/.55/.20):
+
+| gap (a_tool−a_prose) | a (prose,tool,mixed) | per-phase k_opt | single k\* | ideal gain | fixed captures |
+|---|---|---|---|---|---|
+| −0.30 | 0.65,0.35,0.50 | 3,1,2 | 2 | 1.41% | 79.3% |
+| −0.10 | 0.65,0.55,0.60 | 3,3,3 | 3 | 0.00% | 100% |
+|  0.00 | 0.65,0.65,0.65 | 3,3,3 | 3 | 0.00% | 100% |
+| +0.20 | 0.65,0.85,0.75 | 3,7,5 | 6 | 1.83% | 94.8% |
+| +0.30 | 0.65,0.95,0.80 | 3,15,6 | 11 | **6.88%** | 87.3% |
+
+So acceptance drift genuinely shifts the optimal draft length (k_opt swings 1→15). The premise
+of the claim — drift exists and changes the local optimum — is **confirmed**. We modeled BOTH
+directions of the structured-context gap (tool/JSON acceptance higher OR lower than prose) and the
+divergence appears either way. But "drift exists" is NOT the claim — part (B) is.
+
+## (B) Does phase-adaptive beat BEST-TUNED-FIXED by a meaningful margin? — NO.
+The entire committee bar (the EXP-0006/0011 lesson) is: beat the *best-tuned fixed* k, not an
+arbitrary baseline. It does not, at realistic operating points.
+
+| operating regime | n | adaptive gain vs best-tuned-fixed (mean / median / p90) | fixed_captured_frac (median) | % configs gain>3% | % configs fixed captures ≥80% |
+|---|---|---|---|---|---|
+| ALL configs | 3024 | −0.98% / −1.10% / +2.41% | 0.947 | 7.8% | 81.5% |
+| realistic_deep, IDEAL (no overhead) | 112 | +1.87% / +1.01% / +5.20% | 0.927 | 22.3% | 80.4% |
+| realistic_deep, **WITH overhead** (p_err>0, s>0) | 448 | **−2.22% / −2.00%** / +0.78% | 0.927 | 4.0% | 80.4% |
+| ↳ drift≈0 (gap∈[0,0.05)) | 64 | −3.50% | 1.000 | 0% | 100% |
+| ↳ small drift (0.05–0.15) | 160 | −2.49% | 0.973 | 2.5% | 92.5% |
+| ↳ large drift (0.15–0.50) | 224 | −1.66% | 0.866 | 6.2% | 66.1% |
+
+**The Jensen-floor verdict, all three pre-committed negative triggers fire:**
+1. The single best-tuned fixed k captures **≥80% of the adaptive gain** at the realistic mix
+   (median 92.7% with overhead, 92.7% even in the ideal/ceiling case). Committee's ≥80% bar = **empty**.
+2. Adaptive advantage over best-tuned-fixed is **< a few %** — and goes **negative** (−2.2% mean)
+   once realistic detection error (p_err) + switching tax (s) are paid.
+3. Only when drift is extreme (gap=±0.30, a_tool reaching 0.95) and overhead is *zero* does adaptive
+   reach a meaningful +7–9% (best case: a_prose=0.75, gap=+0.30, r=0.1 → ideal +9.49%, dropping to
+   +7.17% with even light overhead p_err=.05/s=.02). That regime (one phase at 95% accept while
+   another sits at 65%, dominating 55% of a long session, with free perfect-but-noisy detection) is
+   not the realistic operating point and even there a tuned k captures 85.6%.
+
+**Why best-tuned-fixed is so strong (the mechanism):** net tok/s as a function of k is a broad,
+concave plateau (the (E[accepted]+1)/(k·r+1) curve is flat near its peak). A single k chosen to
+maximize the *session-weighted* throughput lands inside every phase's near-optimal plateau because
+the plateaus overlap heavily unless acceptances are pathologically far apart. That overlap is the
+Jensen floor — the same geometry that killed EXP-0006 and EXP-0011.
+
+## HONEST framing
+- (A) drift real + material to the *local* optimum: **YES**.
+- (B) phase-adaptive beats best-tuned-fixed by a meaningful margin at realistic operating points:
+  **NO** — tuned-fixed captures ~93%, and adaptive loses net once detection/switching cost is paid.
+- Overall: **NEGATIVE / does-not-hold.** This is a clean honest negative and a WIN.
+
+## Artifacts
+- PRE_REGISTRATION.md (committed pre-run, 5c17b34)
+- run_exp0027.py
+- results/exp0027_sweep.csv (3,024 rows, full sweep)
+- results/exp0027_summary.json (verdict aggregates)
+- logs/run.log
+
+## Prior-art caveat
+Draft-length adaptation is PUBLISHED: EAGLE / EAGLE-2 / Medusa / SpecDec++ /
+Dynamic-Speculation-Lookahead all adapt draft length dynamically. The only candidate novelty here was
+the *session-phase-drift* framing on long agentic traffic + whether it beats best-tuned-fixed. It does
+not, so there is no defensible contribution beyond confirming the Jensen floor in yet another setting.
+
+## What a real L1 must measure
+Real draft+target model pair (e.g. a small draft + a target LLM) on REAL long agentic traces
+(multi-turn tool-calling sessions). Measure: (1) real per-phase acceptance rate vs context depth
+(does it actually drift, and how much?); (2) real net tok/s for best-tuned-fixed k\* vs a real
+phase-detector-driven adaptive k on GPU; (3) real phase-detection accuracy and real switching/recompile
+cost. L0 here is analytic + simulation only — it bounds the *theoretical* ceiling (≤~9% ideal, negative
+with overhead) and shows the bar is almost certainly unreachable, which an L1 would only confirm at cost.
+
+## PRE-REG (committed pre-run 5c17b34)
+# PRE_REGISTRATION — EXP-0027 (CLAIM-0026)
+
+**Committed BEFORE running any sweep.** Researcher-0027, L0 (CPU-only, stdlib, SERIAL, ≤15 min).
+
+## CLAIM-0026
+"In long multi-turn agentic sessions, speculative-decoding draft-model acceptance rate DRIFTS
+materially as context grows (early conversational prose → deep tool-call/JSON/structured context),
+such that a session-phase-ADAPTIVE draft policy (adjust draft length/model by a cheap detected
+context-phase signal) achieves strictly higher net tokens/sec than the BEST-TUNED FIXED draft policy
+on agentic traffic."
+
+## Two falsifiable parts
+- **(A)** Does draft acceptance actually DRIFT across session phases (acceptance-vs-context-depth)?
+- **(B)** Does phase-adaptive beat the BEST-TUNED FIXED draft policy by a MEANINGFUL margin
+  (>~a few % net tok/s) at realistic phase mixes — OR does a single tuned k capture ≥~80% of the gain
+  (the EXP-0006/EXP-0011 Jensen-floor negative)?
+
+## THROUGHPUT MODEL (speculative decoding, standard)
+For draft length k with per-token acceptance probabilities a_1..a_k (geometric-prefix accept):
+- E[accepted] = sum_{i=1..k} prod_{j=1..i} a_j   (expected number of accepted draft tokens)
+- tokens emitted per spec-decode cycle = E[accepted] + 1  (the +1 is the always-correct bonus/resample)
+- cost per cycle = k * c_draft + c_target   (k draft forward passes + 1 target verify pass)
+- net tok/s = (E[accepted] + 1) / (k * c_draft + c_target)
+We use a single per-phase acceptance rate a (a_j = a constant within a phase), so
+E[accepted] = a*(1-a^k)/(1-a). c_target normalized to 1.0; c_draft = r (draft/target cost ratio).
+"net tok/s" is in units of 1/c_target (target-passes^-1) — comparisons are ratios so units cancel.
+
+## SESSION-PHASE MODEL
+A long session is a mixture of 3 phases with fractions (f_prose, f_tool, f_mixed), sum=1:
+- **prose** (early conversational): acceptance a_prose (baseline, moderate).
+- **tool/JSON** (deep structured): acceptance a_tool = a_prose + gap. We model gap in BOTH directions:
+  - gap>0: structured/low-entropy → draft predicts better (HIGHER acceptance)
+  - gap<0: strict JSON the small draft is bad at → LOWER acceptance
+  Let the data decide; we sweep gap over a symmetric range.
+- **mixed** acceptance a_mixed = midpoint of prose & tool.
+DRIFT is operationalized as acceptance varying with context depth; here phase fraction shifts with
+session length (deep sessions → more tool/JSON). We report drift = |a_tool - a_prose| and the
+session-weighted acceptance spread.
+
+## POLICIES (matched draft model, same a per phase)
+
+## ORCHESTRATOR NOTE: this is the THIRD claim in this instance to die on the Jensen-floor-vs-best-tuned-fixed axis (EXP-0006 grammar-region, EXP-0011 early-exit, now this). The pattern is robust: 'adaptive knob vs tuned baseline' collapses when the throughput-vs-knob curve is a broad overlapping plateau. An L1 would re-confirm a tautology at higher fidelity — weigh whether it's worth a GPU pass vs converging.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+ORCHESTRATOR_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'find . -maxdepth 3 -type d | head -50' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.
+./learning
+./learning/roles
+./learning/orchestrator
+./experiments
+./experiments/2026-06-03
+./experiments/2026-06-03/EXP-0017
+./experiments/2026-06-03/EXP-0010
+./experiments/2026-06-03/EXP-0019
+./experiments/2026-06-03/EXP-0021
+./experiments/2026-06-03/EXP-0020
+./experiments/2026-06-03/EXP-0027
+./experiments/2026-06-03/EXP-0018
+./experiments/2026-06-03/EXP-0011
+./experiments/2026-06-03/EXP-0016
+./experiments/2026-06-03/EXP-0007
+./experiments/2026-06-03/EXP-0009
+./experiments/2026-06-03/EXP-0013
+./experiments/2026-06-03/EXP-0014
+./experiments/2026-06-03/EXP-0022
+./experiments/2026-06-03/EXP-0023
+./experiments/2026-06-03/EXP-0015
+./experiments/2026-06-03/EXP-0012
+./experiments/2026-06-02
+./experiments/2026-06-02/EXP-0005
+./experiments/2026-06-02/EXP-0002
+./experiments/2026-06-02/EXP-0003
+./experiments/2026-06-02/EXP-0004
+./experiments/2026-06-02/EXP-0001
+./experiments/2026-06-02/EXP-0006
+./projects
+./projects/PROJ-0006
+./projects/PROJ-0001
+./projects/PROJ-0004
+./projects/PROJ-0003
+./projects/PROJ-0002
+./projects/PROJ-0005
+./prior_art
+./runtime
+./runtime/locks
+./runtime/agents
+./runtime/escalation
+./runtime/handoffs
+./runtime/orchestrator
+./runtime/cron
+./runtime/cron/.proj_notified
+./runtime/cron/.mon_notified
+./runtime/cron/.coord_notified
+./sessions
+./registry
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 490ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -maxdepth 3 -type d -name 'prompts' -o -name '_shared'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -iname '*committee*' -o -iname '*TOOLING*'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 125ms:
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0009/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0013/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0013/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0014/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0014/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0022/COMMITTEE2_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0022/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0023/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0023/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0015/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0015/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0012/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0005/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0002/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0004/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0004/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0001/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0001/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0006/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-02/EXP-0006/COMMITTEE1_PACKET.md
+/Users/dengcchi/autonomous-research-v3/runtime/orchestrator/committee_queue.yaml
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.log
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.alive
+
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -type f | grep -E 'TOOLING|committee_common|prompts' | head -50" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi -path '*_committee_common_v001.md' -o -path '*TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+2026-06-03T08:34:49.420238Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+ succeeded in 26120ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/opt/homebrew/bin/gh
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PreToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/spec_decode.md | sed -n '1,160p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/transformers/main/docs/source/en/generation_strategies.md | grep -n -i \"speculat\\|assistant\\|dynamic\" | head -40" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 193ms:
+404: Not Found
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 202ms:
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc 'gh search code --repo sgl-project/sglang "speculative" --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code --repo vllm-project/vllm "num_speculative_tokens" --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code --repo NVIDIA/TensorRT-LLM "speculative" --limit 10' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code --repo huggingface/transformers "assistant_confidence_threshold" --limit 10' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 985ms:
+sgl-project/sglang:docs_new/src/snippets/autoregressive/qwen35-deployment.jsx: speculative: (value) => value === 'enabled' ? '--speculative-algorithm EAGLE \\\n  --speculative-num-steps 3 \\\n  --speculative-eagle-topk 1 \\\n  --speculative-num-draft-tokens 4' : null,
+sgl-project/sglang:scripts/playground/bench_speculative.py: python3 bench_speculative.py --model-path meta-llama/Llama-2-7b-chat-hf --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B
+sgl-project/sglang:scripts/playground/bench_speculative.py: python3 bench_speculative.py --model-path deepseek-ai/DeepSeek-V3 --speculative-draft-model-path lmsys/DeepSeek-V3-NextN --tp-size 8 --trust-remote-code --batch-size 1 4 8 16 32 --steps 0 1 2 --topk 0 1 2 4 --num_draft_tokens 0 2 4 8
+sgl-project/sglang:docs/advanced_features/adaptive_speculative_decoding.md: Adaptive speculative decoding lets SGLang adjust `speculative_num_steps/speculative_num_draft_tokens` at runtime instead of keeping a single fixed value for the whole server lifetime.
+sgl-project/sglang:docs/advanced_features/adaptive_speculative_decoding.md: `--speculative-adaptive-config` is optional, but the speculative setup still needs to be valid for adaptive mode.
+sgl-project/sglang:sgl-kernel/python/sgl_kernel/speculative.py: def tree_speculative_sampling_target_only(
+sgl-project/sglang:sgl-kernel/python/sgl_kernel/speculative.py: torch.ops.sgl_kernel.tree_speculative_sampling_target_only.default(
+sgl-project/sglang:sgl-kernel/csrc/speculative/speculative_sampling.cu: #include "speculative_sampling.cuh"
+sgl-project/sglang:sgl-kernel/csrc/speculative/speculative_sampling.cu: void tree_speculative_sampling_target_only(
+sgl-project/sglang:docs/advanced_features/speculative_decoding.md: - [EAGLE-2 Decoding via Frequency-Ranked Speculative Sampling](#eagle-2-decoding-via-frequency-ranked-speculative-sampling)
+sgl-project/sglang:docs/advanced_features/speculative_decoding.md: These parameters are mostly the same for EAGLE-2 and EAGLE-3. `--speculative-token-map` is ignored for EAGLE-3 models.
+sgl-project/sglang:docs/advanced_features/speculative_decoding.md: For `--speculative-num-steps`, `--speculative-eagle-topk`, and `--speculative-num-draft-tokens`: leave all three unset to use auto-tuning, or set all three explicitly when tuning.
+sgl-project/sglang:docs/advanced_features/speculative_decoding.md: If you use EAGLE with `--speculative-eagle-topk 1` and your acceptance rate varies across requests, see [Adaptive Speculative Decoding](adaptive_speculative_decoding.md).
+sgl-project/sglang:sgl-kernel/csrc/speculative/speculative_sampling.cuh: #ifndef SPECULATIVE_SAMPLING_CUH_
+sgl-project/sglang:sgl-kernel/csrc/speculative/speculative_sampling.cuh: #define SPECULATIVE_SAMPLING_CUH_
+sgl-project/sglang:python/sglang/srt/arg_groups/speculative_hook.py: speculative_algorithm: Optional[str],
+sgl-project/sglang:python/sglang/srt/arg_groups/speculative_hook.py: speculative_draft_model_path: Optional[str],
+sgl-project/sglang:python/sglang/srt/arg_groups/speculative_hook.py: "Currently DFLASH speculative decoding only supports pp_size == 1."
+sgl-project/sglang:docs_new/docs/advanced_features/speculative_decoding.ipynb: "| SGLang (w/o speculative, 1x H100) | 158.34 tokens/s |\n",
+sgl-project/sglang:docs_new/docs/advanced_features/speculative_decoding.ipynb: "    --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B --speculative-num-steps 5 \\\n",
+sgl-project/sglang:docs_new/docs/advanced_features/speculative_decoding.ipynb: "        --speculative-eagle-topk 8 --speculative-num-draft-tokens 64 --mem-fraction 0.6 \\\n",
+sgl-project/sglang:examples/frontend_language/usage/openai_speculative.py: python3 openai_speculative.py
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1042ms:
+vllm-project/vllm:vllm/config/vllm.py: def num_speculative_tokens(self) -> int:
+vllm-project/vllm:vllm/config/vllm.py: and self.speculative_config.num_speculative_tokens is not None
+vllm-project/vllm:docs/features/speculative_decoding/mtp.md: --speculative-config '{"method":"mtp","model":"gg-hf-am/gemma-4-E2B-it-assistant","num_speculative_tokens":1}'
+vllm-project/vllm:docs/features/speculative_decoding/mtp.md: "num_speculative_tokens": 1,
+vllm-project/vllm:docs/features/speculative_decoding/eagle.md: "num_speculative_tokens": 2,
+vllm-project/vllm:docs/features/speculative_decoding/eagle.md: "num_speculative_tokens": 2,
+vllm-project/vllm:vllm/v1/spec_decode/dflash.py: self.max_query_tokens = self.max_batch_size * (1 + self.num_speculative_tokens)
+vllm-project/vllm:vllm/v1/spec_decode/dflash.py: num_query_per_req = 1 + self.num_speculative_tokens
+vllm-project/vllm:docs/features/speculative_decoding/n_gram.md: "num_speculative_tokens": 5,
+vllm-project/vllm:vllm/v1/spec_decode/suffix_decoding.py: self.num_speculative_tokens = config.num_speculative_tokens
+vllm-project/vllm:docs/features/speculative_decoding/suffix.md: Suffix Decoding will speculate a dynamic number of tokens for each request at each decoding step, so the `num_speculative_tokens` configuration specifies the *maximum* number of speculative tokens. It is suggested to use a high number such as `16` or `32` (default).
+vllm-project/vllm:docs/features/speculative_decoding/suffix.md: "num_speculative_tokens": 32,
+vllm-project/vllm:benchmarks/benchmark_ngram_proposer.py: num_speculative_tokens=args.num_spec_token,
+vllm-project/vllm:benchmarks/benchmark_ngram_proposer.py: NUM_SPECULATIVE_TOKENS_NGRAM = 10
+vllm-project/vllm:vllm/v1/spec_decode/custom_class_proposer.py: "Loaded custom proposer class '%s' with num_speculative_tokens=%d",
+vllm-project/vllm:vllm/v1/spec_decode/custom_class_proposer.py: spec_config.num_speculative_tokens,
+vllm-project/vllm:docs/features/speculative_decoding/README.md: "num_speculative_tokens": 5
+vllm-project/vllm:docs/features/speculative_decoding/README.md: | `num_speculative_tokens` | `integer > 0` | `None` | Number of speculative tokens to propose per step. Required for methods that do not infer it from model metadata. |
+
+ succeeded in 1117ms:
+NVIDIA/TensorRT-LLM:docs/source/features/speculative-decoding.md: Draft/target is the simplest form of speculative decoding. In this approach, an arbitrary draft model is used to produce draft tokens. It is important to make sure that the draft and target models were trained with the same tokenizer, else the acceptance rate is extremely low and performance is regressed.
+NVIDIA/TensorRT-LLM:docs/source/features/speculative-decoding.md: * `speculative_model`: Path or HuggingFace model ID for the DFlash draft model.
+NVIDIA/TensorRT-LLM:examples/llm-api/llm_speculative_decoding.py: ### :title Speculative Decoding
+NVIDIA/TensorRT-LLM:examples/llm-api/llm_speculative_decoding.py: speculative_config=spec_config,
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/sa_worker.py: SA (Suffix Automaton) speculative decoding worker that runs inside model forward.
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/sa_worker.py: This module provides CUDA graph compatible SA speculative decoding by
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/utils.py: from ..speculative.interface import SpecMetadata
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/utils.py: f"Unsupported speculative decoding mode: {spec_config.spec_dec_mode}")
+NVIDIA/TensorRT-LLM:docs/source/blogs/tech_blog/blog12_Combining_Guided_Decoding_and_Speculative_Decoding.md: - [Combining Guided Decoding and Speculative Decoding: Making CPU and GPU Cooperate Seamlessly](#combining-guided-decoding-and-speculative-decoding-making-cpu-and-gpu-cooperate-seamlessly)
+NVIDIA/TensorRT-LLM:docs/source/blogs/tech_blog/blog12_Combining_Guided_Decoding_and_Speculative_Decoding.md: <p align="center"><sub><em>Figure 2: Top: GPU timeline of one-model speculative decoding. Bottom: GPU timeline of two-model speculative decoding.</em></sub></p>
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/one_model_sampler.py: from flashinfer.sampling import chain_speculative_sampling, top_k_top_p_sampling_from_logits
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/one_model_sampler.py: chain_speculative_sampling = None
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/spec_sampler_base.py: Base class for speculative decoding samplers.
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/spec_sampler_base.py: """Tensors for speculative decoding sample state."""
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/draft_target.py: DraftTarget One-Model Speculative Decoding Implementation.
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/speculative/draft_target.py: This module implements a one-model approach for DraftTarget speculative decoding,
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/models/modeling_speculative.py: from ..speculative import (SpecMetadata, get_spec_worker,
+NVIDIA/TensorRT-LLM:tensorrt_llm/_torch/models/modeling_speculative.py: """Slice speculative position IDs along the token dimension."""
+NVIDIA/TensorRT-LLM:docs/source/legacy/advanced/speculative-decoding.md: # Speculative Sampling
+NVIDIA/TensorRT-LLM:docs/source/legacy/advanced/speculative-decoding.md: - [About Speculative Sampling](#about-speculative-sampling)
+
+ succeeded in 1383ms:
+huggingface/transformers:src/transformers/generation/stopping_criteria.py: `model.generation_config.assistant_confidence_threshold` even if the number of speculative tokens (defined by `num_assistant_tokens`) is not yet reached.
+huggingface/transformers:src/transformers/generation/stopping_criteria.py: assistant_confidence_threshold (`float`):
+huggingface/transformers:src/transformers/generation/utils.py: and generation_config.assistant_confidence_threshold is not None
+huggingface/transformers:src/transformers/generation/utils.py: and generation_config.assistant_confidence_threshold > 0
+huggingface/transformers:src/transformers/generation/candidate_generator.py: self.assistant_confidence_threshold = self.assistant_generation_config.assistant_confidence_threshold
+huggingface/transformers:src/transformers/generation/configuration_utils.py: assistant_confidence_threshold (`float`, *optional*):
+huggingface/transformers:src/transformers/generation/configuration_utils.py: `assistant_confidence_threshold` value is persistent over multiple generation calls with the same assistant model.
+huggingface/transformers:tests/generation/test_utils.py: self.assistant_model.generation_config.assistant_confidence_threshold = 0.4
+huggingface/transformers:tests/generation/test_utils.py: self.original_threshold = self.assistant_model.generation_config.assistant_confidence_threshold
+huggingface/transformers:tests/generation/test_stopping_criteria.py: criteria = ConfidenceCriteria(assistant_confidence_threshold=0.5)
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/advanced_features/adaptive_speculative_decoding.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/speculative_decoding/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/docs/source/features/speculative-decoding.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/huggingface/transformers/main/src/transformers/generation/configuration_utils.py | grep -n -A16 -B4 \"num_assistant_tokens\\|assistant_confidence_threshold\\|heuristic\" | head -120" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 221ms:
+# Speculative Decoding
+
+This document shows how to use [Speculative Decoding](https://arxiv.org/pdf/2302.01318) with vLLM to reduce inter-token latency under medium-to-low QPS (query per second), memory-bound workloads.
+
+To train your own draft models for optimized speculative decoding, see [vllm-project/speculators](speculators.md) for seamless training and integration with vLLM.
+
+## vLLM Speculation Methods
+
+vLLM supports a variety of methods of speculative decoding. Model-based methods such as EAGLE, MTP, draft models, PARD and MLP provide the best latency reduction, while simpler methods such as n-gram and suffix decoding provide modest speedups without increasing workload during peak traffic.
+
+- [EAGLE](eagle.md)
+- [Multi-Token Prediction (MTP)](mtp.md)
+- [Draft Model](draft_model.md)
+- [Parallel Draft Model (PARD)](parallel_draft_model.md)
+- [Multi-Layer Perceptron](mlp.md)
+- [N-Gram](n_gram.md)
+- [Suffix Decoding](suffix.md)
+- [Hidden State Extraction](extract_hidden_states.md)
+- [Custom Proposer Backend (Experimental)](#custom-proposer-backend-experimental)
+
+## Method Selection at a Glance
+
+Use this qualitative table as a starting point for method selection. Real gains
+depend on your model family, traffic pattern, hardware, and sampling settings.
+
+| Method | Low QPS (latency focused) | High QPS (throughput focused) | Notes |
+| --- | --- | --- | --- |
+| EAGLE | High gain | Medium to high gain | Strong general-purpose model-based method. |
+| MTP | High gain | Medium to high gain | Best when the target model has native MTP support. |
+| Draft model | High gain | Medium gain | Needs a separate draft model. |
+| Parallel Draft Model | High gain | Medium to high gain | Low draft model latency. |
+| MLP speculator | Medium to high gain | Medium gain | Good when compatible MLP speculators are available. |
+| N-gram | Low to medium gain | Medium gain | Lightweight and easy to enable. |
+| Suffix decoding | Low to medium gain | Medium gain | No extra draft model; dynamic speculation depth. |
+| Custom Proposer | Varies | Varies | Bring your own proposer class (experimental). |
+
+For reproducible measurements in your environment, use
+[`examples/features/speculative_decoding/spec_decode_offline.py`](../../../examples/features/speculative_decoding/spec_decode_offline.py)
+or the [benchmark CLI guide](../../benchmarking/cli.md).
+
+## Custom Proposer Backend (Experimental)
+
+You can plug in your own custom proposer class for speculative decoding by setting the method to `custom_class` and providing the full module path to your class.
+Your custom class must accept a `VllmConfig` upon instantiation and implement a `propose` method.
+
+**Example configuration:**
+
+- `speculative_config.method = "custom_class"`
+- `speculative_config.model = "your_module.YourCustomProposerClass"`
+
+## `--speculative-config` schema
+
+Use `--speculative-config` to pass speculative decoding settings as a JSON
+object on the CLI:
+
+```bash
+vllm serve <target-model> \
+  --speculative-config '{
+    "method": "draft_model",
+    "model": "<draft-model>",
+    "num_speculative_tokens": 5
+  }'
+```
+
+The same keys are accepted from Python via `LLM(..., speculative_config={...})`.
+The tables below highlight common user-facing keys accepted in this JSON
+object; they are not an exhaustive schema reference.
+For more details, see the generated [engine arguments reference](../../configuration/engine_args.md)
+and the API docs for [vllm.config.SpeculativeConfig][].
+
+### Common keys
+
+These keys are commonly used across speculative decoding setups, though some
+only apply to model-based methods such as `draft_model`, `mtp`, `eagle3`, and
+`dflash`.
+
+| Key | Type | Default | Allowed values / meaning |
+| --- | --- | --- | --- |
+| `method` | `string` | `None` | Speculation method. Common values include `draft_model`, `ngram`, `suffix`, `mtp`, `eagle3`, and `dflash`. If omitted, vLLM infers the method from the provided configuration when possible. |
+| `model` | `string` | `None` | Draft model, EAGLE head, or auxiliary model identifier. For `ngram`, `ngram_gpu`, `suffix`, and `mtp`, this can often be omitted. |
+| `num_speculative_tokens` | `integer > 0` | `None` | Number of speculative tokens to propose per step. Required for methods that do not infer it from model metadata. |
+| `draft_tensor_parallel_size` | `integer >= 1` | `None` | Tensor parallel size for the draft model. |
+| `max_model_len` | `integer >= 1` | `None` | Maximum context length for the draft model. |
+| `parallel_drafting` | `boolean` | `false` | Enable parallel draft token generation. Only compatible with EAGLE and draft-model methods. |
+| `rejection_sample_method` | `string` | `strict` | `strict`, `probabilistic`, or `synthetic`. |
+| `synthetic_acceptance_rate` | `float` | `None` | Average acceptance rate to target when `rejection_sample_method` is `synthetic`. Valid range is `[0, 1]`. |
+
+!!! note
+    Gemma 4 assistant checkpoints are handled as Gemma 4 MTP speculators, not
+    as generic draft models. Use `"method": "mtp"` with the assistant
+    checkpoint in `model`, as shown in the [MTP guide](mtp.md#gemma-4-assistant-models).
+
+    If startup logs show `SpeculativeConfig(method='draft_model', ...)` for a
+    Gemma 4 assistant checkpoint, the installed vLLM version does not include
+    Gemma 4 MTP support for that path. Upgrade to a version that includes
+    Gemma 4 MTP support instead of forcing the assistant checkpoint through
+    generic draft-model speculative decoding.
+
+### Method-specific keys
+
+#### N-gram
+
+| Key | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `prompt_lookup_max` | `integer >= 1` | `5` if both lookup bounds are omitted; otherwise mirrors `prompt_lookup_min` when omitted | Maximum n-gram window size. |
+| `prompt_lookup_min` | `integer >= 1` | `5` if both lookup bounds are omitted; otherwise mirrors `prompt_lookup_max` when omitted | Minimum n-gram window size. |
+
+Example:
+
+```bash
+vllm serve <target-model> \
+  --speculative-config '{
+    "method": "ngram",
+    "num_speculative_tokens": 4,
+    "prompt_lookup_min": 2,
+    "prompt_lookup_max": 5
+  }'
+```
+
+#### Suffix decoding
+
+| Key | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `suffix_decoding_max_tree_depth` | `integer` | `24` | Maximum combined prefix-match and speculation tree depth. |
+| `suffix_decoding_max_cached_requests` | `integer` | `10000` | Maximum number of requests cached in the global suffix tree. Set `0` to disable the global cache. |
+| `suffix_decoding_max_spec_factor` | `float` | `1.0` | Caps speculative length as a multiple of prefix-match length. |
+| `suffix_decoding_min_token_prob` | `float` | `0.1` | Minimum estimated token probability required to speculate a token. |
+
+Example:
+
+```bash
+vllm serve <target-model> \
+  --speculative-config '{
+    "method": "suffix",
+    "num_speculative_tokens": 8,
+    "suffix_decoding_max_tree_depth": 24,
+    "suffix_decoding_max_cached_requests": 10000,
+    "suffix_decoding_max_spec_factor": 1.0,
+    "suffix_decoding_min_token_prob": 0.1
+  }'
+```
+
+### Notes
+
+- `--speculative-config` expects a JSON object on the CLI. In YAML config
+  files, use a nested mapping instead of an escaped JSON string.
+- `tensor_parallel_size` is not a valid key in `speculative_config`. Use
+  `draft_tensor_parallel_size` instead.
+- Keys such as `temperature` and `top_p` are sampling parameters, not
+  `--speculative-config` fields.
+- Internal fields such as `target_model_config`, `draft_model_config`,
+  `target_parallel_config`, `draft_parallel_config`, and `draft_load_config`
+  are populated by vLLM and are not intended to be set by users.
+
+## Lossless guarantees of Speculative Decoding
+
+In vLLM, speculative decoding aims to enhance inference efficiency while maintaining accuracy. This section addresses the lossless guarantees of
+speculative decoding, breaking down the guarantees into three key areas:
+
+1. **Theoretical Losslessness**
+   \- Speculative decoding sampling is theoretically lossless up to the precision limits of hardware numerics. Floating-point errors might
+   cause slight variations in output distributions, as discussed
+   in [Accelerating Large Language Model Decoding with Speculative Sampling](https://arxiv.org/pdf/2302.01318)
+
+2. **Algorithmic Losslessness**
+   \- vLLM’s implementation of speculative decoding is algorithmically validated to be lossless. Key validation tests include:
+
+    > - **Rejection Sampler Convergence**: Ensures that samples from vLLM’s rejection sampler align with the target
+    >   distribution. [View Test Code](https://github.com/vllm-project/vllm/blob/47b65a550866c7ffbd076ecb74106714838ce7da/tests/samplers/test_rejection_sampler.py#L252)
+    > - **Greedy Sampling Equality**: Confirms that greedy sampling with speculative decoding matches greedy sampling
+    >   without it. This verifies that vLLM's speculative decoding framework, when integrated with the vLLM forward pass and the vLLM rejection sampler,
+    >   provides a lossless guarantee. Almost all of the tests in [tests/spec_decode/e2e](/tests/v1/spec_decode).
+    >   verify this property using [this assertion implementation](https://github.com/vllm-project/vllm/blob/b67ae00cdbbe1a58ffc8ff170f0c8d79044a684a/tests/spec_decode/e2e/conftest.py#L291)
+
+3. **vLLM Logprob Stability**
+   \- vLLM does not currently guarantee stable token log probabilities (logprobs). This can result in different outputs for the
+   same request across runs. For more details, see the FAQ section
+   titled *Can the output of a prompt vary across runs in vLLM?* in the [FAQs](../../usage/faq.md).
+
+While vLLM strives to ensure losslessness in speculative decoding, variations in generated outputs with and without speculative decoding
+can occur due to following factors:
+
+- **Floating-Point Precision**: Differences in hardware numerical precision may lead to slight discrepancies in the output distribution.
+- **Batch Size and Numerical Stability**: Changes in batch size may cause variations in logprobs and output probabilities, potentially
+  due to non-deterministic behavior in batched operations or numerical instability.
+
+For mitigation strategies, please refer to the FAQ entry *Can the output of a prompt vary across runs in vLLM?* in the [FAQs](../../usage/faq.md).
+
+## Known Feature Incompatibility
+
+1. Pipeline parallelism is not composible with speculative decoding as of `vllm<=0.15.0`
+2. Speculative decoding with a draft models is not supported in `vllm<=0.10.0`
+
+## Resources for vLLM contributors
+
+- [[vLLM Office Hours #40] Intro to Speculators](https://www.youtube.com/watch?v=2ISAr_JVGLs)
+- [A Hacker's Guide to Speculative Decoding in vLLM](https://www.youtube.com/watch?v=9wNAgpX6z_4)
+- [What is Lookahead Scheduling in vLLM?](https://docs.google.com/document/d/1Z9TvqzzBPnh5WHcRwjvK2UEeFeq5zMZb5mFE8jR0HCs/edit#heading=h.1fjfb0donq5a)
+- [Information on batch expansion](https://docs.google.com/document/d/1T-JaS2T1NRfdP51qzqpyakoCXxSXTtORppiwaj5asxA/edit#heading=h.kk7dq05lc6q8)
+- [Dynamic speculative decoding](https://github.com/vllm-project/vllm/issues/4565)
+
+ succeeded in 236ms:
+# Adaptive Speculative Decoding
+
+Adaptive speculative decoding lets SGLang adjust `speculative_num_steps/speculative_num_draft_tokens` at runtime instead of keeping a single fixed value for the whole server lifetime.
+It is designed for workloads whose accept length changes over time, where one static step count is rarely optimal.
+
+## Current support
+
+- Only `--speculative-algorithm EAGLE`
+- Only `--speculative-eagle-topk 1`
+- If either condition is not met, SGLang falls back to static speculative settings
+
+## Why adaptive steps help
+
+`speculative_num_steps` controls how many draft-model autoregressive steps run in each speculative round. In practice, the best value depends on the current workload.
+
+- If `num_steps` is too small, the draft model could have produced more accepted tokens, but the round stops too early.
+- If `num_steps` is too large, the draft model produces many candidate tokens that the target model rejects, so extra draft work is wasted.
+
+Real traffic often moves between high-acceptance and low-acceptance phases, so one fixed step count is usually a compromise. Adaptive mode tries to follow the workload instead of hard-coding a single global `num_steps`.
+
+## Design overview
+
+The adaptive mechanism has three pieces:
+
+- `AdaptiveSpeculativeParams`: the EMA-based policy
+- `SpecRuntimeState`: the per-tier runtime state bundle
+- `AdaptiveController`: the coordinator that chooses a tier and activates the matching runtime state
+
+At startup, SGLang pre-builds one runtime state per candidate tier. By default, the candidate tiers are `candidate_steps = [1, 3, 7]`.
+
+```text
+┌──────────────────────────────────────────────────────────┐
+│                      SpecRuntimeState                    │
+│                                                          │
+│  speculative_num_steps / speculative_num_draft_tokens   │
+│                                                          │
+│  ┌────────────────┐ ┌────────────────┐ ┌──────────────┐  │
+│  │  Draft stage   │ │  Verify stage  │ │ Extend stage │  │
+│  │                │ │                │ │              │  │
+│  │  attn_backend  │ │  attn_backend  │ │ attn_backend │  │
+│  │  cuda_graph    │ │  cuda_graph    │ │ cuda_graph   │  │
+│  └────────────────┘ └────────────────┘ └──────────────┘  │
+└──────────────────────────────────────────────────────────┘
+```
+
+This matters because `CudaGraphRunner` is shape-dependent. Each candidate tier owns its own graph and backend state, so runtime switching is a reference swap, not an online graph recapture.
+
+## Runtime flow
+
+The adaptive update happens after verify and affects the next round, not the current one:
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│           EAGLEWorker.forward_batch_generation() — decode path      │
+│                                                                     │
+│   ① draft(batch)                                                    │
+│       │  draft model multi-step generation with current tier        │
+│       v                                                             │
+│   ② verify(batch, spec_info)                                        │
+│       │  target model tree verification                             │
+│       │  → produces accept_length_per_req                           │
+│       v                                                             │
+│   ③ forward_draft_extend_after_decode(batch)                        │
+│       │  draft model KV-cache catch-up                              │
+│       v                                                             │
+│   ④ adaptive_controller.on_verify_complete(accept_lengths)          │
+│       │                                                             │
+│       │  update EMA, apply warmup / interval / hysteresis gates     │
+│       │  if tier changed, select a pre-built state from pool        │
+│       v                                                             │
+│     worker.apply_runtime_state(state)                               │
+│                                                                     │
+│   Tier switch happens after the current round completes.            │
+│   Backends and CUDA graphs are never swapped mid-round.             │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## How the policy decides
+
+After each verify pass, SGLang reads the accepted draft length per request, computes the batch average, smooths it with an exponential moving average (EMA), and switches among the pre-built candidate tiers `[1, 3, 7]` by default.
+
+The decision logic is intentionally conservative:
+
+- `warmup_batches` skips the first few batches
+- `update_interval` avoids switching every batch
+- `down_hysteresis` and `up_hysteresis` reduce oscillation
+
+Conceptually, the policy probes one step beyond the observed acceptance:
+
+```text
+target_steps ≈ clamp(round(ema_accept_len) + 1, min(candidate_steps), max(candidate_steps))
+```
+
+So if recent requests consistently accept more drafted tokens, the policy tends to move up. If they start rejecting earlier, it tends to move down.
+
+## Usage
+
+`--speculative-adaptive-config` is optional, but the speculative setup still needs to be valid for adaptive mode.
+
+```bash
+python3 -m sglang.launch_server \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --speculative-algorithm EAGLE \
+    --speculative-draft-model-path lmsys/sglang-EAGLE-llama2-chat-7B \
+    --speculative-eagle-topk 1 \
+    --speculative-num-steps 3 \
+    --speculative-num-draft-tokens 4 \
+    --speculative-adaptive
+```
+
+If you want to override the defaults, add `--speculative-adaptive-config /path/to/adaptive_spec.json`.
+
+Example config:
+
+```json
+{
+  "candidate_steps": [1, 3, 7],
+  "ema_alpha": 0.2,
+  "warmup_batches": 10,
+  "update_interval": 5
+}
+```
+
+## Config file reference
+
+The config file is optional. Any omitted keys use defaults.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `candidate_steps` | `[1, 3, 7]` | Discrete `speculative_num_steps` tiers that adaptive mode can switch between |
+| `ema_alpha` | `0.2` | EMA smoothing factor for accepted draft length |
+| `update_interval` | `5` | Recompute interval, in verify batches, after warmup |
+| `warmup_batches` | `10` | Number of verify batches to observe before switching |
+| `down_hysteresis` | `-0.25` | Extra margin before moving to a smaller step |
+| `up_hysteresis` | `0.0` | Extra margin before moving to a larger step |
+
+The initial `--speculative-num-steps` is snapped to the nearest value in `candidate_steps`.
+
+## Monitoring
+
+You can inspect the active tier and acceptance metric via `/server_info`:
+
+```bash
+curl -s http://127.0.0.1:30000/server_info | jq '.internal_states[0] | {speculative_num_steps, avg_spec_accept_length}'
+```
+
+- `speculative_num_steps` is the current active tier
+- `avg_spec_accept_length` helps explain whether the server is likely to move up or down
+
+## Tuning tips
+
+- Start with the default candidate tiers `[1, 3, 7]`
+- Use fewer tiers if you want lower startup and graph-memory overhead
+- Increase `ema_alpha` to react faster, or lower it for more stability
+- Increase `warmup_batches` or `update_interval` if tier switching is too noisy
+- If your workload is already stable and one static setting is well tuned, adaptive mode may not help much
+
+ succeeded in 234ms:
+# Speculative Decoding
+
+Speculative decoding is a technique for accelerating LLM inference at low batch sizes. A lightweight drafting mechanism proposes candidate tokens, and the target model verifies them in a single forward pass. Tokens that match are accepted, reducing the number of sequential forward passes needed.
+
+## Quick Start
+
+For all speculation algorithms, when speculation is enabled, a single sequence of draft tokens with length `max_draft_len` is created for every request. There is currently no way to dynamically disable speculation, thus speed ups are only observable at low batch sizes.
+
+
+### Draft/Target
+
+Draft/target is the simplest form of speculative decoding. In this approach, an arbitrary draft model is used to produce draft tokens. It is important to make sure that the draft and target models were trained with the same tokenizer, else the acceptance rate is extremely low and performance is regressed.
+
+```python
+from tensorrt_llm.llmapi import DraftTargetDecodingConfig
+
+# Option 1: Use a HuggingFace Hub model ID (auto-downloaded)
+speculative_config = DraftTargetDecodingConfig(
+    max_draft_len=3, speculative_model="yuhuili/EAGLE3-LLaMA3.1-Instruct-8B")
+
+# Option 2: Use a local path
+# speculative_config = DraftTargetDecodingConfig(
+#     max_draft_len=3, speculative_model="/path/to/draft_model")
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config, disable_overlap_scheduler=True)
+```
+
+### EAGLE 3
+
+The EAGLE 3 algorithm is described in the paper [EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test](https://arxiv.org/pdf/2503.01840).
+By default, each request uses a single sequence (linear chain) of draft tokens with length `max_draft_len`. Optionally, dynamic tree draft generation can be enabled to improve acceptance rates — see [Dynamic Tree Mode](#dynamic-tree-mode) below.
+
+The following draft model checkpoints can be used for EAGLE 3:
+* Llama 3 variants: [use the checkpoints from the authors of the original EAGLE 3 paper](https://huggingface.co/yuhuili).
+* Llama 4 Maverick: [use the checkpoint from the NVIDIA HuggingFace repository](https://huggingface.co/nvidia/Llama-4-Maverick-17B-128E-Eagle3).
+* Other models, including `gpt-oss-120b` and `Qwen3`: check out the [Speculative Decoding Modules](https://huggingface.co/collections/nvidia/speculative-decoding-modules) collection from NVIDIA.
+
+```python
+from tensorrt_llm.llmapi import Eagle3DecodingConfig
+
+model = "meta-llama/Llama-3.1-8B-Instruct"
+speculative_model = "yuhuili/EAGLE3-LLaMA3.1-Instruct-8B"
+
+speculative_config = Eagle3DecodingConfig(
+    max_draft_len=3,
+    speculative_model=speculative_model)
+
+llm = LLM(model, speculative_config=speculative_config)
+```
+
+EAGLE 3 can be combined with the [Suffix Automaton enhancement](#suffix-automaton-sa-enhancement) for improved acceptance rates on repetitive content. See the SA section below for details.
+
+#### Dynamic Tree Mode
+
+Dynamic tree mode enables tree-structured draft generation for EAGLE 3, where the drafter expands multiple candidate tokens at each layer instead of a single token. This can improve acceptance rates compared to linear drafting at the cost of additional compute per generation step.
+
+To enable dynamic tree mode, set `use_dynamic_tree=True` on the `Eagle3DecodingConfig` and provide the following parameters:
+
+* `use_dynamic_tree` (`bool`): Enables dynamic tree draft generation. Mutually exclusive with `eagle_choices` (static tree).
+* `dynamic_tree_max_topK` (`int`): Maximum number of tokens to expand per node at each draft layer.
+* `max_total_draft_tokens` (`int`, optional): Total draft token budget for the tree. Must satisfy `max_draft_len <= max_total_draft_tokens <= dynamic_tree_max_topK * max_draft_len`. Defaults to `dynamic_tree_max_topK * max_draft_len` if not set.
+
+When `use_dynamic_tree=True`, the dynamic tree CUDA buffers are pre-allocated based on the `LLM`'s `max_batch_size`, which is propagated internally and must not be passed directly to `Eagle3DecodingConfig`.
+
+```python
+from tensorrt_llm.llmapi import Eagle3DecodingConfig
+
+speculative_config = Eagle3DecodingConfig(
+    max_draft_len=6,
+    speculative_model="yuhuili/EAGLE3-LLaMA3.1-Instruct-8B",
+    use_dynamic_tree=True,
+    dynamic_tree_max_topK=10,
+    max_total_draft_tokens=60,
+)
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+```{note}
+Dynamic tree mode is currently **not supported** for models that use sliding window attention or MLA (Multi-Latent Attention), such as DeepSeek and gpt-oss models.
+```
+
+### NGram
+
+The NGram method is an implementation of [this Prompt Lookup Decoding algorithm](https://github.com/apoorvumang/prompt-lookup-decoding).
+
+When the NGram algorithm is used, TRT-LLM will maintain a map from token prefixes to candidate draft sequences. For example, the 3-gram ["The ", " future ", " is"] could map to the draft sequence [" bright", " because"]. The prefixes are token sequences that are extracted from the prompt and the tokens generated by the target model. The NGram pool and matching procedure can be tuned with the following options:
+
+* `max_draft_len`: Maximum draft candidate length.
+* `max_matching_ngram_size`: Maximum prompt suffix length to match with keys in the pool.
+* `is_public_pool`: If true, a single ngram pool is shared for all requests. Otherwise, each request has its own ngram pool.
+* `is_keep_all`: If true, draft candidates will be retained in the pool forever. Otherwise, only the largest draft candidate is retained.
+* `is_use_oldest`: If true, the oldest draft candidate is always proposed for a given match. Otherwise, the newest draft candidate is used. Only applicable if `is_keep_all == True` because `is_keep_all == False` means we'll only ever have a single value for each key.
+
+```python
+from tensorrt_llm.llmapi import NGramDecodingConfig
+
+speculative_config = NGramDecodingConfig(
+    max_draft_len=3, max_matching_ngram_size=4, is_public_pool=True)
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config, disable_overlap_scheduler=True)
+```
+
+### MTP
+
+MTP is currently only supported by Deepseek. MTP can be tuned with the following configuration options:
+
+* `max_draft_len`: Maximum draft candidate length.
+* `num_nextn_predict_layers`: Number of MTP modules to use. Currently must match `max_draft_len`.
+* `use_relaxed_acceptance_for_thinking`: If true, use relaxed decoding for reasoning models in the thinking phase. In this mode, speculation requirements are relaxed for the thinking phase - a draft token may be accepted if it appears in a candidate set constructed with `relaxed_topk` and `relaxed_delta`.
+* `relaxed_topk`: The top K tokens are sampled from the target model's logits to create the initial candidate set for relaxed decoding.
+* `relaxed_delta`: Used to further filter the top K candidate set for relaxed decoding. We remove tokens `t` for which `log(P(top 1 token)) - log(P(t)) > relaxed_delta`.
+
+```python
+from tensorrt_llm.llmapi import MTPDecodingConfig
+
+speculative_config = MTPDecodingConfig(max_draft_len=3)
+
+llm = LLM("/path/to/deepseek_model", speculative_config=speculative_config)
+```
+
+MTP can be combined with the [Suffix Automaton enhancement](#suffix-automaton-sa-enhancement) for improved acceptance rates on repetitive content. See the SA section below for details.
+
+### PARD
+
+PARD (PARallel Draft) is a target-independent speculative decoding method that predicts all draft tokens in a single forward pass using mask tokens. Unlike MTP or EAGLE 3 which generate drafts one token at a time, PARD produces K draft tokens in parallel.
+
+Reference: [PARD: Parallel Drafting for Speculative Decoding](https://arxiv.org/pdf/2504.18583)
+
+* `max_draft_len`: Maximum draft candidate length.
+* `speculative_model`: Path or HuggingFace model ID for the PARD draft model.
+* `mask_token_id`: Token ID used as the mask token for parallel prediction. If not set, it is read from the draft model config.
+
+```python
+from tensorrt_llm.llmapi import PARDDecodingConfig
+
+speculative_config = PARDDecodingConfig(
+    max_draft_len=4, speculative_model="/path/to/pard_model")
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+PARD can be combined with the [Suffix Automaton enhancement](#suffix-automaton-sa-enhancement) for improved acceptance rates on repetitive content. See the SA section below for details.
+
+### DFlash
+
+DFlash is a target-dependent speculative decoding method that uses hidden states from specific target model layers as cross-attention context in the draft model to predict multiple draft tokens in parallel.
+
+Reference: [DFlash: Distilled Flash Speculative Decoding](https://arxiv.org/pdf/2602.06036)
+
+* `max_draft_len`: Maximum draft candidate length.
+* `speculative_model`: Path or HuggingFace model ID for the DFlash draft model.
+* `mask_token_id`: Token ID used as the mask token for parallel prediction. If not set, it is read from the draft model config.
+* `target_layer_ids`: List of target model layer indices whose hidden states are captured for cross-attention in the draft model. If not set, read from the draft model config.
+
+```python
+from tensorrt_llm.llmapi import DFlashDecodingConfig
+
+speculative_config = DFlashDecodingConfig(
+    max_draft_len=4, speculative_model="/path/to/dflash_model")
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+### User-provided drafting
+A completely user-defined drafting method can be supplied with a `UserProvidedDecodingConfig` that includes
+* `max_draft_len`: Maximum draft candidate length.
+* `drafter`: An object of type `Drafter` that implements the `prepare_draft_tokens` method (see [Developer Guide](speculative-decoding.md#developer-guide) 7.)
+* `resource_manager`: An optional `ResourceManager` object (see [Developer Guide](speculative-decoding.md#developer-guide) 4.)
+
+```python
+from tensorrt_llm.llmapi import UserProvidedDecodingConfig
+
+speculative_config = UserProvidedDecodingConfig(
+    max_draft_len=3, drafter=MyDrafter())
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+## Suffix Automaton (SA) Enhancement
+
+The Suffix Automaton (SA) is a model-free, GPU-based pattern-matching draft enhancer. It finds suffix matches in previously generated tokens and proposes draft tokens when the match is long enough. SA is very accurate when it matches (exact pattern repetition), while neural methods are better for novel content — combining them gives the best of both worlds.
+
+SA can be combined with the following speculative decoding techniques:
+
+* **MTP** (`MTPDecodingConfig`)
+* **EAGLE 3** (`Eagle3DecodingConfig`)
+* **PARD** (`PARDDecodingConfig`)
+
+To enable SA combination, set `use_sa_spec=True` on the speculative config. The `sa_spec_threshold` parameter controls the minimum suffix match length required to override the neural draft (default: 4).
+
+```python
+from tensorrt_llm.llmapi import Eagle3DecodingConfig
+
+speculative_config = Eagle3DecodingConfig(
+    max_draft_len=4,
+    speculative_model="/path/to/eagle3_model",
+    use_sa_spec=True,
+    sa_spec_threshold=4)
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+SA can also be used as a standalone speculative decoding technique via `SADecodingConfig`:
+
+```python
+from tensorrt_llm.llmapi import SADecodingConfig
+
+speculative_config = SADecodingConfig(max_draft_len=4)
+
+llm = LLM("/path/to/target_model", speculative_config=speculative_config)
+```
+
+## Usage with `trtllm-bench` and `trtllm-serve`
+
+```{eval-rst}
+.. include:: ../_includes/note_sections.rst
+   :start-after: .. start-note-config-flag-alias
+   :end-before: .. end-note-config-flag-alias
+```
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 292ms:
+138-            The minimum numbers of tokens to generate, ignoring the number of tokens in the prompt.
+139-        early_stopping (`bool` or `str`, *optional*):
+140-            Controls the stopping condition for beam-based methods, like beam-search. It accepts the following values:
+141-            `True`, where the generation stops as soon as there are `num_beams` complete candidates; `False`, where an
+142:            heuristic is applied and the generation stops when is it very unlikely to find better candidates;
+143-            `"never"`, where the beam search procedure only stops when there cannot be better candidates (canonical
+144-            beam search algorithm).
+145-        max_time (`float`, *optional*):
+146-            The maximum amount of time you allow the computation to run for in seconds. generation will still finish
+147-            the current pass after allocated time has been passed.
+148-        stop_strings (`str or list[str]`, *optional*):
+149-            A string or a list of strings that should terminate generation if the model outputs them.
+150-
+151-        > Parameters that control the generation strategy used
+152-
+153-        do_sample (`bool`):
+154-            Whether or not to use sampling ; use greedy decoding otherwise.
+155-        num_beams (`int`, *optional*):
+156-            Number of beams for beam search. 1 means no beam search.
+157-
+158-        > Parameters that control the cache
+--
+308-
+309-        > Generation parameters exclusive to assistant generation
+310-        is_assistant (`bool`):
+311-            Whether the model is an assistant (draft) model.
+312:        num_assistant_tokens (`int`, *optional*):
+313-            Defines the number of _speculative tokens_ that shall be generated by the assistant model before being
+314:            checked by the target model at each iteration. Higher values for `num_assistant_tokens` make the generation
+315-            more _speculative_ : If the assistant model is performant larger speed-ups can be reached, if the assistant
+316-            model requires lots of corrections, lower speed-ups are reached.
+317:        num_assistant_tokens_schedule (`str`, *optional*):
+318-            Defines the schedule at which max assistant tokens shall be changed during inference.
+319:            - `"heuristic"`: When all speculative tokens are correct, increase `num_assistant_tokens` by 2 else
+320:              reduce by 1. `num_assistant_tokens` value is persistent over multiple generation calls with the same assistant model.
+321:            - `"heuristic_transient"`: Same as `"heuristic"` but `num_assistant_tokens` is reset to its initial value after each generation call.
+322:            - `"constant"`: `num_assistant_tokens` stays unchanged during generation
+323:        assistant_confidence_threshold (`float`, *optional*):
+324-            The confidence threshold for the assistant model. If the assistant model's confidence in its prediction for the current token is lower
+325-            than this threshold, the assistant model stops the current token generation iteration, even if the number of _speculative tokens_
+326:            (defined by `num_assistant_tokens`) is not yet reached. The assistant's confidence threshold is adjusted throughout the speculative iterations to reduce the number of unnecessary draft and target forward passes, biased towards avoiding false negatives.
+327:            `assistant_confidence_threshold` value is persistent over multiple generation calls with the same assistant model.
+328-            It is an unsupervised version of the dynamic speculation lookahead
+329-            from Dynamic Speculation Lookahead Accelerates Speculative Decoding of Large Language Models <https://huggingface.co/papers/2405.04304>.
+330-        prompt_lookup_num_tokens (`int`, *optional*):
+331-            The number of tokens to be output as candidate tokens.
+332-        max_matching_ngram_size (`int`, *optional*):
+333-            The maximum ngram size to be considered for matching in the prompt. Default to 2 if not provided.
+334-        assistant_early_exit(`int`, *optional*):
+335-            If set to a positive integer, early exit of the model will be used as an assistant. Can only be used with
+336-            models that support early exit (i.e. models where logits from intermediate layers can be interpreted by the LM head).
+337-        assistant_lookbehind(`int`, *optional*):
+338-            If set to a positive integer, the re-encodeing process will additionally consider the last `assistant_lookbehind` assistant tokens
+339-            to correctly align tokens. Can only be used with different tokenizers in speculative decoding.
+340-            See this [blog](https://huggingface.co/blog/universal_assisted_generation) for more details.
+341-        target_lookbehind(`int`, *optional*):
+342-            If set to a positive integer, the re-encodeing process will additionally consider the last `target_lookbehind` target tokens
+343-            to correctly align tokens. Can only be used with different tokenizers in speculative decoding.
+--
+436-        self.decoder_start_token_id = kwargs.pop("decoder_start_token_id", None)
+437-
+438-        # Assistant generation
+439-        self.is_assistant = kwargs.pop("is_assistant", None)
+440:        self.num_assistant_tokens = kwargs.pop("num_assistant_tokens", None)
+441:        self.num_assistant_tokens_schedule = kwargs.pop("num_assistant_tokens_schedule", None)
+442:        self.assistant_confidence_threshold = kwargs.pop("assistant_confidence_threshold", None)
+443-        self.prompt_lookup_num_tokens = kwargs.pop("prompt_lookup_num_tokens", None)
+444-        self.max_matching_ngram_size = kwargs.pop("max_matching_ngram_size", None)
+445-        self.assistant_early_exit = kwargs.pop("assistant_early_exit", None)
+446-        self.assistant_lookbehind = kwargs.pop("assistant_lookbehind", None)
+447-        self.target_lookbehind = kwargs.pop("target_lookbehind", None)
+448-
+449-        # Performance
+450-        self.compile_config = kwargs.pop("compile_config", None)
+451-        self.disable_compile = kwargs.pop("disable_compile", None)
+452-
+453-        self.continuous_batching_config = kwargs.pop("continuous_batching_config", None)
+454-
+455-        # Deprecated (moved to the Hub). TODO remove for v5
+456-        self.low_memory = kwargs.pop("low_memory", None)
+457-        self.penalty_alpha = kwargs.pop("penalty_alpha", None)
+458-        self.dola_layers = kwargs.pop("dola_layers", None)
+--
+597-            "begin_suppress_tokens": None,
+598-            "epsilon_cutoff": 0.0,
+599-            "eta_cutoff": 0.0,
+600-            "encoder_repetition_penalty": 1.0,
+601:            "num_assistant_tokens": 20,
+602:            "num_assistant_tokens_schedule": "constant",
+603:            "assistant_confidence_threshold": 0.4,
+604-            "assistant_lookbehind": 10,
+605-            "target_lookbehind": 10,
+606-            # Deprecated arguments (moved to the Hub). TODO joao, manuel: remove in v4.62.0
+607-            "num_beam_groups": 1,
+608-            "diversity_penalty": 0.0,
+609-        }
+610-
+611-    def validate(self, strict=False, user_set_attributes: set[str] | None = None):
+612-        """
+613-        Validates the values of the attributes of the [`GenerationConfig`] instance. Raises exceptions in the presence
+614-        of parameterization that can be detected as incorrect from the configuration instance alone.
+615-
+616-        Note that some parameters not validated here are best validated at generate runtime, as they may depend on
+617-        other inputs and/or the model, such as parameters related to the generation length.
+618-
+619-        Args:
+
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "find experiments -path '*committee*' -type f | head -20" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-03/EXP-0017/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0017/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0017/committee1/_runner.log
+experiments/2026-06-03/EXP-0017/committee1/.members.txt
+experiments/2026-06-03/EXP-0017/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0017/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0017/committee1/product_realist.out
+experiments/2026-06-03/EXP-0017/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0017/committee1/area_chair.out
+experiments/2026-06-03/EXP-0017/committee1/area_chair.err
+experiments/2026-06-03/EXP-0017/committee1/_status.txt
+experiments/2026-06-03/EXP-0017/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0017/committee1/product_realist.err
+experiments/2026-06-03/EXP-0010/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0010/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0010/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0010/committee1/_runner.log
+experiments/2026-06-03/EXP-0010/committee1/.members.txt
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'find experiments/2026-06-03/EXP-0027 -maxdepth 3 -type f -print' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-03/EXP-0027/committee1/evaluation_prosecutor.out
+experiments/2026-06-03/EXP-0027/committee1/theory_skeptic.out
+experiments/2026-06-03/EXP-0027/committee1/systems_reviewer.out
+experiments/2026-06-03/EXP-0027/committee1/_runner.log
+experiments/2026-06-03/EXP-0027/committee1/.members.txt
+experiments/2026-06-03/EXP-0027/committee1/evaluation_prosecutor.err
+experiments/2026-06-03/EXP-0027/committee1/theory_skeptic.err
+experiments/2026-06-03/EXP-0027/committee1/systems_reviewer.err
+experiments/2026-06-03/EXP-0027/committee1/product_realist.out
+experiments/2026-06-03/EXP-0027/committee1/novelty_killer.out
+experiments/2026-06-03/EXP-0027/committee1/area_chair.err
+experiments/2026-06-03/EXP-0027/committee1/novelty_killer.err
+experiments/2026-06-03/EXP-0027/committee1/product_realist.err
+experiments/2026-06-03/EXP-0027/run_exp0027.py
+experiments/2026-06-03/EXP-0027/experiment.yaml
+experiments/2026-06-03/EXP-0027/results/exp0027_sweep.csv
+experiments/2026-06-03/EXP-0027/results/exp0027_summary.json
+experiments/2026-06-03/EXP-0027/RESULTS.md
+experiments/2026-06-03/EXP-0027/logs/run.log
+experiments/2026-06-03/EXP-0027/PRE_REGISTRATION.md
+experiments/2026-06-03/EXP-0027/COMMITTEE1_PACKET.md
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,200p' experiments/2026-06-03/EXP-0027/committee1/systems_reviewer.out" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,140p' experiments/2026-06-03/EXP-0017/committee1/systems_reviewer.out" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SGLang / RadixAttention", url: "https://www.lmsys.org/blog/2024-01-17-sglang/", overlap: "Automatic KV-cache reuse via prefix matching across LLM calls; overlaps on avoiding repeated in-context computation, but not on skipping an external RAG lookup because answer content is already resident in the live window."},
+  {system: "vLLM Automatic Prefix Caching", url: "https://docs.vllm.ai/en/latest/design/prefix_caching.html", overlap: "Hashes prompt-token blocks and reuses computed KV blocks for matching prefixes; token-prefix cache, not semantic/context-span retrieval gating."},
+  {system: "TensorRT-LLM KV cache reuse", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "Shares KV pages for requests starting with the same prompt to reduce TTFT; no evidence of pre-retrieval in-context-presence checks."},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "Shares long-context/prefix KV across vLLM instances and lowers repeated long-context TTFT; no evidence of RAG retrieval-call suppression based on live-window content."},
+  {system: "Self-RAG / FLARE / Adaptive-RAG", url: "https://arxiv.org/abs/2310.11511 ; https://arxiv.org/abs/2305.06983 ; https://arxiv.org/abs/2403.14403", overlap: "Adaptive retrieval decides when/how much to retrieve based on reflection tokens, low-confidence future generation, or query complexity; closest published overlap, but not specifically an in-context-residency gate with independent item-id GT."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: Synthetic L0 only. The anti-circular GT/check split is clean, and matched-random control is the right systems baseline for the proposed gate. But realistic workload validity is unproven: no real long-horizon agent/RAG traces, no real embedding, no real retrieval latency/token accounting, and no model-in-the-loop task recovery after wrong skips.
+RATIONALE: No shipping OSS system found that directly implements “skip retrieval because the needed content is already in the current live context window.” Existing systems already solve adjacent redundancy at the inference layer via token-prefix/KV reuse: SGLang explicitly retains KV for prompts and generation results in a radix tree for prefix search/reuse/eviction, while vLLM and TensorRT-LLM reuse hashed/paged KV blocks for same-prefix requests. That makes this not an inference-systems cache insight; it is a RAG-layer retrieval-suppression mechanism plus measurement protocol. The packet’s evidence supports the mechanism on a constructed generator: redundant fraction 0.235-0.816, lexical AUC 0.835-1.000, and matched-random accuracy delta CI > 0 with tau=0.3 skipping 39% at modeled accuracy 1.000. However, because the workload, redundancy labels, and task-success model are generated, the systems claim does not yet hold at realistic scale/workload. L1 must use real agent+RAG logs with in-context-presence labels, production-like retrieval costs, a real sentence embedding/check, and end-to-end model accuracy.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed

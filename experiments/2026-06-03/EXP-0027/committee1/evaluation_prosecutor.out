@@ -1,0 +1,10 @@
+```
+ROLE: evaluation_prosecutor  VOTE: green
+MANDATORY_BASELINES: 
+- {name: "Best-Tuned Fixed k", why: "The theoretically optimal static configuration across the entire session distribution. (Included and correctly sank the claim).", repo_or_cite: "Standard SD baseline"}
+- {name: "SpecDec++ / Dynamic-Speculation-Lookahead", why: "Existing dynamic draft-length methods that adapt token-by-token rather than phase-by-phase. If phase-adaptation had worked, it would still need to beat these.", repo_or_cite: "SpecDec++ (arXiv:2401.01160)"}
+STRAWMAN_RISKS: ["Comparing adaptive against a 'default' k instead of a session-weighted optimal k (avoided)", "Ignoring context-switch/phase-detection overheads (avoided)"]
+MISSING_METRICS: ["Real GPU kernel launch overhead (which would likely increase the switching tax further)", "Empirical token acceptance distributions (L0 assumes i.i.d. geometric prefix acceptance, which might under/over-state the Jensen floor flat region)"]
+KILLER_EXPERIMENT: Real hardware end-to-end throughput test on a long-context agentic dataset (e.g., WebArena traces) using vLLM to measure whether actual CUDA graph recompilation or dynamic batching constraints impose an even harsher switching tax than the simulated 's>0' penalty. 
+RATIONALE: The evaluation correctly implemented its own prosecution. By pre-registering the `best-tuned-fixed` baseline and explicitly modeling detection error and switching tax, the L0 correctly identified the Jensen floor failure mode. The evaluation is structurally sound because it successfully and honestly rejected the claim without relying on a strawman baseline.
+```

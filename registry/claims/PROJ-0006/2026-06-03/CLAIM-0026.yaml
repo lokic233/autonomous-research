@@ -1,7 +1,7 @@
 claim_id: CLAIM-0026
 project_id: PROJ-0006
 stage: seed
-status: seed
+status: weakened
 claim: "In long multi-turn agentic sessions, speculative-decoding draft-model acceptance\
   \ rate DRIFTS materially as the running context grows (the token distribution shifts\
   \ from early conversational prose to deep tool-call/JSON/structured context), such\
@@ -25,16 +25,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0027
+  summary: 'NEGATIVE (Jensen-floor, WIN). (A) Acceptance drift across session phases
+    is REAL: per-phase optimal draft length k_opt swings 1..15 as accept drifts (modeled
+    both gap directions). (B) Phase-adaptive does NOT beat BEST-TUNED-FIXED: single
+    tuned k captures ~93% (median) of gain; with realistic detection error + switching
+    tax adaptive LOSES (mean -2.2% net tok/s) at realistic deep-session mix. Only
+    extreme drift (gap +/-0.30, a_tool~0.95) + zero overhead reaches +7-9% ideal,
+    even there tuned-fixed captures 85%. Same Jensen-floor as EXP-0006/EXP-0011: broad
+    concave net-tok/s-vs-k plateau means session-weighted single k sits in every phase
+    near-optimum. Prior art (EAGLE/EAGLE-2/Medusa/SpecDec++/Dyn-Spec-Lookahead) already
+    does draft-length adaptation; the session-phase-drift novelty fails to beat tuned-fixed.
+    3024 configs x5 seeds.'
+  data_path: experiments/2026-06-03/EXP-0027/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r3-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0027 result, then ros exp complete --exp EXP-0027 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0027; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0027
+active_experiments: []
 created_at: '2026-06-03T08:20:51Z'
-last_updated: '2026-06-03T08:21:19Z'
+last_updated: '2026-06-03T08:28:18Z'
