@@ -1,0 +1,71 @@
+verdict_id: VERDICT-0039
+claim_id: CLAIM-0040
+project_id: PROJ-0011
+date: '2026-06-03'
+experiment_ids:
+- EXP-0037
+- EXP-0038
+experiment_paths:
+- experiments/2026-06-03/EXP-0037
+- experiments/2026-06-03/EXP-0038
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: kill
+green_rule: unanimous
+final_verdict: kill
+override_rule: false
+fatal_objections:
+- 'GATE (EXP-0038, N=1641 real tool-result records) KILLED the candidate on real empirical
+  premises: rho=T_stream/T_step < 1 for ALL real tool classes (results short 46-225
+  tok, prefill ~instant vs next decode'
+- 0-9% clear rho>=1
+- lone high-rho search_rag collapses to 0% under realistic next-step) -> nothing to
+  overlap
+- dumb-truncation@N=512 fully captures actionable content 4/5 classes (100%) -> early-commit/redo
+  apparatus unjustified
+- "adversarial (f_fl,rho) bind CONFIRMED \u2014 only high-rho class is the only NON-end-front-loaded\
+  \ (5.5%) + truncation-resistant one -> early-commit would commit WRONG where it\
+  \ has time"
+- incremental-prefill (real prod) already overlaps the sub-100ms residual
+- EXP-0037's favorable p* break-even was real math over an operating point (rho>=2)
+  that does NOT occur in real tool traffic
+- prior-art cleared (LLMCompiler call-graph-parallel+lossless
+- CALM own-decode
+- "spec-decode lossless) \u2014 niche genuinely open but EMPIRICALLY EMPTY"
+- '(1 green is GREEN-ON-THE-KILL: rigorous honest gate, NOT green on the claim)'
+required_evidence:
+- "None \u2014 empirically-empty regime"
+- "cheap gate correctly killed before GPU L1. (Genuine open niche if real tool traffic\
+  \ ever shifts to long slow-streaming front-loaded truncation-resistant results \u2014\
+  \ does not occur today.)"
+map_delta_proposals:
+- CLAIM-0040 -> KILL (DEAD-0009
+- "two-pass closure L0 EXP-0037 HELD-PARTIAL -> cheap-gate EXP-0038 kill). First fresh-axis\
+  \ L0 survivor, killed at the CHEAP corpus gate (cost-aware gating saved a GPU L1\
+  \ \u2014 3rd time). EXP-0037 favorable-break-even was real math over a non-existent\
+  \ operating point. PROJ-0011 converged. NEW SCREEN: 'favorable break-even in sim'\
+  \ must be gated by a CHEAP real-distribution measurement of the operating point\
+  \ BEFORE any GPU. No false green"
+baseline_requirements:
+- Dumb-truncation @N512 (matches 4/5 classes, zero overhead)
+- Incremental/chunked prefill (vLLM/SGLang prod baseline)
+- LLMCompiler (call-graph parallel, lossless)
+- CALM (own-decode early-exit)
+- Leviathan spec-decode cost model (lossless, no W)
+committee_run_dir: experiments/2026-06-03/EXP-0038/committee2
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T12:23:20Z'

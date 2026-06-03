@@ -1,7 +1,7 @@
 claim_id: CLAIM-0040
 project_id: PROJ-0011
 stage: seed
-status: killed
+status: dead
 claim: "For agent tool-result re-ingestion, EARLY-COMMITTING the next reasoning step\
   \ on the STREAMING PREFIX of a long tool result (once the front-loaded actionable\
   \ content has arrived, before the full result streams in) reduces end-to-end agent-step\
@@ -83,12 +83,16 @@ verdict_history:
 - verdict_id: VERDICT-0038
   date: '2026-06-03'
   result: yellow
+- verdict_id: VERDICT-0039
+  date: '2026-06-03'
+  result: kill
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
 lifecycle_state: done
-next_action: killed -> cemetery; no further action
+next_action: "terminal: VERDICT-0039 kill (DEAD-0009; gate killed it \u2014 rho<1\
+  \ real traffic, truncation matches, regime empirically empty)"
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T11:28:58Z'
-last_updated: '2026-06-03T12:20:21Z'
+last_updated: '2026-06-03T12:23:50Z'
