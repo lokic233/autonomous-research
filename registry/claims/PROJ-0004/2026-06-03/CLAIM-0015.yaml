@@ -52,12 +52,16 @@ verdict_history:
 - verdict_id: VERDICT-0019
   date: '2026-06-03'
   result: yellow
+- verdict_id: VERDICT-0024
+  date: '2026-06-03'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0022; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal: VERDICT-0024 red (relabeling \u2014 quant-specific signal=generic-difficulty;\
+  \ cost-win negative; Hybrid-LLM/RouteLLM collision)"
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T05:58:07Z'
-last_updated: '2026-06-03T08:05:42Z'
+last_updated: '2026-06-03T08:19:45Z'

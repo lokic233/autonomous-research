@@ -1,0 +1,72 @@
+verdict_id: VERDICT-0024
+claim_id: CLAIM-0015
+project_id: PROJ-0004
+date: '2026-06-03'
+experiment_ids:
+- EXP-0020
+- EXP-0022
+experiment_paths:
+- experiments/2026-06-03/EXP-0020
+- experiments/2026-06-03/EXP-0022
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: red
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "Quant-sensitivity-SPECIFIC pre-decode signal does NOT exist beyond generic difficulty/domain\
+  \ routing: within-domain prompt-ppl AUC 0.591 (arith) / 0.456 (longqa) \u2014 at/below\
+  \ chance"
+- the headline 0.838 is carried entirely by the DOMAIN TAG (a 3-bin lookup, not a
+  learned quant-specific feature)
+- "RELABELING test confirms collapse: sensitivity-router 0.838 vs generic-difficulty-router\
+  \ 0.813 = +0.025 AUC, within 5-fold CV noise (n=120, ~24 pos, binomial SE 0.04-0.05)\
+  \ \u2014 statistically indistinguishable"
+- this is the experiment the claim MUST win and it does not
+- Skip-decode cost-win arithmetically NEGATIVE at measured 178:71 prompt:decode (quant
+  prefill 5.47e11 = 71.6% of full fwd
+- "reroute net +5.53e11 > skipped decode 2.17e11) \u2014 contradicted by the experiment's\
+  \ own FLOP accounting"
+- "Mechanism collision w/ Hybrid-LLM (2404.14618) + RouteLLM (2406.18665) confirmed\
+  \ >=2 sources AND by the L1's own head-to-head \u2014 the router IS a generic difficulty/quality-gap\
+  \ router relabeled 'quant-sensitivity-aware'"
+required_evidence:
+- 7B AWQ/GPTQ pair w/ WITHIN-domain AUC significantly >0.6 on a quant-sensitivity
+  target (ONLY path to a quant-specific signal distinct from domain/difficulty)
+- Long-generation workloads (decode>=500 tok, decode>>prefill) showing a true FLOPs
+  cost-win from skip-decode (ONLY regime the cost story survives)
+- Paired bootstrap/DeLong CI on the sensitivity-vs-generic AUC gap showing p<0.05
+  (currently 'within noise', untested). All speculative -> a substantially different
+  claim needing new pre-registration
+map_delta_proposals:
+- "CLAIM-0015 -> REFUTED (novel mechanism). PREMISE survives (quant degradation IS\
+  \ heavy-tailed/request-dependent) but is NOT novel \u2014 expected behavior of low-bit\
+  \ weight quant on mixture workloads. NOVEL claim (quant-sensitivity-SPECIFIC pre-decode\
+  \ router beating generic difficulty + skip-decode cost-win) REFUTED by the L1's\
+  \ own evidence: relabeling +0.025 AUC, within-domain ppl at chance, cost-win negative.\
+  \ Clean negative. PROJ-0004 CONVERGE \u2014 named revival paths (7B-AWQ, long-generation)\
+  \ are speculative + would be a different claim. Demonstrates two-pass value: yellow\
+  \ L0 honestly refuted on real H100. No false green"
+baseline_requirements:
+- Hybrid-LLM (2404.14618)
+- RouteLLM (2406.18665)
+- FrugalGPT (2305.05176)
+- AutoMix (2310.12963)
+committee_run_dir: experiments/2026-06-03/EXP-0020/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-03T08:17:28Z'

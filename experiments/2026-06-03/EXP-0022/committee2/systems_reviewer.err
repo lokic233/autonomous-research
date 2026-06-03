@@ -2908,3 +2908,16 @@ hook: PostToolUse
 hook: PostToolUse
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: red
+EXISTING_IMPLEMENTATIONS: [
+  {system: "RouteLLM", url: "https://github.com/lm-sys/RouteLLM", overlap: "Ships/evaluates strong-vs-weak LLM routing via calibrated thresholds; README describes OpenAI-compatible serving, strong/weak model pairs, random/BERT/MF/causal routers, and GSM8K/MMLU/MT-Bench evals."},
+  {system: "Hybrid LLM", url: "https://arxiv.org/abs/2404.14618", overlap: "Prior work routes queries to small/large models based on predicted query difficulty and desired quality; abstract reports up to 40% fewer large-model calls with no response-quality drop."},
+  {system: "vLLM Production Stack router", url: "https://github.com/vllm-project/production-stack/tree/main/src/vllm_router", overlap: "Shipping OSS router supports endpoints running different models, model aliases, round-robin/session/prefix-aware/KV-aware routing, metrics, service discovery; not quant-sensitivity-specific."},
+  {system: "SGLang Model Gateway", url: "https://docs.sglang.io/docs/advanced_features/sgl_model_gateway.md", overlap: "Shipping model-routing gateway for large-scale deployments across HTTP/gRPC/OpenAI-compatible backends, cache-aware policies, worker lifecycle, PD routing; not quant-sensitivity-specific."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Does not hold on the measured realistic H100 workload in the packet: quant prefill costs 5.47e11 FLOPs, 71.6% of full quant forward; prompt length 178 dominates decode 71, so skipping quant decode saves less than the extra full reroute cost. Artifact is reproducible enough for a negative L1 result (RESULTS.md, results_raw.json 160 rows), but not sufficient for a production positive claim: NF4 1.5B only, no AWQ/GPTQ 7B+, no long-generation decode>>prefill regime, no concurrent serving/queueing study.
+RATIONALE: prompt_version=v001. No shipping OSS system found that implements this exact "predict quantization degradation before decode, then route quant-sensitive requests from quantized to full precision" mechanism, but the systems contribution collapses to existing strong/weak difficulty routing. L1 reports sensitivity AUC 0.838 vs generic difficulty router AUC 0.813, only +0.025 AUC, and within-domain prompt-ppl is chance/near-chance (arith 0.591, longqa 0.456). That is insufficient evidence for a quant-specific systems insight. The cost claim is contradicted by the packet's true FLOPs accounting, and confidence cascade Pareto fronts overlap. Existing RouteLLM/Hybrid LLM already cover the generic router design; vLLM/SGLang already ship routing/gateway substrate.
+tokens used
+129,292
