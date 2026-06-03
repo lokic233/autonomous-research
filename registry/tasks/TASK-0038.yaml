@@ -1,6 +1,6 @@
 task_id: TASK-0038
 kind: research
-parent: orchestrator-r4-001
+parent: orchestrator-r5-001
 assignee: researcher-0046
 session_id: ''
 project_id: PROJ-0015
@@ -14,7 +14,7 @@ summary: "L1 GPU (H100 devgpu014): dense-retriever (bge-base + e5-base) ecologic
   \ fragile"
 evidence_delta: ''
 opened_at: '2026-06-03T15:54:27Z'
-updated_at: '2026-06-03T15:54:27Z'
+updated_at: '2026-06-03T17:26:03Z'
 closed_at: ''
 history:
 - ts: '2026-06-03T15:54:27Z'
@@ -25,3 +25,7 @@ history:
     \ the recovery arm vs BM25? clean-answer rank + score-margin vs template-length\
     \ L; same corpus/grid as EXP-0044/0047; anti-circular GT=planted doc-id; H100\
     \ not fragile"
+- ts: '2026-06-03T17:26:03Z'
+  event: reparent
+  by: orchestrator-r4-001
+  note: supervisor orchestrator-r4-001->orchestrator-r5-001
