@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0025
 claim_id: CLAIM-0055
 exp_id: EXP-0062
-status: open
+status: done
 summary: 'L0: constrained-decoding support-removal misroute. Synthetic lattice intent
   space; enum=K-subset; out-of-set requests forced to nearest in-enum member. Baseline
   A greedy-mask, B STRONGEST=GAD-style faithful renorm (must STILL misroute when target
@@ -18,8 +18,8 @@ summary: 'L0: constrained-decoding support-removal misroute. Synthetic lattice i
   GT). PERSISTENT-SEEDER loop'
 evidence_delta: ''
 opened_at: '2026-06-03T23:10:05Z'
-updated_at: '2026-06-03T23:10:05Z'
-closed_at: ''
+updated_at: '2026-06-03T23:15:51Z'
+closed_at: '2026-06-03T23:15:51Z'
 history:
 - ts: '2026-06-03T23:10:05Z'
   event: open
@@ -33,3 +33,7 @@ history:
     proximity. GUARDS: FIXED kernel + robustness across temps (anti-tuned-knob); escape
     claim SCOPED to proximity curve. anti-circular (monitor sees emitted token+validity
     only, never GT). PERSISTENT-SEEDER loop'
+- ts: '2026-06-03T23:15:51Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0060 completed EXP EXP-0062 (support)

@@ -61,17 +61,24 @@ why_it_matters: "FRESH AREA (eval-and-safety x agentic: constrained-decoding sil
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0062
+  summary: "HELD: stream silent-misroute RISES as K falls (0.65@K50 -> 0.98@K3), KERNEL-INDEPENDENT\
+    \ across all 6 temp\xD7noise cells (strongest anti-tuned-knob: K-effect is geometric\
+    \ oos-exposure, not a tuned kernel); near-miss MORE dangerous (misroute confidence\
+    \ rises as neighbor-gap shrinks, sign-stable all temps); validity-monitor recall=0\
+    \ (by construction); GAD-style B out-of-set gap-recovery=0.0000 (support-removal,\
+    \ GAD-irrecoverable); escape-recall DECREASES with proximity (0.0 near -> 1.0\
+    \ far, scoped to curve, leaks at near-miss). No falsifier triggered."
+  data_path: experiments/2026-06-03/EXP-0062/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0062 result, then ros exp complete --exp EXP-0062 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0062; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0062
+active_experiments: []
 created_at: '2026-06-03T23:09:39Z'
-last_updated: '2026-06-03T23:10:05Z'
+last_updated: '2026-06-03T23:15:51Z'

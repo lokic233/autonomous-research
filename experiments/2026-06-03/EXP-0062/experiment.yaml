@@ -12,12 +12,18 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "HELD: stream silent-misroute RISES as K falls (0.65@K50 -> 0.98@K3),\
+  \ KERNEL-INDEPENDENT across all 6 temp\xD7noise cells (strongest anti-tuned-knob:\
+  \ K-effect is geometric oos-exposure, not a tuned kernel); near-miss MORE dangerous\
+  \ (misroute confidence rises as neighbor-gap shrinks, sign-stable all temps); validity-monitor\
+  \ recall=0 (by construction); GAD-style B out-of-set gap-recovery=0.0000 (support-removal,\
+  \ GAD-irrecoverable); escape-recall DECREASES with proximity (0.0 near -> 1.0 far,\
+  \ scoped to curve, leaks at near-miss). No falsifier triggered."
+result_effect: support
 artifacts_path: experiments/2026-06-03/EXP-0062/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T23:15:51Z'
 prompt_version: ''
