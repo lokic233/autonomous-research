@@ -73,6 +73,15 @@ supporting_evidence:
     Lv-Zhai 2011, Zhong 2023, Doc2Query-- 2023). Recommend fast-track L1: dense-retriever
     test (predict recovery arm dampened/absent without b>0 length penalty).'
   data_path: experiments/2026-06-03/EXP-0047/
+- exp_id: EXP-0048
+  summary: 'NEGATIVE/REFINING (GPU L1 H100 dense bge+e5). BM25 inverted-U does NOT
+    transfer to dense retrieval under realistic query-bearing templates: clean answer
+    rank 1.00 at all L both models (FLAT). Only adversarial verbatim-query injection
+    displaces it, model-dependently (bge monotone-worse confirms L0; e5 partial inverted-U
+    via 512-tok truncation, different mechanism). BOTTOM LINE: CLAIM-0045 is a BM25-specific
+    lexical artifact, does NOT threaten dense RAG under normal hygiene. Not a clean
+    transfer. Artifacts devgpu014 ~/ros-EXP-0048/.'
+  data_path: experiments/2026-06-03/EXP-0048/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0043
@@ -91,11 +100,9 @@ revival_conditions: 'REVIVED from DEAD-0011 with new evidence: NEW REGIME + NEW 
   is the revival-condition regime, with evidence.'
 owner: researcher-0042
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: L1 EXP-0048 (GT-0001) dispatched to H100 channel; researcher-0046 to
-  run on devgpu014
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0048; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0048
+active_experiments: []
 created_at: '2026-06-03T15:17:41Z'
-last_updated: '2026-06-03T15:54:27Z'
+last_updated: '2026-06-03T16:14:47Z'

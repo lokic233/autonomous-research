@@ -50,17 +50,23 @@ why_it_matters: "FRESH AREA (agentic-systems: recovery policy). EMPIRICAL-phenom
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0046
+  summary: 'INCONCLUSIVE: sim tripped its own pre-registered bug-check (alpha=0 penalty
+    -46/-28pct >> 5pct threshold -> policy comparison mis-specified, alpha>0 untrustable).
+    Huge penalties co-occur with dnc_A 0.57-0.62 (policy A never completes = artifact,
+    not fair token accounting). Direction may survive a corrected sim (bound A retries
+    + fair non-completion accounting + B no-overshoot at alpha=0). Researcher completed
+    compute then went stale; orchestrator recorded honestly from committed CSV.'
+  data_path: experiments/2026-06-03/EXP-0046/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r4-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0046 result, then ros exp complete --exp EXP-0046 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0046; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0046
+active_experiments: []
 created_at: '2026-06-03T15:21:58Z'
-last_updated: '2026-06-03T15:22:12Z'
+last_updated: '2026-06-03T16:14:47Z'

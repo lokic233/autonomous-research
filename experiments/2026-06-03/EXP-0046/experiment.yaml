@@ -12,12 +12,18 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'INCONCLUSIVE: sim tripped its own pre-registered bug-check (alpha=0
+  penalty -46/-28pct >> 5pct threshold -> policy comparison mis-specified, alpha>0
+  untrustable). Huge penalties co-occur with dnc_A 0.57-0.62 (policy A never completes
+  = artifact, not fair token accounting). Direction may survive a corrected sim (bound
+  A retries + fair non-completion accounting + B no-overshoot at alpha=0). Researcher
+  completed compute then went stale; orchestrator recorded honestly from committed
+  CSV.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0046/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T16:14:47Z'
 prompt_version: ''

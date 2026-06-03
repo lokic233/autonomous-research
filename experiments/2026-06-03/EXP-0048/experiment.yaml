@@ -12,12 +12,18 @@ resource_budget:
 needs_gpu: true
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'NEGATIVE/REFINING (GPU L1 H100 dense bge+e5). BM25 inverted-U does
+  NOT transfer to dense retrieval under realistic query-bearing templates: clean answer
+  rank 1.00 at all L both models (FLAT). Only adversarial verbatim-query injection
+  displaces it, model-dependently (bge monotone-worse confirms L0; e5 partial inverted-U
+  via 512-tok truncation, different mechanism). BOTTOM LINE: CLAIM-0045 is a BM25-specific
+  lexical artifact, does NOT threaten dense RAG under normal hygiene. Not a clean
+  transfer. Artifacts devgpu014 ~/ros-EXP-0048/.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-03/EXP-0048/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-03T16:14:47Z'
 prompt_version: ''
