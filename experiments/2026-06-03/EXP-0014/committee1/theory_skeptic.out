@@ -1,0 +1,75 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- f_indep is essentially a readout of the assumed archetype mix, not an empirical
+  discovery. Independence is defined by ground-truth DAGs that the corpus
+  constructor itself wrote. "f_indep>30% across mixes" is mechanically forced by
+  the archetype templates (single-call steps trivially score 100% independent,
+  fan-out archetypes are 100% independent by construction). A' helps but doesn't
+  remove the circularity — exploitable-width still tracks the input mix linearly.
+- f_wrong(e) ≈ 1 − (1−e)^k where k = expected true dep edges per multi-call step.
+  The 10–12% at e=0.05 is the EXPECTED value of a binomial bookkeeping process,
+  not an emergent finding. Reporting it as a "correctness bound" overstates what
+  was measured: it's just `1 − (1−e)^k` evaluated at the corpus's assumed edge
+  density. No surprise, no signal beyond the assumption stack.
+
+CONFOUNDS:
+- Independence criterion ("B.reads ∩ A.writes" + shared-resource conflict) is
+  defined and labeled by the SAME process that generates the corpus → the
+  detector is being graded against its own oracle. Any "f_indep" reading is
+  unfalsifiable inside this loop.
+- "Every true edge treated as load-bearing" inflates f_wrong: real tool calls
+  routinely tolerate stale reads, are idempotent, commutative, or produce
+  identical-enough outputs. The conservative-bookkeeping f_wrong is an UPPER
+  BOUND on corruption, not an estimate. Part B's "FAILED" verdict is therefore
+  partly an artifact of the worst-case assumption, not evidence the mechanism
+  is unsafe.
+- Heterogeneous latency speedup uses lognormal σ=0.6 (assumed, uncited). Real
+  tool-latency distributions (esp. with retries / queueing tails) have heavier
+  tails; the 1.4× headline is sensitive to σ in a way not bounded.
+
+ASSUMPTIONS_UNTESTED:
+- The load-bearing parameter `e` (detector false-negative rate on real traces)
+  is never measured — yet the entire Part B verdict pivots on whether e≲0.025.
+  Calling Part B "FAILED" assumes e=0.05 is realistic; that assumption has no
+  evidentiary support in the packet.
+- The archetype mixes themselves are guessed. There is no calibration to any
+  real benchmark, even informally. "Balanced realistic" is a label, not a
+  measurement.
+- Assumes parallelizing one step independently affects only that step's
+  correctness — ignores downstream propagation (a corrupt result poisons later
+  steps), which would INCREASE end-to-end f_wrong beyond per-step f_wrong.
+- "True by the independence definition" at e=0 is a tautology, not evidence of
+  correctness-safety; it's just the definition restated.
+
+STATISTICAL_GAPS:
+- Error bars (±0.002–0.007 on f_indep) reflect Monte Carlo variance within the
+  fixed constructed distribution, NOT uncertainty about real-world parallelism.
+  They are essentially decorative for the actual claim; the dominant uncertainty
+  is the mix prior and the detector-error prior, which have no error bars at all.
+- 5 seeds × 1 fixed generator → no cross-generator robustness. A second corpus
+  builder with different archetype templates would likely shift numbers by far
+  more than the reported ±0.007.
+- No sensitivity analysis on the edge-density parameter inside mixed/fanout
+  archetypes — f_wrong's slope in `e` depends entirely on that hidden knob.
+- No prior-art quantitative comparison: LLMCompiler / ReWOO report parallel-call
+  fractions and speedups on real benchmarks. Those numbers should anchor the
+  constructed mixes; the packet cites the works but does not compare numerically.
+
+RATIONALE: The researcher is admirably honest about workload-conditionality, and
+the PARTIAL verdict is the right shape. But the modeling has two deep weaknesses
+the writeup understates: (1) the headline numbers are largely entailed by the
+corpus construction (independence is defined by the same oracle that grades it,
+so f_indep is more a readout of the prior than an empirical finding), and
+(2) f_wrong(e) is a textbook `1−(1−e)^k` bookkeeping calculation evaluated at an
+ASSUMED edge density under an ASSUMED detector error — neither of which is
+measured. Calling Part B "FAILED" on this basis is an over-claim symmetric to
+the over-claim it disclaims; it's actually "INSUFFICIENT EVIDENCE on real
+detectors." The L1 plan correctly identifies measuring real `e` as load-bearing.
+Not red because the work is scoped honestly and useful as a parameterized
+sensitivity sketch; not green because the central quantitative claims reduce to
+restatements of the input priors. Recommend weaken to "model-based sensitivity
+analysis pending empirical `e`" and require the L1 to measure detector FNR on a
+real-trace ground truth before any correctness-bound language is used.
+```

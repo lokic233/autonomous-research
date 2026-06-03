@@ -1,7 +1,7 @@
 claim_id: CLAIM-0012
 project_id: PROJ-0003
 stage: seed
-status: seed
+status: weakened
 claim: "In agentic LLM serving, a non-trivial fraction (>15%) of generated decode\
   \ tokens are WASTED on agent turns that are subsequently abandoned (tool errors,\
   \ early-stop, branch pruning, retries), and a cheap online abandonment-risk signal\
@@ -18,16 +18,34 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0015
+  summary: "PARTIAL(measure)/NEGATIVE(mechanism). L0 CPU/stdlib/serial, 8 seeds, anti-circular.\
+    \ A: waste >15% only at p_abandon>=0.20+late or >=0.35 (conditional, NOT universal;\
+    \ 3-11% at low/early). B: non-oracle predictor (noisy partial-decode obs, never\
+    \ reads latent hazard/label/abandon_step) reaches AUC~0.71, median lead 22-28\
+    \ tok, 69-80% fire pre-abandon \u2014 USABLE \u2014 but ONLY when abandonment\
+    \ is latent-driven; oracle AUC ceiling is a WORKLOAD property (<=0.60 for coin-flip\
+    \ abandonment, no signal can help). C: CORE MECHANISM FAILS \u2014 deprioritize-only\
+    \ reclaims 0 slots and blows +5% p99 fairness budget at W=1 (+18%); kill-on-flag\
+    \ (only mechanism that reclaims) at achievable precision~0.50 reclaims 0.4-3.4%\
+    \ compute while destroying 2.2-18.6% of COMPLETED turns (harm > reclaim at every\
+    \ op point). Claim 'reclaim WITHOUT harm at matched fairness' does NOT hold. Weaken\
+    \ to: agent-abandonment waste exists+is partly predictable, but converting prediction\
+    \ to reclaimed compute without harm is unsolved at realistic AUC. Prior-art: reduces\
+    \ to generic preemption (Llumnix/FastServe/TokenFlow/FlowPrefill/SLO-sched); agent-specific\
+    \ signal advantage NOT demonstrated. L1 owes: real-trace oracle-AUC ceiling, real\
+    \ partial-decode predictor on real LLM, real GPU reclaim + p99 TTFT at matched\
+    \ fairness w/ FP-rerun cost. Artifacts: experiments/2026-06-03/EXP-0015/RESULTS.md\
+    \ + harness.py/sharpen.py/part_c_final.py/part_c_kill.py + 6 CSVs."
+  data_path: experiments/2026-06-03/EXP-0015/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0015 result, then ros exp complete --exp EXP-0015 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0015; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0015
+active_experiments: []
 created_at: '2026-06-03T01:53:05Z'
-last_updated: '2026-06-03T01:53:23Z'
+last_updated: '2026-06-03T02:06:46Z'

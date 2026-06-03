@@ -1,0 +1,67 @@
+verdict_id: VERDICT-0013
+claim_id: CLAIM-0011
+project_id: PROJ-0001
+date: '2026-06-03'
+experiment_ids:
+- EXP-0014
+experiment_paths:
+- experiments/2026-06-03/EXP-0014
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+fatal_objections:
+- "(none \u2014 unanimous yellow, no fatal) but MANDATORY RELABEL: this is a MODEL-BASED\
+  \ SENSITIVITY ANALYSIS under assumed parameters, NOT yet an empirical characterization"
+- "mechanism is FULLY PRIOR (LLMCompiler/ReWOO/AsyncLM/native parallel calls) \u2014\
+  \ contribution is characterization, which at L0 reveals nothing non-obvious (corpus\
+  \ constructed, numbers entailed by construction)"
+- f_indep is a READOUT of the generating oracle (tracks input mix linearly, unfalsifiable
+  in-loop), not a discovery
+- error bars = MC variance within a fixed generator
+- f_wrong(e)~1-(1-e)^k is BINOMIAL BOOKKEEPING at an ASSUMED e=0.05 + worst-case 'every
+  edge load-bearing' (real tool calls often idempotent/stale-tolerant)
+- '''Part B FAILED'' is a symmetric over-claim to the ''free win'' it disclaims ->
+  honest label = ''insufficient evidence on real detectors'''
+- prior-art search INADEQUATE (offline, unverified to >=2-source)
+- BFCL parallel categories + speculative-decode parallelize-then-verify are unrebutted
+  adjacencies
+required_evidence:
+- "L1 MUST measure REAL dependency-detector false-negative rate e on ground-truth\
+  \ tool-call DAGs (tau-bench/AppWorld/BFCL) \u2014 THE load-bearing unknown"
+- the e<=0.025 threshold is meaningless without it
+- "L1 MUST report end-to-end task correctness (exact-match/reward) under ACTUAL parallel-vs-serial\
+  \ dispatch on a real benchmark \u2014 not modeled f_wrong"
+- L1 MUST fix the workload mix empirically (removes the Part A mix-conditionality
+  caveat)
+- Relabel Part B 'FAILED' -> 'insufficient evidence on real detectors'
+- "If real benchmark UNREACHABLE offline, the honest outcome is 'sensitivity framework\
+  \ only' (thin) \u2014 converge, do NOT fabricate a real-data result"
+map_delta_proposals:
+- 'CLAIM-0011 weaken: relabel ''empirical characterization w/ correctness-safety bound''
+  -> ''model-based sensitivity analysis under assumed detector error + constructed
+  mix''. L1 gate = real detector FNR + real end-to-end correctness on tau-bench/AppWorld/BFCL
+  + numeric LLMCompiler compare. Upgrade to ''empirical bound'' IFF real e<=0.025
+  achievable AND f_wrong confirmed on real traces'
+- else sensitivity framework only (thin but honest) -> further weaken/retire
+baseline_requirements:
+- "LLMCompiler (arXiv 2312.04511) \u2014 numeric end-to-end accuracy on HotpotQA/ParallelQA\
+  \ under DAG-parallel dispatch, not just cite"
+- "BFCL parallel/parallel-multiple categories \u2014 real independent-call fractions\
+  \ as anchor for the constructed mixes"
+- "Speculative decoding (Leviathan 2211.17192) \u2014 parallelize-then-verify"
+- an UNVERIFIED detector's f_wrong is the known-bad baseline, not a contribution
+created_at: '2026-06-03T02:07:16Z'

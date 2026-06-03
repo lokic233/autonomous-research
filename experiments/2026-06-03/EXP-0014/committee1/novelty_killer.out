@@ -1,0 +1,27 @@
+Network search is unavailable in this offline environment (consistent with the experiment's own no-network constraint), and the project's `prior_art/` corpus is empty. I ran the mandated sweep against parametric knowledge of the named prior works (with arXiv IDs) and flag the live-search limitation explicitly for auditability.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Kim et al., 'An LLM Compiler for Parallel Function Calling' (LLMCompiler), arXiv:2312.04511, 2023/24",
+   url: "https://arxiv.org/abs/2312.04511",
+   why_close: "Exactly the claimed mechanism: a Planner emits a tool-call DAG with dependency edges, a Task-Fetching Unit dispatches independent calls in parallel as deps resolve. Reports latency speedup (~3.7x) AND end-to-end accuracy on HotpotQA/ParallelQA/Game-of-24/WebShop. The whole point of its dependency-aware planner IS that mis-parallelizing dependent calls breaks correctness — i.e. the risk CLAIM-0011 Part B 'discovers' is the EXPLICIT design rationale of this prior work. What it does NOT publish: a parametric f_wrong(e) curve as a function of a dependency-detector false-negative rate."}
+- {cite: "Xu et al., 'ReWOO: Decoupling Reasoning from Observations', arXiv:2305.18323, 2023",
+   url: "https://arxiv.org/abs/2305.18323",
+   why_close: "Plans all tool calls upfront from the dependency structure; reports token-efficiency + accuracy. No detector-error correctness bound."}
+- {cite: "Berkeley Function-Calling Leaderboard (BFCL), Gorilla project, 2024",
+   url: "https://gorilla.cs.berkeley.edu/leaderboards.html",
+   why_close: "Has explicit 'parallel' and 'parallel-multiple' categories measuring whether models correctly emit independent calls together on REAL function-call data — directly adjacent to Part A's 'fraction of independent calls', and on real (not constructed) inputs."}
+- {cite: "Liu et al., 'Asynchronous LLM Function Calling' (AsyncLM), arXiv:2412.07017, 2024; HuggingGPT (Shen et al., arXiv:2303.17580) for task-DAG dependency planning",
+   url: "https://arxiv.org/abs/2412.07017",
+   why_close: "Overlaps generation/execution and plans inter-task dependencies; latency-reported, no detector-error correctness bound."}
+
+NAMING_VS_MECHANISM: Mechanism is fully prior and the researcher correctly concedes it (LLMCompiler/ReWOO/AsyncLM/native parallel calls). The two residual claims are BOTH weak as L0 contributions, not mechanism deltas: (a) "parallelism as a function of workload mix" is measured on a CONSTRUCTED archetype corpus with ground-truth-by-construction DAGs — that is a parameterized simulation of an assumed mix, not a measurement; BFCL/τ-bench/AppWorld already categorize parallel calls on real data. (b) "correctness-safety bound f_wrong(e)" is an analytical binomial-corruption model (miss each true edge w.p. e → f_wrong scales ~linearly with e), computed on edges the corpus ASSUMES — mildly circular (you posit the DAG, then model forgetting it). It re-quantifies a risk that is already the stated motivation for dependency-aware planners. So the delta is mostly FRAMING ("bound") over a known mechanism + a synthetic/analytical core, NOT a measured-on-real-data phenomenon.
+
+FATAL_COLLISIONS: None VERIFIED to ≥2-source standard. I could NOT confirm a published paper that reports the specific f_wrong(e) detector-error correctness curve, so I do NOT assert a fatal collision (would require live retrieval I cannot perform here). Absence of a confirmable collision on (b) is the ONLY thing keeping this off red.
+
+MANDATORY_RELATED_WORK: LLMCompiler (arXiv:2312.04511) — must cite as the dependency-aware-parallel-planner whose design rationale already encodes the Part-B risk; ReWOO (2305.18323); AsyncLM (2412.07017); HuggingGPT (2303.17580); BFCL parallel/parallel-multiple categories; τ-bench (Yao et al., arXiv:2406.12045) and AppWorld (arXiv:2407.18901) for REAL tool-call traces; and — most importantly — speculative decoding (Leviathan et al., arXiv:2211.17192) as the canonical "parallelize-then-VERIFY for guaranteed correctness" analog, which makes the L0 framing weaker: the field already solves "parallelize without breaking correctness" via a verification step, so an unverified detector's f_wrong(e) is the known-bad baseline, not a finding.
+
+RATIONALE: I cannot vote green: the only contribution that would be non-subsumed by LLMCompiler — a REAL detector false-negative rate e measured on REAL tool-call DAGs + REAL end-to-end correctness under parallel dispatch — is exactly what the L0 does NOT have (constructed corpus, analytical f_wrong, no measured e; the researcher states this honestly). I cannot vote red either: no fatal collision on the specific f_wrong(e) bound is verifiable to the ≥2-source bar (live web search is blocked in this environment; prior_art/ corpus is empty; cites above are from parametric knowledge with arXiv IDs). Net: residual novelty is thin and CONTINGENT on L1. The L0 as-stated does not establish a contribution beyond restating, in a parameterized simulation, the known motivation for existing dependency-aware parallel planners. → yellow, gated on the L1 ask (τ-bench/AppWorld/BFCL real DAGs to fix the mix + MEASURE real detector e, target e≲0.025 + real serial-vs-parallel exact-match correctness). If at L1 the real detector e proves achievable and f_wrong(e) is shown on real traces, that would be the first such bound to my knowledge and would clear novelty; absent that, novelty collapses toward weaken.
+```
