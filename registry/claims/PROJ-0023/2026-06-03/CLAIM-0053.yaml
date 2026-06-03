@@ -1,0 +1,73 @@
+claim_id: CLAIM-0053
+project_id: PROJ-0023
+stage: seed
+status: seed
+claim: "N-gram-overlap benchmark decontamination (the standard GPT-3/Llama 'remove\
+  \ any test item sharing an >=k-gram with the training corpus' filter) deletes test\
+  \ items with a probability MONOTONE-INCREASING in item length (a re-derivable union-bound\
+  \ over per-n-gram match events), so the SURVIVING benchmark is systematically shifted\
+  \ toward shorter items \u2014 and when item difficulty is length-correlated (as\
+  \ it empirically is on QA/reasoning benchmarks), this length-selection biases the\
+  \ post-decontamination accuracy estimate UPWARD by a margin that grows with corpus\
+  \ n-gram coverage and persists at the production k in {8,13}, even though the filter\
+  \ never inspects difficulty or labels. The harm is a property of the MITIGATION,\
+  \ not of contamination."
+why_it_matters: "FRESH AREA (eval-and-safety: decontamination methodology). EMPIRICAL-phenomenon.\
+  \ Survivor of scout-H's search. Passes 6.5/7 killers: NOT metric-validity (causal\
+  \ selection effect reshaping the surviving population's estimand, not a mis-count);\
+  \ NOT closed-form-tautology (removal-rises-with-length is union-bound-flavored =\
+  \ the ANCHOR, but the HEADLINE accuracy-inflation magnitude depends on coverage\
+  \ x length-dist x length-difficulty curve, MEASURED not forced \u2014 can be null\
+  \ at alpha=0); foundational incumbent ADDRESSED (Brown2020 GPT-3 n-gram decontam\
+  \ 2005.14165 + Llama3 Dubey 2407.21783 8-gram, benchmarked vs THEIR k; detection/evasion\
+  \ line Yang 2311.04850 is false-NEGATIVES opposite direction; Bordt 2410.03249 APPLIES\
+  \ the filter + notes 'significant filtering' but treats removal as benign; residual-contamination-inflation\
+  \ Schaeffer 2601.04301 studies un-removed contamination); NOT known-mechanism-costume\
+  \ (a CONTENT-AGNOSTIC filter acting as a DIFFICULTY-biased sampler via length->collision-probability\
+  \ is the non-obvious mechanism, not 'selection bias relabeled'; practitioners believe\
+  \ decontam removes only CONTAMINATED items, claim = it removes CLEAN LONG items\
+  \ too); NOT wrong-currency (reported benchmark accuracy pct points = the model-comparison/release\
+  \ number); NOT killer-#7 (the harm IS the standard mitigation; counter-mitigation\
+  \ raise-k 8->13->25 MODELED + shown to only shift the removal curve right, monotonicity\
+  \ persists; length-stratified reporting is the implied fix practitioners don't use).\
+  \ RESIDUAL killer-#6 FLAG (honest): inflation sign/size hinges on length<->difficulty>0\
+  \ (documented QA/reasoning: QuALITY 2112.08608, LongICLBench 2404.02060, med-QA\
+  \ 2310.07225; weaker on MCQ-w-boilerplate) \u2014 MITIGATED: the STRUCTURAL composition-shift\
+  \ (survivors shorter) is UNCONDITIONAL (holds at difficulty _|_ length); headline\
+  \ inflation reported as fn of SWEPT alpha w/ EXPLICIT alpha=0 honest-negative (flat\
+  \ slope -> informative 'composition-shifting but score-safe', not dead). Falsifiable:\
+  \ synth benchmark M items, each token-seq (Zipfian, controllable length L_i) + true\
+  \ difficulty d_i + correct-prob p_i=f(d_i); d_i = alpha*g(L_i)+(1-alpha)*eps (alpha\
+  \ SWEPT: 0=difficulty _|_ length, >0=longer-harder); training corpus = bag of n-grams\
+  \ from SAME vocab, coverage c. Filter sees ONLY token-seqs + corpus n-gram set,\
+  \ removes item iff any k-gram in corpus (NEVER sees d_i/p_i/labels = strictly anti-circular).\
+  \ MEASURE: (1) structural anchor (must hold): removal-rate monotone in L_i + survivor\
+  \ mean-length < full mean-length, re-derived vs union-bound; (2) headline: reported-acc\
+  \ = mean p_i over SURVIVORS vs over FULL set; inflation Delta(alpha,c,k). PREDICT\
+  \ Delta grows w/ alpha + c; ALPHA=0 CONTROL: composition shifts but Delta~0 (the\
+  \ load-bearing falsification \u2014 proves it's the length-difficulty coupling not\
+  \ an artifact). k-SWEEP {8,13,25}: Delta persists (raise-k only shifts removal right).\
+  \ HONEST-NEGATIVE: Delta~0 even at high alpha+c -> falsified; or non-trivial only\
+  \ at implausibly extreme c -> trivially-small; or production-k drives removal->0\
+  \ -> no bias. Topic: eval-and-safety. L1 CONFIRMATORY (L0 anchors removal-monotonicity\
+  \ structurally): real MMLU/GSM8K/QuALITY + actual GPT-3/Llama n-gram decontam vs\
+  \ real web n-gram corpus (C4/Pile) -> confirm removal-rises-with-length + survivor-shorter,\
+  \ measure real length-difficulty slope from public per-item accuracy, report realized\
+  \ inflation on survivors vs full."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r5-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0059 result, then ros exp complete --exp EXP-0059 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0059
+created_at: '2026-06-03T21:53:11Z'
+last_updated: '2026-06-03T21:53:34Z'
