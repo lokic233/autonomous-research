@@ -1,0 +1,7 @@
+```
+ROLE: evaluation_prosecutor  VOTE: green
+MANDATORY_BASELINES: [{"name": "Continuous Batching (Orca/vLLM)", "why": "Industry standard for filling cross-request idle time. Used correctly here as the claim-killer.", "repo_or_cite": "SOSP'23 vLLM / OSDI'22 Orca"}, {"name": "Chunked Prefill + Continuous Batching", "why": "Modern baseline that intermixes prefill and decode to eliminate prefill-induced bubbles.", "repo_or_cite": "SGLang / Sarathi-Serve"}]
+STRAWMAN_RISKS: ["Comparing against static batching or a purely serial floor. The evaluation successfully avoided this by including the serial floor only as a sanity check, relying on continuous batching for the actual evaluation."]   MISSING_METRICS: ["KV cache capacity/utilization constraints", "Prefill latency / prefill-decode interference"]
+KILLER_EXPERIMENT: A queueing simulation that models KV-cache allocation instead of just slot-occupancy, testing whether continuous batching still hits the theoretical "ready-work ceiling" when admission is strictly KV-bound rather than bounded by fixed slot counts.
+RATIONALE: The evaluation methodology is rock-solid. It explicitly tested the strongest applicable baseline (continuous batching) and proved it leaves zero fillable residual idle. The metrics chosen (throughput bounded by matched per-agent p99) correctly penalized the proposed SJF-like policy for achieving false throughput gains via tail latency starvation. The evaluation rightfully killed the claim by verifying the null hypothesis against a production-grade baseline rather than a toy strawman.
+```
