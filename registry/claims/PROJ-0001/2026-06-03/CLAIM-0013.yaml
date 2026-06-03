@@ -20,17 +20,28 @@ why_it_matters: "Fresh axis (agent memory/RAG retrieval-cost \u2014 untouched by
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0017
+  summary: 'CLAIM-0013 in-context redundancy gate, L0 model-based characterization
+    (constructed agent+RAG trace, anti-circular: GT=item-id-resident-in-window, cheap
+    check=lexical/hashed-embedding overlap only, NO LLM/GT access). (A) redundant
+    fraction >20% across realistic workload band (0.24-0.82, rising w/ p_repeat &
+    window W). (B) cheap lexical-Jaccard check AUC 0.84-1.00 (oracle gap 0-0.165,
+    grows w/ paraphrase), BEATS random-skip @matched skip-rate by +9..+19 acc pts
+    (bootstrap CI strictly >0 everywhere); SAFE Pareto pt tau=0.3: skip 39pct of retrievals
+    @ task-acc 1.000 (==always-retrieve). Honest-negative branch NOT triggered. VERDICT
+    held-CONDITIONAL (constructed-trace; real L1 needs real traces+real embedding+real
+    task-acc). Adaptive-retrieval (Self-RAG/FLARE/SKR) published; novelty=in-context-redundancy-specific
+    gate + matched-random control + independent GT. 8 seeds, 5.1s, stdlib serial.'
+  data_path: experiments/2026-06-03/EXP-0017/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r2-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0017 result, then ros exp complete --exp EXP-0017 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0017; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0017
+active_experiments: []
 created_at: '2026-06-03T03:57:25Z'
-last_updated: '2026-06-03T03:57:58Z'
+last_updated: '2026-06-03T04:25:20Z'
