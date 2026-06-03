@@ -1393,3 +1393,22 @@ just stalled GPU work: the hard-to-notice failure mode.
 **Repro (isolated /tmp):** pull vs direct diverged on `'h100'` and `'H100 '` (pull=skip, direct=allow).
 **Fix (minimal, no new mechanism):** normalize both sides `strip().lower()` in the pull predicate to match the
 direct path exactly. Patched repro: 0 divergences across H100/h100/'H100 '/any/MI350X/mi350x. AST-validated.
+
+## BUG-94 — fragile-node host_mem_floor SAFETY gate TypeError-crashes on a string floor
+**Surface:** `cmd_exp_dispatch` (~597), `cmd_gpu_queue` (~1243), pull-scheduler fragile check (~1342), engine/ros.py. **Commit:** ff910c2 (research-os main).
+**Found:** v3 ACTIVE-DEBUG bugbash (gpu host_mem_floor-fragile surface, isolated /tmp). **Class:** type-coercion inconsistency on a hardware-safety path.
+
+The fragile-node host_mem_floor watchdog is the ONE gate the design says is NEVER waived (hardware safety on
+the fragile MI350X, not a scientific gate). Three on-disk reads — `cmd_exp_dispatch` (`floor = budget.get(
+"host_mem_floor_gb",0) or 0`), `cmd_gpu_queue`, and the pull-scheduler — pull the floor straight off
+experiment.yaml / gpu_queue.yaml with only `... or 0` and NO int() coercion. By contrast `gpu-task submit`
+(~1520) and `backend register` (~1479) defensively `int()`-wrap the same value. The fragile gate then does
+`floor <= 0`. A STRING floor (`"32"` from a hand-edit, an older agent, or a restored backup YAML) raises
+`TypeError: '<=' not supported between instances of 'str' and 'int'` — CRASHING the safety gate instead of
+either honoring the floor or failing safe. argparse enforces `type=int` so the CLI can't introduce it, but
+any non-CLI write path (manual edit / migration / restore) can — and the crash lands on the never-waived gate.
+
+**Repro (isolated /tmp):** `gate({"host_mem_floor_gb": "32"}, fragile=True)` -> TypeError. **Fix (minimal, no new
+mechanism):** int()-coerce all three on-disk reads with `except (TypeError, ValueError): floor = 0`, matching
+the established defensive idiom at ~1520/~1479. Fails SAFE: un-coercible -> 0 -> fragile gate REFUSES. Patched
+repro: `"32"`->dispatch@32, `"high"`/None/missing/negative -> safe REFUSE. AST-validated; live `ros gpu status` clean.
