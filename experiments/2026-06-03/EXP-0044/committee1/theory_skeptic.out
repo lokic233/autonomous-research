@@ -1,0 +1,27 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- Rising arm = textbook "inject query terms into competitor doc, its TF score rises" (BM25 TF term, Robertson&Sparck-Jones 1976 onward).
+- Recovery arm = textbook BM25 length normalization via parameter b=0.75 penalizing inflated docs (Robertson&Walker SIGIR 1994; Singhal-Buckley-Mitra pivoted-length-norm 1996). With distractor length growing from 1.0× to 7.56× while the answer stays unit-length, the b-term must eventually flip the score order — this is mechanical, not emergent.
+- "No closed form for L*" is a weak novelty claim: IR ranking interactions rarely admit closed forms; qualitatively the inverted-U is predicted by anyone who knows TF saturation + length normalization sit in tension.
+
+CONFOUNDS:
+- The claim text asserts a DUAL mechanism (length-norm AND IDF-collapse drive recovery). The researcher's own decomposition shows qterm_idf is FLAT across L>0 (4.05 from L=4 onward) — so the recovery arm is monocausal (length-norm), and the IDF-collapse arm only acts via the orthogonal SPREAD axis (4.65→4.05 over frac). The literal claim is therefore partially falsified by its own evidence and needs to be re-stated; passing it as "held" without rewriting risks endorsing a mis-specified mechanism.
+- "top-distractor score" in the decomposition table tracks the argmax-distractor at each L — identity may switch between templated/untemplated docs as L crosses ~64–256, conflating regime-switch with smooth crossover.
+- ~30 partial-overlap distractors + 1 fully-matching clean answer is a structurally privileged corpus; the inverted-U depth is sensitive to (#distractors, overlap distribution) which were not varied.
+
+ASSUMPTIONS_UNTESTED:
+- (k1, b) ROBUSTNESS — the diagnostic theory test. b=0 (no length norm) MUST kill the recovery arm if length-norm is the cause; b∈{0, 0.25, 0.5, 0.75, 1.0} sweep would directly validate or refute the stated mechanism. Absent. This is the single cheapest, most decisive test of the theory claim and it was not run.
+- L grid is geometric over {0,4,8,16,32,64,128,256,512}: the "interior peak" location is grid-dependent; no continuous interpolation / no test that L* moves predictably with (k1, b, N, avgdl).
+- Realism of L=512 query-term repetitions on a short doc — distractors become near-pure query-term spam, not "boilerplate."
+- Dense-retriever absence at L0 is fine, but the claim text references BM25-specific recovery; without an explicit "this phenomenon is BM25(b>0)-specific" scoping, novelty is overstated.
+
+STATISTICAL_GAPS:
+- Multiple comparisons: pre-registered test searches over 9 L values × 4 cells with no Bonferroni/FDR adjustment; "interior peak CI excludes both endpoints" has inflated Type-I risk across the grid.
+- 20 seeds, ranks bounded ≥1, several reported CIs of half-width 0.0 → CI is clipped at the floor and likely understates uncertainty in low-rank cells; report bootstrap CIs or rank-distribution quantiles.
+- Weakest cell (f=0.5, T=1) is NS — under a strict pre-registered single-cell test this is a falsification; the "3/4 cells" framing converts a per-cell test into an OR across cells (further inflation).
+- No across-cell monotonicity test (claim asserts "more query terms and/or wider spread → deeper inverted-U" but no formal interaction test was specified pre-reg).
+
+RATIONALE: The phenomenon is REAL and replicated in the strongest cell (20/20 seeds), but the theoretical novelty is weaker than packaged: the recovery arm is length-norm-only per the researcher's own decomposition, contradicting the claim's dual-mechanism framing; the inverted-U is a derivable consequence of textbook BM25 length normalization (Robertson&Walker 1994) meeting trivial query-term injection. The most diagnostic theory check — a b-sweep that would either confirm length-norm as the necessary cause (b=0 → recovery vanishes) or expose a confound — was not run despite being CPU-trivial at L0. Without it, "length-norm-dominated recovery" is asserted from a single decomposition trace rather than tested. YELLOW (not RED) because: (a) the crossover IS empirically present and the killed-sibling revival condition was honestly engineered, (b) the result is reported with explicit honest nuance flagging the IDF-flatness, (c) 3/4 cells + 20/20 in strongest is non-trivial. Required for L1 promotion: (1) rewrite claim to drop dual-mechanism — recovery is length-norm-dominated; IDF-collapse acts only across SPREAD axis; (2) add (k1,b) sweep at L0 (cheap) showing b→0 abolishes recovery and length-norm-free dense retrievers should dampen it; (3) FDR-correct the per-cell tests; (4) prove L* shifts predictably with (b, avgdl) — that would elevate the claim from "BM25-default-parameter coincidence" to genuine quantitative phenomenon. Cite: Robertson&Walker SIGIR'94 (length norm), Lv&Zhai SIGIR'11 (lower-bounding TF normalization) for prior BM25 length-effect literature the packet does not engage with.
+```

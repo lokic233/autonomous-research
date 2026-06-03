@@ -11,3 +11,60 @@ MetaCode at Meta (https://fburl.com/metacode)
 [0m⚙ [0mmeta_core_search_files {"pattern":"TOOLING_v001.md","output_mode":"files_with_matches"}
 [0m✱ [0mGlob "**/*committee_common*.md"[90m 0 matches[0m
 [0m✱ [0mGlob "**/*TOOLING*.md"[90m 0 matches[0m
+[0m→ [0mRead .
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*committee*" -o -name "*TOOLING*" 2>/dev/null | head -20
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0034/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0033/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0035/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0044/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0017/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0010/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0019/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0021/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0042/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0020/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0027/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0018/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0011/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0016/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0029/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0037/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0039/committee1
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0038/committee2
+/Users/dengcchi/autonomous-research-v3/experiments/2026-06-03/EXP-0007/committee1
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "prompts" -type d 2>/dev/null | head -5
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/_shared 2>/dev/null || ls -la /Users/dengcchi/autonomous-research-v3 | grep -i shared
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/ | head -30
+total 88
+drwxr-xr-x  21 dengcchi  staff   672 Jun  3 07:42 .
+drwxr-x---+ 91 dengcchi  staff  2912 Jun  3 08:26 ..
+drwxr-xr-x  15 dengcchi  staff   480 Jun  3 08:26 .git
+-rw-r--r--   1 dengcchi  staff    56 Jun  2 11:39 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+-rw-r--r--   1 dengcchi  staff  1221 Jun  3 06:46 DECISION_expand_lightweight.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  2 17:01 experiments
+-rw-r--r--   1 dengcchi  staff  2699 Jun  2 17:24 HANDOFF_r1_to_r2.md
+-rw-r--r--   1 dengcchi  staff  2516 Jun  2 23:21 HANDOFF_r2_to_r3.md
+-rw-r--r--   1 dengcchi  staff  2856 Jun  3 03:22 HANDOFF_r3_to_r4.md
+drwxr-xr-x   5 dengcchi  staff   160 Jun  3 02:14 learning
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 00:15 ORCHESTRATOR_CHARTER.md
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x  20 dengcchi  staff   640 Jun  3 08:21 projects
+-rw-r--r--   1 dengcchi  staff  2222 Jun  3 04:48 QUIESCENCE_r4_001.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  3123 Jun  3 05:33 QUIESCENCE_r4_002.SUPERSEDED.md
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 06:45 research-os.config.yaml
+-rw-r--r--   1 dengcchi  staff  2055 Jun  3 07:42 RESEARCHER_CHARTER.md
+drwxr-xr-x   9 dengcchi  staff   288 Jun  3 01:05 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/committee/_committee_common_v001.md

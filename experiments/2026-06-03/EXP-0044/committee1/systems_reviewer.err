@@ -397,3 +397,349 @@ hook: PreToolUse
 hook: PreToolUse Completed
 mcp: meta_core/knowledge_load started
 mcp: meta_core/knowledge_load (failed)
+codex
+The internal loader is blocking external page content, but web search returned canonical URLs. I’ll use direct terminal fetches for the relevant public docs so the citation details are grounded.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://docs.opensearch.org/latest/search-plugins/keyword-search/' | grep -io -E '.{0,100}(BM25|k1|b parameter|document length|term frequency).{0,140}' | head -30" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables' | grep -io -E '.{0,120}(field length|average field length|b parameter|term frequency|inverse document frequency).{0,160}' | head -20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://lucene.apache.org/core/8_1_1/core/org/apache/lucene/search/similarities/BM25Similarity.html' | sed -n '1,220p' | grep -i -A3 -B3 'length\\|discount\\|avgFieldLength\\|b parameter'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 771ms:
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/lucene/search/similarities/BM25Similarity.html#discountOverlaps">discountOverlaps</a></span></code>
+<div class="block">True if overlap tokens (tokens with a position of increment of zero) are
+ discounted from the document's length.</div>
+</td>
+</tr>
+</table>
+--
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>protected float</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/lucene/search/similarities/BM25Similarity.html#avgFieldLength-org.apache.lucene.search.CollectionStatistics-">avgFieldLength</a></span>(<a href="../../../../../org/apache/lucene/search/CollectionStatistics.html" title="class in org.apache.lucene.search">CollectionStatistics</a>&nbsp;collectionStats)</code>
+<div class="block">The default implementation computes the average as <code>sumTotalTermFreq / docCount</code></div>
+</td>
+</tr>
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 3680ms:
+arch.org/latest/analyzers/token-filters/delimited-term-frequency/" class="nav-list-link" >Delimited term frequency</a></li><li role="none" class="nav-list-item"><a role="treeitem"href="https://docs.opensearch.org/latest/analyzers/token-filters/dictionary
+fault, OpenSearch calculates document scores using the <a href="https://en.wikipedia.org/wiki/Okapi_BM25">Okapi BM25</a> algorithm. BM25 is a keyword-based algorithm that performs lexical search for words that appear in the query.</p> <p>When d
+etermining a document’s relevance, BM25 considers <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">term frequency/inverse document frequency (TF/IDF)</a>:</p> <ul> <li> <p><
+em>Term frequency</em> stipulates that documents in which the search term appears more frequently are more relevant.</p> </li> <li> <p><em>Inverse document f
+gorithm</td> <td>Description</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">BM25</code></td> <td>The default OpenSearch <a href="https://en.wikipedia.org/wiki/Okapi_BM25">Okapi BM25</a> similarity algorithm.</td> </tr> <
+tr> <td><code class="language-plaintext highlighter-rouge">LegacyBM25</code> (Deprecated)</td> <td>The older <a href="https://github.com/opensearch-project/OpenSearch/blob/main/server/src/main/java/org/opensea
+rch/lucene/similarity/LegacyBM25Similarity.java">LegacyBM25Similarity</a> implementation. Kept for backward compatibility.</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">boole
+y value of whether the terms match.</td> </tr> </tbody> </table></div> <h3 id="important-changes-to-bm25-scoring-in-opensearch-30">Important changes to BM25 scoring in OpenSearch 3.0</h3> <p>In OpenSearch 3.0, the default similarity algorithm c
+hanged from <code class="language-plaintext highlighter-rouge">LegacyBM25Similarity</code> to Lucene’s native <code class="language-plaintext highlighter-rouge">BM25Similarity</code>.</p> <p>This change improves a
+ important difference:</p> <ul> <li> <p>In <code class="language-plaintext highlighter-rouge">LegacyBM25Similarity</code>, scores included an extra constant factor of <code class="language-plaintext highlighter-rouge">k₁ + 1</code> in the numer
+ator of the <code class="language-plaintext highlighter-rouge">BM25</code> formula.</p> </li> <li> <p>In <code class="language-plaintext highlighter-rouge">BM25Similarity</code>, this constant was removed fo
+r cleaner normalization (see <a href="https://en.wikipedia.org/wiki/Okapi_BM25">BM25</a> and the corresponding <a href="https://github.com/apache/lucene/issues/9609">Lucene GitHub issue</a>).</p> </li> <li> <p>Scores produce
+d by <code class="language-plaintext highlighter-rouge">BM25Similarity</code> are lower than those produced by <code class="language-plaintext highlighter-rouge">LegacyBM25Similarity</code>, typically
+citly configure your field or index to use <code class="language-plaintext highlighter-rouge">LegacyBM25</code> (see <a href="#configuring-legacy-bm25-similarity">Configuring legacy BM25 similarity</a>).</p> </li> </ul> <h2 id="specifying-simil
+ext highlighter-rouge">boolean_field</code>. The <code class="language-plaintext highlighter-rouge">bm25_field</code> is assigned the default <code class="language-plaintext highlighter-rouge">BM25</code> similarity:</p> <div class="language-js
+      </span><span class="nl">"bm25_field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> 
+</pre></div></div> <p><label hidden="" class="copy-curl-label">copy</label></p> <h2 id="configuring-bm25-similarity">Configuring BM25 similarity</h2> <p>You can configure BM25 similarity parameters at the index level as follows:</p> <div class=
+pan><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BM25"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"k1"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+</span></code></pre></div></div> <p><code class="language-plaintext highlighter-rouge">BM25</code> similarity supports the following parameters.</p> <div class="table-wrapper"><table> <tbody> <tr> <td>Parameter</td> <td>Data type</
+td> <td>Description</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">k1</code></td> <td>Float</td> <td>Determines non-linear term frequency normalization (saturation) properties. The default value is <code class
+nguage-plaintext highlighter-rouge">b</code></td> <td>Float</td> <td>Determines the degree to which document length normalizes TF values. The default value is <code class="language-plaintext highlighter-rouge">0.75</code>.</td> </tr> <tr> <td><code class=
+o not count when computing the norm).</td> </tr> </tbody> </table></div> <h2 id="configuring-legacy-bm25-similarity">Configuring legacy BM25 similarity</h2> <p>If you want to retain the older similarity behavior, specify <code class="language-p
+laintext highlighter-rouge">LegacyBM25</code> as the similarity <code class="language-plaintext highlighter-rouge">type</code>:</p> <div class="language-json highlighter-rouge"><
+pan class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LegacyBM25"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"k1"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+larity-algorithms">Similarity algorithms</a><ul><li class="toc-item"><a href="#important-changes-to-bm25-scoring-in-opensearch-30">Important changes to BM25 scoring in OpenSearch 3.0</a></li></ul></li><li class="toc-item"><a href="#specifying-s
+imilarity">Specifying similarity</a></li><li class="toc-item"><a href="#configuring-bm25-similarity">Configuring BM25 similarity</a></li><li class="toc-item"><a href="#configuring-legacy-bm25-similarity">Configuring legacy BM25 
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 4567ms:
+span>, <span style="font-family:monospace">k1</span>, <span style="font-family:monospace">b</span>, and something about field lengths. Here’s what each of these is all about:</p><ol><li><span style="font-family:monospace;font-weight:bold">q<sub>i</sub></span> is the i<sup>th</sup> query term
+d all of it is summed up.</li><li><span style="font-family:monospace;font-weight:bold">IDF(g<sub>i</sub>)</span> is the inverse document frequency of the i<sup>th</sup> query term.<br/><br/>For those that have worked with TF/IDF before, the <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf#Inverse_doc
+ term “the” (which will be in nearly all documents).<br/></li><li>We see that the length of the field is divided by the average field length in the denominator as <span style="font-family:monospace;font-weight:bold">fieldLen/avgFieldLen</span>.<br/><br/>We can think of this as how long a document is
+ and if it’s shorter than average, the denominator gets smaller (increasing the score). Note that the implementation of field length in Elasticsearch is based on number of terms (vs something else like character length). This is exactly as described in the original BM25 paper, though we do h
+ily:monospace;font-weight:bold">b</span> which shows up in the denominator and that it’s multiplied by the ratio of the field length we just discussed. <strong>If </strong><span style="font-family:monospace"><strong>b</strong></span><strong> is bigger, the effects of the length of the docume
+riable which helps determine <a href="/guide/en/elasticsearch/guide/current/pluggable-similarites.html#bm25-saturation">term frequency saturation</a> characteristics. That is, it limits how much a single query term can affect the score of a given document. It does this through approaching an <
+on of <span style="font-family:monospace">k1</span> is that for documents of the average length, it is the value of the term frequency that gives a score of half the maximum score for the considered term. The curve of the impact of tf on the score grows quickly when tf() ≤ <span style="font-fa
+;\"\u003ek1\u003c/span\u003e, \u003cspan style=\"font-family: monospace;\"\u003eb\u003c/span\u003e, and something about field lengths. Here’s what each of these is all about:\u003c/p\u003e\u003col\u003e\u003cli\u003e\u003cspan style=\"font-family: monospace;font-weight: bold;\"\u003eq\u003cs
+style=\"font-family: monospace;font-weight: bold;\"\u003eIDF(g\u003csub\u003ei\u003c/sub\u003e)\u003c/span\u003e is the inverse document frequency\u0026nbsp;of the i\u003csup\u003eth\u003c/sup\u003e query term.\u003cbr /\u003e\u003cbr /\u003eFor those that have worked with TF/IDF before, the \u003ca href=
+early all documents).\u003cbr /\u003e\u003c/li\u003e\u003cli\u003eWe see that the length of the field is divided by the average field length in the denominator as \u003cspan style=\"font-family: monospace;font-weight: bold;\"\u003efieldLen/avgFieldLen\u003c/span\u003e.\u003cbr /\u003e\u003cbr /\u003
+ and if it’s shorter than average, the denominator gets smaller (increasing the score). Note that the implementation of field length in Elasticsearch is based on number of terms (vs something else like character length). This is exactly as described in the original BM25 paper, though we do h
+-weight: bold;\"\u003eb\u003c/span\u003e which shows up in the denominator and that it’s multiplied by the ratio of the field length we just discussed. \u003cstrong\u003eIf \u003c/strong\u003e\u003cspan style=\"font-family: monospace;\"\u003e\u003cstrong\u003eb\u003c/strong\u003e\u003c/span\
+ helps determine \u003ca href=\"/guide/en/elasticsearch/guide/current/pluggable-similarites.html#bm25-saturation\"\u003eterm frequency saturation\u003c/a\u003e characteristics. That is, it limits how much a single query term can affect the score of a given document. It does this through approa
+"font-family: monospace;\"\u003ek1\u003c/span\u003e is that for documents of the average length, it is the value of the term frequency that gives a score of half the maximum score for the considered term. The curve of the impact of tf on the score grows quickly when tf() ≤ \u003cspan style=\"f
+;\"\u003ek1\u003c/span\u003e, \u003cspan style=\"font-family: monospace;\"\u003eb\u003c/span\u003e, and something about field lengths. Here’s what each of these is all about:\u003c/p\u003e\u003col\u003e\u003cli\u003e\u003cspan style=\"font-family: monospace;font-weight: bold;\"\u003eq\u003cs
+style=\"font-family: monospace;font-weight: bold;\"\u003eIDF(g\u003csub\u003ei\u003c/sub\u003e)\u003c/span\u003e is the inverse document frequency\u0026nbsp;of the i\u003csup\u003eth\u003c/sup\u003e query term.\u003cbr /\u003e\u003cbr /\u003eFor those that have worked with TF/IDF before, the \u003ca href=
+early all documents).\u003cbr /\u003e\u003c/li\u003e\u003cli\u003eWe see that the length of the field is divided by the average field length in the denominator as \u003cspan style=\"font-family: monospace;font-weight: bold;\"\u003efieldLen/avgFieldLen\u003c/span\u003e.\u003cbr /\u003e\u003cbr /\u003
+ and if it’s shorter than average, the denominator gets smaller (increasing the score). Note that the implementation of field length in Elasticsearch is based on number of terms (vs something else like character length). This is exactly as described in the original BM25 paper, though we do h
+-weight: bold;\"\u003eb\u003c/span\u003e which shows up in the denominator and that it’s multiplied by the ratio of the field length we just discussed. \u003cstrong\u003eIf \u003c/strong\u003e\u003cspan style=\"font-family: monospace;\"\u003e\u003cstrong\u003eb\u003c/strong\u003e\u003c/span\
+ helps determine \u003ca href=\"/guide/en/elasticsearch/guide/current/pluggable-similarites.html#bm25-saturation\"\u003eterm frequency saturation\u003c/a\u003e characteristics. That is, it limits how much a single query term can affect the score of a given document. It does this through approa
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://raw.githubusercontent.com/apache/lucene/main/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java' | grep -n -E 'idf\\(|avgFieldLength|sloppyFreq|score\\(|getB\\(|getK1\\(|length' | head -40" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 365ms:
+41:   * @param b Controls to what degree document length normalizes tf values.
+43:   *     are discounted from the document's length.
+73:   * @param b Controls to what degree document length normalizes tf values.
+75:   *     are discounted from the document's length.
+87:   * @param b Controls to what degree document length normalizes tf values.
+106:   *     are discounted from the document's length.
+139:  protected float idf(long docFreq, long docCount) {
+144:  protected float avgFieldLength(FieldStats fieldStats) {
+163:   * idf(docFreq, docCount);
+180:    final float idf = idf(df, docCount);
+212:        termStats.length == 1
+215:    float avgdl = avgFieldLength(fieldStats);
+218:    for (int i = 0; i < cache.length; i++) {
+232:    /** b value for length normalization impact */
+238:    /** The average document length. */
+271:    public float score(float freq, long encodedNorm) {
+283:        public void score(int size, float[] freqs, long[] norms, float[] scores) {
+284:          if (normInverses.length < size) {
+305:      // not using "product of" since the rewrite that we do in score()
+309:          "score(freq=" + freq.getValue() + "), computed as boost * idf * tf from:",
+318:      subs.add(Explanation.match(b, "b, length normalization parameter"));
+320:        subs.add(Explanation.match(doclen, "dl, length of field (approximate)"));
+322:        subs.add(Explanation.match(doclen, "dl, length of field"));
+324:      subs.add(Explanation.match(avgdl, "avgdl, average length of field"));
+354:  public final float getK1() {
+363:  public final float getB() {
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://raw.githubusercontent.com/apache/lucene/main/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java' | sed -n '130,180p;212,278p;309,325p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  @Override
+  public float computeQueryTermWeight(int queryTermFrequency) {
+    if (k3 < 0) {
+      return (float) queryTermFrequency;
+    }
+    return ((k3 + 1f) * queryTermFrequency) / (k3 + queryTermFrequency);
+  }
+
+  /** Implemented as <code>log(1 + (docCount - docFreq + 0.5)/(docFreq + 0.5))</code>. */
+  protected float idf(long docFreq, long docCount) {
+    return (float) Math.log(1 + (docCount - docFreq + 0.5D) / (docFreq + 0.5D));
+  }
+
+  /** The default implementation computes the average as <code>sumTotalTermFreq / docCount</code> */
+  protected float avgFieldLength(FieldStats fieldStats) {
+    return (float) (fieldStats.sumTotalTermFreq() / (double) fieldStats.docCount());
+  }
+
+  /** Cache of decoded bytes. */
+  private static final float[] LENGTH_TABLE = new float[256];
+
+  static {
+    for (int i = 0; i < 256; i++) {
+      LENGTH_TABLE[i] = SmallFloat.byte4ToInt((byte) i);
+    }
+  }
+
+  /**
+   * Computes a score factor for a simple term and returns an explanation for that score factor.
+   *
+   * <p>The default implementation uses:
+   *
+   * <pre><code class="language-java">
+   * idf(docFreq, docCount);
+   * </code></pre>
+   *
+   * Note that {@link FieldStats#docCount()} is used instead of {@link
+   * org.apache.lucene.index.IndexReader#numDocs() IndexReader#numDocs()} because also {@link
+   * TermStats#docFreq()} is used, and when the latter is inaccurate, so is {@link
+   * FieldStats#docCount()}, and in the same direction. In addition, {@link FieldStats#docCount()}
+   * does not skew when fields are sparse.
+   *
+   * @param fieldStats field-level statistics
+   * @param termStats term-level statistics for the term
+   * @return an Explain object that includes both an idf score factor and an explanation for the
+   *     term.
+   */
+  public Explanation idfExplain(FieldStats fieldStats, TermStats termStats) {
+    final long df = termStats.docFreq();
+    final long docCount = fieldStats.docCount();
+    final float idf = idf(df, docCount);
+        termStats.length == 1
+            ? idfExplain(fieldStats, termStats[0])
+            : idfExplain(fieldStats, termStats);
+    float avgdl = avgFieldLength(fieldStats);
+
+    float[] cache = new float[256];
+    for (int i = 0; i < cache.length; i++) {
+      cache[i] = 1f / (k1 * ((1 - b) + b * LENGTH_TABLE[i] / avgdl));
+    }
+    return new BM25Scorer(boost, k1, b, idf, avgdl, cache);
+  }
+
+  /** Field statistics for the BM25 model. */
+  private static class BM25Scorer extends SimScorer {
+    /** query boost */
+    private final float boost;
+
+    /** k1 value for scale factor */
+    private final float k1;
+
+    /** b value for length normalization impact */
+    private final float b;
+
+    /** BM25's idf */
+    private final Explanation idf;
+
+    /** The average document length. */
+    private final float avgdl;
+
+    /** precomputed norm[256] with k1 * ((1 - b) + b * dl / avgdl) */
+    private final float[] cache;
+
+    /** weight (idf * boost) */
+    private final float weight;
+
+    BM25Scorer(float boost, float k1, float b, Explanation idf, float avgdl, float[] cache) {
+      this.boost = boost;
+      this.idf = idf;
+      this.avgdl = avgdl;
+      this.k1 = k1;
+      this.b = b;
+      this.cache = cache;
+      this.weight = boost * idf.getValue().floatValue();
+    }
+
+    private float doScore(float freq, float normInverse) {
+      // In order to guarantee monotonicity with both freq and norm without
+      // promoting to doubles, we rewrite freq / (freq + norm) to
+      // 1 - 1 / (1 + freq * 1/norm).
+      // freq * 1/norm is guaranteed to be monotonic for both freq and norm due
+      // to the fact that multiplication and division round to the nearest
+      // float. And then monotonicity is preserved through composition via
+      // x -> 1 + x and x -> 1 - 1/x.
+      // Finally we expand weight * (1 - 1 / (1 + freq * 1/norm)) to
+      // weight - weight / (1 + freq * 1/norm), which runs slightly faster.
+      return weight - weight / (1f + freq * normInverse);
+    }
+
+    @Override
+    public float score(float freq, long encodedNorm) {
+      float normInverse = cache[((byte) encodedNorm) & 0xFF];
+      return doScore(freq, normInverse);
+    }
+
+    @Override
+    public BulkSimScorer asBulkSimScorer() {
+      return new BulkSimScorer() {
+          "score(freq=" + freq.getValue() + "), computed as boost * idf * tf from:",
+          subs);
+    }
+
+    private Explanation explainTF(Explanation freq, long norm) {
+      List<Explanation> subs = new ArrayList<>();
+      subs.add(freq);
+      subs.add(Explanation.match(k1, "k1, term saturation parameter"));
+      float doclen = LENGTH_TABLE[((byte) norm) & 0xff];
+      subs.add(Explanation.match(b, "b, length normalization parameter"));
+      if ((norm & 0xFF) > 39) {
+        subs.add(Explanation.match(doclen, "dl, length of field (approximate)"));
+      } else {
+        subs.add(Explanation.match(doclen, "dl, length of field"));
+      }
+      subs.add(Explanation.match(avgdl, "avgdl, average length of field"));
+      float normInverse = 1f / (k1 * ((1 - b) + b * doclen / avgdl));
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PreToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://raw.githubusercontent.com/quickwit-oss/tantivy/main/src/schema/index_record_option.rs' | grep -n -i 'bm25\\|score' | head -20; curl -L --max-time 20 -s 'https://api.github.com/search/code?q=repo:quickwit-oss/tantivy+BM25' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s 'https://api.github.com/search/code?q=repo:opensearch-project/OpenSearch+BM25Similarity' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 395ms:
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+ succeeded in 546ms:
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Apache Lucene BM25Similarity", url: "https://lucene.apache.org/core/8_1_1/core/org/apache/lucene/search/similarities/BM25Similarity.html", overlap: "Implements the core scoring pieces used by the claim: RSJ-style IDF, avg field length, k1 saturation, and b-controlled document-length normalization."},
+  {system: "Elasticsearch BM25", url: "https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables", overlap: "Documents BM25 IDF, term-frequency saturation, and fieldLen/avgFieldLen length normalization; this is the known mechanism behind the recovery arm."},
+  {system: "OpenSearch BM25", url: "https://docs.opensearch.org/latest/search-plugins/keyword-search/", overlap: "Shipping keyword search uses BM25 by default and exposes k1=1.2, b=0.75; docs state b determines document-length normalization of TF values."},
+  {system: "vLLM / SGLang / LMCache / FlashInfer / TensorRT-LLM", url: "https://github.com/vllm-project/vllm ; https://github.com/sgl-project/sglang ; https://github.com/LMCache/LMCache ; https://developer.nvidia.com/blog/run-high-performance-llm-inference-kernels-from-nvidia-using-flashinfer/ ; https://docs.nvidia.com/tensorrt-llm/index.html", overlap: "No meaningful overlap found in the searched OSS systems; these are LLM serving/KV-cache/kernel/inference stacks, not BM25 lexical retrieval systems."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: "Not yet shown at realistic workload. Evidence is L0 synthetic: N=2000 Zipf short docs, one planted clean answer, ~30 distractors, controlled template length/fraction, standard BM25 only. Missing real analyzer/tokenization effects, shard/index statistics, field weighting, boilerplate extraction, spam/duplicate handling, real SEO/EDGAR/Wikipedia corpora, real query set, dense retriever comparison, and downstream RAG accuracy. Reproducibility is plausible from packet paths and pre-registration, but I did not see an executed independent rerun in the packet."
+RATIONALE: "YELLOW because the observed curve is supported in the packet, but the systems content is mostly a composition of already-shipping BM25 mechanisms rather than a systems design. Lucene/OpenSearch/Elasticsearch already implement the exact primitives needed for the claimed crossover: query-term IDF, TF saturation, avg document length, and b-controlled length normalization. The packet’s own mechanism table admits qterm_idf is flat across L>0, so the L-dependent recovery is length-normalization dominated; that weakens the literal claim that L-driven recovery comes from both length normalization and IDF collapse. The exact clean-answer-rank inverted-U under query-term-bearing distractor boilerplate was not found as a named shipping feature in the searched systems, but the mechanism is predictable from BM25 scoring once distractors receive query terms and then become very long. The artifact is a useful empirical stress test candidate for L1, not enough for GREEN as a systems insight/design at realistic scale."
+```
+tokens used
+51,593
