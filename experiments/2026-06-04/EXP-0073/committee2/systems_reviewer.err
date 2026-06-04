@@ -1,0 +1,882 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e9404-b7c1-7351-80a0-41208adc7280
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 — CLAIM-0061 (PROJ-0031, retrieval-and-memory x model-artifact) — the L1 GREEN GATE
+## This is committee#2 (L0->c1 YELLOW->L1->c2). effect=SUPPORT. Vote HONESTLY by role. GREEN requires real 6/6 by role. NOT advocacy — the orchestrator presents the L1 evidence + the residual concern straight.
+
+## WHAT committee#1 SAID (VERDICT-0060, YELLOW 4Y+1G, no RED): the claim is REAL but MODEST; it gated on 5 evidence items, the #1 being load-bearing/decisive:
+1. ★ DECISIVE: does ST's OWN .encode() auto-apply the config'd prompt? If YES -> seam closes inside ST -> COSTUME -> RED. If NO -> seam real at the wrapper boundary.
+2. in-situ Chroma/pymilvus end-to-end (L0 only simulated via bare ST).
+3. >=2 more self-describing models. 4. >=2 more BEIR datasets. 5. relabel DISCARD->"fail to auto-load by default".
+
+## ★★★ THE #1 DECISIVE TEST RESULT (resolves committee#1's load-bearing question):
+arctic-embed-s config_sentence_transformers.json: prompts={"query":"Represent this sentence..."}, **default_prompt_name = null**.
+=> ST applies prompts[default_prompt_name] on .encode() ONLY if default_prompt_name is non-null. It is NULL -> **plain .encode() applies NO prompt.**
+RESULT (real BEIR/SciFact, exact cosine NN): A=model.encode() R@10=0.7292 ; B=model.encode_query() R@10=0.8229 ; AB_embeddings_identical=False.
+**A < B (+9.4pp). The seam is REAL at the WRAPPER boundary, NOT inside ST. The claim is NOT a costume.** (Had .encode() auto-applied -> this would be RED. It does not.)
+
+## IN-SITU WRAPPER (committee item 2) — through the REAL production code path:
+Chroma 1.5.9 DEFAULT SentenceTransformerEmbeddingFunction(model="arctic-embed-s"), collection.add()+collection.query() on SciFact:
+Chroma default R@10 = 0.7226 (R@1 identical 0.4675). bare-ST A=0.7292, B=0.8229. **The production Chroma path lands on the A-number, NOT B** (-0.67pp vs bare-ST A = HNSW ANN approx). The +9.4pp is lost IN SITU through the real wrapper. Confirmed code: __call__ -> self._model.encode() with NO prompt; base embed_query documents the doc/query asymmetry then falls back to __call__, ST subclass does NOT override.
+
+## CROSS-MODEL (item 3) — generality, SciFact, A=plain vs B=encode_query:
+arctic-embed-s (33M, prompt, dpn=null): A 0.7292 / B 0.8229 / +9.4pp. arctic-embed-m (109M): A 0.2356 / B 0.8680 / **+63.2pp**. arctic-embed-xs (23M): A 0.6254 / B 0.7733 / +14.8pp. ALL A<B, every one default_prompt_name=null. BAAI/bge-base-en-v1.5 ships NO prompt -> COULD-IT-FAIL CONTROL (A==B expected, like e5-small-v2 in L0). >=2-model minimum MET (3 confirmed).
+
+## CROSS-DATASET (item 4) — arctic-embed-s, A vs B:
+SciFact (5183d/300q): +9.4pp. NFCorpus (3633d/323q, hard biomedical-IR): +2.9pp. Direction CONSISTENT (A<B), magnitude domain-dependent. >=2-dataset minimum MET.
+
+## RELABEL (item 5): adopted. The wrappers FAIL TO AUTO-LOAD the shipped prompt by default (Chroma: ST subclass doesn't override embed_query; pymilvus query_instruction=""; LangChain query_encode_kwargs={}; LlamaIndex query_instruction=None). NOT "wrappers make prompts impossible." The delta is on the INTEGRATION-DEFAULT/packaging axis (artifact self-describes -> DB boundary silently doesn't honor it), NOT the (decades-known) prompt-mechanism axis.
+
+## THE RESIDUAL CONCERN committee#2 MUST WEIGH (the orchestrator surfaces it straight, NO advocacy):
+committee#1's product_realist voted GREEN; the other 4 voted YELLOW on killer #3 — is "model self-describes a prompt + ST auto-applies via encode_query, yet the DB wrapper's default __call__ path silently doesn't honor it, surviving a competent user who picked a self-describing model" a GENUINELY PUBLISHABLE FINDING, or is it "the known instruction-prefix footgun re-skinned in a new wrapper"? The L1 STRENGTHENED the case (seam confirmed real not in-ST; reproduced in situ; generalizes across 3 models + 2 datasets; effect up to +63pp). The honest counter: the mechanism (prompts help) is decades-known; the contribution is the INTEGRATION-DEFAULT seam + its silent invisibility to a competent user, NOT a new mechanism. Is that contribution sufficient for GREEN, or a strong-but-modest YELLOW (integration/packaging finding)?
+
+## CITATIONS (verified): "prompts help" = E5/Wang2022 + Instructor/TART (cited, not re-derived). ST Migration Guide (encode_query/encode_document honor the model's predefined prompts) verified verbatim. MTEB added shipped-prompt support only in PR#1221 (Aug 2024). DB-wrapper defaults source-verified open in Chroma/pymilvus/LangChain/LlamaIndex (current releases).
+
+## ORCHESTRATOR NOTE (NOT advocacy): The L1 met all 5 committee#1 items and the decisive test resolved IN the claim's favor (real seam, not a costume), reproduced in situ, generalizing across models+datasets. The ONLY live question is the killer-#3 altitude: is the integration-default seam a publishable finding (GREEN) or a strong honest YELLOW (modest packaging delta). Vote your honest read by role. Real 6/6 by role for GREEN; if not unanimous, an honest YELLOW-converged is the correct, zero-false-green outcome. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/milvus-io/pymilvus/master/pymilvus/model/dense/sentence_transformer.py | sed -n '1,240p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' /Users/dengcchi 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/chroma-core/chroma/main/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py | sed -n '1,220p'" in /Users/dengcchi
+hook: PostToolUse
+ exited 127 in 105ms:
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 734ms:
+404: Not Found
+ succeeded in 743ms:
+from chromadb.api.types import EmbeddingFunction, Space, Embeddings, Documents
+from typing import List, Dict, Any
+import numpy as np
+from chromadb.utils.embedding_functions.schemas import validate_config_schema
+
+
+class SentenceTransformerEmbeddingFunction(EmbeddingFunction[Documents]):
+    # Since we do dynamic imports we have to type this as Any
+    models: Dict[str, Any] = {}
+
+    # If you have a beefier machine, try "gtr-t5-large".
+    # for a full list of options: https://huggingface.co/sentence-transformers, https://www.sbert.net/docs/pretrained_models.html
+    def __init__(
+        self,
+        model_name: str = "all-MiniLM-L6-v2",
+        device: str = "cpu",
+        normalize_embeddings: bool = False,
+        **kwargs: Any,
+    ):
+        """Initialize SentenceTransformerEmbeddingFunction.
+
+        Args:
+            model_name (str, optional): Identifier of the SentenceTransformer model, defaults to "all-MiniLM-L6-v2"
+            device (str, optional): Device used for computation, defaults to "cpu"
+            normalize_embeddings (bool, optional): Whether to normalize returned vectors, defaults to False
+            **kwargs: Additional arguments to pass to the SentenceTransformer model.
+        """
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            raise ValueError(
+                "The sentence_transformers python package is not installed. Please install it with `pip install sentence_transformers`"
+            )
+
+        self.model_name = model_name
+        self.device = device
+        self.normalize_embeddings = normalize_embeddings
+        for key, value in kwargs.items():
+            if not isinstance(value, (str, int, float, bool, list, dict, tuple)):
+                raise ValueError(f"Keyword argument {key} is not a primitive type")
+        self.kwargs = kwargs
+
+        if model_name not in self.models:
+            self.models[model_name] = SentenceTransformer(
+                model_name_or_path=model_name, device=device, **kwargs
+            )
+        self._model = self.models[model_name]
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Generate embeddings for the given documents.
+
+        Args:
+            input: Documents to generate embeddings for.
+
+        Returns:
+            Embeddings for the documents.
+        """
+        embeddings = self._model.encode(
+            list(input),
+            convert_to_numpy=True,
+            normalize_embeddings=self.normalize_embeddings,
+        )
+
+        return [np.array(embedding, dtype=np.float32) for embedding in embeddings]
+
+    @staticmethod
+    def name() -> str:
+        return "sentence_transformer"
+
+    def default_space(self) -> Space:
+        # If normalize_embeddings is True, cosine is equivalent to dot product
+        return "cosine"
+
+    def supported_spaces(self) -> List[Space]:
+        return ["cosine", "l2", "ip"]
+
+    @staticmethod
+    def build_from_config(config: Dict[str, Any]) -> "EmbeddingFunction[Documents]":
+        model_name = config.get("model_name")
+        device = config.get("device")
+        normalize_embeddings = config.get("normalize_embeddings")
+        kwargs = config.get("kwargs", {})
+
+        if model_name is None or device is None or normalize_embeddings is None:
+            assert False, "This code should not be reached"
+
+        return SentenceTransformerEmbeddingFunction(
+            model_name=model_name,
+            device=device,
+            normalize_embeddings=normalize_embeddings,
+            **kwargs,
+        )
+
+    def get_config(self) -> Dict[str, Any]:
+        return {
+            "model_name": self.model_name,
+            "device": self.device,
+            "normalize_embeddings": self.normalize_embeddings,
+            "kwargs": self.kwargs,
+        }
+
+    def validate_config_update(
+        self, old_config: Dict[str, Any], new_config: Dict[str, Any]
+    ) -> None:
+        # model_name is also used as the identifier for model path if stored locally.
+        # Users should be able to change the path if needed, so we should not validate that.
+        # e.g. moving file path from /v1/my-model.bin to /v2/my-model.bin
+        return
+
+    @staticmethod
+    def validate_config(config: Dict[str, Any]) -> None:
+        """
+        Validate the configuration using the JSON schema.
+
+        Args:
+            config: Configuration to validate
+
+        Raises:
+            ValidationError: If the configuration does not match the schema
+        """
+        validate_config_schema(config, "sentence_transformer")
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/run-llama/llama_index/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/langchain-ai/langchain/master/libs/community/langchain_community/embeddings/huggingface.py | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=repo:milvus-io/pymilvus+query_instruction+SentenceTransformer' | sed -n '1,160p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 737ms:
+404: Not Found
+hook: PostToolUse
+ succeeded in 943ms:
+import asyncio
+from io import BytesIO
+import logging
+from typing import Any, Callable, Dict, List, Optional, Sequence, Union
+
+from deprecated import deprecated
+from huggingface_hub import (
+    AsyncInferenceClient,
+    InferenceClient,
+    model_info,
+)
+from huggingface_hub.hf_api import ModelInfo
+from llama_index.core.base.embeddings.base import (
+    DEFAULT_EMBED_BATCH_SIZE,
+    BaseEmbedding,
+    Embedding,
+)
+from llama_index.core.bridge.pydantic import Field, PrivateAttr
+from llama_index.core.callbacks import CallbackManager
+from llama_index.embeddings.huggingface.pooling import Pooling
+from llama_index.core.embeddings.multi_modal_base import MultiModalEmbedding
+from llama_index.core.utils import get_cache_dir, infer_torch_device
+from llama_index.embeddings.huggingface.utils import (
+    DEFAULT_HUGGINGFACE_EMBEDDING_MODEL,
+    format_query,
+    format_text,
+    get_query_instruct_for_model_name,
+    get_text_instruct_for_model_name,
+)
+from llama_index.core.schema import ImageType
+from sentence_transformers import SentenceTransformer
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+DEFAULT_HUGGINGFACE_LENGTH = 512
+logger = logging.getLogger(__name__)
+
+
+class HuggingFaceEmbedding(MultiModalEmbedding):
+    """
+    HuggingFace class for text and image embeddings.
+
+    Args:
+        model_name (str, optional): If it is a filepath on disc, it loads the model from that path.
+            If it is not a path, it first tries to download a pre-trained SentenceTransformer model.
+            If that fails, tries to construct a model from the Hugging Face Hub with that name.
+            Defaults to DEFAULT_HUGGINGFACE_EMBEDDING_MODEL.
+        max_length (Optional[int], optional): Max sequence length to set in Model's config. If None,
+            it will use the Model's default max_seq_length. Defaults to None.
+        query_instruction (Optional[str], optional): Instruction to prepend to query text.
+            Defaults to None.
+        text_instruction (Optional[str], optional): Instruction to prepend to text.
+            Defaults to None.
+        normalize (bool, optional): Whether to normalize returned vectors.
+            Defaults to True.
+        embed_batch_size (int, optional): The batch size used for the computation.
+            Defaults to DEFAULT_EMBED_BATCH_SIZE.
+        cache_folder (Optional[str], optional): Path to store models. Defaults to None.
+        trust_remote_code (bool, optional): Whether or not to allow for custom models defined on the
+            Hub in their own modeling files. This option should only be set to True for repositories
+            you trust and in which you have read the code, as it will execute code present on the Hub
+            on your local machine. Defaults to False.
+        device (Optional[str], optional): Device (like "cuda", "cpu", "mps", "npu", ...) that should
+            be used for computation. If None, checks if a GPU can be used. Defaults to None.
+        callback_manager (Optional[CallbackManager], optional): Callback Manager. Defaults to None.
+        parallel_process (bool, optional): If True it will start a multi-process pool to process the
+            encoding with several independent processes. Great for vast amount of texts.
+            Defaults to False.
+        target_devices (Optional[List[str]], optional): PyTorch target devices, e.g.
+            ["cuda:0", "cuda:1", ...], ["npu:0", "npu:1", ...], or ["cpu", "cpu", "cpu", "cpu"].
+            If target_devices is None and CUDA/NPU is available, then all available CUDA/NPU devices
+            will be used. If target_devices is None and CUDA/NPU is not available, then 4 CPU devices
+            will be used. This parameter will only be used if `parallel_process = True`.
+            Defaults to None.
+        num_workers (int, optional): The number of workers to use for async embedding calls.
+            Defaults to None.
+        show_progress_bar (bool, optional): Whether to show a progress bar.
+            Defaults to False.
+        **model_kwargs: Other model kwargs to use
+        tokenizer_name (Optional[str], optional): "Deprecated"
+        pooling (str, optional): "Deprecated"
+        model (Optional[Any], optional): "Deprecated"
+        tokenizer (Optional[Any], optional): "Deprecated"
+
+    Examples:
+        `pip install llama-index-embeddings-huggingface`
+
+        ```python
+        from llama_index.core import Settings
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+
+        # Set up the HuggingFaceEmbedding class with the required model to use with llamaindex core.
+        embed_model  = HuggingFaceEmbedding(model_name = "BAAI/bge-small-en")
+        Settings.embed_model = embed_model
+
+        # Or if you want to Embed some text separately
+        embeddings = embed_model.get_text_embedding("I want to Embed this text!")
+
+        ```
+
+    """
+
+    max_length: int = Field(
+        default=DEFAULT_HUGGINGFACE_LENGTH, description="Maximum length of input.", gt=0
+    )
+    normalize: bool = Field(default=True, description="Normalize embeddings or not.")
+    query_instruction: Optional[str] = Field(
+        description="Instruction to prepend to query text.", default=None
+    )
+    text_instruction: Optional[str] = Field(
+        description="Instruction to prepend to text.", default=None
+    )
+    cache_folder: Optional[str] = Field(
+        description="Cache folder for Hugging Face files.", default=None
+    )
+    show_progress_bar: bool = Field(
+        description="Whether to show a progress bar.", default=False
+    )
+    _model: SentenceTransformer = PrivateAttr()
+    _device: str = PrivateAttr()
+    _parallel_process: bool = PrivateAttr()
+    _target_devices: Optional[List[str]] = PrivateAttr()
+
+    def __init__(
+        self,
+        model_name: str = DEFAULT_HUGGINGFACE_EMBEDDING_MODEL,
+        tokenizer_name: Optional[str] = "deprecated",
+        pooling: str = "deprecated",
+        max_length: Optional[int] = None,
+        query_instruction: Optional[str] = None,
+        text_instruction: Optional[str] = None,
+        normalize: bool = True,
+        model: Optional[Any] = "deprecated",
+        tokenizer: Optional[Any] = "deprecated",
+        embed_batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
+        cache_folder: Optional[str] = None,
+        trust_remote_code: bool = False,
+        device: Optional[str] = None,
+        callback_manager: Optional[CallbackManager] = None,
+        parallel_process: bool = False,
+        target_devices: Optional[List[str]] = None,
+        show_progress_bar: bool = False,
+        **model_kwargs,
+    ):
+        device = device or infer_torch_device()
+        cache_folder = cache_folder or get_cache_dir()
+
+        for variable, value in [
+            ("model", model),
+            ("tokenizer", tokenizer),
+            ("pooling", pooling),
+            ("tokenizer_name", tokenizer_name),
+        ]:
+            if value != "deprecated":
+                raise ValueError(
+                    f"{variable} is deprecated. Please remove it from the arguments."
+                )
+        if model_name is None:
+            raise ValueError("The `model_name` argument must be provided.")
+
+        model = SentenceTransformer(
+            model_name,
+            device=device,
+            cache_folder=cache_folder,
+            trust_remote_code=trust_remote_code,
+            prompts={
+                "query": query_instruction
+                or get_query_instruct_for_model_name(model_name),
+                "text": text_instruction
+                or get_text_instruct_for_model_name(model_name),
+            },
+            **model_kwargs,
+        )
+        if max_length:
+            model.max_seq_length = max_length
+        else:
+            max_length = model.max_seq_length
+
+        super().__init__(
+            embed_batch_size=embed_batch_size,
+            callback_manager=callback_manager,
+            model_name=model_name,
+            max_length=max_length,
+            normalize=normalize,
+            query_instruction=query_instruction,
+            text_instruction=text_instruction,
+            show_progress_bar=show_progress_bar,
+        )
+        self._device = device
+        self._model = model
+        self._parallel_process = parallel_process
+        self._target_devices = target_devices
+
+    @classmethod
+    def class_name(cls) -> str:
+        return "HuggingFaceEmbedding"
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        reraise=True,
+    )
+    def _embed_with_retry(
+        self,
+        inputs: List[Union[str, BytesIO]],
+        prompt_name: Optional[str] = None,
+    ) -> List[List[float]]:
+        """
+        Generates embeddings with retry mechanism.
+
+        Args:
+            inputs: List of texts or images to embed
+            prompt_name: Optional prompt type
+
+        Returns:
+            List of embedding vectors
+
+        Raises:
+            Exception: If embedding fails after retries
+
+        """
+        try:
+            if self._parallel_process:
+                pool = self._model.start_multi_process_pool(
+                    target_devices=self._target_devices
+                )
+                emb = self._model.encode_multi_process(
+                    inputs,
+                    pool=pool,
+                    batch_size=self.embed_batch_size,
+                    prompt_name=prompt_name,
+                    normalize_embeddings=self.normalize,
+                    show_progress_bar=self.show_progress_bar,
+                )
+                self._model.stop_multi_process_pool(pool=pool)
+            else:
+                emb = self._model.encode(
+                    inputs,
+                    batch_size=self.embed_batch_size,
+                    prompt_name=prompt_name,
+                    normalize_embeddings=self.normalize,
+                    show_progress_bar=self.show_progress_bar,
+                )
+            return emb.tolist()
+        except Exception as e:
+            logger.warning(f"Embedding attempt failed: {e!s}")
+            raise
+
+    def _embed(
+        self,
+        inputs: List[Union[str, BytesIO]],
+        prompt_name: Optional[str] = None,
+    ) -> List[List[float]]:
+        """
+        Generates Embeddings with input validation and retry mechanism.
+
+        Args:
+            sentences: Texts or Sentences to embed
+            prompt_name: The name of the prompt to use for encoding
+
+        Returns:
+
+hook: PostToolUse
+ succeeded in 994ms:
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/langchain-ai/langchain/master/libs/partners/huggingface/langchain_huggingface/embeddings/huggingface.py | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/UKPLab/sentence-transformers/master/sentence_transformers/SentenceTransformer.py | grep -n \"def encode_query\\|prompt_name\\|default_prompt_name\" | head -30" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/run-llama/llama_index/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py | sed -n '260,420p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/milvus-io/pymilvus/master/pymilvus/model/dense/sentence_transformer.py | head -20' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 574ms:
+        Returns:
+            List of embedding vectors
+
+        Raises:
+            ValueError: If any input text is invalid
+            Exception: If embedding fails after retries
+
+        """
+        return self._embed_with_retry(inputs, prompt_name)
+
+    def _get_query_embedding(self, query: str) -> List[float]:
+        """
+        Generates Embeddings for Query.
+
+        Args:
+            query (str): Query text/sentence
+
+        Returns:
+            List[float]: numpy array of embeddings
+
+        """
+        return self._embed([query], prompt_name="query")[0]
+
+    async def _aget_query_embedding(self, query: str) -> List[float]:
+        """
+        Generates Embeddings for Query Asynchronously.
+
+        Args:
+            query (str): Query text/sentence
+
+        Returns:
+            List[float]: numpy array of embeddings
+
+        """
+        return await asyncio.to_thread(self._get_query_embedding, query)
+
+    async def _aget_text_embedding(self, text: str) -> List[float]:
+        """
+        Generates Embeddings for text Asynchronously.
+
+        Args:
+            text (str): Text/Sentence
+
+        Returns:
+            List[float]: numpy array of embeddings
+
+        """
+        return await asyncio.to_thread(self._get_text_embedding, text)
+
+    def _get_text_embedding(self, text: str) -> List[float]:
+        """
+        Generates Embeddings for text.
+
+        Args:
+            text (str): Text/sentences
+
+        Returns:
+            List[float]: numpy array of embeddings
+
+        """
+        return self._embed([text], prompt_name="text")[0]
+
+    def _get_text_embeddings(self, texts: List[str]) -> List[List[float]]:
+        """
+        Generates Embeddings for text.
+
+        Args:
+            texts (List[str]): Texts / Sentences
+
+        Returns:
+            List[List[float]]: numpy array of embeddings
+
+        """
+        return self._embed(texts, prompt_name="text")
+
+    async def _aget_text_embeddings(self, texts: List[str]) -> List[List[float]]:
+        """
+        Generates Embeddings for text asynchronously.
+        """
+        return await asyncio.to_thread(self._get_text_embeddings, texts)
+
+    def _get_image_embedding(self, img_file_path: ImageType) -> List[float]:
+        """Generate embedding for an image."""
+        return self._embed([img_file_path])[0]
+
+    async def _aget_image_embedding(self, img_file_path: ImageType) -> List[float]:
+        """Generate embedding for an image asynchronously."""
+        return self._get_image_embedding(img_file_path)
+
+    def _get_image_embeddings(
+        self, img_file_paths: List[ImageType]
+    ) -> List[List[float]]:
+        """Generate embeddings for multiple images."""
+        return self._embed(img_file_paths)
+
+    async def _aget_image_embeddings(
+        self, img_file_paths: List[ImageType]
+    ) -> List[List[float]]:
+        """Generate embeddings for multiple images asynchronously."""
+        return self._get_image_embeddings(img_file_paths)
+
+
+@deprecated(
+    "Deprecated in favor of `HuggingFaceInferenceAPIEmbedding` from `llama-index-embeddings-huggingface-api` which should be used instead.",
+    action="always",
+)
+class HuggingFaceInferenceAPIEmbedding(BaseEmbedding):  # type: ignore[misc]
+    """
+    Wrapper on the Hugging Face's Inference API for embeddings.
+
+    Overview of the design:
+    - Uses the feature extraction task: https://huggingface.co/tasks/feature-extraction
+    """
+
+    pooling: Optional[Pooling] = Field(
+        default=Pooling.CLS,
+        description="Pooling strategy. If None, the model's default pooling is used.",
+    )
+    query_instruction: Optional[str] = Field(
+        default=None, description="Instruction to prepend during query embedding."
+    )
+    text_instruction: Optional[str] = Field(
+        default=None, description="Instruction to prepend during text embedding."
+    )
+
+    # Corresponds with huggingface_hub.InferenceClient
+    model_name: Optional[str] = Field(
+        default=None,
+        description="Hugging Face model name. If None, the task will be used.",
+    )
+    token: Union[str, bool, None] = Field(
+        default=None,
+        description=(
+            "Hugging Face token. Will default to the locally saved token. Pass "
+            "token=False if you don’t want to send your token to the server."
+        ),
+    )
+    timeout: Optional[float] = Field(
+        default=None,
+        description=(
+            "The maximum number of seconds to wait for a response from the server."
+            " Loading a new model in Inference API can take up to several minutes."
+            " Defaults to None, meaning it will loop until the server is available."
+        ),
+    )
+    headers: Dict[str, str] = Field(
+        default=None,
+        description=(
+            "Additional headers to send to the server. By default only the"
+            " authorization and user-agent headers are sent. Values in this dictionary"
+            " will override the default values."
+        ),
+    )
+    cookies: Dict[str, str] = Field(
+        default=None, description="Additional cookies to send to the server."
+    )
+    task: Optional[str] = Field(
+        default=None,
+        description=(
+            "Optional task to pick Hugging Face's recommended model, used when"
+            " model_name is left as default of None."
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 796ms:
+404: Not Found
+ succeeded in 1013ms:
+ succeeded in 1025ms:
+from __future__ import annotations
+
+from typing import Any
+
+from langchain_core.embeddings import Embeddings
+from pydantic import BaseModel, ConfigDict, Field
+
+from langchain_huggingface.utils.import_utils import (
+    IMPORT_ERROR,
+    is_ipex_available,
+    is_optimum_intel_available,
+    is_optimum_intel_version,
+)
+
+_MIN_OPTIMUM_VERSION = "1.22"
+
+
+class HuggingFaceEmbeddings(BaseModel, Embeddings):
+    """HuggingFace sentence_transformers embedding models.
+
+    To use, you should have the `sentence_transformers` python package installed.
+
+    Example:
+        ```python
+        from langchain_huggingface import HuggingFaceEmbeddings
+
+        model_name = "sentence-transformers/all-mpnet-base-v2"
+        model_kwargs = {"device": "cpu"}
+        encode_kwargs = {"normalize_embeddings": False}
+        hf = HuggingFaceEmbeddings(
+            model_name=model_name,
+            model_kwargs=model_kwargs,
+            encode_kwargs=encode_kwargs,
+        )
+        ```
+    """
+
+    model_name: str = Field(
+        default="sentence-transformers/all-mpnet-base-v2", alias="model"
+    )
+    """Model name to use."""
+    cache_folder: str | None = None
+    """Path to store models.
+    Can be also set by SENTENCE_TRANSFORMERS_HOME environment variable."""
+    model_kwargs: dict[str, Any] = Field(default_factory=dict)
+    """Keyword arguments to pass to the Sentence Transformer model, such as `device`,
+    `prompts`, `default_prompt_name`, `revision`, `trust_remote_code`, or `token`.
+    See also the Sentence Transformer documentation: https://sbert.net/docs/package_reference/SentenceTransformer.html#sentence_transformers.SentenceTransformer"""
+    encode_kwargs: dict[str, Any] = Field(default_factory=dict)
+    """Keyword arguments to pass when calling the `encode` method for the documents of
+    the Sentence Transformer model, such as `prompt_name`, `prompt`, `batch_size`,
+    `precision`, `normalize_embeddings`, and more.
+    See also the Sentence Transformer documentation: https://sbert.net/docs/package_reference/SentenceTransformer.html#sentence_transformers.SentenceTransformer.encode"""
+    query_encode_kwargs: dict[str, Any] = Field(default_factory=dict)
+    """Keyword arguments to pass when calling the `encode` method for the query of
+    the Sentence Transformer model, such as `prompt_name`, `prompt`, `batch_size`,
+    `precision`, `normalize_embeddings`, and more.
+    See also the Sentence Transformer documentation: https://sbert.net/docs/package_reference/SentenceTransformer.html#sentence_transformers.SentenceTransformer.encode"""
+    multi_process: bool = False
+    """Run encode() on multiple GPUs."""
+    show_progress: bool = False
+    """Whether to show a progress bar."""
+
+    def __init__(self, **kwargs: Any):
+        """Initialize the sentence_transformer."""
+        super().__init__(**kwargs)
+        try:
+            import sentence_transformers  # type: ignore[import]
+        except ImportError as exc:
+            msg = (
+                "Could not import sentence_transformers python package. "
+                "Please install it with `pip install sentence-transformers`."
+            )
+            raise ImportError(msg) from exc
+
+        if self.model_kwargs.get("backend", "torch") == "ipex":
+            if not is_optimum_intel_available() or not is_ipex_available():
+                msg = f"Backend: ipex {IMPORT_ERROR.format('optimum[ipex]')}"
+                raise ImportError(msg)
+
+            if is_optimum_intel_version("<", _MIN_OPTIMUM_VERSION):
+                msg = (
+                    f"Backend: ipex requires optimum-intel>="
+                    f"{_MIN_OPTIMUM_VERSION}. You can install it with pip: "
+                    "`pip install --upgrade --upgrade-strategy eager "
+                    "`optimum[ipex]`."
+                )
+                raise ImportError(msg)
+
+            from optimum.intel import IPEXSentenceTransformer  # type: ignore[import]
+
+            model_cls = IPEXSentenceTransformer
+
+        else:
+            model_cls = sentence_transformers.SentenceTransformer
+
+        self._client = model_cls(
+            self.model_name, cache_folder=self.cache_folder, **self.model_kwargs
+        )
+
+    model_config = ConfigDict(
+        extra="forbid",
+        protected_namespaces=(),
+        populate_by_name=True,
+    )
+
+    def _embed(
+        self, texts: list[str], encode_kwargs: dict[str, Any]
+    ) -> list[list[float]]:
+        """Embed a text using the HuggingFace transformer model.
+
+        Args:
+            texts: The list of texts to embed.
+            encode_kwargs: Keyword arguments to pass when calling the
+                `encode` method for the documents of the SentenceTransformer
+                encode method.
+
+        Returns:
+            List of embeddings, one for each text.
+
+        """
+        import sentence_transformers  # type: ignore[import]
+
+        texts = [x.replace("\n", " ") for x in texts]
+        if self.multi_process:
+            pool = self._client.start_multi_process_pool()
+            embeddings = self._client.encode_multi_process(texts, pool)
+            sentence_transformers.SentenceTransformer.stop_multi_process_pool(pool)
+        else:
+            embeddings = self._client.encode(
+                texts,
+                show_progress_bar=self.show_progress,
+                **encode_kwargs,
+            )
+
+        if isinstance(embeddings, list):
+            msg = (
+                "Expected embeddings to be a Tensor or a numpy array, "
+                "got a list instead."
+            )
+            raise TypeError(msg)
+
+        return embeddings.tolist()  # type: ignore[return-type]
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        """Compute doc embeddings using a HuggingFace transformer model.
+
+        Args:
+            texts: The list of texts to embed.
+
+        Returns:
+            List of embeddings, one for each text.
+
+        """
+        return self._embed(texts, self.encode_kwargs)
+
+    def embed_query(self, text: str) -> list[float]:
+        """Compute query embeddings using a HuggingFace transformer model.
+
+        Args:
+            text: The text to embed.
+
+        Returns:
+            Embeddings for the text.
+
+        """
+        embed_kwargs = (
+            self.query_encode_kwargs
+            if len(self.query_encode_kwargs) > 0
+            else self.encode_kwargs
+        )
+        return self._embed([text], embed_kwargs)[0]
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+2026-06-04T19:04:41.421587Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+ exited -1 in 37603ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.codex /Users/dengcchi/.claude -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
