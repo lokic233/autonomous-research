@@ -1,0 +1,40 @@
+claim_id: CLAIM-0060
+project_id: PROJ-0030
+stage: seed
+status: seed
+claim: 'In production VLM serving, vLLM keys multimodal/vision-encoder cache reuse
+  on RAW TRANSPORT BYTES of the image (MultiModalHasher over original_bytes / decoded-PIL
+  array, mm_processor_cache ON by default 4GB), while the model-effective input is
+  the processed pixel grid. A lossless, pixel-PRESERVING transport re-encode by an
+  independently-owned upstream layer (CDN/proxy re-optimization, EXIF/metadata strip,
+  PNG<->lossless-WebP, base64 re-wrap, client SDK re-save) yields a NEW cache key
+  for a model-identical image -> a FALSE cache MISS forcing full vision-encoder recompute.
+  The hash domain is provably WIDER than the model-effective input; a competing production
+  framework (SGLang) already hashes the PROCESSED pixel_values tensor (invariant to
+  this divergence). The vLLM fix (client mm_uuid / EXIF ImageID) is source-gated on
+  a different team, so it is structurally unset in real deployments. Headline: on
+  the lossless-re-encode set, vLLM raw-byte cache hit-rate <=10% while SGLang processed-tensor
+  hit-rate >=90% (>=~80pp recoverable vision-encoder reuse lost at the seam).'
+why_it_matters: 'Cross-area production-seam (multimodal-serving x data/transport),
+  same winning shape as first-green CLAIM-0059: a known mechanism (cache-key canonicalization)
+  at an UNAUDITED org-seam between two independently-owned subsystems, with a COMPETING
+  framework (SGLang) already on the other side of the seam = the fix is feasible +
+  the divergence is real + verifiable in source today. Cleared all 10 killers (incl
+  production-framework prior-art read verbatim from vLLM hasher.py + SGLang mm_utils.py);
+  honest falsifiable boundary (lossy JPEG correctly misses both => L0 CAN fail). Honest
+  risk: magnitude rests on the real-traffic rate of lossless re-encoding.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-04T16:26:30Z'
+last_updated: '2026-06-04T16:26:30Z'
