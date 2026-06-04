@@ -1,0 +1,34 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: green
+REVIEWER_VOTES: {novelty_killer: green, systems_reviewer: green, evaluation_prosecutor: green, theory_skeptic: green, product_realist: green}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "Citation set MUST include Lee et al. 2022 (arXiv:2107.06499) as the incumbent dedup method the FN is measured against",
+  "Citation set MUST include Kandpal et al. 2022 (arXiv:2202.06539) and/or Carlini et al. 2022 (arXiv:2202.07646) to substantiate the memorization/privacy/contamination consequence invoked in the lead claim — novelty_killer flagged these as unconfirmed in the packet"
+]
+MANDATORY_BASELINES: [
+  "text-dedup / datatrove MinHash (ChenghaoMou/text-dedup, huggingface/datatrove) — verified as production standard; normalization logic independently confirmed (re.compile(r'\\W+',re.UNICODE) + .lower(), NO NFKC, NO casefold)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0059", change: "status → VERIFIED-GREEN; claim_text rewritten to lead with '45.2% prevalence + 34.6% MinHash-survival [33.6%,35.6%] on real C4-multilingual' (operational); 95.1% exact-escape demoted to supporting; altitude tag = 'empirical measurement of IIR §2.2 normalization-mismatch at dedup×tokenizer seam'; scope_bound = 'NFKC+casefold tokenizers only (T5/SentencePiece nfkc_cf); raw-bytes BPE inverts; BERT-multilingual NFD+lower gap vanishes'; evidence_grade = L1-real-corpus-with-bootstrap-CIs"}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE: UNANIMOUS GREEN across all 5 roles — the first such verdict for this claim after two prior committee rounds. The editorial revision satisfies every condition that held 3 reviewers at YELLOW in committee#2:
+
+(1) ALTITUDE (novelty_killer + theory_skeptic satisfied): The mechanism is now explicitly attributed to IIR §2.2 (Manning/Raghavan/Schütze) and UAX#15 — the claim is scoped to EMPIRICAL MEASUREMENT of a textbook-predicted mismatch at a specific, previously-unquantified seam, not a novel mechanism. This is the honest framing. novelty_killer confirms no fatal collision in ≥2 sources; the novelty ceiling is low (measurement-only) but a low ceiling is not a prior-art kill.
+
+(2) LEAD METRIC (theory_skeptic + evaluation_prosecutor satisfied): The structurally-tautological 95.1% exact-escape is demoted to supporting. The lead is now the non-tautological pair: 45.2% prevalence (real C4 docs with a model-identical NFKC-twin) and 34.6% MinHash-survival at T=0.8 [95% CI: 33.6%, 35.6%]. evaluation_prosecutor confirms this correctly captures operational impact and neutralizes the strawman risk of comparing against a toy deduper.
+
+(3) SCOPE (theory_skeptic satisfied): Bounded to NFKC+casefold tokenizers (T5/SentencePiece nfkc_cf). Raw-bytes BPE (GPT-2/Llama) INVERTS; BERT-multilingual NFD+lower gap vanishes. Claim is now honest and falsifiable.
+
+(4) BOOTSTRAP CIs (theory_skeptic satisfied): B=10,000 nonparametric percentile CIs for pooled (0.9515 [0.9469, 0.9558]), all 5 per-language rates, and the lead MinHash-survival metric (0.346 [0.336, 0.356]). Every per-language lower bound clears the 1% gate by ≥51× (ar) to ≥997× (zh). Statistical gaps closed.
+
+(5) TEXT-DEDUP VERIFICATION (product_realist + systems_reviewer satisfied): ChenghaoMou/text-dedup confirmed to use re.compile(r'\W+',re.UNICODE) split + .lower() — NO NFKC, NO casefold. Substantiates ≥2 production codebases (datatrove + text-dedup) misaligned with NFKC+casefold.
+
+(CHAIR BASELINE) GINI/CONCENTRATION (self-satisfied): Per-pair dominant-class Gini=0.852; fullwidth_ascii top-1=77.4% but ≥3 classes hold ≥1% (fullwidth_ascii, other_compat ≈19%, super/sub). de/fr clear the gate at ~94.6% with ZERO fullwidth-ASCII → ≥2 structurally distinct Unicode drivers. Not a single-mode artifact.
+
+ANTI-HALLUCINATION CHECK: Seam independently verified open by ≥3 committee#1 members checking ≥2 production codebases. All quantitative claims trace to EXP-0069 real corpus (21,300 C4 docs, 5 languages) with deterministic reproduction confirmed before bootstrapping (EXP-0070).
+
+RESIDUAL NOTE (not blocking): novelty_killer flags that the memorization/privacy/contamination consequence cited in the lead claim relies on Lee 2022 and Kandpal/Carlini 2022 — these are MANDATORY in the final citation set but are a citation hygiene requirement, not an evidence gap (the causal link duplication→memorization is established literature). The product_realist output appears duplicated in the packet but both instances are consistent GREEN with identical rationale; treated as one vote.
+
+VERDICT: This claim has earned its GREEN through three committee rounds of increasingly rigorous scrutiny. The final form is a well-scoped empirical measurement (not a mechanism claim) with operationally-grounded lead metrics, honest scope bounds, quantified uncertainty, and verified-open production seam. v001.
+```

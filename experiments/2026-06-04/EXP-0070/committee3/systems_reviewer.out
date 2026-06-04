@@ -1,0 +1,16 @@
+```
+ROLE: systems_reviewer  VOTE: green
+EXISTING_IMPLEMENTATIONS: [
+  {system: "datatrove MinHash dedup", url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/utils/text.py", overlap: "partial baseline only: simplify_text lowercases, strips punctuation/whitespace, and uses unicodedata.normalize('NFD'); no NFKC/casefold or model-tokenizer-alignment mode"},
+  {system: "text-dedup MinHash", url: "https://github.com/ChenghaoMou/text-dedup/blob/main/src/text_dedup/config/algorithms/minhash.py", overlap: "partial baseline only: tokenizes via regex \\W split over content.lower(); no NFKC/casefold alignment"},
+  {system: "HuggingFace tokenizers", url: "https://github.com/huggingface/tokenizers/blob/main/tokenizers/src/normalizers/unicode.rs", overlap: "implements tokenizer-side NFKC/NFD primitives, but not data-dedup alignment or measurement"},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm", overlap: "inference/serving stack; no dataset near-dedup normalizer alignment found"},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "inference/serving stack; no dataset near-dedup normalizer alignment found"},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache/inference reuse system; no dataset near-dedup normalizer alignment found"},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "GPU inference kernels; no dataset near-dedup normalizer alignment found"},
+  {system: "TensorRT-LLM", url: "https://github.com/NVIDIA/TensorRT-LLM", overlap: "LLM inference runtime/kernels; no dataset near-dedup normalizer alignment found"}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds for the claimed seam and workload slice: real C4 multilingual docs, 20,000 measured docs, 9,044 model-identical NFKC-twin pairs, 45.2% pair-formable prevalence, 34.6% MinHash survival at T=0.8 with 95% CI [33.6%,35.6%]. Gaps: not a full-corpus web-scale run, not tied to one loaded tokenizer.json, and downstream memorization/eval-contamination effect is inferred from hidden duplicate exposure rather than trained-model measurement.
+RATIONALE: v001. This is not systems mechanism novelty; the revision correctly frames it as empirical measurement of the IIR §2.2 equivalence-class normalization mismatch at the dedup × tokenizer seam. OSS search found production dedup tools that implement nearby MinHash/text normalization pipelines but do not implement model-tokenizer normalizer alignment: datatrove uses lowercase + NFD in simplify_text, and text-dedup uses lower + regex tokenization. Inference systems requested for comparison (vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM) are serving/cache/kernel stacks, not training-data dedup systems, and I found no overlap implementing this mechanism. The contribution is therefore a systems insight/measurement, not integration-only glue. The artifact is reproducible enough for this claim: EXP-0069 reports 95.1% residual FN on real C4 multilingual and 34.6% production MinHash survival; EXP-0070 adds bootstrap CIs and driver concentration, with fullwidth_ascii top-1 77.4% but other_compat 19.0% and de/fr clearing ~94.6% without fullwidth ASCII, so the result is not only a single Unicode class artifact.
+```

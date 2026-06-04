@@ -1820,3 +1820,442 @@ mod tests {
     }
 }
 
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/pipeline/dedup/minhash.py | grep -n \"simplify_text\\|normal\\|lower\\|token\\|ngram\\|MinHash\\|jaccard\" | head -160" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/utils/text.py | grep -n \"def simplify_text\\|normalize\\|lower\\|casefold\\|NFKC\\|NFD\\|punctuation\\|translate\" | head -120" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/src/text_dedup/utils/preprocess.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/src/text_dedup/config/algorithms/minhash.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 172ms:
+187:    lowercase: bool = True
+189:    remove_punctuation: bool = True
+212:def simplify_text(text: str, config=DEF_TEXT_NORM_CONFIG) -> str:
+217:    - lowercase text
+219:    - remove all punctuation
+221:    - unicode normalize
+236:    # lower case
+237:    if config.lowercase:
+238:        text = text.lower()
+246:    # convert punctuation to spaces
+247:    if config.remove_punctuation:
+248:        text = text.translate(PUNCTUATION_TRANS)
+255:        text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
+
+ succeeded in 184ms:
+22:from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+24:from datatrove.utils.word_tokenizers import load_word_tokenizer
+135:    name = "🎯 MinHash stage 1"
+151:        self.word_tokenizer = load_word_tokenizer(language)
+193:        Shingles are created by hashing n-grams of simplified text (lower cases, whitespace normalized, no punctuation, etc).
+204:                for x in ngrams(
+205:                    self.word_tokenizer.word_tokenize(simplify_text(text, self.config.norm_config)),
+292:                # for verification, as unsorted records are the #1 issue around MinHash
+339:    name = "🎯 MinHash stage 2"
+507:    name = "🎯 MinHash stage 3"
+606:    name = "🎯 MinHash stage 4"
+698:    name = "🎯 MinHash build index"
+
+hook: PostToolUse Completed
+ succeeded in 166ms:
+#!/usr/bin/env python
+# @Date    : 2023-05-06 19:39:27
+# @Author  : Chenghao Mou (mouchenghao@gmail.com)
+
+import regex as re
+
+DIGIT_RE = re.compile(r"\d")
+PUNCT_OR_NON_PRINTING_CHARS_RE = re.compile(r"[\p{P}\p{C}\p{S}]+")
+
+
+def normalize(line: str) -> str:
+    """
+    Normalize a line of text. Source: https://github.com/facebookresearch/cc_net/blob/bda555bd1cf1ee2e0b925363e62a61cd46c8b60d/cc_net/text_normalizer.py#L180
+
+    Parameters
+    ----------
+    line : str
+        The line of text to normalize.
+
+    Returns
+    -------
+    str
+        The normalized line of text.
+
+    Examples
+    --------
+    >>> normalize("Hello, world!")
+    'hello world'
+    >>> normalize("Hello, 123!\\n\\t\\b")
+    'hello 000'
+    """
+    line = line.strip()
+    if not line:
+        return line
+    line = line.lower()
+    line = DIGIT_RE.sub("0", line)
+    line = PUNCT_OR_NON_PRINTING_CHARS_RE.sub("", line)
+    return line
+
+
+def news_copy_preprocessing(text: str) -> str:
+    """
+    This is the same preprocessing code used NEWS-COPY benchmark.
+
+    Prameters
+    ---------
+    text : str
+        The input text to be processed.
+
+    Returns
+    -------
+    str
+        The processed text.
+    """
+    chars_to_remove = r'"#$%&\()*+/:;<=>@[\\]^_`{|}~.?,!\''
+    text = text.replace("-\n", "").replace("\n", " ")
+    text = text.translate(str.maketrans("", "", chars_to_remove))
+    text = text.encode("ascii", "ignore").decode()
+    return text
+
+ succeeded in 185ms:
+# pyright: reportAny=false
+# pyright: reportExplicitAny=false
+from collections.abc import Callable
+from functools import partial
+from typing import Any
+from typing import Literal
+from typing import override
+
+import numpy as np
+import numpy.typing as npt
+import regex as re
+from scipy.integrate import quad as integrate
+
+from text_dedup.config.algorithms.base import AlgorithmConfig
+from text_dedup.utils.tokenization import ngrams
+
+
+def optimal_param(
+    threshold: float,
+    num_perm: int,
+    false_positive_weight: float = 0.5,
+    false_negative_weight: float = 0.5,
+) -> tuple[int, int]:  # pragma: no cover
+    """
+    Compute the optimal `MinHashLSH` parameter that minimizes the weighted sum
+    of false positive and false negative areas, taken from datasketch.
+
+    You can also refer to the interactive demo at https://huggingface.co/spaces/bigcode/near-deduplication.
+
+    Parameters
+    ----------
+    threshold : float
+        The threshold for similarity.
+    num_perm : int
+        The number of permutations.
+    false_positive_weight : float
+        The weight of false positive.
+    false_negative_weight : float
+        The weight of false negative.
+
+    Returns
+    -------
+    tuple[int, int]
+        The optimal `b` (bands) and `r` (rows) parameters.
+    """
+
+    def false_positive_area(threshold: float, b: int, r: int) -> float:
+        """Source: `datasketch.lsh`"""
+
+        def proba(s: float) -> float:
+            return float(1 - (1 - s ** float(r)) ** float(b))
+
+        a, _ = integrate(proba, 0.0, threshold)
+        return float(a)
+
+    def false_negative_area(threshold: float, b: int, r: int) -> float:
+        """Source: `datasketch.lsh`"""
+
+        def proba(s: float) -> float:
+            return float(1 - (1 - (1 - s ** float(r)) ** float(b)))
+
+        a, _ = integrate(proba, threshold, 1.0)
+        return float(a)
+
+    min_error = float("inf")
+    opt = (0, 0)
+    for b in range(1, num_perm + 1):
+        max_r = int(num_perm / b)
+        for r in range(1, max_r + 1):
+            fp = false_positive_area(threshold, b, r)
+            fn = false_negative_area(threshold, b, r)
+            error = fp * false_positive_weight + fn * false_negative_weight
+            if error < min_error:
+                min_error = error
+                opt = (b, r)
+    return opt
+
+
+class MinHashAlgorithmConfig(AlgorithmConfig):
+    algo_name: Literal["minhash"] = "minhash"
+    hash_bits: int = 64
+    hash_func_name: Literal["sha1", "xxh3"] = "xxh3"
+    bands: int | None = None
+    rows: int | None = None
+    num_perm: int
+    ngram_size: int = 1
+    threshold: float
+    min_length: int = 5
+    false_positive_weight: float = 0.5
+    false_negative_weight: float = 0.5
+    check_false_positive: bool = False
+    _modulo_prime: np.uint
+    _max_hash: np.uint
+    _dtype: type
+
+    # 64bit config is backwards compatibility mode.
+    # it uses 64bit types but almost entirely 32bit data, except for one mersenne prime 2^61
+    # why legacy implementations used mersenne primes for modulo:
+    # https://en.wikipedia.org/wiki/Universal_hashing#Hashing_strings
+    # (dtype, max_hash, modulo_prime)
+    _hash_config: dict[int, tuple[type, Any, Any]] = {  # noqa: RUF012
+        64: (np.uint64, np.uint32((1 << 32) - 1), np.uint64((1 << 61) - 1)),
+        # 32, 16bit configs do not use a mersenne prime number.
+        # The original reason for using mersenne prime was speed.
+        # Testing reveals there is no benefit to using a 2^61 mersenne prime number for division
+        32: (np.uint32, np.uint32((1 << 32) - 1), np.uint32((1 << 32) - 5)),
+        16: (np.uint16, np.uint16((1 << 16) - 1), np.uint16((1 << 16) - 15)),
+    }
+
+    @override
+    def model_post_init(self, context: Any) -> None:
+        super().model_post_init(context)
+        if self.bands is None and self.rows is None:
+            # Compute the optimal `MinHashLSH` parameter that minimizes the weighted sum
+            # of probabilities of false positive and false negative, taken from datasketch.
+            # You can also refer to the interactive demo at https://huggingface.co/spaces/bigcode/near-deduplication.
+            # The following assumes a "perfect hash". using 16bit hashes might challenge this assumption
+            # lower precision dtype will cause more collisions, so higher false_positives and fewer false negatives.
+            # Both effects move the result towards more documents being considered duplicates.
+            self.bands, self.rows = optimal_param(
+                self.threshold,
+                self.num_perm,
+                false_positive_weight=self.false_positive_weight,
+                false_negative_weight=self.false_negative_weight,
+            )
+
+        DTYPE, MAX_HASH, MODULO_PRIME = self.get_hash_config()
+        self._dtype = DTYPE
+        self._modulo_prime = MODULO_PRIME
+        self._max_hash = MAX_HASH
+
+    def get_hash_config(self) -> tuple[type, Any, Any]:
+        return self._hash_config[self.hash_bits]
+
+    @property
+    def hash_func(self) -> Callable[[bytes], int]:
+        match self.hash_func_name:
+            case "sha1":
+                from text_dedup.utils.hashfunc import sha1_hash
+
+                result = partial(sha1_hash, d=min(self.hash_bits, 32))
+            case "xxh3":
+                from text_dedup.utils.hashfunc import xxh3_hash
+
+                result = partial(xxh3_hash, seed=self.seed, bits=min(self.hash_bits, 32))
+        return result
+
+    @property
+    def hash_ranges(self) -> list[tuple[int, int]]:
+        bands = self.bands or 0
+        rows = self.rows or 0
+        return [(i * rows, (i + 1) * rows) for i in range(bands)]
+
+    @property
+    def permutations(self) -> tuple[np.ndarray, np.ndarray]:
+        """
+        for minhash, we need to make a lot of hashes(=num_perms).
+        In many previous implementations, this is achieved through a method described in
+        `Universal classes of hash functions` https://doi.org/10.1016/0022-0000(79)90044-8
+        There we start with a know good hash x (=hash_func) and permutate it as the following:
+        `new_hash = (a * x + b) mod prime mod max_hash` we need one a (!=0), b pair per new hash
+        the following produces these a, b pairs
+        """
+        if self._rng is None:
+            raise ValueError("RNG is not materialized")  # noqa: TRY003
+
+        # a is a multiplier so should not be 0
+        a = self._rng.randint(1, self._modulo_prime, size=(self.num_perm,), dtype=self._dtype)
+        b = self._rng.randint(0, self._modulo_prime, size=(self.num_perm,), dtype=self._dtype)
+
+        return a, b
+
+    def get_filtering_func(self) -> Callable[[str], bool]:
+        tokenize_func = self._get_tokenize_func()
+
+        def f(text: str) -> bool:
+            return len(tokenize_func(text)) >= self.min_length
+
+        return f
+
+    def _get_tokenize_func(self) -> Callable[[str], list[str]]:
+        NON_ALPHA = re.compile(r"\W", re.UNICODE)
+
+        def f(content: str) -> list[str]:
+            return [t for t in NON_ALPHA.split(content.lower()) if t]
+
+        return f
+
+    def get_ngrams_func(self) -> Callable[[str], set[bytes]]:
+        tokenize_func = self._get_tokenize_func()
+
+        def f(content: str) -> set[bytes]:
+            return {
+                bytes(" ".join(t).lower(), "utf-8")
+                for t in ngrams(tokenize_func(content), self.ngram_size, self.min_length)
+            }
+
+        return f
+
+    def get_embed_func(
+        self,
+    ) -> Callable[[list[str], list[int]], dict[str, list[int | bytes]]]:
+        """Create a function that embeds a string into a list of (index, hash, length) tuples."""
+        # Fall back to pure Python implementation
+        # a, b are each np.ndarray arrays containing {num_perm} pairs of random numbers used for building new hashes
+        # the formula is a * x(base hash of each shingle) + b
+        a, b = self.permutations
+        hash_func = self.hash_func
+        hash_ranges = self.hash_ranges
+        ngrams_func = self.get_ngrams_func()
+
+        def f(text_col: list[str], idx_col: list[int]) -> dict[str, list[int | bytes]]:
+            # split content on whitespace (NON_ALPHA regex), tokenize with ngrams(), and join these n-grams into a single space separated string.
+            # we then convert to lower case and then bytestrings which is then hashed. Only unique hashed n-grams are left.
+            content: str = text_col[0]
+            idx: int = idx_col[0]
+            tokens: set[bytes] = ngrams_func(content)
+            hashvalues: npt.NDArray[Any] = np.array([hash_func(token) for token in tokens], dtype=self._dtype).reshape(  # pyright: ignore[reportUnknownVariableType]
+                len(tokens), 1
+            )
+
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/utils/text.py | sed -n '180,265p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# add other scripts
+PUNCTUATION_SET = set(PUNCTUATION).union(TERMINAL_PUNCTUATION)
+PUNCTUATION_TRANS = str.maketrans(PUNCTUATION, " " * len(PUNCTUATION))
+
+
+@dataclass
+class TextNormConfig:
+    lowercase: bool = True
+    norm_whitespace: bool = True
+    remove_punctuation: bool = True
+    norm_unicode_diacritics: bool = True
+    norm_numbers: bool = True
+    norm_weekdays: bool = False
+    norm_monthnames: bool = False
+
+
+DEF_TEXT_NORM_CONFIG = TextNormConfig()
+# Match digits in any script, allowing for different decimal separators
+# One or more digits in any script
+# Common decimal separators (period, comma, Arabic decimal, etc)
+# Optional decimal part with digits
+# we need regex and not re for this one to match unicode
+NUMBERS_PATTERN = regex.compile(
+    r"\p{Nd}+([.,،٫⎖⎗⎘]{1}\p{Nd}+)?",
+    regex.VERBOSE | regex.UNICODE,
+)
+WHITESPACE_PATTERN = re.compile(r"\s+")
+# WARNING: english specific
+WEEKDAYS_PATTERN = re.compile(r"monday|tuesday|wednesday|thursday|friday|saturday|sunday")
+MONTHS_PATTERN = re.compile(r"january|february|march|april|may|june|july|august|september|october|november|december")
+
+
+def simplify_text(text: str, config=DEF_TEXT_NORM_CONFIG) -> str:
+    """Performs the following operations to increase recall when looking for matches between documents:
+    - number normalization
+    - weekday normalization
+    - month normalization
+    - lowercase text
+    - replace all whitespace with a single " "
+    - remove all punctuation
+    - convert diacritics
+    - unicode normalize
+
+    Args:
+        text
+
+    Returns:
+        modified text
+    """
+    # We should apply the transformation in such order so that, we do same transformations
+    # incrementaly as we would do if we applied each from scratch.
+    # Eg.
+    # 1|2|3 -> 000
+    # vs
+    # 1|2|3 -> 0
+
+    # lower case
+    if config.lowercase:
+        text = text.lower()
+    if config.norm_numbers:
+        text = NUMBERS_PATTERN.sub("0", text)
+    if config.norm_weekdays:
+        text = WEEKDAYS_PATTERN.sub("WEEKDAY", text)
+    if config.norm_monthnames:
+        text = MONTHS_PATTERN.sub("MONTH", text)
+
+    # convert punctuation to spaces
+    if config.remove_punctuation:
+        text = text.translate(PUNCTUATION_TRANS)
+
+    # remove consecutive spaces, newlines, tabs in the middle and in the beginning / end
+    if config.norm_whitespace:
+        text = WHITESPACE_PATTERN.sub(" ", text.strip())
+    # diacritics/unicode normalization
+    if config.norm_unicode_diacritics:
+        text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
+
+    return text.strip()
+
+
+# from https://tedboy.github.io/nlps/_modules/nltk/util.html#ngrams
+def ngrams(sequence: Iterable, n: int):
+    iterables = tee(sequence, n)
+
+    for i, sub_iterable in enumerate(iterables):  # For each window,
+        for _ in range(i):  # iterate through every order of ngrams
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+```
+ROLE: systems_reviewer  VOTE: green
+EXISTING_IMPLEMENTATIONS: [
+  {system: "datatrove MinHash dedup", url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/utils/text.py", overlap: "partial baseline only: simplify_text lowercases, strips punctuation/whitespace, and uses unicodedata.normalize('NFD'); no NFKC/casefold or model-tokenizer-alignment mode"},
+  {system: "text-dedup MinHash", url: "https://github.com/ChenghaoMou/text-dedup/blob/main/src/text_dedup/config/algorithms/minhash.py", overlap: "partial baseline only: tokenizes via regex \\W split over content.lower(); no NFKC/casefold alignment"},
+  {system: "HuggingFace tokenizers", url: "https://github.com/huggingface/tokenizers/blob/main/tokenizers/src/normalizers/unicode.rs", overlap: "implements tokenizer-side NFKC/NFD primitives, but not data-dedup alignment or measurement"},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm", overlap: "inference/serving stack; no dataset near-dedup normalizer alignment found"},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang", overlap: "inference/serving stack; no dataset near-dedup normalizer alignment found"},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache/inference reuse system; no dataset near-dedup normalizer alignment found"},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "GPU inference kernels; no dataset near-dedup normalizer alignment found"},
+  {system: "TensorRT-LLM", url: "https://github.com/NVIDIA/TensorRT-LLM", overlap: "LLM inference runtime/kernels; no dataset near-dedup normalizer alignment found"}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds for the claimed seam and workload slice: real C4 multilingual docs, 20,000 measured docs, 9,044 model-identical NFKC-twin pairs, 45.2% pair-formable prevalence, 34.6% MinHash survival at T=0.8 with 95% CI [33.6%,35.6%]. Gaps: not a full-corpus web-scale run, not tied to one loaded tokenizer.json, and downstream memorization/eval-contamination effect is inferred from hidden duplicate exposure rather than trained-model measurement.
+RATIONALE: v001. This is not systems mechanism novelty; the revision correctly frames it as empirical measurement of the IIR §2.2 equivalence-class normalization mismatch at the dedup × tokenizer seam. OSS search found production dedup tools that implement nearby MinHash/text normalization pipelines but do not implement model-tokenizer normalizer alignment: datatrove uses lowercase + NFD in simplify_text, and text-dedup uses lower + regex tokenization. Inference systems requested for comparison (vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM) are serving/cache/kernel stacks, not training-data dedup systems, and I found no overlap implementing this mechanism. The contribution is therefore a systems insight/measurement, not integration-only glue. The artifact is reproducible enough for this claim: EXP-0069 reports 95.1% residual FN on real C4 multilingual and 34.6% production MinHash survival; EXP-0070 adds bootstrap CIs and driver concentration, with fullwidth_ascii top-1 77.4% but other_compat 19.0% and de/fr clearing ~94.6% without fullwidth ASCII, so the result is not only a single Unicode class artifact.
+```
+tokens used
+69,692
