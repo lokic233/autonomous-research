@@ -1,0 +1,33 @@
+task_id: TASK-0058
+kind: research
+parent: orchestrator-r6-001
+assignee: researcher-0066
+session_id: ''
+project_id: PROJ-0029
+claim_id: CLAIM-0059
+exp_id: EXP-0069
+status: open
+summary: 'L1 decisive: residual FN rate (model-identical dups missed AFTER production
+  dedup normalization) on a real multilingual corpus. Real production dedup defaults
+  (datatrove simplify_text lowercase+NFD-diacritic-strip+punct-removal OR text-dedup
+  preprocess lowercase+non-word-split) x real model tokenizer (SentencePiece NFKC+casefold
+  or HF normalizer). GREEN gate: residual FN >=1pct of model-identical pairs -> GREEN;
+  <0.1pct -> RED (toothless). Also: NFKC-compatibility-only pair prevalence, word/BPE-shingle
+  sensitivity, partial-coupling regime. Cite IIR sec2.2 normalization-mismatch as
+  the general principle.'
+evidence_delta: ''
+opened_at: '2026-06-04T02:27:21Z'
+updated_at: '2026-06-04T02:27:21Z'
+closed_at: ''
+history:
+- ts: '2026-06-04T02:27:21Z'
+  event: open
+  by: orchestrator-r6-001
+  note: 'L1 decisive: residual FN rate (model-identical dups missed AFTER production
+    dedup normalization) on a real multilingual corpus. Real production dedup defaults
+    (datatrove simplify_text lowercase+NFD-diacritic-strip+punct-removal OR text-dedup
+    preprocess lowercase+non-word-split) x real model tokenizer (SentencePiece NFKC+casefold
+    or HF normalizer). GREEN gate: residual FN >=1pct of model-identical pairs ->
+    GREEN; <0.1pct -> RED (toothless). Also: NFKC-compatibility-only pair prevalence,
+    word/BPE-shingle sensitivity, partial-coupling regime. Cite IIR sec2.2 normalization-mismatch
+    as the general principle.'
