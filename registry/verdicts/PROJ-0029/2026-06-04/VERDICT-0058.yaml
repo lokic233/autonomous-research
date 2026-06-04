@@ -1,0 +1,83 @@
+verdict_id: VERDICT-0058
+claim_id: CLAIM-0059
+project_id: PROJ-0029
+date: '2026-06-04'
+experiment_ids:
+- EXP-0068
+- EXP-0069
+experiment_paths:
+- experiments/2026-06-04/EXP-0068
+- experiments/2026-06-04/EXP-0069
+committee_version: v002
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: green
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- 'NONE (no fatal objections from ANY reviewer). The area_chair rendered FINAL_VERDICT:
+  green (2 reviewer green + 3 reviewer yellow'
+- 'the chair weighed the gate-met L1 evidence + verified-open-seam + 95.1pct magnitude
+  and synthesized GREEN per committee#1''s stated decision rule). HOWEVER: the engine
+  enforces green_rule=UNANIMOUS (all members must vote green for a green verdict).
+  With 3 reviewers at YELLOW, the unanimity gate is NOT met -> the engine rejects
+  the green -> recorded as the STRONGEST YELLOW (chair-green, no-fatal, gate-met,
+  but not unanimous). Zero false greens integrity HELD by the engine''s rule. The
+  3 YELLOW concerns are ALL EDITORIAL (not blocking per the chair): (1) novelty_killer:
+  frame as empirical-measurement-of-IIR-sec2.2 not a mechanism-claim (altitude)'
+- '(2) evaluation_prosecutor: verify text-dedup normalizer + bootstrap CIs'
+- '(3) theory_skeptic: the 95.1pct twin-rate is structurally predicted by UAX#15 once
+  the design is fixed (lead with 34.6pct MinHash-survival instead) + scope to NFKC+casefold
+  tokenizer family. The chair explicitly ruled these editorial-not-blocking. BUT the
+  engine''s unanimity rule is the binding safety constraint.'
+required_evidence:
+- "The 3 YELLOW reviewers' EDITORIAL conditions (per the chair, these convert them\
+  \ to green for the next committee round if addressed \u2014 but per the engine's\
+  \ rule, a re-committee with all concerns addressed is the path to a true green):\
+  \ (1) reframe as empirical-measurement-altitude (novelty_killer)"
+- "(2) lead with 45.2pct-prevalence + 34.6pct-MinHash-survival not the 95.1pct-twin-construction-rate\
+  \ (theory_skeptic \u2014 it's structurally predicted by UAX#15 once the design is\
+  \ fixed)"
+- "(3) scope to NFKC+casefold tokenizer family (theory_skeptic \u2014 raw-bytes-BPE\
+  \ inverts"
+- BERT-NFD+lower ~= production)
+- (4) bootstrap CI on residual_FN per-language (theory_skeptic)
+- (5) verify text-dedup default normalizer >=2 codebases (evaluation_prosecutor).
+  These are FRAMING+COMPLETENESS conditions, not mechanism/evidence gaps.
+map_delta_proposals:
+- 'CLAIM-0059 -> YELLOW (strongest: chair-rendered-GREEN but engine unanimity gate
+  not met [3/5 reviewers yellow, all editorial-not-blocking per the chair]). The CLOSEST
+  to GREEN the run has produced: gate-met L1 95.1pct + no fatal objections + verified-open-seam
+  + chair synthesized GREEN'
+- "the 3 yellow concerns are framing/completeness (altitude, metrics-ordering, scope-note,\
+  \ CIs, text-dedup-verification) NOT evidence/mechanism gaps. A re-committee addressing\
+  \ the editorial conditions could reach unanimous GREEN. PROJ-0029 remains open (not\
+  \ converged \u2014 this is an ALIVE-toward-green claim, not a converge-the-yellow).\
+  \ ORCHESTRATOR NOTE: the engine's unanimous-green rule held the integrity line \u2014\
+  \ even though the chair rendered GREEN and 2 reviewers voted green and there are\
+  \ no fatal objections, 3 editorial-yellow reviewers prevent the automatic green.\
+  \ The path to a true green: address the 5 editorial conditions (reframe altitude,\
+  \ lead-metric, scope-note, CIs, text-dedup-verify) and re-run committee. These are\
+  \ all CHEAP textual/analytical additions, not new experiments."
+baseline_requirements:
+- IIR sec2.2 normalization-mismatch (parent mechanism)
+- UAX#15 (structural driver)
+- datatrove + text-dedup (production-verified baselines)
+- tokenizer-family scope note
+committee_run_dir: experiments/2026-06-04/EXP-0069/committee2
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T03:10:30Z'
