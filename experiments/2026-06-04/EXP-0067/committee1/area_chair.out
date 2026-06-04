@@ -1,0 +1,34 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: red, systems_reviewer: red, evaluation_prosecutor: red, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS:
+  - "NeMo Guardrails streaming output rails (chunk_size/context_size) directly implements the claimed mechanism AND the recovery fix. Two independent reviewers (novelty_killer, systems_reviewer) cite the same framework with specific parameter names, documentation URLs, and code-level evidence (RollingBuffer in buffer.py). The packet's 'ZERO direct hits' prior-art assessment is factually wrong — the flagship production streaming-guardrails framework is directly on point. This collapses the central novelty claim ('first uncrossed cross-area seam')."
+  - "W=16 'production baseline' is unsupported by any citation, vendor doc, or config survey. The evaluation_prosecutor correctly identifies this as a strawman: production safety filters require semantic context (128+ tokens minimum for Llama-Guard-class models), and maintaining a larger text buffer is computationally trivial. At realistic W (128+), W >> 2*C holds naturally for all tested chunk sizes, and the fragmentation effect vanishes entirely."
+  - "The org-seam claim (runtime team sets chunk_size blind to safety team's max-phrase-length) is the ONLY residual novelty after NeMo prior art is acknowledged — and it has ZERO evidence in the packet. No config audit, no postmortem, no team-structure citation, no survey of deployed configurations. It is an assumption, not a demonstrated empirical object. Worse, it is contradicted by the dominant production pattern (NeMo, Guardrails AI) where chunk and overlap are co-owned in a single guardrails config."
+REQUIRED_EVIDENCE:
+  - "Cite and empirically differentiate NeMo Guardrails chunk_size/context_size — explain what the claim adds beyond what NeMo already ships and documents."
+  - "Ground the W=16 production baseline with at least one real deployment config, vendor default, or latency-constrained justification showing bounded-window moderators exist with W this small."
+  - "Provide at least one concrete instance (config audit, postmortem, or organizational survey) demonstrating the cross-org seam actually exists — that runtime and safety teams set chunk_size and W independently without knowledge of each other's parameter."
+  - "Report standard errors / confidence intervals on all recall table cells (5 seeds is marginal; the decisive 42.7pp drop and W*=2C threshold need variance characterization)."
+  - "Fit the recall surface to the trivially predicted combinatorial law W >= C + L_max - 1 and report residuals — if the fit is perfect, the result IS the known invariant, not a new finding."
+MANDATORY_BASELINES:
+  - "NeMo Guardrails streaming output rails with chunk_size/context_size configured per documentation — the canonical production system that already implements the mechanism and fix."
+  - "Realistic window sizes (W=128, W=256) matching Llama-Guard / semantic moderator context requirements — if recall is 100% at these W for all tested C, the practical threat does not exist."
+  - "Unbounded-rescan computational cost at realistic completion lengths (1-4KB) — if cost is negligible, bounded-window is never the rational production choice and the coupling never manifests."
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0058", change: "status -> REJECTED (red). Mechanism is prior-implemented (NeMo chunk_size/context_size); recovery law W>=C+L is textbook chunk-overlap; production baseline W=16 is unsupported; org-seam is assumed not demonstrated. Retain as LESSON: prior-art search must include production guardrails frameworks (NeMo, Guardrails AI), not only academic papers and inference engines."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Three unrebutted REDs on independent, substantive grounds; prior-art search was inadequate. The claim's stated novelty has three load-bearing pillars, and all three are broken:
+
+(1) MECHANISM NOVELTY ("chunk granularity degrades streaming moderation recall via boundary-straddling phrases") — COLLAPSED. NeMo Guardrails' streaming output-rail configuration explicitly parameterizes chunk_size (tokens buffered before the output rail runs) and context_size (overlap tokens carried across chunk boundaries), with documentation stating context_size gives rails visibility across chunk boundaries. The code (RollingBuffer) implements exactly the sliding-window-with-overlap moderator the L0 tests. Two reviewers independently cite this with specific URLs and parameter names, meeting the >=2-source collision bar. The mechanism is not merely known as folklore — it is shipped, documented, and parameterized in the dominant production framework.
+
+(2) RECOVERY LAW ("W* ≈ 2C is a novel finding") — COLLAPSED. W >= C + L_max - 1 is the textbook overlap condition for any windowed scanner over chunked input (cf. HF token-classification stride, RAG chunk-overlap, streaming-ASR windowing). The theory_skeptic correctly identifies the L0 result as a controlled re-measurement of this known invariant. No goodness-of-fit test against the predicted law was performed — if the fit is exact, the result IS the known invariant.
+
+(3) ORG-SEAM NOVELTY ("runtime team sets chunk_size without knowing safety team's max-phrase-length — first uncrossed cross-area seam") — UNSUPPORTED. This is the only potential residual novelty, and it has zero evidence. No config survey, no postmortem, no team-structure citation. The dominant production pattern (NeMo) co-locates chunk_size and context_size in a single config, closing the seam by construction. The claim assumes separate ownership but does not demonstrate it.
+
+Additionally, the evaluation_prosecutor's strawman concern is damning: W=16 (≈12 words of context) is implausibly small for any production safety filter that performs semantic moderation. Llama-Guard-class models require 128+ tokens of context. At realistic W, the condition W >= 2*C is trivially satisfied for all tested C, and the fragmentation effect is zero. The packet provides no latency/memory justification for why W would ever be this small.
+
+The L0 execution quality is genuinely high — prereg before run, anti-circular design, sanity ceiling, null controls, honest reporting. The theory_skeptic and product_realist rightly credit this. But execution quality cannot rescue a claim whose mechanism is prior-implemented and whose novelty premise (the uncrossed seam) is both undemonstrated and contradicted by the production landscape. The finding reduces to: "we re-measured a known chunk-overlap effect in a toy harness with an unrealistically small window and called it novel because we didn't check NeMo Guardrails."
+
+Prompt version: v001.
+```

@@ -1,0 +1,35 @@
+task_id: TASK-0057
+kind: research
+parent: orchestrator-r6-001
+assignee: researcher-0065
+session_id: ''
+project_id: PROJ-0029
+claim_id: CLAIM-0059
+exp_id: EXP-0068
+status: open
+summary: "L0 cross-area: dedup FN driven by normalizer DIVERGENCE (model NFKC+casefold\
+  \ vs deduper NFC/raw) not edit-distance. From-scratch MinHash+LSH, internal-normalizer=param;\
+  \ GT=identical-under-model-normalization (harness, never read by deduper). ALIAS\
+  \ CONTROL: hold shingle-size+raw-edit-distance FIXED, vary normalizable-vs-random-typo\
+  \ (FN moves only in normalizable arm). NULL EXITS: typo-arm flat / deduper=NFKC+casefold->FN-baseline\
+  \ / smooth-not-stepped. \u2605 GUARD: isolate any genuine equivalence-class STEP\
+  \ from the inherent LSH S-curve artifact (step is SECONDARY/flagged, NOT the headline;\
+  \ primary=divergence-drives-FN is robust). PERSISTENT-SEEDER loop (prefer cross-area\
+  \ next)"
+evidence_delta: ''
+opened_at: '2026-06-04T01:33:33Z'
+updated_at: '2026-06-04T01:33:33Z'
+closed_at: ''
+history:
+- ts: '2026-06-04T01:33:33Z'
+  event: open
+  by: orchestrator-r6-001
+  note: "L0 cross-area: dedup FN driven by normalizer DIVERGENCE (model NFKC+casefold\
+    \ vs deduper NFC/raw) not edit-distance. From-scratch MinHash+LSH, internal-normalizer=param;\
+    \ GT=identical-under-model-normalization (harness, never read by deduper). ALIAS\
+    \ CONTROL: hold shingle-size+raw-edit-distance FIXED, vary normalizable-vs-random-typo\
+    \ (FN moves only in normalizable arm). NULL EXITS: typo-arm flat / deduper=NFKC+casefold->FN-baseline\
+    \ / smooth-not-stepped. \u2605 GUARD: isolate any genuine equivalence-class STEP\
+    \ from the inherent LSH S-curve artifact (step is SECONDARY/flagged, NOT the headline;\
+    \ primary=divergence-drives-FN is robust). PERSISTENT-SEEDER loop (prefer cross-area\
+    \ next)"

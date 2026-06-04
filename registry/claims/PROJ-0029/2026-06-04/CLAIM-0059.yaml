@@ -1,0 +1,79 @@
+claim_id: CLAIM-0059
+project_id: PROJ-0029
+stage: seed
+status: seed
+claim: "In a standard near-duplicate dedup pipeline (MinHash+LSH over char/word shingles),\
+  \ the document-pair FALSE-NEGATIVE rate (missed true duplicates, where 'true duplicate'\
+  \ = IDENTICAL under the MODEL tokenizer's normalization) is driven by the Unicode-equivalence\
+  \ DIVERGENCE between the dedup pipeline's text normalizer and the model tokenizer's\
+  \ normalizer \u2014 NOT by surface edit distance. When the model normalizes more\
+  \ strongly than the deduper (tokenizer NFKC+casefold while the deduper runs NFC-only/raw),\
+  \ a systematic class of document pairs is identical from the model's perspective\
+  \ (same token sequence) yet escapes the deduper; aligning the deduper's normalizer\
+  \ to the model's collapses the false-negatives to baseline. (Secondary/flagged:\
+  \ the missed-pair rate may jump in discrete steps as the normalizable-pair fraction\
+  \ crosses LSH-band thresholds \u2014 but this must be isolated from the inherent\
+  \ LSH S-curve.) NULL EXIT: if the deduper already collapses the same equivalence\
+  \ classes present, or dup pairs differ only by non-normalizable random typos, the\
+  \ FN rate is flat in normalizer choice and the coupling vanishes."
+why_it_matters: "2nd CROSS-AREA coupling claim (different seam from CLAIM-0058). Couples\
+  \ TOKENIZATION/PREPROCESSING (model tokenizer normalizer NFC/NFKC/casefold, modeling-team-owned\
+  \ for vocab) x DATA-SYSTEMS (dedup recall, data-platform-owned). SEAM: the deduper's\
+  \ own normalizer + the model tokenizer's normalizer are configured INDEPENDENTLY\
+  \ + routinely diverge; the coupling IS the divergence. PRIMARY (robust): dedup FN\
+  \ driven by normalizer DIVERGENCE not edit distance. SECONDARY/FLAGGED: step-structure\
+  \ in normalizable-fraction \u2014 \u2605 GUARD: banded LSH inherently has a step\
+  \ S-curve (textbook), the L0 MUST isolate any genuine equivalence-class step from\
+  \ the LSH artifact; if it's just the S-curve, downgrade to primary-only (still novel/cross-area/clean-null).\
+  \ Passes killers: #10 GENUINE NULL (corpus buildable so dup pairs differ only by\
+  \ random typos -> divergence irrelevant -> flat; not construction-forced); #9 not-textbook\
+  \ ('normalize before hashing' is textbook, but that the MODEL's normalizer [a different\
+  \ subsystem's vocab decision] sets the dedup recall CEILING + the divergence is\
+  \ the driver is not; Lee2022/UAX#15 incumbents silent on the seam); LESSON-A defense\
+  \ = the cause lives in a subsystem (tokenizer normalization) dedup researchers NEVER\
+  \ instrument as an input (verified uncrossed, zero direct hits); LESSON-B ALIAS\
+  \ CONTROL = hold shingle-set SIZE + raw EDIT-DISTANCE FIXED across arms, vary ONLY\
+  \ normalizable (compat/case/combining via unicodedata) vs random-typo (FN moves\
+  \ only in the normalizable arm -> cause is divergence NOT difficulty) + sweep Jaccard\
+  \ threshold; LESSON-C + #7 PRODUCTION baseline = real MinHash (k=5 char or word-13gram,\
+  \ 128 perms, threshold~0.8, WITH its own NFC normalizer) + standard mitigation 'normalize\
+  \ in deduper too' modeled (force both identical -> FN to baseline = null arm); NOT\
+  \ metric-validity (FN=missed-true-dup/total, GT=identical-under-model-normalization\
+  \ HARNESS-OWNED, deduper never reads GT = anti-circular); NOT closed-form (MinHash\
+  \ collision under partial-overlap + non-linear equivalence collapse, measured);\
+  \ RUNTIME-MITIGATION irrelevant (recall property not a fixed cost). BOUNDARY (verified\
+  \ DISTINCT): CLAIM-0045 BM25-ranking, CLAIM-0048 eval-aggregation-canonicalizer,\
+  \ CLAIM-0054 CC-dedup-chaining-graph-topology, CLAIM-0042 contamination \u2014 none\
+  \ is normalizer-DIVERGENCE-driven dedup-FN. Falsifiable L0 (CPU, stdlib unicodedata/hashlib):\
+  \ N~5-10k synth docs; true-dup pairs where doc2 = doc1 + a controlled difference\
+  \ of TYPE (i) NORMALIZABLE (random subset of chars -> compat/case/combining-equivalent\
+  \ codepoints) or (ii) RANDOM non-normalizable TYPO (alias-control), MATCHED count\
+  \ so raw edit-distance FIXED across arms. GT = doc1==doc2 under model normalization\
+  \ (NFKC+casefold). From-scratch MinHash+LSH deduper, internal normalizer = PARAM\
+  \ {raw,NFC,NFKC,NFKC+casefold}, emits candidate pairs, NEVER sees GT. Measure FN\
+  \ vs deduper-normalizer per arm, across Jaccard-threshold + corpus-composition sweeps.\
+  \ NULL EXITS: (a) typo-arm FN flat across normalizers (alias passes); (b) deduper=NFKC+casefold\
+  \ -> FN to baseline (confirms coupling=divergence); (c) FN smooth in edit-distance\
+  \ not stepped -> step sub-claim falsified (primary survives). PREDICT: normalizable\
+  \ arm w/ deduper weaker than model -> LARGE FN, vanishes when aligned. Topic: tokenization\
+  \ x data-systems. L1: real multilingual C4/OSCAR shard + real tokenizer HF normalizer\
+  \ (model side) + datatrove/text-dedup MinHash (data side) -> rate of model-identical\
+  \ dup pairs surviving production dedup from normalizer divergence + recovery on\
+  \ alignment (hidden duplicate exposure -> memorization/privacy/contamination)."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0068 result, then ros exp complete --exp EXP-0068 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0068
+created_at: '2026-06-04T01:33:03Z'
+last_updated: '2026-06-04T01:33:03Z'
