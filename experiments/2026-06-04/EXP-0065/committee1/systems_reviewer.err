@@ -1198,3 +1198,1200 @@ hook: PostToolUse Completed
 /tmp/sglang-prior/python/sglang/srt/multimodal/processors/step3_vl.py:341:        self.num_image_feature_size = 169
 /tmp/sglang-prior/python/sglang/srt/multimodal/processors/step3_vl.py:344:        self.image_feature_placeholder = self.image_token * self.num_image_feature_size
 
+ succeeded in 9711ms:
+/tmp/vllm-prior-70814/vllm/v1/metrics/perf.py:1091:            # unless they're doing chunked prefill (num_tokens > 1)
+/tmp/vllm-prior-70814/vllm/v1/attention/backend.py:303:                "partial multimodal token full attention not supported"
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/triton_attn.py:111:        # Return None if all ranges are trivial (only (0,0) placeholders)
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/mamba_attn.py:244:        of the interaction with chunked prefill in order to
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/rocm_attn.py:30:from vllm.v1.attention.ops.chunked_prefill_paged_decode import (
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/rocm_attn.py:31:    chunked_prefill_paged_decode,
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/rocm_attn.py:230:        chunked_prefill_paged_decode's prefill kernel (context_attention_fwd)
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/rocm_attn.py:435:        chunked_prefill_paged_decode(
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/mla/sparse_swa.py:273:        For prefill, we use chunked prefill to align with the indexer's chunking.
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/utils.py:174:# For example, if are performing a chunked prefill a batch of 3 sequences:
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/utils.py:617:        short_extend:  (num_scheduled <= threshold AND is chunked prefilling)
+/tmp/vllm-prior-70814/vllm/v1/attention/backends/utils.py:618:        long_extend:   (num_scheduled > threshold AND is chunked prefilling)
+/tmp/vllm-prior-70814/vllm/v1/attention/ops/triton_attention_helpers.py:277:    ``mm_prefix_range`` when PrefixLM / multimodal attention is active.
+/tmp/vllm-prior-70814/vllm/v1/attention/ops/triton_attention_helpers.py:298:    # PrefixLM: extend mask with bidirectional ranges for multimodal tokens.
+/tmp/vllm-prior-70814/vllm/v1/attention/ops/chunked_prefill_paged_decode.py:266:def chunked_prefill_paged_decode(
+/tmp/vllm-prior-70814/vllm/v1/attention/ops/rocm_aiter_mla_sparse.py:767:            # pad in edge case where we have short chunked prefill length <
+/tmp/vllm-prior-70814/vllm/v1/attention/ops/triton_unified_attention.py:953:    # a non-null pointer.  Reuse ``out`` as the placeholder.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:15:        # reusable read-only placeholder list for speculative decoding.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:16:        self._spec_token_placeholders: list[int] = [-1] * self.num_spec_tokens
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:28:                request.use_structured_output and request.num_output_placeholders > 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:33:            request.num_output_placeholders += 1 + cur_num_spec_tokens
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:34:            # Add placeholders for the new draft/spec tokens.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:36:            request.spec_token_ids = self._spec_token_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:58:        # Update the number of output placeholders.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:59:        request.num_output_placeholders -= len(new_token_ids)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:60:        assert request.num_output_placeholders >= 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/async_scheduler.py:65:                request, request.num_computed_tokens - request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/interface.py:8:from vllm.multimodal import MULTIMODAL_REGISTRY, MultiModalRegistry
+/tmp/vllm-prior-70814/vllm/v1/core/sched/interface.py:64:        can be somewhere in between in case of chunked prefills, prefix caching,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/interface.py:217:    def reset_encoder_cache(self) -> None:
+/tmp/vllm-prior-70814/vllm/v1/core/sched/interface.py:218:        """Reset the encoder cache to invalidate all cached encoder outputs.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:30:from vllm.multimodal import MULTIMODAL_REGISTRY, MultiModalRegistry
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:31:from vllm.multimodal.encoder_budget import MultiModalBudget
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:32:from vllm.multimodal.utils import get_mm_features_in_window
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:33:from vllm.v1.core.encoder_cache_manager import (
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:185:        # Calculate encoder cache size if applicable
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:186:        supports_mm_inputs = mm_registry.supports_multimodal_inputs(
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:199:                "multimodal interface with at most one modality."
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:205:        encoder_cache_size = mm_budget.encoder_cache_size if mm_budget else 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:206:        self.encoder_cache_manager = (
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:207:            EncoderDecoderCacheManager(cache_size=encoder_cache_size)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:209:            else EncoderCacheManager(cache_size=encoder_cache_size)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:349:        # chunked prefills, prefix caching, speculative decoding,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:381:                request.num_output_placeholders > 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:382:                # This is (num_computed_tokens + 1) - (num_output_placeholders - 1).
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:383:                # Since output placeholders are also included in the computed tokens
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:384:                # count, we subtract (num_output_placeholders - 1) to remove any draft
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:387:                and request.num_computed_tokens + 2 - request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:404:                + request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:449:                # 3. The encoder cache is exhausted.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:524:                    - request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:539:                # Allocate the encoder cache.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:541:                    self.encoder_cache_manager.allocate(request, i)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:547:                    self.encoder_cache_manager.allocate(request, i)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:688:                    # chunked prefill has to be enabled explicitly to allow
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:691:                        not self.scheduler_config.enable_chunked_prefill
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:694:                        # If chunked_prefill is disabled,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:769:                        self.encoder_cache_manager.free(request)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:838:                    # Allocate the encoder cache.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:840:                        self.encoder_cache_manager.allocate(request, i)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:844:                # Allocate for external load encoder cache
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:847:                        self.encoder_cache_manager.allocate(request, i)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:931:            free_encoder_mm_hashes=self.encoder_cache_manager.get_freed_mm_hashes(),
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:969:        self.encoder_cache_manager.free(request)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:996:                request.num_tokens + request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1113:                req.num_output_tokens + req.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1142:        - It is not already computed and stored in the encoder cache.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1143:        - It is not exist on remote encoder cache (via ECConnector)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1145:        - The encoder cache has space to store it.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1201:                # We are not using the encoder cache for encoder-decoder models,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1208:                if self.encoder_cache_manager.check_and_update_cache(request, i):
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1214:            # partially schedule a multimodal item. If the scheduled range would
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1223:                # encoder cache miss. This ensures the scheduled range
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1229:            if not self.encoder_cache_manager.can_allocate(
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1232:                # The encoder cache is full or the encoder budget is exhausted.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1251:            # of scheduled encoder placeholder tokens.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1261:            # There's no embeddings in the current range of encoder placeholder tokens
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1409:                # If async scheduling, num_output_placeholders also includes
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1411:                if request.num_output_placeholders > 0:
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1412:                    request.num_output_placeholders -= num_rejected
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1695:        cached_encoder_input_ids = self.encoder_cache_manager.get_cached_input_ids(
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1712:                self.encoder_cache_manager.free_encoder_input(request, input_id)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1716:                self.encoder_cache_manager.free_encoder_input(request, input_id)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1755:            placeholder_spec_tokens = sched_spec_tokens.get(req_id)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1756:            if not placeholder_spec_tokens:
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1759:            orig_num_spec_tokens = len(placeholder_spec_tokens)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1761:            # (needed for chunked prefill case for example).
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1875:        self.encoder_cache_manager.free(request)
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1946:                # return. num_output_placeholders is exactly that count: 0 if
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1950:                request.async_tokens_to_discard = request.num_output_placeholders
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1951:                request.num_output_placeholders = 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1995:    def reset_encoder_cache(self) -> None:
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1996:        """Reset the encoder cache to invalidate all cached encoder outputs.
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:2001:        self.encoder_cache_manager.reset()
+/tmp/vllm-prior-70814/vllm/v1/core/sched/output.py:16:    from vllm.multimodal.inputs import MultiModalFeatureSpec
+/tmp/vllm-prior-70814/vllm/v1/core/sched/output.py:214:    # freed from the encoder cache.
+/tmp/vllm-prior-70814/vllm/v1/core/single_type_kv_cache_manager.py:1222:        # 3. No reusable prefix exists between different multimodal inputs
+/tmp/vllm-prior-70814/vllm/v1/core/single_type_kv_cache_manager.py:1333:    # placeholder.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:18:    """Manages caching of encoder outputs for multimodal models in vLLM V1.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:20:    The EncoderCacheManager handles the lifecycle of multimodal encoder outputs
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:23:    same multimodal inputs appear in different stages of request processing.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:28:    - Any multimodal model where encoder computation is expensive and
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:31:    The cache operates at the granularity of individual multimodal input items
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:33:    chunked processing of multimodal inputs.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:35:    Cache is enabled to share embeddings of same multimodal data
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:41:    NOTE: The EncoderCacheManager operates on the level of multimodal embeddings
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:42:    instead of encoder tokens (i.e. all tokens that represent the multimodal data
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:43:    in the input sequence). This means all break/text tokens in-between multimodal
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:82:        """Reset the encoder cache to its initial state.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:95:        """Check if encoder output for a specific multimodal input is cached.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:103:            request: The request containing the multimodal input
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:104:            input_id: Index of the multimodal input within the request
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:130:        """Check if there's sufficient cache space for a multimodal input.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:143:            request: The request containing the multimodal input.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:144:            input_id: Index of the multimodal input within the request.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:185:        """Allocate cache space for a multimodal input's encoder output.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:188:        specified multimodal input. The actual encoder output storage happens in
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:213:        """Get all cached multimodal input IDs for a request."""
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:256:        """Get and clear the list of recently freed encoder cache entries.
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:273:    """Compute the encoder cache budget based on the model and scheduler
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1120,1270p' /tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+            all_token_ids=all_token_ids,
+            new_block_ids=new_block_ids,
+            num_computed_tokens=num_computed_tokens,
+            num_output_tokens=num_output_tokens,
+        )
+
+    def _try_schedule_encoder_inputs(
+        self,
+        request: Request,
+        num_computed_tokens: int,
+        num_new_tokens: int,
+        encoder_compute_budget: int,
+        shift_computed_tokens: int = 0,
+    ) -> tuple[list[int], int, int, list[int]]:
+        """
+        Determine which encoder inputs need to be scheduled in the current step,
+        and update `num_new_tokens` and encoder token budget accordingly.
+
+        An encoder input will be scheduled if:
+        - Its output tokens overlap with the range of tokens being computed
+        in this step, i.e.,
+        [num_computed_tokens, num_computed_tokens + num_new_tokens).
+        - It is not already computed and stored in the encoder cache.
+        - It is not exist on remote encoder cache (via ECConnector)
+        - There is sufficient encoder token budget to process it.
+        - The encoder cache has space to store it.
+
+        If an encoder input cannot be scheduled due to cache or budget
+        limitations, the method adjusts `num_new_tokens` to schedule only the
+        decoder tokens up to just before the unschedulable encoder input.
+
+        Note that num_computed_tokens includes both locally cached
+        blocks and externally cached blocks (via KVConnector).
+        """
+        if num_new_tokens == 0 or not request.has_encoder_inputs:
+            return [], num_new_tokens, encoder_compute_budget, []
+        encoder_inputs_to_schedule: list[int] = []
+        mm_features = request.mm_features
+        assert mm_features is not None
+        assert len(mm_features) > 0
+        external_load_encoder_input = []
+
+        # NOTE: since scheduler operates on the request level (possibly with
+        # multiple encoder inputs per request), we need to create temporary
+        # trackers for accounting at the encoder input level.
+        mm_hashes_to_schedule = set()
+        num_embeds_to_schedule = 0
+
+        lo, hi = get_mm_features_in_window(
+            mm_features,
+            start=num_computed_tokens,
+            end=num_computed_tokens + num_new_tokens + shift_computed_tokens,
+        )
+        # For encoder-decoder, all inputs sit at start_pos=0, so lo=0 always.
+        if self.is_encoder_decoder:
+            lo = 0
+
+        for i in range(lo, hi):
+            mm_feature = mm_features[i]
+            start_pos = mm_feature.mm_position.offset
+            num_encoder_tokens = mm_feature.mm_position.length
+            num_encoder_embeds = mm_feature.mm_position.get_num_embeds()
+            item_identifier = mm_feature.identifier
+
+            if self.is_encoder_decoder and num_computed_tokens > 0:
+                assert start_pos == 0, (
+                    "Encoder input should be processed at the beginning of "
+                    "the sequence when encoder-decoder models are used."
+                )
+                # Encoder input has already been computed
+                # The calculation here is a bit different. We don't turn encoder
+                # output into tokens that get processed by the decoder and
+                # reflected in num_computed_tokens. Instead, start_pos reflects
+                # the position where we need to ensure we calculate encoder
+                # inputs. This should always be 0 to ensure we calculate encoder
+                # inputs before running the decoder.  Once we've calculated some
+                # decoder tokens (num_computed_tokens > 0), then we know we
+                # already calculated encoder inputs and can skip here.
+                continue
+
+            if not self.is_encoder_decoder:
+                # We are not using the encoder cache for encoder-decoder models,
+                # yet.
+                if item_identifier in mm_hashes_to_schedule:
+                    # The same encoder input has already been scheduled in the
+                    # current step.
+                    continue
+
+                if self.encoder_cache_manager.check_and_update_cache(request, i):
+                    # The encoder input is already computed and cached from a
+                    # previous step.
+                    continue
+
+            # If no encoder input chunking is allowed, we do not want to
+            # partially schedule a multimodal item. If the scheduled range would
+            # only cover part of the mm input, roll back to before the mm item.
+            if (
+                self.scheduler_config.disable_chunked_mm_input
+                and num_computed_tokens < start_pos
+                and (num_computed_tokens + num_new_tokens)
+                < (start_pos + num_encoder_tokens)
+            ):
+                # Account for EAGLE shift when rolling back to avoid
+                # encoder cache miss. This ensures the scheduled range
+                # stops before start_pos even with the shift.
+                num_new_tokens = max(
+                    0, start_pos - (num_computed_tokens + shift_computed_tokens)
+                )
+                break
+            if not self.encoder_cache_manager.can_allocate(
+                request, i, encoder_compute_budget, num_embeds_to_schedule
+            ):
+                # The encoder cache is full or the encoder budget is exhausted.
+                # NOTE(woosuk): We assume that the encoder input tokens should
+                # be processed altogether, as the encoder usually uses
+                # bidirectional attention.
+                if num_computed_tokens + shift_computed_tokens < start_pos:
+                    # We only schedule the decoder tokens just before the
+                    # encoder input.
+                    num_new_tokens = start_pos - (
+                        num_computed_tokens + shift_computed_tokens
+                    )
+                else:
+                    # Because of prefix caching, num_computed_tokens is greater
+                    # than start_pos even though its encoder input is not
+                    # available. In this case, we can't schedule any token for
+                    # the request in this step.
+                    num_new_tokens = 0
+                break
+
+            # Calculate the number of embeddings to schedule in the current range
+            # of scheduled encoder placeholder tokens.
+            start_idx_rel = max(0, num_computed_tokens - start_pos)
+            end_idx_rel = min(
+                num_encoder_tokens, num_computed_tokens + num_new_tokens - start_pos
+            )
+            curr_embeds_start, curr_embeds_end = (
+                mm_feature.mm_position.get_embeds_indices_in_range(
+                    start_idx_rel, end_idx_rel
+                )
+            )
+            # There's no embeddings in the current range of encoder placeholder tokens
+            # so we can skip the encoder input.
+            if curr_embeds_end - curr_embeds_start == 0:
+                continue
+
+            if self.ec_connector is not None and self.ec_connector.has_cache_item(
+                item_identifier
+            ):
+                mm_hashes_to_schedule.add(item_identifier)
+                external_load_encoder_input.append(i)
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,120p' /tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+
+from collections import OrderedDict
+from collections.abc import Mapping
+from typing import TYPE_CHECKING
+
+from vllm.logger import init_logger
+from vllm.v1.request import Request
+
+if TYPE_CHECKING:
+    from vllm.config import SchedulerConfig
+
+logger = init_logger(__name__)
+
+
+class EncoderCacheManager:
+    """Manages caching of encoder outputs for multimodal models in vLLM V1.
+
+    The EncoderCacheManager handles the lifecycle of multimodal encoder outputs
+    (such as vision embeddings from images) during request processing. It
+    provides memory-aware caching to avoid recomputing encoder outputs when the
+    same multimodal inputs appear in different stages of request processing.
+
+    This manager is particularly important for:
+    - Vision-language models (e.g., LLaVA) where image encoder outputs are
+      cached
+    - Any multimodal model where encoder computation is expensive and
+      cacheable
+
+    The cache operates at the granularity of individual multimodal input items
+    within requests, allowing for fine-grained memory management and enabling
+    chunked processing of multimodal inputs.
+
+    Cache is enabled to share embeddings of same multimodal data
+    item (identified by their hash value) between different requests,
+    and eviction takes place at allocation time when there's no free
+    space for new embeddings.
+    Oldest cached embeddings with no request referenced will be first evicted.
+
+    NOTE: The EncoderCacheManager operates on the level of multimodal embeddings
+    instead of encoder tokens (i.e. all tokens that represent the multimodal data
+    in the input sequence). This means all break/text tokens in-between multimodal
+    embeddings are not considered with respect to the cache size and the number
+    of free slots.
+
+    Args:
+        cache_size: Limit the size of the cache, measured by the number of
+                    encoder embeddings from the input sequence.
+
+    Attributes:
+        cache_size: Total cache capacity in encoder embeddings.
+        num_free_slots: Current available cache capacity in encoder embeddings.
+        num_freeable_slots: Capacity that can be immediately reclaimed by
+            evicting entries with zero references (in encoder embeddings).
+        cached: Mapping from mm_hash to a set of request IDs that currently
+            reference the cached entry. If the set is empty, the entry exists
+            but is not referenced by any request and is eligible for
+            reclamation.
+        freeable: List of tuples (mm_hash, num_encoder_embeds) representing entries
+            whose no current running request is needed and that can be freed to
+            make space when needed.
+        freed: List of mm_hash strings that were actually evicted since the
+            last call to get_freed_mm_hashes(). This list is cleared on return.
+    """
+
+    def __init__(self, cache_size: int):
+        self.cache_size = cache_size
+        self.num_free_slots = cache_size
+        self.num_freeable_slots = cache_size
+
+        # mm_hash of mm_data => ids of requests that reference the mm_data
+        self.cached: dict[str, set[str]] = {}
+        # request_id => set of input_ids cached for that request
+        self.request_cached_ids: dict[str, set[int]] = {}
+
+        # mm_hash of mm_data => num_encoder_embeds of the mm_data
+        self.freeable: OrderedDict[str, int] = OrderedDict()
+        self.freed: list[str] = []
+
+    def reset(self) -> None:
+        """Reset the encoder cache to its initial state.
+
+        This clears all cached encoder outputs and resets capacity tracking.
+        Called when model weights are updated to invalidate stale embeddings.
+        """
+        self.cached.clear()
+        self.request_cached_ids.clear()
+        self.freeable.clear()
+        self.freed.clear()
+        self.num_free_slots = self.cache_size
+        self.num_freeable_slots = self.cache_size
+
+    def check_and_update_cache(self, request: Request, input_id: int) -> bool:
+        """Check if encoder output for a specific multimodal input is cached.
+
+        If the encoder output is cached, update `cached` to add the request id
+        to the set of request ids that reference the cached encoder output.
+        If the encoder output was previously not referenced by any request,
+        update `freeable` and `num_freeable_slots` accordingly.
+
+        Args:
+            request: The request containing the multimodal input
+            input_id: Index of the multimodal input within the request
+
+        Returns:
+            True if the encoder output for this input is already cached
+        """
+        mm_hash = request.mm_features[input_id].identifier
+        # Not cached at all
+        if mm_hash not in self.cached:
+            return False
+
+        # Cached but currently not referenced by any request
+        if not self.cached[mm_hash]:
+            num_encoder_embeds = self.freeable.pop(mm_hash)
+            self.num_freeable_slots -= num_encoder_embeds
+
+        self.cached[mm_hash].add(request.request_id)
+        self.request_cached_ids.setdefault(request.request_id, set()).add(input_id)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/vllm-prior-70814/vllm/multimodal/encoder_budget.py" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "grep -RIn \"num_image_tokens\\|encoder_lens_cpu\\|can_run\" /tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py /tmp/sglang-prior/python/sglang/srt/managers/scheduler.py | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+from collections.abc import Mapping
+
+from vllm.config import ModelConfig, VllmConfig
+from vllm.logger import init_logger
+from vllm.multimodal.processing import BaseMultiModalProcessor
+from vllm.multimodal.registry import MultiModalRegistry
+from vllm.utils.torch_utils import set_default_torch_num_threads
+from vllm.v1.core.encoder_cache_manager import compute_mm_encoder_budget
+
+logger = init_logger(__name__)
+
+
+def get_mm_max_toks_per_item(
+    model_config: ModelConfig,
+    mm_registry: MultiModalRegistry,
+    processor: BaseMultiModalProcessor,
+    mm_counts: Mapping[str, int],
+) -> Mapping[str, int]:
+    """
+    Get the maximum number of tokens per data item from each modality based
+    on underlying model configuration.
+    """
+    max_tokens_per_item = processor.info.get_mm_max_tokens_per_item(
+        seq_len=model_config.max_model_len,
+        mm_counts=mm_counts,
+    )
+    if max_tokens_per_item is not None:
+        return max_tokens_per_item
+
+    mm_inputs = mm_registry.get_dummy_mm_inputs(
+        model_config,
+        mm_counts=mm_counts,
+        processor=processor,
+    )
+
+    return {
+        modality: sum(item.get_num_embeds() for item in placeholders)
+        for modality, placeholders in mm_inputs["mm_placeholders"].items()
+    }
+
+
+class MultiModalBudget:
+    """Helper class to calculate budget information for multi-modal models."""
+
+    def __init__(
+        self,
+        vllm_config: VllmConfig,
+        mm_registry: MultiModalRegistry,
+    ) -> None:
+        super().__init__()
+
+        self.model_config = model_config = vllm_config.model_config
+        self.scheduler_config = scheduler_config = vllm_config.scheduler_config
+
+        self.max_model_len = model_config.max_model_len
+        self.max_num_reqs = scheduler_config.max_num_seqs
+
+        with set_default_torch_num_threads():  # Avoid hang during startup
+            cache = mm_registry.processor_only_cache_from_config(vllm_config)
+            processor = mm_registry.create_processor(model_config, cache=cache)
+
+            self.cache = cache
+            self.processor = processor
+            mm_config = model_config.get_multimodal_config()
+            enable_mm_embeds = mm_config is not None and mm_config.enable_mm_embeds
+
+            supported_mm_limits = processor.info.supported_mm_limits
+            self.mm_limits = mm_limits = processor.info.allowed_mm_limits
+
+            # Modalities that pass through the MM encoder tower
+            tower_modalities = {
+                modality
+                for modality in supported_mm_limits
+                if mm_limits.get(modality, 0) > 0
+            }
+            # Modalities that bypass the tower (pre-computed embeddings only)
+            embed_only_modalities = {
+                modality
+                for modality in supported_mm_limits
+                if enable_mm_embeds and mm_limits.get(modality, 0) == 0
+            }
+
+            active_modalities = tower_modalities | embed_only_modalities
+
+            all_mm_max_toks_per_item = get_mm_max_toks_per_item(
+                model_config,
+                mm_registry,
+                processor,
+                mm_counts=dict.fromkeys(active_modalities, 1),
+            )
+
+        if embed_only_modalities:
+            logger.info_once(
+                "enable_mm_embeds is True; modalities handled as embedding-only: %s",
+                tuple(embed_only_modalities),
+            )
+
+        # Some models (e.g., Qwen3Omni with use_audio_in_video=True) share
+        # placeholders between modalities, so not all active modalities will
+        # have their own entry in the returned dict. We filter to only include
+        # modalities that have independent placeholder tokens.
+        active_mm_max_toks_per_item = {
+            modality: all_mm_max_toks_per_item[modality]
+            for modality in active_modalities
+            if modality in all_mm_max_toks_per_item
+        }
+        tower_mm_max_toks_per_item = {
+            modality: active_mm_max_toks_per_item[modality]
+            for modality in tower_modalities
+            if modality in active_mm_max_toks_per_item
+        }
+
+        # Encoder budget is computed from all active modalities (including
+        # embedding-only ones that need encoder cache space).
+        encoder_compute_budget, encoder_cache_size = compute_mm_encoder_budget(
+            scheduler_config,
+            active_mm_max_toks_per_item,
+        )
+
+        self.encoder_compute_budget = encoder_compute_budget
+        self.encoder_cache_size = encoder_cache_size
+
+        mm_max_items_per_prompt = dict[str, int]()
+        mm_max_items_per_batch = dict[str, int]()
+
+        # Per-prompt/per-batch limits are only relevant for tower modalities
+        # (embedding-only modalities don't go through the encoder tower).
+        for modality, max_toks_per_item in tower_mm_max_toks_per_item.items():
+            (
+                mm_max_items_per_prompt[modality],
+                mm_max_items_per_batch[modality],
+            ) = self._get_max_items(modality, max_toks_per_item)
+
+        self.mm_max_toks_per_item = tower_mm_max_toks_per_item
+        self.mm_max_items_per_prompt: Mapping[str, int] = mm_max_items_per_prompt
+        self.mm_max_items_per_batch: Mapping[str, int] = mm_max_items_per_batch
+
+    def _get_max_items(
+        self,
+        modality: str,
+        max_tokens_per_item: int,
+    ) -> tuple[int, int]:
+        if max_tokens_per_item == 0:
+            return 0, 0
+
+        # Check how many items of this modality can be supported by
+        # the encoder budget.
+        if (encoder_budget := self.get_encoder_budget()) == 0:
+            return 0, 0
+
+        max_encoder_items_per_batch = encoder_budget // max_tokens_per_item
+
+        # Check how many items of this modality can be supported by
+        # the decoder budget.
+        mm_limit = self.mm_limits[modality]
+
+        max_items_per_prompt = max(
+            1,
+            min(mm_limit, self.max_model_len // max_tokens_per_item),
+        )
+
+        scheduler_config = self.scheduler_config
+        max_num_reqs = self.max_num_reqs
+
+        if not scheduler_config.enable_chunked_prefill:
+            max_num_reqs = min(
+                max_num_reqs,
+                scheduler_config.max_num_batched_tokens // max_tokens_per_item,
+            )
+
+        max_decoder_items_per_batch = max_num_reqs * max_items_per_prompt
+
+        max_items_per_batch = max(
+            1,
+            min(max_encoder_items_per_batch, max_decoder_items_per_batch),
+        )
+
+        return max_items_per_prompt, max_items_per_batch
+
+    def get_modality_with_max_tokens(self) -> str:
+        mm_max_toks_per_item = self.mm_max_toks_per_item
+        modality, _ = max(mm_max_toks_per_item.items(), key=lambda x: (x[1], x[0]))
+
+        return modality
+
+    def get_encoder_budget(self) -> int:
+        return min(self.encoder_compute_budget, self.encoder_cache_size)
+
+    def reset_cache(self) -> None:
+        if self.cache is not None:
+            self.cache.clear_cache()
+
+ succeeded in 0ms:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:467:    num_image_tokens: Optional[int] = None
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1591:    can_run_dp_cuda_graph: bool = False
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1628:    encoder_lens_cpu: Optional[List[int]] = None
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1701:        self.encoder_lens_cpu = []
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1706:            if im is None or im.num_image_tokens is None:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1708:                self.encoder_lens_cpu.append(0)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1711:                self.encoder_lens_cpu.append(im.num_image_tokens)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1714:                    or len(req.prefix_indices) >= im.num_image_tokens
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1718:            self.encoder_lens_cpu, dtype=torch.int64, pin_memory=_pin
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1726:            encoder_len = self.encoder_lens_cpu[i]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1778:                encoder_len = self.encoder_lens_cpu[i]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1807:            encoder_len = self.encoder_lens_cpu[i]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2557:            self.encoder_lens_cpu = [self.encoder_lens_cpu[i] for i in keep_indices]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2613:            self.encoder_lens_cpu.extend(other.encoder_lens_cpu)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2678:            can_run_dp_cuda_graph=self.can_run_dp_cuda_graph,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:934:        # into last iteration's batch (i.e., in can_run_list -> got a fresh
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2629:                self.chunked_req in adder.can_run_list
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2637:            running_loras.update(req.lora_id for req in adder.can_run_list)
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2651:            if len(adder.can_run_list) >= self.get_num_allocatable_reqs(running_bs):
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2656:                if len(adder.can_run_list) >= self.req_to_token_pool.available_size():
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2691:                            adder.can_run_list
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2699:                added = len(adder.can_run_list) > 0 and req is adder.can_run_list[-1]
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2712:        can_run_list: List[Req] = adder.can_run_list
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2713:        if len(can_run_list) == 0:
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2716:        can_run_set = set(can_run_list)
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2717:        self.waiting_queue = [x for x in self.waiting_queue if x not in can_run_set]
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2726:            # new_chunked_req is added to can_run_list by add_one_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2733:        set_time_batch(can_run_list, "set_forward_entry_time")
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2737:            can_run_list,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2748:            self.chunked_req is None or len(can_run_list) != 1
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2751:        self.max_prefill_bs = max(self.max_prefill_bs, len(can_run_list))
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1270,1315p' /tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+                external_load_encoder_input.append(i)
+                num_embeds_to_schedule += num_encoder_embeds
+                continue
+
+            num_embeds_to_schedule += num_encoder_embeds
+            encoder_compute_budget -= num_encoder_embeds
+            mm_hashes_to_schedule.add(item_identifier)
+            encoder_inputs_to_schedule.append(i)
+
+        return (
+            encoder_inputs_to_schedule,
+            num_new_tokens,
+            encoder_compute_budget,
+            external_load_encoder_input,
+        )
+
+    def get_grammar_bitmask(
+        self, scheduler_output: SchedulerOutput
+    ) -> GrammarOutput | None:
+        # Collect list of scheduled request ids that use structured output.
+        # The corresponding rows of the bitmask will be in this order.
+        if not scheduler_output.has_structured_output_requests:
+            return None
+
+        structured_output_request_ids = [
+            req_id
+            for req_id in scheduler_output.num_scheduled_tokens
+            if (req := self.requests.get(req_id))
+            and (req.use_structured_output and not req.is_prefill_chunk)
+        ]
+        if not structured_output_request_ids:
+            return None
+
+        bitmask = self.structured_output_manager.grammar_bitmask(
+            self.requests,
+            structured_output_request_ids,
+            scheduler_output.scheduled_spec_decode_tokens,
+        )
+        return GrammarOutput(structured_output_request_ids, bitmask)
+
+    def update_from_output(
+        self,
+        scheduler_output: SchedulerOutput,
+        model_runner_output: ModelRunnerOutput,
+    ) -> dict[int, EngineCoreOutputs]:
+        sampled_token_ids = model_runner_output.sampled_token_ids
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1688,1735p' /tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py && sed -n '2560,2760p' /tmp/sglang-prior/python/sglang/srt/managers/scheduler.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+    def batch_size(self):
+        return len(self.reqs)
+
+    def is_empty(self):
+        return len(self.reqs) == 0
+
+    def is_dllm(self):
+        return self.dllm_config is not None
+
+    def prepare_encoder_info_extend(
+        self, input_ids: List[array[int]], seq_lens: List[int]
+    ):
+        _pin = is_pin_memory_available(self.device)
+        self.encoder_lens_cpu = []
+        self.encoder_cached = []
+
+        for req in self.reqs:
+            im = req.multimodal_inputs
+            if im is None or im.num_image_tokens is None:
+                # No image input
+                self.encoder_lens_cpu.append(0)
+                self.encoder_cached.append(True)
+            else:
+                self.encoder_lens_cpu.append(im.num_image_tokens)
+                self.encoder_cached.append(
+                    self.forward_mode.is_decode()
+                    or len(req.prefix_indices) >= im.num_image_tokens
+                )
+
+        self.encoder_lens = torch.tensor(
+            self.encoder_lens_cpu, dtype=torch.int64, pin_memory=_pin
+        ).to(self.device, non_blocking=True)
+
+        # Strip encoder infos
+        pt = 0
+        decoder_out_cache_loc = []
+        encoder_out_cache_loc = []
+        for i, req in enumerate(self.reqs):
+            encoder_len = self.encoder_lens_cpu[i]
+            seq_lens[i] -= encoder_len
+
+            if len(req.prefix_indices) < encoder_len:
+                # NOTE: the encoder part should be considered as a whole
+                assert len(req.prefix_indices) == 0
+                input_ids[i] = input_ids[i][encoder_len:]
+                encoder_out_cache_loc.append(self.out_cache_loc[pt : pt + encoder_len])
+                decoder_out_cache_loc.append(
+                    self.out_cache_loc[pt + encoder_len : pt + req.extend_input_len]
+                self._add_request_to_queue(req)
+
+        if self.enable_hierarchical_cache:
+            self.tree_cache.check_hicache_events()
+
+        if self.enable_priority_preemption or self.is_hybrid_swa:
+            # Reset batch_is_full to try preemption with a prefill adder.
+            self.running_batch.batch_is_full = False
+
+        if (
+            self.running_batch.batch_is_full or len(self.waiting_queue) == 0
+        ) and self.chunked_req is None:
+            return None
+
+        running_bs = len(self.running_batch.reqs)
+
+        # Ignore the check if self.chunked_req is not None.
+        # In the non-PP case, when self.chunked_req is not None, num_allocatable_reqs should always be greater than 0,
+        # as the space for the chunked requests has just been released.
+        # In PP case, chunked requests (or dllm requests) can start in one microbatch and end in another microbatch, so the max_running_requests per microbatch should not be strict.
+        # Instead, we should always allow chunked requests to be added, otherwise, there will be a memory leak.
+        if (
+            self.get_num_allocatable_reqs(running_bs) <= 0
+            and self.chunked_req is None
+            and not self.enable_priority_preemption
+        ):
+            self.running_batch.batch_is_full = True
+            return None
+
+        # Get priority queue
+        self.policy.calc_priority(self.waiting_queue, self.running_batch)
+
+        if TEST_RETRACT and running_bs > TEST_RETRACT_NO_PREFILL_BS:
+            # If we are testing retraction and the running batch size exceeds
+            # TEST_RETRACT_NO_PREFILL_BS, we skip the prefill to keep the requests
+            # in the waiting queue.
+            return None
+
+        # Determine chunked_prefill_size for this batch
+        chunked_prefill_size = self.chunked_prefill_size
+        if self.chunked_req is not None and self.enable_dynamic_chunking:
+            history_len = len(self.chunked_req.prefix_indices)
+            dynamic_size = self.predict_next_chunk_size(history_len)
+            if dynamic_size is not None:
+                chunked_prefill_size = dynamic_size
+
+        # Prefill policy
+        adder = PrefillAdder(
+            self.page_size,
+            self.tree_cache,
+            self.token_to_kv_pool_allocator,
+            self.running_batch,
+            self.new_token_ratio_tracker.current,
+            self.max_prefill_tokens,
+            chunked_prefill_size,
+            running_bs if self.is_mixed_chunk else 0,
+            self.priority_scheduling_preemption_threshold,
+            max_prefill_bs=self.max_prefill_bs,
+            max_running_requests=self.max_running_requests,
+            prefill_max_requests=self.server_args.prefill_max_requests,
+            prefill_delayer_single_pass=prefill_delayer_single_pass,
+            dllm_config=self.dllm_config,
+            waiting_queue_len=len(self.waiting_queue),
+        )
+
+        if self.chunked_req is not None:
+            self.chunked_req.init_next_round_input()
+            self.chunked_req = adder.add_chunked_req(self.chunked_req)
+            self._chunked_req_scheduled_last_iter = (
+                self.chunked_req in adder.can_run_list
+            )
+        else:
+            self._chunked_req_scheduled_last_iter = False
+
+        if self.enable_lora:
+            running_loras = {req.lora_id for req in self.running_batch.reqs}
+            # Account for LoRAs that are already loaded in the adder, such as chunked requests
+            running_loras.update(req.lora_id for req in adder.can_run_list)
+
+            if self.lora_drainer:
+                self.lora_drainer.update_draining_state(
+                    self.waiting_queue,
+                    self.running_batch.reqs,
+                )
+
+        # Get requests from the waiting queue to a new prefill batch
+        for req in self.waiting_queue:
+            if self.enable_lora and not self._can_schedule_lora_req(req, running_loras):
+                continue
+
+            running_bs = len(self.running_batch.reqs)
+            if len(adder.can_run_list) >= self.get_num_allocatable_reqs(running_bs):
+                self.running_batch.batch_is_full = True
+            if self.disaggregation_mode == DisaggregationMode.PREFILL:
+                # In prefill mode, prealloc queue and transfer queue can also take memory,
+                # so we need to check if the available size for the actual available size.
+                if len(adder.can_run_list) >= self.req_to_token_pool.available_size():
+                    self.running_batch.batch_is_full = True
+
+            if self.running_batch.batch_is_full:
+                if (
+                    not self.enable_priority_preemption
+                    or not adder.preempt_to_schedule(req, self.server_args)
+                ):
+                    break
+
+            if self.enable_hicache_storage:
+                prefetch_done = self.tree_cache.check_prefetch_progress(req.rid)
+                if not prefetch_done:
+                    # skip staging requests that are ongoing prefetch
+                    continue
+                # Pop the number of tokens loaded from storage (L3 hits)
+                req.storage_hit_length = self.tree_cache.pop_prefetch_loaded_tokens(
+                    req.rid
+                )
+
+            req.init_next_round_input(self.tree_cache)
+            res = adder.add_one_req(
+                req,
+                has_chunked_req=(self.chunked_req is not None),
+                truncation_align_size=self.truncation_align_size,
+            )
+
+            if self.enable_lora:
+                running_loras.add(req.lora_id)
+
+            if res != AddReqResult.CONTINUE:
+                if res == AddReqResult.NO_TOKEN:
+                    if self.enable_hierarchical_cache:
+                        # Set batch_is_full after making sure there are requests that can be served
+                        self.running_batch.batch_is_full = len(
+                            adder.can_run_list
+                        ) > 0 or (not self.running_batch.is_empty())
+                    else:
+                        self.running_batch.batch_is_full = True
+                # revert matched mamba idx to avoid memory leak, if req is not added.
+                # Only free if the slot was freshly allocated in this batch (not
+                # pre-existing from a session). Session-held slots have their own
+                # lifecycle and freeing them here causes double-free.
+                added = len(adder.can_run_list) > 0 and req is adder.can_run_list[-1]
+                if (
+                    not added
+                    and req.mamba_pool_idx is not None
+                    and not getattr(req, "session", None)
+                ):
+                    self.tree_cache.req_to_token_pool.mamba_pool.free(
+                        req.mamba_pool_idx.unsqueeze(-1)
+                    )
+                    req.mamba_pool_idx = None
+                break
+
+        # Update waiting queue
+        can_run_list: List[Req] = adder.can_run_list
+        if len(can_run_list) == 0:
+            return None
+
+        can_run_set = set(can_run_list)
+        self.waiting_queue = [x for x in self.waiting_queue if x not in can_run_set]
+        if adder.preempt_list:
+            for req in adder.preempt_list:
+                self._add_request_to_queue(req)
+
+        if adder.new_chunked_req is not None:
+            # Update chunked prefill
+            assert self.chunked_req is None
+            self.chunked_req = adder.new_chunked_req
+            # new_chunked_req is added to can_run_list by add_one_req,
+            # so it will be scheduled this iter -> stash is needed next iter.
+            self._chunked_req_scheduled_last_iter = True
+
+        if self.chunked_req is not None:
+            self.chunked_req.inflight_middle_chunks += 1
+
+        set_time_batch(can_run_list, "set_forward_entry_time")
+
+        # Create a new batch
+        new_batch = ScheduleBatch.init_new(
+            can_run_list,
+            self.req_to_token_pool,
+            self.token_to_kv_pool_allocator,
+            self.tree_cache,
+            self.model_config,
+            self.enable_overlap,
+            self.spec_algorithm,
+            chunked_req=self.chunked_req,
+        )
+
+        new_batch.contains_last_prefill_chunk = (
+            self.chunked_req is None or len(can_run_list) != 1
+        )
+
+        self.max_prefill_bs = max(self.max_prefill_bs, len(can_run_list))
+        if self.enable_hierarchical_cache:
+            # todo (zhiqiang): disable cuda graph execution if hicache loading triggered
+            new_batch.hicache_consumer_index = (
+                self.tree_cache.ready_to_load_host_cache()
+            )
+
+        new_batch.prepare_for_extend()
+
+        # Record prefill stats for logging after forward.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "grep -RIn \"compute_mm_encoder_budget\\|encoder_compute_budget\\|disable_chunked_mm_input\" /tmp/vllm-prior-70814/vllm | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 864ms:
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:203:            mm_budget.encoder_compute_budget if mm_budget else 0
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:366:        encoder_compute_budget = self.max_num_encoder_input_tokens
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:420:            new_encoder_compute_budget = encoder_compute_budget
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:425:                    new_encoder_compute_budget,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:431:                    encoder_compute_budget,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:495:                                encoder_compute_budget += num_embeds_to_restore
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:544:                encoder_compute_budget = new_encoder_compute_budget
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:672:                new_encoder_compute_budget = encoder_compute_budget
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:706:                            new_encoder_compute_budget,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:712:                            encoder_compute_budget,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:843:                    encoder_compute_budget = new_encoder_compute_budget
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1131:        encoder_compute_budget: int,
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1155:            return [], num_new_tokens, encoder_compute_budget, []
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1217:                self.scheduler_config.disable_chunked_mm_input
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1230:                request, i, encoder_compute_budget, num_embeds_to_schedule
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1275:            encoder_compute_budget -= num_encoder_embeds
+/tmp/vllm-prior-70814/vllm/v1/core/sched/scheduler.py:1282:            encoder_compute_budget,
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:127:        encoder_compute_budget: int,
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:145:            encoder_compute_budget: Number of encoder embeddings allowed to be
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:161:        if num_embeds > encoder_compute_budget:
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:269:def compute_mm_encoder_budget(
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:299:        scheduler_config.disable_chunked_mm_input
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:309:    encoder_compute_budget = max(
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:316:    return encoder_compute_budget, encoder_cache_size
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:343:        encoder_compute_budget: int,
+/tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py:348:        if num_encoder_embeds > encoder_compute_budget:
+/tmp/vllm-prior-70814/vllm/platforms/cuda.py:241:            and not scheduler_config.disable_chunked_mm_input
+/tmp/vllm-prior-70814/vllm/platforms/cuda.py:244:                "Forcing --disable_chunked_mm_input for models "
+/tmp/vllm-prior-70814/vllm/platforms/cuda.py:247:            scheduler_config.disable_chunked_mm_input = True
+/tmp/vllm-prior-70814/vllm/config/vllm.py:2124:            assert not self.scheduler_config.disable_chunked_mm_input, (
+/tmp/vllm-prior-70814/vllm/config/scheduler.py:117:    disable_chunked_mm_input: bool = False
+/tmp/vllm-prior-70814/vllm/config/scheduler.py:227:            self.disable_chunked_mm_input = True
+/tmp/vllm-prior-70814/vllm/multimodal/encoder_budget.py:10:from vllm.v1.core.encoder_cache_manager import compute_mm_encoder_budget
+/tmp/vllm-prior-70814/vllm/multimodal/encoder_budget.py:117:        encoder_compute_budget, encoder_cache_size = compute_mm_encoder_budget(
+/tmp/vllm-prior-70814/vllm/multimodal/encoder_budget.py:122:        self.encoder_compute_budget = encoder_compute_budget
+/tmp/vllm-prior-70814/vllm/multimodal/encoder_budget.py:189:        return min(self.encoder_compute_budget, self.encoder_cache_size)
+/tmp/vllm-prior-70814/vllm/engine/arg_utils.py:599:    disable_chunked_mm_input: bool = SchedulerConfig.disable_chunked_mm_input
+/tmp/vllm-prior-70814/vllm/engine/arg_utils.py:1402:            "--disable-chunked-mm-input", **scheduler_kwargs["disable_chunked_mm_input"]
+/tmp/vllm-prior-70814/vllm/engine/arg_utils.py:2039:            disable_chunked_mm_input=self.disable_chunked_mm_input,
+
+exec
+/bin/zsh -lc "sed -n '269,318p' /tmp/vllm-prior-70814/vllm/v1/core/encoder_cache_manager.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+def compute_mm_encoder_budget(
+    scheduler_config: "SchedulerConfig",
+    mm_max_toks_per_item: Mapping[str, int],
+) -> tuple[int, int]:
+    """Compute the encoder cache budget based on the model and scheduler
+    configurations for a multimodal model.
+
+    Args:
+        scheduler_config: Scheduler configuration.
+        mm_max_toks_per_item: The maximum number of tokens per item for each
+            non-text modality.
+
+    Returns:
+        - Compute budget for encoder execution, measured in number of tokens
+            from the input sequence.
+        - Space budget for encoder cache size, measured in number of tokens
+            from the input sequence.
+    """
+
+    if not mm_max_toks_per_item:
+        logger.warning(
+            "All non-text modalities supported by the model have been "
+            "explicitly disabled via limit_mm_per_prompt. Encoder cache will "
+            "not be initialized."
+        )
+        return 0, 0
+
+    max_tokens_per_mm_item = max(mm_max_toks_per_item.values())
+
+    if (
+        scheduler_config.disable_chunked_mm_input
+        and max_tokens_per_mm_item > scheduler_config.max_num_batched_tokens
+    ):
+        raise ValueError(
+            "Chunked MM input disabled but max_tokens_per_mm_item "
+            f"({max_tokens_per_mm_item}) is larger than max_num_batched_tokens"
+            f" ({scheduler_config.max_num_batched_tokens}). Please increase "
+            "max_num_batched_tokens."
+        )
+
+    encoder_compute_budget = max(
+        scheduler_config.max_num_encoder_input_tokens, max_tokens_per_mm_item
+    )
+    encoder_cache_size = max(
+        scheduler_config.encoder_cache_size, max_tokens_per_mm_item
+    )
+
+    return encoder_compute_budget, encoder_cache_size
+
+
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "grep -RIn \"class PrefillAdder\\|def add_one_req\\|chunked_prefill_size\\|extend_input_len\" /tmp/sglang-prior/python/sglang/srt/managers | head -120" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/logprob_result_processor.py:138:        extend_input_len: int,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/logprob_result_processor.py:153:                if extend_logprob_start_len <= idx < extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/logprob_result_processor.py:157:            return extend_input_len - extend_logprob_start_len
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/load_inquirer.py:65:                so callers pass ``extend_input_len`` here. At load-reporting
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:198:                extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:203:                result.extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:249:                            extend_input_len_per_req=extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:284:                            extend_input_len_per_req=extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:392:        extend_input_len_per_req: Optional[List[int]],
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:398:        assert extend_input_len_per_req is not None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:400:        extend_input_len = extend_input_len_per_req[i]
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:404:            extend_input_len,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:500:        extend_input_len_per_req: Optional[List[int]],
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:505:        extend_input_len = extend_input_len_per_req[i]
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:506:        if extend_logprob_start_len < extend_input_len:
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_components/batch_result_processor.py:511:                    extend_input_len,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:579:                    self.chunked_prefill_size * 1.25
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:580:                    - i * (self.chunked_prefill_size * 1.25 // 128)
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:611:                req.set_extend_input_len(len(req.fill_ids) - len(req.prefix_indices))
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:726:        self.length_predictor.set_target_latency(self.chunked_prefill_size)
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:741:            Predicted chunk size, or None to use default chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:753:            base_chunk_size=self.chunked_prefill_size,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:1091:        extend_input_len_per_req = None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:1097:                extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler_pp_mixin.py:1109:            extend_input_len_per_req=extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/utils.py:41:    extend_input_len_per_req: Optional[List[int]] = None
+/tmp/sglang-prior/python/sglang/srt/managers/utils.py:135:            extend_input_len_per_req=proxy_dict.get("extend_input_len_per_req", None),
+/tmp/sglang-prior/python/sglang/srt/managers/utils.py:182:        "extend_input_len_per_req": result.extend_input_len_per_req,
+/tmp/sglang-prior/python/sglang/srt/managers/utils.py:219:    extend_input_len_per_req = next_pp_outputs["extend_input_len_per_req"]
+/tmp/sglang-prior/python/sglang/srt/managers/utils.py:224:    return logits_output, extend_input_len_per_req, extend_logprob_start_len_per_req
+/tmp/sglang-prior/python/sglang/srt/managers/mm_utils.py:709:            chunked_prefill_size = get_global_server_args().chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/mm_utils.py:710:            if chunked_prefill_size != -1:
+/tmp/sglang-prior/python/sglang/srt/managers/mm_utils.py:712:                    "You may want to avoid this issue by raising `chunked_prefill_size`, or disabling chunked prefill"
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:581:            # make sure the page size is not larger than block_size and chunked_prefill_size on NPU backend
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:582:            # the npu backend request the defined page size to be no larger than block_size and chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:873:                f"chunked_prefill_size={self.server_args.chunked_prefill_size}, "
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:915:        self.chunked_prefill_size = self.server_args.chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:920:            self.chunked_prefill_size is not None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:921:            and self.chunked_prefill_size > 0
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:929:            self.chunked_prefill_size = None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:930:        elif self.chunked_prefill_size is not None and self.chunked_prefill_size <= 0:
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:931:            self.chunked_prefill_size = None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:943:            self.chunked_prefill_size is not None
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:1233:                end = start + req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2598:        # Determine chunked_prefill_size for this batch
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2599:        chunked_prefill_size = self.chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2604:                chunked_prefill_size = dynamic_size
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2614:            chunked_prefill_size,
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:2767:                    self.chunked_req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:3087:                batch_result.extend_input_len_per_req = [
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:3088:                    req.extend_input_len for req in batch.reqs
+/tmp/sglang-prior/python/sglang/srt/managers/scheduler.py:3094:                batch_result.extend_input_len_per_req = None
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:811:        self.extend_input_len = 0
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1136:        self.set_extend_input_len(len(self.fill_ids) - len(self.prefix_indices))
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1320:        self.extend_input_len = 0
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1392:    def set_extend_input_len(self, extend_input_len: int):
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1393:        # Setting extend_input_len and computing the relative logprob_start_len in an extend batch
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1398:        # - extend_input_len: Number of tokens that need to be processed in this extend batch
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1399:        self.extend_input_len = extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1407:            self.extend_input_len,
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1735:                    self.out_cache_loc[pt + encoder_len : pt + req.extend_input_len]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1741:                    self.out_cache_loc[pt : pt + req.extend_input_len]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1745:            pt += req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1780:                old_contribution = req.extend_input_len - old_start_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1811:                req.extend_input_len -= encoder_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1831:        extend_lens = [r.extend_input_len for r in reqs]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1871:            assert seq_len - pre_len == req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1881:                # Slice to match extend_input_len — PrefillAdder truncates
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1882:                # fill_ids/extend_input_len on chunk overflow but not input_embeds.
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1884:                    req.input_embeds[pre_len : pre_len + req.extend_input_len]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1896:                    if extend_pos < 0 or extend_pos >= req.extend_input_len:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1980:                # We will need req.extend_input_len - req.extend_logprob_start_len number of
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:1985:                        req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2095:        mask = req.extend_input_len >= mamba_cache_chunk_size
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2106:            mamba_track_seqlen = len(req.prefix_indices) + req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2112:                + (req.extend_input_len // mamba_cache_chunk_size)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2122:                + (req.extend_input_len // mamba_cache_chunk_size)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2196:            req.set_extend_input_len(1)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2744:                                pre_len - server_args.chunked_prefill_size
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_batch.py:2745:                                if server_args.chunked_prefill_size > 0
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:405:class PrefillAdder:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:545:    def _swa_budget_for_req(self, extend_input_len: int) -> int:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:557:            alloc = min(extend_input_len, self.rem_chunk_tokens)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:559:            alloc = extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:587:        extend_input_len: int,
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:592:        extend_input_len = self.ceil_paged_tokens(extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:596:        self.rem_total_token_offset += extend_input_len + max_new_tokens + page_overhead
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:597:        self.cur_rem_token_offset += extend_input_len + page_overhead
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:598:        self.rem_input_tokens -= extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:601:            self.rem_swa_token_offset += self._swa_budget_for_req(extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:604:            self.rem_dllm_tokens -= extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:606:            self.rem_chunk_tokens -= extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:611:        self.log_input_tokens += extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:614:            self.reprocessed_log_input_tokens += extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:637:        req.extend_input_len = trunc_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:657:        truncated = req.extend_input_len > _rem_tokens
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:658:        req.extend_input_len = min(req.extend_input_len, _rem_tokens)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:659:        req.fill_ids = req.fill_ids[: len(req.prefix_indices) + req.extend_input_len]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:669:            0, req.extend_input_len, max_new_tokens, req.retracted_stain
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:697:        truncated = req.extend_input_len > _rem_tokens
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:698:        req.set_extend_input_len(min(req.extend_input_len, _rem_tokens))
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:699:        req.fill_ids = req.fill_ids[: len(req.prefix_indices) + req.extend_input_len]
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:703:            req.extend_input_len,
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:732:    def add_one_req_ignore_eos(self, req: Req):
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:733:        paged_input = self.ceil_paged_tokens(req.extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:737:            if self._swa_budget_for_req(req.extend_input_len) > self.rem_swa_tokens:
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:777:                req.extend_input_len
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:803:            or req.extend_input_len <= self.rem_chunk_tokens  # it is the last chunk
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:809:                req.extend_input_len,
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:820:            req.set_extend_input_len(trunc_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:828:    def add_one_req(
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:862:        total_tokens = req.extend_input_len + max_new + self.page_size
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:865:        real_input_tokens = req.extend_input_len - req.host_hit_length
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:873:            swa_needed = self._swa_budget_for_req(req.extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:893:                swa_needed = self._swa_budget_for_req(req.extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:906:                req.set_extend_input_len(len(req.fill_ids) - len(req.prefix_indices))
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:910:            input_tokens = self.ceil_paged_tokens(req.extend_input_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:972:                req.set_extend_input_len(trunc_len)
+/tmp/sglang-prior/python/sglang/srt/managers/schedule_policy.py:1015:            req.extend_input_len
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/configuration/optimization.md | sed -n '/## Chunked Prefill/,/## /p' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 224ms:
+100    14  100    14    0     0     54      0 --:--:-- --:--:-- --:--:--    54100    14  100    14    0     0     54      0 --:--:-- --:--:-- --:--:--    54
+
+codex
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Sarathi-Serve", url: "https://www.usenix.org/system/files/osdi24-agrawal.pdf", overlap: "Baseline chunked-prefill/token-work-per-iteration scheduling and ITL motivation; no multimodal ViT/image-count accounting shown."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/pull/8425", overlap: "Shipping project already acknowledged multimodal + chunked prefill problems and disabled it by default in that hotfix; issue was partial multimodal placeholder scheduling/prefix caching, not the fixed-per-image latency axis."},
+  {system: "vLLM V1 current", url: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/scheduler.py", overlap: "Has encoder cache and schedules encoder inputs as whole multimodal items; encoder budget is decremented by encoder embeds/tokens, not measured fixed per-image ViT cost."},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang/pull/5456", overlap: "Attempted VLM cache and chunk prefill support; not merged. Current scheduling evidence uses chunked_prefill_size/extend_input_len/num_image_tokens, not image-count fixed-cost scheduling."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/features/multi-modality.html", overlap: "Documents multimodal encoder, in-flight batching, CPU/GPU concurrency, hashing/token chunk info; no evidence found for image-count-aware ViT burst budgeting."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: "Partially realistic but not yet established. The mechanism matches current vLLM-style whole-item encoder scheduling and token/embed-denominated encoder budgets, and the packet's r=0 control plus fixed-T/vary-k design support the mechanism. Gaps: only CPU discrete-event L0; real vLLM/SGLang H100 measurements of ViT intercept/slope, actual chunk budget B, batching interactions, cache-hit rates, and production arrival mixes are missing. The prereg primary stream-p99 prediction is not uniformly supported; realistic small-T Qwen2-VL regimes mainly show worst-iteration single-stall risk."
+RATIONALE: "Prompt version v001. This is not integration-only glue: the fixed-per-image ViT cost being invisible to token-budget chunked prefill is a concrete systems mechanism. But it is also not enough for green because closest shipping systems already expose much of the interaction surface: vLLM PR#8425 states multimodal chunked prefill was flaky because multimodal placeholders could not be partially prefilled, and current vLLM code documents encoder-cache scheduling at whole multimodal input granularity with compute/cache budgets measured in encoder embeddings/tokens. I found no OSS evidence that vLLM, SGLang, LMCache, TensorRT-LLM, or FlashInfer already implements the claimed image-count/fixed-overhead-aware scheduler accounting; however, the packet only proves a simulator mechanism with anchored-but-unmeasured r. Required next evidence: real vLLM V1/SGLang run with chunked prefill + encoder cache enabled, fixed total image tokens T while varying image count k, reporting both decode ITL stream-p99 and worst-iteration ITL, plus measured ViT intercept/slope and chunk size."
+tokens used
+86,638
