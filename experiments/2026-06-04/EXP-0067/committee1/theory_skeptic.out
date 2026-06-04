@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The recall-vs-(C,W) surface is the textbook bounded-window substring-matching law. For any windowed scanner re-examining the last W tokens after each C-token flush, a phrase of length L is captured iff it fits inside some scanned window, which gives the standard requirement W >= C + L - 1 (≈ 2C when L ≈ C). The reported "W* ≈ 2C" recovery is the trivially predicted threshold, not an emergent finding.
+- Stateless-per-delta curve (0/18.8/54.3/78.4/90.5/97.1 over C=1..32 for L<=4) is consistent with simple combinatorial P(phrase fits inside one chunk) ~ max(0,(C-L+1)/C) marginalized over L. Phrase-length monotone drop (100/88.5/77.1/65.3 at fixed C=8) is the same combinatorics with L varied — pure counting, no mechanism beyond "longer phrases have more boundary-straddling positions."
+- The "PRODUCTION arm at W=16 drops 42.7pp at C=32" is just C > W: the moderator window cannot hold even one full chunk, so straddling matches between chunks i and i+1 are guaranteed-lost for L>1. This is definitional, not empirical surprise.
+
+CONFOUNDS:
+- GT-span planting distribution: uniform random insertion biases boundary-straddling probability; real violations may cluster at delimiters that flush-schedulers actually align to (sentence/punctuation), which would systematically REDUCE or INCREASE straddling vs harness — sign of the real-world effect not pinned.
+- Filter substitution: harness uses exact Aho-Corasick over tokens; real production moderators are Llama-Guard / OpenAI-Moderation = learned classifiers operating over characters/subwords with their own internal context. The "chunk-boundary fragmentation" failure mode of an exact-string matcher does not translate cleanly — a learned moderator may degrade for entirely different reasons (semantic, not lexical fragmentation). Mechanism claim is harness-specific.
+- BPE/tokenizer mismatch unmeasured: harness "tokens" are not vLLM/TGI BPE tokens. The L=2..4 token distribution at the harness level may correspond to L=1 or L=10 in real BPE, collapsing or amplifying the effect.
+
+ASSUMPTIONS_UNTESTED:
+- That production moderators actually use bounded-token-window W=16. Packet ASSERTS this is "the PRODUCTION baseline" but cites no measurement, vendor doc, or survey. If realistic deployments use option (c) unbounded-rescan (the null arm), claim collapses; packet flags this honestly as open in stress-test (c) but provides no evidence either way.
+- That runtime and safety teams are organizationally separated such that W is set without knowledge of max-phrase-length. This is the actual novel content — and it is a sociological claim with zero evidence in the packet (no team-structure citation, no postmortem, no config audit).
+- That moderators window in TOKENS at all (vs characters or sub-word units) — shifts W* nontrivially.
+- Anti-circularity: GT = harness-planted-span and filter = exact matcher over the SAME phrase set. The 100% sanity ceiling is by-construction of Aho-Corasick + planted spans; it confirms the harness is consistent but does not bound generalization to non-exact matchers.
+
+STATISTICAL_GAPS:
+- No SE/CI on any cell of the recall tables (means only over 5 seeds × 30k). The decisive 42.7pp drop and W*=2C recovery are presented categorically; cross-seed variance and significance of the W=16 -> W=32 transition not reported.
+- "Recovery point W*" uses an arbitrary >=99% threshold; sharpness/sensitivity to threshold not characterized.
+- 5 seeds is on the low end for a study whose headline depends on a sharp threshold crossing.
+- No goodness-of-fit test against the predicted combinatorial law W >= C + L_max - 1; reporting this fit would either (a) confirm the result IS the trivial theory (supports mundane explanation) or (b) reveal extra structure (would strengthen novelty). Not done.
+
+RATIONALE:
+Empirically the L0 is clean: anti-circular harness, 100% sanity ceiling, byte-identical completion control, monotone phrase-length moderator, prereg before run (HEAD e905de4), null exit logic correctly evaluated and reported HONESTLY as not-fired. The production-window arm clearing the make-or-break is real signal. However, the *theoretical* content reduces to bounded-window substring matching combinatorics (W >= C + L - 1 ≈ 2C), which is textbook (cf. any streaming pattern-matching reference, e.g. Aho & Corasick 1975 implicitly; standard chunked-grep overlap discipline). The "surprise" lives entirely in the SOCIAL claim — that real orgs separate the W knob from the L_max knob — and the packet provides ZERO evidence for that organizational gap (no config survey, no postmortem, no team-structure citation). Combined with harness specificity (exact matcher; harness tokens not BPE; planted-span distribution may not match real violation placement), the empirical effect is real-as-measured but its load-bearing mechanism (cross-org-seam coupling causing production recall loss) is undertested. L1 must (i) measure real moderator window semantics + defaults + token unit, (ii) ground the org-seam claim with at least one config/postmortem citation, (iii) report variance/CIs and fit to the trivial combinatorial law to distinguish "we measured a known invariant" from "there is residual structure."
+```

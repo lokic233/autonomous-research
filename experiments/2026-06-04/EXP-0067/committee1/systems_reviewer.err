@@ -1,0 +1,559 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e903e-0735-7730-90cd-f4b9f8057652
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0058 (PROJ-0028, CROSS-AREA: inference-runtime x eval-safety) — token-flush chunk granularity degrades streaming safety-filter recall
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=support/HELD. NOT metric-validity (recall vs harness-owned GT span-membership; whole-text control pins 100% ceiling). NO closed form. Anti-circular (GT=planted-violation-span, filter reads only emitted chunks, never GT). Vote HONESTLY by role — first cross-area claim + best-positioned candidate since CLAIM-0055; it CLEARED the production-baseline make-or-break that gated recent yellows. Do not rubber-stamp; do not reflexively kill.
+
+## CLAIM: the token-flush CHUNK GRANULARITY (a runtime latency/SSE knob) causally degrades the RECALL of a separately-owned incremental output safety filter — multi-token violation phrases straddle flush boundaries + a bounded-window moderator never sees them intact. Recall drops as chunk size grows toward production defaults, EVEN THOUGH the full completion is byte-identical + a whole-text scan flags 100%. The runtime engineer sets chunk size with no model of the safety window.
+
+## L0 RESULT (5 seeds x N=30k, pure-Python Aho-Corasick, anti-circular):
+SANITY CEILING PASSED: unbounded-rescan/whole-text = 100pct recall at every chunk size C{1..32}, 0 FP on benign+decoy -> any loss is streaming FRAGMENTATION not filter weakness. Completion byte-identical across C (only flush boundaries move).
+Recall vs chunk-size C, multi-token phrases (%): stateless-per-delta 0/18.8/54.3/78.4/90.5/97.1 (C=1..32); ★ PRODUCTION sliding-window W=16: 100/100/100/100/95.5/57.3; unbounded-rescan ceiling 100 everywhere.
+★ DECISIVE — OVERLAP RECOVERY POINT: the PRODUCTION sliding-window arm at realistic default W=16 shows a MATERIAL 42.7pp recall drop (100->57.3) at production chunk C=32. Recovery to ~100pct only at W* ~= 2*C (C8->W16; C16->W32; C32 needs W64), i.e. W >= chunk_size + max-phrase-len. A SMALL default overlap (W=8) does NOT heal it (46pct @C16) -> NOT a WEAKEN. The window must hold the current chunk PLUS a full-chunk lookback — a setting the latency-conscious runtime team can't pick without knowing the safety team's max-phrase token-length = the predicted cross-org-seam coupling.
+DIRECTION NUANCE (flagged for L1): danger zone is LARGE chunks vs the window, not small (stateless recall RISES with C; production window heals small chunks but breaks once C>~W).
+PHRASE-LENGTH MODERATION (alias control, stateless, fixed C=8): 1-token=100pct (NULL control, cannot fragment); 2/3/4-token = 88.5/77.1/65.3 (monotone) -> phrase length is the confirmed effect-moderator.
+
+## STRESS-TEST HONESTLY: (a) is the cross-seam coupling (runtime flush-knob -> safety recall via fragmentation) genuinely uncrossed/novel, or does some streaming-moderation work already tie segment formation to the flush schedule? (scout found ZERO direct hits; Orca/vLLM silent on the safety window, Llama-Guard/2512.03553/2604.14865 evaluate on segments but never tie to flush). (b) is the W>=chunk+max-phrase recovery condition a REAL operational gap (runtime + safety are separately owned, latency team picks W without the phrase-length) or would a competent safety team obviously set W large? (c) does the org-seam framing hold — or in practice is the moderator usually the unbounded-rescan ceiling (the null arm), making the bounded-window the strawman? (the L0 included unbounded-rescan as the ceiling; the claim is the COMMON latency-motivated bounded config).
+
+## CLAIM YAML
+claim: "An inference-runtime streaming knob \u2014 the token-flush chunk granularity\
+  \ (tokens accumulated before emitting a partial completion, tuned for ITL smoothing\
+  \ / SSE batching / throughput) \u2014 causally degrades the RECALL of a separately-owned\
+  \ incremental output safety filter, because policy-violating multi-token phrases\
+  \ straddle flush boundaries and the stateless/bounded-window moderator never sees\
+  \ them intact. As chunk size grows from 1 token toward realistic SSE batch sizes\
+  \ (4-16 tok/flush, the production default), the streaming moderator's detection\
+  \ recall on a fixed set of violating spans drops MONOTONICALLY and non-trivially\
+  \ (predicted >15-30pp recall loss at production chunk sizes for multi-token phrases),\
+  \ EVEN THOUGH the full completion is byte-identical and a whole-text scan of the\
+  \ same filter flags 100%. NULL EXIT: if recall is flat across chunk sizes (filter\
+  \ re-scans an unbounded re-accumulated buffer, or phrases are single-token, or default\
+  \ window-overlap already exceeds max-phrase-length), the coupling is absent and\
+  \ the claim is FALSE."
+why_it_matters: "FIRST CROSS-AREA coupling claim (acting on scout-M's mined-out signal:\
+
+## L0 RESULTS (EXP-0067)
+# RESULTS — EXP-0067 / CLAIM-0058
+**Researcher:** researcher-0064 · **Project:** PROJ-0028 · **Verdict: HELD (support, with a precise scope condition)**
+**Level:** L0 (CPU-only, stdlib pure-Python Aho-Corasick, SERIAL, 16.1 s wall) · 5 seeds × N=30,000 completions each.
+Prereg committed BEFORE run (HEAD e905de4). Harness owns GT; the filter never reads GT.
+
+## Headline
+The token-flush CHUNK GRANULARITY causally degrades the recall of an incremental output safety
+filter on multi-token policy-violating phrases — **and the loss survives against the PRODUCTION
+sliding-window-with-overlap moderator at a realistic default window (W=16)**, not just the naive
+stateless scanner. At W=16, multi-token recall falls from 100% (small chunks) to **57.3%** at the
+production-scale chunk size C=32 — a **42.7pp** drop. Recall recovers to ~100% only when the window
+**W ≥ ~2·C** (W=16 heals C=8; C=16 needs W=32; C=32 needs W=64) — i.e. the window must exceed the
+chunk size by the max-phrase-length, a coupling the latency-tuning runtime team sets blind.
+
+## Sanity ceiling (alias control B) — PASSED
+Unbounded-rescan / whole-text scan = **100.0% recall at every chunk size C∈{1..32}**, 0 false
+positives on benign+decoy completions. -> any recall loss is streaming FRAGMENTATION, not filter
+weakness or phrase difficulty. Completion text is byte-identical across all C (only flush boundaries
+move) — alias control A holds by construction.
+
+## Recall vs chunk-size C, per moderator arm (multi-token phrases, mean over 5 seeds, % )
+| Arm | C=1 | C=2 | C=4 | C=8 | C=16 | C=32 |
+|-----|-----|-----|-----|-----|------|------|
+| (a) stateless-per-delta | 0.0 | 18.8 | 54.3 | 78.4 | 90.5 | 97.1 |
+| (b) ★ sliding-window W=16 (PRODUCTION) | 100.0 | 100.0 | 100.0 | 100.0 | 95.5 | 57.3 |
+| (c) unbounded-rescan (ceiling) | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+
+- **Stateless** recall is LOW at small C (C=1 → 0%: every token is its own delta, no multi-token
+  phrase is ever seen intact) and *rises* with C (large chunk often contains the whole phrase). This
+  is the naive worst case and is the wrong knob direction to reason about — hence the production arm.
+- **★ Sliding-window W=16** (the decisive arm): 100% for C≤8, **95.5% at C=16, 57.3% at C=32**.
+  As soon as the chunk size approaches/exceeds the window, boundary-straddling phrases fall in the
+  blind spot between what the window retains and the next chunk. **Material (>15pp) loss at
+  production chunk sizes against the production baseline.**
+
+## ★ THE OVERLAP RECOVERY POINT (decisive measurement) — multi-token recall vs window W (%)
+| | W=0(stateless) | W=2 | W=4 | W=8 | W=16 | W=32 | W=64 |
+|--|--|--|--|--|--|--|--|
+| C=8  | 78.4 | 5.2 | 29.9 | 82.5 | 100.0 | 100.0 | 100.0 |
+| C=16 | 90.5 | 2.9 | 16.5 | 46.2 | 95.5 | 100.0 | 100.0 |
+
+**Recovery point W\*** (smallest W with recall≥99%): **C=8 → W\*=16 ; C=16 → W\*=32.**
+Empirically **W\* ≈ 2·C** (the window must hold the current chunk PLUS a full-chunk lookback so any
+phrase straddling the latest flush boundary lands inside one re-scanned window). Critically: a
+realistic *small* default overlap (W=8) does **NOT** heal it (46% at C=16) — so this is **not** a
+WEAKEN. The seam is healed only when the runtime team happens to set W ≥ 2·C, which requires
+knowing both the chunk size AND the safety max-phrase-length — exactly the cross-org coupling the
+claim predicts they lack.
+
+## Phrase-length moderation control (alias control C; stateless arm, fixed C=8, %)
+| phrase_len | 1 (NULL control) | 2 | 3 | 4 |
+|--|--|--|--|--|
+| recall | 100.0 | 88.5 | 77.1 | 65.3 |
+
+1-token phrases = **100%** (cannot be fragmented — null control passes). Recall falls monotonically
+with phrase length (88.5 → 77.1 → 65.3%). **Phrase length is the confirmed effect-moderator** — the
+loss is specifically multi-token fragmentation, exactly the mechanism in the claim.
+
+## NULL exit — DID NOT trigger
+The genuine null exit (stateless multi-token recall flat across C) did NOT fire: stateless recall
+spans 0%→97% across C (huge fragmentation effect), and the production arm shows a 42.7pp drop. The
+effect is real and large, so we report HELD honestly — but note the *direction* nuance: the danger
+zone is LARGE chunks vs the window, not small chunks (small chunks fragment so badly that even
+stateless misses everything; the production window heals small chunks but breaks at C≳W).
+
+
+## PRE-REG
+# PRE_REGISTRATION — EXP-0067 / CLAIM-0058
+**Researcher:** researcher-0064 (PERSISTENT-SEEDER, BUG-115) · **Project:** PROJ-0028 · **Task:** TASK-0056
+**Level:** L0 (CPU-only, stdlib-only, SERIAL, <=15 min) · **Date:** 2026-06-04
+**Status at write time:** PRE-REGISTERED BEFORE RUNNING. Harness owns GT; filter never reads GT.
+
+## THE CLAIM (CLAIM-0058 — CROSS-AREA: inference-runtime x eval-safety)
+The token-flush CHUNK GRANULARITY (tokens accumulated before emitting a partial completion — a
+runtime latency/SSE knob) causally degrades the RECALL of a separately-owned incremental output
+safety filter, because policy-violating MULTI-TOKEN phrases straddle flush boundaries and a
+stateless / bounded-window moderator never sees them intact. As chunk size grows (1 -> 4..32
+tok/flush), recall on violating spans is predicted to drop monotonically (>15-30pp at production
+chunk sizes for multi-token phrases) EVEN THOUGH the full completion is byte-identical and a
+whole-text scan flags 100%.
+
+## ★ THE MAKE-OR-BREAK (orchestrator guard #1): PRODUCTION baseline, not a strawman
+The standard production streaming moderator is a SLIDING-WINDOW-WITH-OVERLAP scanner. The headline
+lives or dies against THAT, not against the naive stateless-per-chunk scanner.
+
+### Three moderator arms (all read ONLY emitted chunks; none read GT)
+- (a) **stateless-per-delta** — scans only each new chunk in isolation (naive / worst case).
+- (b) ★ **sliding-window-overlap-W** (THE PRODUCTION BASELINE) — maintains a buffer of the last W
+  emitted TOKENS and re-scans that window each flush. Overlap = the window retains W-(new chunk)
+  tokens of context from previous flushes, so a phrase can match if it fits within any W-token
+  window that the scanner re-examines.
+- (c) **unbounded-rescan** — re-scans the entire accumulated buffer every flush (safety-correct
+
+## ORCHESTRATOR NOTE: FIRST cross-area claim (inference-runtime x eval-safety), acting on a prior scout's mined-out signal for single-area train-eff+eval-safety. PRIOR-ART (verified): Orca OSDI22 + vLLM (streaming/chunked emission, SILENT on the safety window); Llama-Guard + OpenAI-Moderation + 2512.03553 + 2604.14865 (evaluate on segments/completions, never tie segment formation to the flush schedule); ZERO direct seam hits. Novelty = a latency-tuning runtime knob silently lowering safety RECALL via benign span fragmentation across the org seam (NOT the adversarial Unicode-homoglyph attack). This CLEARED the production-baseline make-or-break (the sliding-window-overlap moderator, not a strawman; default overlap does NOT heal it) that gated the recent yellows + the runtime-mitigation killer (info-fragmentation is not a fixed cost CUDA-Graphs heal) + killer-#10 (genuine null exit didn't fire). If candidate-grade, L1: real vLLM/TGI SSE at varying output_token_chunk x a real streaming moderator (Llama-Guard-streaming/OpenAI-Moderation-incremental) on a real red-team multi-token-violation set -> recall vs flush granularity + the W>=chunk+max-phrase recovery condition (note real BPE may split phrases into MORE tokens, widening the gap; check if moderators window in chars/subtokens vs words, shifting W*). If you judge the seam is actually crossed in the lit OR real moderators rescan-unbounded by default (null arm) OR the recovery condition is operationally obvious -> YELLOW/RED honestly. If the cross-seam coupling is genuinely novel + survives the production baseline + ecologically real -> a clean APPROVE toward the real-stack L1, and the strongest green shot since CLAIM-0055. Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll read the committee and tooling instructions first, then check current OSS behavior around streaming/chunked output and moderation/windowing before voting.
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "rg --files | rg '("'^|/)(_committee_common_v001'"\\.md|TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+RESEARCHER_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed in this environment, so I’m falling back to `find`/shell reads. I found the repo root and am locating the prompt files now.
+exec
+/bin/zsh -lc 'find . -maxdepth 3 -type d | sort | head -80' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+.
+./.git
+./.git/hooks
+./.git/info
+./.git/logs
+./.git/logs/refs
+./.git/objects
+./.git/objects/00
+./.git/objects/01
+./.git/objects/02
+./.git/objects/03
+./.git/objects/04
+./.git/objects/05
+./.git/objects/06
+./.git/objects/07
+./.git/objects/08
+./.git/objects/09
+./.git/objects/0a
+./.git/objects/0b
+./.git/objects/0c
+./.git/objects/0d
+./.git/objects/0e
+./.git/objects/0f
+./.git/objects/10
+./.git/objects/11
+./.git/objects/12
+./.git/objects/13
+./.git/objects/14
+./.git/objects/15
+./.git/objects/16
+./.git/objects/17
+./.git/objects/18
+./.git/objects/19
+./.git/objects/1a
+./.git/objects/1b
+./.git/objects/1c
+./.git/objects/1d
+./.git/objects/1e
+./.git/objects/1f
+./.git/objects/20
+./.git/objects/21
+./.git/objects/22
+./.git/objects/23
+./.git/objects/24
+./.git/objects/25
+./.git/objects/26
+./.git/objects/27
+./.git/objects/28
+./.git/objects/29
+./.git/objects/2a
+./.git/objects/2b
+./.git/objects/2c
+./.git/objects/2d
+./.git/objects/2e
+./.git/objects/2f
+./.git/objects/30
+./.git/objects/31
+./.git/objects/32
+./.git/objects/33
+./.git/objects/34
+./.git/objects/35
+./.git/objects/36
+./.git/objects/37
+./.git/objects/38
+./.git/objects/39
+./.git/objects/3a
+./.git/objects/3b
+./.git/objects/3c
+./.git/objects/3d
+./.git/objects/3e
+./.git/objects/3f
+./.git/objects/40
+./.git/objects/41
+./.git/objects/42
+./.git/objects/43
+./.git/objects/44
+./.git/objects/45
+./.git/objects/46
+./.git/objects/47
+./.git/objects/48
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 148ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi -path '*_committee_common_v001.md' -o -path '*TOOLING_v001.md' 2>/dev/null | head -50" in /Users/dengcchi/autonomous-research-v3
+2026-06-04T01:27:50.906667Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc 'pkill -f "find /Users/dengcchi -path" || true' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ exited -1 in 25823ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The local rules match the packet excerpt. I’m now checking public systems and issue/docs sources for whether streaming emission chunking is already connected to moderation windows, rather than just assuming the packet’s scout result.
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'gh search code "multi_step_stream_outputs repo:vllm-project/vllm" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "stream_interval repo:sgl-project/sglang" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "TextIteratorStreamer moderation" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "stream_options include_usage moderation" --limit 20' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 601ms:
+ succeeded in 661ms:
+sgl-project/sglang:python/sglang/srt/sampling/sampling_params.py: stream_interval: Optional[int] = None,
+sgl-project/sglang:python/sglang/srt/sampling/sampling_params.py: self.stream_interval = stream_interval
+sgl-project/sglang:python/sglang/srt/managers/scheduler_components/output_streamer.py: DEFAULT_FORCE_STREAM_INTERVAL = envs.SGLANG_FORCE_STREAM_INTERVAL.get()
+sgl-project/sglang:.claude/skills/env-var-conventions/SKILL.md: | `FORCE_FOO` | Overrides autodetection | `SGLANG_FORCE_FP8_MARLIN`, `SGLANG_FORCE_STREAM_INTERVAL` |
+sgl-project/sglang:python/sglang/srt/environ.py: SGLANG_FORCE_STREAM_INTERVAL = EnvInt(50)
+sgl-project/sglang:docs_new/src/snippets/autoregressive/deepseek-r1-advanced-deployment.jsx: "stream_interval": 10
+sgl-project/sglang:docs_new/src/snippets/autoregressive/deepseek-r1-advanced-deployment.jsx: "stream_interval": 10
+sgl-project/sglang:python/sglang/srt/server_args.py: stream_interval: int = 1
+sgl-project/sglang:python/sglang/srt/server_args.py: default=ServerArgs.stream_interval,
+sgl-project/sglang:python/sglang/auto_benchmark_lib.py: "stream_interval",
+sgl-project/sglang:python/sglang/auto_benchmark_lib.py: "stream_interval": "stream",
+sgl-project/sglang:python/sglang/srt/managers/scheduler.py: self.stream_interval = server_args.stream_interval
+sgl-project/sglang:sgl-model-gateway/tests/common/mock_worker.rs: "stream_interval": 8,
+sgl-project/sglang:python/sglang/test/bench_one_batch_server_internal.py: client_stream_interval: int = 1
+sgl-project/sglang:python/sglang/test/bench_one_batch_server_internal.py: default=BenchArgs.client_stream_interval,
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 742ms:
+ succeeded in 746ms:
+exec
+/bin/zsh -lc 'gh search code "stream_interval repo:vllm-project/vllm" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "stream_interval moderation" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "RequestOutputKind repo:vllm-project/vllm" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "partial_text repo:huggingface/text-generation-inference" --limit 20' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 394ms:
+vllm-project/vllm:vllm/v1/engine/output_processor.py: stream_interval: int,
+vllm-project/vllm:vllm/v1/engine/output_processor.py: self.stream_interval = stream_interval
+vllm-project/vllm:vllm/v1/engine/llm_engine.py: stream_interval=self.vllm_config.scheduler_config.stream_interval,
+vllm-project/vllm:vllm/config/scheduler.py: stream_interval: int = Field(default=1, ge=1)
+vllm-project/vllm:rust/src/cmd/src/cli/unsupported.rs: pub stream_interval: Option<Unsupported>,
+vllm-project/vllm:vllm/engine/arg_utils.py: stream_interval: int = SchedulerConfig.stream_interval
+vllm-project/vllm:vllm/v1/engine/async_llm.py: stream_interval=self.vllm_config.scheduler_config.stream_interval,
+vllm-project/vllm:tests/tool_parsers/test_hermes_tool_parser.py: Tokens are batched into chunks of `stream_interval` tokens,
+vllm-project/vllm:tests/tool_parsers/test_hermes_tool_parser.py: qwen_tokenizer, parser, any_chat_request, text, stream_interval
+vllm-project/vllm:tests/tool_parsers/test_kimi_k2_tool_parser.py: def _chunk_tokenized_deltas(tokenizer, text: str, stream_interval: int) -> list[str]:
+vllm-project/vllm:tests/tool_parsers/test_kimi_k2_tool_parser.py: """Encode text, group tokens into chunks of stream_interval, decode each."""
+vllm-project/vllm:tests/tool_parsers/test_kimi_k2_tool_parser.py: self, kimi_k2_tokenizer, stream_interval
+vllm-project/vllm:tests/v1/engine/test_output_processor.py: @pytest.mark.parametrize("stream_interval", [1, 5, 10])
+vllm-project/vllm:tests/v1/engine/test_output_processor.py: stream_interval: int,
+vllm-project/vllm:tests/tool_parsers/test_minimax_m2_tool_parser.py: # Large chunks (stream_interval > 1)
+vllm-project/vllm:tests/tool_parsers/test_minimax_m2_tool_parser.py: """Simulate stream_interval > 1 where many tokens arrive at once."""
+vllm-project/vllm:tests/tool_parsers/test_deepseekv32_tool_parser.py: def test_single_tool_chunked_stream_interval(self, parser):
+vllm-project/vllm:tests/tool_parsers/test_glm4_moe_tool_parser.py: # Simulate stream_interval=3: chunks contain multiple XML tags
+vllm-project/vllm:tests/tool_parsers/test_glm4_moe_tool_parser.py: glm4_moe_tokenizer, parser, request, text, stream_interval
+
+hook: PostToolUse
+ succeeded in 337ms:
+ succeeded in 343ms:
+hook: PostToolUse Completed
+ succeeded in 438ms:
+vllm-project/vllm:vllm/sampling_params.py: class RequestOutputKind(Enum):
+vllm-project/vllm:vllm/pooling_params.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:vllm/pooling_params.py: output_kind: RequestOutputKind = RequestOutputKind.FINAL_ONLY
+vllm-project/vllm:vllm/v1/engine/parallel_sampling.py: from vllm.sampling_params import RequestOutputKind, SamplingParams
+vllm-project/vllm:vllm/v1/engine/parallel_sampling.py: if (sampling_params.output_kind == RequestOutputKind.FINAL_ONLY)
+vllm-project/vllm:vllm/v1/engine/logprobs.py: Ensures correct RequestOutputKind.DELTA semantics
+vllm-project/vllm:rust/src/engine-core-client/src/protocol/mod.rs: // (for example `FinishReason`, `StopReason`, `RequestOutputKind`, and future
+vllm-project/vllm:rust/src/engine-core-client/src/protocol/mod.rs: pub enum RequestOutputKind {
+vllm-project/vllm:vllm/v1/engine/async_llm.py: from vllm.sampling_params import RequestOutputKind, SamplingParams
+vllm-project/vllm:vllm/v1/engine/async_llm.py: or params.output_kind == RequestOutputKind.FINAL_ONLY
+vllm-project/vllm:vllm/entrypoints/openai/completion/protocol.py: RequestOutputKind,
+vllm-project/vllm:vllm/entrypoints/openai/completion/protocol.py: output_kind=RequestOutputKind.DELTA
+vllm-project/vllm:examples/deployment/async_llm_streaming.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:examples/deployment/async_llm_streaming.py: output_kind=RequestOutputKind.DELTA,  # Get only new tokens each iteration
+vllm-project/vllm:benchmarks/benchmark_hidden_state_extraction.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:benchmarks/benchmark_hidden_state_extraction.py: output_kind=RequestOutputKind.FINAL_ONLY,
+vllm-project/vllm:vllm/entrypoints/serve/disagg/serving.py: from vllm.sampling_params import RequestOutputKind, SamplingParams
+vllm-project/vllm:vllm/entrypoints/serve/disagg/serving.py: sampling_params.output_kind = RequestOutputKind.DELTA
+vllm-project/vllm:vllm/entrypoints/speech_to_text/translation/protocol.py: RequestOutputKind,
+vllm-project/vllm:vllm/entrypoints/speech_to_text/translation/protocol.py: output_kind=RequestOutputKind.DELTA
+vllm-project/vllm:vllm/v1/engine/output_processor.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:vllm/v1/engine/output_processor.py: def __init__(self, output_kind: RequestOutputKind, request_id: str):
+vllm-project/vllm:vllm/v1/engine/output_processor.py: self.aggregate = output_kind == RequestOutputKind.DELTA
+vllm-project/vllm:vllm/entrypoints/openai/chat_completion/protocol.py: RequestOutputKind,
+vllm-project/vllm:vllm/entrypoints/openai/chat_completion/protocol.py: output_kind=RequestOutputKind.DELTA
+vllm-project/vllm:vllm/entrypoints/speech_to_text/realtime/connection.py: from vllm.sampling_params import RequestOutputKind, SamplingParams
+vllm-project/vllm:vllm/entrypoints/speech_to_text/realtime/connection.py: output_kind=RequestOutputKind.DELTA,
+vllm-project/vllm:vllm/entrypoints/offline_utils.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:vllm/entrypoints/offline_utils.py: params.output_kind = RequestOutputKind.FINAL_ONLY
+vllm-project/vllm:vllm/entrypoints/openai/responses/protocol.py: RequestOutputKind,
+vllm-project/vllm:vllm/entrypoints/openai/responses/protocol.py: RequestOutputKind.DELTA if self.stream else RequestOutputKind.FINAL_ONLY
+vllm-project/vllm:rust/src/engine-core-client/src/tests/python_compat.py: class RequestOutputKind(Enum):
+vllm-project/vllm:vllm/entrypoints/speech_to_text/transcription/protocol.py: RequestOutputKind,
+vllm-project/vllm:vllm/entrypoints/speech_to_text/transcription/protocol.py: output_kind=RequestOutputKind.DELTA
+vllm-project/vllm:tests/v1/engine/test_abort_final_step.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:tests/v1/engine/test_abort_final_step.py: output_kind=RequestOutputKind.DELTA,
+vllm-project/vllm:tests/v1/shutdown/test_delete.py: from vllm.sampling_params import RequestOutputKind
+vllm-project/vllm:tests/v1/shutdown/test_delete.py: max_tokens=1, output_kind=RequestOutputKind.DELTA
+
+codex
+The first pass finds emission controls in vLLM and SGLang (`stream_interval`) but no code-search hits tying those controls to moderation. I’m drilling into the relevant implementation/docs snippets and then I’ll compare that to real streaming moderation APIs.
+exec
+/bin/zsh -lc 'gh search code "moderation repo:sgl-project/sglang" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "moderation repo:vllm-project/vllm" --limit 20' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "stream_interval repo:sgl-project/sglang python/sglang/srt/server_args.py" --limit 5 --json repository,path,url' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'gh search code "stream_interval repo:vllm-project/vllm vllm/config/scheduler.py" --limit 5 --json repository,path,url' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 286ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID B8C5:6A79:2C984C17:2D08CD5B:6A20D4C4 and timestamp 2026-06-04 01:28:37 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=5&q=stream_interval+repo%3A%22vllm-project%2Fvllm+vllm%2Fconfig%2Fscheduler.py%22)
+
+ exited 1 in 286ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID A4FF:9FD2A:2C0CC4A4:2C7F4B77:6A20D4C4 and timestamp 2026-06-04 01:28:37 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=moderation+repo%3Asgl-project%2Fsglang)
+
+ exited 1 in 318ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID 9D86:35D02C:2C20EC37:2C92A9C1:6A20D4C4 and timestamp 2026-06-04 01:28:37 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=moderation+repo%3Avllm-project%2Fvllm)
+
+ succeeded in 318ms:
+[]
+

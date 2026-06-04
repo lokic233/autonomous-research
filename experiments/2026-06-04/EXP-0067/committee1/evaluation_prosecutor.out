@@ -1,0 +1,9 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: red
+MANDATORY_BASELINES: [{"name": "Standard Context ML Safety Filter", "why": "Real semantic filters use context windows of W>=128 tokens, which trivially satisfies W >= 2*C for typical streaming chunk sizes.", "repo_or_cite": "Llama-Guard (2312.06674) / NeMo Guardrails"}]
+STRAWMAN_RISKS: ["W=16 is an extreme strawman. No production safety filter restricts its context to 16 tokens (~12 words) because semantic moderation requires larger context.", "Assuming the runtime team dictates the safety filter's local buffer size (W); maintaining a text buffer of a few hundred tokens is practically free in latency and memory."]
+MISSING_METRICS: ["Latency/memory cost analysis justifying why W would ever be restricted to 16 in production.", "Recall evaluation on standard, realistic window sizes (W=128+)."]
+KILLER_EXPERIMENT: Test the safety filter with a realistic production window (W=128 or W=256) against the production chunk sizes (C=16, C=32). If recall remains at 100% because W >> 2*C naturally in practice, the fragmentation effect is proven to be a pure artifact of the strawman W=16 configuration.
+RATIONALE: The claim manufactures a failure by asserting a "production baseline" sliding window of W=16. Production safety models and blocklists require significantly larger contexts to evaluate semantics, and retaining 128–256 tokens in a string buffer adds zero meaningful overhead. Because any realistic safety team would configure a window far larger than the runtime's chunk size (W >> C), the cross-org seam vulnerability does not exist in practice.
+```
