@@ -1,0 +1,85 @@
+verdict_id: VERDICT-0064
+claim_id: CLAIM-0064
+project_id: PROJ-0034
+date: '2026-06-04'
+experiment_ids:
+- EXP-0077
+experiment_paths:
+- experiments/2026-06-04/EXP-0077
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED, no fatal collision)
+required_evidence:
+- "Independent live prior-art sweep (>=2 sources) confirming no mechanism-exact incumbent\
+  \ \u2014 novelty_killer was denied search tools"
+- explicitly position against Parmar et al. 2104.11222 + Recht et al. 1902.10811
+- "ImageNet-1k val EXIF prevalence f (the canonical benchmark \u2014 if f=0 there,\
+  \ materiality is zero for the most-cited use case)"
+- "KILLER EXPERIMENT: unmodified standard eval harness (OpenCLIP zero-shot / timm\
+  \ / ELEVATER) on original-file vs HF-mirror end-to-end \u2014 if delta=0.0 under\
+  \ default loaders, the reproducibility framing collapses to a theoretical edge case"
+- measurement of the real EXIF-honoring consumer population (what fraction of eval
+  pipelines call exif_transpose/apply_exif_orientation=True)
+- '>=1 additional model family (ViT / rotation-augmented CNN) to test whether the
+  42.1pp per-tagged flip is architecture-dependent'
+- tighter CI on f (n=400 Wilson CI +-1.6pp straddles the 5pct materiality bar)
+map_delta_proposals:
+- CLAIM-0064 -> HOLD at L0-YELLOW
+- do NOT advance to L1 until the gate conditions met. Tag as 'incremental-composition'
+  subtype under cross-area coupling. If the killer experiment yields delta=0.0 under
+  all standard harnesses -> converges as a well-controlled negative/hygiene result
+  (valuable but L0-terminal, not L1-promotable).
+baseline_requirements:
+- "Unmodified standard eval harness (OpenCLIP/timm/ELEVATER) on original vs HF-mirror\
+  \ \u2014 must survive under REAL eval infra, not a constructed consumer"
+- ImageNet-1k val EXIF prevalence scan (canonical benchmark
+- if f=0 materiality is zero for the most-cited use case)
+committee_run_dir: experiments/2026-06-04/EXP-0077/committee1
+verbatim_votes_summary: 'novelty_killer(Y): denied live search; <2 verified sources
+  for any collision -> novelty unresolved; cannot clear without the sweep. systems_reviewer(Y):
+  mechanism real + controls clean, but materiality + consumer-population unproven.
+  evaluation_prosecutor(Y): fork INVISIBLE under default loaders -> need an unmodified
+  standard harness e2e (original vs mirror); if delta=0 the reproducibility framing
+  collapses to hygiene. theory_skeptic(Y): both endpoints (PIL-strip-on-save, decoder-ignores-EXIF)
+  INDEPENDENTLY+obviously predict the composed outcome = incremental composition,
+  NOT CLAIM-0059''s altitude where neither endpoint predicted it; 42.1pp is the trivial
+  90-deg upper bound (n_tagged=6, no CI), may collapse under a ViT/augmented model.
+  product_realist(Y): real metadata-hygiene finding but needs the canonical-benchmark
+  prevalence + the e2e harness delta. area_chair(Y): clears the footgun (not a rename)
+  but NOT the mechanism-known ceiling at 0059''s altitude; PRIOR_ART_ADEQUATE:no (Parmar/Recht
+  uncited); incremental-but-real = YELLOW; 3 independent GREEN-blockers any one sufficient.'
+key_structural_finding: 'Serialization-destruction chain empirically verified (step-0
+  kill-gate survived; identity + requant controls 0.0pp). The coupling IS distinct
+  from the known display footgun (dormant tag -> irreversible serialization-time destruction,
+  no pixel/card trace). BUT: (1) PRIOR-ART inadequate (novelty_killer denied search;
+  area_chair surfaced 2 uncited genre incumbents: Parmar CVPR2022 preprocessing-default-forks-eval-metric,
+  Recht ICML2019 same-benchmark non-reproducibility); (2) MATERIALITY below own bar
+  (real f=2.75% -> 1.16pp fork < 2pp threshold; served HF sets f~0 BECAUSE mechanism
+  already fired -> surviving-tag regime is the minority case); (3) CONSUMER POPULATION
+  unmeasured (fork invisible under default eval loaders; if a standard harness shows
+  delta=0 e2e the reproducibility framing collapses to a metadata-hygiene finding).
+  Altitude = incremental-composition subtype (both endpoints independently predict
+  the composed outcome), vs CLAIM-0059 where neither endpoint did.'
+disposition: committee#1 UNANIMOUS 6/6 YELLOW (no RED). The chain CLEARS the EXIF-footgun
+  (all 5 agree it's not a rename) but does NOT clear the mechanism-known ceiling at
+  CLAIM-0059's altitude (here both endpoints independently/obviously predict the outcome
+  once composed = INCREMENTAL COMPOSITION; CLAIM-0059's coupling was one where neither
+  endpoint predicted it). GREEN blocked by 3 independent obstacles.
+created_at: '2026-06-04T20:41:44Z'
