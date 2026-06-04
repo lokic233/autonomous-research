@@ -1,0 +1,87 @@
+verdict_id: VERDICT-0066
+claim_id: CLAIM-0067
+project_id: PROJ-0037
+date: '2026-06-04'
+experiment_ids:
+- EXP-0080
+experiment_paths:
+- experiments/2026-06-04/EXP-0080
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED
+- issue-tracker gate cleared, no collision)
+required_evidence:
+- "L1: Global-CategoricalDtype + OrdinalEncoder-on-global-vocab baselines showing\
+  \ deltaR2 collapses to ~0 with standard schema mgmt (isolates missing-practice vs\
+  \ framework-defect \u2014 evaluation_prosecutor killer, unrebutted)"
+- permutation baseline (uniform-random code reassignment, matched cardinality) to
+  show deltaR2 is bounded by the trivial-scramble prediction (theory_skeptic)
+- '>=1 non-tree model class (linear-on-one-hot or neural embedding) to bound generality
+  beyond axis-aligned splitters'
+- "EVIDENCE a real consumer pattern reads raw .cat.codes cross-shard as ML features\
+  \ (public repo/pipeline/survey/documented anti-pattern) \u2014 the load-bearing\
+  \ sociotechnical assumption, asserted not measured"
+- a REAL partitioned public dataset (Criteo/NYC-taxi) with naturally partial-observation
+  shards confirming the f-distribution falls in the hazardous 0.1-0.4 band (not f~0
+  or f~1 where the claim is moot)
+map_delta_proposals:
+- CLAIM-0067 -> advance to L1 conditional on all required-evidence + mandatory-baselines
+  pre-registered. Tag altitude='framing-composition-over-documented-mechanism'. If
+  L1 Global-CategoricalDtype baseline zeroes deltaR2 -> reclassify as 'missing-practice
+  awareness' (GREEN at that REDUCED altitude). If no real consumer reads raw .cat.codes
+  cross-shard -> DOWNGRADE to RED (strawman pipeline).
+baseline_requirements:
+- "Global CategoricalDtype (pd.CategoricalDtype(categories=fixed_list)) before .cat.codes\
+  \ \u2014 the standard pandas fix"
+- "sklearn OrdinalEncoder fitted on global vocab \u2014 the standard ML-pipeline fix"
+- permutation baseline (uniform-random matched-cardinality codes) for the trivial-scramble
+  deltaR2 floor
+committee_run_dir: experiments/2026-06-04/EXP-0080/committee1
+verbatim_votes_summary: "novelty_killer(Y): mechanism documented (Categorical.codes\
+  \ API); non-portability is folklore (SO Q54731396); pandas #44099/#22143 are concat/ordering,\
+  \ NOT this framing -> thin-but-real delta. systems_reviewer(Y): searched 'cat.codes\
+  \ parquet/across files/ML' -> no shipping-system collision, no merged fix. evaluation_prosecutor(Y):\
+  \ multi-shard pipeline is a STRAWMAN \u2014 Global CategoricalDtype/OrdinalEncoder\
+  \ trivially prevent it; need those baselines (unrebutted killer). theory_skeptic(Y):\
+  \ cross-shard mismatch follows BY DEFINITION of sort; tree-R2 collapse on scrambled\
+  \ codes is elementary; need a permutation baseline + a non-tree model + evidence\
+  \ real consumers do this. product_realist(Y): real niche but the consumer pattern\
+  \ (raw .cat.codes cross-shard) is unmeasured. area_chair(Y): issue-tracker gate\
+  \ CLEARED (NOT a CLAIM-0066 repeat); clean honest non-rigged L0 deserves L1; GREEN\
+  \ blocked by documented-mechanism + strawman + unmeasured-consumer; advance conditional\
+  \ on the 5 evidence items + 3 baselines."
+key_structural_finding: "Exceptionally clean L0 (composition verified in CURRENT pandas\
+  \ 3.0.3; exact f=0 null boundary; strict monotonic dose-response deltaR2 0->1.415;\
+  \ realistic SNR R2~0.78; RF cross-check; 2 distinct divergence arms; all could-fail\
+  \ audits clean). The framing delta is REAL (no pandas doc/SO/issue warns astype('category').cat.codes\
+  \ yields UNSTABLE ML feature IDs across separately-cast shards). BUT altitude =\
+  \ framing-composition-over-DOCUMENTED-mechanism: (i) the sort-over-observed-values\
+  \ mechanism is documented (Categorical.codes API) + the non-portability is community\
+  \ folklore (SO Q54731396); (ii) STRAWMAN risk \u2014 standard schema mgmt (Global\
+  \ CategoricalDtype / OrdinalEncoder on global vocab) trivially prevents it, and\
+  \ a multi-file practitioner would apply it (evaluation_prosecutor, unrebutted);\
+  \ (iii) the sociotechnical load-bearing assumption (real consumers read raw .cat.codes\
+  \ cross-shard as features) is ASSERTED not measured (theory_skeptic + product_realist)."
+disposition: "committee#1 UNANIMOUS 6/6 YELLOW (no RED). \u2605 Framework-issue-tracker\
+  \ gate CLEARED (5 independent reviewer searches found only concat/ordering issues,\
+  \ NOT the cross-shard .cat.codes-as-ML-feature framing -> NO CLAIM-0066-style RED).\
+  \ Not GREEN: documented-mechanism altitude + possible strawman pipeline + unmeasured\
+  \ consumer pattern. Gate to a make-or-break L1 OR converge."
+created_at: '2026-06-04T23:08:51Z'
