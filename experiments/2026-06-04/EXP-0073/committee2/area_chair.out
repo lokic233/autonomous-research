@@ -1,0 +1,31 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: green, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  ">=1 non-Snowflake model family with default_prompt_name=null + shipped prompts to confirm the packaging convention generalizes beyond arctic-embed (theory_skeptic item 1, unrebutted)",
+  "Bootstrap CIs or seed-variance on R@10 deltas — NFCorpus +2.9pp on n=323 queries is indistinguishable from noise without a CI (theory_skeptic item 2, unrebutted)",
+  "In-situ LangChain HuggingFaceEmbeddings.embed_query() and LlamaIndex HuggingFaceEmbedding e2e run to empirically confirm source-code hypothesis (evaluation_prosecutor mandatory baseline, unrebutted)"
+]
+MANDATORY_BASELINES: [
+  "E5 / Wang 2022 (arXiv:2212.03533) — mechanism attribution",
+  "INSTRUCTOR / TART (arXiv:2212.09741) — instruction-conditioned embedding prior art",
+  "ST Migration Guide + config_sentence_transformers.json prompt semantics — the decisive seam is documented ST behavior",
+  "MTEB PR#1221 (Aug 2024) — prior ecosystem recognition of the integration-must-honor-shipped-prompts problem",
+  "Four wrapper sources at pinned versions (Chroma, pymilvus, LangChain, LlamaIndex) — evidentiary core of the contribution"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0061", change: "stage L1->YELLOW-CONVERGED; altitude relabel from 'retrieval-and-memory finding' to 'integration-default/packaging measurement'; mechanism axis closed (decades-known, correctly attributed); contribution axis narrowed to 'silent-default surface across production DB wrappers'; next gate L2 requires REQUIRED_EVIDENCE items 1-3 above to attempt GREEN"}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE: Four YELLOW votes converge on the same diagnosis from independent angles; the single GREEN (evaluation_prosecutor) is on evaluation methodology quality, not contribution altitude, and therefore does not rebut the altitude concern that drives the other four votes. Synthesizing:
+
+(1) THE SEAM IS REAL. The decisive test resolves committee#1's load-bearing question conclusively: default_prompt_name=null → plain .encode() applies no prompt → the seam lives at the wrapper boundary, not inside ST. This is verified in ≥2 sources (ST config semantics + reproduced BEIR/SciFact numbers: A=0.7292 vs B=0.8229, embeddings non-identical). The costume risk is dead. Anti-hallucination rule honored — the collision check used ST docs + empirical reproduction.
+
+(2) THE IN-SITU REPRODUCTION IS CLEAN. Chroma 1.5.9 default path lands on the A-number (0.7226), confirming the +9.4pp is lost through the real production code path. Cross-model (3 arctic-embed sizes, up to +63.2pp on arctic-embed-m) and cross-dataset (SciFact + NFCorpus) generalization meet the >=2 minimums from committee#1's items 3-4.
+
+(3) THE MECHANISM IS NOT NEW. All four non-GREEN reviewers independently identify that the A<B delta is a re-measurement of E5/Wang2022 and Instructor/TART's known asymmetric-prompt effect through a different code path. The novelty_killer's prior-art search is thorough (E5, Instructor/TART, ST Migration Guide, MTEB PR#1221, four wrapper sources — all with retrievable URLs). MTEB PR#1221 shows the ecosystem already recognized "integration code must honor shipped prompts" as a problem class. The claim correctly does not re-claim the mechanism — but the contribution altitude is then bounded to the integration-default/packaging axis.
+
+(4) THE ALTITUDE QUESTION RESOLVES TO YELLOW. The contribution is: "model self-describes a prompt + ST honors it via encode_query + DB wrapper's default __call__ silently routes through plain encode() and drops it, invisible to a competent user." That is a real, source-verified, multi-wrapper finding. But three unrebutted concerns prevent GREEN: (a) n=1 on model-family axis (all arctic-embed, single vendor convention — theory_skeptic, unrebutted); (b) no CIs on R@10 deltas where sample sizes are small enough to matter (theory_skeptic, unrebutted); (c) the "competent user" framing is a usability claim asserted at n=0 on the human-factors axis (theory_skeptic, unrebutted). The evaluation_prosecutor's GREEN does not address any of these — it validates that the evaluation *design* is correct (which it is), not that the *contribution* clears the novelty bar.
+
+(5) DISPOSITION. This is a strong, honest YELLOW — not a weak one. The evidence is reproducible, the seam is real, the effect is large (up to +63pp), and the finding is actionable (wrapper maintainers should honor model prompts by default). It is publishable as a systems/measurement note or a technical report on the integration-default surface. It does not reach GREEN because the mechanism is decades-known, the generality axis (model families beyond arctic-embed) is under-tested, and the human-factors claim that elevates it from "config observation" to "invisible footgun" is unmeasured. The three REQUIRED_EVIDENCE items above define the L2 gate for a future GREEN attempt. Prompt version: v001.
+```

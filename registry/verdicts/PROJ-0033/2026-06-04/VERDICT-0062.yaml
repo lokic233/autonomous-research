@@ -1,0 +1,76 @@
+verdict_id: VERDICT-0062
+claim_id: CLAIM-0063
+project_id: PROJ-0033
+date: '2026-06-04'
+experiment_ids:
+- EXP-0076
+experiment_paths:
+- experiments/2026-06-04/EXP-0076
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED, no fatal collision)
+required_evidence:
+- "L1 GATE (run FIRST, potential kill): codegen-default audit \u2014 feed type:integer/format:int64\
+  \ through mcp-to-ai-sdk + json-schema-to-zod + AI-SDK-doc-recommended patterns"
+- if codegen emits z.number().int() (CLOSED) the claim contracts to a developer-error
+  class -> weaken/RED
+- 'End-to-end tool mis-execution (corrupted float64 ID causes observable wrong behavior
+  in a real downstream sink: wrong DB row / wrong API resource / wrong delete)'
+- LLM bare-integer emission rate (do Claude/GPT emit bare integer literals vs string
+  reps for int64 ID fields? if strings, the seam isn't traversed)
+- live composite prior-art search (novelty_killer was permission-blocked)
+map_delta_proposals:
+- CLAIM-0063 -> HOLD L0-YELLOW. Do NOT advance to full L1 until the codegen-default
+  gate runs. If codegen emits .int() -> reclassify 'framework seam (joint defense
+  blindness)' -> 'developer-error pattern (z.number() where .int() is available+recommended)'
+  and re-scope altitude down before any further investment.
+baseline_requirements:
+- "json-schema-to-zod output for integer/int64 (systems_reviewer reports .int() \u2014\
+  \ verify+version)"
+- AI SDK official docs recommended Zod pattern for integer tool args
+- MCP spec integer/int64 param representation
+committee_run_dir: experiments/2026-06-04/EXP-0076/committee1
+verbatim_votes_summary: "novelty_killer(Y): mechanism = ECMA-262 \xA76.1.6.1 + RFC8259\
+  \ \xA76 (canonical); live composite search permission-blocked -> prior-art INADEQUATE.\
+  \ systems_reviewer(Y): json-schema-to-zod@2.6.1 maps integer->z.number().int() (CLOSED)\
+  \ -> the canonical codegen path may close the seam. evaluation_prosecutor(Y): entire\
+  \ impact depends on z.number() being the realistic default; if codegen=.int() the\
+  \ contribution drops to known-folklore-re-measured. theory_skeptic(Y): 'joint blindness\
+  \ of two defenses' is the NULL of orthogonality \u2014 non-overlapping threat models\
+  \ = a PREDICTED gap not a discovered seam; Python control = known PEP-237 delta.\
+  \ product_realist(Y): real footgun but needs end-to-end mis-execution + the codegen-default\
+  \ answer. area_chair(Y): clean honest L0 (.int() self-kill creditable), but the\
+  \ codegen-default gate is THE question + theory-skeptic's orthogonality objection\
+  \ unrebutted; no GREEN possible at this stage."
+key_structural_finding: "Scoped z.number() seam is real + clean (silent_pass=1.0,\
+  \ unrecoverable post-parse, Python-isolated; .int() sub-leg honestly self-killed).\
+  \ BUT: (1) mechanism is fully known/deterministic (ECMA-262 + RFC8259); (2) theory_skeptic's\
+  \ decisive objection \u2014 'joint blindness of two defenses' is the NULL of orthogonality\
+  \ (two layers with non-overlapping threat models both not addressing X = a PREDICTED\
+  \ gap, not a DISCOVERED seam); (3) the impact depends on z.number() being the real\
+  \ default, but json-schema-to-zod codegen already emits .int() (closed). Residual\
+  \ novelty approaches zero if codegen default is .int()."
+disposition: 'yellow (committee#1; UNANIMOUS 6/6, no RED). Gate to a CHEAP decisive
+  L1 (codegen-default audit) OR converge. The load-bearing question: is the codegen
+  default for int64 ID fields z.number() (seam OPEN) or z.number().int() (CLOSED)?
+  systems_reviewer ALREADY found json-schema-to-zod@2.6.1 maps integer->z.number().int()
+  (CLOSED) -> preliminary evidence the canonical path may close the seam, contracting
+  the claim from ''framework seam'' to ''developer error''.'
+created_at: '2026-06-04T19:17:14Z'

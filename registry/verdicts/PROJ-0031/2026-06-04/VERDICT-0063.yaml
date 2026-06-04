@@ -1,0 +1,83 @@
+verdict_id: VERDICT-0063
+claim_id: CLAIM-0061
+project_id: PROJ-0031
+date: '2026-06-04'
+experiment_ids:
+- EXP-0072
+- EXP-0073
+experiment_paths:
+- experiments/2026-06-04/EXP-0072
+- experiments/2026-06-04/EXP-0073
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED, no fatal collision)
+required_evidence:
+- ">=1 NON-Snowflake model family with default_prompt_name=null + shipped prompts\
+  \ (confirm the packaging convention generalizes beyond arctic-embed \u2014 single-vendor\
+  \ convention now)"
+- bootstrap CIs / seed-variance on R@10 deltas (NFCorpus +2.9pp on n=323 needs a CI
+  to beat noise)
+- in-situ LangChain HuggingFaceEmbeddings.embed_query() + LlamaIndex HuggingFaceEmbedding
+  e2e runs (empirically confirm the source-code hypothesis, not just Chroma)
+map_delta_proposals:
+- CLAIM-0061 -> stage L1->YELLOW-CONVERGED
+- altitude relabel 'retrieval-and-memory finding' -> 'integration-default/packaging
+  measurement'
+- mechanism axis CLOSED (decades-known, correctly attributed)
+- contribution axis = 'silent-default surface across production DB wrappers'
+- L2 GREEN gate = the 3 required-evidence items
+baseline_requirements:
+- E5/Wang2022 (2212.03533) mechanism attribution
+- INSTRUCTOR/TART (2212.09741) instruction-conditioned prior art
+- ST Migration Guide + config_sentence_transformers.json prompt semantics
+- MTEB PR#1221 (Aug2024) prior ecosystem recognition
+- 4 wrapper sources at pinned versions (Chroma/pymilvus/LangChain/LlamaIndex)
+committee_run_dir: experiments/2026-06-04/EXP-0073/committee2
+verbatim_votes_summary: "novelty_killer(Y): A<B delta re-measures E5/Wang2022 + Instructor/TART\
+  \ through a different code path; MTEB PR#1221 shows ecosystem already recognized\
+  \ the problem class; contribution bounded to integration-default axis. systems_reviewer(Y):\
+  \ seam source-verified open in 4 wrappers but the mechanism is known; integration/packaging\
+  \ finding. evaluation_prosecutor(GREEN): evaluation DESIGN is correct (decisive\
+  \ test, in-situ, controls) \u2014 but votes green on methodology QUALITY, not contribution\
+  \ altitude. theory_skeptic(Y): 3 unrebutted blockers \u2014 n=1 model FAMILY (all\
+  \ arctic-embed), no CIs on small-sample deltas, 'competent user' human-factors claim\
+  \ at n=0. product_realist(Y): real actionable footgun (wrapper maintainers should\
+  \ honor model prompts) but needs the generality + human-factors evidence. area_chair(Y):\
+  \ STRONG honest yellow \u2014 seam real, effect up to +63pp, publishable as a measurement\
+  \ note; GREEN blocked by decades-known mechanism + under-tested generality + unmeasured\
+  \ human-factors; 3 items define the L2 green gate."
+key_structural_finding: 'The seam is REAL and the L1 is clean (decisive test: default_prompt_name=null
+  -> plain .encode() applies no prompt -> A=0.7292<B=0.8229; in-situ Chroma lands
+  on A-number 0.7226; cross-model arctic-s/m/xs +9.4/+63.2/+14.8pp; cross-dataset
+  SciFact+9.4/NFCorpus+2.9pp). But the MECHANISM IS NOT NEW (re-measures E5/Wang2022
+  + Instructor/TART asymmetric-prompt effect through a different code path; MTEB PR#1221
+  already recognized ''integration must honor shipped prompts''). Contribution altitude
+  bounded to the INTEGRATION-DEFAULT/packaging axis. 3 unrebutted GREEN-blockers:
+  (a) n=1 model FAMILY (all arctic-embed/single vendor convention); (b) no CIs on
+  small-sample R@10 deltas (NFCorpus +2.9pp on n=323 indistinguishable from noise
+  w/o CI); (c) the ''competent user / invisible footgun'' framing is a human-factors
+  claim at n=0.'
+disposition: "committee#2 YELLOW (4Y + 1G-on-methodology + AC yellow; NOT green-unanimous\
+  \ -> final YELLOW). The L1 RESOLVED committee#1's decisive question IN the claim's\
+  \ favor (seam REAL at wrapper boundary, NOT a costume) + reproduced in-situ + generalized\
+  \ 3 models/2 datasets \u2014 a STRONG honest yellow, not a weak one. GREEN held\
+  \ because the mechanism is decades-known + 3 generality/CI/human-factors axes under-tested.\
+  \ L2 gate defined for a future green attempt."
+created_at: '2026-06-04T19:20:14Z'
