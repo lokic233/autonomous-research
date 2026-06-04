@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'HELD/support. Sanity ceiling: unbounded-rescan=100% recall all C,
+  0 FP (loss is fragmentation, not filter). PRODUCTION sliding-window-overlap W=16
+  (decisive arm): multitoken recall 100% (C<=8) -> 95.5% (C=16) -> 57.3% (C=32) =
+  42.7pp drop at prod chunk size. OVERLAP RECOVERY POINT W*~=2C (C=8->W16, C=16->W32);
+  small default W=8 does NOT heal (46% @C16) so NOT a weaken. Stateless arm rises
+  0%(C1)->97%(C32) (small chunks fragment worst). Phrase-len moderator confirmed:
+  1-tok=100% (null control), 2/3/4-tok=88/77/65%. NULL exit did not fire. Cross-seam
+  coupling real: runtime must set W>=chunk+max-phrase-len, a param neither org owns
+  alone.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0067/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T01:24:55Z'
 prompt_version: ''

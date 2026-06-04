@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0028
 claim_id: CLAIM-0058
 exp_id: EXP-0066
-status: open
+status: done
 summary: "L0 cross-area: token-flush chunk granularity degrades streaming safety-filter\
   \ recall via phrase fragmentation. Synthetic streams + planted multi-token violations\
   \ (real lexicon); real Aho-Corasick/regex filter runs INCREMENTALLY over flushed\
@@ -20,8 +20,8 @@ summary: "L0 cross-area: token-flush chunk granularity degrades streaming safety
   \ sweep); PERSISTENT-SEEDER loop"
 evidence_delta: ''
 opened_at: '2026-06-04T01:18:15Z'
-updated_at: '2026-06-04T01:18:15Z'
-closed_at: ''
+updated_at: '2026-06-04T01:24:55Z'
+closed_at: '2026-06-04T01:24:55Z'
 history:
 - ts: '2026-06-04T01:18:15Z'
   event: open
@@ -37,3 +37,7 @@ history:
     \ flat -> FALSE. anti-circular (GT=planted-span-membership never read by filter;\
     \ whole-text-rescan=100% ceiling); alias control (byte-identical completion across\
     \ flush schedules + phrase-length sweep); PERSISTENT-SEEDER loop"
+- ts: '2026-06-04T01:24:55Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0064 completed EXP EXP-0067 (support)

@@ -67,17 +67,25 @@ why_it_matters: "FIRST CROSS-AREA coupling claim (acting on scout-M's mined-out 
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0067
+  summary: 'HELD/support. Sanity ceiling: unbounded-rescan=100% recall all C, 0 FP
+    (loss is fragmentation, not filter). PRODUCTION sliding-window-overlap W=16 (decisive
+    arm): multitoken recall 100% (C<=8) -> 95.5% (C=16) -> 57.3% (C=32) = 42.7pp drop
+    at prod chunk size. OVERLAP RECOVERY POINT W*~=2C (C=8->W16, C=16->W32); small
+    default W=8 does NOT heal (46% @C16) so NOT a weaken. Stateless arm rises 0%(C1)->97%(C32)
+    (small chunks fragment worst). Phrase-len moderator confirmed: 1-tok=100% (null
+    control), 2/3/4-tok=88/77/65%. NULL exit did not fire. Cross-seam coupling real:
+    runtime must set W>=chunk+max-phrase-len, a param neither org owns alone.'
+  data_path: experiments/2026-06-04/EXP-0067/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0067 result, then ros exp complete --exp EXP-0067 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0067; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0067
+active_experiments: []
 created_at: '2026-06-04T01:17:43Z'
-last_updated: '2026-06-04T01:18:15Z'
+last_updated: '2026-06-04T01:24:55Z'
