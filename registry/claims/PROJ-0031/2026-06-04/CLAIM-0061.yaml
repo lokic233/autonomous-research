@@ -1,0 +1,49 @@
+claim_id: CLAIM-0061
+project_id: PROJ-0031
+stage: seed
+status: seed
+claim: 'In production RAG, the embedding model author ships its required query/document
+  prompts INSIDE the model artifact (config_sentence_transformers.json; sentence-transformers
+  v3+ auto-applies them via encode_query/encode_document, v5 Router), but every production
+  vector-DB embedding-function wrapper DISCARDS that shipped prompt contract at the
+  DB boundary: Chroma SentenceTransformerEmbeddingFunction.__call__ calls plain encode()
+  with no prompt (same path for add+query); pymilvus.model.dense.SentenceTransformerEmbeddingFunction
+  defaults query_instruction=doc_instruction="" and never reads the artifact prompts;
+  LangChain HuggingFaceEmbeddings + LlamaIndex HuggingFaceEmbedding have no field
+  that auto-loads the shipped prompts. For a model whose own config asks for a query
+  prompt (e.g. Snowflake/snowflake-arctic-embed-s), the production-DEFAULT path costs
+  +10.3pp Recall@10 / +32% relative Recall@1 on real BEIR/SciFact vs the CORRECT path
+  that honors the shipped prompt. Measured on real qrels + real wrapper code paths,
+  exact cosine NN. The effect VANISHES on a model that ships empty prompts (intfloat/e5-small-v2)
+  => model/artifact-dependent, not a construction tautology; an alias-break control
+  (prompt on docs too) confirms the gain comes from the QUERY receiving its trained
+  prompt.'
+why_it_matters: 'Cross-area production-seam (retrieval-and-memory x model-artifact/serving),
+  purest replica of first-green CLAIM-0059 winning shape: a model artifact SELF-DESCRIBES
+  a contract (shipped query/doc prompts) and an INDEPENDENTLY-OWNED DB embedding-function
+  wrapper SILENTLY DISCARDS it at the boundary. Novelty != "prompts help" (known:
+  E5/Instructor) but the UNAUDITED artifact->DB DISCARD that survives a COMPETENT
+  user who deliberately picked a self-describing model. Seam source-verified OPEN
+  in Chroma (base-class even documents the asymmetry then does not override), pymilvus,
+  LangChain, LlamaIndex; MTEB only added shipped-prompt support in PR#1221 Aug2024.
+  Cleared all 10 killers; L0 ALREADY RUN: A(prod-default) R@10=0.720 -> B(correct)=0.823
+  (+10.3pp), alias-break C~=B, could-it-fail proven (empty-prompt model A~=B). Honest
+  risk: killer #3 "just the prefix footgun" -> defense = the artifact->DB DISCARD
+  framing as load-bearing novelty.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0072 result, then ros exp complete --exp EXP-0072 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0072
+created_at: '2026-06-04T16:31:28Z'
+last_updated: '2026-06-04T16:32:50Z'
