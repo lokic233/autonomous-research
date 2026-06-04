@@ -27,3 +27,126 @@ Using AI Gateway (Meta Model API upstream)
 [0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -5
 /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
 [0m
+[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"datatrove deduplication normalizer NFKC casefold model tokenizer alignment"}
+[0m% [0mWebFetch https://github.com/huggingface/datatrove
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"datatrove deduplication pipeline normalizer NFKC NFC configuration"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"NeMo Curator deduplication normalizer NFKC model tokenizer"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"text-dedup deduplication normalizer NFKC NFC github"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"BigCode dedup pipeline normalizer NFKC casefold"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"\"datatrove\" \"normalizer\" OR \"normalize\" dedup"}
+[0m
+[0m$ [0mgh search code "datatrove" "normalizer" --limit 5 2>&1 | head -30
+huggingface/datatrove:src/datatrove/pipeline/filters/url_filter.py: from datatrove.utils._import_utils import ASSETS_PATH
+huggingface/datatrove:src/datatrove/pipeline/filters/url_filter.py: from datatrove.utils.logging import logger
+huggingface/datatrove:src/datatrove/pipeline/filters/url_filter.py: normalizer = re.compile(r"[^a-zA-Z0-9]+")
+nikolas-rauscher/t5-sci-en2de-continued-pretraining:src/dataprep/symbol_token_normalizer.py: log.info("Using existing W&B session for Symbol Normalizer")
+nikolas-rauscher/t5-sci-en2de-continued-pretraining:src/dataprep/symbol_token_normalizer.py: project="BA-DataTrove",
+ML-GSAI/SMDM:environment.yaml: - charset-normalizer==3.4.0
+ML-GSAI/SMDM:environment.yaml: - datatrove==0.0.1.dev0
+isLinXu/Source-Code-Reading:source/data/datatrove/examples/url_deduplication.py: from datatrove.pipeline.readers import JsonlReader
+isLinXu/Source-Code-Reading:source/data/datatrove/examples/url_deduplication.py: from datatrove.pipeline.writers.jsonl import JsonlWriter
+isLinXu/Source-Code-Reading:source/data/datatrove/examples/url_deduplication.py: url_normalizer=lambda url: url.lower(),
+JT-Ushio/MHA2MLA:requirements.txt: charset-normalizer==3.4.1
+JT-Ushio/MHA2MLA:requirements.txt: datatrove==0.3.0
+[0m
+[0m$ [0mgh search code "repo:huggingface/datatrove dedup" --limit 10 2>&1 | head -50
+[0m
+[0m$ [0mgh repo view huggingface/datatrove --json description,url 2>&1 | head -20
+{"description":"Freeing data processing from scripting madness by providing a set of platform-agnostic customizable pipeline processing blocks.","url":"https://github.com/huggingface/datatrove"}
+[0m
+[0m$ [0mgit clone --depth 1 https://github.com/huggingface/datatrove.git /tmp/datatrove 2>&1 | tail -10
+Cloning into '/tmp/datatrove'...
+[0m
+[0m$ [0mfind /tmp/datatrove -name "*.py" | xargs grep -l -i "dedup" 2>/dev/null | head -10
+/tmp/datatrove/tests/pipeline/inference/test_progress_monitor.py
+/tmp/datatrove/tests/pipeline/dedup/test_exact_substrings.py
+/tmp/datatrove/tests/pipeline/dedup/test_exact_deduplication.py
+/tmp/datatrove/tests/pipeline/dedup/test_sentence_deduplication.py
+/tmp/datatrove/tests/pipeline/dedup/test_bloom_filter.py
+/tmp/datatrove/tests/pipeline/dedup/test_minhash.py
+/tmp/datatrove/examples/sentence_deduplication.py
+/tmp/datatrove/examples/minhash_deduplication.py
+/tmp/datatrove/examples/url_deduplication.py
+/tmp/datatrove/examples/inference/benchmark/analyze_results.py
+[0m
+[0m$ [0mfind /tmp/datatrove -name "*minhash*" -type f 2>/dev/null | head -10
+/tmp/datatrove/tests/pipeline/dedup/test_minhash.py
+/tmp/datatrove/examples/minhash_deduplication.py
+/tmp/datatrove/src/datatrove/pipeline/dedup/minhash.py
+[0m
+[0m→ [0mRead ../../../tmp/datatrove/src/datatrove/pipeline/dedup/minhash.py[90m [limit=100][0m
+[0m
+[0m$ [0mfind /tmp/datatrove -name "*.py" | xargs grep -l "TextNormConfig" 2>/dev/null | head -5
+/tmp/datatrove/tests/pipeline/text/test_text.py
+/tmp/datatrove/src/datatrove/pipeline/decont/n_grams.py
+/tmp/datatrove/src/datatrove/pipeline/stats/contamination_stats.py
+/tmp/datatrove/src/datatrove/pipeline/dedup/bloom_filter.py
+/tmp/datatrove/src/datatrove/pipeline/dedup/sentence_dedup.py
+[0m
+[0m$ [0mfind /tmp/datatrove -name "text.py" | grep utils | head -5
+/tmp/datatrove/src/datatrove/utils/text.py
+[0m
+[0m→ [0mRead ../../../tmp/datatrove/src/datatrove/utils/text.py[90m [limit=100][0m
+[0m→ [0mRead ../../../tmp/datatrove/src/datatrove/utils/text.py[90m [offset=186, limit=30][0m
+[0m→ [0mRead ../../../tmp/datatrove/src/datatrove/utils/text.py[90m [offset=212, limit=60][0m
+[0m
+[0m$ [0mgit clone --depth 1 https://github.com/NVIDIA-NeMo/Curator.git /tmp/curator 2>&1 | tail -10
+Cloning into '/tmp/curator'...
+[0m
+[0m$ [0mfind /tmp/curator -name "*.py" | xargs grep -l -i "minhash\|dedup" 2>/dev/null | head -10
+/tmp/curator/tests/conftest.py
+/tmp/curator/tests/config/test_run.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_fuzzy_workflow.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_connected_components_stage.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_minhash_stage.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_lsh_stage.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_buckets_to_edges_stage.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_minhash.py
+/tmp/curator/tests/stages/deduplication/semantic/test_utils.py
+/tmp/curator/tests/stages/deduplication/semantic/test_pairwise_io.py
+[0m
+[0m$ [0mfind /tmp/curator -name "*minhash*" -type f 2>/dev/null | head -10
+/tmp/curator/tests/stages/deduplication/fuzzy/test_minhash_stage.py
+/tmp/curator/tests/stages/deduplication/fuzzy/test_minhash.py
+/tmp/curator/nemo_curator/stages/deduplication/fuzzy/minhash.py
+[0m
+[0m→ [0mRead ../../../tmp/curator/nemo_curator/stages/deduplication/fuzzy/minhash.py[90m [limit=100][0m
+[0m
+[0m$ [0mgrep -rn "normalize\|NFKC\|NFC\|casefold" /tmp/curator/nemo_curator/stages/deduplication --include="*.py" | head -30
+/tmp/curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:56:        self.path_normalizer = lambda x: x
+/tmp/curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:66:        self.path_normalizer = self.fs.unstrip_protocol if is_remote_url(self.input_path) else (lambda x: x)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:94:                centroid_dirs[centroid_id] = self.path_normalizer(entry)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:200:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:330:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:386:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:449:    def normalize_embeddings_col_in_df(df: "cudf.DataFrame", embedding_col: str) -> "cudf.DataFrame":
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:451:        normalized_tensor = tensor / torch.norm(tensor, dim=1, keepdim=True)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:452:        df[embedding_col] = create_list_series_from_1d_or_2d_ar(cp.asarray(normalized_tensor), index=df.index)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:459:        Embeddings are normalized. For cosine we'll need to normalize the centroids as well.
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:461:        normalized_embeddings = get_array_from_df(df, embedding_col)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:462:        # We normalize the centroids as well for cosine distance
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:463:        normalized_centroids = centroids / cp.linalg.norm(centroids, axis=1, keepdims=True)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:466:            cp.sum((normalized_embeddings - centroids[df["centroid"].values]) ** 2, axis=1)
+/tmp/curator/nemo_curator/stages/deduplication/semantic/kmeans.py:470:                normalized_embeddings * normalized_centroids[df["centroid"].values],
+[0m
+[0m$ [0mgrep -rn "lower\|unicode" /tmp/curator/nemo_curator/stages/deduplication/fuzzy --include="*.py" | head -30
+/tmp/curator/nemo_curator/stages/deduplication/fuzzy/identify_duplicates.py:130:            # If user has not specified row_group_size_rows, set it to the lower of 10% of the number of removal ids or 1M (default) or a minimum of 1k (for small datasets)
+[0m
+[0m$ [0mgh search repos "bigcode dedup" --limit 5 2>&1 | head -20
+[0m
+[0m$ [0mgh search repos "text-dedup" --limit 5 2>&1 | head -20
+google-research/deduplicate-text-datasets		public, archived	2026-05-26T07:58:09Z
+ChenghaoMou/text-dedup	All-in-one text de-duplication	public	2026-06-01T11:33:22Z
+conanhujinming/text_dedup	High-Performance Text Deduplication Toolkit	public	2026-05-02T15:54:48Z
+ramana1266/Deduplication	This is a FUSE based file system that dedups text files to save disk space.	public	2018-08-19T17:29:11Z
+lovit/text-dedup	Python package for memory-friendly text de-duplication	public	2026-03-09T17:40:36Z
+[0m
+[0m$ [0mgit clone --depth 1 https://github.com/ChenghaoMou/text-dedup.git /tmp/textdedup 2>&1 | tail -10
+Cloning into '/tmp/textdedup'...
+[0m
+[0m$ [0mfind /tmp/textdedup -name "*.py" | xargs grep -l "normalize\|NFKC\|NFC" 2>/dev/null | head -10
+/tmp/textdedup/tests/test_utils/test_preprocess.py
+/tmp/textdedup/src/text_dedup/utils/preprocess.py
+[0m
+[0m→ [0mRead ../../../tmp/textdedup/src/text_dedup/utils/preprocess.py

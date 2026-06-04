@@ -1,0 +1,33 @@
+I have enough for a grounded novelty verdict. Two independent production sources confirmed; the decisive seam question resolves clearly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lee et al. 2022, 'Deduplicating Training Data Makes Language Models Better' (NearDup/MinHash)",
+   url: "https://arxiv.org/abs/2107.06499",
+   why_close: "Canonical training-data MinHash dedup; defines the pipeline under test; SILENT on the model tokenizer's normalizer — so it does not pre-empt the specific seam, but it is the baseline the claim modifies."}
+- {cite: "Unicode UAX#15 Normalization Forms (canonical vs compatibility equivalence, NFC/NFKC)",
+   url: "https://unicode.org/reports/tr15/",
+   why_close: "Defines the exact equivalence classes (compat mappings, casefold-adjacent) the claim exploits. The phenomenon 'two components normalize to different forms -> they disagree on identity' is THE substrate; the claim is an application of it, not a new equivalence theory."}
+- {cite: "Manning/Raghavan/Schütze, Introduction to Information Retrieval, §2.2 'Normalization (equivalence classing of terms)'",
+   url: "https://nlp.stanford.edu/IR-book/html/htmledition/normalization-equivalence-classing-of-terms-1.html",
+   why_close: "Decades-old textbook result: if index-time and query-time normalization disagree, recall drops — the GENERAL mechanism. The claim is the dedup-normalizer-vs-model-normalizer instance of this exact mismatch principle."}
+- {cite: "Production dedup source (datatrove TextNormConfig/simplify_text; BigCode near_deduplication)",
+   url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/utils/text.py ; https://github.com/bigcode-project/bigcode-dataset/blob/main/near_deduplication/minhash_deduplication.py",
+   why_close: "Establishes deployed-practice defaults — and that NO tool aligns to a model tokenizer. Relevant to the seam-open question, not a paper collision."}
+
+NAMING_VS_MECHANISM: Not pure renaming, but the mechanism is an INSTANCE of a known one. The underlying phenomenon — two pipeline stages with divergent Unicode normalizers disagree on identity, costing recall — is textbook IR (index/query normalization mismatch) on the UAX#15 substrate. The genuine deltas over that: (1) choosing the MODEL tokenizer's NFKC+casefold as the ground-truth equivalence relation (motivated by memorization/contamination — the model literally sees the pairs as one token sequence), and (2) the empirical localization that divergence acts UPSTREAM of LSH (collapses Jaccard to ~0, so no threshold/band recovers it) rather than perturbing the S-curve. (2) is a real mechanistic finding; (1) is a definitional/framing choice that makes "weaker-deduper misses model-identical pairs" close to tautological once accepted. Net: a real but INCREMENTAL cross-area transfer of a known mechanism, not a fundamentally new one.
+
+FATAL_COLLISIONS: NONE VERIFIED. The CLAIM-0058 kill pattern ('seam already closed in production tooling') does NOT replicate. Verified in ≥2 independent production sources that NO model-normalizer-alignment mode exists and NFKC+casefold is NOT the default: datatrove defaults to lowercase + NFD-with-combining-mark-strip (diacritics) + punctuation-removal + whitespace/number norm — NO NFKC, NO casefold, and TextNormConfig exposes no tokenizer-alignment field; BigCode near_dedup applies ONLY `NON_ALPHA=[^A-Za-z_0-9]` splitting — no unicode normalization, no lowercase, no alignment hook. The dedup normalizer is fixed/internal in both; neither co-owns the model tokenizer's normalizer. So the seam is genuinely OPEN in deployed practice — the claim SURVIVES the #1 stress-test (answer = (b)).
+
+MANDATORY_RELATED_WORK:
+- UAX#15 (NFC/NFKC, compat & canonical equivalence) — REQUIRED; it is the mechanism's substrate, currently only glancingly cited.
+- IR normalization-mismatch principle (Manning et al. IIR §2.2, or equivalent) — REQUIRED; without it the paper overclaims novelty for what is the dedup instance of a known recall-loss mechanism. The novelty must be framed as "cross-area transfer + empirical LSH-upstream localization," not "new mechanism."
+- datatrove `TextNormConfig`/`simplify_text` + BigCode `near_deduplication` source — REQUIRED as the seam-open evidence (no alignment knob in deployed tooling).
+- Adjacent: UTS#39 Unicode Security / normalization-confusion literature — recommended as the closest "normalizer divergence is exploitable/consequential" prior work.
+
+RATIONALE: Two reasons block GREEN but none reach RED.
+(1) NOT RED: I could not verify a fatal collision in ≥2 sources. The decisive production-tooling check resolves AGAINST the kill — datatrove and BigCode (≥2 independent) both confirm no model-aware/aligned dedup normalization and no NFKC+casefold default. Unlike CLAIM-0058, the seam is not closed in shipped tooling.
+(2) NOT GREEN: the core mechanism (divergent normalizers -> identity disagreement -> recall loss) is well-established IR/UAX#15 lore; the claim's novelty is an incremental cross-area transfer plus a definitional GT choice (true-dup = model-normalized-identical) that borders on tautological. Additionally, a novelty-adjacent realism gap: the L0 deduper ladder {raw, NFC, NFKC, NFKC+casefold} does NOT match any real production normalizer — both production dedupers normalize AGGRESSIVELY in OTHER dimensions (datatrove already lowercases AND strips diacritics; BigCode strips all non-ASCII), so the FN=1.00 'total miss' is an artifact of the raw/NFC strawman. Real datatrove would already collapse the case- and diacritic-normalizable classes; only the NFKC-COMPATIBILITY residue (fullwidth↔halfwidth, ligature↔expansion) genuinely survives. The open seam is therefore NARROWER than 'FN=1.00'. The claim must be required, at L1 against real datatrove + real tokenizer, to demonstrate a NON-TRIVIAL surviving model-identical-dup rate from that NFKC-compat residue specifically — otherwise the demonstrated magnitude is unrepresentative even though the seam is genuinely open. YELLOW, conditioned on adding the mandatory mechanism prior-art and the realistic-deduper baseline.
+```

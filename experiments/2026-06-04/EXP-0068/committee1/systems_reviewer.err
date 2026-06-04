@@ -1830,3 +1830,1393 @@ hook: PostToolUse Completed
 /tmp/NeMo-Curator/tests/utils/test_grouping.py
 /tmp/NeMo-Curator/tests/utils/test_merge_file_prefixes.py
 
+exec
+/bin/zsh -lc "find /tmp/NeMo-Curator -maxdepth 4 -type d | grep -E 'dedup|fuzzy|modules' | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/NeMo-Curator/tests/stages/deduplication
+/tmp/NeMo-Curator/tests/stages/deduplication/fuzzy
+/tmp/NeMo-Curator/tests/stages/deduplication/semantic
+/tmp/NeMo-Curator/tests/stages/deduplication/shuffle_utils
+/tmp/NeMo-Curator/tests/stages/deduplication/exact
+/tmp/NeMo-Curator/tests/stages/image/dedup
+/tmp/NeMo-Curator/tests/stages/text/deduplication
+/tmp/NeMo-Curator/tests/stages/text/modules
+/tmp/NeMo-Curator/docs/_extensions/search_assets/modules
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/shuffle_utils
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/exact
+/tmp/NeMo-Curator/nemo_curator/stages/image/deduplication
+/tmp/NeMo-Curator/nemo_curator/stages/text/deduplication
+/tmp/NeMo-Curator/nemo_curator/stages/text/modules
+/tmp/NeMo-Curator/tutorials/text/deduplication
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy
+/tmp/NeMo-Curator/tutorials/text/deduplication/semantic
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "grep -R \"NFKC\\|casefold\\|unicodedata\\|normalize\" -n /tmp/NeMo-Curator/src /tmp/NeMo-Curator/nemo_curator 2>/dev/null | head -160" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "grep -R \"class.*MinHash\\|MinHash\\|minhash\\|fuzzy\" -n /tmp/NeMo-Curator/src /tmp/NeMo-Curator/nemo_curator 2>/dev/null | head -120" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 157ms:
+/tmp/NeMo-Curator/nemo_curator/pipeline/workflow.py:27:        workflow_name: Human readable workflow identifier (e.g., "fuzzy_dedup").
+/tmp/NeMo-Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml:28:  This configuration file can be used to build a NeMo Curator pipeline that performs fuzzy deduplication.
+/tmp/NeMo-Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml:29:  This example reads the input files, runs the fuzzy deduplication workflow, and saves the results.
+/tmp/NeMo-Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml:43:  - _target_: nemo_curator.stages.deduplication.fuzzy.workflow.FuzzyDeduplicationWorkflow
+/tmp/NeMo-Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml:59:    minhashes_per_band: 13
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/identify_duplicates.py:17:from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_FUZZY_DUPLICATE_GROUP_FIELD
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/identify_duplicates.py:32:    Stage that generates removal IDs for fuzzy deduplication.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/connected_components.py:26:from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_FUZZY_DUPLICATE_GROUP_FIELD
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/__init__.py:15:from nemo_curator.stages.deduplication.fuzzy.workflow import FuzzyDeduplicationWorkflow
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/utils.py:15:CURATOR_DEFAULT_MINHASH_FIELD = "_minhash_signature"
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:24:from nemo_curator.stages.deduplication.fuzzy.buckets_to_edges import BucketsToEdgesStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:25:from nemo_curator.stages.deduplication.fuzzy.connected_components import ConnectedComponentsStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:26:from nemo_curator.stages.deduplication.fuzzy.identify_duplicates import IdentifyDuplicatesStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:27:from nemo_curator.stages.deduplication.fuzzy.lsh.stage import LSHStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:28:from nemo_curator.stages.deduplication.fuzzy.minhash import MinHashStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:38:ID_GENERATOR_OUTPUT_FILENAME = "fuzzy_id_generator.json"
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:43:    A pipeline that performs fuzzy deduplication of a dataset.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:47:    - MinHashStage
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:48:        Computes minhashes for the input dataset.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:50:        Performs Locality Sensitive Hashing on the minhashes.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:80:        minhashes_per_band: int = 13,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:89:        Configuration for MinHash based fuzzy duplicates detection.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:92:            Directory to store deduplication intermediates such as minhashes/buckets etc.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:126:            Seed for minhash permutations
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:128:            Size of Char ngram shingles used in minhash computation
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:134:            Whether to use a 32bit or 64bit hash function for minhashing.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:172:        self.minhashes_per_band = minhashes_per_band
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:182:        self.num_hashes = self.num_bands * self.minhashes_per_band
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:200:    def _create_minhash_pipeline(self, generate_input_filegroups: bool) -> Pipeline:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:212:            MinHashStage(
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:225:            name="minhash_pipeline",
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:235:                    file_paths=cache_dir_fs.sep.join([self.cache_path, "MinHashStage"]),
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:244:                    minhashes_per_band=self.minhashes_per_band,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:246:                    # Reading minhashes from cache_path
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:305:        workflow_result = WorkflowRunResult(workflow_name="fuzzy_deduplication")
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:306:        minhash_time = 0.0
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:328:            `nemo_curator.stages.deduplication.id_generator.kill_id_generator_actor` before running the fuzzy deduplication pipeline.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:335:            minhash_pipeline = self._create_minhash_pipeline(generate_input_filegroups=initial_tasks is None)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:336:            minhash_start_time = time.time()
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:337:            minhash_tasks = minhash_pipeline.run(executor=executor, initial_tasks=initial_tasks)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:338:            minhash_end_time = time.time()
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:339:            minhash_time = minhash_end_time - minhash_start_time
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:340:            workflow_result.add_pipeline_tasks("minhash", minhash_tasks)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:341:            workflow_result.add_metadata("minhash_time", minhash_time)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:342:            logger.info(f"Minhash pipeline completed in {minhash_time:.2f} seconds")
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/workflow.py:358:            # LSH stage generates it's own input tasks from the minhash directory
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:23:from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_DEFAULT_MINHASH_FIELD
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:34:class MinHash(ABC):
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:36:    Base class for computing minhash signatures of a document corpus
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:49:        seed: Seed for minhash permutations
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:50:        num_hashes: Length of minhash signature (No. of minhash permutations)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:51:        char_ngrams: Width of text window (in characters) while computing minhashes.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:61:        Generate seeds for all minhash permutations based on the given seed.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:68:    def compute_minhashes(self, text_series: Any) -> Any:  # noqa: ANN401
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:70:        Compute minhash signatures for the given dataframe text column.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:74:class GPUMinHash(MinHash):
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:84:        MinHash.__init__(
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:105:        Generate seeds for all minhash permutations based on the given seed.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:131:    def minhash32(self, ser: cudf.Series) -> cudf.Series:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:133:        Compute 32bit minhashes based on the MurmurHash3 algorithm
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:142:        return ser.str.minhash(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:144:    def minhash64(self, ser: cudf.Series) -> cudf.Series:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:146:        Compute 64bit minhashes based on the MurmurHash3 algorithm
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:155:        return ser.str.minhash64(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:157:    def compute_minhashes(self, text_series: cudf.Series) -> cudf.Series:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:159:        Compute minhash signatures for the given text series.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:164:            Series containing text data to compute minhashes for
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:168:        cudf.Series containing minhash signatures
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:174:        # Compute minhashes
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:175:        minhash_method = self.minhash64 if self.use_64bit_hash else self.minhash32
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:176:        return minhash_method(text_series)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:179:class MinHashStage(ProcessingStage[FileGroupTask, FileGroupTask], DeduplicationIO):
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:181:    ProcessingStage for computing MinHash signatures on documents for fuzzy deduplication.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:184:    FileGroupTask containing paths to computed minhash signature files. It uses GPU-accelerated
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:185:    MinHash computation to generate locality-sensitive hash signatures that can be used
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:191:    - Computing MinHash signatures using GPU acceleration
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:197:        Base path where minhash output files will be written
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:199:        Name of the field containing text to compute minhashes from
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:200:    minhash_field : str, default="_minhash_signature"
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:201:        Name of the field where minhash signatures will be stored
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:203:        Width of character n-grams for minhashing
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:205:        Number of hash functions (length of minhash signature)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:207:        Random seed for reproducible minhash generation
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:219:    >>> stage = MinHashStage(
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:220:    ...     output_path="/path/to/minhash/output",
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:232:        minhash_field: str = CURATOR_DEFAULT_MINHASH_FIELD,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:247:        self.minhash_field = minhash_field
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:256:        # Initialize the minhash processor in setup
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:257:        self.minhash_processor = None
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:265:        """Initialize the GPU MinHash processor and ID generator."""
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:277:        # Initialize the GPU minhash processor
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:278:        self.minhash_processor = GPUMinHash(
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:291:        """Define outputs - produces FileGroupTask with minhash files."""
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:296:        Process a group of files to compute minhashes.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:302:            FileGroupTask containing paths to minhash output files
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:305:        if self.minhash_processor is None or self.id_generator is None:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:306:            msg = "MinHash processor or ID generator not initialized. Call setup() first."
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:323:        result_df[self.minhash_field] = self.minhash_processor.compute_minhashes(df[self.text_field])
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:331:            dataset_name=f"{task.dataset_name}_minhash",
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py:335:                "minhash_field": self.minhash_field,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:24:from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_DEFAULT_MINHASH_FIELD, CURATOR_LSH_BUCKET_FIELD
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:44:    minhashes_per_band
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:45:        Number of minhashes per band.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:48:    minhash_field
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:49:        Name of the minhash field in input data.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:75:    - `read_minhash`: Reads minhash files and returns a DataFrame
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:78:    - `minhash_to_bands`: Transforms a single minhash DataFrame into LSH bands
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:85:    1. Files are read using `read_minhash`
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:86:    2. Data is processed with `minhash_to_bands` to extract LSH bucket IDs
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:97:        minhashes_per_band: int,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:99:        minhash_field: str = CURATOR_DEFAULT_MINHASH_FIELD,
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:118:        self.minhashes_per_band = minhashes_per_band
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:120:        self.minhash_field = minhash_field
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:125:    def _generate_band_ranges(num_bands: int, minhashes_per_band: int) -> list[list[int]]:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:127:        Generates a list of indices for the minhash ranges given num_bands &
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:128:        minhashes_per_band.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:129:        eg: num_bands=3, minhashes_per_band=2
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:132:        return [list(range(band * minhashes_per_band, (band + 1) * minhashes_per_band)) for band in range(num_bands)]
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:134:    def read_minhash(self, filepaths: list[str]) -> cudf.DataFrame:
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/lsh/lsh.py:136:        Read minhash data from parquet files.
+
+ succeeded in 157ms:
+/tmp/NeMo-Curator/nemo_curator/metrics/xenna_grafana_dashboard.json:136:            "expr": "max by (stage) (ray_pipeline_finished_tasks_normalized{SessionName=~\"${session}\"})",
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:37:    def _normalize_pipeline_tasks(
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:59:        normalized: dict[str, list[Task]] = {}
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:62:                normalized[str(pipeline_name)] = []
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:64:                normalized[str(pipeline_name)] = pipeline_tasks
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:66:                normalized[str(pipeline_name)] = [pipeline_tasks]
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:68:                normalized[str(pipeline_name)] = list(pipeline_tasks)
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:70:        return normalized or {"": []}
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:89:        for pipeline_tasks in TaskPerfUtils._normalize_pipeline_tasks(tasks).values():
+/tmp/NeMo-Curator/nemo_curator/tasks/utils.py:117:        pipeline_task_map = TaskPerfUtils._normalize_pipeline_tasks(tasks)
+/tmp/NeMo-Curator/nemo_curator/tasks/video.py:299:        # normalize to 5 min
+/tmp/NeMo-Curator/nemo_curator/core/serve/placement.py:330:    # normalize to an iterable of metas.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:56:        self.path_normalizer = lambda x: x
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:66:        self.path_normalizer = self.fs.unstrip_protocol if is_remote_url(self.input_path) else (lambda x: x)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:94:                centroid_dirs[centroid_id] = self.path_normalizer(entry)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:200:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:330:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:386:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:449:    def normalize_embeddings_col_in_df(df: "cudf.DataFrame", embedding_col: str) -> "cudf.DataFrame":
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:451:        normalized_tensor = tensor / torch.norm(tensor, dim=1, keepdim=True)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:452:        df[embedding_col] = create_list_series_from_1d_or_2d_ar(cp.asarray(normalized_tensor), index=df.index)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:459:        Embeddings are normalized. For cosine we'll need to normalize the centroids as well.
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:461:        normalized_embeddings = get_array_from_df(df, embedding_col)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:462:        # We normalize the centroids as well for cosine distance
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:463:        normalized_centroids = centroids / cp.linalg.norm(centroids, axis=1, keepdims=True)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:466:            cp.sum((normalized_embeddings - centroids[df["centroid"].values]) ** 2, axis=1)
+/tmp/NeMo-Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:470:                normalized_embeddings * normalized_centroids[df["centroid"].values],
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:34:    This stage cleans the text and normalizes it using NeMo text processing (numbers to words, etc).
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:70:    _normalizer: Any = field(default=None, repr=False)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:101:        if self._normalizer is None:
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:102:            self._normalizer = Normalizer(input_case="cased", lang=self.language.lower())
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:104:    def normalize_text(self, text: str) -> str:
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:110:            normalized_text = self._normalizer.normalize(text, verbose=False, punct_post_process=False)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:134:                final = final + self._normalizer.normalize(chunk, verbose=False, punct_post_process=False) + " "
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:136:            normalized_text = final.strip()
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:138:        return normalized_text
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:144:    def normalize_and_clean_text(self, text: str) -> tuple[str, str]:
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:146:        normalized_text = self.normalize_text(text)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:147:        cleaned_text_with_punct = self.clean_text(normalized_text, retain_pncs=True)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:148:        cleaned_text = self.clean_text(normalized_text, retain_pncs=False)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:198:        hypothesis_pnc, hypothesis_clean = self.normalize_and_clean_text(audio_segment[self.hypothesis_text_key])
+/tmp/NeMo-Curator/nemo_curator/stages/audio/metrics/wer.py:199:        reference_pnc, reference_clean = self.normalize_and_clean_text(audio_segment[self.reference_text_key])
+/tmp/NeMo-Curator/nemo_curator/stages/audio/filtering/band_filter_module/features.py:91:                normalized_audio = pyln.normalize.loudness(y, original_loudness, -25.0)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/filtering/band_filter_module/features.py:93:                normalized_audio = y
+/tmp/NeMo-Curator/nemo_curator/stages/audio/filtering/band_filter_module/features.py:96:            stft_magnitude = np.abs(librosa.stft(normalized_audio, n_fft=n_fft))
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:21:from nemo_text_processing.inverse_text_normalization.inverse_normalize import (
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:52:    _normalizer: Any = field(default=None, repr=False)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:61:        """Load the inverse normalizer once per worker."""
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:62:        if self._normalizer is None:
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:63:            self._normalizer = InverseNormalizer(lang=self.language)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:74:                    sentences = self._normalizer.split_text_into_sentences(text)
+/tmp/NeMo-Curator/nemo_curator/stages/audio/tagging/text/itn.py:75:                    text_itn = " ".join(self._normalizer.normalize_list(sentences))
+/tmp/NeMo-Curator/nemo_curator/stages/client_partitioning.py:112:        # Relativize and normalize; de-dup while preserving order
+/tmp/NeMo-Curator/nemo_curator/stages/interleaved/pdf/nemotron_parse/utils.py:145:    (normalized [x1, y1, x2, y2]).
+/tmp/NeMo-Curator/nemo_curator/stages/interleaved/pdf/nemotron_parse/utils.py:218:    """Crop a region from the padded canvas using normalized bbox coordinates.
+/tmp/NeMo-Curator/nemo_curator/stages/interleaved/utils/validation_utils.py:42:    """Validate requested source `fields` and normalize selected values for tabular output."""
+/tmp/NeMo-Curator/nemo_curator/stages/synthetic/nemotron_cc/nemotron_cc.py:60:    normalizes bullets, optionally samples pairs based on input length/tokenizer,
+/tmp/NeMo-Curator/nemo_curator/stages/synthetic/nemotron_cc/nemotron_cc.py:150:    It normalizes leading bullet markers and trims indentation, producing a clean newline-separated list.
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:55:        self.name, self.score_fn, self.text_field, _, self.score_field = _validate_and_normalize_filters(
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:150:        self.name, self.filter_fn, self.filter_field, self.invert, _ = _validate_and_normalize_filters(
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:250:        self.name, self.filter_obj, self.text_field, self.invert, self.score_field = _validate_and_normalize_filters(
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:429:def _validate_and_normalize_filters(  # noqa: C901, PLR0912
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:437:    Validate and normalize all parameters needed for the Score, Filter, and ScoreFilter modules.
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:450:            The normalized filters, input fields, invert flags, and output fields make up the rest of the tuple.
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:473:        _normalized_filter = [_filter]
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:494:        _normalized_filter = _filter
+/tmp/NeMo-Curator/nemo_curator/stages/text/filters/score_filter.py:527:    return _name, _normalized_filter, _input_field, _invert, _output_field
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/stages/segmentation.py:40:    normalize_text_field,
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/stages/segmentation.py:292:        paths = normalize_text_field(self.text_field)
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/stages/segmentation.py:316:        field_paths = normalize_text_field(self.text_field)
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/__init__.py:22:    normalize_text_field,
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/__init__.py:45:    "normalize_text_field",
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/utils/field_paths.py:125:def normalize_text_field(text_field: str | list[str]) -> list[str]:
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/utils/__init__.py:5:    normalize_text_field,
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/utils/__init__.py:22:    "normalize_text_field",
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/evaluation/faith.py:475:        normalized: dict[str, float] = {}
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/evaluation/faith.py:479:                    normalized[key] = float(scores_dict[key])
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/evaluation/faith.py:481:                    normalized[key] = 0.0
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/evaluation/faith.py:483:                normalized[key] = 0.0
+/tmp/NeMo-Curator/nemo_curator/stages/text/experimental/translation/evaluation/faith.py:484:        return normalized, False
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py:40:        normalization: Literal["NFC", "NFD", "NFKC", "NFKD"] | None = None,
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py:105:            normalization ("NFC", "NFD", "NFKC", "NFKD", None): Default is None.
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py:109:                Changing this to "NFKC" applies more compatibility conversions, such as
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py:111:                identical. However, some NFKC normalizations change the meaning of text,
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:60:        self.modifier_fn = _validate_and_normalize_modifiers(self.modifier_fn, self.input_fields)
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:61:        self._input_fields = _normalize_input_fields(self.input_fields, self.modifier_fn)
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:62:        self._output_fields = _normalize_output_fields(self.output_fields, self._input_fields, self.modifier_fn)
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:116:def _validate_and_normalize_modifiers(
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:121:    Validate inputs and normalize the modifier(s) to a list.
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:138:def _normalize_input_fields(
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/modifier.py:170:def _normalize_output_fields(
+/tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/string/__init__.py:18:from .newline_normalizer import NewlineNormalizer
+/tmp/NeMo-Curator/nemo_curator/stages/text/io/writer/base.py:47:        # Use fsspec's url_to_fs to get both filesystem and normalized path
+/tmp/NeMo-Curator/nemo_curator/stages/text/io/writer/base.py:82:        # Generate filename with appropriate extension using normalized fs path
+/tmp/NeMo-Curator/nemo_curator/stages/text/embedders/base.py:106:        return F.normalize(sum_embeddings / sum_mask, dim=1)
+/tmp/NeMo-Curator/nemo_curator/stages/text/embedders/base.py:117:        return F.normalize(last_token_embeddings, dim=1)
+/tmp/NeMo-Curator/nemo_curator/stages/text/download/utils.py:16:import unicodedata
+/tmp/NeMo-Curator/nemo_curator/stages/text/download/utils.py:19:from charset_normalizer import detect as charset_normalizer_detect
+/tmp/NeMo-Curator/nemo_curator/stages/text/download/utils.py:43:    return "".join(i for i in text if unicodedata.category(i)[0] != "C")
+/tmp/NeMo-Curator/nemo_curator/stages/text/download/utils.py:90:    detected_encoding = charset_normalizer_detect(html_bytes)["encoding"]
+/tmp/NeMo-Curator/nemo_curator/stages/text/classifiers/aegis.py:67:        x = F.normalize(x, dim=-1)
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:148:    return posixpath.splitext(name)[1][1:].casefold()
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:176:            e.casefold().lstrip(".")
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:180:    normalize = fs.unstrip_protocol if is_remote_url(path) else (lambda x: x)
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:204:                records.append((normalize(raw_path), -1 if include_size and raw_size is None else raw_size))
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:321:    normalized = mode.strip().lower()
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:323:    if normalized not in allowed:
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:327:    if normalized == "append" and append_mode_implemented is False:
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:331:    if normalized == "error" and fs.exists(path):
+/tmp/NeMo-Curator/nemo_curator/utils/file_utils.py:335:    if normalized == "overwrite":
+/tmp/NeMo-Curator/nemo_curator/models/nsfw.py:53:            x: Input tensor to normalize.
+/tmp/NeMo-Curator/nemo_curator/models/transnetv2.py:408:        x = functional.normalize(x, p=2, dim=2)
+/tmp/NeMo-Curator/nemo_curator/models/transnetv2.py:504:        # histograms_normalized
+/tmp/NeMo-Curator/nemo_curator/models/transnetv2.py:505:        return functional.normalize(histograms, p=2, dim=2)
+/tmp/NeMo-Curator/nemo_curator/models/qwen_vl.py:122:            "do_normalize": self.model_does_preprocess,
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:97:            self._normalized_variant: NemotronVariant = "nemotron-bf16"
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:99:            self._normalized_variant = model_variant  # type: ignore[assignment]
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:101:        if self._normalized_variant not in _NEMOTRON_VARIANTS_INFO:
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:114:        self._hf_model_id = _NEMOTRON_VARIANTS_INFO[self._normalized_variant]
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:132:        if self._normalized_variant == "nemotron-fp8":
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:135:        elif self._normalized_variant == "nemotron-nvfp4":
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:249:        normalized_variant: NemotronVariant = "nemotron-bf16" if variant == "nemotron" else variant
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:251:        if normalized_variant not in _NEMOTRON_VARIANTS_INFO:
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:256:        hf_model_id = _NEMOTRON_VARIANTS_INFO[normalized_variant]
+/tmp/NeMo-Curator/nemo_curator/models/nemotron_h_vl.py:257:        revision = _NEMOTRON_REVISION_INFO.get(normalized_variant)
+/tmp/NeMo-Curator/nemo_curator/models/clip.py:111:        """Encode text(s) to normalized CLIP text embeddings.
+
+exec
+/bin/zsh -lc "sed -n '1,280p' /tmp/NeMo-Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Copyright (c) 2025, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Literal
+
+import cudf
+import numpy as np
+import rmm
+
+from nemo_curator.stages.base import ProcessingStage
+from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_DEFAULT_MINHASH_FIELD
+from nemo_curator.stages.deduplication.id_generator import CURATOR_DEDUP_ID_STR, get_id_generator_actor
+from nemo_curator.stages.deduplication.io_utils import DeduplicationIO
+from nemo_curator.stages.resources import Resources
+from nemo_curator.tasks import FileGroupTask
+from nemo_curator.utils.file_utils import create_or_overwrite_dir, get_fs
+
+if TYPE_CHECKING:
+    from nemo_curator.backends.base import WorkerMetadata
+
+
+class MinHash(ABC):
+    """
+    Base class for computing minhash signatures of a document corpus
+    """
+
+    def __init__(
+        self,
+        seed: int = 42,
+        num_hashes: int = 260,
+        char_ngrams: int = 24,
+        use_64bit_hash: bool = False,
+    ):
+        """
+        Parameters
+        ----------
+        seed: Seed for minhash permutations
+        num_hashes: Length of minhash signature (No. of minhash permutations)
+        char_ngrams: Width of text window (in characters) while computing minhashes.
+        use_64bit_hash: Whether to use a 64 bit hash function.
+        """
+        self.num_hashes = num_hashes
+        self.char_ngram = char_ngrams
+        self.seed = seed
+        self.use_64bit_hash = use_64bit_hash
+
+    def generate_seeds(self, n_permutations: int = 260, seed: int = 0, bit_width: int = 32) -> np.ndarray:
+        """
+        Generate seeds for all minhash permutations based on the given seed.
+        This is a placeholder that child classes should implement if needed.
+        """
+        msg = "Child classes should implement this method if needed"
+        raise NotImplementedError(msg)
+
+    @abstractmethod
+    def compute_minhashes(self, text_series: Any) -> Any:  # noqa: ANN401
+        """
+        Compute minhash signatures for the given dataframe text column.
+        """
+
+
+class GPUMinHash(MinHash):
+    def __init__(
+        self,
+        seed: int = 42,
+        num_hashes: int = 260,
+        char_ngrams: int = 24,
+        use_64bit_hash: bool = False,
+        pool: bool = False,
+    ):
+        # Initialize parent class
+        MinHash.__init__(
+            self,
+            seed=seed,
+            num_hashes=num_hashes,
+            char_ngrams=char_ngrams,
+            use_64bit_hash=use_64bit_hash,
+        )
+
+        # Initialize memory pool for cuDF
+        if pool:
+            rmm.reinitialize(pool_allocator=pool)
+
+        # Generate seeds
+        self.seeds = self.generate_seeds(
+            n_permutations=self.num_hashes,
+            seed=self.seed,
+            bit_width=64 if self.use_64bit_hash else 32,
+        )
+
+    def generate_seeds(self, n_permutations: int = 260, seed: int = 0, bit_width: int = 32) -> np.ndarray:
+        """
+        Generate seeds for all minhash permutations based on the given seed.
+        """
+        gen = np.random.RandomState(seed)
+
+        if bit_width == 32:  # noqa: PLR2004
+            MERSENNE_PRIME = np.uint32((1 << 31) - 1)  # noqa: N806
+            dtype = np.uint32
+        elif bit_width == 64:  # noqa: PLR2004
+            # For 64-bit, use a larger prime number suitable for 64-bit operations
+            MERSENNE_PRIME = np.uint64((1 << 61) - 1)  # noqa: N806
+            dtype = np.uint64
+        else:
+            msg = "Unsupported bit width. Use either 32 or 64."
+            raise ValueError(msg)
+
+        return np.array(
+            [
+                (
+                    gen.randint(1, MERSENNE_PRIME, dtype=dtype),
+                    gen.randint(0, MERSENNE_PRIME, dtype=dtype),
+                )
+                for _ in range(n_permutations)
+            ],
+            dtype=dtype,
+        )
+
+    def minhash32(self, ser: cudf.Series) -> cudf.Series:
+        """
+        Compute 32bit minhashes based on the MurmurHash3 algorithm
+        """
+        if not isinstance(ser, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        seeds_a = cudf.Series(self.seeds[:, 0], dtype="uint32")
+        seeds_b = cudf.Series(self.seeds[:, 1], dtype="uint32")
+
+        return ser.str.minhash(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+
+    def minhash64(self, ser: cudf.Series) -> cudf.Series:
+        """
+        Compute 64bit minhashes based on the MurmurHash3 algorithm
+        """
+        if not isinstance(ser, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        seeds_a = cudf.Series(self.seeds[:, 0], dtype="uint64")
+        seeds_b = cudf.Series(self.seeds[:, 1], dtype="uint64")
+
+        return ser.str.minhash64(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+
+    def compute_minhashes(self, text_series: cudf.Series) -> cudf.Series:
+        """
+        Compute minhash signatures for the given text series.
+
+        Parameters
+        ----------
+        text_series: cudf.Series
+            Series containing text data to compute minhashes for
+
+        Returns
+        -------
+        cudf.Series containing minhash signatures
+        """
+        if not isinstance(text_series, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        # Compute minhashes
+        minhash_method = self.minhash64 if self.use_64bit_hash else self.minhash32
+        return minhash_method(text_series)
+
+
+class MinHashStage(ProcessingStage[FileGroupTask, FileGroupTask], DeduplicationIO):
+    """
+    ProcessingStage for computing MinHash signatures on documents for fuzzy deduplication.
+
+    This stage takes FileGroupTask containing paths to input documents and produces
+    FileGroupTask containing paths to computed minhash signature files. It uses GPU-accelerated
+    MinHash computation to generate locality-sensitive hash signatures that can be used
+    for approximate duplicate detection.
+
+    The stage automatically handles:
+    - Reading input files (JSONL or Parquet format)
+    - Assigning unique Integer IDs to documents using the IdGenerator actor
+    - Computing MinHash signatures using GPU acceleration
+    - Writing results to Parquet files
+
+    Parameters
+    ----------
+    output_path : str
+        Base path where minhash output files will be written
+    text_field : str, default="text"
+        Name of the field containing text to compute minhashes from
+    minhash_field : str, default="_minhash_signature"
+        Name of the field where minhash signatures will be stored
+    char_ngrams : int, default=24
+        Width of character n-grams for minhashing
+    num_hashes : int, default=260
+        Number of hash functions (length of minhash signature)
+    seed : int, default=42
+        Random seed for reproducible minhash generation
+    use_64bit_hash : bool, default=False
+        Whether to use 64-bit hash functions (vs 32-bit)
+    read_format : Literal["jsonl", "parquet"], default="jsonl"
+        Format of input files
+    read_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for reading input files
+    write_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for writing output files
+
+    Examples
+    --------
+    >>> stage = MinHashStage(
+    ...     output_path="/path/to/minhash/output",
+    ...     text_field="content",
+    ...     num_hashes=128,
+    ...     char_ngrams=5
+    ... )
+    >>> # Use in a pipeline to process document batches
+    """
+
+    def __init__(  # noqa: PLR0913
+        self,
+        output_path: str,
+        text_field: str = "text",
+        minhash_field: str = CURATOR_DEFAULT_MINHASH_FIELD,
+        char_ngrams: int = 24,
+        num_hashes: int = 260,
+        seed: int = 42,
+        use_64bit_hash: bool = False,
+        read_format: Literal["jsonl", "parquet"] = "jsonl",
+        read_kwargs: dict[str, Any] | None = None,
+        write_kwargs: dict[str, Any] | None = None,
+        pool: bool = True,
+    ):
+        # Set ProcessingStage attributes
+        self.name = self.__class__.__name__
+        self.resources = Resources(gpus=1.0)  # Requires 1 GPU
+
+        self.text_field = text_field
+        self.minhash_field = minhash_field
+        self.char_ngrams = char_ngrams
+        self.num_hashes = num_hashes
+        self.seed = seed
+        self.use_64bit_hash = use_64bit_hash
+        self.read_format = read_format
+        self.read_kwargs = read_kwargs or {}
+        self.write_kwargs = write_kwargs or {}
+        self.pool = pool
+        # Initialize the minhash processor in setup
+        self.minhash_processor = None
+        self.id_generator = None
+
+        self.output_fs = get_fs(output_path, self.write_kwargs.get("storage_options", {}))
+        self.output_path = self.output_fs.sep.join([output_path, self.name])
+        create_or_overwrite_dir(self.output_path, storage_options=self.write_kwargs.get("storage_options", {}))
+
+    def setup(self, _worker_metadata: "WorkerMetadata | None" = None) -> None:
+        """Initialize the GPU MinHash processor and ID generator."""
+        # Initialize the ID generator (will be shared across workers)
+
+        try:
+            self.id_generator = get_id_generator_actor()
+        except ValueError as e:
+            err_msg = """
+            Failed to get ID generator actor. Start an ID generator actor via `create_id_generator_actor` if calling this stage directly.
+            If using the FuzzyDedup API this should be started automatically.
+            """
+            raise ValueError(err_msg) from e
+
+        # Initialize the GPU minhash processor
+        self.minhash_processor = GPUMinHash(
+            seed=self.seed,
+            num_hashes=self.num_hashes,
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,180p' /tmp/NeMo-Curator/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Copyright (c) 2026, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from typing import Literal
+
+import ftfy
+from ftfy import TextFixerConfig
+
+from nemo_curator.stages.text.modifiers.doc_modifier import DocumentModifier
+
+
+class UnicodeReformatter(DocumentModifier):
+    def __init__(  # noqa: PLR0913
+        self,
+        config: TextFixerConfig | None = None,
+        unescape_html: str | bool = "auto",
+        remove_terminal_escapes: bool = True,
+        fix_encoding: bool = True,
+        restore_byte_a0: bool = True,
+        replace_lossy_sequences: bool = True,
+        decode_inconsistent_utf8: bool = True,
+        fix_c1_controls: bool = True,
+        fix_latin_ligatures: bool = False,
+        fix_character_width: bool = False,
+        uncurl_quotes: bool = False,
+        fix_line_breaks: bool = False,
+        fix_surrogates: bool = True,
+        remove_control_chars: bool = True,
+        normalization: Literal["NFC", "NFD", "NFKC", "NFKD"] | None = None,
+        max_decode_length: int = 1000000,
+        explain: bool = True,
+    ):
+        """
+        See https://ftfy.readthedocs.io/en/latest/config.html for more information about the TextFixerConfig parameters.
+
+        Args:
+            config: A TextFixerConfig object. If None, the default values for all other arguments will be used.
+                Default is None.
+            unescape_html (str, bool): Default is None.
+                Configures whether to replace HTML entities such as &amp; with the character
+                they represent. "auto" says to do this by default, but disable it when a
+                literal < character appears, indicating that the input is actual HTML and
+                entities should be preserved. The value can be True, to always enable this
+                fixer, or False, to always disable it.
+            remove_terminal_escapes (bool): Default is True.
+                Removes "ANSI" terminal escapes, such as for changing the color of text in a
+                terminal window.
+            fix_encoding (bool): Default is True.
+                Detect mojibake and attempt to fix it by decoding the text in a different
+                encoding standard.
+
+            The following four options affect `fix_encoding` works, and do nothing if
+            `fix_encoding` is False:
+                restore_byte_a0 (bool): Default is True.
+                    Allow a literal space (U+20) to be interpreted as a non-breaking space
+                    (U+A0) when that would make it part of a fixable mojibake string.
+                    Because spaces are very common characters, this could lead to false
+                    positives, but we try to apply it only when there's strong evidence for
+                    mojibake. Disabling `restore_byte_a0` is safer from false positives,
+                    but creates false negatives.
+                replace_lossy_sequences (bool): Default is True.
+                    Detect mojibake that has been partially replaced by the characters
+                    '�' or '?'. If the mojibake could be decoded otherwise, replace the
+                    detected sequence with '�'.
+                decode_inconsistent_utf8 (bool): Default is True.
+                    When we see sequences that distinctly look like UTF-8 mojibake, but
+                    there's no consistent way to reinterpret the string in a new encoding,
+                    replace the mojibake with the appropriate UTF-8 characters anyway.
+                    This helps to decode strings that are concatenated from different
+                    encodings.
+                fix_c1_controls (bool): Default is True.
+                    Replace C1 control characters (the useless characters U+80 - U+9B that
+                    come from Latin-1) with their Windows-1252 equivalents, like HTML5 does,
+                    even if the whole string doesn't decode as Latin-1.
+
+            fix_latin_ligatures (bool): Default is False.
+                Replace common Latin-alphabet ligatures, such as ``ﬁ``, with the
+                letters they're made of.
+            fix_character_width (bool): Default is False.
+                Replace fullwidth Latin characters and halfwidth Katakana with
+                their more standard widths.
+            uncurl_quotes (bool): Default is False.
+                Replace curly quotes with straight quotes.
+            fix_line_breaks (bool): Default is False.
+                Replace various forms of line breaks with the standard Unix line
+                break, ``\n``.
+            fix_surrogates (bool): Default is True.
+                Replace sequences of UTF-16 surrogate codepoints with the character
+                they were meant to encode. This fixes text that was decoded with the
+                obsolete UCS-2 standard, and allows it to support high-numbered
+                codepoints such as emoji.
+            remove_control_chars (bool): Default is True.
+                Remove certain control characters that have no displayed effect on text.
+            normalization ("NFC", "NFD", "NFKC", "NFKD", None): Default is None.
+                Choose what kind of Unicode normalization is applied. Usually, we apply
+                NFC normalization, so that letters followed by combining characters become
+                single combined characters.
+                Changing this to "NFKC" applies more compatibility conversions, such as
+                replacing the 'micro sign' with a standard Greek lowercase mu, which looks
+                identical. However, some NFKC normalizations change the meaning of text,
+                such as converting "10³" to "103".
+                `normalization` can be None, to apply no normalization.
+            max_decode_length (int): Default is 1000000.
+                The maximum size of "segment" that ftfy will try to fix all at once.
+            explain (bool): Default is True.
+                Whether to compute 'explanations', lists describing what ftfy changed.
+                When this is False, the explanation will be None, and the code that
+                builds the explanation will be skipped, possibly saving time.
+                Functions that accept TextFixerConfig and don't return an explanation
+                will automatically set `explain` to False.
+
+        """
+        if config is None:
+            self.config = TextFixerConfig(
+                unescape_html=unescape_html,
+                remove_terminal_escapes=remove_terminal_escapes,
+                fix_encoding=fix_encoding,
+                restore_byte_a0=restore_byte_a0,
+                replace_lossy_sequences=replace_lossy_sequences,
+                decode_inconsistent_utf8=decode_inconsistent_utf8,
+                fix_c1_controls=fix_c1_controls,
+                fix_latin_ligatures=fix_latin_ligatures,
+                fix_character_width=fix_character_width,
+                uncurl_quotes=uncurl_quotes,
+                fix_line_breaks=fix_line_breaks,
+                fix_surrogates=fix_surrogates,
+                remove_control_chars=remove_control_chars,
+                normalization=normalization,
+                max_decode_length=max_decode_length,
+                explain=explain,
+            )
+        else:
+            self.config = config
+
+        super().__init__()
+
+    def modify_document(self, text: str) -> str:
+        return ftfy.fix_text(text, config=self.config)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '35,75p' /tmp/NeMo-Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+text_field: "text"
+
+ray_client:
+  _target_: nemo_curator.core.client.RayClient
+  num_cpus: null  # if null, will use all available CPUs
+  num_gpus: 4  # deduplication workflow requires at least 1 GPU
+
+workflow:
+  - _target_: nemo_curator.stages.deduplication.fuzzy.workflow.FuzzyDeduplicationWorkflow
+    input_path: ${input_path}
+    output_path: ${output_path}
+    cache_path: ${cache_path}
+    input_filetype: ${input_filetype}
+    input_blocksize: "1GiB"
+    input_file_extensions: null
+    read_kwargs: null
+    cache_kwargs: null
+    write_kwargs: null
+    text_field: ${text_field}
+    perform_removal: False
+    # Minhash + LSH Config
+    seed: 42
+    char_ngrams: 24
+    num_bands: 20
+    minhashes_per_band: 13
+    use_64_bit_hash: False
+    bands_per_iteration: 5
+    env_vars: null
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/bigcode-project/bigcode-dataset/main/near_deduplication/minhash_deduplication.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search repos 'bigcode near deduplication minhash' --limit 10" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/bigcode-project/bigcode-dataset/main/near_deduplication/README.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 241ms:
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# author      : Chenghao Mou (mouchenghao@gmail.com)
+# created     : 10/4/22
+from __future__ import annotations
+
+import gc
+import hashlib
+import logging
+import multiprocessing as mp
+import os
+import random
+import re
+import struct
+import time
+import warnings
+from collections import defaultdict
+from itertools import tee
+from pathlib import Path
+from typing import Any
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import Tuple
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    import datasets
+    import numpy as np
+    import typer
+    from datasets import load_dataset
+    from scipy.integrate import quad as integrate
+    from tqdm import tqdm
+
+
+SEED = 42
+NON_ALPHA = re.compile("[^A-Za-z_0-9]")
+RNG = np.random.RandomState(SEED)
+MAX_HASH = np.uint64((1 << 32) - 1)
+MERSENNE_PRIME = np.uint64((1 << 61) - 1)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+datasets.logging.set_verbosity_error()
+
+
+def ngrams(sequence: List[str], n: int, min_ngram_size: int) -> Iterable:
+    """
+    Directly taken from nltk package to avoid dependency.
+
+    Parameters
+    ----------
+    sequence : list
+        The sequence of items to be n-grammed.
+    n : int
+        The order of the n-grams to be extracted.
+    min_ngram_size : int
+        The minimum size of n-grams.
+
+    Returns
+    -------
+    Iterable
+        The n-grams generated from the sequence.
+    """
+    if len(sequence) < min_ngram_size:
+        return []
+    iterables = tee(sequence, n)
+    for i, sub_iterable in enumerate(iterables):
+        for _ in range(i):
+            next(sub_iterable, None)
+    return zip(*iterables)
+
+
+def sha1_hash32(data):
+    """
+    Directly taken from datasketch package to avoid dependency.
+
+    Parameters
+    ----------
+    data : bytes
+
+    Returns
+    -------
+    int
+    """
+    return struct.unpack("<I", hashlib.sha1(data).digest()[:4])[0]
+
+
+def embed_func(
+    content: str,
+    idx: int,
+    *,
+    num_perm: int,
+    ngram_size: int,
+    hashranges: List[Tuple[int, int]],
+    permutations: np.ndarray,
+    min_ngram_size: int = 5,
+) -> Dict[str, Any]:
+    """
+    Combined with some datasketch code to better parallelize computation.
+
+    Parameters
+    ----------
+    content : str
+        The content to be embedded.
+    idx : int
+        The index of the content.
+    num_perm : int
+        The number of permutations.
+    ngram_size : int
+        The size of n-grams.
+    hashranges : List[Tuple[int, int]]
+        The ranges of hash values.
+    permutations : np.ndarray
+        The permutations for the minhash.
+    min_ngram_size : int
+        The minimum size of n-grams.
+
+    Returns
+    -------
+    Dict[str, Any]
+        The hash values in each range and the index.
+    """
+    hashvalues = np.ones(num_perm, dtype=np.uint64) * MAX_HASH
+    tokens = {" ".join(t) for t in ngrams(NON_ALPHA.split(content), ngram_size, min_ngram_size)}
+    hv = np.array([sha1_hash32(token.encode("utf-8")) for token in tokens], dtype=np.uint64)  # noqa: E501
+    a, b = permutations
+    phv = np.bitwise_and(((hv * np.tile(a, (len(hv), 1)).T).T + b) % MERSENNE_PRIME, MAX_HASH)  # noqa: E501
+    hashvalues = np.vstack([phv, hashvalues]).min(axis=0)
+    Hs = [bytes(hashvalues[start:end].byteswap().data) for start, end in hashranges]
+    return {"__signatures__": Hs, "__id__": idx}
+
+
+def optimal_param(
+    threshold: float,
+    num_perm: int,
+    false_positive_weight: float = 0.5,
+    false_negative_weight: float = 0.5,
+):
+    """
+    Compute the optimal `MinHashLSH` parameter that minimizes the weighted sum
+    of probabilities of false positive and false negative, taken from datasketch.
+
+    Parameters
+    ----------
+    threshold : float
+        The threshold for similarity.
+    num_perm : int
+        The number of permutations.
+    false_positive_weight : float
+        The weight of false positive.
+    false_negative_weight : float
+        The weight of false negative.
+
+    Returns
+    -------
+    Tuple[int, int]
+        The optimal `b` and `r` parameters.
+        The number of bands, and the number of rows per band respectively.
+    """
+
+    def false_positive_probability(threshold: float, b: int, r: int):
+        """Source: `datasketch.lsh`"""
+
+        def proba(s):
+            return 1 - (1 - s ** float(r)) ** float(b)
+
+        a, _ = integrate(proba, 0.0, threshold)
+        return a
+
+    def false_negative_probability(threshold: float, b: int, r: int):
+        """Source: `datasketch.lsh`"""
+
+        def proba(s):
+            return 1 - (1 - (1 - s ** float(r)) ** float(b))
+
+        a, _ = integrate(proba, threshold, 1.0)
+        return a
+
+    min_error = float("inf")
+    opt = (0, 0)
+    for b in range(1, num_perm + 1):
+        max_r = int(num_perm / b)
+        for r in range(1, max_r + 1):
+            fp = false_positive_probability(threshold, b, r)
+            fn = false_negative_probability(threshold, b, r)
+            error = fp * false_positive_weight + fn * false_negative_weight
+            if error < min_error:
+                min_error = error
+                opt = (b, r)
+    return opt
+
+
+class UnionFind:
+    def __init__(self):
+        self.parent: Dict[int, int] = {}
+
+    def find(self, x):
+        if x not in self.parent:
+            self.parent[x] = x
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px = self.find(x)
+        py = self.find(y)
+        self.parent[px] = self.parent[py] = min(px, py)
+
+
+if __name__ == "__main__":
+
+    def run(
+        dataset: str = typer.Option("codeparrot/codeparrot-clean-valid", help="The dataset to use"),  # noqa: E501
+        config: str = typer.Option("default", help="Dataset config"),
+        split: str = typer.Option("train", help="Dataset split"),
+        data_dir: str = typer.Option(None, help="Dataset data directory"),
+        revision: str = typer.Option("main", help="Dataset revision"),
+        column: str = typer.Option("content", help="Dataset column"),
+        cache_dir: str = typer.Option(".cache", help="Cache directory"),
+        ngram_size: int = typer.Option(5, help="The ngram size to use for MinHash"),
+
+hook: PostToolUse Completed
+ succeeded in 222ms:
+# Near deduplication
+
+This is our implementation of near deduplication for BigCode dataset. It is largely evolved from the [original repo](https://github.com/bigcode-project/bigcode-analysis/tree/main/data_analysis/near-deduplication).
+
+## V2
+
+We use Google Dataproc and Cloud Storage for the deduplication. The actual script to run is at `bigcode-v2/run.sh`. Feel free to update the parameters in the script to run on your own dataset.
+
+## V1.*
+
+### Setup
+
+````
+pip install -r requirements.txt
+````
+
+Login to be able to be able to push the dataset to the hub after deduplication and clone your huggingface-hub repositories:
+
+````
+huggingface-cli login
+````
+
+And make sure you have git-lfs installed.
+
+### Usage
+
+```bash
+# For details on the arguments, see the help message
+python minhash_deduplication.py --help
+# Quick example
+python minhash_deduplication.py --dataset codeparrot/codeparrot-clean-valid \
+    --split train \
+    --column content \
+    --cache-dir .cache \
+    --min-ngram-size 5
+# For details on the arguments, see the help message
+python minhash_deduplication.py --help
+```
+
+Spark Script
+
+```bash
+# Upload the dataset to a bigquery table first!
+export CLUSTER_NAME=chenghao-temp
+export PROJECT_ID=huggingface-science-codeparrot
+export REGION=us-central1
+export ZONE=us-central1-a
+
+gcloud dataproc clusters create $CLUSTER_NAME \
+    --enable-component-gateway \
+    --region $REGION \
+    --zone $ZONE \
+    --master-machine-type c2d-standard-16 \
+    --master-boot-disk-size 500 \
+    --num-workers 10 \
+    --worker-machine-type c2d-standard-16 \
+    --worker-boot-disk-size 500 \
+    --image-version 2.0-debian10 \
+    --project $PROJECT_ID
+
+gcloud dataproc jobs submit pyspark --cluster ${CLUSTER_NAME} \
+    --region $REGION \
+    --jars gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar \
+    --driver-log-levels root=WARN \
+    --properties="spark.executor.memory"="50g","spark.driver.memory"="8g","spark.executor.cores"="14" \
+    near_deduplication/minhash_deduplication_spark.py \
+    -- \
+    --table "huggingface-science-codeparrot.the_stack_java.java" \
+    --output "gs://chenghao-data/dataproc_output/deduplicated" \
+    --min_ngram_size 5 \
+    --ngram_size 5 \
+    --threshold 0.7
+```
+
+With above settings, it took about 40 minutes to deduplicate the Java subset (42 million docs, 319GB), 15x faster than the following python implementation in a comparable single-machine environment. In terms of scaling, it took about 5 hours to deduplicate the 1.3 TB json subset of the Stack with a 15-machine cluster. 
+
+Warning: Big Query might change your list schema in the output! You can use the following code to restore the format (credit to [@RaymondLi0](https://github.com/RaymondLi0)):
+
+```python
+LIST_COLUMNS = ['max_stars_repo_licenses', 'max_issues_repo_licenses', 'max_forks_repo_licenses']
+def fix_license_cols(example):
+    for col in LIST_COLUMNS:
+        example[col] = [x["item"] for x in example[col]["list"]]
+    return example
+...
+ds = ds.map(fix_license_cols)
+```
+
+#### Python Implementation Analysis
+
+This section is a brief analysis of the time complexity and memory complexity. It is not a rigorous proof, but it should give you a general idea of how the implementation works.
+
+##### Scaling
+
+To understand the limitation of current deduplication implementation, it is important to have an idea of how each step in the pipeline affects the overall time:
+1. Hashing is fast, but it takes longer for long documents. Hashing scales with both the number of cores and single core performance (clock speed, for example). With `datasets`'s caching, it also does not require much memory.
+2. Indexing is basically putting hash signatures into different buckets. This is one bottleneck in this pipeline. In an ideal situation where MapReduce is seamlessly integrated with other parts, it can be further improved with distributed buckets. Finding duplicates can be done after the indexing step or during the index building.
+4. Depending on how you decide to group duplicates, you can build a graph and then do connected component analysis or use simple algorithm like union-find.
+5. What to do with a group of duplicates is also an open question. We opt to keep one document within a group/cluster in this case.
+
+##### Experiments
+
+We report here some stats on the experiments we did along the way with a 80-core machine on GCP (M1):
+
+For SantaCoder, our results can be replicated by the following commands using [older version of the code](https://github.com/bigcode-project/bigcode-analysis/tree/fdd70bffb9cceab031f6d682edf83b5af49e8aaf):
+
+```bash
+python minhash_deduplication.py --dataset bigcode/the-stack-dedup-pjj --data-dir data/java --revision v1.1.a1 --cache-dir cache2 --ngram-size 5 --threshold 0.7 --min-token-length 10 --fast
+python minhash_deduplication.py --dataset bigcode/the-stack-dedup-pjj --data-dir data/javascript --revision v1.1.a1 --cache-dir cache2 --ngram-size 5 --threshold 0.7 --min-token-length 10 --fast
+python minhash_deduplication.py --dataset bigcode/the-stack-dedup-pjj --data-dir data/python --revision v1.1.a1 --cache-dir cache2 --ngram-size 5 --threshold 0.7 --min-token-length 10 --fast
+```
+
+Java Results as of Dec 20, 2022
+```
+load_dataset                    : 3414.68 seconds
+minhash                         : 22966.13 seconds
+clustering                      : 7676.72 seconds
+filtering                       : 1118.62 seconds
+save                            : 3105.66 seconds
+Data Number (before)            : 40113161
+Data Number (after)             : 21108567 (52.62%)
+Duplicate Number                : 19004594 (47.38%)
+Total Time                      : 38281.88 seconds (10.6 hours)
+```
+
+
+Java (already deduplicated) Results as of Dec 2, 2022
+```
+Load Dataset                    : 77.18 seconds                                                                                       
+Embed                           : 5052.87 seconds                                                                                     
+Create Index                    : 16253.12 seconds                                                                                    
+Save Index                      : 0.00 seconds                                                                                        
+Freeze Memory                   : 0.00 seconds                                                                                        
+Query                           : 1321.61 seconds                                                                                     
+Save Neighbors                  : 0.00 seconds                                                                                        
+Unfreeze Memory                 : 0.00 seconds                                                                                        
+Clustering                      : 10825.30 seconds                                                                                    
+Total Processing Time           : 34919.87 seconds                                                                                    
+Deduplicate                     : 605.83 seconds                                                                                      
+Save Deduplicated               : 2356.10 seconds                                                                                     
+Language                        : java                                                                                                
+Data Number (before filtering)  : 25124914                                                                                            
+Data Number (after filtering)   : 24972491                                                                                            
+Duplicate Number                : 4822205 (19.31%)                                                                                    
+Total Reduction                 : 4974628 (19.80%)                                                                                    
+Total Time                      : 37881.83 seconds (10.5 hours)                                                                        
+```
+
+More details can be found on https://zippy-anise-556.notion.site/Deduplication-Log-d75d1b3f2e684e96a12b069c5aff68cb. We ignore physical size change because it is less relevant to the deduplication process and varies a lot depending on the data format.
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 521ms:
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/NVIDIA/NeMo-Curator/main/docs/curate-text/process-data/deduplication/fuzzy-deduplication.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 186ms:
+404: Not Found
+exec
+/bin/zsh -lc "find /tmp/NeMo-Curator/docs/curate-text/process-data/deduplication -type f -maxdepth 2 -print | sort | sed -n '1,80p' && grep -R \"UnicodeReformatter\\|normalization\\|NFKC\\|fuzzy\" -n /tmp/NeMo-Curator/docs/curate-text /tmp/NeMo-Curator/tutorials/text/deduplication | head -120" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/exact.md
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/semdedup.md
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:4:tags: ["deduplication", "fuzzy-dedup", "semantic-dedup", "exact-dedup", "gpu-accelerated", "minhash"]
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:17:NeMo Curator provides three deduplication approaches: exact matching (MD5 hashing), fuzzy matching (MinHash + LSH), and semantic matching (embeddings). All methods are GPU-accelerated and integrate with the {ref}`data processing pipeline <about-concepts-text-data-processing>`.
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:72:from nemo_curator.stages.deduplication.fuzzy.workflow import FuzzyDeduplicationWorkflow
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:77:fuzzy_workflow = FuzzyDeduplicationWorkflow(
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:89:fuzzy_workflow.run()
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:92:For removal, use `TextDuplicatesRemovalWorkflow` with the generated duplicate IDs. See {ref}`Fuzzy Duplicate Removal <text-process-data-dedup-fuzzy>` for details.
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:200::link: fuzzy
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:238:Use `TextDuplicatesRemovalWorkflow` to apply duplicate IDs to your original dataset. Works with IDs from exact, fuzzy, or semantic deduplication.
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:289:  - `fuzzy_id_generator.json` (if IDs auto-assigned)
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:372:3. **Fuzzy → Semantic**: Use fuzzy for near-duplicates, then semantic for paraphrases
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:380:- {ref}`Fuzzy Duplicate Removal <text-process-data-dedup-fuzzy>`
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:398:- **GPU**: Required for all workflows (Ray with GPU support for exact/fuzzy, GPU for semantic)
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:457:- **Need near-duplicate detection**: See {ref}`Fuzzy Duplicate Removal <text-process-data-dedup-fuzzy>` for MinHash-based matching
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/index.md:468:Fuzzy Duplicate Removal <fuzzy>
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:4:tags: ["fuzzy-dedup", "minhash", "lsh", "gpu", "ray"]
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:11:(text-process-data-dedup-fuzzy)=
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:38:**Running in Docker**: When running fuzzy deduplication inside the NeMo Curator container, ensure the container is started with `--gpus all` so that Ray workers can access the GPU. Without GPU access, you may see `CUDARuntimeError` or `AttributeError: 'CUDARuntimeError' object has no attribute 'msg'`. Also activate the virtual environment with `source /opt/venv/env.sh` after entering the container.
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:43:Get started with fuzzy deduplication using the following example of identifying duplicates, then remove them:
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:46:from nemo_curator.stages.deduplication.fuzzy.workflow import FuzzyDeduplicationWorkflow
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:53:fuzzy_workflow = FuzzyDeduplicationWorkflow(
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:64:fuzzy_workflow.run()
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:75:    id_generator_path="./results/fuzzy_id_generator.json"
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:83:Configure fuzzy deduplication using these key parameters:
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:161:fuzzy_workflow = FuzzyDeduplicationWorkflow(
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:167:fuzzy_workflow = FuzzyDeduplicationWorkflow(
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:188:    id_generator_path="/path/to/output/fuzzy_id_generator.json"  # Required if IDs were auto-assigned
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:204:The fuzzy deduplication process produces the following directory structure:
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:220:└── fuzzy_id_generator.json          # ID generator mapping (if IDs were auto-assigned)
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:232:2. **ID Generator** (`fuzzy_id_generator.json`):
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md:266:For comparison with other deduplication methods and guidance on when to use fuzzy deduplication, refer to the {ref}`Deduplication overview <text-process-data-dedup>`.
+/tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/semdedup.md:16:Unlike exact or fuzzy deduplication, which focus on textual similarity, semantic deduplication leverages the meaning of content to identify duplicates. This approach can significantly reduce dataset size while maintaining or even improving model performance.
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/index.md:2:description: "Clean, normalize, and transform text content to meet specific requirements including text cleaning and normalization"
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/index.md:4:tags: ["content-processing", "text-cleaning", "unicode", "normalization"]
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/index.md:52:{bdg-secondary}`normalization`
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/index.md:69:from nemo_curator.stages.text.modifiers.unicode import UnicodeReformatter
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/index.md:88:    Modify(modifier_fn=UnicodeReformatter(), input_fields="text")
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md:4:tags: ["text-cleaning", "unicode", "normalization", "url-removal", "preprocessing", "ftfy"]
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md:18:NeMo Curator enables you to easily run this document through the default `UnicodeReformatter` module to detect and remove the unwanted text, or you can define your own custom Unicode text cleaner tailored to your needs.
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md:24:- `UnicodeReformatter`: Uses [ftfy](https://ftfy.readthedocs.io/en/latest/) to fix broken Unicode characters. Modifies the "text" field of the dataset by default. The module accepts extensive configuration options for fine-tuning Unicode repair behavior. Please see the [ftfy documentation](https://ftfy.readthedocs.io/en/latest/config.html) for more information about parameters used by the `UnicodeReformatter`.
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md:46:from nemo_curator.stages.text.modifiers.unicode import UnicodeReformatter
+/tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md:64:    pipeline.add_stage(Modify(UnicodeReformatter()))
+/tmp/NeMo-Curator/docs/curate-text/process-data/index.md:84:{bdg-secondary}`normalization`
+/tmp/NeMo-Curator/docs/curate-text/process-data/index.md:108::link: deduplication/fuzzy
+/tmp/NeMo-Curator/docs/curate-text/index.md:164:{bdg-secondary}`normalization`
+/tmp/NeMo-Curator/docs/curate-text/index.md:173:{bdg-secondary}`fuzzy-dedup`
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:8:    "# End-to-end fuzzy deduplication\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:10:    "GPU accelerated implementation of a MinHash-LSH based fuzzy deduplication. For more information about fuzzy deduplication in NeMo Curator, refer to the [Deduplication](https://docs.nvidia.com/nemo/curator/latest/curate-text/process-data/deduplication/index.html) section of the documentation page.\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:12:    "The tutorial here shows how to run fuzzy deduplication on text data by executing 2 end to end workflows.\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:13:    "These 2 workflows roughly cover the following steps to perform fuzzy deduplication:\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:43:    "fuzzy_output_dir = \"./fuzzy_outputs\"  # Path to store all fuzzy outputs including cache & deduped dataset\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:45:    "fuzzy_cache_path = os.path.join(\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:46:    "    fuzzy_output_dir, \"cache\"\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:47:    ")  # Path to store fuzzy deduplication intermediates (minhash, lsh etc.)\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:48:    "deduplicated_output_path = os.path.join(fuzzy_output_dir, \"fuzzy_deduped_dataset\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:60:    "fs, _ = fsspec.url_to_fs(fuzzy_cache_path, **storage_options if storage_options is not None else {})"
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:238:    "See the [API Reference](https://docs.nvidia.com/nemo/curator/latest/apidocs/stages/stages.deduplication.fuzzy.workflow.html#api) for more information about the `FuzzyDeduplicationWorkflow` class.\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:247:    "6. We also save a `fuzzy_id_generator.json` which maintains a mapping of input file partitions to ID ranges for that batch.\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:257:    "1. The current defaults for fuzzy deduplication (260 hashes, 13 hashes per band) approximate finding documents with a Jaccard similarity of 0.8. For more information on selecting the number of bands/hashes it's recommended to analyze the S curve and tolerable threshold for false positives (and negatives). More information about LSH can be found in section `3.4.2` [here](http://infolab.stanford.edu/~ullman/mmds/ch3n.pdf).\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:292:    "from nemo_curator.stages.deduplication.fuzzy import FuzzyDeduplicationWorkflow\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:298:    "    cache_path=fuzzy_cache_path,\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:299:    "    output_path=fuzzy_output_dir,\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:411:    "    ids_to_remove_path=os.path.join(fuzzy_output_dir, \"FuzzyDuplicateIds\"),\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:416:    "    id_generator_path=os.path.join(fuzzy_output_dir, \"fuzzy_id_generator.json\"),\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:772:    "minhash_path = os.path.join(fuzzy_cache_path, \"MinHashStage\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:775:    "lsh_path = os.path.join(fuzzy_cache_path, \"LSHStage\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:778:    "b2e_path = os.path.join(fuzzy_cache_path, \"BucketsToEdgesStage\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:949:    "cc_path = os.path.join(fuzzy_cache_path, \"ConnectedComponentsStage\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:1045:    "duplicate_ids_path = os.path.join(fuzzy_output_dir, \"FuzzyDuplicateIds\")\n",
+/tmp/NeMo-Curator/tutorials/text/deduplication/fuzzy/fuzzy_e2e.ipynb:1170:    "        filepath=os.path.join(fuzzy_output_dir, \"fuzzy_id_generator.json\"), storage_options=storage_options\n",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '83,140p' /tmp/NeMo-Curator/docs/curate-text/process-data/deduplication/fuzzy.md && sed -n '20,80p' /tmp/NeMo-Curator/docs/curate-text/process-data/content-processing/text-cleaning.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+Configure fuzzy deduplication using these key parameters:
+
+```{list-table} Key Configuration Parameters
+:header-rows: 1
+:widths: 25 15 20 40
+
+* - Parameter
+  - Type
+  - Default
+  - Description
+* - `input_path`
+  - str | list[str]
+  - None
+  - Path(s) to input files or directories
+* - `cache_path`
+  - str
+  - Required
+  - Directory to cache intermediate results
+* - `output_path`
+  - str
+  - Required
+  - Directory to write duplicate IDs and ID generator
+* - `text_field`
+  - str
+  - "text"
+  - Name of the text field in input data
+* - `char_ngrams`
+  - int
+  - 24
+  - Character n-gram size for MinHash (recommended: >= 20)
+* - `num_bands`
+  - int
+  - 20
+  - Number of LSH bands (affects similarity threshold)
+* - `minhashes_per_band`
+  - int
+  - 13
+  - Number of hashes per LSH band
+* - `bands_per_iteration`
+  - int
+  - 5
+  - Bands processed per iteration (memory tuning)
+* - `use_64_bit_hash`
+  - bool
+  - False
+  - Use 64-bit hash (more memory, fewer collisions)
+* - `seed`
+  - int
+  - 42
+  - Random seed for MinHash permutations
+* - `input_filetype`
+  - str
+  - "parquet"
+  - Input file format ("parquet" or "jsonl")
+* - `input_blocksize`
+  - str | int
+  - "1GiB"
+  - Size of input blocks for processing
+## How it Works
+
+NeMo Curator provides the following modules for cleaning text:
+
+- `UnicodeReformatter`: Uses [ftfy](https://ftfy.readthedocs.io/en/latest/) to fix broken Unicode characters. Modifies the "text" field of the dataset by default. The module accepts extensive configuration options for fine-tuning Unicode repair behavior. Please see the [ftfy documentation](https://ftfy.readthedocs.io/en/latest/config.html) for more information about parameters used by the `UnicodeReformatter`.
+- `NewlineNormalizer`: Uses regex to replace 3 or more consecutive newline characters in each document with only 2 newline characters.
+- `UrlRemover`: Uses regex to remove all URLs in each document.
+
+You can use these modules individually or sequentially in a cleaning pipeline.
+
+---
+
+## Usage
+
+::::{tab-set}
+
+:::{tab-item} Python
+
+Consider the following example, which loads a dataset from a directory (`books/`), steps through each module in a cleaning pipeline, and outputs the processed dataset to `cleaned_books/`:
+
+```python
+from nemo_curator.core.client import RayClient
+from nemo_curator.pipeline import Pipeline
+from nemo_curator.stages.text.io.reader import JsonlReader
+from nemo_curator.stages.text.io.writer import JsonlWriter
+from nemo_curator.stages.text.modifiers.string import UrlRemover, NewlineNormalizer
+from nemo_curator.stages.text.modifiers.unicode import UnicodeReformatter
+from nemo_curator.stages.text.modifiers import Modify
+
+def main():
+    # Initialize Ray client
+    ray_client = RayClient()
+    ray_client.start()
+
+    # Create processing pipeline
+    pipeline = Pipeline(
+        name="text_cleaning_pipeline",
+        description="Clean text data using Unicode reformatter, newline normalizer, and URL remover"
+    )
+
+    # Add reader stage
+    pipeline.add_stage(JsonlReader(file_paths="books/"))
+
+    # Add processing stages
+    pipeline.add_stage(Modify(UnicodeReformatter()))
+    pipeline.add_stage(Modify(NewlineNormalizer()))
+    pipeline.add_stage(Modify(UrlRemover()))
+
+    # Add writer stage
+    pipeline.add_stage(JsonlWriter(path="cleaned_books/"))
+
+    # Execute pipeline
+    results = pipeline.run()
+
+    # Stop Ray client
+    ray_client.stop()
+
+if __name__ == "__main__":
+    main()
+```
+:::
+
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "datatrove MinHash dedup", url: "https://github.com/huggingface/datatrove/blob/main/src/datatrove/pipeline/dedup/minhash.py", overlap: "Ships MinHash+LSH with TextNormConfig and simplify_text preprocessing; default lowercases, normalizes whitespace/numbers, strips punctuation/diacritics via NFD. No evidence of model-tokenizer normalizer import/alignment or NFKC+casefold default."},
+  {system: "text-dedup", url: "https://github.com/ChenghaoMou/text-dedup/blob/main/src/text_dedup/config/algorithms/minhash.py", overlap: "MinHash tokenizer lowercases and splits on non-word chars; utility normalize() lowercases/digit/punctuation-normalizes, but MinHash path does not expose model-normalizer alignment or NFKC+casefold."},
+  {system: "NeMo Curator fuzzy dedup", url: "https://github.com/NVIDIA/NeMo-Curator/blob/main/nemo_curator/stages/deduplication/fuzzy/minhash.py", overlap: "GPU MinHash over cuDF string minhash with char ngrams; fuzzy workflow config exposes ngram/hash/band fields, not tokenizer-normalizer alignment."},
+  {system: "NeMo Curator UnicodeReformatter", url: "https://github.com/NVIDIA/NeMo-Curator/blob/main/nemo_curator/stages/text/modifiers/unicode/unicode_reformatter.py", overlap: "Separate cleaning stage can apply NFC/NFD/NFKC/NFKD through ftfy, but it is not co-owned by fuzzy dedup as a model-aware alignment mode and does not provide casefold alignment."},
+  {system: "BigCode near dedup", url: "https://github.com/bigcode-project/bigcode-dataset/blob/main/near_deduplication/minhash_deduplication.py", overlap: "Production-scale MinHash+LSH pipeline using NON_ALPHA tokenization; no model-tokenizer normalizer alignment found."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: Holds mechanically for the synthetic harness, but realistic workload evidence is insufficient. The packet reports N=300/seed x 7, exact Jaccard plus 64-perm LSH, with FN 1.00 under weak dedup normalizers and 0.00 under aligned NFKC/NFKC+casefold. Missing: real multilingual corpus rate, real tokenizer integration, run through datatrove/text-dedup/NeMo Curator defaults, and demonstrated org-seam evidence.
+RATIONALE: I do not find a shipping dedup system that already closes the exact seam by co-locating model tokenizer normalization with MinHash dedup normalization. However, the packet overstates the production baseline if it treats production dedup as raw/NFC-only: datatrove already has configurable text normalization with lowercasing and NFD diacritic stripping, and NeMo Curator ships a separate UnicodeReformatter with NFKC support. Those are partial mitigations, not model-aware alignment. Therefore this is not integration-only, but it is not green until L1 shows the effect survives real pipelines/defaults and quantifies surviving model-identical duplicates at realistic corpus scale.
+tokens used
+105,645
