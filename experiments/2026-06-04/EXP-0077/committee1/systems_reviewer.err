@@ -1,0 +1,342 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e944e-25cc-7663-b4c7-0e0ff284c983
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0064 (PROJ-0034, multimodal x data/serialization)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT. Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge. This is a NEW-COUPLING claim deliberately designed to clear the MECHANISM-KNOWN ceiling that yellowed the run's prior strongest candidate (CLAIM-0061) — judge that altitude squarely.
+
+## ★★★ THE #1 STRESS-TEST (orchestrator flags FRONT-AND-CENTER — the killer this claim must beat):
+MECHANISM-KNOWN CEILING (killer #3): the committee MUST decide whether this is a GENUINELY NEW coupling or "the known EXIF-rotation footgun re-measured." THE KNOWN FACT: "EXIF orientation can rotate images / hurt accuracy" = a decades-known display/upload footgun (CloudFactory, Google 1911.07201). That is NOT this claim and would only YELLOW. THE CLAIMED-NEW RELATIONSHIP: a PURE SERIALIZATION STEP (HF datasets push-to-hub PIL-object re-encode) silently converts a BENIGN-DORMANT tag into an INVISIBLE, IRREVERSIBLE CROSS-MIRROR benchmark-SCORE FORK — a link between (serialize-default) x (decoder-default) -> score NON-REPRODUCIBILITY across byte-different mirrors of the SAME benchmark, which the robustness/reproducibility literature has NOT connected. THE DECISIVE QUESTION: is "dormant-tag (both read defaults ignore it -> harmless) -> serialization-time IRREVERSIBLE destruction (no pixel change, no dataset-card diff) -> invisible cross-mirror score fork" a genuinely NEW, publishable coupling — OR does it collapse to the known rotation footgun? (a) NEW coupling + irreversibility + invisibility are the contribution -> SUPPORT toward L1. (b) collapses to known footgun -> YELLOW/RED. Judge honestly. The FIRST GREEN (CLAIM-0059) cleared this exact ceiling because its coupling (model-tokenizer normalizer SETS dedup recall ceiling) was a new relationship, not a known effect at a new seam.
+
+## CLAIM
+A dataset publisher's serialization choice on push_to_hub (passthrough-bytes vs PIL re-encode) silently+irreversibly determines whether a model's measured score is reproducible across dataset mirrors — because HF datasets Image.encode_example re-serializes in-memory PIL objects via PIL.Image.save (strips EXIF by default), DESTROYING the EXIF orientation tag (0x0112) that default decoders (PIL Image.open; torchvision decode_jpeg apply_exif_orientation=False) silently IGNORE. Dormant in the original-file world; weaponized into an irreversible cross-mirror SCORE FORK = f x per-image-flip by the serialization step. NULL EXIT: if datasets PRESERVES EXIF on the PIL path, OR f~0 on real sets, OR default loaders silently transpose -> vanishes.
+
+## L0 RESULT (EXP-0077, CPU; resnet50 IMAGENET1K_V2 + default transforms; pinned datasets 4.8.5 / pillow 12.2 / torchvision 0.27)
+STEP-0 SERIALIZATION-BEHAVIOR KILL GATE (claim SURVIVED, verified in INSTALLED libs):
+ (a) datasets.Image().encode_example(in-memory PIL) DESTROYS the tag: input orient=6 -> stored bytes orient=None (re-serializes via PIL.Image.save, no exif=). 
+ (b) encode_example(file PATH) PRESERVES it (orient=6) -> the publish path (PIL-object vs path) IS the passthrough-vs-re-encode bit. 
+ (c) PIL Image.open default IGNORES orientation. (d) torchvision decode_jpeg default apply_exif_orientation=False (read from installed signature). KILL condition did NOT fire.
+f (REAL public prevalence): Open Images V7 val, 400 ORIGINAL Flickr photos (raw EXIF from Google CDN): orient hist {1:389, 6:6, 0-malformed:5} -> f=2.75%. Corroborated by Open Images own Rotation column over 41,620 val imgs -> 1.3% flagged. Literature phone-roll range 3-25%. PERVASIVE-DESTRUCTION evidence: 8 served HF parquet benchmarks scanned -> f~0 on ALL, BECAUSE their EXIF was already destroyed at publish (the mechanism in the wild); surviving tags only on original-file sources.
+MAIN (140 real images): M1 (passthrough, tag=6) consumer-EXIF toggle = 42.1pp (42% of tagged images flip prediction when honored); M2 (datasets re-encode, tag destroyed) toggle = 0.0pp (nothing to honor). Composed cross-mirror SCORE FORK = f x flip: 1.16pp @ f=2.75% (real), 2.1pp @5%, 4.2pp @10%, 10.5pp @25%. Under a DEFAULT loader both mirrors score identically (tag ignored) -> the fork is INVISIBLE until any consumer flips the EXIF bit, then WHICH MIRROR you pulled decides the score.
+CONTROLS (both HELD): identity-orientation (tag=1) = 0.0pp all toggles/mirrors (isolates orientation, not re-encode noise); JPEG-requantization-only (re-encode of tag-1) = 0.0pp drift (effect is orientation destruction, not codec drift).
+PRE-REGISTERED THRESHOLDS all met; NO null exit fired.
+
+## STRESS-TESTS the committee SHOULD probe:
+1. (THE killer, above) NEW coupling vs known footgun — is the serialization-destruction->irreversibility->cross-mirror-invisibility chain genuinely distinct + publishable?
+2. MAGNITUDE/PREVALENCE: real f=2.75% gives only 1.16pp fork (below the 2pp it-matters bar); the 2pp+ band needs f>=5% (literature 3-25% phone-roll). Is the materiality resting on the higher-prevalence regime honest, or is the realistic f too small? (The 42pp PER-TAGGED-IMAGE flip is large; the fork scales with f.)
+3. WHO HONORS EXIF: the fork is only visible to a consumer that DOES honor EXIF (HF viewer, browser, exif_transpose, apply_exif_orientation=True). Is that a realistic consumer population, or do all default eval loaders ignore it (making the fork latent-but-rarely-triggered)?
+4. IRREVERSIBILITY/INVISIBILITY: verified (M2 destroyed=0pp; no card diff) — is this the load-bearing novelty over the known footgun?
+
+## PRIOR-ART: EXIF-as-display-footgun = incumbent (explicitly distinguished). EXIF spec Tag 0x0112; torchvision apply_exif_orientation=False stable 0.15->0.27; PIL save-strips-EXIF multi-year = stable mechanism, NO version-chase (verified current). The serialization-time-destruction -> cross-mirror score non-reproducibility coupling returned no literature hits (robustness lit rotates to PROBE a model; none connect serialize-default x decoder-default to silent score non-reproducibility). Committee should scrutinize for a missed incumbent.
+
+## ORCHESTRATOR NOTE (NOT advocacy): clean, well-controlled L0 (step-0 kill-gate survived; identity + requant controls held; real public f; version-chase cleared). The make-or-break is the #1 stress-test: does the dormant->serialization-destruction->cross-mirror-fork CHAIN clear the mechanism-known ceiling as a NEW coupling, or collapse to the known EXIF rotation footgun? Secondary: is the materiality (1.16pp at real f=2.75%, 2pp+ only at f>=5%) sufficient, and is the EXIF-honoring consumer population realistic? If new-coupling + material -> advance to an L1 (broader real-prevalence + a real eval harness that honors EXIF + >=1 more model/dataset). If it collapses to the footgun or f is too small to matter -> YELLOW/converge. Judge honestly. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the reviewer rules first, then do a targeted OSS/prior-art check against the named systems and related libraries before voting.
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' /Users/dengcchi 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi -path '*/_committee_common_v001.md' -o -path '*/_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+hook: PostToolUse Completed
+codex
+`rg` is not available in this shell, so I’m falling back to filesystem search and narrowing from likely prompt directories.
+exec
+/bin/zsh -lc 'ls -la /Users/dengcchi' in /Users/dengcchi
+ succeeded in 0ms:
+total 2824424
+drwxr-x---+  96 dengcchi  staff       3072 Jun  4 13:23 .
+drwxr-xr-x    5 root      admin        160 Jun  3 15:07 ..
+-r--------    1 dengcchi  staff          7 Feb  9 15:55 .CFUserTextEncoding
+-rw-r--r--@   1 dengcchi  staff      18436 Jun  2 14:33 .DS_Store
+drwx------+  10 dengcchi  staff        320 Apr 30 06:01 .Trash
+drwxr-x---    4 dengcchi  staff        128 Mar  3 11:08 .android
+-rw-------    1 dengcchi  staff        344 Mar 13 13:28 .arcrc
+drwxr-xr-x    3 dengcchi  staff         96 Feb 10 09:23 .aspnet
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:05 .buckconfig.d
+drwxr-xr-x    3 dengcchi  staff         96 May 28 22:24 .bun
+drwxr-xr-x   11 dengcchi  staff        352 Jun  4 13:03 .cache
+drwxr-xr-x    3 dengcchi  staff         96 Feb  9 16:07 .cisco
+drwxr-xr-x   26 dengcchi  staff        832 Jun  4 08:05 .claude
+drwxr-xr-x   16 dengcchi  staff        512 May 26 12:28 .claude-templates
+-rw-r--r--    1 dengcchi  staff       6189 Jun  4 13:23 .claude.json
+drwxr-xr-x   26 dengcchi  staff        832 Jun  4 13:23 .codex
+drwxr-xr-x    7 dengcchi  staff        224 Jun  3 15:15 .config
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:07 .cursor
+drwx------   10 dengcchi  staff        320 Jun  3 15:09 .fb-sks-agent
+drwx------    6 dengcchi  staff        192 Jun  3 15:09 .fb-sks-agent-lowbox
+drwxr-xr-x   12 dengcchi  staff        384 Jun  4 12:05 .gemini
+-rw-r--r--    1 dengcchi  staff        403 Feb  9 16:00 .gitconfig
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 07:59 .kube
+-rw-------    1 dengcchi  staff         20 Apr 10 10:58 .lesshst
+drwxr-xr-x    5 dengcchi  staff        160 Mar  3 10:29 .llms
+drwxr-xr-x    5 dengcchi  staff        160 Apr 13 17:37 .local
+drwxr-xr-x   13 dengcchi  staff        416 Jun  4 13:23 .navi
+drwxr-xr-x    6 dengcchi  staff        192 Apr 15 23:32 .npm
+drwxr-xr-x    8 dengcchi  staff        256 Jun  1 00:00 .ondemand
+drwxr-xr-x    3 dengcchi  staff         96 May 28 23:04 .opencode
+drwxr-xr-x    2 dengcchi  staff         64 Feb  9 16:00 .osquery
+-rw-r--r--    1 dengcchi  staff       4096 Feb 10 14:06 .scm.sqlite
+drwxr-xr-x   14 dengcchi  staff        448 Apr 13 17:27 .ssh
+drwxr-xr-x    8 dengcchi  staff        256 Jun  4 07:50 .uie-companion
+-rw-------    1 dengcchi  staff       2086 May 19 13:42 .viminfo
+drwxr-xr-x    3 dengcchi  staff         96 May 22 22:12 .viz-plan
+drwxr-xr-x    3 dengcchi  staff         96 Feb  9 16:48 .vpn
+drwxr-xr-x    3 dengcchi  staff         96 May 27 10:41 .vscode-fb-basecamp-mkt
+drwxr-xr-x    4 dengcchi  staff        128 Feb 10 14:05 .vscode-fb-mkt
+drwxr-xr-x    3 dengcchi  staff         96 Feb 10 14:14 .vscode-fb-stable
+-rw-r--r--    1 dengcchi  staff         47 Feb 19 16:48 .zprofile
+-rw-------    1 dengcchi  staff      40722 Jun  4 07:25 .zsh_history
+drwx------  121 dengcchi  staff       3872 Jun  4 07:56 .zsh_sessions
+-rw-r--r--    1 dengcchi  staff        378 Apr 28 00:23 .zshrc
+drwx------@   6 dengcchi  staff        192 May 22 22:13 Applications
+drwx------+ 143 dengcchi  staff       4576 Jun  4 10:20 Desktop
+drwx------+  16 dengcchi  staff        512 May 27 11:04 Documents
+drwx------@  76 dengcchi  staff       2432 May 29 12:48 Downloads
+drwx------@  85 dengcchi  staff       2720 May 31 03:00 Library
+drwx------    4 dengcchi  staff        128 Feb 10 09:08 Movies
+drwx------+   4 dengcchi  staff        128 Feb 23 20:54 Music
+drwx------+   4 dengcchi  staff        128 Feb  9 15:55 Pictures
+drwxr-xr-x+   4 dengcchi  staff        128 Feb  9 15:55 Public
+drwxr-xr-x   15 dengcchi  staff        480 May 31 05:47 afar-src
+-rw-r--r--    1 dengcchi  staff      32513 May 29 01:39 agent_infra_committee_code_20260529T083946Z.tar.gz
+-rw-r--r--    1 dengcchi  staff     238626 May 29 01:39 agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+drwxr-xr-x   10 dengcchi  staff        320 May 31 04:54 ar-private-src
+drwxr-xr-x   20 dengcchi  staff        640 Apr 30 06:45 audit-post-export
+-rw-r--r--    1 dengcchi  staff    1091154 Apr 30 05:22 audit-post-export.tar.gz
+drwxr-xr-x   15 dengcchi  staff        480 May 31 21:54 autonomous-research
+drwxr-xr-x   10 dengcchi  staff        320 Jun  2 14:39 autonomous-research-e2e
+drwxr-xr-x   22 dengcchi  staff        704 Jun  4 07:45 autonomous-research-v3
+drwxr-xr-x   53 dengcchi  staff       1696 Jun  1 11:49 axon
+-rw-r--r--    1 dengcchi  staff  182066835 Apr 22 10:54 axon-chat-export-CLEAN.tar.gz
+-rw-r--r--    1 dengcchi  staff  184848274 Apr 22 12:11 axon-chat-export-WITH-overrides.tar.gz
+-rw-r--r--    1 dengcchi  staff  182062979 Apr 21 21:34 axon-chat-export-e2e.tar.gz
+-rw-r--r--    1 dengcchi  staff  184775423 Apr 21 10:28 axon-chat-export.tar.gz
+drwxr-xr-x   29 dengcchi  staff        928 Apr 30 05:27 axon-chat-external
+-rw-r--r--    1 dengcchi  staff     692775 Apr 30 05:27 axon-chat-external-build.tar.gz
+drwxr-xr-x   34 dengcchi  staff       1088 Apr 30 08:01 axon-deploy
+drwxr-xr-x   27 dengcchi  staff        864 Apr 15 11:05 axon-export
+drwxr-xr-x   39 dengcchi  staff       1248 Apr 30 05:51 axon-export-v2
+-rw-r--r--    1 dengcchi  staff     501193 Apr 20 21:35 axon-export.tar.gz
+-rw-r--r--    1 dengcchi  staff    6049191 Apr 23 17:38 axon_vercel.tar.gz
+-rw-r--r--    1 dengcchi  staff    5915217 Apr 23 18:53 axon_vercel_20260423_1852.tar.gz
+drwxr-xr-x   15 dengcchi  staff        480 May 29 17:21 branchable_replay_R1
+drwxr-xr-x    3 dengcchi  staff         96 May 29 19:27 branchable_replay_R2
+drwxr-xr-x    3 dengcchi  staff         96 May 29 20:23 branchable_replay_R3
+drwxr-xr-x   18 dengcchi  staff        576 May 30 01:38 branchable_replay_review
+drwxr-xr-x    6 dengcchi  staff        192 May 22 22:14 cert-work
+drwxr-xr-x    8 dengcchi  staff        256 Jun  4 09:42 exp0072_work
+drwxr-xr-x   20 dengcchi  staff        640 Jun  4 12:03 exp0073_work
+-rwxr-xr-x    1 dengcchi  staff  697679868 Feb 23 22:27 generate_ifm.par
+drwxr-xr-x    6 dengcchi  staff        192 Apr  5 01:47 gpu_pipeline_changes
+drwxr-xr-x   12 dengcchi  staff        384 May 30 05:22 green_thesis_factory
+-rw-r--r--    1 dengcchi  staff       6054 Jun  4 08:02 mrs-tpu-devserver-handoff.md
+-rw-r--r--    1 dengcchi  staff         87 Apr 30 07:37 package-lock.json
+drwxr-xr-x   21 dengcchi  staff        672 May 29 11:23 public_agent_infra_research_engagement
+drwxr-xr-x   15 dengcchi  staff        480 May 31 23:25 research-os
+drwxr-xr-x   10 dengcchi  staff        320 Jun  1 04:38 research-os-meta
+drwxr-xr-x    8 dengcchi  staff        256 Jun  4 12:45 research-os-venv
+drwxr-xr-x   11 dengcchi  staff        352 May 31 03:47 ros-poc
+-rw-r--r--@   1 dengcchi  staff      13764 Mar  2 11:42 vision_tax_investigation_report.md
+drwxr-xr-x   32 dengcchi  staff       1024 May  4 18:16 weave
+drwxr-xr-x    4 dengcchi  staff        128 May  1 08:53 weave-dev
+drwxr-xr-x    3 dengcchi  staff         96 May 14 15:59 work
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 5 \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null" in /Users/dengcchi
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research -maxdepth 6 \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -maxdepth 6 \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi/green_thesis_factory -maxdepth 6 \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 165ms:
+hook: PostToolUse Completed
+ succeeded in 4480ms:
+ succeeded in 4565ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 3 -type d -name 'prompts' 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 4 -type d -name '_shared' 2>/dev/null" in /Users/dengcchi
+ exited 1 in 2107ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts
+/Users/dengcchi/research-os/prompts
+
+exec
+/bin/zsh -lc "mdfind 'kMDItemFSName == \"_committee_common_v001.md\" || kMDItemFSName == \"TOOLING_v001.md\"'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 544ms:
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 131ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+ succeeded in 275ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 19406ms:
+/Users/dengcchi/research-os/prompts/_shared
+
+codex
+The local rules require retrievable sources, so I’m checking both mechanism sources and the named OSS systems for an actual overlap rather than treating “EXIF exists” as a collision.
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+ exited 1 in 54285ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
