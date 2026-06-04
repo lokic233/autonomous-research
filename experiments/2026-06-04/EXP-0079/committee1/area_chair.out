@@ -1,0 +1,25 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: red
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: red, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS:
+  - systems_reviewer cites pandas issues #20642, #43929, #48757 — three independent prior reports of the EXACT phenomenon (float16 Series.mean() → inf/NaN from accumulator overflow). PR #64791 is a MERGED fix upcasting float16 in nanmean/nansum for pandas 3.1. The packet's claim "no GitHub issue for 'pandas float16 Series.mean overflow inf/nan' on current versions" is demonstrably false. This is not near-prior-art; it IS the same bug, reported, triaged, and patched by the framework maintainers.
+  - The "neither endpoint predicts it" leg of stress-test A fails: numpy's official documentation EXPLICITLY warns that float16 reductions are precision-limited and recommends passing dtype=float64 (novelty_killer cites numpy.mean reference docs). One endpoint does predict the hazard from its own side.
+  - The "silent" framing is challenged by evaluation_prosecutor: inf/NaN are IEEE-754 poison pills that trigger immediate ValueError in sklearn (check_array), making the failure LOUD in any standard downstream pipeline, not silent. No killer experiment was run to demonstrate silent model corruption.
+REQUIRED_EVIDENCE:
+  - Exhaustive pandas issue-tracker search acknowledging #20642, #43929, #48757, PR #64791, and explaining what residual contribution survives after these.
+  - Downstream pipeline survival-rate test: does pandas inf/NaN actually propagate silently through sklearn/model training, or does it crash immediately at validation?
+  - Prevalence data for fp16 tabular feature storage + pandas reduction in real production systems (GitHub/Kaggle/HF dataset dtype audits, not just one California housing cast).
+  - Reproduction on pandas 2.2.x (actual widely-deployed version) AND post-fix pandas 3.1+ to establish whether the seam still exists on versions people use.
+MANDATORY_BASELINES:
+  - pandas issues #20642, #43929, #48757 and PR #64791 as direct prior art (authors must differentiate or concede)
+  - numpy.mean official dtype promotion documentation (float16 → float32 accumulator is documented, not discovered)
+  - sklearn.utils.check_array NaN/Inf rejection as downstream loud-failure baseline
+PRIOR_ART_ADEQUATE: no
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0066", change: "status -> RED/converge; reclassify from 'empirical cross-area phenomenon' to 'known-bug reproduction with cross-tool comparison framing'; the three pandas issues + merged fix establish this is a reported, acknowledged, and patched framework bug, not a novel cross-area coupling; residual value (cross-tool comparison table) is a documentation contribution, not a research finding at the claimed altitude"}
+RATIONALE: The systems_reviewer's RED is backed by hard, verifiable evidence — three pandas issues spanning 2018–2022 reporting the identical float16 mean→inf/NaN overflow, plus a merged PR fixing it. This RED is unrebutted by any other reviewer or by the packet. Per committee rules, I cannot emit GREEN with an unrebutted RED or inadequate prior-art search, and both conditions hold here.
+
+The four YELLOWs converge from independent angles on the same conclusion: (1) novelty_killer — mechanism is textbook IEEE 754 overflow, per-tool behaviors are individually documented, numpy docs explicitly warn about float16 reductions; (2) evaluation_prosecutor — "silent" framing collapses if downstream sklearn validation catches inf/NaN immediately (no killer experiment run to disprove this); (3) theory_skeptic — the entire divergence reduces to one inequality (running_sum > 65504), fully predictable from fp16 spec × each tool's documented accumulator dtype, making the "coupling" a Cartesian product of known policies, not an emergent phenomenon; (4) product_realist — fp16 tabular feature storage is uncommon, workaround is trivial (astype float64), no prevalence data provided.
+
+Critically, this claim fails BOTH stress tests flagged by the orchestrator: (A) the "neither endpoint predicts" argument is false — numpy's own docs warn, and the data side can compute mean×N>65504 from the fp16 spec; (B) no evidence that fp16 feature storage + pandas reduction is a realistic deployed pattern. The claim also fails the CLAIM-0059 comparison: NFKC-vs-NFC produced a nonlinear statistical surprise (95% dup-escape) that neither side's documentation could derive; here the effect is a one-line inequality applied to a known accumulator policy. The honest altitude is "well-executed reproduction of a known, already-patched pandas bug with a useful cross-tool comparison table" — a documentation/blog-post contribution, not a publishable new cross-area coupling. Converge.
+```
