@@ -16,3 +16,60 @@ Run `metacode migrate-from-claude` to copy them to ~/.agents/skills/, or `agent-
 [0m→ [0mRead .
 [0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common","engine":"FILENAME"}
 [0m✱ [0mGlob "**/_committee_common_v001.md"[90m in work · 0 matches[0m
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -20
+<bash_metadata>
+bash tool terminated command after exceeding timeout 120 seconds
+</bash_metadata>
+[0m
+[0m$ [0mls /Users/dengcchi/*.md 2>/dev/null; ls /Users/dengcchi/*/*.md 2>/dev/null | head -30
+/Users/dengcchi/mrs-tpu-devserver-handoff.md
+/Users/dengcchi/vision_tax_investigation_report.md
+/Users/dengcchi/Downloads/axon-vercel-setup-guide.md
+/Users/dengcchi/afar-src/ARCHITECTURE.md
+/Users/dengcchi/afar-src/MANIFEST.md
+/Users/dengcchi/afar-src/OVERNIGHT_LOG.md
+/Users/dengcchi/ar-private-src/BOOTSTRAP_JUDGES.md
+/Users/dengcchi/ar-private-src/MAPPING.md
+/Users/dengcchi/ar-private-src/ORCHESTRATOR_HANDOFF.md
+/Users/dengcchi/ar-private-src/README.md
+/Users/dengcchi/ar-private-src/RESUME.md
+/Users/dengcchi/audit-post-export/AUDIT_REPORT.md
+/Users/dengcchi/autonomous-research-v3/CUTOVER_RUNBOOK.md
+/Users/dengcchi/autonomous-research-v3/DECISION_expand_lightweight.md
+/Users/dengcchi/autonomous-research-v3/HANDOFF_r1_to_r2.md
+/Users/dengcchi/autonomous-research-v3/HANDOFF_r2_to_r3.md
+/Users/dengcchi/autonomous-research-v3/HANDOFF_r3_to_r4.md
+/Users/dengcchi/autonomous-research-v3/ORCHESTRATOR_CHARTER.md
+/Users/dengcchi/autonomous-research-v3/QUIESCENCE_r4_001.SUPERSEDED.md
+/Users/dengcchi/autonomous-research-v3/QUIESCENCE_r4_002.SUPERSEDED.md
+/Users/dengcchi/autonomous-research-v3/RESEARCHER_CHARTER.md
+/Users/dengcchi/autonomous-research/CONTRIBUTING.md
+/Users/dengcchi/autonomous-research/README.md
+/Users/dengcchi/axon-chat-external/TODO.md
+/Users/dengcchi/axon-deploy/TODO.md
+/Users/dengcchi/axon-export-v2/TODO.md
+/Users/dengcchi/axon-export/TODO.md
+/Users/dengcchi/axon/CLAUDE.md
+/Users/dengcchi/axon/CONTRIBUTING.md
+/Users/dengcchi/axon/README.md
+/Users/dengcchi/axon/TODO.md
+/Users/dengcchi/branchable_replay_R1/CITATIONS.md
+[0m
+[0m$ [0mls /Users/dengcchi/*committee* 2>/dev/null; ls /Users/dengcchi/*COMMITTEE* 2>/dev/null
+/Users/dengcchi/agent_infra_committee_code_20260529T083946Z.tar.gz
+/Users/dengcchi/agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+zsh:1: no matches found: /Users/dengcchi/*COMMITTEE*
+[0m
+[0m$ [0mfind /Users/dengcchi -maxdepth 3 -name "_committee_common_v001.md" 2>/dev/null
+[0m
+[0m$ [0mfind /Users/dengcchi/.claude -name "_committee_common_v001.md" 2>/dev/null | head -5
+[0m
+[0m$ [0mfind /Users/dengcchi -maxdepth 4 -name "TOOLING_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m$ [0mfind /Users/dengcchi -maxdepth 4 -name "_committee_common_v001.md" 2>/dev/null | head -5
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m→ [0mRead research-os/prompts/committee/_committee_common_v001.md
+[0m→ [0mRead research-os/prompts/_shared/TOOLING_v001.md
