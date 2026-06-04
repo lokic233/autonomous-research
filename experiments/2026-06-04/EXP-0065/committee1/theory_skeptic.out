@@ -1,0 +1,30 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The "image-count-driven ITL inflation" is trivial arithmetic given the model's stated assumptions: if a ViT forward is atomic and carries a fixed per-image cost f, then k images in one chunk-iter contributes k*f to that iter's latency while the token budget prices only T. This is M/G/1 with a non-preemptible service item — first-week queueing theory, not an emergent phenomenon. The L0 "confirms" what the simulator is constructed to exhibit.
+- Worst-iter "coalescence" at T<=B is definitional: if all k items fit in one iter and each is atomic, their costs add. The 7.3x@r=4096 is just k*f/(B*per_token_marginal+small) evaluated at the chosen sweep point — closed-form, not discovered.
+- Stream-p99 "spreading" at T>>B is the same additive cost distributed across ceil(T/B) iters; the 1.36x and 6.8x numbers are predicted by f/(B*per_token_marginal) per iter. Basic theory predicts the regime flip the prereg called "REGIME-BOUNDED".
+
+CONFOUNDS:
+- The simulator and the claim share the SAME assumption (atomic unchunked per-image ViT with fixed overhead independent of batch). The r=0 control rules out one implementation bug; it does NOT rule out that the modeled atomicity itself is the artifact. A real system with CUDA Graphs, fused encoder kernels, or torch.compile collapses the 200-kernel launch chain — r could be ~10x lower than the 64–1024 band, moving the realistic regime into the null region.
+- per_token_marginal is assumed LINEAR in T. Qwen2-VL ViT uses windowed attention with different T-scaling regimes; if marginal cost is super-linear in T, the small-T worst-iter "material" band shrinks because per_token_marginal*T catches up faster.
+- "Per-image fixed cost independent of k" ignores intra-forward batching across images in a single multimodal request — vLLM-V1's encoder-cache PR explicitly batches encoder calls. If k images batch into one ViT forward, k*f collapses to ~f and the entire effect vanishes. This is the load-bearing assumption and it is not tested.
+- Decode-pool GPU contention is not modeled beyond serialization. Real ITL p99 is dominated by SM contention, KV-cache memory pressure, and NCCL collectives under TP — none represented.
+
+ASSUMPTIONS_UNTESTED:
+- ViT runs as a single atomic unit on the same stream as decode (no separate CUDA stream, no overlap).
+- per_image_fixed is a property of "per image" rather than "per encoder call" — not the same when encoder batches.
+- Anchoring r from Nsight kernel-launch math is a back-of-envelope estimate, NOT a measurement on Qwen2-VL-7B with the production runtime (CUDA Graphs / torch.compile state unknown).
+- B=512 is fixed; sensitivity to production B (often 2048–8192 in vLLM-V1) is not swept — could push the crossover out of the realistic band entirely.
+- Single-GPU, single-replica, no TP/PP — burst scheduling on TP>1 may serialize ViT across ranks differently.
+
+STATISTICAL_GAPS:
+- Discrete-event sim is deterministic; no seeds, no variance, no CIs reported on any spike ratio. "EXACTLY 1.000" for the r=0 control is a smell, not a signal — it confirms determinism, not effect size confidence.
+- Crossover thresholds (r=16 at T=256, r=64 at T=1024) presented as point estimates from a 6-point r-grid {0,16,64,256,1024,4096} — coarse log-grid, no interpolation uncertainty, no statement that crossover is monotone in r.
+- The "realistic band" 1.25x–5.9x worst-iter spike is computed from anchored-but-unmeasured r; no error propagation from the 1–5ms / 4us-per-token anchor ranges (which span ~5x themselves) to the headline ratio.
+- p99 over 400-iter windows: no statement of how many windows, no resampling, no comparison to baseline p99 noise floor.
+
+RATIONALE:
+Mechanism is mathematically trivial given the modeling assumptions — the L0 demonstrates the assumptions are self-consistent, not that they hold on real hardware. The genuine scientific content is concentrated in two unmeasured quantities (real r on Qwen2-VL-7B with production runtime; whether the encoder actually batches across k in one forward), and the headline regime-bounded materiality flips on both. The anti-circular r=0 control is a sanity check on the sim, not a test of the mechanism's reality. Not red — the prereg + null-region honesty + regime-flip disclosure are scientifically clean, and the L1 microbench is the right next step. Not green — the L0 alone cannot distinguish "real production effect" from "consequence of an atomicity assumption a single CUDA Graph or batched encoder forward would erase." Vote yellow contingent on L1 measuring (a) real r on Qwen2-VL-7B with production runtime flags, (b) whether the encoder actually batches across images in one request, (c) variance/CIs on the spike ratios, (d) sensitivity to production B.
+```

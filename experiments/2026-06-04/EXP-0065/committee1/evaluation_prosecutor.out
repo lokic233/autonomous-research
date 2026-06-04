@@ -1,0 +1,15 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "vLLM-V1 + Chunked Prefill + Encoder Cache", why: "Production baseline identified in orchestrator, required to prove the latency axis survives the cache fix.", repo_or_cite: "vLLM PR#8425 / SGLang PR#5456"}
+  - {name: "vLLM with CUDA Graphs / torch.compile for ViT", why: "Kernel launch overheads (the cited source of per-image fixed costs) are explicitly mitigated by CUDA Graphs or compilation in production serving. Assuming linear k*fixed_cost without these is a strawman.", repo_or_cite: "vLLM standard production configuration"}
+STRAWMAN_RISKS: 
+  - "Goalpost shifting: The preregistered PRIMARY metric (stream p99) was NOT material in the realistic T regime (T <= 1280). The claim pivoted to 'worst-iteration ITL' to salvage a material effect, which does not map cleanly to standard production p99 ITL SLOs that smooth over single-iteration spikes."
+  - "Simulating kernel launch overheads as linearly additive (k * fixed) without accounting for real-world GPU batching, concurrent streams, or framework-level operator coalescing."
+MISSING_METRICS: 
+  - "Empirical measurement of 'r' on actual production hardware with optimized serving configurations (CUDA Graphs on)."
+  - "End-to-end client-perceived ITL p99 across a realistic request trace, not just isolated discrete-event server-side chunk iterations."
+KILLER_EXPERIMENT: A microbenchmark on a real H100 running vLLM-V1 with CUDA Graphs / torch.compile ENABLED for the Qwen2-VL vision encoder. Measure the actual execution time for k=8 vs k=1 at fixed T=1024. If production optimizations amortize the kernel launch overheads across the k images, then 'r' approaches 0, triggering the L0's exact null control and falsifying the material impact of the claim.
+RATIONALE: The simulation mechanically proves the vulnerability, but its real-world materiality relies entirely on a high 'r' value derived from unoptimized kernel launch overheads (Nsight profiling cited). Production systems actively deploy compilation and graph execution to eliminate these exact per-dispatch overheads. Furthermore, the explicit failure of the pre-registered stream-p99 metric in the realistic regime casts doubt on the claim's actual SLO impact. The effect is theoretically sound but requires the L1 to prove that 'r' survives production GPU optimizations.
+```
