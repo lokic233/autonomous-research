@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORT (independent reproduction). Arctic-embed-s real BEIR/SciFact
+  (5183 docs, 300 test queries, exact cosine NN): A(prod-default,no prompt) R@10=0.7292
+  -> B(correct,shipped query prompt) R@10=0.8229 = +9.37pp (>>+3pp threshold; 95%
+  bootstrap CI [+6.3,+13.0]pp; 29/300 queries improved, 0 hurt; R@1 0.4675->0.5593
+  +9.2pp/+19.6%rel; MRR 0.5701->0.6718). Alias-break C(query prompt on docs too) R@10=0.8212~=B
+  HOLDS (gain is query-specific). Could-it-fail control e5-small-v2 (ships NO config_sentence_transformers.json)
+  A==B EXACTLY (0.8129) -> effect VANISHES on empty-prompt artifact (not a tautology).
+  DB-wrapper DISCARD source-verified OPEN in Chroma (base embed_query docstring documents
+  the doc/query asymmetry then ST subclass does not override; __call__ uses prompt-less
+  encode), pymilvus (query_instruction=doc_instruction=''''), LangChain (no shipped-prompt
+  auto-load), LlamaIndex. Novelty = artifact->DB DISCARD surviving a competent user,
+  NOT ''prompts help''.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0072/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T17:05:06Z'
 prompt_version: ''

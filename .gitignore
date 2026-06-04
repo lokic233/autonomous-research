@@ -2,3 +2,13 @@ runtime/
 research-os.config.yaml
 __pycache__/
 .DS_Store
+
+# experiment-local virtualenvs + large binaries (must never be committed — block GitHub 100MB limit)
+experiments/**/venv/
+experiments/**/.venv/
+**/site-packages/
+*.dylib
+*.so
+*.pt
+*.bin
+*.safetensors

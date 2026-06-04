@@ -1,0 +1,67 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+===== Snowflake/snowflake-arctic-embed-s =====
+  loaded model + data (13s); 5183 docs, 300 test queries
+  doc embed done (347s)
+  [A_prod_default] qprompt=None docprompt_override=None -> {1: 0.4675, 5: 0.6489444444444443, 10: 0.7292222222222222, 20: 0.7612222222222222} (3s)
+  [B_correct] qprompt='Represent this sentence for searching relevant passages: ' docprompt_override=None -> {1: 0.5592777777777777, 5: 0.7562777777777777, 10: 0.8228888888888889, 20: 0.8726666666666667} (3s)
+  [C_alias_break] qprompt='Represent this sentence for searching relevant passages: ' docprompt_override='Represent this sentence for searching relevant passages: ' -> {1: 0.5615, 5: 0.7562777777777777, 10: 0.8212222222222223, 20: 0.8726666666666667} (380s)
+
+===== intfloat/e5-small-v2 =====
+  loaded model + data (8s); 5183 docs, 300 test queries
+  doc embed done (294s)
+  [A_prod_default] qprompt=None docprompt_override=None -> {1: 0.5223333333333333, 5: 0.7565, 10: 0.8128888888888889, 20: 0.8546666666666666} (1s)
+  [B_shipped_empty] qprompt=None docprompt_override=None -> {1: 0.5223333333333333, 5: 0.7565, 10: 0.8128888888888889, 20: 0.8546666666666666} (2s)
+  [B_naive_arctic] qprompt='Represent this sentence for searching relevant passages: ' docprompt_override=None -> {1: 0.5217777777777777, 5: 0.7370555555555556, 10: 0.8028888888888889, 20: 0.8523333333333333} (2s)
+  [B_e5_readme_qprefix] qprompt='query: ' docprompt_override=None -> {1: 0.5442777777777776, 5: 0.7418333333333333, 10: 0.8056666666666666, 20: 0.8673333333333333} (1s)
+
+===== FINAL =====
+{
+  "snowflake-arctic-embed-s": {
+    "A_prod_default": {
+      "1": 0.4675,
+      "5": 0.6489444444444443,
+      "10": 0.7292222222222222,
+      "20": 0.7612222222222222
+    },
+    "B_correct": {
+      "1": 0.5592777777777777,
+      "5": 0.7562777777777777,
+      "10": 0.8228888888888889,
+      "20": 0.8726666666666667
+    },
+    "C_alias_break": {
+      "1": 0.5615,
+      "5": 0.7562777777777777,
+      "10": 0.8212222222222223,
+      "20": 0.8726666666666667
+    }
+  },
+  "e5-small-v2": {
+    "A_prod_default": {
+      "1": 0.5223333333333333,
+      "5": 0.7565,
+      "10": 0.8128888888888889,
+      "20": 0.8546666666666666
+    },
+    "B_shipped_empty": {
+      "1": 0.5223333333333333,
+      "5": 0.7565,
+      "10": 0.8128888888888889,
+      "20": 0.8546666666666666
+    },
+    "B_naive_arctic": {
+      "1": 0.5217777777777777,
+      "5": 0.7370555555555556,
+      "10": 0.8028888888888889,
+      "20": 0.8523333333333333
+    },
+    "B_e5_readme_qprefix": {
+      "1": 0.5442777777777776,
+      "5": 0.7418333333333333,
+      "10": 0.8056666666666666,
+      "20": 0.8673333333333333
+    }
+  }
+}
+DONE_OK

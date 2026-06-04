@@ -1,0 +1,112 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+PROCESSOR: Qwen/Qwen2.5-VL-7B-Instruct :: Qwen2VLImageProcessor
+320 source images
+  25/320 imgs, 225 pairs, 2s
+  50/320 imgs, 450 pairs, 5s
+  75/320 imgs, 675 pairs, 7s
+  100/320 imgs, 900 pairs, 9s
+  125/320 imgs, 1125 pairs, 11s
+  150/320 imgs, 1350 pairs, 14s
+  175/320 imgs, 1575 pairs, 16s
+  200/320 imgs, 1800 pairs, 18s
+  225/320 imgs, 2025 pairs, 21s
+  250/320 imgs, 2250 pairs, 23s
+  275/320 imgs, 2475 pairs, 26s
+  300/320 imgs, 2700 pairs, 30s
+wrote results/per_pair.csv 2880 pairs
+{
+  "processor": "Qwen/Qwen2.5-VL-7B-Instruct :: Qwen2VLImageProcessor",
+  "model_id": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "have_blake3": true,
+  "n_source_images": 320,
+  "n_pairs": 2880,
+  "ALL_lossless": {
+    "n": 1920,
+    "pixel_identical_frac": 1.0,
+    "vllm_prod_hit_rate": 0.1667,
+    "vllm_pil_hit_rate": 1.0,
+    "sglang_hit_rate": 1.0
+  },
+  "ALL_lossy": {
+    "n": 960,
+    "pixel_identical_frac": 0.0,
+    "vllm_prod_hit_rate": 0.0,
+    "vllm_pil_hit_rate": 0.0,
+    "sglang_hit_rate": 0.0
+  },
+  "lossless_PIXEL_IDENTICAL_subset": {
+    "n": 1920,
+    "pixel_identical_frac": 1.0,
+    "vllm_prod_hit_rate": 0.1667,
+    "vllm_pil_hit_rate": 1.0,
+    "sglang_hit_rate": 1.0
+  },
+  "lossy_PIXEL_IDENTICAL_subset": {
+    "n": 0
+  },
+  "per_variant": {
+    "L1_png_reopt": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "L1b_png_recompress0": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "L2_exif_strip": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "L3_lossless_webp": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "L4_base64_rewrap": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 1.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "L5_client_resave_tiff": {
+      "n": 320,
+      "pixel_identical_frac": 1.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 1.0,
+      "sglang_hit_rate": 1.0
+    },
+    "Y1_jpeg_q90": {
+      "n": 320,
+      "pixel_identical_frac": 0.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 0.0,
+      "sglang_hit_rate": 0.0
+    },
+    "Y2_jpeg_q95": {
+      "n": 320,
+      "pixel_identical_frac": 0.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 0.0,
+      "sglang_hit_rate": 0.0
+    },
+    "Y3_resize99": {
+      "n": 320,
+      "pixel_identical_frac": 0.0,
+      "vllm_prod_hit_rate": 0.0,
+      "vllm_pil_hit_rate": 0.0,
+      "sglang_hit_rate": 0.0
+    }
+  }
+}
