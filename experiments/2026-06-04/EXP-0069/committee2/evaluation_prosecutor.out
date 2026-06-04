@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [{"name": "Modern Raw BPE Tokenizer (e.g., Llama-3, GPT-4)", "why": "Verifies if the 'model-identical' assumption holds for modern models that omit NFKC normalization", "repo_or_cite": "tiktoken / transformers"}]
+STRAWMAN_RISKS: ["Assuming NFKC+casefold is universally used by model tokenizers", "Using the 95.1% exact-match residual as the headline when the real production MinHash residual is 34.6%"]
+MISSING_METRICS: ["Actual token-sequence identity rate for the NFKC-twins under real production tokenizers (Llama-3, GPT-4)"]
+KILLER_EXPERIMENT: Encode the 9,044 C4-multilingual (d, NFKC-twin) pairs using a modern production tokenizer (e.g., Llama-3 or GPT-4 `tiktoken`). If the resulting token sequences differ because the model lacks NFKC normalization, the 'model-identical hidden exposure' threat model collapses.
+RATIONALE: The L1 technically met the >1% quantitative gate (even the 34.6% MinHash residual clears it), but relies on a fatal methodological assumption: computing ground-truth 'model-identical' pairs synthetically via NFKC+casefold rather than using a real `tokenizer.json`. As noted in the packet's own caveat, if a modern model (like Llama-3 or GPT-4) uses raw byte-level BPE without NFKC normalization, these compatibility characters yield distinct token sequences. In that regime, the pairs are not model-identical and the divergence vulnerability does not exist. The evaluation is incomplete without verifying the NFKC assumption against the target model's actual tokenizer.
+```
