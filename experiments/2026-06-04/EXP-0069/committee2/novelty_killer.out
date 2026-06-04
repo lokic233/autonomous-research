@@ -1,0 +1,35 @@
+Web search tools are gated behind a permission grant that isn't available in this session; I ran the prior-art assessment from retrievable, citeable literature and am flagging the live-search limitation explicitly (anti-coping: I will not assert a fatal collision I could not verify in ≥2 sources).
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lee et al., 'Deduplicating Training Data Makes Language Models Better,' ACL 2022",
+   url: "https://arxiv.org/abs/2107.06499",
+   why_close: "Canonical near-dedup-for-LM work (MinHash + exact substring). Establishes that dedup quality drives memorization/eval-contamination. Performs light pre-hash normalization (lowercasing/whitespace) but does NOT analyze tokenizer-vs-deduper normalizer divergence — the seam this claim measures. Closest in PURPOSE, not in MECHANISM."}
+- {cite: "Manning, Raghavan & Schütze, 'Introduction to Information Retrieval,' Ch.2 §2.2 (token normalization / equivalence classes)",
+   url: "https://nlp.stanford.edu/IR-book/",
+   why_close: "This IS the mechanism in the abstract: differing normalization → differing equivalence classes → recall loss when two stages disagree. Committee#1 already framed the claim as an instance of this. The claim is a specific, measured INSTANTIATION of a textbook IR principle, not a new principle."}
+- {cite: "Wenzek et al., 'CCNet,' LREC 2020 (and Penedo et al., FineWeb/datatrove, arXiv:2406.17557)",
+   url: "https://arxiv.org/abs/1911.00359",
+   why_close: "Production dedup normalizers (CCNet pre-hash normalization; datatrove `simplify_text` = NFD+lower+strip) — the exact tooling the L1 tests against. Confirms the 'no production tool does NFKC+casefold' premise is real, but also means the normalizer choices are documented prior art, not hidden."}
+- {cite: "Unicode TR15 (Normalization Forms) + TR44",
+   url: "https://unicode.org/reports/tr15/",
+   why_close: "The core structural fact (NFD = canonical-only, NFKC = compatibility, lower() ≠ casefold) is Unicode spec, not a discovered property. The fullwidth-ASCII / ß / ligature drivers follow directly from the spec — predictable, not surprising, once the two normalizers are named."}
+
+NAMING_VS_MECHANISM:
+The MECHANISM is NOT renaming, but it is also NOT genuinely new: it is an incremental instance of a known IR principle (normalization equivalence-class mismatch reduces recall, IIR §2.2) composed with a Unicode-spec fact (NFKC compat ⊄ NFD canonical). The genuine, non-textbook DELTA is purely EMPIRICAL: the magnitude (95.1% residual FN; 45.2% prevalence) of model-identical-yet-undeduped pairs on REAL multilingual C4, with per-language attribution (CJK driven by fullwidth ASCII). I could not locate a prior source that quantifies this specific tokenizer↔deduper coupling at this magnitude — so the measurement is a real contribution, but the mechanism contribution is incremental.
+
+FATAL_COLLISIONS:
+None verified. Per mandate I will NOT assert a kill-collision without ≥2 independent confirming sources, and I could not establish one (live web search was permission-blocked this session; no paper in my recall measures this exact coupling/magnitude). Therefore there is no novelty-fatal reason to override the gate to RED. Equally, the absence of a collision does not by itself elevate an incremental mechanism to GREEN-grade novelty — the contribution is empirical, not mechanistic.
+
+MANDATORY_RELATED_WORK (must be cited or the novelty claim is overstated):
+- Lee et al. 2022 (arXiv:2107.06499) — dedup→LM quality, the work this extends.
+- Carlini et al., 'Quantifying Memorization Across Neural Language Models' (arXiv:2202.07646) — the privacy/memorization stakes the 'why it matters' invokes.
+- Wenzek et al. CCNet (arXiv:1911.00359) + Penedo et al. FineWeb/datatrove (arXiv:2406.17557) — production normalizer choices under test.
+- Unicode TR15/TR44 — the structural NFKC-vs-NFD/casefold gap that makes the residual 'structurally uncatchable.'
+- Manning/Raghavan/Schütze IIR Ch.2 — the parent mechanism (already flagged by committee#1).
+
+RATIONALE:
+YELLOW, not RED: no prior-art collision is verifiable in ≥2 sources (the mandate's own bar for a kill), and the empirical magnitude on real multilingual data appears genuinely unquantified in prior work — so killing on novelty grounds would be unsupported. YELLOW, not GREEN (on the novelty axis I own): the mechanism is, by committee#1's own framing and by the IIR §2.2 / Unicode TR15 prior art above, an incremental instantiation of a known normalization-mismatch principle plus a spec-predictable Unicode gap; the trivial fix ('use NFKC+casefold in the deduper') follows immediately once the two normalizers are named. The contribution's weight rests entirely on the empirical surprise (95% / 45% prevalence on real CJK-heavy web), which is real but is a measurement result, not a mechanism discovery, and is contingent on the mandatory related work being cited so the novelty is not overclaimed. I do not raise a FATAL objection that would override the committee's stated residual-FN gate; my axis returns YELLOW (no kill, but novelty is empirical/incremental, not mechanistic).
+```
