@@ -1,0 +1,63 @@
+claim_id: CLAIM-0064
+project_id: PROJ-0034
+stage: seed
+status: seed
+claim: 'On public image benchmarks, the dataset publishers serialization choice on
+  push_to_hub (passthrough-bytes vs PIL re-encode) silently and IRREVERSIBLY determines
+  whether a models measured score is reproducible across dataset mirrors -- because
+  HF datasets Image.encode_example re-serializes in-memory PIL objects via PIL.Image.save
+  (which STRIPS EXIF by default), DESTROYING the EXIF orientation tag (Tag 0x0112)
+  that every DEFAULT decoder (PIL Image.open; torchvision decode_jpeg apply_exif_orientation=False)
+  silently IGNORES. In the original-file/passthrough world the tag is DORMANT and
+  harmless (pixels+model+all consumers mutually consistent). A pure serialization
+  step (publishing to the Hub on the PIL-object path) converts that benign-dormant
+  tag into a PERMANENT INVISIBLE FORK: any consumer that DOES honor EXIF (the HF dataset
+  viewer, a browser, exif_transpose, decode_jpeg(apply_exif_orientation=True)) sees
+  pixels rotated relative to the model, while a default consumer sees them un-rotated.
+  The benchmarks measured score becomes a function of (publish-path bit) x (loader-EXIF
+  bit) -- a 2-bit provenance LOTTERY -- diverging by ~= the orientation-tagged image
+  fraction (measured 3-25% across phone-camera-sourced public sets), with ZERO trace
+  in the dataset card. NULL EXIT: if HF datasets PRESERVES EXIF on the PIL-object
+  re-encode path, OR the orientation-tagged fraction ~0, OR the default loaders silently
+  DO transpose -> effect vanishes (falsifiable on CPU <1hr).'
+why_it_matters: 'Cross-area production-seam (multimodal x data), FIRST-GREEN (CLAIM-0059)
+  shape and designed to CLEAR the mechanism-known ceiling that yellowed CLAIM-0061.
+  The KNOWN fact is "EXIF orientation rotates images" (display/upload footgun) --
+  NOT this claim. The NEW, literature-absent RELATIONSHIP: (1) two read-side defaults
+  AGREE to ignore orientation (PIL off, torchvision off) so the tag is DORMANT+harmless
+  in the original-file world (no bug); (2) a pure SERIALIZATION step (push_to_hub
+  re-encode) silently DESTROYS that dormant tag with no pixel change + no card diff,
+  converting it into a permanent IRREVERSIBLE cross-mirror score fork; (3) subsystem
+  A choice (serialize how) silently SETS a surprising previously-unconnected property
+  of B (cross-mirror reproducibility+validity of a robustness/accuracy score) = the
+  FIRST-GREEN coupling shape, NOT a re-measurement of the rotation effect at a new
+  code path. The robustness lit (ImageNet-C/E, "Just rotate it", Google 1911.07201)
+  deliberately rotates to PROBE a model; NONE connect decoder-default x serialize-default
+  to SILENT score non-reproducibility across byte-different mirrors. Three disjoint
+  owners (dataset author, decoder-lib maintainers, eval-harness author). Stable/standardized
+  mechanism (EXIF Tag 0x0112; torchvision apply_exif_orientation=False stable 0.15->0.26;
+  PIL save-strips-EXIF multi-year) = NO version-chase. Public-measurable (phone-camera
+  HF sets), identity baseline (same model+dataset+default loader, only mirror serialize-path
+  differs), clean falsifiable L0 with tag-1 + requant-only controls. Scout-F GREEN-eligible
+  borderline. LIVE RISK: committee may conflate with the known EXIF footgun (mechanism-known
+  ceiling) -> defense = the dormant-tag->serialization-destruction->cross-mirror-non-reproducibility
+  CHAIN (absent from literature), framed as "a pure serialization step silently converts
+  a benign-dormant metadata tag into an invisible irreversible benchmark-score fork",
+  NOT "EXIF rotation hurts accuracy".'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0077 result, then ros exp complete --exp EXP-0077 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0077
+created_at: '2026-06-04T19:27:46Z'
+last_updated: '2026-06-04T19:29:01Z'
