@@ -1,0 +1,80 @@
+verdict_id: VERDICT-0065
+claim_id: CLAIM-0066
+project_id: PROJ-0036
+date: '2026-06-04'
+experiment_ids:
+- EXP-0079
+experiment_paths:
+- experiments/2026-06-04/EXP-0079
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- 'Three pandas issues #20642/#43929/#48757 + MERGED fix PR #64791 = the EXACT phenomenon,
+  reported+triaged+patched by maintainers (systems_reviewer, UNREBUTTED)'
+- numpy.mean docs explicitly warn float16 reductions are precision-limited -> incremental-composition
+  leg false (one endpoint predicts it)
+- inf/NaN trigger immediate sklearn check_array ValueError -> 'silent' framing false
+required_evidence:
+- 'Exhaustive pandas issue-tracker search acknowledging #20642/#43929/#48757/PR#64791
+  + what residual survives'
+- downstream survival test (does inf/NaN propagate SILENTLY or crash at sklearn validation)
+- real prevalence of fp16 tabular feature storage + pandas reduction (dtype audits,
+  not one cast)
+- reproduction on pandas 2.2.x (deployed) AND post-fix 3.1+ (is the seam even still
+  open)
+map_delta_proposals:
+- CLAIM-0066 -> RED/converge -> DEAD. Reclassify 'empirical cross-area phenomenon'
+  -> 'known-bug reproduction with cross-tool framing'
+- the 3 issues + merged fix establish a reported/acknowledged/patched framework bug,
+  not a novel coupling
+- residual (cross-tool table) = documentation, not a finding at the claimed altitude.
+baseline_requirements:
+- 'pandas #20642/#43929/#48757 + PR#64791 as direct prior art (differentiate or concede)'
+- numpy.mean dtype-promotion docs (float16->float32 accumulator is DOCUMENTED not
+  discovered)
+- sklearn.utils.check_array NaN/Inf rejection as the loud-failure baseline
+committee_run_dir: experiments/2026-06-04/EXP-0079/committee1
+verbatim_votes_summary: "systems_reviewer(RED): pandas #20642/#43929/#48757 report\
+  \ the EXACT float16 mean->inf/NaN; PR#64791 MERGED fix for 3.1; packet's 'no issue\
+  \ exists' is false -> this IS the bug, patched. novelty_killer(Y): mechanism is\
+  \ textbook IEEE-754 overflow; per-tool behaviors individually documented; numpy\
+  \ docs warn float16 reductions. evaluation_prosecutor(Y): 'silent' collapses \u2014\
+  \ inf/NaN caught immediately by sklearn check_array; no killer experiment. theory_skeptic(Y):\
+  \ divergence = one inequality (sum>65504) x documented accumulator policies = Cartesian\
+  \ product of known policies, not emergent. product_realist(Y): fp16 tabular feature\
+  \ storage uncommon, trivial workaround (astype float64), no prevalence data. area_chair(RED):\
+  \ unrebutted RED + PRIOR_ART_ADEQUATE:no -> cannot GREEN; fails BOTH orchestrator\
+  \ stress-tests; honest altitude = reproduction of a known+patched bug = documentation,\
+  \ converge."
+key_structural_finding: "FATAL prior-art miss: three independent pandas issues (#20642,\
+  \ #43929, #48757, 2018-2022) report the EXACT float16 Series.mean()->inf/NaN accumulator\
+  \ overflow, + a MERGED fix PR #64791 (upcast float16 in nanmean/nansum, pandas 3.1).\
+  \ The packet's 'no GitHub issue exists' was FALSE. ALSO: incremental-composition\
+  \ leg FAILS \u2014 numpy docs EXPLICITLY warn float16 reductions are precision-limited\
+  \ + recommend dtype=float64, so ONE endpoint DOES predict the hazard from its own\
+  \ side (unlike CLAIM-0059's NFKC-vs-NFC where neither side's docs could derive the\
+  \ 95% surprise). ALSO: 'silent' framing FAILS \u2014 inf/NaN are IEEE-754 poison\
+  \ pills that trigger an immediate sklearn check_array ValueError (LOUD, not silent);\
+  \ no killer experiment showed silent model corruption. The divergence reduces to\
+  \ one inequality (running_sum>65504) x each tool's DOCUMENTED accumulator policy\
+  \ = a Cartesian product of known policies, not an emergent phenomenon. Altitude\
+  \ = well-executed reproduction of a known+patched pandas bug w/ a useful cross-tool\
+  \ comparison table = documentation/blog contribution, NOT a publishable new coupling."
+disposition: committee#1 RED (systems_reviewer RED + 4 yellow, area_chair RED on an
+  UNREBUTTED RED + inadequate prior-art). CONVERGE -> DEAD. The claim is a reproduction
+  of a KNOWN, ALREADY-PATCHED pandas bug, not a novel cross-area coupling.
+created_at: '2026-06-04T22:37:31Z'
