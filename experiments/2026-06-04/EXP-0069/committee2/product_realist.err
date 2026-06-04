@@ -5,42 +5,11 @@ Using AI Gateway (Meta Model API upstream)
 [0m
 > build · avocado-code-latest
 [0m
-[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001\\.md"}
+[0m✗ [0mread failed
+[91m[1mError: [0mFile not found: /Users/dengcchi/autonomous-research-v3/_committee_common_v001.md
 [0m→ [0mRead .
-[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001"}
+[0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md"}
+[0m✱ [0mGlob "**/*committee_common*"[90m 0 matches[0m
+[0m✱ [0mGlob "**/TOOLING*"[90m 0 matches[0m
 [0m
 [0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "_committee_common_v001.md" 2>/dev/null | head -20
-[0m
-[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "TOOLING_v001.md" 2>/dev/null | head -20
-[0m
-[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/prompts 2>/dev/null || find /Users/dengcchi/autonomous-research-v3 -type d -name "prompts" 2>/dev/null | head -5
-[0m
-[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "*.md" | xargs grep -l "committee_common" 2>/dev/null | head -5
-/Users/dengcchi/autonomous-research-v3/learning/roles/orchestrator.md
-/Users/dengcchi/autonomous-research-v3/learning/orchestrator/2026-06-03.md
-[0m
-[0m$ [0mgrep -r "_committee_common_v001" /Users/dengcchi/autonomous-research-v3 2>/dev/null | head -5
-/Users/dengcchi/autonomous-research-v3/learning/roles/orchestrator.md:- COMMITTEE-COMPLETENESS / 503 PROTOCOL (the big one): a committee member can return a transient 503/API-error as its .out (NOT a vote). The area_chair correctly casts NO_VOTE and refuses to fabricate. DO NOT write a 5/6 or invent the 6th. RE-RUN THE FAILED REVIEWER ALONE against the SAME packet: claude --dangerously-disable-osx-sandbox --model <backend> -p "$(cat /Users/dengcchi/research-os/prompts/committee/<role>_v001.md /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md <PACKET>)" > <out>/<role>.out — backends: novelty_killer=claude-opus-4-8, systems_reviewer=codex, evaluation_prosecutor=gemini, theory_skeptic=claude-opus-4-7, product_realist=metacode, area_chair=claude-opus-4-6. Then tally the real 6/6. (Happened on CLAIM-0011 committee#2; recovered cleanly.)
-/Users/dengcchi/autonomous-research-v3/learning/orchestrator/2026-06-03.md:- COMMITTEE-COMPLETENESS / 503 PROTOCOL (the big one): a committee member can return a transient 503/API-error as its .out (NOT a vote). The area_chair correctly casts NO_VOTE and refuses to fabricate. DO NOT write a 5/6 or invent the 6th. RE-RUN THE FAILED REVIEWER ALONE against the SAME packet: claude --dangerously-disable-osx-sandbox --model <backend> -p "$(cat /Users/dengcchi/research-os/prompts/committee/<role>_v001.md /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md <PACKET>)" > <out>/<role>.out — backends: novelty_killer=claude-opus-4-8, systems_reviewer=codex, evaluation_prosecutor=gemini, theory_skeptic=claude-opus-4-7, product_realist=metacode, area_chair=claude-opus-4-6. Then tally the real 6/6. (Happened on CLAIM-0011 committee#2; recovered cleanly.)
-/Users/dengcchi/autonomous-research-v3/experiments/2026-06-04/EXP-0069/committee2/systems_reviewer.err:Read _committee_common_v001.md + _shared/TOOLING_v001.md.
-/Users/dengcchi/autonomous-research-v3/experiments/2026-06-04/EXP-0069/committee2/systems_reviewer.err:/bin/zsh -lc "rg --files | rg '("'^|/)(_committee_common_v001'"\\.md|TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi/autonomous-research-v3
-/Users/dengcchi/autonomous-research-v3/experiments/2026-06-04/EXP-0069/committee2/systems_reviewer.err:/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
-[0m
-[0m$ [0mls -la /Users/dengcchi/research-os/prompts/committee/ 2>/dev/null | head -30
-total 56
-drwxr-xr-x  9 dengcchi  staff   288 May 31 03:14 .
-drwxr-xr-x  7 dengcchi  staff   224 May 31 23:07 ..
--rw-r--r--  1 dengcchi  staff  1216 May 31 03:14 _committee_common_v001.md
--rw-r--r--  1 dengcchi  staff  1122 May 31 03:14 area_chair_v001.md
--rw-r--r--  1 dengcchi  staff   625 May 31 03:14 evaluation_prosecutor_v001.md
--rw-r--r--  1 dengcchi  staff   697 May 31 03:14 novelty_killer_v001.md
--rw-r--r--  1 dengcchi  staff   592 May 31 03:14 product_realist_v001.md
--rw-r--r--  1 dengcchi  staff   706 May 31 03:14 systems_reviewer_v001.md
--rw-r--r--  1 dengcchi  staff   652 May 31 03:14 theory_skeptic_v001.md
-[0m
-[0m$ [0mfind /Users/dengcchi/research-os -name "TOOLING_v001.md" 2>/dev/null | head -5
-/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
-[0m
-[0m→ [0mRead ../research-os/prompts/committee/_committee_common_v001.md
-[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md
-[0m→ [0mRead ../research-os/prompts/committee/product_realist_v001.md
