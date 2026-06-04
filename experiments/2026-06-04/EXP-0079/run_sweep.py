@@ -1,4 +1,4 @@
-import numpy as np, pandas as pd, pyarrow.parquet as pq
+import numpy as np, pandas as pd, pyarrow, pyarrow.parquet as pq
 from sklearn.preprocessing import StandardScaler
 import tempfile, os, csv, warnings, sys, platform
 warnings.simplefilter("ignore")  # we record finiteness ourselves; numpy overflow warnings expected
@@ -8,7 +8,7 @@ RES = os.path.join(OUT, "results")
 os.makedirs(RES, exist_ok=True)
 
 VERS = dict(python=platform.python_version(), pandas=pd.__version__, numpy=np.__version__,
-            pyarrow=pq.pa.__version__, sklearn=__import__("sklearn").__version__)
+            pyarrow=pyarrow.__version__, sklearn=__import__("sklearn").__version__)
 print("VERSIONS:", VERS)
 
 def roundtrip_parquet(arr, dtype):
