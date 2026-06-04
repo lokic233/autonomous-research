@@ -1739,3 +1739,24 @@ VERIFY (by outcome, isolated /tmp): reap dry-run BEFORE = 'orchestrator-r1-001 r
 
 ## BUG-118 (RESERVED navi-v3-watch-successor 2026-06-04T15:3xZ) monitor cron runs `ros reap` WITHOUT --apply (dry-run) -> reaper NEVER flips lingering agents -> stale-running zombies persist -> self-check STEP-0 keeps identifying as the frozen orchestrator + never spawns a successor
 SURFACE: engine/crons/monitor.sh line ~45: `ROS reap >/dev/null 2>&1 || true`. `ros reap` DEFAULTS TO DRY-RUN (cmd_reap: apply=args.apply, needs --apply). So the 5-min monitor only PRINTS what it would reap and discards it — it never actually flips a past-grace status=running agent to dead/superseded/retired. CONSEQUENCE (the deeper root cause of the ~10h silent brain death, compounding BUG-117): orchestrator-r6-001 went past-grace at 04:26Z but stayed status:running FOREVER because no cron applied the reap. The self-check job STEP-0 ('newest NON-TERMINAL orchestrator = YOU; if newest retired + none running -> spawn rN+1') therefore kept self-identifying as the still-"running" r6 and NEVER triggered the spawn-successor path -> no respawn, no AGENT_DOWN. Even BUG-117 (role-aware DEAD classification) is INERT in production until the cron actually applies the reap. REPRO: live v3 r6 is STILL status:running at 04:26Z hb 11h later despite 130+ monitor cycles. FIX (engine next, CAUTIOUS — monitor.sh is shared + driver-run every 5m): change to `ROS reap --apply` so past-grace lingerers are flipped (now BUG-117-correctly: global singletons -> dead+NOTIFY, per-project converged -> clean retire, superseded -> superseded). Validate in /tmp that --apply is idempotent + only touches past-grace agents (BUG-113 lock + re-check-inside already guards a racing heartbeat).
+
+## 2026-06-04 ~16:10 UTC — BUG-117 (orchestrator-session-death has no recovery path) [v3-impl, found post-blackout]
+dengcchi's Mac slept ~10h (power blackout). On reconnect: driver relaunched fine, BUT the orchestrator
+Navi session (b433bb72) DIED with the Mac — and unlike a clean token-retire (distill->spawn ONE successor),
+a SESSION DEATH has NO recovery path: (1) the reaper correctly flipped r6 running->dead + dropped AGENT_DOWN
+into the ORCHESTRATOR INBOX — but the orchestrator IS the dead agent, so nobody reads it (circular); (2) the
+self-check schedule job fired into the DEAD session every 10m, registering lastStatus:ok (trigger ran) while
+NO live agent acted; (3) lanes showed DESIGN? 0/2 (actionable work) for ~11h with a dead orchestrator + no
+successor = idle-while-actionable, the exact v2 incident class. A watch cycle mislabeled it "benign (converged,
+empty queue)" — WRONG: below-target DESIGN? is actionable, not converged-done.
+ROOT GAP: orchestrator session-death (vs token-retire) isn't auto-recovered; per the escalation chain
+(main-navi <- orchestrator <- crons), the MAIN NAVI session is the recovery layer when the orchestrator
+can't self-revive. RECOVERY DONE (main-navi, this session): registered orchestrator-r7-001 (parent r6),
+fixed r6 lineage (retired_to r7), acked the 3 stale AGENT_DOWN (r6 + 2 GPU coords), spawned a fresh r7 Navi
+session (d56e1ca8) with full warm-start+respawn-coords+refill-DESIGN directive, recreated the self-check
+job (5f756cfb) targeting r7's live session, removed the stale self-check (af9235ca, pointed at dead b433bb72).
+FOLLOW-UP (design, for a future engine session — NOT yet coded): a dead-man recovery so the system
+self-heals an orchestrator session-death without a human: e.g. a cron that, on AGENT_DOWN:orchestrator with
+no live successor + actionable lanes, escalates to the main-navi session (or a tiny launcher) to spawn the
+successor. Today that escalation is manual (main-navi). Engine HEAD unchanged (b193b57) — this recovery was
+operational, not an engine code fix; the dead-man cron is the real fix to build next.
