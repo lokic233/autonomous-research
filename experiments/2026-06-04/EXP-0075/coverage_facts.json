@@ -1,0 +1,29 @@
+{
+  "clean_single_keyword_enforced": {
+    "minimum_int(min=10,viol=5)": true,
+    "maximum_int(max=100,viol=999)": true,
+    "minLength(5,viol=hi)": true,
+    "maxLength(3,viol=abcdefg)": true,
+    "pattern(^[a-z]+$,viol=ABC)": true,
+    "multipleOf(5,viol=7)": false
+  },
+  "integer_max_boundary_bug": {
+    "100": true,
+    "130": false,
+    "153": false,
+    "180": false,
+    "255": true
+  },
+  "integer_min_boundary_bug": {
+    "1": true,
+    "2": false,
+    "5": false,
+    "10": true
+  },
+  "number_range_enforced": false,
+  "int_min_violated_by_float(min=5,viol=4.0)": true,
+  "pattern_plus_maxLength_enforced": false,
+  "pattern_plus_minLength_enforced": false,
+  "maxLength_alone_enforced": true,
+  "multipleOf_always_dropped": true
+}
