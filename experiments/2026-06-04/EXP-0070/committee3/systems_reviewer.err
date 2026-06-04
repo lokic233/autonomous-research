@@ -1218,3 +1218,605 @@ hook: PostToolUse Completed
 hook: PostToolUse Completed
 exec
 /bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebookresearch/datatrove/main/src/datatrove/utils/text.py | grep -n \"def simplify_text\\|normalize\\|lower\\|casefold\\|NFKC\\|NFD\" | head -80" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/sgl-project/sglang/main/README.md | head -40' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/vllm-project/vllm/main/README.md | head -40' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/text_dedup/utils/__init__.py | grep -n \"NON_ALPHA\\|casefold\\|NFKC\\|normalize\\|lower\" | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 229ms:
+hook: PostToolUse Completed
+ succeeded in 164ms:
+ succeeded in 186ms:
+<!-- markdownlint-disable MD001 MD041 -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-dark.png">
+    <img alt="vLLM" src="https://raw.githubusercontent.com/vllm-project/vllm/main/docs/assets/logos/vllm-logo-text-light.png" width=55%>
+  </picture>
+</p>
+
+<h3 align="center">
+Easy, fast, and cheap LLM serving for everyone
+</h3>
+
+<p align="center">
+| <a href="https://docs.vllm.ai"><b>Documentation</b></a> | <a href="https://blog.vllm.ai/"><b>Blog</b></a> | <a href="https://arxiv.org/abs/2309.06180"><b>Paper</b></a> | <a href="https://x.com/vllm_project"><b>Twitter/X</b></a> | <a href="https://discuss.vllm.ai"><b>User Forum</b></a> | <a href="https://slack.vllm.ai"><b>Developer Slack</b></a> |
+</p>
+
+🔥 We have built a vLLM website to help you get started with vLLM. Please visit [vllm.ai](https://vllm.ai) to learn more.
+For events, please visit [vllm.ai/events](https://vllm.ai/events) to join us.
+
+---
+
+## About
+
+vLLM is a fast and easy-to-use library for LLM inference and serving.
+
+Originally developed in the [Sky Computing Lab](https://sky.cs.berkeley.edu) at UC Berkeley, vLLM has grown into one of the most active open-source AI projects built and maintained by a diverse community of many dozens of academic institutions and companies from over 2000 contributors.
+
+vLLM is fast with:
+
+- State-of-the-art serving throughput
+- Efficient management of attention key and value memory with [**PagedAttention**](https://blog.vllm.ai/2023/06/20/vllm.html)
+- Continuous batching of incoming requests, chunked prefill, prefix caching
+- Fast and flexible model execution with piecewise and full CUDA/HIP graphs
+- Quantization: FP8, MXFP8/MXFP4, NVFP4, INT8, INT4, GPTQ/AWQ, GGUF, compressed-tensors, ModelOpt, TorchAO, and [more](https://docs.vllm.ai/en/latest/features/quantization/index.html)
+- Optimized attention kernels including FlashAttention, FlashInfer, TRTLLM-GEN, FlashMLA, and Triton
+- Optimized GEMM/MoE kernels for various precisions using CUTLASS, TRTLLM-GEN, CuTeDSL
+- Speculative decoding including n-gram, suffix, EAGLE, DFlash
+- Automatic kernel generation and graph-level transformations using torch.compile
+- Disaggregated prefill, decode, and encode
+
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 329ms:
+<div align="center" id="sglangtop">
+<img src="https://raw.githubusercontent.com/sgl-project/sglang/main/assets/logo.png" alt="logo" width="400" margin="10px"></img>
+
+[![PyPI](https://img.shields.io/pypi/v/sglang)](https://pypi.org/project/sglang)
+![PyPI - Downloads](https://static.pepy.tech/badge/sglang?period=month)
+[![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE)
+[![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)
+
+</div>
+
+--------------------------------------------------------------------------------
+
+<p align="center">
+<a href="https://lmsys.org/blog/"><b>Blog</b></a> |
+<a href="https://docs.sglang.io/"><b>Documentation</b></a> |
+<a href="https://roadmap.sglang.io/"><b>Roadmap</b></a> |
+<a href="https://slack.sglang.io/"><b>Join Slack</b></a> |
+<a href="https://meet.sglang.io/"><b>Weekly Dev Meeting</b></a> |
+<a href="https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#slides"><b>Slides</b></a>
+</p>
+
+## News
+- [2026/02] 🔥 Unlocking 25x Inference Performance with SGLang on NVIDIA GB300 NVL72 ([blog](https://lmsys.org/blog/2026-02-20-gb300-inferencex/)).
+- [2026/01] 🔥 SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2026-01-16-sglang-diffusion/)).
+- [2025/12] SGLang provides day-0 support for latest open models ([MiMo-V2-Flash](https://lmsys.org/blog/2025-12-16-mimo-v2-flash/), [Nemotron 3 Nano](https://lmsys.org/blog/2025-12-15-run-nvidia-nemotron-3-nano/), [Mistral Large 3](https://github.com/sgl-project/sglang/pull/14213), [LLaDA 2.0 Diffusion LLM](https://lmsys.org/blog/2025-12-19-diffusion-llm/), [MiniMax M2](https://lmsys.org/blog/2025-11-04-miminmax-m2/)).
+- [2025/10] 🔥 SGLang now runs natively on TPU with the SGLang-Jax backend ([blog](https://lmsys.org/blog/2025-10-29-sglang-jax/)).
+- [2025/09] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part II): 3.8x Prefill, 4.8x Decode Throughput ([blog](https://lmsys.org/blog/2025-09-25-gb200-part-2/)).
+- [2025/09] SGLang Day 0 Support for DeepSeek-V3.2 with Sparse Attention ([blog](https://lmsys.org/blog/2025-09-29-deepseek-V32/)).
+- [2025/08] SGLang x AMD SF Meetup on 8/22: Hands-on GPU workshop, tech talks by AMD/xAI/SGLang, and networking ([Roadmap](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_roadmap.pdf), [Large-scale EP](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_ep.pdf), [Highlights](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_highlights.pdf), [AITER/MoRI](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_aiter_mori.pdf), [Wave](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_wave.pdf)).
+
+<details>
+<summary>More</summary>
+
+- [2025/11] SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2025-11-07-sglang-diffusion/)).
+- [2025/10] PyTorch Conference 2025 SGLang Talk ([slide](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/sglang_pytorch_2025.pdf)).
+- [2025/10] SGLang x Nvidia SF Meetup on 10/2 ([recap](https://x.com/lmsysorg/status/1975339501934510231)).
+- [2025/08] SGLang provides day-0 support for OpenAI gpt-oss model ([instructions](https://github.com/sgl-project/sglang/issues/8833))
+- [2025/06] SGLang, the high-performance serving infrastructure powering trillions of tokens daily, has been awarded the third batch of the Open Source AI Grant by a16z ([a16z blog](https://a16z.com/advancing-open-source-ai-through-benchmarks-and-bold-experimentation/)).
+
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/ChenghaoMou/text-dedup/git/trees/main?recursive=1 | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'minhash|utils|normalize|dedup' | head -100" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/facebookresearch/datatrove/git/trees/main?recursive=1 | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'text|dedup|normal' | head -100" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/ChenghaoMou/text-dedup/git/trees/main?recursive=1
+
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/facebookresearch/datatrove/git/trees/main?recursive=1
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/LMCache/LMCache/main/README.md | head -60' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/flashinfer-ai/flashinfer/main/README.md | head -50' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/main/README.md | head -50' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 217ms:
+# LMCache core library
+
+## Installation
+
+**Prerequisite:** Python >= 3.10
+
+```bash
+pip install -e .
+```
+
+## Demos
+Feel free to try our docker-based demos yourself! All the demos are available [in this repo](https://github.com/LMCache/demo).
+
+## Quickstart: 
+
+**Prerequisites**: To run the quickstart demo, your server should have 1 GPU and the [docker environment](https://docs.docker.com/engine/install/) installed.
+
+**Step 1:** Pull docker images
+```bash
+docker pull apostacyh/vllm:lmcache-0.1.0
+```
+
+**Step 2:** Start vLLM + LMCache 
+```bash
+model=mistralai/Mistral-7B-Instruct-v0.2    # Replace with your model name
+sudo docker run --runtime nvidia --gpus '"device=0"' \
+    -v <Huggingface cache dir on your local machine>:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<Your huggingface access token>" \
+    --ipc=host \
+    --network=host \
+    apostacyh/vllm:lmcache-0.1.0 \
+    --model $model --gpu-memory-utilization 0.6 --port 8000 \
+    --lmcache-config-file /lmcache/LMCache/examples/example-local.yaml
+```
+Please fill `Huggingface cache dir on your local machine` and `Your huggingface access token` in the above command. 
+
+You can also change the `model` variable to use different models.
+
+The vLLM engine is ready after you see the logs like this:
+```
+INFO:     Started server process [865615]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+**Step 3:** Run demo application
+
+You can now run the demo application in the LMCache repo. Please execute the following commands on the server
+```bash
+git clone https://github.com/LMCache/LMCache
+cd LMCache/examples/
+
+# Install openai client library
+pip install openai
+
+# Start the demo chat application
+python openai_chat_completion_client.py 8000
+```
+
+hook: PostToolUse Completed
+ succeeded in 184ms:
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-black-background.png?raw=true">
+    <img alt="FlashInfer" src="https://github.com/flashinfer-ai/web-data/blob/main/logo/FlashInfer-white-background.png?raw=true" width=55%>
+  </picture>
+</p>
+<h1 align="center">
+High-Performance GPU Kernels for Inference
+</h1>
+
+<p align="center">
+| <a href="https://docs.flashinfer.ai"><b>Documentation</b></a> | <a href="https://github.com/flashinfer-ai/flashinfer/releases/latest"><b>Latest Release</b></a> | <a href="https://flashinfer.ai"><b>Blog</b></a> | <a href="https://join.slack.com/t/flashinfer/shared_invite/zt-379wct3hc-D5jR~1ZKQcU00WHsXhgvtA"><b>Slack</b></a> |  <a href="https://github.com/orgs/flashinfer-ai/discussions"><b>Discussion Forum</b></a> |
+</p>
+
+[![Build Status](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/badge/icon)](https://ci.tlcpack.ai/job/flashinfer-ci/job/main/)
+[![Documentation](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml/badge.svg)](https://github.com/flashinfer-ai/flashinfer/actions/workflows/build-doc.yml)
+
+**FlashInfer** is a library and kernel generator for inference that delivers state-of-the-art performance across diverse GPU architectures. It provides unified APIs for attention, GEMM, and MoE operations with multiple backend implementations including FlashAttention-2/3, cuDNN, CUTLASS, and TensorRT-LLM.
+
+## Why FlashInfer?
+
+- **State-of-the-art Performance**: Optimized kernels for prefill, decode, and mixed batching scenarios
+- **Multiple Backends**: Automatically selects the best backend for your hardware and workload
+- **Modern Architecture Support**: Support for SM75 (Turing) and later (through Blackwell)
+- **Low-Precision Compute**: FP8 and FP4 quantization for attention, GEMM, and MoE operations
+- **Production-Ready**: CUDAGraph and torch.compile compatible for low-latency serving
+
+## Core Features
+
+### Attention Kernels
+- **Paged and Ragged KV-Cache**: Efficient memory management for dynamic batch serving
+- **Decode, Prefill, and Append**: Optimized kernels for all attention phases
+- **MLA Attention**: Native support for DeepSeek's Multi-Latent Attention
+- **Cascade Attention**: Memory-efficient hierarchical KV-Cache for shared prefixes
+- **Sparse Attention**: Block-sparse and variable block-sparse patterns
+- **POD-Attention**: Fused prefill+decode for mixed batching
+
+### GEMM & Linear Operations
+- **BF16 GEMM**: BF16 matrix multiplication for SM10.0+ GPUs.
+- **FP8 GEMM**: Per-tensor and groupwise scaling
+- **FP4 GEMM**: NVFP4 and MXFP4 matrix multiplication for Blackwell GPUs
+- **Grouped GEMM**: Efficient batched matrix operations for LoRA and multi-expert routing
+
+### Mixture of Experts (MoE)
+- **Fused MoE Kernels**
+- **Multiple Routing Methods**: DeepSeek-V3, Llama-4, and standard top-k routing
+- **Quantized MoE**: FP8 and FP4 expert weights with block-wise scaling
+
+### Sampling & Decoding
+- **Sorting-Free Sampling**: Efficient Top-K, Top-P, and Min-P without sorting
+
+ succeeded in 217ms:
+<div align="center">
+
+TensorRT LLM
+===========================
+<h4>TensorRT LLM optimizes inference for LLMs and Visual Gen models with specialized kernels for common operations, an efficient runtime, and a pythonic framework that enables you to customize and extend the system.</h4>
+
+[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://nvidia.github.io/TensorRT-LLM/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/NVIDIA/TensorRT-LLM)
+[![python](https://img.shields.io/badge/python-3.12-green)](https://www.python.org/downloads/release/python-3123/)
+[![python](https://img.shields.io/badge/python-3.10-green)](https://www.python.org/downloads/release/python-31012/)
+[![cuda](https://img.shields.io/badge/cuda-13.1.1-green)](https://developer.nvidia.com/cuda-downloads)
+[![torch](https://img.shields.io/badge/torch-2.10.0-green)](https://pytorch.org)
+[![version](https://img.shields.io/badge/release-1.3.0rc18-green)](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/version.py)
+[![license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/NVIDIA/TensorRT-LLM/blob/main/LICENSE)
+
+[Architecture](https://nvidia.github.io/TensorRT-LLM/developer-guide/overview.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Performance](https://nvidia.github.io/TensorRT-LLM/developer-guide/perf-overview.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Examples](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation](https://nvidia.github.io/TensorRT-LLM/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Roadmap](https://github.com/NVIDIA/TensorRT-LLM/issues?q=is%3Aissue%20state%3Aopen%20label%3Aroadmap)
+
+---
+<div align="left">
+
+## Tech Blogs
+
+<!-- Use github markdown link to link for the latest blog since the doc build has not happened yet. When the doc build is updated, it should be updated to the webpage link. -->
+
+* [05/15] Joint Optimization of Agent Applications and TensorRT-LLM
+✨ [➡️ link](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/blogs/tech_blog/blog23_Joint_Optimization_of_Agent_Applications_and_TensorRT-LLM.md)
+
+* [04/03] Tuning CUDA Graph Batch Sizes for Higher Output Throughput
+✨ [➡️ link](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/blogs/tech_blog/blog20_Tuning_CUDA_Graph_Batch_Sizes_for_Higher_Output_Throughput.md)
+
+* [04/03] DWDP: Distributed Weight Data Parallelism for High-Performance LLM Inference on NVL72
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog19_DWDP_Distributed_Weight_Data_Parallelism_for_High_Performance_LLM_Inference_on_NVL72.html)
+
+
+* [03/16] Optimizing MoE Communication with One-Sided AlltoAll Over NVLink
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog18_Optimizing_MoE_Communication_with_One_Sided_AlltoAll_Over_NVLink.html)
+
+* [03/04] Sparse Attention in TensorRT LLM
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog17_Sparse_Attention_in_TensorRT-LLM.html)
+
+* [02/06] Accelerating Long-Context Inference with Skip Softmax Attention
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog16_Accelerating_Long_Context_Inference_with_Skip_Softmax_Attention.html)
+
+* [01/09] Optimizing DeepSeek-V3.2 on NVIDIA Blackwell GPUs
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog15_Optimizing_DeepSeek_V32_on_NVIDIA_Blackwell_GPUs)
+
+<details close>
+<summary>Previous Blogs</summary>
+* [10/13] Scaling Expert Parallelism in TensorRT LLM (Part 3: Pushing the Performance Boundary)
+✨ [➡️ link](https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog14_Scaling_Expert_Parallelism_in_TensorRT-LLM_part3.html)
+
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/facebookresearch/datatrove/git/trees/main?recursive=1' | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'text|dedup|normal' | head -100" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/huggingface/tokenizers/git/trees/main?recursive=1' | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'normalizer|unicode|sentencepiece|nfkc' | head -120" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/ChenghaoMou/text-dedup/git/trees/main?recursive=1' | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'minhash|utils|normalize|dedup' | head -120" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 220ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 314ms:
+"path": "benchmarks/utils.py"
+"path": "configs/benchmark_core_minhash.toml"
+"path": "configs/benchmark_news_minhash.toml"
+"path": "configs/minhash.toml"
+"path": "src/text_dedup"
+"path": "src/text_dedup/__init__.py"
+"path": "src/text_dedup/bloom_filter.py"
+"path": "src/text_dedup/config"
+"path": "src/text_dedup/config/__init__.py"
+"path": "src/text_dedup/config/algorithms"
+"path": "src/text_dedup/config/algorithms/__init__.py"
+"path": "src/text_dedup/config/algorithms/base.py"
+"path": "src/text_dedup/config/algorithms/bloom.py"
+"path": "src/text_dedup/config/algorithms/minhash.py"
+"path": "src/text_dedup/config/algorithms/simhash.py"
+"path": "src/text_dedup/config/algorithms/suffix_array.py"
+"path": "src/text_dedup/config/base.py"
+"path": "src/text_dedup/config/debug.py"
+"path": "src/text_dedup/config/io"
+"path": "src/text_dedup/config/io/__init__.py"
+"path": "src/text_dedup/config/io/input_configs.py"
+"path": "src/text_dedup/config/io/output_configs.py"
+"path": "src/text_dedup/data_sources"
+"path": "src/text_dedup/data_sources/__init__.py"
+"path": "src/text_dedup/data_sources/io.py"
+"path": "src/text_dedup/minhash.py"
+"path": "src/text_dedup/py.typed"
+"path": "src/text_dedup/simhash.py"
+"path": "src/text_dedup/suffix_array.py"
+"path": "src/text_dedup/utils"
+"path": "src/text_dedup/utils/__init__.py"
+"path": "src/text_dedup/utils/env.py"
+"path": "src/text_dedup/utils/ftfy_utils.py"
+"path": "src/text_dedup/utils/hashfunc.py"
+"path": "src/text_dedup/utils/jaccard.py"
+"path": "src/text_dedup/utils/logger.py"
+"path": "src/text_dedup/utils/preprocess.py"
+"path": "src/text_dedup/utils/progress.py"
+"path": "src/text_dedup/utils/timer.py"
+"path": "src/text_dedup/utils/tokenization.py"
+"path": "src/text_dedup/utils/union_find.py"
+"path": "tests/test_benchmarks/test_utils.py"
+"path": "tests/test_config/test_algorithms/test_minhash_components.py"
+"path": "tests/test_utils"
+"path": "tests/test_utils/test_hashfunc.py"
+"path": "tests/test_utils/test_jaccard.py"
+"path": "tests/test_utils/test_preprocess.py"
+"path": "tests/test_utils/test_tokenization.py"
+"path": "tests/test_utils/test_union_find.py"
+"path": "third_party/deduplicate-text-datasets"
+
+hook: PostToolUse Completed
+ succeeded in 402ms:
+"path": "bindings/node/lib/bindings/normalizers.test.ts"
+"path": "bindings/node/src/normalizers.rs"
+"path": "bindings/python/py_src/tokenizers/implementations/sentencepiece_bpe.py"
+"path": "bindings/python/py_src/tokenizers/implementations/sentencepiece_unigram.py"
+"path": "bindings/python/py_src/tokenizers/normalizers.pyi"
+"path": "bindings/python/py_src/tokenizers/normalizers"
+"path": "bindings/python/py_src/tokenizers/normalizers/__init__.py"
+"path": "bindings/python/scripts/sentencepiece_extractor.py"
+"path": "bindings/python/src/normalizers.rs"
+"path": "bindings/python/tests/bindings/test_normalizers.py"
+"path": "bindings/python/tests/implementations/test_sentencepiece.py"
+"path": "docs/source-doc-builder/api/normalizers.mdx"
+"path": "tokenizers/src/normalizers"
+"path": "tokenizers/src/normalizers/bert.rs"
+"path": "tokenizers/src/normalizers/byte_level.rs"
+"path": "tokenizers/src/normalizers/mod.rs"
+"path": "tokenizers/src/normalizers/precompiled.rs"
+"path": "tokenizers/src/normalizers/prepend.rs"
+"path": "tokenizers/src/normalizers/replace.rs"
+"path": "tokenizers/src/normalizers/strip.rs"
+"path": "tokenizers/src/normalizers/unicode.rs"
+"path": "tokenizers/src/normalizers/utils.rs"
+"path": "tokenizers/src/pre_tokenizers/unicode_scripts"
+"path": "tokenizers/src/pre_tokenizers/unicode_scripts/mod.rs"
+"path": "tokenizers/src/pre_tokenizers/unicode_scripts/pre_tokenizer.rs"
+"path": "tokenizers/src/pre_tokenizers/unicode_scripts/scripts.rs"
+"path": "tokenizers/src/tokenizer/normalizer.rs"
+
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/huggingface/datatrove/git/trees/main?recursive=1' | grep -o '\"path\": \"["'^"]*"'"' | grep -E 'text|dedup|normal|filter' | head -160" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/src/text_dedup/utils/tokenization.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/src/text_dedup/minhash.py | grep -n \"tokenize\\|lower\\|casefold\\|NON_ALPHA\\|normalize\\|NFKC\" | head -120" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/tokenizers/main/tokenizers/src/normalizers/unicode.rs | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 193ms:
+from collections.abc import Iterator
+from itertools import tee
+
+
+def ngrams(sequence: list[str], n: int, min_length: int = 5) -> Iterator[tuple[str, ...]]:
+    """
+    Return the ngrams generated from a sequence of items, as an iterator.
+
+    This is a modified version of nltk.util.ngrams.
+
+    Parameters
+    ----------
+    sequence : List[Text]
+        The sequence of items.
+    n : int
+        The length of each ngram.
+    min_length : int, optional
+        The minimum length of each ngram, by default 5
+
+    Returns
+    -------
+    iterator
+        The ngrams.
+    """
+    if len(sequence) < min_length:
+        return iter([])
+    if len(sequence) < n:
+        return iter([tuple(sequence)])
+    iterables = tee(iter(sequence), n)
+    for i, sub_iterable in enumerate(iterables):
+        for _ in range(i):
+            next(sub_iterable, None)  # pyright: ignore[reportUnusedCallResult]
+    return zip(*iterables, strict=False)
+
+ succeeded in 198ms:
+118:    tokenizer = algo.get_ngrams_func()
+123:                    set(tokenizer(record[algo.text_column])),  # pyright: ignore[reportAny]
+124:                    set(tokenizer(record[f"{algo.text_column}_right"])),  # pyright: ignore[reportAny]
+
+ succeeded in 358ms:
+"path": "examples/filter_hf_dataset.py"
+"path": "examples/minhash_deduplication.py"
+"path": "examples/sentence_deduplication.py"
+"path": "examples/url_deduplication.py"
+"path": "src/datatrove/assets/url_filterblacklistsv0_3_0.tar.gz"
+"path": "src/datatrove/pipeline/dedup"
+"path": "src/datatrove/pipeline/dedup/__init__.py"
+"path": "src/datatrove/pipeline/dedup/bloom_filter.py"
+"path": "src/datatrove/pipeline/dedup/exact_dedup.py"
+"path": "src/datatrove/pipeline/dedup/exact_substrings.py"
+"path": "src/datatrove/pipeline/dedup/minhash.py"
+"path": "src/datatrove/pipeline/dedup/sentence_dedup.py"
+"path": "src/datatrove/pipeline/filters"
+"path": "src/datatrove/pipeline/filters/__init__.py"
+"path": "src/datatrove/pipeline/filters/base_filter.py"
+"path": "src/datatrove/pipeline/filters/c4_filters.py"
+"path": "src/datatrove/pipeline/filters/fasttext_filter.py"
+"path": "src/datatrove/pipeline/filters/fineweb_quality_filter.py"
+"path": "src/datatrove/pipeline/filters/gopher_quality_filter.py"
+"path": "src/datatrove/pipeline/filters/gopher_repetition_filter.py"
+"path": "src/datatrove/pipeline/filters/lambda_filter.py"
+"path": "src/datatrove/pipeline/filters/language_filter.py"
+"path": "src/datatrove/pipeline/filters/regex_filter.py"
+"path": "src/datatrove/pipeline/filters/sampler_filter.py"
+"path": "src/datatrove/pipeline/filters/unigram_log_probs.py"
+"path": "src/datatrove/pipeline/filters/url_filter.py"
+"path": "src/datatrove/pipeline/media/filters"
+"path": "src/datatrove/pipeline/media/filters/base_filter.py"
+"path": "src/datatrove/pipeline/media/filters/mime_filter.py"
+"path": "src/datatrove/pipeline/tokens/context_shuffler.py"
+"path": "src/datatrove/utils/text.py"
+"path": "tests/pipeline/dedup"
+"path": "tests/pipeline/dedup/__init__.py"
+"path": "tests/pipeline/dedup/test_bloom_filter.py"
+"path": "tests/pipeline/dedup/test_exact_deduplication.py"
+"path": "tests/pipeline/dedup/test_exact_substrings.py"
+"path": "tests/pipeline/dedup/test_minhash.py"
+"path": "tests/pipeline/dedup/test_ngrams_decont.py"
+"path": "tests/pipeline/dedup/test_sentence_deduplication.py"
+"path": "tests/pipeline/filters"
+"path": "tests/pipeline/filters/__init__.py"
+"path": "tests/pipeline/filters/test_filters.py"
+"path": "tests/pipeline/filters/test_formatters.py"
+"path": "tests/pipeline/filters/test_pii_removal.py"
+"path": "tests/pipeline/filters/test_symbollines.py"
+"path": "tests/pipeline/text"
+"path": "tests/pipeline/text/__init__.py"
+"path": "tests/pipeline/text/test_request_cache.py"
+"path": "tests/pipeline/text/test_text.py"
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 331ms:
+use crate::tokenizer::{NormalizedString, Normalizer, Result};
+use crate::utils::macro_rules_attribute;
+
+#[derive(Default, Copy, Clone, Debug)]
+#[macro_rules_attribute(impl_serde_type!)]
+pub struct NFD;
+impl Normalizer for NFD {
+    fn normalize(&self, normalized: &mut NormalizedString) -> Result<()> {
+        normalized.nfd();
+        Ok(())
+    }
+}
+
+#[derive(Default, Copy, Clone, Debug)]
+#[macro_rules_attribute(impl_serde_type!)]
+pub struct NFKD;
+impl Normalizer for NFKD {
+    fn normalize(&self, normalized: &mut NormalizedString) -> Result<()> {
+        normalized.nfkd();
+        Ok(())
+    }
+}
+
+#[derive(Default, Copy, Clone, Debug)]
+#[macro_rules_attribute(impl_serde_type!)]
+pub struct NFC;
+impl Normalizer for NFC {
+    fn normalize(&self, normalized: &mut NormalizedString) -> Result<()> {
+        normalized.nfc();
+        Ok(())
+    }
+}
+
+#[derive(Default, Copy, Clone, Debug)]
+#[macro_rules_attribute(impl_serde_type!)]
+pub struct NFKC;
+impl Normalizer for NFKC {
+    fn normalize(&self, normalized: &mut NormalizedString) -> Result<()> {
+        normalized.nfkc();
+        Ok(())
+    }
+}
+
+fn do_nmt(normalized: &mut NormalizedString) {
+    // Ascii Control characters
+    normalized
+        .filter(|c| {
+            !matches!(
+                c as u32,
+                0x0001..=0x0008 |
+                0x000B |
+                0x000E..=0x001F |
+                0x007F |
+                0x008F |
+                0x009F
+            )
+        })
+        // Other code points considered as whitespace.
+        .map(|c| match c as u32 {
+            0x0009 => ' ',
+            0x000A => ' ',
+            0x000C => ' ',
+            0x000D => ' ',
+            0x1680 => ' ',
+            0x200B..=0x200F => ' ',
+            0x2028 => ' ',
+            0x2029 => ' ',
+            0x2581 => ' ',
+            0xFEFF => ' ',
+            0xFFFD => ' ',
+            _ => c,
+        });
+}
+
+#[derive(Default, Copy, Clone, Debug)]
+#[macro_rules_attribute(impl_serde_type!)]
+pub struct Nmt;
+impl Normalizer for Nmt {
+    fn normalize(&self, normalized: &mut NormalizedString) -> Result<()> {
+        do_nmt(normalized);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_nfkc() {
+        let original = "\u{fb01}".to_string();
+        let normalized = "fi".to_string();
+        let mut n = NormalizedString::from(original.clone());
+        NFKC.normalize(&mut n).unwrap();
+
+        assert_eq!(
+            n,
+            NormalizedString::new(original, normalized, vec![(0, 3), (0, 3)], 0)
+        );
+
+        assert_eq!(n.alignments_original(), vec![(0, 2), (0, 2), (0, 2)]);
+    }
+}
+
