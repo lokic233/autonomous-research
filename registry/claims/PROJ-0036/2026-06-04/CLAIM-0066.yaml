@@ -1,0 +1,62 @@
+claim_id: CLAIM-0066
+project_id: PROJ-0036
+stage: seed
+status: seed
+claim: "A numeric feature column stored as float16 (a storage/transport cost decision\
+  \ by the data team) silently makes the SAME columns summary statistic DEPEND ON\
+  \ WHICH REDUCTION TOOL computes it: pandas Series.mean() returns inf/nan (fp16 accumulator\
+  \ overflow \u2014 nanops.nanmean keeps dtype_sum=dtype_count=fp16 for float kinds)\
+  \ while numpy ndarray.mean() returns a QUANTIZED-but-finite value (fp32 accumulator\
+  \ upcast) and sklearn StandardScaler.mean_ stays CORRECT (incremental fp64) \u2014\
+  \ three tools, THREE answers on the identical fp16 column, with NO error/warning\
+  \ raised. Divergence onsets at N as low as ~656 rows (magnitude-100 feature: sum\
+  \ exceeds fp16 max 65504) or ~65,504 rows (unit-scale feature: count overflow ->\
+  \ nan); the quantization-vs-overflow tool DIVERGENCE itself holds at ALL N>=~1k\
+  \ regardless of magnitude. The fp16 dtype SURVIVES a pyarrow Parquet round-trip\
+  \ unchanged, so the consumer genuinely receives fp16 (seam traversed). NULL EXIT:\
+  \ fp32/fp64 storage -> all three tools agree to ~1e-5 (confirms fp16 storage-dtype\
+  \ is the cause, not data scale or N alone)."
+why_it_matters: "Cross-area production-seam (data-systems/storage-format x downstream\
+  \ statistics-computation), FIRST-GREEN (CLAIM-0059) shape, GENUINELY ORTHOGONAL\
+  \ to every dead vein this run (no LLM-config, no vector-index, no sampling/sharding,\
+  \ no Parquet-MAP/dict). \u2605 CLEARS the incremental-composition ceiling cleanly:\
+  \ NEITHER endpoint predicts the outcome from its own side. Data team: \"fp16 represents\
+  \ my magnitude-100 VALUES fine (range to 65504, ~3 digits)\" -- correct about every\
+  \ STORED ELEMENT, predicts NOTHING about an ACCUMULATOR over N (never sees NxValue).\
+  \ ML team: \"mean of a magnitude-100 column is ~100, finite, nowhere near a limit\"\
+  \ -- correct ARITHMETICALLY, predicts NOTHING about pandass fp16-accumulator returning\
+  \ inf (invisible at the API surface: no dtype, no error, no warning). The surprise\
+  \ lives ONLY in fp16-storage(A) x fp16-accumulator-policy(pandas nanmean,B); drop\
+  \ either -> vanishes (fp32 col fine; numpy merely quantizes). The NFKC-vs-NFC analog\
+  \ is numpy-fp32-acc vs pandas-fp16-acc. \u2605 VERIFY-THE-COMPOSITION applied (the\
+  \ CLAIM-0065 kill lesson): scout traced the ACTUAL pandas nanops.nanmean source\
+  \ (dtype_sum=dtype for float kind, NOT upcast), empirically confirmed numpys opposite\
+  \ fp32-upcast, AND verified fp16 survives the Parquet round-trip (seam traversed)\
+  \ -- not assumed. Prior-art: no framework documents the cross-tool divergence; nearest\
+  \ lit (bf16/fp16 FMA-accum precision arXiv:1904.06376, Kahan/pairwise summation)\
+  \ is about SUMMATION ERROR not a storage-dtype x tool-choice silent-divergence SEAM;\
+  \ no active 2024-26 cluster. Public-measurable + version-current (pandas 3.0.3/numpy\
+  \ 2.4.6/pyarrow 24.0.0). Scout-N GREEN-eligible, pre-verified end-to-end on cli:devvm14382.\
+  \ HONEST RISK: most dramatic inf needs magnitude>=100 OR N>65504 -> defense = HEADLINE\
+  \ the cross-tool DIVERGENCE (numpy quantizes / pandas inf / sklearn correct on the\
+  \ identical col, robust at all N>=~1k), the catastrophic inf is the dramatic INSTANCE\
+  \ not the robust core; magnitude-frequency objection mitigated (any unnormalized\
+  \ count/price/duration feature is magnitude>>1; even unit-scale breaks pandas at\
+  \ N>65504 = tiny for a feature store)."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r8-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0079 result, then ros exp complete --exp EXP-0079 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0079
+created_at: '2026-06-04T22:02:34Z'
+last_updated: '2026-06-04T22:03:38Z'
