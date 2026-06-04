@@ -1,0 +1,38 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE:
+  - "L1 GATE (must run FIRST, potential kill): Codegen-default audit. Feed OpenAPI/JSON Schema with `type: integer, format: int64` through mcp-to-ai-sdk, json-schema-to-zod, and any AI SDK doc-recommended patterns. Systems reviewer already found json-schema-to-zod@2.6.1 maps integer→z.number().int() (CLOSED). If this is the canonical AI SDK integration path, the surviving claim contracts from 'framework seam' to 'developer hand-writes z.number() for IDs' — a developer-error class, not a defense-layer blindness finding. This single measurement determines whether L1 is worth running at all."
+  - "End-to-end tool mis-execution: demonstrate that the corrupted float64 ID actually causes observable wrong behavior in a downstream sink (DB lookup returns wrong row, API call hits wrong resource, delete hits wrong entity). Without this, the corruption is upstream-only and the 'consequence' leg is assumed, not measured."
+  - "LLM bare-integer emission rate: measure whether production LLMs (Claude, GPT-4, etc.) emit bare integer literals vs string representations for int64 ID fields in tool-call arguments. If models predominantly emit '\"1234567890123456789\"' (string), the seam is not traversed regardless of the Zod schema."
+
+MANDATORY_BASELINES:
+  - "json-schema-to-zod output for integer/int64 schema fields (systems reviewer reports .int() — verify and document version)"
+  - "AI SDK official examples/docs: what Zod pattern do they recommend for integer tool args?"
+  - "MCP spec: how are integer/int64 parameter schemas represented in the tool definition protocol?"
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0063", change: "Hold at L0-YELLOW. Do NOT advance to full L1 until the codegen-default gate experiment runs. If codegen emits .int() for integer/int64, reclassify from 'framework seam (joint defense blindness)' to 'developer-error pattern (using z.number() where .int() is available and recommended)' and re-scope the claim altitude accordingly before any further investment."}
+
+PRIOR_ART_ADEQUATE: no — with caveat
+
+RATIONALE:
+Unanimous YELLOW from all five reviewers. The committee agrees on three points: (1) the scoped L0 measurement is clean, reproducible, and honestly self-corrected (the .int() sub-leg kill is creditable discipline); (2) the mechanism is entirely known and deterministic (ECMA-262 §6.1.6.1 + RFC 8259 §6 — every reviewer cites this independently); (3) the decisive empirical question is unanswered.
+
+The strongest convergent finding across reviewers is that stress-test #1 — whether the production/codegen default for int64 ID fields is z.number() (open) or z.number().int() (closed) — is THE load-bearing question, and the systems reviewer has already surfaced evidence that json-schema-to-zod@2.6.1 maps integer to z.number().int(), which closes the seam on the canonical integration path. This is not a minor caveat; it is potentially fatal to the "framework seam" framing. If confirmed at L1, the claim contracts to "developers who hand-write z.number() for int64 IDs despite .int() being available" — a developer-error class, not joint defense blindness.
+
+On novelty: the novelty_killer could not run live composite search (permission denied) but grounded in canonical sources. I mark prior-art INADEQUATE because the inability to search for the exact composite claim (named-stack joint-blindness measurement) means we cannot confirm absence of prior empirical work. The canonical mechanism sources are well-established and reliably cited, but a live search for "AI SDK integer precision loss" / "Zod number int64 corruption" type composites should run at L1 before any GREEN consideration.
+
+On the theory-skeptic's point that "joint blindness of two defenses" is the null hypothesis of orthogonality (two layers that don't address X both not addressing X): this is the strongest intellectual objection. The framing implies emergent interaction, but the two layers have non-overlapping threat models by design. This is not a discovered seam — it is a predicted gap. The Python negative control similarly demonstrates a known language-design delta (PEP 237 arbitrary-precision int), not a novel isolation.
+
+On the evaluation-prosecutor's strawman risk: the entire impact claim depends on z.number() being the realistic default. If the killer experiment (codegen audit) shows .int() is the ecosystem default for integer/int64, the contribution drops from "production defense gap" to "known JS bigint folklore re-measured in a named stack" — at which point the novelty delta approaches zero and a RED would be warranted.
+
+Verdict: YELLOW. The scoped empirical claim (z.number() path, silent_pass=1.0, unrecoverable, Python-isolated) survives at L0. But: do NOT advance to full L1 investigation until the codegen-default gate runs. That single experiment — which the systems reviewer has already partially answered — determines whether the remaining claim is a framework seam or a developer error. If the gate confirms .int() is default, re-scope the claim downward before investing further. If the gate confirms z.number() is the actual default for int64 fields in AI SDK tooling, then the three required-evidence items above constitute a legitimate L1.
+
+No GREEN is possible at this stage: prior-art search was incomplete (novelty_killer permission-blocked), the codegen-default question is unresolved with preliminary evidence suggesting it may close the seam, and no reviewer's concerns are rebutted by current evidence.
+
+PROMPT_VERSION: v001
+```

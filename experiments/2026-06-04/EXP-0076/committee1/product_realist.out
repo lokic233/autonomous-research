@@ -1,3 +1,17 @@
 27 skills discovered
 4 skills discovered
 4 skills discovered
+```
+ROLE: product_realist  VOTE: yellow
+REAL_USE_CASE: Developers hand-writing Vercel AI SDK tool schemas with z.number() for int64 ID fields (e.g., Snowflake IDs, ns-timestamps) without using z.number().int() or a lossless parser; insufficient evidence that this is the AI SDK codegen or documentation default for integer/int64 fields.
+OPERATIONAL_SIGNIFICANCE: Microbenchmark-validated seam (silent_pass=1.0 for 6231/6231 probes, survival=0.0037) with real-world int64 prevalence (21.3% of 150 APIs.guru APIs declare ≥1 int64 field), but insufficient evidence that the corrupted ID reaches the tool to cause mis-execution or that z.number() (vs z.number().int()) is the production default for ID fields.
+ADOPTION_BARRIER: [Schema audit burden to replace z.number() with z.number().int() for ID fields; lossless-json not wired in AI SDK defaults; if AI SDK codegen/docs already emit z.number().int() for integers, the seam is limited to hand-written schemas only]
+RATIONALE: Packet L0 shows z.number() silent_pass=1.0 (6231/6231) and unrecoverability, with Python control isolating to JS runtime; z.number().int() sub-leg honestly killed (0/6509 silent_pass). Prevalence: APIs.guru 21.3% APIs have int64, 2.82% of integer fields are int64. Stress-test #1 (packet) notes insufficient evidence whether mcp-to-ai-sdk/AI SDK docs generate z.number() or z.number().int() for int64—if .int() is default, seam shrinks to hand-written z.number(). Stress-test #3 notes missing evidence that corruption reaches tool for real consequence. No evidence in packet of end-to-end tool mis-execution or codegen default audit.
+```
+```
+ROLE: product_realist  VOTE: yellow
+REAL_USE_CASE: Developers hand-writing Vercel AI SDK tool schemas with z.number() for int64 ID fields (e.g., Snowflake IDs, ns-timestamps) without using z.number().int() or a lossless parser; insufficient evidence that this is the AI SDK codegen or documentation default for integer/int64 fields.
+OPERATIONAL_SIGNIFICANCE: Microbenchmark-validated seam (silent_pass=1.0 for 6231/6231 probes, survival=0.0037) with real-world int64 prevalence (21.3% of 150 APIs.guru APIs declare ≥1 int64 field), but insufficient evidence that the corrupted ID reaches the tool to cause mis-execution or that z.number() (vs z.number().int()) is the production default for ID fields.
+ADOPTION_BARRIER: [Schema audit burden to replace z.number() with z.number().int() for ID fields; lossless-json not wired in AI SDK defaults; if AI SDK codegen/docs already emit z.number().int() for integers, the seam is limited to hand-written schemas only]
+RATIONALE: Packet L0 shows z.number() silent_pass=1.0 (6231/6231) and unrecoverability, with Python control isolating to JS runtime; z.number().int() sub-leg honestly killed (0/6509 silent_pass). Prevalence: APIs.guru 21.3% APIs have int64, 2.82% of integer fields are int64. Stress-test #1 (packet) notes insufficient evidence whether mcp-to-ai-sdk/AI SDK docs generate z.number() or z.number().int() for int64—if .int() is default, seam shrinks to hand-written z.number(). Stress-test #3 notes missing evidence that corruption reaches tool for real consequence. No evidence in packet of end-to-end tool mis-execution or codegen default audit.
+```
