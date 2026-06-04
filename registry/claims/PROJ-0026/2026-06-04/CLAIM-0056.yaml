@@ -1,0 +1,73 @@
+claim_id: CLAIM-0056
+project_id: PROJ-0026
+stage: seed
+status: seed
+claim: "Length-sorted greedy sequence packing (SPFHP/best-fit-decreasing, the standard\
+  \ production packer) inflates the per-step gradient noise scale (GNS, McCandlish\
+  \ B_simple=tr(Sigma)/||g||^2) versus globally-shuffled packing, because document\
+  \ length correlates with domain so same-length->same-domain documents get co-located\
+  \ in the same packed row and thus the same minibatch, collapsing within-batch domain\
+  \ diversity. At a fixed token budget, length-sorted packing yields a measurably\
+  \ LARGER GNS (>=1.3x in the realistic regime) than shuffle-then-pack \u2014 meaning\
+  \ its EFFECTIVE batch size is smaller than its nominal batch size, a hidden data-parallelism\
+  \ tax that the seminal packing paper's 'without impacting performance' claim (which\
+  \ concerns only the attention cross-contamination axis) does not cover."
+why_it_matters: "FRESH AREA (data-systems: sequence-packing ORDERING axis). EMPIRICAL-phenomenon,\
+  \ measured in GNS (real gradients), NOT a count. CLEARS killer #10 (could-the-L0-FAIL):\
+  \ the GNS_sorted/GNS_shuffled ratio is GENUINELY UNCERTAIN + parameter-DEPENDENT\
+  \ with 3 explicit null exits the sim must RUN to rule out \u2014 (A) length _|_\
+  \ domain -> ratio~1; (B) within-PACK averaging (each row=several docs) washes out\
+  \ batch-level domain-homogeneity -> ratio~1 (which effect wins is EMERGENT = the\
+  \ strongest residual risk, moderate green prob); (C) sign-flip ratio<1. A parameter-independent\
+  \ result is impossible here = anti-tautology. Passes the other 9: NOT metric-validity;\
+  \ NOT closed-form (depends on empirical (length,domain) joint + realized gradient\
+  \ covariance); foundational incumbents VERIFIED (Krell 2107.02027 SPFHP/NNLSHP 'without\
+  \ impacting performance' = ATTENTION cross-contamination axis ONLY, silent on the\
+  \ batch-composition/minibatch-IID axis = the gap; McCandlish 1812.06162 B_simple\
+  \ ASSUMES IID minibatches = the assumption length-sort breaks); NOT known-mechanism-costume\
+  \ + STRONGEST-baseline (baseline = SHUFFLE-THEN-PACK, same packer+masking+token-efficiency,\
+  \ differs ONLY in row-ordering); NOT wrong-currency (effective-batch via GNS = canonical\
+  \ data-parallelism currency); NOT trivially-small/assumed-shape (magnitude from\
+  \ the REAL corpus length<->domain correlation, measured not injected); NOT omitted-mitigation\
+  \ (shuffle-then-pack + large buffers IS the standard mitigation + IS the baseline\
+  \ arm; sweep finite buffer 1k/10k/inf); citations VERIFIED, claim explicitly ABOUT\
+  \ an IID violation; NOT mechanism-textbook (GNS/gradient-diversity textbook but\
+  \ the packer-length-sort->domain-correlated-rows->GNS pathway is not + Krell argues\
+  \ the OPPOSITE). Falsifiable: small REAL mixed corpus (code/chat/web/books, labeled\
+  \ domains + heterogeneous real lengths); 2 arms identical packer+masking differing\
+  \ ONLY in row ordering \u2014 (1) length-sorted BFD packing emit-in-packer-order,\
+  \ (2) same packer then GLOBAL shuffle of packed rows (realistic finite buffer 1k/10k/inf\
+  \ swept). FROZEN identical small transformer across both arms (any GNS diff is purely\
+  \ batch composition, not weights = anti-circular). Headline = B_simple=tr(Sigma_batch)/||g_full||^2\
+  \ per arm (McCandlish estimator over many minibatches) -> report GNS_sorted/GNS_shuffled.\
+  \ Secondary diagnostic: within-batch domain entropy (sorted vs shuffled) + empirical\
+  \ corpus length<->domain mutual information (confirms mechanism if headline fires,\
+  \ localizes the null exit if not). HONEST-NEGATIVE: ratio <=~1.05 at realistic buffer\
+  \ -> within-pack averaging neutralizes it / Krell's 'no impact' extends to the ordering\
+  \ axis -> clean negative. Topic: data-systems-for-ml. BOUNDARY (scout-flagged, distinct\
+  \ from OCCUPIED CLAIM-0051 streaming-shuffle-buffer-variance-vs-runlength): different\
+  \ mechanism (packer-length-sort domain-co-location vs streaming-buffer-vs-runlength),\
+  \ different incumbent (Krell-packing vs RR/GraB), different metric (GNS/effective-batch\
+  \ vs batch-mean-gradient-variance). L1: real 100-300M pretraining fixed token budget\
+  \ both arms matched nominal batch -> loss-vs-tokens + steps-to-target-loss (sorted\
+  \ behaves like smaller effective batch) + sweep shuffle-buffer to find where the\
+  \ GNS+convergence gap closes (production recommendation: min buffer for length-sorted\
+  \ packers); residual risk = within-pack averaging may neutralize -> moderate not\
+  \ high green prob."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0064 result, then ros exp complete --exp EXP-0064 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0064
+created_at: '2026-06-04T00:01:11Z'
+last_updated: '2026-06-04T00:01:41Z'
