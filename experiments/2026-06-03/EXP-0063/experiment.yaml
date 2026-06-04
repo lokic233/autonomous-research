@@ -12,12 +12,25 @@ resource_budget:
 needs_gpu: true
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'REAL-LM L1, Qwen2.5-7B (primary) + Qwen2.5-0.5B (confirm), constructed
+  OOS slice (80 prompts, K=5), vLLM hard guided_choice. TEST1 (causal): unconstrained
+  Qwen-7B ABSTAINS 0.8375 CI[.742,.903] on identical OOS prompts where constrained
+  misroutes 1.0 -> constraint IS the causal coercer on a capable model (causal leg
+  SURVIVES). TEST2 (monitorability): semantic LLM-as-judge monitor on the 7B misroutes
+  RECALL=1.0 CI[.954,1.0] (neutral framing 0.9125; control yes-on-correct 0.675, non-degenerate)
+  -> a non-trivial semantic monitor CATCHES the near-miss misroutes -> MONITORABILITY-COLLAPSE
+  LEG IS FALSIFIED on capable models (only a syntactic schema-validator is blind).
+  CAPABILITY INVERSION: the two legs never co-occur on one model -- weak 0.5B has
+  monitor recall 0.0 but its unconstrained base already misroutes 0.9125 (constraint
+  not causal there). Per pre-reg STOP rule (Tests3-5 only if 1+2 both survive), STOPPED
+  after Test2 -- no Test3-4. Disposition WEAKEN: support-removal coercion is real+causal;
+  the safety/monitorability story is overstated. NOT green-track. Test5 prior-art:
+  could not certify novelty offline -- flag for committee#2 w/ web.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-03/EXP-0063/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T00:20:50Z'
 prompt_version: ''

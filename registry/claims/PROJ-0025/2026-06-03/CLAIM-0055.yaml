@@ -1,7 +1,7 @@
 claim_id: CLAIM-0055
 project_id: PROJ-0025
 stage: seed
-status: seed
+status: weakened
 claim: "In agentic tool/action routing with HARD grammar-constrained decoding over\
   \ an enum of valid actions, when a request's correct action is NOT a member of the\
   \ enum (out-of-set intent), the decoder does not error or abstain \u2014 it mechanically\
@@ -71,7 +71,24 @@ supporting_evidence:
     \ GAD-irrecoverable); escape-recall DECREASES with proximity (0.0 near -> 1.0\
     \ far, scoped to curve, leaks at near-miss). No falsifier triggered."
   data_path: experiments/2026-06-03/EXP-0062/
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0063
+  summary: 'REAL-LM L1, Qwen2.5-7B (primary) + Qwen2.5-0.5B (confirm), constructed
+    OOS slice (80 prompts, K=5), vLLM hard guided_choice. TEST1 (causal): unconstrained
+    Qwen-7B ABSTAINS 0.8375 CI[.742,.903] on identical OOS prompts where constrained
+    misroutes 1.0 -> constraint IS the causal coercer on a capable model (causal leg
+    SURVIVES). TEST2 (monitorability): semantic LLM-as-judge monitor on the 7B misroutes
+    RECALL=1.0 CI[.954,1.0] (neutral framing 0.9125; control yes-on-correct 0.675,
+    non-degenerate) -> a non-trivial semantic monitor CATCHES the near-miss misroutes
+    -> MONITORABILITY-COLLAPSE LEG IS FALSIFIED on capable models (only a syntactic
+    schema-validator is blind). CAPABILITY INVERSION: the two legs never co-occur
+    on one model -- weak 0.5B has monitor recall 0.0 but its unconstrained base already
+    misroutes 0.9125 (constraint not causal there). Per pre-reg STOP rule (Tests3-5
+    only if 1+2 both survive), STOPPED after Test2 -- no Test3-4. Disposition WEAKEN:
+    support-removal coercion is real+causal; the safety/monitorability story is overstated.
+    NOT green-track. Test5 prior-art: could not certify novelty offline -- flag for
+    committee#2 w/ web.'
+  data_path: experiments/2026-06-03/EXP-0063/
 verdict_history:
 - verdict_id: VERDICT-0053
   date: '2026-06-03'
@@ -79,12 +96,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: "L1 EXP-0063 dispatched (GT-0004, researcher-0061 on H100): cost-aware\
-  \ staged \u2014 unconstrained-causal baseline FIRST, then semantic-monitor, then\
-  \ (K,gap)+monotonicity. GREEN if all survive, honest cap if any fails"
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0063; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0063
+active_experiments: []
 created_at: '2026-06-03T23:09:39Z'
-last_updated: '2026-06-03T23:48:12Z'
+last_updated: '2026-06-04T00:20:50Z'

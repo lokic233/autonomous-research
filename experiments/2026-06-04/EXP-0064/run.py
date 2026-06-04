@@ -94,8 +94,9 @@ print(f"[NULL-A] length<->domain MI={MI:.4f} bits, H(domain)={Hd:.3f}, NMI={NMI:
 dom_meanlen={d: (sum(len(t) for dd,t in docs if dd==d)/max(1,sum(1 for dd,_ in docs if dd==d))) for d in domains}
 print("[length] per-domain mean token len:", {k:round(v,1) for k,v in dom_meanlen.items()})
 
-# ==================== FROZEN MODEL (identical across ALL arms & MAXLENs) ====================
-D=16; V=4096
+# ==================== FROZEN MODEL (identical across ALL arms & MAXLENs) — DENSE/FAST ====================
+import array
+D=8; V=1024; P=V*D   # flat grad dim
 def tid(tok): return (hash(tok)%V)
 rng=random.Random(7)
 E=[[rng.gauss(0,0.1) for _ in range(D)] for _ in range(V)]
@@ -103,51 +104,50 @@ W=[[rng.gauss(0,0.1) for _ in range(D)] for _ in range(V)]
 K=12
 negbase=[rng.randrange(V) for _ in range(K-1)]
 
-def row_grad(row, MAXLEN):
-    g={}; nstep=0
+def row_grad_dense(row, MAXLEN):
+    g=array.array('d',[0.0])*0  # placeholder
+    g=array.array('d',[0.0 for _ in range(P)])
+    nstep=0
     for di in row:
-        toks=docs[di][1][:MAXLEN]
-        ids=[tid(t) for t in toks]
+        ids=[tid(t) for t in docs[di][1][:MAXLEN]]
         for p in range(len(ids)-1):
             cur=ids[p]; tgt=ids[p+1]; cand=[tgt]+negbase; ev=E[cur]
             logits=[sum(W[c][d]*ev[d] for d in range(D)) for c in cand]
             m=max(logits); ex=[math.exp(l-m) for l in logits]; Z=sum(ex); ps=[e/Z for e in ex]
-            gv=g.get(cur)
-            if gv is None: gv=[0.0]*D; g[cur]=gv
+            base=cur*D
             for ci,c in enumerate(cand):
                 coef=ps[ci]-(1.0 if ci==0 else 0.0); Wc=W[c]
-                for d in range(D): gv[d]+=coef*Wc[d]
+                for d in range(D): g[base+d]+=coef*Wc[d]
             nstep+=1
     if nstep>0:
         inv=1.0/nstep
-        for k in g:
-            gv=g[k]
-            for d in range(D): gv[d]*=inv
+        for j in range(P): g[j]*=inv
     return g
 
-def add_into(acc,g,w=1.0):
-    for k,gv in g.items():
-        a=acc.get(k)
-        if a is None: a=[0.0]*D; acc[k]=a
-        for d in range(D): a[d]+=w*gv[d]
-def diff_sqnorm(g,gbar):
-    keys=set(g)|set(gbar); s=0.0
-    for k in keys:
-        a=g.get(k,[0.0]*D); b=gbar.get(k,[0.0]*D)
-        for d in range(D):
-            dd=a[d]-b[d]; s+=dd*dd
+def vmean(vecs):
+    out=array.array('d',[0.0 for _ in range(P)]); n=len(vecs); inv=1.0/n
+    for v in vecs:
+        for j in range(P): out[j]+=v[j]
+    for j in range(P): out[j]*=inv
+    return out
+def sqdiff(a,b):
+    s=0.0
+    for j in range(P):
+        d=a[j]-b[j]; s+=d*d
+    return s
+def sqn(a):
+    s=0.0
+    for j in range(P): s+=a[j]*a[j]
     return s
 
 MB=8
 buffers=[("1k",1000),("10k",10000),("inf",None)]
 MAXLENS=[128,256,512]
 allidx=list(range(len(docs)))
-gns_rows=[]   # (maxlen, mean_dpp, buffer, GNS_sorted, GNS_shuf, ratio, lo, hi, ent_s, ent_h)
-dpp_rows=[]
+gns_rows=[]; dpp_rows=[]
 
-def packer(doc_idx, MAXLEN):
-    order=sorted(doc_idx,key=lambda i:len(docs[i][1]),reverse=True)
-    rows=[]; rem=[]
+def packer(doc_idx,MAXLEN):
+    order=sorted(doc_idx,key=lambda i:len(docs[i][1]),reverse=True); rows=[]; rem=[]
     for i in order:
         L=min(len(docs[i][1]),MAXLEN); best=-1; bestrem=MAXLEN+1
         for r in range(len(rows)):
@@ -155,7 +155,6 @@ def packer(doc_idx, MAXLEN):
         if best>=0: rows[best].append(i); rem[best]-=L
         else: rows.append([i]); rem.append(MAXLEN-L)
     return rows
-
 def emit_sorted(n): return list(range(n))
 def emit_shuf(n,buf):
     if buf is None or buf>=n:
@@ -165,52 +164,41 @@ def emit_shuf(n,buf):
     for x in it:
         j=rnd.randrange(len(window)); out.append(window[j]); window[j]=x
     rnd.shuffle(window); out.extend(window); return out
-
 from collections import Counter as Ctr
+
 for MAXLEN in MAXLENS:
     rows=packer(allidx,MAXLEN)
     mean_dpp=sum(len(r) for r in rows)/len(rows)
     dpp_rows.append((MAXLEN,len(rows),round(mean_dpp,3)))
     print(f"[MAXLEN={MAXLEN}] {len(rows)} rows mean_dpp={mean_dpp:.2f} t={time.time()-T0:.1f}s",flush=True)
-    rg=[row_grad(r,MAXLEN) for r in rows]
-    gfull={}
-    for g in rg: add_into(gfull,g,1.0/len(rows))
-    gfull_sq=sum(v*v for vec in gfull.values() for v in vec)
-    def mb_grad(idx):
-        acc={}
-        for ri in idx: add_into(acc,rg[ri],1.0/len(idx))
-        return acc
-    def dom_ent(idx):
-        c=Ctr()
-        for ri in idx:
-            for di in rows[ri]: c[docs[di][0]]+=1
-        tot=sum(c.values()); return -sum((v/tot)*math.log2(v/tot) for v in c.values())
-    def gns(order):
-        nmb=len(order)//MB; gs=[]; ents=[]
+    rg=[row_grad_dense(r,MAXLEN) for r in rows]
+    gfull=vmean(rg); gfull_sq=sqn(gfull)
+    # minibatch grads for a given emission order: precompute per minibatch (mean of its rows)
+    def mb_grads_for(order):
+        nmb=len(order)//MB; out=[]; ents=[]
         for i in range(nmb):
-            idx=order[i*MB:(i+1)*MB]; gs.append(mb_grad(idx)); ents.append(dom_ent(idx))
-        gbar={}
-        for g in gs: add_into(gbar,g,1.0/len(gs))
-        var=sum(diff_sqnorm(g,gbar) for g in gs)/(len(gs)-1)
-        return MB*var/gfull_sq, sum(ents)/len(ents), gs
+            idx=order[i*MB:(i+1)*MB]
+            out.append(vmean([rg[ri] for ri in idx]))
+            c=Ctr()
+            for ri in idx:
+                for di in rows[ri]: c[docs[di][0]]+=1
+            tot=sum(c.values()); ents.append(-sum((v/tot)*math.log2(v/tot) for v in c.values()))
+        return out,ents
     def bsimp(gs):
-        gbar={}
-        for g in gs: add_into(gbar,g,1.0/len(gs))
-        return MB*(sum(diff_sqnorm(g,gbar) for g in gs)/(len(gs)-1))/gfull_sq
-    Bs,ents,gs_s=gns(emit_sorted(len(rows)))
+        gb=vmean(gs); return MB*(sum(sqdiff(g,gb) for g in gs)/(len(gs)-1))/gfull_sq
+    gs_s,ents_s=mb_grads_for(emit_sorted(len(rows)))
+    Bs=bsimp(gs_s); ent_s=sum(ents_s)/len(ents_s)
     for nm,buf in buffers:
-        Bh,enth,gs_h=gns(emit_shuf(len(rows),buf))
-        ratio=Bs/Bh if Bh>0 else float('nan')
-        # bootstrap CI (lighter: 200)
-        rb=random.Random(5); ratios=[]
-        ns=len(gs_s); nh=len(gs_h)
-        for _ in range(200):
+        gs_h,ents_h=mb_grads_for(emit_shuf(len(rows),buf))
+        Bh=bsimp(gs_h); ratio=Bs/Bh if Bh>0 else float('nan'); enth=sum(ents_h)/len(ents_h)
+        rb=random.Random(5); ratios=[]; ns=len(gs_s); nh=len(gs_h)
+        for _ in range(120):
             ss=[gs_s[rb.randrange(ns)] for _ in range(ns)]; hh=[gs_h[rb.randrange(nh)] for _ in range(nh)]
             bh=bsimp(hh)
             if bh>0: ratios.append(bsimp(ss)/bh)
         ratios.sort(); lo=ratios[int(0.025*len(ratios))]; hi=ratios[int(0.975*len(ratios))]
-        gns_rows.append((MAXLEN,round(mean_dpp,2),nm,Bs,Bh,ratio,lo,hi,ents,enth))
-        print(f"   buf={nm:4s} GNS_s={Bs:.3f} GNS_h={Bh:.3f} RATIO={ratio:.3f} CI[{lo:.3f},{hi:.3f}] ent_s={ents:.3f} ent_h={enth:.3f}",flush=True)
+        gns_rows.append((MAXLEN,round(mean_dpp,2),nm,Bs,Bh,ratio,lo,hi,ent_s,enth))
+        print(f"   buf={nm:4s} GNS_s={Bs:.3f} GNS_h={Bh:.3f} RATIO={ratio:.3f} CI[{lo:.3f},{hi:.3f}] ent_s={ent_s:.3f} ent_h={enth:.3f}",flush=True)
 
 with open(f"{OUT}/gns_by_buffer.csv","w",newline="") as f:
     w=csv.writer(f); w.writerow(["maxlen","mean_docs_per_pack","buffer","GNS_sorted","GNS_shuffled","ratio","ci_lo","ci_hi","ent_sorted","ent_shuffled"])
@@ -223,6 +211,6 @@ with open(f"{OUT}/length_hist.csv","w",newline="") as f:
     for d in domains: w.writerow([d,f"{dom_meanlen[d]:.2f}",sum(1 for dd,_ in docs if dd==d)])
 with open(f"{OUT}/diagnostics.json","w") as f:
     json.dump({"n_docs":N,"domains":domains,"per_domain_counts":dict(Counter(d for d,_ in docs)),
-               "MI_bits":MI,"NMI":NMI,"H_domain":Hd,"H_lengthbin":Hl,"MB_rows":MB,
+               "MI_bits":MI,"NMI":NMI,"H_domain":Hd,"H_lengthbin":Hl,"MB_rows":MB,"V":V,"D":D,
                "per_domain_mean_len":dom_meanlen,"maxlen_sweep":dpp_rows},f,indent=2)
 print(f"[done] t={time.time()-T0:.1f}s",flush=True)
