@@ -1,0 +1,56 @@
+claim_id: CLAIM-0063
+project_id: PROJ-0033
+stage: seed
+status: seed
+claim: 'In the standard JS/TS LLM-agent tool-calling stack (Vercel AI SDK v5 -> secure-json-parse
+  -> Zod z.number() validation), any tool-call argument that is a JSON integer literal
+  > 2^53 (a 64-bit ID, nanosecond timestamp, DB bigint PK) is silently rounded to
+  the nearest IEEE-754 double AND passes validation unflagged -> the tool receives
+  a corrupted ID with ZERO error surfaced. The seam is OPEN by default because the
+  TWO defenses the runtime actually deploys (a SECURITY-hardened parser secure-json-parse
+  for prototype-pollution, and a SCHEMA validator Zod) NEITHER covers numeric fidelity:
+  secure-json-parse delegates numbers to native JSON.parse (float64), and z.number()/z.number().int()
+  check Number.isInteger NOT Number.isSafeInteger. Worse, MDN reviver-ordering means
+  precision is gone BEFORE any reviver/refinement can see the original text -> structurally
+  UNRECOVERABLE post-parse, not just unguarded. Measured: in-band (>2^53) bit-exact
+  survival = 0 (every value collides), silent-validation-pass = 100%; control band
+  [0,2^53) survives 1.0; Python OpenAI/Pydantic path (json.loads parse_int=int, arbitrary
+  precision) survives 1.0 (negative control sharpening the seam to the JS runtime).
+  NULL EXIT: if the current default parser preserved precision (lossless-json/BigInt)
+  OR z.number().int() rejected unsafe integers, survival=1.0 -> claim KILLED.'
+why_it_matters: "Cross-area production-seam (agentic-systems x data-systems/serialization),\
+  \ CLAIM-0059 winning shape, designed to clear ALL the killers that hit the last\
+  \ 4 claims. RESIDUAL NOVELTY > folklore (\"JS loses bigints\" known since 2016):\
+  \ the SEAM is that the agent runtime DEPLOYS TWO named defensive layers at exactly\
+  \ this boundary (deliberately swapped raw JSON.parse for HARDENED secure-json-parse\
+  \ + runtime Zod schema validation = its selling point) and BOTH are JOINTLY BLIND\
+  \ to numeric width, AND the loss is structurally UNRECOVERABLE post-parse (reviver-ordering).\
+  \ A reasonable engineer assumes \"hardened parse + schema validation = safe args\"\
+  \ -> false. \u2605 CLEARS killer #10 (deterministic over the value space, NO traffic\
+  \ constant; prevalence anchored on PUBLIC artifacts: Discord/Twitter snowflakes\
+  \ >2^53, APIs.guru int64 fields, public MCP tool schemas, ns timestamps). \u2605\
+  \ CLEARS killer #11 version-chase: core mechanism = IEEE-754 binary64 + ECMA-262\
+  \ number, UNMOVABLE since 1999; the fast-moving pieces (AI SDK v5, secure-json-parse,\
+  \ Zod v4) each VERIFIED in CURRENT release to leave the seam open, and the spec-level\
+  \ seam persists for ANY JS JSON.parse tool path. Real baseline run as-shipped; trivial\
+  \ unimplemented fix (.refine(Number.isSafeInteger)/lossless parser); falsifiable\
+  \ L0 with two controls (safe-band + Python negative). Scout self-rating GREEN-eligible.\
+  \ Honest risk: killer #3 \"everyone knows JS bigints lossy\" -> defense = the JOINT-BLINDNESS-of-two-named-defenses\
+  \ + post-parse-unrecoverability + Python negative control as the irreducible headline."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0076 result, then ros exp complete --exp EXP-0076 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0076
+created_at: '2026-06-04T18:36:47Z'
+last_updated: '2026-06-04T18:37:39Z'
