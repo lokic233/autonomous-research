@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- B_simple = tr(Σ)/||g||² is DEFINED under IID minibatches (McCandlish 1812.06162 §2). Length-sort is non-IID BY CONSTRUCTION. "Non-IID estimator changes when assumption is violated" is textbook, not emergent — the 1.10–1.22x is the expected direction and rough magnitude any first-year stats reader would predict from "between-batch variance ↑ when within-batch homogeneity ↑".
+- LENGTH-HOMOGENEITY-PER-SE confound (separate from domain): grouping similar-length rows mechanically reduces variance in per-row ||g|| (longer rows → more token losses summed → larger gradient norm). This shifts tr(Σ) and ||g||² independently of any "domain diversity collapse" pathway. The entropy diagnostic does not isolate domain from length.
+- The "monotone decay" with dpp is also expected mechanically: averaging K i.i.d.-ish docs per row reduces row-level variance ~1/K, dampening any batch-composition effect regardless of mechanism. Three points (dpp 2.0 / 3.1 / 5.8) is consistent with a CLT-style 1/K dampening, not specifically with domain washout.
+
+CONFOUNDS:
+- Length-homogeneity vs domain-homogeneity: NOT separately identified. A length-stratified shuffle (matched length distribution per batch but domain-randomized) is the missing control.
+- Domain labels (CODE/DOCSTRING/MAN1/MAN5) are a 4-bucket proxy for true gradient diversity. Entropy over 4 coarse labels ≠ gradient covariance structure; the "mechanism confirmed via entropy" is correlational, not causal.
+- FROZEN tiny analytic-CE model + hashed V=1024 D=8 embeddings is a degenerate gradient geometry. Real mid-training gradients have rank/curvature structure absent here; GNS magnitudes on this proxy do not bound GNS on a real 100–300M model (researcher's own flag — they're right).
+
+ASSUMPTIONS_UNTESTED:
+- That B_simple is even well-defined / meaningful as a comparison statistic when its IID assumption is violated identically in both arms (sorted arm violates it more, but BOTH violate it — the ratio's interpretation as "effective-batch tax" requires a derivation that is not in the packet).
+- That packer-induced batch composition at training step t generalizes across t (gradient covariance evolves; the static frozen-model number is a single snapshot).
+- That a 4-domain stdlib corpus is representative of pretraining mixtures (which routinely have >>4 domains, very different length-domain joint).
+- The Krell-novelty claim ("attention axis only") is asserted but the batch-composition axis is implicit in any textbook DP-SGD analysis — McCandlish + "sorted batches aren't IID" composes to the prediction without new theory.
+
+STATISTICAL_GAPS:
+- CIs include 1.0 at MAXLEN=256 and MAXLEN=512 across ALL buffer settings. The "monotone decay" rests on a single point (MAXLEN=128) being significant; with 3 ordered measurements and CIs that wide, the trend is not statistically established — it's visually suggestive.
+- Single corpus (n=3329, 4 domains). No replication across corpora; the length↔domain MI=0.232 bits is a property of THIS corpus's domain mix, not a general fact.
+- Resampling unit + seed structure not stated in packet — CI construction method opaque; if bootstrap is over packed-rows within a single fixed packing seed, CIs underestimate true variability.
+- No within-arm seed sweep reported (packing has randomness in shuffled arm; sort is deterministic — variance comparison is asymmetric).
+- The length-stratified-shuffle control that would isolate domain from length is MISSING.
+
+RATIONALE: The empirical adjudication of the three null exits was honest and the PARTIAL verdict matches the data — that earns a yellow not a red. But the underlying theoretical novelty is thin: B_simple inflation under non-IID batches is predicted by the very paper that defines B_simple, the length-vs-domain confound is unidentified, the frozen-tiny-analytic-CE setup cannot bound real mid-training GNS (per Krell 2107.02027 + McCandlish 1812.06162 IID footnote), and 2 of 3 headline points have CIs crossing 1.0. The 1.10–1.22x effect is real-but-expected and regime-narrow (dpp<3). L1 should not promote until: (i) length-stratified-shuffle control rules out length-homogeneity-per-se, (ii) the IID-violation interpretation of B_simple is derived or replaced with a non-IID-valid effective-batch measure, (iii) the result replicates on a non-frozen mid-training checkpoint of a real (≥100M) model on ≥1 non-stdlib corpus.
+```

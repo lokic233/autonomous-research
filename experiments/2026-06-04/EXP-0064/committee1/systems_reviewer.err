@@ -300,3 +300,1632 @@ mcp: meta_core/knowledge_load started
 mcp: meta_core/knowledge_load (failed)
 mcp: meta_core/knowledge_load started
 mcp: meta_core/knowledge_load (failed)
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://docs.nvidia.com/nemo-framework/user-guide/24.09/nemotoolkit/features/optimizations/sequence_packing.html | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://nvidia.github.io/Megatron-Energon/advanced/packing.html | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 20 https://docs.nvidia.com/nemo/megatron-bridge/latest/training/packed-sequences.html | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 176ms:
+
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packing &mdash; megatron-energon  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=d1eb448f" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Grouping" href="grouping.html" />
+    <link rel="prev" title="Reproducible Scaling" href="repro_scaling.html" />
+     
+    <link rel="apple-touch-icon" sizes="180x180" href="../_static/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../_static/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../_static/favicon-16x16.png">
+<link rel="shortcut icon" href="../_static/favicon.ico">
+<link rel="manifest" href="../_static/site.webmanifest">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            megatron-energon
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/data_prep.html">Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/data_decoding.html">Data Decoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/basics_flow.html">Data Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/task_encoder.html">Task Encoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/metadataset.html">Metadataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/save_restore.html">Save and Restore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic/glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="remote_dataset.html">Remote Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crude_datasets.html">Crude Datasets and Auxiliary Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_sample_loader.html">Custom Sample Loader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repro_scaling.html">Reproducible Scaling</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Packing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-pack-samples-on-the-fly">How to pack samples on the fly</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grouping.html">Grouping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joining_datasets.html">Joining Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subsets.html">Dataset Subsets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epochized_blending.html">Epochized Blending</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_blending.html">Customized Blending</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="error_handling.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_prep_api.html">Programmatic Data Preparation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">Packages and Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">Command-Line Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internals</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../internals/contrib_guidelines.html">Contribution Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/code_structure.html">Code Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">megatron-energon</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Packing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/advanced/packing.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="repro_scaling.html" class="btn btn-neutral float-left" title="Reproducible Scaling" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="grouping.html" class="btn btn-neutral float-right" title="Grouping" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!--- Copyright (c) 2025, NVIDIA CORPORATION.
+SPDX-License-Identifier: BSD-3-Clause -->
+<section id="packing">
+<h1>Packing<a class="headerlink" href="#packing" title="Link to this heading"></a></h1>
+<p>Packing (sometimes also called sequence packing), enables you to selectively compress multiple
+input samples into a single sample, for example depending on their length.</p>
+<p>This technique is commonly used with large language models, if the input samples have very different
+lengths leading to lots of padding and hence wasted compute.</p>
+<p>This section explains how you can pack samples together and utilize the full context length.</p>
+<section id="how-to-pack-samples-on-the-fly">
+<h2>How to pack samples on the fly<a class="headerlink" href="#how-to-pack-samples-on-the-fly" title="Link to this heading"></a></h2>
+<p>To use packing, you need to implement the TaskEncoder methods <a class="reference internal" href="../api/modules_data.html#megatron.energon.TaskEncoder.select_samples_to_pack" title="megatron.energon.TaskEncoder.select_samples_to_pack"><code class="xref py py-meth docutils literal notranslate"><span class="pre">select_samples_to_pack</span></code></a>
+and <a class="reference internal" href="../api/modules_data.html#megatron.energon.TaskEncoder.pack_selected_samples" title="megatron.energon.TaskEncoder.pack_selected_samples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pack_selected_samples</span></code></a>.
+Furthermore, you need to initialize the loader with the <code class="docutils literal notranslate"><span class="pre">packing_buffer_size</span></code> argument set to a non-zero number.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">select_samples_to_pack</span></code> method will receive a list of samples (size according to the selected <code class="docutils literal notranslate"><span class="pre">packing_buffer_size</span></code>),
+and should partition those samples into groups that shall be packed together. Hence the function returns
+a list of lists of samples.</p>
+<p>For each group, the second method <code class="docutils literal notranslate"><span class="pre">pack_selected_samples</span></code> will be called. You need to implement how a group of
+samples will be mapped to a single sample. In terms of LLMs for example, this method might concatenate the input tokens.</p>
+<div class="important admonition">
+<p class="admonition-title">Note</p>
+<p>You can set the <code class="docutils literal notranslate"><span class="pre">__restore_key__</span></code> of the packed sample to an empty tuple, since energon will set the correct
+restore key afterwards, based on the samples that went in.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To handle attention masks and tokenized inputs, you will want to operate on a different sample type.
+The <code class="docutils literal notranslate"><span class="pre">pack_selected_samples</span></code> method may return a different sample type that is expected as the input for the <code class="docutils literal notranslate"><span class="pre">batch</span></code> method.</p>
+</div>
+<p>It is important, to mark custom functions like <code class="docutils literal notranslate"><span class="pre">encode_sample</span></code> and <code class="docutils literal notranslate"><span class="pre">pack_selected_samples</span></code> as <code class="docutils literal notranslate"><span class="pre">&#64;stateless</span></code> to allow saving
+samples for packing. If augmentations happen, it should be marked with
+<code class="docutils literal notranslate"><span class="pre">&#64;stateless(restore_seeds=True)</span></code>, to deterministically set the seeds based on the <code class="docutils literal notranslate"><span class="pre">TaskEncoder.current_sample_index</span></code>.
+You have to make sure the methods are actually stateless, meaning that they will produce the same output when invoked
+with the same input and random states.</p>
+<p>Example packing for a large language model extending the example from the <a class="reference internal" href="../basic/task_encoder.html"><span class="doc std std-doc">Task Encoder</span></a> section:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PackingCaptioningTaskEncoder</span><span class="p">(</span><span class="n">CaptioningTaskEncoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class extends the CaptioningTaskEncoder and adds select_samples_to_pack and pack_selected_samples for packing samples</span>
+<span class="sd">    efficiently on-the-fly.</span>
+<span class="sd">    Set the `packing_buffer_size` of the get_(train|val)_dataset to an accordingly large number to get a</span>
+<span class="sd">    properly sized input sample buffer with good diversity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@stateless</span><span class="p">(</span><span class="n">restore_seeds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+        <span class="c1"># Added `stateless` decorator to allow saving samples for packing. Will set the seed</span>
+        <span class="c1"># deterministically based on the self.current_sample_index.</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_samples_to_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CaptioningSample</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">CaptioningSample</span><span class="p">]]:</span>
+        <span class="c1"># Do something intelligent here, e.g. sort by caption length and concat where possible.</span>
+        <span class="c1"># This could be better, but it&#39;s just an example.</span>
+        <span class="n">samples</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">caption</span><span class="p">))</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">caption_len</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">caption_len</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">:</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+                <span class="n">caption_len</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
+            <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">groups</span>
+    
+    <span class="nd">@stateless</span>
+    <span class="k">d100 18009  100 18009    0     0  90437      0 --:--:-- --:--:-- --:--:-- 90497
+ef</span><span class="w"> </span><span class="nf">pack_selected_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CaptioningSample</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CaptioningSample</span><span class="p">:</span>
+        <span class="c1"># Construct a new CaptioningSample by concatenating the captions</span>
+        <span class="o">...</span>
+
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="repro_scaling.html" class="btn btn-neutral float-left" title="Reproducible Scaling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="grouping.html" class="btn btn-neutral float-right" title="Grouping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 NVIDIA Corporation.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 417ms:
+100 69626    0 69626    0     0   157k      0 --:--:-- --:--:-- --:--:--  157k
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Packed Sequences &#8212; Megatron Bridge</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+
+
+    <script src="../_static/documentation_options.js?v=ff822928"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'training/packed-sequences';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.17.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.4.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+
+    <link rel="icon" href="../_static/favicon.png"/>
+
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multi-Token Prediction (MTP)" href="multi-token-prediction.html" />
+    <link rel="prev" title="Parameter-Efficient Fine-Tuning (PEFT)" href="peft.html" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+
+
+    <script src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js" ></script>
+    
+
+
+  </head>
+
+  <body data-default-mode="">
+
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="Megatron Bridge - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="Megatron Bridge - Home"/>
+  
+  
+    <p class="title logo__title">Megatron Bridge</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 621ms:
+100 71508    0 71508    0     0   116k      0 --:--:-- --:--:-- --:--:--  116k
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sequence Packing &#8212; NVIDIA NeMo Framework User Guide</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=767de534" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/asciinema-player_3.12.1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+
+<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript"
+  data-document-language="true" charset="UTF-8" data-domain-script="3e2b62ff-7ae7-4ac5-87c8-d5949ecafff5">
+</script>
+<script type="text/javascript">
+  function OptanonWrapper() {
+    var event = new Event('bannerLoaded');
+    window.dispatchEvent(event);
+  }
+</script>
+<script src="https://images.nvidia.com/aem-dam/Solutions/ot-js/ot-custom.js" type="text/javascript">
+</script>
+
+
+    <script rel="preload" src="../../../_static/modal-table.js"></script>
+    <script src="../../../_static/documentation_options.js?v=e7047dca"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scrollspy-patch.js?v=edc4054a"></script>
+    <script src="../../../_static/external-links.js"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=65e89d2a"></script>
+    <script src="../../../_static/asciinema-player_3.12.1.js"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nemotoolkit/features/optimizations/sequence_packing';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '24.09';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../../../_static/version-patch.js?v=3e13fdd2"></script>
+
+<script type="text/javascript" src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js"></script>
+
+    <link rel="canonical" href="https://docs.nvidia.com/nemo-framework/user-guide/24.09/nemotoolkit/features/optimizations/sequence_packing.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Activation Recomputation" href="activation_recomputation.html" />
+    <link rel="prev" title="Attention Optimizations" href="attention_optimizations.html" />
+
+<link rel="preload" as="image" href="https://www.nvidia.com/content/dam/1x1-00000000.png">
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="Jan 13, 2026"/>
+
+
+  </head>
+
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+<img src="https://www.nvidia.com/content/dam/1x1-00000000.png" width="1" height="1" style="display:none;" alt="country_code">
+
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">This archived material is no longer maintained, and its links or information may be outdated or pose security risks. Visit the <a href='https://docs.nvidia.com/'>NVIDIA Docs Hub</a> for the latest and most up-to-date content.</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA NeMo Framework User Guide - Home"/>
+    <img src="../../../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="NVIDIA NeMo Framework User Guide - Home"/>
+  
+  
+    <p class="title logo__title">NVIDIA NeMo Framework User Guide</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+
+exec
+/bin/zsh -lc "curl -Ls https://docs.nvidia.com/nemo-framework/user-guide/24.09/nemotoolkit/features/optimizations/sequence_packing.html | grep -io -C 3 -E 'first fit|decreasing|sort|packing|without|performance|algorithm|SPFHP|NNLSHP' | head -120" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -Ls https://nvidia.github.io/Megatron-Energon/advanced/packing.html | grep -io -C 3 -E 'sort|length|buffer|packing|diversity|group|sample|first fit|decreasing' | head -160" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+Packing
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=d1eb448f" />
+--
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+Group
+group
+    <link rel="prev" title="Reproducible Scaling" href="repro_scaling.html" />
+     
+    <link rel="apple-touch-icon" sizes="180x180" href="../_static/apple-touch-icon.png">
+--
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="remote_dataset.html">Remote Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crude_datasets.html">Crude Datasets and Auxiliary Data</a></li>
+sample
+Sample
+<li class="toctree-l1"><a class="reference internal" href="repro_scaling.html">Reproducible Scaling</a></li>
+Packing
+sample
+sample
+</ul>
+</li>
+group
+Group
+<li class="toctree-l1"><a class="reference internal" href="joining_datasets.html">Joining Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subsets.html">Dataset Subsets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epochized_blending.html">Epochized Blending</a></li>
+--
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+Packing
+      <li class="wy-breadcrumbs-aside">
+packing
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="repro_scaling.html" class="btn btn-neutral float-left" title="Reproducible Scaling" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+group
+Group
+  </div>
+  <hr/>
+</div>
+--
+             
+  <!--- Copyright (c) 2025, NVIDIA CORPORATION.
+SPDX-License-Identifier: BSD-3-Clause -->
+packing
+Packing
+packing
+Packing
+packing
+sample
+sample
+length
+sample
+length
+sample
+length
+sample
+sample
+sample
+packing
+sample
+sample
+sample
+sample
+sample
+sample
+packing
+buffer
+sample
+sample
+packing
+buffer
+sample
+group
+sample
+group
+sample
+group
+sample
+sample
+<div class="important admonition">
+<p class="admonition-title">Note</p>
+sample
+sample
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+sample
+sample
+sample
+</div>
+sample
+sample
+sample
+packing
+sample
+You have to make sure the methods are actually stateless, meaning that they will produce the same output when invoked
+with the same input and random states.</p>
+packing
+Packing
+sample
+sample
+packing
+sample
+<span class="sd">    efficiently on-the-fly.</span>
+packing
+buffer
+sample
+buffer
+diversity
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@stateless</span><span class="p">(</span><span class="n">restore_seeds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+sample
+sample
+packing
+sample
+        <span class="o">...</span>
+
+sample
+sample
+Sample
+Sample
+sort
+length
+        <span class="c1"># This could be better, but it&#39;s just an example.</span>
+sample
+sort
+group
+sample
+            <span class="n">batch</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">caption_len</span> <span class="o">=</span> <span class="mi">0</span>
+sample
+sample
+length
+sample
+sample
+sample
+sample
+group
+group
+    
+    <span class="nd">@stateless</span>
+sample
+sample
+Sample
+Sample
+Sample
+        <span class="o">...</span>
+
+</pre></div>
+--
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -Ls https://docs.nvidia.com/nemo/megatron-bridge/latest/training/packed-sequences.html | grep -io -C 3 -E 'pack|sequence|length|preprocess|shuffle|dataset|algorithm|efficiency' | head -160" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 157ms:
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+Pack
+Sequence
+  
+  
+  
+  <script data-cfasync="false">
+dataset
+dataset
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+--
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+pack
+sequence
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.17.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+--
+<li class="toctree-l1"><a class="reference internal" href="activation-recomputation.html">Activation Recomputation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpu-offloading.html">CPU Offloading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="peft.html">Parameter-Efficient Fine-Tuning (PEFT)</a></li>
+Pack
+Sequence
+<li class="toctree-l1"><a class="reference internal" href="multi-token-prediction.html">Multi-Token Prediction (MTP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+</ul>
+--
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../apidocs/bridge/bridge.data.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+dataset
+dataset
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.hf_processors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.hf_processors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.builders.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.builders</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.energon.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.energon</span></code></a></li>
+dataset
+dataset
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.mimo.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.mimo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.utils</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.loaders.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.loaders</span></code></a></li>
+--
+<li class="toctree-l4"><a class="reference internal" href="../apidocs/bridge/bridge.data.iterator_utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bridge.data.iterator_utils</span></code></a></li>
+</ul>
+</details></li>
+pack
+pack
+</ul>
+</details></li>
+</ul>
+--
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/cuda-graphs/SKILL.html">CUDA Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/tp-dp-comm-overlap/SKILL.html">TP / DP / PP Communication Overlap Skill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/megatron-fsdp/SKILL.html">Megatron FSDP Skill</a></li>
+pack
+sequence
+Pack
+Sequence
+sequence
+pack
+Sequence
+Pack
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/hybrid-context-parallel/SKILL.html">Hybrid / Hierarchical Context Parallel Skill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/expert-parallel-overlap/SKILL.html">MoE Expert-Parallel Overlap Skill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills/perf-techniques/moe-comm-overlap/SKILL.html">MoE Communication Overlap</a></li>
+--
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+Pack
+Sequence
+  </ul>
+</nav>
+</div>
+--
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+pack
+sequence
+Pack
+Sequence
+pack
+sequence
+Pack
+sequence
+pack
+sequence
+boundaries for attention. In Megatron Bridge, this is primarily a supervised
+fine-tuning and PEFT optimization rather than a general pretraining feature.</p>
+pack
+sequence
+them, and which constraints are durable. For operational setup, code anchors,
+sequence
+pack
+sequence
+pack
+<section id="what-it-is">
+<h2>What It Is<a class="headerlink" href="#what-it-is" title="Link to this heading">#</a></h2>
+dataset
+length
+those examples are batched conventionally, many tokens in each batch are just
+Pack
+sequence
+pack
+multiple examples and carrying boundary metadata into the attention path.</p>
+pack
+enablement through context parallelism:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+--
+</tr>
+</thead>
+<tbody>
+pack
+<td><p>Text-only finetuning</p></td>
+pack
+sequence
+</tr>
+pack
+<td><p>VLM finetuning</p></td>
+pack
+sequence
+</tr>
+<tr class="row-even"><td><p>Long-context (CP)</p></td>
+<td><p>Pretrain / finetune at 16K-128K+</p></td>
+--
+</tbody>
+</table>
+</div>
+pack
+pack
+sequence
+length
+</section>
+<section id="when-to-use-it">
+<h2>When to Use It<a class="headerlink" href="#when-to-use-it" title="Link to this heading">#</a></h2>
+Pack
+sequence
+<ul class="simple">
+pack
+supported; see the path table above)</p></li>
+length
+pack
+</ul>
+Pack
+sequence
+<ul class="simple">
+<li><p>you are doing standard Megatron-style pretraining, which already concatenates
+documents during sampling</p></li>
+<li><p>you want long-context training in general, where context parallelism is often
+the main technique</p></li>
+pack
+sequence
+</ul>
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 426ms:
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+Packing
+  
+  
+  
+--
+    <script src="../../../_static/asciinema-player_3.12.1.js"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+packing
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+--
+
+<script type="text/javascript" src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js"></script>
+
+packing
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+
+    <link rel="index" title="Index" href="../../../genindex.html" />
+--
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Install NeMo Framework</a></li>
+performance
+performance
+Performance
+<li class="toctree-l1"><a class="reference internal" href="../../../why-nemo.html">Why NeMo Framework?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+--
+<li class="toctree-l2"><a class="reference internal" href="../moe.html">Mixture of Experts</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Optimizations</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="attention_optimizations.html">Attention Optimizations</a></li>
+Packing
+<li class="toctree-l3"><a class="reference internal" href="activation_recomputation.html">Activation Recomputation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="communication_overlap.html">Communication Overlap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpu_offloading.html">CPU Offloading</a></li>
+--
+<li class="toctree-l4"><a class="reference internal" href="../../multimodal/mllm/video_neva.html">Video NeVA</a></li>
+
+
+packing
+Packing
+<li class="toctree-l4"><a class="reference internal" href="../../multimodal/speech_llm/intro.html">Speech-agumented Large Language Models (SpeechLLM)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../multimodal/speech_llm/datasets.html">SpechLLM Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../multimodal/speech_llm/configs.html">Common Configuration Files</a></li>
+--
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Optimizations</a></li>
+    
+Packing
+  </ul>
+</nav>
+</div>
+--
+<p>You are viewing the NeMo 2.0 documentation. This release introduces significant changes to the API and a new library, <a class="reference external" href="https://github.com/NVIDIA/NeMo-Run">NeMo Run</a>. We are currently porting all features from NeMo 1.0 to 2.0. For documentation on previous versions or features not yet available in 2.0, please refer to the <a class="reference external" href="https://docs.nvidia.com/nemo-framework/user-guide/24.07/overview.html">NeMo 24.07 documentation</a>.</p>
+</div>
+</div></blockquote>
+packing
+Packing
+packing
+packing
+packing
+Packing
+packing
+<section id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h3>
+<p>When fine-tuning a large language model, whether using SFT or PEFT methods, GPU underutilization often occurs due to an inefficient data pipeline. This inefficiency arises because most fine-tuning datasets have a skewed distribution of sequence lengths, with many short sequences and a few long ones, following Zipf’s Law. Since transformer models require fixed-length inputs, shorter sequences must be padded with unused tokens, leading to two main inefficiencies:</p>
+--
+<li><p>Micro batch size is often limited by the batch which contains longer sequences, so that most other micro batches have
+underutilized GPU memory.</p></li>
+</ul>
+packing
+<p>While sequences for pretraining can be concatenated naively, this is not the case for SFT and instruction fine-tuning
+where each input sequence should be treated individually. The conventional solution is to build an extended attention
+mask to mark the sequence id each token belongs to, and mask out attention values between sequences. However, this
+increases the complexity of attention from <span class="math notranslate nohighlight">\(\sum_i {s_i}^2\)</span> to <span class="math notranslate nohighlight">\(\Big({\sum_i {s_i}}\Big)^2\)</span>, where <span class="math notranslate nohighlight">\(s_i\)</span> is the
+packing
+packing
+kernels in FlashAttention and TransformerEngine. With this approach, attention values between sequences are never calculated,
+packing
+that GPU memory can be fully utilized.</p>
+packing
+<ul class="simple">
+performance
+performance
+<li><p>No impact on model convergence</p></li>
+</ul>
+</section>
+--
+<p>Two main steps are run in this script:</p>
+<ol class="arabic simple">
+<li><p>The online processing code in GPTSFTDataset is run. This includes tasks such as prompt template manipulation, sequence length truncation, and tokenization. The result is an array of tokenized sequences, represented by indices.</p></li>
+packing
+algorithm
+</ol>
+packing
+algorithm
+packing
+algorithm
+Currently, two variants of <code class="docutils literal notranslate"><span class="pre">first_fit</span></code> are supported.
+decreasing
+sort
+decreasing
+algorithm
+packing
+Packing
+The recommendation is to run <code class="docutils literal notranslate"><span class="pre">first_fit_shuffle</span></code> and check the packed sequence lengths. If they are similar to the
+packing
+decreasing
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/nlp_language_modeling/prepare_packed_ft_dataset.py<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>model.data.train_ds.file_names<span class="o">=[</span>/path/to/training.jsonl<span class="o">]</span><span class="w"> </span><span class="se">\</span>
+--
+<span class="w">   </span>+tokenizer_path<span class="o">=</span>/path/to/tokenizer.model<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>+output_dir<span class="o">=</span>/path/to/output_folder<span class="w"> </span><span class="se">\</span>
+
+exec
+/bin/zsh -lc "curl -Ls https://nvidia.github.io/Megatron-Energon/_sources/advanced/packing.md.txt | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -Ls https://docs.nvidia.com/nemo-framework/user-guide/24.09/_sources/nemotoolkit/features/optimizations/sequence_packing.rst.txt | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -Ls https://docs.nvidia.com/nemo/megatron-bridge/latest/_sources/training/packed-sequences.md.txt | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 190ms:
+<!--- Copyright (c) 2025, NVIDIA CORPORATION.
+SPDX-License-Identifier: BSD-3-Clause -->
+
+# Packing
+
+Packing (sometimes also called sequence packing), enables you to selectively compress multiple
+input samples into a single sample, for example depending on their length.
+
+This technique is commonly used with large language models, if the input samples have very different
+lengths leading to lots of padding and hence wasted compute.
+
+This section explains how you can pack samples together and utilize the full context length.
+
+## How to pack samples on the fly
+
+To use packing, you need to implement the TaskEncoder methods {py:meth}`select_samples_to_pack <megatron.energon.TaskEncoder.select_samples_to_pack>`
+and {py:meth}`pack_selected_samples <megatron.energon.TaskEncoder.pack_selected_samples>`.
+Furthermore, you need to initialize the loader with the `packing_buffer_size` argument set to a non-zero number.
+
+The `select_samples_to_pack` method will receive a list of samples (size according to the selected `packing_buffer_size`),
+and should partition those samples into groups that shall be packed together. Hence the function returns
+a list of lists of samples.
+
+For each group, the second method `pack_selected_samples` will be called. You need to implement how a group of
+samples will be mapped to a single sample. In terms of LLMs for example, this method might concatenate the input tokens.
+
+
+```{admonition} Note
+:class: important
+You can set the `__restore_key__` of the packed sample to an empty tuple, since energon will set the correct
+restore key afterwards, based on the samples that went in.
+```
+
+```{warning}
+To handle attention masks and tokenized inputs, you will want to operate on a different sample type.
+The `pack_selected_samples` method may return a different sample type that is expected as the input for the `batch` method.
+```
+
+It is important, to mark custom functions like `encode_sample` and `pack_selected_samples` as `@stateless` to allow saving
+samples for packing. If augmentations happen, it should be marked with
+`@stateless(restore_seeds=True)`, to deterministically set the seeds based on the `TaskEncoder.current_sample_index`.
+You have to make sure the methods are actually stateless, meaning that they will produce the same output when invoked
+with the same input and random states.
+
+Example packing for a large language model extending the example from the [](../basic/task_encoder) section:
+
+```python
+class PackingCaptioningTaskEncoder(CaptioningTaskEncoder):
+    """This class extends the CaptioningTaskEncoder and adds select_samples_to_pack and pack_selected_samples for packing samples
+    efficiently on-the-fly.
+    Set the `packing_buffer_size` of the get_(train|val)_dataset to an accordingly large number to get a
+    properly sized input sample buffer with good diversity.
+    """
+
+    @stateless(restore_seeds=True)
+    def encode_sample(self, ...):
+        # Added `stateless` decorator to allow saving samples for packing. Will set the seed
+        # deterministically based on the self.current_sample_index.
+        ...
+
+    def select_samples_to_pack(self, samples: List[CaptioningSample]) -> List[List[CaptioningSample]]:
+        # Do something intelligent here, e.g. sort by caption length and concat where possible.
+        # This could be better, but it's just an example.
+        samples.sort(key=lambda x: len(x.caption))
+        groups = []
+        while len(samples) > 0:
+            batch = []
+            caption_len = 0
+            while len(samples) > 0 and caption_len + len(samples[0].caption) < self.max_length:
+                sample = samples.pop(0)
+                batch.append(sample)
+                caption_len += len(sample.caption)
+            groups.append(batch)
+        return groups
+    
+    @stateless
+    def pack_selected_samples(self, samples: List[CaptioningSample]) -> CaptioningSample:
+        # Construct a new CaptioningSample by concatenating the captions
+        ...
+
+```
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 547ms:
+# Packed Sequences
+
+Packed sequences are a fine-tuning technique that reduces padding waste by
+concatenating multiple examples into one pack while preserving sequence
+boundaries for attention. In Megatron Bridge, this is primarily a supervised
+fine-tuning and PEFT optimization rather than a general pretraining feature.
+
+This page is the stable overview for what packed sequences are, when to use
+them, and which constraints are durable. For operational setup, code anchors,
+and verification commands, see [skills/perf-techniques/sequence-packing/SKILL.md](../skills/perf-techniques/sequence-packing/SKILL.md).
+
+## What It Is
+
+Fine-tuning datasets often contain examples with highly variable lengths. When
+those examples are batched conventionally, many tokens in each batch are just
+padding. Packed sequences reduce that waste by building longer packs from
+multiple examples and carrying boundary metadata into the attention path.
+
+In Bridge today, there are two distinct packing paths plus long-context
+enablement through context parallelism:
+
+| Path | Use case | Key config |
+|---|---|---|
+| Offline packed SFT | Text-only finetuning | `packed_sequence_specs` |
+| VLM in-batch packing | VLM finetuning | `pack_sequences_in_batch=True` |
+| Long-context (CP) | Pretrain / finetune at 16K-128K+ | `context_parallel_size > 1` |
+
+These are related but they are not the same knob. Offline packed SFT and VLM
+in-batch packing solve padding waste; long-context training primarily addresses
+activation memory and communication tradeoffs at larger sequence lengths.
+
+## When to Use It
+
+Packed sequences are a good fit when all of the following are true:
+
+- you are doing SFT, PEFT, or VLM finetuning (all three packing paths are
+  supported; see the path table above)
+- your examples have variable lengths and padding waste is significant
+- you can tolerate the micro-batch constraints of packed training
+
+Packed sequences are usually not the right answer when:
+
+- you are doing standard Megatron-style pretraining, which already concatenates
+  documents during sampling
+- you want long-context training in general, where context parallelism is often
+  the main technique
+- your model family or recipe explicitly opts out of packed-sequence support
+
+## Stable Constraints
+
+The durable constraints for packed sequences in Bridge are:
+
+- packed SFT requires `micro_batch_size == 1`
+- when context parallelism is used, sequence length must satisfy the standard
+  CP divisibility constraints
+- for fine-tuning with CP enabled, per-token loss behavior and reduction
+  settings matter
+- CUDA-graph-friendly packed metadata requires additional padding constraints
+
+Model-family support is not universal. Some families and recipe paths explicitly
+opt out of packed sequences or related packing modes.
+
+## Relationship to Long-Sequence Training
+
+Packed sequences and long-sequence training are often mentioned together because
+both affect sequence layout and memory behavior, but they solve different
+problems:
+
+- packed sequences mainly reduce padding waste in fine-tuning datasets
+- long-sequence training mainly addresses activation memory and communication
+  tradeoffs at larger sequence lengths
+
+For long-sequence training guidance, see:
+
+- `docs/performance-guide.md`
+- `docs/training/hybrid-context-parallel.md`
+
+## Practical Caveats
+
+The most stable caveats to remember are:
+
+1. Packed-sequence support is recipe- and model-family-specific.
+2. Fine-tuning sequence packing should not be assumed to work with every other
+   training feature.
+3. Packed sequences improve efficiency primarily by reducing padding waste, not
+   by replacing long-context parallelism or memory-planning techniques.
+
+## Related Docs
+
+- [docs/training/multi-token-prediction.md](multi-token-prediction.md)
+- [docs/performance-guide.md](../performance-guide.md)
+- [docs/training/hybrid-context-parallel.md](hybrid-context-parallel.md)
+- [skills/perf-techniques/sequence-packing/SKILL.md](../skills/perf-techniques/sequence-packing/SKILL.md)
+- [skills/perf-techniques/sequence-packing/card.yaml](../skills/perf-techniques/sequence-packing/card.yaml)
+- [skills/perf-techniques/packed-sequences-long-context/SKILL.md](../skills/perf-techniques/packed-sequences-long-context/SKILL.md)
+- [skills/perf-techniques/packed-sequences-long-context/card.yaml](../skills/perf-techniques/packed-sequences-long-context/card.yaml)
+
+ succeeded in 577ms:
+
+<!DOCTYPE html>
+<html class="Page"xmlns="XHTML namespace" lang="en" xml:lang="en"dir="ltr"
+>
+<head>
+<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript"
+  data-document-language="true" charset="UTF-8" data-domain-script="3e2b62ff-7ae7-4ac5-87c8-d5949ecafff5">
+</script>
+<script type="text/javascript">
+  function OptanonWrapper() {
+    var event = new Event('bannerLoaded');
+    window.dispatchEvent(event);
+  }
+</script>
+<script src="https://images.nvidia.com/aem-dam/Solutions/ot-js/ot-custom.js" type="text/javascript">
+</script>
+
+    <meta charset="UTF-8">
+
+    <meta property="og:title" content="Page Not Found">
+
+    <meta property="og:url" content="https://docs.nvidia.com/page-not-found">
+
+    <meta property="og:description" content="Page displayed for direct links that are not 
+supported by current publishing formats.">
+
+    <meta property="og:site_name" content="NVIDIA Docs">
+
+
+
+    <meta property="og:type" content="website">
+
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+    
+    
+    
+    
+    <meta name="twitter:description" content="Page displayed for direct links that are not 
+supported by current publishing formats."/>
+    
+    
+    
+    
+    
+    
+    <meta name="twitter:title" content="Page Not Found"/>
+    
+
+
+    <meta name="title" content="Page Not Found"/>
+
+    <meta name="nv-pub-date" content="Wed Feb 08 14:41:59 EST 2023"/>
+<style type="text/css">:root {
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+}
+</style>
+    <style type="text/css">:root {
+            --button-border-radius:40px;
+        }
+</style>
+    <style type="text/css">:root {
+  --font-1: "Arial";
+  --font-2: "Times";
+}
+
+body {
+  --font-1: "Roboto";
+  --font-2: "Merriweather";
+}
+</style>
+
+    
+        
+            
+                <link data-cssvarsponyfill="true" class="Webpack-css" rel="stylesheet" 
+href="https://docscontent.nvidia.com/resource/00000183-6725-d7fd-a5bb-6727dc560000/styles/default/All.min.27a6af8267a29524b726de01888c20d6.gz.css">
+            
+            
+        
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, 
+maximum-scale=5"><title>Page Not Found</title><link rel="canonical" 
+href="https://docs.nvidia.com/page-not-found"><meta name="brightspot.contentId" 
+content="00000186-3288-df52-ad9f-3ecce2040000"><link 
+rel="apple-touch-icon"sizes="180x180"href="/apple-touch-icon.png"><link 
+rel="icon"type="image/png"href="/favicon-32x32.png"><link 
+rel="icon"type="image/png"href="/favicon-16x16.png"><link type="application/rss+xml" 
+rel="alternate" title="Page Not Found" href="https://docs.nvidia.com/page-not-found.rss">
+
+    <!-- this will add webcomponent polyfills based on browsers. As of 04/29/21 still needed for 
+IE11 and Safari -->
+    <script 
+src="https://docscontent.nvidia.com/resource/00000183-6725-d7fd-a5bb-6727dc560000/webcomponents-loader/webcomponents-loader.2938a610ca02c611209b1a5ba2884385.gz.js"></script>
+
+    <script>
+        /**
+            This allows us to load the IE polyfills via feature detection so that they do not load
+            needlessly in the browsers that do not need them. It also ensures they are loaded
+            non async so that they load before the rest of our JS.
+        */
+        if (!window.CSS || !window.CSS.supports || !window.CSS.supports('--fake-var', 0)) {
+            var script = document.createElement('script');
+            script.setAttribute('src', 
+"https://docscontent.nvidia.com/resource/00000183-6725-d7fd-a5bb-6727dc560000/util/IEPolyfills.3af8d32fc874177c8b40f77d0ae336b5.gz.js");
+            script.setAttribute('type', 'text/javascript');
+            script.async = false;
+            document.head.appendChild(script);
+        }
+    </script>
+    
+        
+            
+                <script 
+src="https://docscontent.nvidia.com/resource/00000183-6725-d7fd-a5bb-6727dc560000/styles/default/All.min.c1207f668de39769b24ecb17f2345c66.gz.js" 
+async></script>
+            
+            
+            
+        
+    <script 
+src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js"></script>
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-svg.min.js"></script>
+<script src="https://js.hcaptcha.com/1/api.js"></script>
+<script src="https://tbyb.rivaspeech.com/tbyb.js" defer></script>
+<script>
+        var link = document.createElement('link');
+        link.setAttribute('href', 
+'//fonts.googleapis.com/css?family=Roboto+Mono&family=Roboto:300,400,700');
+        var relList = link.relList;
+
+        if (relList && relList.supports('preload')) {
+            link.setAttribute('as', 'style');
+            link.setAttribute('rel', 'preload');
+            link.setAttribute('onload', 'this.rel="stylesheet"');
+            link.setAttribute('crossorigin', 'anonymous');
+        } else {
+            link.setAttribute('rel', 'stylesheet');
+        }
+
+        document.head.appendChild(link);
+    </script>
+<link rel="stylesheet" href="/common-libs/common.css">
+<script src="/common-libs/common.js"></script>
+</head>
+
+
+<body class="Page-body">
+    <!-- Putting icons here, so we don't have to include in a bunch of -body hbs's -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="iconsMap">
+    <symbol id="mono-icon-facebook" viewBox="0 0 10 19">
+        <path fill-rule="evenodd" d="M2.707 18.25V10.2H0V7h2.707V4.469c0-1.336.375-2.373 
+1.125-3.112C4.582.62 5.578.25
+        6.82.25c1.008 0 1.828.047 2.461.14v2.848H7.594c-.633 
+0-1.067.14-1.301.422-.188.235-.281.61-.281
+        1.125V7H9l-.422 3.2H6.012v8.05H2.707z"></path>
+    </symbol>
+    <symbol id="action-icon-facebook" viewBox="0 0 7 12" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g transform="translate(-112.000000, -395.000000)" fill="#FFFFFF">
+                <g transform="translate(100.000000, 386.000000)">
+                    <g transform="translate(12.000000, 9.000000)">
+                        <path d="M1.777125,12 L1.777125,6.48659606 L0,6.48659606 L0,4.05412254 
+L1.777125,4.05412254
+                        L1.777125,3.10626869 C1.777125,1.47184919 2.99976923,0 4.50308654,0 
+L6.46153846,0 L6.46153846,2.43247352
+                        L4.50308654,2.43247352 C4.28864423,2.43247352 4.03846154,2.69376172 
+4.03846154,3.08498454 L4.03846154,4.05412254
+                        L6.46153846,4.05412254 L6.46153846,6.48659606 L4.03846154,6.48659606 
+L4.03846154,12"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </symbol>
+    <symbol id="mono-icon-instagram" viewBox="0 0 17 17">
+        <g>
+            <path fill-rule="evenodd" d="M8.281 4.207c.727 0 1.4.182 2.022.545a4.055 4.055 0 0 1 
+1.476 1.477c.364.62.545 1.294.545 2.021 0 .727-.181 1.4-.545 2.021a4.055 4.055 0 0 1-1.476 1.477 
+3.934 3.934 0 0 1-2.022.545c-.726 0-1.4-.182-2.021-.545a4.055 4.055 0 0 1-1.477-1.477 3.934 3.934 
+0 0 1-.545-2.021c0-.727.182-1.4.545-2.021A4.055 4.055 0 0 1 6.26 4.752a3.934 3.934 0 0 1 
+
+exec
+/bin/zsh -lc 'tmp=$(mktemp); curl -Ls https://docs.nvidia.com/nemo-framework/user-guide/24.09/nemotoolkit/features/optimizations/sequence_packing.html > $tmp; grep -n "Currently, two variants'"\\|first_fit\\|decreasing\\|No impact\" "'$tmp | head -30; sed -n '"'430,560p' "'$tmp | perl -0777 -pe '"'s/<["'^>]+>/ /g; s/&lt;/</g; s/&gt;/>/g; s/&amp;/'"\\&/g; s/\\s+/ /g' | fold -w 140; rm "'$tmp' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 837ms:
+820:<li><p>No impact on model convergence</p></li>
+839:Currently, two variants of <code class="docutils literal notranslate"><span class="pre">first_fit</span></code> are supported.
+840:- <code class="docutils literal notranslate"><span class="pre">first_fit_decreasing</span></code> sorts the sequences in decreasing order before applying the first-fit algorithm. It generates a
+842:- <code class="docutils literal notranslate"><span class="pre">first_fit_shuffle</span></code> runs first-fit in a random order. Packing is less optimal but it keeps the dataset order random.
+843:The recommendation is to run <code class="docutils literal notranslate"><span class="pre">first_fit_shuffle</span></code> and check the packed sequence lengths. If they are similar to the
+844:target length (i.e. efficient packing), then use shuffle. Otherwise try <code class="docutils literal notranslate"><span class="pre">first_fit_decreasing</span></code>.</p>
+852:<span class="o">[</span><span class="w">  </span>+packing_algorithm<span class="o">=</span>first_fit_shuffle<span class="w"> </span><span class="se">\ </span><span class="w"> </span><span class="o">]</span>
+ Mixture of Experts Optimizations Attention Optimizations Sequence Packing Activation Recomputation Communication Overlap CPU Offloading Che
+ckpoints Distributed Checkpoints Community Model Converter User Guide Community Model Converter Development Guide Converting from Megatron-L
+M NeMo APIs NeMo Models Neural Modules Experiment Manager Neural Types Exporting NeMo Models Adapters Adapter Components Adapters API NeMo C
+ore APIs NeMo Common Collection API Callbacks Losses Metrics Tokenizers Data S3 Checkpointing NeMo Large language Model API ONNX Export of M
+egatron Models NeMo Multimodal API NeMo ASR API NeMo TTS API NeMo Collections Large Language Models GPT Model Training Batching RETRO Model 
+Hiddens Module Parameter-Efficient Fine-Tuning (PEFT) Positional embeddings Megatron Core Customization Drop Model Laeyrs Reset Learning Rat
+e Ramp Up Batch Size Machine Translation Models ONNX Export of Megatron Models Quantization Multimodal Language Models Multimodal Language M
+odel Datasets Common Configuration Files NeVA Video NeVA Sequence Packing for NeVA Speech-agumented Large Language Models (SpeechLLM) SpechL
+LM Dataset Common Configuration Files SpeechLLM API Vision-Language Foundation Datasets Common Configuration Files Checkpoints CLIP Text to 
+Image Models Datasets Common Configuration Files Checkpoints Stable Diffusion Imagen DreamBooth ControlNet InstructPix2Pix Stable Diffusion 
+XL Int8 Quantization NeRF Datasets Common Configuration Files DreamFusion Speech-agumented Large Language Models (SpeechLLM) SpechLLM Datase
+t Common Configuration Files SpeechLLM API Vision Models Datasets Common Configuration Files Checkpoints ViT Automatic Speech Recognition (A
+SR) Models Datasets 
+exec
+/bin/zsh -lc 'tmp=$(mktemp); curl -Ls https://docs.nvidia.com/nemo-framework/user-guide/24.09/nemotoolkit/features/optimizations/sequence_packing.html > $tmp; sed -n '"'800,850p' "'$tmp | perl -0777 -pe '"'s/<["'^>]+>/ /g; s/&lt;/</g; s/&gt;/>/g; s/&amp;/'"\\&/g; s/\\s+/ /g' | fold -w 120; rm "'$tmp' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 229ms:
+ When fine-tuning a large language model, whether using SFT or PEFT methods, GPU underutilization often occurs due to an
+ inefficient data pipeline. This inefficiency arises because most fine-tuning datasets have a skewed distribution of seq
+uence lengths, with many short sequences and a few long ones, following Zipf’s Law. Since transformer models require fix
+ed-length inputs, shorter sequences must be padded with unused tokens, leading to two main inefficiencies: Computation p
+erformed on the pad values is eventually ignored for model output, resulting in wasted FLOPs. Micro batch size is often 
+limited by the batch which contains longer sequences, so that most other micro batches have underutilized GPU memory. Se
+quence packing is a training technique where multiple training sequences (examples) are concatenated into one long seque
+nce (pack). This method eliminates the need for padding, allowing more tokens to be processed in each micro batch. As a 
+result, it maximizes both GPU compute and GPU memory utilization. While sequences for pretraining can be concatenated na
+ively, this is not the case for SFT and instruction fine-tuning where each input sequence should be treated individually
+. The conventional solution is to build an extended attention mask to mark the sequence id each token belongs to, and ma
+sk out attention values between sequences. However, this increases the complexity of attention from \(\sum_i {s_i}^2\) t
+o \(\Big({\sum_i {s_i}}\Big)^2\) , where \(s_i\) is the length of the ith subsequence. In practice, the conventional sol
+ution puts a limit on the length of packing. Instead, NeMo provides a highly optimized version of sequence packing which
+ makes use of variable-length attention kernels in FlashAttention and TransformerEngine. With this approach, attention v
+alues between sequences are never calculated, so the complexity of attention remains at \(\sum_i {s_i}^2\) . This allows
+ packing sequences to arbitrary lengths so that GPU memory can be fully utilized. All things considered, NeMo’s implemen
+tation of sequence packing provides [ 1 ] Up to 10X performance improvement in terms of FLOPs Up to 6X performance impro
+vement in terms of training time No impact on model convergence How to run SFT/PEFT with packed sequence # Prepare Datas
+et # We provide a convenient script to pack your SFT or PEFT dataset. This script assumes that you already have a prepar
+ed dataset file for SFT/PEFT training in NeMo. If you do not, please follow this to download and prepare the Dolly datas
+et as an example. You will get a file named training.jsonl. The rest of this tutorial also assumes you already have a re
+cipe for training with the unpacked dataset. Two main steps are run in this script: The online processing code in GPTSFT
+Dataset is run. This includes tasks such as prompt template manipulation, sequence length truncation, and tokenization. 
+The result is an array of tokenized sequences, represented by indices. The tokenized sequences are grouped by length and
+ a packing algorithm is run. You can read more about packing algorithms here . Currently, two variants of first_fit are 
+supported. - first_fit_decreasing sorts the sequences in decreasing order before applying the first-fit algorithm. It ge
+nerates a more optimal packing, but it tends to keep all short sequences together, which may have an impact for converge
+nce. - first_fit_shuffle runs first-fit in a random order. Packing is less optimal but it keeps the dataset order random
+. The recommendation is to run first_fit_shuffle and check the packed sequence lengths. If they are similar to the targe
+t length (i.e. efficient packing), then use shuffle. Otherwise try first_fit_decreasing . python scripts/nlp_language_mo
+deling/prepare_packed_ft_dataset.py \ model.data.train_ds.file_names =[ /path/to/training.jsonl ] \ model.data.train_ds.
+max_seq_length = 2048 \ +tokenizer_path = /path/to/tokenizer.model \ +output_dir = /path/to/output_folder \ 
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed

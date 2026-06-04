@@ -8,3 +8,11 @@ Using AI Gateway (Meta Model API upstream)
 [0m✗ [0mread failed
 [91m[1mError: [0mFile not found: /Users/dengcchi/autonomous-research-v3/_committee_common_v001.md
 [0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
+[0m⚙ [0mmeta_core_search_files {"pattern":"committee_common","engine":"FILENAME"}
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "_committee_common_v001.md" 2>/dev/null | head -20
+[0m→ [0mRead .
+[0m
+[0m$ [0mfind /Users/dengcchi/autonomous-research-v3 -name "TOOLING_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mls -la /Users/dengcchi/autonomous-research-v3/_shared 2>/dev/null || find /Users/dengcchi/autonomous-research-v3 -type d -name "_shared" 2>/dev/null | head -5

@@ -1,0 +1,14 @@
+```
+ROLE: evaluation_prosecutor
+VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "Chunked/Local Sorting (Megatron-LM style)", why: "Production systems rarely globally sort the entire corpus before packing. They typically shuffle globally, then sort locally within chunks (e.g., 10k-100k docs) to balance packing efficiency with batch IID-ness. Comparing against global sorting attacks a strawman of production practices.", repo_or_cite: "Standard Megatron-LM / LLM data prep pipelines"}
+STRAWMAN_RISKS: 
+  - "Using a frozen, single-layer linear model to measure GNS. Gradients at initialization or with frozen weights are fundamentally different from gradients mid-training. A real model adapts its representations to the data distribution, which alters the gradient covariance matrix (Sigma) over time."
+  - "Assuming 'global length-sorting' is the definitive production standard, when chunked sorting is widely used precisely to avoid macroscopic domain clustering."
+MISSING_METRICS: 
+  - "Dynamic GNS measured mid-training (e.g., at step 1k, 10k, 50k) rather than on a static/frozen model."
+  - "End-to-end validation loss at a fixed token budget to prove the theoretical 'effective batch tax' actually translates to a convergence penalty."
+KILLER_EXPERIMENT: Train a 100M+ parameter model (e.g., GPT-2 small) from scratch using (a) global SPFHP, (b) chunked-sorted packing, and (c) fully shuffled packing. Measure GNS dynamically at logarithmic step intervals (10, 100, 1K, 10K) and track validation loss over a fixed token budget. If the validation loss curves converge to the same value despite early GNS differences, the hypothesized 'tax' is a harmless artifact of initialization/frozen weights.
+RATIONALE: The L0 evaluation takes a severe shortcut by using a completely frozen, randomly initialized tiny model to measure GNS. While this isolates batch composition, it completely ignores training dynamics; an actual model updates its weights, and the gradient noise scale evolves as the network learns. Furthermore, attacking 'global' length-sorting is likely attacking a strawman, as production pipelines usually employ global-shuffle followed by local-chunk-sorting to maintain global IID properties while achieving high pack density. The mechanism is plausible, but the evaluation is currently too synthetic to prove it impacts real training convergence.
+```
