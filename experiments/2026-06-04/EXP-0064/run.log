@@ -1,0 +1,14 @@
+[corpus] 2735 docs, domains=['CODE', 'DOCSTRING', 'MAN1', 'MAN5']
+[corpus] per-domain counts: {'CODE': 1285, 'DOCSTRING': 1177, 'MAN1': 253, 'MAN5': 20}
+[NULL-A] length<->domain MI=0.2487 bits, H(domain)=1.405, NMI=0.1770
+[length] per-domain mean token len: {'CODE': 113.9, 'DOCSTRING': 54.3, 'MAN1': 110.9, 'MAN5': 218.1}
+[packer] 475 rows, mean docs/pack=5.76 (NULL EXIT B driver)
+[grad] precomputing 475 row gradients... t=1.2s
+   row 0 t=1.2s
+[grad] done t=5.9s
+[grad] ||g_full||^2=3.381062e-04
+[gns] MB=8 rows/batch, mean docs/batch~46.1
+[gns] buffer=1k   GNS_sorted=3.7450 GNS_shuf=3.3013 RATIO=1.134 CI[0.875,1.452] ent_s=1.183 ent_h=1.250
+[gns] buffer=10k  GNS_sorted=3.7450 GNS_shuf=3.3013 RATIO=1.134 CI[0.875,1.452] ent_s=1.183 ent_h=1.250
+[gns] buffer=inf  GNS_sorted=3.7450 GNS_shuf=3.3013 RATIO=1.134 CI[0.875,1.452] ent_s=1.183 ent_h=1.250
+[done] total t=430.0s
