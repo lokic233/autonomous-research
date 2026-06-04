@@ -1,0 +1,80 @@
+verdict_id: VERDICT-0061
+claim_id: CLAIM-0060
+project_id: PROJ-0030
+date: '2026-06-04'
+experiment_ids:
+- EXP-0071
+experiment_paths:
+- experiments/2026-06-04/EXP-0071
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED, no fatal collision)
+required_evidence:
+- "Lossless-re-encode PREVALENCE in real VLM-serving/agent-RAG traffic from a NAMED\
+  \ source (production trace / WildVision / LMSYS multimodal arena / instrumented\
+  \ client SDK) \u2014 THE single gate, <~5% => operationally trivial"
+- FLOPs/TTFT saved per recovered hit under realistic working-set pressure incl processed-tensor
+  cache memory overhead (decoded tensors ~10-50x larger -> SGLang advantage may erode
+  under eviction)
+- reverse-confound test (processor-version drift invalidating processed-tensor hashes
+  while byte hashes survive)
+- baseline vLLM with client-injected mm_uuid (how much the existing escape hatch already
+  closes)
+- '>=1 more framework (HF TGI / TRT-LLM) byte-vs-processed keying to establish industry-wide
+  vs vLLM-specific'
+- PROPER LITERATURE SEARCH with >=2 independent sources confirming the prior-art negative
+  (novelty_killer's web search was DENIED -> PRIOR_ART_ADEQUATE:no)
+map_delta_proposals:
+- CLAIM-0060 -> HOLD L0-complete/L1-gated. Tag contribution_type='empirical_measurement_of_known_mechanism'
+  (NOT new_failure_mode). L1 = empirical prevalence + cost. Advance beyond L1 ONLY
+  if prevalence >=5% in named real traffic AND net FLOPs/TTFT survives memory-pressure
+  + reverse-confound. If <5% -> converge confirmed-but-marginal, no further escalation.
+baseline_requirements:
+- vLLM with client-injected mm_uuid (existing mitigation, measures org-seam cost)
+- HF TGI multimodal cache keying (industry baseline)
+- SGLang under memory-constrained eviction (do larger processed-tensor entries erase
+  the hit-rate advantage?)
+committee_run_dir: experiments/2026-06-04/EXP-0071/committee1
+verbatim_votes_summary: 'novelty_killer(Y): mechanism = cache-key over-specification,
+  pre-2020 folklore (pHash/CAS, RFC7234, GPTCache); live web-search DENIED so prior-art
+  negative unverified -> hold. systems_reviewer(Y): cross-framework divergence is
+  a real code fact but the fix already ships in SGLang; check HF TGI/TRT-LLM for industry
+  baseline. evaluation_prosecutor(Y): the 5 genuine re-encodes are HAND-CURATED not
+  traffic-sampled; need real prevalence. theory_skeptic(Y): 100pp is the DEFINITIONAL
+  consequence of keying one canonicalization step too early -> predicted by basic
+  cache theory, not surprising; prevalence is the binary gate. product_realist(Y):
+  dominant CDN traffic is LOSSY (zero-gap arm); mm_uuid fix needs cross-org coordination
+  = real adoption barrier. area_chair(Y): unanimous, all converge on prevalence bottleneck;
+  mechanism real+clean but NOT novel; frame as ''quantified a known mismatch'' not
+  ''discovery''; PRIOR_ART_ADEQUATE:no.'
+key_structural_finding: "Cross-framework hash-domain divergence is a REAL, verbatim-verified,\
+  \ pixel-identity-checked code-level fact (vLLM transport-bytes vs SGLang processed-pixels;\
+  \ 100pp gap on genuine lossless re-encodes; honest lossy null-exit). But the MECHANISM\
+  \ IS NOT NOVEL (cache-key over-specification = pre-2020 systems folklore; SGLang\
+  \ already ships the fix; vLLM mm_uuid = maintainers already know). Contribution\
+  \ is EMPIRICAL (quantified a known design-point mismatch), NOT a new failure mode.\
+  \ The decisive number \u2014 lossless-re-encode prevalence in real traffic \u2014\
+  \ is UNMEASURED."
+disposition: 'yellow-advance (committee#1; UNANIMOUS 6/6 yellow, no RED, no fatal).
+  All 5 reviewers converge on the SAME bottleneck (strengthens the yellow). Gate to
+  an empirical-prevalence L1 OR converge: if lossless-re-encode prevalence >=5% in
+  a NAMED real-traffic source -> material -> advance; if <5% -> real-but-marginal
+  -> converge as confirmed-but-marginal.'
+created_at: '2026-06-04T17:29:17Z'

@@ -49,13 +49,18 @@ supporting_evidence:
     surviving a competent user, NOT ''prompts help''.'
   data_path: experiments/2026-06-04/EXP-0072/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0060
+  date: '2026-06-04'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0072; convene committee if candidate-grade
+lifecycle_state: experiment_running
+next_action: await EXP-0073 result, then ros exp complete --exp EXP-0073 --effect
+  ...
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0073
 created_at: '2026-06-04T16:31:28Z'
-last_updated: '2026-06-04T17:05:07Z'
+last_updated: '2026-06-04T17:30:20Z'

@@ -1,0 +1,69 @@
+verdict_id: VERDICT-0060
+claim_id: CLAIM-0061
+project_id: PROJ-0031
+date: '2026-06-04'
+experiment_ids:
+- EXP-0072
+experiment_paths:
+- experiments/2026-06-04/EXP-0072
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED, no fatal collision)
+required_evidence:
+- "ST .encode() vs .encode_query() on arctic-embed-s \u2014 if .encode() auto-applies\
+  \ the config prompt the seam closes inside ST -> RED (THE load-bearing test)"
+- In-situ Chroma+pymilvus end-to-end add()+query() reproducing the A-number through
+  the actual default wrapper code path (L0 only simulated it via bare ST calls)
+- '>=2 more asymmetric-prompt self-describing models (bge-base-en-v1.5, arctic-embed-m)'
+- '>=2 more BEIR datasets (NFCorpus/FiQA/TREC-COVID)'
+- relabel DISCARD -> 'fail to auto-load by default' (wrappers EXPOSE prompt params,
+  default them empty)
+map_delta_proposals:
+- 'CLAIM-0061 -> HOLD at L0-YELLOW, do NOT advance until the ST .encode() test (item
+  1) clears: if .encode() auto-applies the prompt -> RED/costume'
+- else re-convene for L1 with relabeled framing
+baseline_requirements:
+- ST model.encode() vs encode_query() on arctic (isolates ST-boundary vs wrapper-boundary)
+- Chroma default ST-EmbeddingFunction end-to-end on SciFact
+- '>=1 more self-describing model'
+- '>=1 more BEIR dataset'
+committee_run_dir: experiments/2026-06-04/EXP-0072/committee1
+verbatim_votes_summary: "novelty_killer(Y): wrappers EXPOSE prompt params + default\
+  \ them empty -> 'DISCARD' overstates, 'fail to auto-load' is accurate; delta is\
+  \ integration-default not mechanism. systems_reviewer(Y): vLLM already loads input_type\
+  \ artifact prompt -> 'no system does this' false outside vector-DB wrappers; sector-specific.\
+  \ evaluation_prosecutor(Y): L0 only SIMULATES the wrapper discard via bare ST calls;\
+  \ need in-situ Chroma/pymilvus. theory_skeptic(Y): THE load-bearing untested assertion\
+  \ \u2014 if ST .encode() auto-applies the config prompt the seam is inside ST not\
+  \ the wrapper; also N=1 model/dataset, CI within-SciFact-arctic only. product_realist(GREEN):\
+  \ real, material RAG-quality bug surviving a competent user. area_chair(Y): discard-framing\
+  \ partially distinct + surprising (post-v3 self-describing) but modest; controls\
+  \ sound; prior-art adequate; too thin (N=1/N=1) to advance without items 1-4."
+key_structural_finding: 'Artifact->DB prompt-discard is PARTIALLY distinct from the
+  known prefix footgun (post-ST-v3 the artifact self-describes + auto-applies, so
+  a competent user expects it to work). Delta survives but is MODEST (packaging/defaults,
+  not mechanism). Controls sound (alias-break + could-it-fail held); honest reproduction.
+  Decisive untested assumption: whether ST .encode() already auto-applies the prompt
+  (would close the seam inside ST).'
+disposition: 'yellow-advance (committee#1; 4Y+1G, no RED, no fatal). Gate to a make-or-break
+  L1 OR converge. The decisive L1 test is killer-#3: does ST .encode() itself auto-apply
+  the config''d prompt? If yes -> RED/costume (seam is inside ST, not the wrapper);
+  if no -> seam real at the wrapper boundary.'
+created_at: '2026-06-04T17:28:40Z'
