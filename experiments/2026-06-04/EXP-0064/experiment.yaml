@@ -12,12 +12,18 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'PARTIAL: GNS_sorted/GNS_shuffled = 1.10-1.22 at realistic 10k buffer
+  (>1.05, <1.3 headline). Mechanism CONFIRMED (sorted batches lower within-domain
+  entropy at every point; null-A length<->domain MI=0.232 bits ruled out; null-C sign-flip
+  ruled out, ratio>1 everywhere). NULL EXIT B (within-pack averaging) is the dominant
+  moderator: ratio decays monotonically 1.22->1.17->1.10 as mean docs/pack rises 2.0->3.1->5.8;
+  at production pack density (5.79) it falls to 1.10 w/ CI incl 1.0. Real 4-domain
+  stdlib+manpage corpus, frozen identical model both arms. Honest PARTIAL, not forced.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-04/EXP-0064/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T00:25:46Z'
 prompt_version: ''

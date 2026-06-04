@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0026
 claim_id: CLAIM-0056
 exp_id: EXP-0064
-status: open
+status: done
 summary: 'L0: length-sorted packing GNS inflation vs shuffle-then-pack. Real mixed
   corpus (labeled domains+real lengths); 2 arms identical packer+masking differ ONLY
   in row-ordering; FROZEN identical model (anti-circular); headline GNS_sorted/GNS_shuffled
@@ -16,8 +16,8 @@ summary: 'L0: length-sorted packing GNS inflation vs shuffle-then-pack. Real mix
   if ratio<=1.05 at realistic buffer; PERSISTENT-SEEDER loop'
 evidence_delta: ''
 opened_at: '2026-06-04T00:01:41Z'
-updated_at: '2026-06-04T00:01:41Z'
-closed_at: ''
+updated_at: '2026-06-04T00:25:46Z'
+closed_at: '2026-06-04T00:25:46Z'
 history:
 - ts: '2026-06-04T00:01:41Z'
   event: open
@@ -29,3 +29,7 @@ history:
     to RULE OUT: (A) length _|_ domain, (B) within-pack averaging washes it out, (C)
     sign-flip; diagnostic = within-batch domain entropy + corpus length<->domain MI.
     honest-neg if ratio<=1.05 at realistic buffer; PERSISTENT-SEEDER loop'
+- ts: '2026-06-04T00:25:46Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0062 completed EXP EXP-0064 (keep-exploring)
