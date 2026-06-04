@@ -1,0 +1,13 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: 
+  - {name: "Standard Production Dedup Normalizer", why: "Production tooling (datatrove, text-dedup) does not run 'raw'; they apply aggressive baseline normalization, at minimum lowercasing and punctuation stripping.", repo_or_cite: "https://github.com/ChenghaoMou/text-dedup, https://github.com/huggingface/datatrove"}
+STRAWMAN_RISKS: 
+  - "The L0 'raw/NFC' baseline is a strawman. The experiment explicitly injected 'upper<->lower' case differences into the normalizable arm. Since standard production dedupers (e.g., text-dedup) use lowercasing by default, they would successfully cluster those pairs. The FN=1.00 result is an artifact of artificially disabling standard casefolding in the baseline."
+  - "Synthetic dense injection of NFKC-specific differences (ligatures, fullwidth) does not represent the natural distribution or density of such characters, potentially exaggerating their impact on Jaccard similarity."
+MISSING_METRICS: 
+  - "Absolute frequency of NFKC-divergent duplicates in the wild (natural corpora)."
+  - "Residual False Negative Rate: the percentage of model-identical pairs missed AFTER a standard production normalizer (lowercase + punctuation strip) is applied."
+KILLER_EXPERIMENT: 
+  - "Run a true Datatrove/text-dedup default baseline (lowercase + punctuation stripping) vs. model-tokenizer normalizer on a natural corpus (e.g., C4). Measure the residual FN rate driven strictly by non-case NFKC divergences (e.g., ligatures, fullwidth). If standard lowercasing already catches 99.9% of model-identical pairs, the divergence is practically irrelevant."
+RATIONALE: "The organizational seam is genuinely uncrossed—datatrove and text-dedup do not accept a model's tokenizer normalizer config, meaning the theoretical divergence exists. However, the L0 evaluation relies on a rigged baseline. By injecting case differences (upper<->lower) into the

@@ -1,0 +1,726 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e9064-f8ca-7870-be96-76471e2a62a4
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0059 (PROJ-0029, CROSS-AREA: tokenization/preprocessing x data-systems) — normalizer-divergence drives dedup false-negatives
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=support/HELD (primary). NOT metric-validity (FN = missed-true-dup-pairs/total, GT=model-identical harness-owned, deduper never reads GT). Anti-circular. Vote HONESTLY by role.
+
+## ★★★ THE #1 STRESS-TEST (the orchestrator flags this FRONT-AND-CENTER — the decisive question, from the sibling CLAIM-0058 RED lesson):
+A sibling cross-area claim (CLAIM-0058, runtime-flush->streaming-safety-recall) was KILLED at committee because its 'uncrossed seam' was ALREADY CLOSED in production tooling (NeMo Guardrails ships the mechanism+fix; 'zero paper hits' != 'uncrossed seam'). So THE DECISIVE QUESTION FOR THIS CLAIM: does PRODUCTION DEDUP TOOLING (datatrove, text-dedup, NeMo-Curator, BigCode/HF dedup pipelines) already offer a model-normalizer-alignment mode / default to NFKC+casefold / co-locate the model-normalizer + the dedup-normalizer in a single config? (a) If YES -> the seam is ALREADY CLOSED in production tooling (the same kill) -> RED. (b) If NO (production dedup defaults to NFC/raw with no 'align to the model tokenizer's normalizer' knob, and there is no tooling that co-owns both) -> the seam is genuinely OPEN in deployed practice -> the claim SURVIVES. ALSO: is the ORG-SEAM (model-team + data-team configure normalizers independently) DEMONSTRATED or merely ASSUMED? (CLAIM-0058 was killed partly because 'assumed not demonstrated + contradicted by production co-location'.) The novelty_killer / systems_reviewer should search: does datatrove / text-dedup / NeMo-Curator / BigCode offer a 'model-aware dedup normalization' config, or is the dedup normalizer always fixed/internal?
+
+## CLAIM: in a standard MinHash+LSH dedup pipeline, the document-pair FN rate (missed true dups, where 'true dup' = identical under the MODEL tokenizer's NFKC+casefold) is driven by the Unicode-equivalence DIVERGENCE between the deduper's normalizer and the model tokenizer's — not edit distance. When the model normalizes more strongly than the deduper, model-identical pairs escape the deduper; aligning the deduper's normalizer collapses FN to baseline.
+
+## L0 RESULT (exact-Jaccard @ production T=0.8, N=300/seed x 7 seeds; confirmed real 64-perm banded MinHash-LSH):
+FN NORMALIZABLE arm: deduper raw/NFC = **1.00** (total miss); deduper NFKC / NFKC+casefold = **0.00** (FN collapses = confirms coupling IS the divergence). All +-0.00 over 7 seeds. Flat across T=[0.5,0.9].
+ALIAS CONTROL PASSES: typo arm (matched edit-distance, non-normalizable random substitutions) is FLAT across ALL 4 deduper-normalizers (divergence irrelevant when differences aren't normalizable) — raw-deduper Jaccard IDENTICAL between arms (0.667/0.472 normalizable vs 0.665/0.470 typo) -> cause is DIVERGENCE not difficulty.
+SECONDARY step -> PRIMARY-ONLY (honest downgrade): FN saturated at 1.00 for all fractions under weaker normalizers; no genuine step beyond saturation. The divergence acts UPSTREAM of LSH (changes the Jaccard, not the S-curve collision-prob).
+
+## PRIOR-ART (verified): side-A Lee2022 NearDup (surface-noise/shingle/threshold, SILENT on model-normalizer); UAX#15 + Arnett2025 tokenizer-normalization-for-fertility (model-side, never touch dedup recall); BigCode + Noise-Robust-Dedup ICLR23 (dedup, never an external model-normalizer). The seam (model's normalizer -> dedup recall) returned ZERO paper hits. BUT: the committee MUST now check the PRODUCTION TOOLING per the lesson above.
+
+## CLAIM YAML
+claim: "In a standard near-duplicate dedup pipeline (MinHash+LSH over char/word shingles),\
+  \ the document-pair FALSE-NEGATIVE rate (missed true duplicates, where 'true duplicate'\
+  \ = IDENTICAL under the MODEL tokenizer's normalization) is driven by the Unicode-equivalence\
+  \ DIVERGENCE between the dedup pipeline's text normalizer and the model tokenizer's\
+  \ normalizer \u2014 NOT by surface edit distance. When the model normalizes more\
+  \ strongly than the deduper (tokenizer NFKC+casefold while the deduper runs NFC-only/raw),\
+  \ a systematic class of document pairs is identical from the model's perspective\
+  \ (same token sequence) yet escapes the deduper; aligning the deduper's normalizer\
+  \ to the model's collapses the false-negatives to baseline. (Secondary/flagged:\
+  \ the missed-pair rate may jump in discrete steps as the normalizable-pair fraction\
+  \ crosses LSH-band thresholds \u2014 but this must be isolated from the inherent\
+  \ LSH S-curve.) NULL EXIT: if the deduper already collapses the same equivalence\
+  \ classes present, or dup pairs differ only by non-normalizable random typos, the\
+  \ FN rate is flat in normalizer choice and the coupling vanishes."
+why_it_matters: "2nd CROSS-AREA coupling claim (different seam from CLAIM-0058). Couples\
+
+## L0 RESULTS (EXP-0068)
+# RESULTS — EXP-0068 / CLAIM-0059 — researcher-0065 (L0)
+
+## OUTCOME: **HELD (PRIMARY)** — divergence-drives-FN. Secondary step: PRIMARY-ONLY (no step beyond saturation).
+
+The MODEL tokenizer's normalizer (NFKC+casefold) sets the near-dedup recall **ceiling**: when the
+deduper normalizes more weakly than the model (raw / NFC-only), every document pair that is
+IDENTICAL under the model's normalization escapes the deduper (FN = 1.00). Aligning the deduper's
+normalizer to the model's (NFKC+casefold) collapses FN to baseline (0.00). The cause is normalizer
+DIVERGENCE, not surface edit distance — proven by the matched-edit-distance typo control.
+
+---
+
+## SETUP (pure-Python stdlib: unicodedata, hashlib, random; CPU-only; SERIAL)
+- **Corpus (harness-owned GT):** synthetic docs, ascii + accented/multilingual vocab. For each pair,
+  doc2 = doc1 with a controlled difference of TYPE, at matched positions/count (matched raw edit distance).
+- **GT (never read by deduper):** pair is a TRUE DUPLICATE iff `NFKC(casefold(doc1)) == NFKC(casefold(doc2))`.
+- **Two arms (matched edit distance):**
+  - NORMALIZABLE: each changed char → compat/case/combining-EQUIVALENT codepoint
+    (fullwidth↔halfwidth, ligature↔expansion, precomposed↔combining, upper↔lower). Stays model-identical.
+  - TYPO: each changed char → random NON-normalizable substitution. Same count/positions. Difficulty control.
+- **Deduper (tested signal; reads only its own shingles):** from-scratch MinHash + banded LSH, k=5 char
+  shingles, internal-normalizer PARAM ∈ {raw, NFC, NFKC, NFKC+casefold}. FN computed by harness.
+- Verified with BOTH an exact-Jaccard deduper (sharp LSH limit, production threshold T=0.8) AND a REAL
+  64-perm banded MinHash-LSH (b=4,r=16, knee≈0.92).
+
+---
+
+## PRIMARY RESULT — FN(deduper-normalizer, arm), production T=0.8, N=300/seed × 7 seeds
+
+### NORMALIZABLE arm — FN = missed model-identical dups / model-identical dups
+| frac | raw | NFC | NFKC | NFKC+casefold | meanJ(raw) | frac J≥0.8 (raw) |
+|------|-----|-----|------|---------------|-----------|------------------|
+| 0.05 | **1.00** | **1.00** | 0.00 | 0.00 | 0.667 | 0.000 |
+| 0.10 | **1.00** | **1.00** | 0.00 | 0.00 | 0.472 | 0.000 |
+| 0.20 | **1.00** | **1.00** | 0.00 | 0.00 | 0.251 | 0.000 |
+| 0.30 | **1.00** | **1.00** | 0.00 | 0.00 | 0.132 | 0.000 |
+| 0.50 | **1.00** | **1.00** | 0.00 | 0.00 | 0.030 | 0.000 |
+| 0.80 | **1.00** | **1.00** | 0.00 | 0.00 | 0.001 | 0.000 |
+(all ±0.00 over 7 seeds)
+
+→ Deduper WEAKER than model (raw/NFC): **FN = 1.00 (total miss)**. Deduper ALIGNED (NFKC / NFKC+casefold):
+**FN = 0.00 (perfect recall)**. The mitigation arm (align normalizers) collapses FN to baseline. **Coupling = divergence.**
+
+### Threshold robustness (normalizable arm, frac=0.3): FN is flat in T
+| T | raw | NFC | NFKC | NFKC+cf |
+|---|-----|-----|------|---------|
+| 0.5 | 1.00 | 1.00 | 0.00 | 0.00 |
+| 0.6 | 1.00 | 1.00 | 0.00 | 0.00 |
+| 0.7 | 1.00 | 1.00 | 0.00 | 0.00 |
+| 0.8 | 1.00 | 1.00 | 0.00 | 0.00 |
+| 0.9 | 1.00 | 1.00 | 0.00 | 0.00 |
+
+→ FN is invariant to the Jaccard threshold: the raw/NFC deduper projects model-identical pairs to
+Jaccard ≈ 0 (table above), so NO threshold and NO LSH knee recovers them. Not a threshold artifact.
+
+
+## ORCHESTRATOR NOTE: NOVELTY = the MODEL tokenizer's normalizer (a different subsystem's vocab decision) silently sets the dedup recall CEILING via divergence -> hidden dup exposure / memorization-privacy-contamination invisible to dedup metrics. The L0 is unusually clean (FN=1.00 total-miss vs 0.00 recovery; alias control bit-matched; reproduced under real LSH). If the committee judges (a) the seam is genuinely open in production dedup tooling (no alignment knob, normalizers configured independently) AND (b) the ORG-SEAM is real (not contradicted by tooling co-location) -> this is a genuine, strong, clean cross-area finding -> approve toward L1 (real multilingual C4/OSCAR x real tokenizer x real datatrove dedup -> rate of model-identical dups surviving + recovery on alignment). If the tooling ALREADY aligns normalizers OR the fix is a trivial single-config change no one would miss -> the seam is closed -> RED (same pattern as CLAIM-0058). Judge that honestly. Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+RESEARCHER_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "find . -path '*prompts*' -maxdepth 5 -type f | head -50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 248ms:
+ succeeded in 254ms:
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -type f | grep -E '(_committee_common_v001\\.md|TOOLING_v001\\.md)"'$'"' | head -20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+ succeeded in 219ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi -type f \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null | head -50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'find . -type f | head -200' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+./HANDOFF_r1_to_r2.md
+./QUIESCENCE_r4_001.SUPERSEDED.md
+./DECISION_expand_lightweight.md
+./learning/.gitkeep
+./learning/roles/orchestrator.md
+./learning/roles/researcher.md
+./learning/roles/committee.md
+./learning/orchestrator/2026-06-03.md
+./experiments/.gitkeep
+./experiments/2026-06-04/EXP-0067/summary.json
+./experiments/2026-06-04/EXP-0067/harness.py
+./experiments/2026-06-04/EXP-0067/committee1/evaluation_prosecutor.out
+./experiments/2026-06-04/EXP-0067/committee1/theory_skeptic.out
+./experiments/2026-06-04/EXP-0067/committee1/systems_reviewer.out
+./experiments/2026-06-04/EXP-0067/committee1/_runner.log
+./experiments/2026-06-04/EXP-0067/committee1/.members.txt
+./experiments/2026-06-04/EXP-0067/committee1/evaluation_prosecutor.err
+./experiments/2026-06-04/EXP-0067/committee1/theory_skeptic.err
+./experiments/2026-06-04/EXP-0067/committee1/systems_reviewer.err
+./experiments/2026-06-04/EXP-0067/committee1/.v3_notified.ready
+./experiments/2026-06-04/EXP-0067/committee1/product_realist.out
+./experiments/2026-06-04/EXP-0067/committee1/novelty_killer.out
+./experiments/2026-06-04/EXP-0067/committee1/area_chair.out
+./experiments/2026-06-04/EXP-0067/committee1/area_chair.err
+./experiments/2026-06-04/EXP-0067/committee1/_status.txt
+./experiments/2026-06-04/EXP-0067/committee1/novelty_killer.err
+./experiments/2026-06-04/EXP-0067/committee1/product_realist.err
+./experiments/2026-06-04/EXP-0067/run_all.log
+./experiments/2026-06-04/EXP-0067/experiment.yaml
+./experiments/2026-06-04/EXP-0067/recall_by_overlap.csv
+./experiments/2026-06-04/EXP-0067/RESULTS.md
+./experiments/2026-06-04/EXP-0067/PRE_REGISTRATION.md
+./experiments/2026-06-04/EXP-0067/recall_by_chunk_arm.csv
+./experiments/2026-06-04/EXP-0067/run_all.py
+./experiments/2026-06-04/EXP-0067/recall_by_phraselen.csv
+./experiments/2026-06-04/EXP-0067/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0066/experiment.yaml
+./experiments/2026-06-04/EXP-0068/harness.py
+./experiments/2026-06-04/EXP-0068/committee1/evaluation_prosecutor.out
+./experiments/2026-06-04/EXP-0068/committee1/theory_skeptic.out
+./experiments/2026-06-04/EXP-0068/committee1/systems_reviewer.out
+./experiments/2026-06-04/EXP-0068/committee1/_runner.log
+./experiments/2026-06-04/EXP-0068/committee1/.members.txt
+./experiments/2026-06-04/EXP-0068/committee1/evaluation_prosecutor.err
+./experiments/2026-06-04/EXP-0068/committee1/theory_skeptic.err
+./experiments/2026-06-04/EXP-0068/committee1/systems_reviewer.err
+./experiments/2026-06-04/EXP-0068/committee1/product_realist.out
+./experiments/2026-06-04/EXP-0068/committee1/novelty_killer.out
+./experiments/2026-06-04/EXP-0068/committee1/area_chair.err
+./experiments/2026-06-04/EXP-0068/committee1/novelty_killer.err
+./experiments/2026-06-04/EXP-0068/committee1/product_realist.err
+./experiments/2026-06-04/EXP-0068/run_sweep.py
+./experiments/2026-06-04/EXP-0068/experiment.yaml
+./experiments/2026-06-04/EXP-0068/results/lshcheck.log
+./experiments/2026-06-04/EXP-0068/results/frac_sweep.log
+./experiments/2026-06-04/EXP-0068/results/main_sweep.json
+./experiments/2026-06-04/EXP-0068/results/frac_sweep.json
+./experiments/2026-06-04/EXP-0068/results/main_sweep.log
+./experiments/2026-06-04/EXP-0068/results/lshcheck.json
+./experiments/2026-06-04/EXP-0068/results/final.log
+./experiments/2026-06-04/EXP-0068/results/final.json
+./experiments/2026-06-04/EXP-0068/RESULTS.md
+./experiments/2026-06-04/EXP-0068/PRE_REGISTRATION.md
+./experiments/2026-06-04/EXP-0068/run_frac.py
+./experiments/2026-06-04/EXP-0068/run_lshcheck.py
+./experiments/2026-06-04/EXP-0068/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0068/run_final.py
+./experiments/2026-06-04/EXP-0064/run.py
+./experiments/2026-06-04/EXP-0064/run2.log
+./experiments/2026-06-04/EXP-0064/committee1/evaluation_prosecutor.out
+./experiments/2026-06-04/EXP-0064/committee1/theory_skeptic.out
+./experiments/2026-06-04/EXP-0064/committee1/systems_reviewer.out
+./experiments/2026-06-04/EXP-0064/committee1/_runner.log
+./experiments/2026-06-04/EXP-0064/committee1/.members.txt
+./experiments/2026-06-04/EXP-0064/committee1/evaluation_prosecutor.err
+./experiments/2026-06-04/EXP-0064/committee1/theory_skeptic.err
+./experiments/2026-06-04/EXP-0064/committee1/systems_reviewer.err
+./experiments/2026-06-04/EXP-0064/committee1/.v3_notified.ready
+./experiments/2026-06-04/EXP-0064/committee1/product_realist.out
+./experiments/2026-06-04/EXP-0064/committee1/novelty_killer.out
+./experiments/2026-06-04/EXP-0064/committee1/area_chair.out
+./experiments/2026-06-04/EXP-0064/committee1/area_chair.err
+./experiments/2026-06-04/EXP-0064/committee1/_status.txt
+./experiments/2026-06-04/EXP-0064/committee1/novelty_killer.err
+./experiments/2026-06-04/EXP-0064/committee1/product_realist.err
+./experiments/2026-06-04/EXP-0064/run.log
+./experiments/2026-06-04/EXP-0064/dpp_by_maxlen.csv
+./experiments/2026-06-04/EXP-0064/diagnostics.json
+./experiments/2026-06-04/EXP-0064/experiment.yaml
+./experiments/2026-06-04/EXP-0064/RESULTS.md
+./experiments/2026-06-04/EXP-0064/PRE_REGISTRATION.md
+./experiments/2026-06-04/EXP-0064/length_hist.csv
+./experiments/2026-06-04/EXP-0064/run_v1_maxlen512.py
+./experiments/2026-06-04/EXP-0064/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0064/gns_by_buffer.csv
+./experiments/2026-06-04/EXP-0065/sim.py
+./experiments/2026-06-04/EXP-0065/committee1/evaluation_prosecutor.out
+./experiments/2026-06-04/EXP-0065/committee1/theory_skeptic.out
+./experiments/2026-06-04/EXP-0065/committee1/systems_reviewer.out
+./experiments/2026-06-04/EXP-0065/committee1/_runner.log
+./experiments/2026-06-04/EXP-0065/committee1/.members.txt
+./experiments/2026-06-04/EXP-0065/committee1/.v3_notified.incomplete
+./experiments/2026-06-04/EXP-0065/committee1/evaluation_prosecutor.err
+./experiments/2026-06-04/EXP-0065/committee1/theory_skeptic.err
+./experiments/2026-06-04/EXP-0065/committee1/systems_reviewer.err
+./experiments/2026-06-04/EXP-0065/committee1/product_realist.out
+./experiments/2026-06-04/EXP-0065/committee1/novelty_killer.out
+./experiments/2026-06-04/EXP-0065/committee1/area_chair.out
+./experiments/2026-06-04/EXP-0065/committee1/area_chair.err
+./experiments/2026-06-04/EXP-0065/committee1/_status.txt
+./experiments/2026-06-04/EXP-0065/committee1/novelty_killer.err
+./experiments/2026-06-04/EXP-0065/committee1/product_realist.err
+./experiments/2026-06-04/EXP-0065/experiment.yaml
+./experiments/2026-06-04/EXP-0065/results/itl_sweep.csv
+./experiments/2026-06-04/EXP-0065/RESULTS.md
+./experiments/2026-06-04/EXP-0065/PRE_REGISTRATION.md
+./experiments/2026-06-04/EXP-0065/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0034/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0034/experiment.yaml
+./experiments/2026-06-03/EXP-0034/results/flip_summary.csv
+./experiments/2026-06-03/EXP-0034/results/sweep_sigma_conf.csv
+./experiments/2026-06-03/EXP-0034/RESULTS.md
+./experiments/2026-06-03/EXP-0034/logs/sweep.log
+./experiments/2026-06-03/EXP-0034/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0034/sweep.py
+./experiments/2026-06-03/EXP-0034/committee2/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0034/committee2/theory_skeptic.out
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.out
+./experiments/2026-06-03/EXP-0034/committee2/_runner.log
+./experiments/2026-06-03/EXP-0034/committee2/.members.txt
+./experiments/2026-06-03/EXP-0034/committee2/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0034/committee2/theory_skeptic.err
+./experiments/2026-06-03/EXP-0034/committee2/systems_reviewer.err
+./experiments/2026-06-03/EXP-0034/committee2/.v3_notified.ready
+./experiments/2026-06-03/EXP-0034/committee2/product_realist.out
+./experiments/2026-06-03/EXP-0034/committee2/novelty_killer.out
+./experiments/2026-06-03/EXP-0034/committee2/area_chair.out
+./experiments/2026-06-03/EXP-0034/committee2/area_chair.err
+./experiments/2026-06-03/EXP-0034/committee2/_status.txt
+./experiments/2026-06-03/EXP-0034/committee2/novelty_killer.err
+./experiments/2026-06-03/EXP-0034/committee2/product_realist.err
+./experiments/2026-06-03/EXP-0033/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0033/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0033/committee1/_runner.log
+./experiments/2026-06-03/EXP-0033/committee1/.members.txt
+./experiments/2026-06-03/EXP-0033/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0033/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0033/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0033/committee1/.v3_notified.ready
+./experiments/2026-06-03/EXP-0033/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0033/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0033/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0033/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0033/committee1/_status.txt
+./experiments/2026-06-03/EXP-0033/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0033/committee1/product_realist.err
+./experiments/2026-06-03/EXP-0033/experiment.yaml
+./experiments/2026-06-03/EXP-0033/results/agg_by_cell.csv
+./experiments/2026-06-03/EXP-0033/results/global_summary.csv
+./experiments/2026-06-03/EXP-0033/results/raw_results.csv
+./experiments/2026-06-03/EXP-0033/RESULTS.md
+./experiments/2026-06-03/EXP-0033/logs/run.log
+./experiments/2026-06-03/EXP-0033/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0033/exp.py
+./experiments/2026-06-03/EXP-0033/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0056/harness.py
+./experiments/2026-06-03/EXP-0056/committee1/evaluation_prosecutor.out
+./experiments/2026-06-03/EXP-0056/committee1/theory_skeptic.out
+./experiments/2026-06-03/EXP-0056/committee1/systems_reviewer.out
+./experiments/2026-06-03/EXP-0056/committee1/_runner.log
+./experiments/2026-06-03/EXP-0056/committee1/.members.txt
+./experiments/2026-06-03/EXP-0056/committee1/evaluation_prosecutor.err
+./experiments/2026-06-03/EXP-0056/committee1/theory_skeptic.err
+./experiments/2026-06-03/EXP-0056/committee1/systems_reviewer.err
+./experiments/2026-06-03/EXP-0056/committee1/.v3_notified.ready
+./experiments/2026-06-03/EXP-0056/committee1/product_realist.out
+./experiments/2026-06-03/EXP-0056/committee1/novelty_killer.out
+./experiments/2026-06-03/EXP-0056/committee1/area_chair.out
+./experiments/2026-06-03/EXP-0056/committee1/area_chair.err
+./experiments/2026-06-03/EXP-0056/committee1/_status.txt
+./experiments/2026-06-03/EXP-0056/committee1/novelty_killer.err
+./experiments/2026-06-03/EXP-0056/committee1/product_realist.err
+./experiments/2026-06-03/EXP-0056/experiment.yaml
+./experiments/2026-06-03/EXP-0056/run_axis_clean.py
+./experiments/2026-06-03/EXP-0056/results/inflation_grid.csv
+./experiments/2026-06-03/EXP-0056/results/axis_clean_baseline.json
+./experiments/2026-06-03/EXP-0056/results/results.json
+./experiments/2026-06-03/EXP-0056/results/axis_clean.csv
+./experiments/2026-06-03/EXP-0056/results/axis_clean_baseline.log
+./experiments/2026-06-03/EXP-0056/RESULTS.md
+./experiments/2026-06-03/EXP-0056/PRE_REGISTRATION.md
+./experiments/2026-06-03/EXP-0056/run_grid.py
+./experiments/2026-06-03/EXP-0056/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0051/canon.py
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0051/stage_a.py
+./experiments/2026-06-03/EXP-0051/gsm8k_test.jsonl
+./experiments/2026-06-03/EXP-0051/__pycache__/canon.cpython-312.pyc
+./experiments/2026-06-03/EXP-0051/experiment.yaml
+
+hook: PostToolUse
+hook: PostToolUse Completed
+2026-06-04T02:10:31.960529Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 26141ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,200p' experiments/2026-06-04/EXP-0068/committee1/systems_reviewer.out" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'git --version' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+git version 2.50.1
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'gh --version' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+gh version 2.89.0 (2026-03-26)
+https://github.com/cli/cli/releases/tag/v2.89.0
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/pipeline/dedup/minhash.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 319ms:
+import contextlib
+import hashlib
+import heapq
+import os
+import re
+import struct
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Generator
+
+import numpy as np
+from fsspec.spec import AbstractBufferedFile
+from tqdm import tqdm
+
+from datatrove.data import DocumentsPipeline
+from datatrove.io import DataFolderLike, get_datafolder
+from datatrove.pipeline.base import PipelineStep
+from datatrove.pipeline.writers.disk_base import DiskWriter
+from datatrove.utils.binaryio import read_tuples_from_file, seek_to_start
+from datatrove.utils.hashing import HashConfig, create_hash_func
+from datatrove.utils.logging import logger
+from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+from datatrove.utils.typeshelper import Languages, StatHints
+from datatrove.utils.word_tokenizers import load_word_tokenizer
+
+
+# http://en.wikipedia.org/wiki/Mersenne_prime
+_mersenne_prime = np.uint64((1 << 61) - 1)
+
+"""
+n_grams -> roughly nr of words (this should be small enough to catch fuzzy matches but big enough to not have each shingle be too common)
+threshold is (1/14)^(1/8)~0.72
+threshold is real minhash similarity cutoff for high probability inclusion by LSH minhash
+probability of inclusion for s=0.8: 1-(1-0.8^8)^14=0.924
+"""
+
+SENTINEL = (1 << 32) - 1
+
+
+@dataclass
+class MinhashConfig:
+    """Configuration for Min-Hash deduplication
+
+    Args:
+        n_grams: n-grams size to use
+        num_buckets: number of buckets to use
+        hashes_per_bucket: number of hashes per bucket
+        seed: random seed used to generate the hash function parameters. Should be the same on all workers to ensure they all have the same parameters
+    """
+
+    n_grams: int = 5
+    num_buckets: int = 14
+    hashes_per_bucket: int = 8
+    seed: int = 1
+
+    norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+    hash_config: HashConfig = field(default_factory=HashConfig)
+
+    def __str__(self):
+        return f"{self.n_grams}ng_{self.num_buckets}bs_{self.hashes_per_bucket}hs_{self.hash_config}"
+
+
+@dataclass(order=True)
+class HashSig:
+    """Hash signature for a given document in a given bucket
+
+    Args:
+        sig: tuple of hashes
+        file_id: file id
+        doc_id: document id
+        reader_id: reader id. Used to know from where the next signature should be requested
+    """
+
+    sig: tuple[int]
+    file_id: int
+    file_stem: str
+    doc_id: int
+    reader_id: int
+
+    def is_from_index(self):
+        return self.reader_id != self.file_id
+
+
+def read_sigs(
+    file: AbstractBufferedFile,
+    reader_id: int,
+    config: MinhashConfig,
+    index_file: bool = False,
+    min_hash: int = 0,
+    max_hash: int = _mersenne_prime,
+    ensure_order: bool = True,
+    lines_to_buffer: int = 5,
+) -> Generator:
+    """Read signatures from a file
+
+    Args:
+        file: file to read from
+        reader_id: reader id
+        config: minhash configuration (a MinhashConfig object)
+        index_file: is index file
+    """
+    line_format = f"{config.hashes_per_bucket}{config.hash_config.struct_format}{'I' if not index_file else ''}"
+    with file as f:
+        if f.size == 0:
+            return
+        seek_to_start(f, min_hash, line_format, config.hash_config.struct_format)
+        last = None
+        file_stem = Path(file.path).name.removesuffix(".minhash.sig")
+        for data in read_tuples_from_file(f, line_format, lines_to_buffer=lines_to_buffer):
+            sigdata = data if index_file else data[:-1]
+            assert sigdata[0] >= min_hash and (ensure_order is False or last is None or sigdata >= last), (
+                f"Hash order error. {f.tell()=}, {min_hash=}, {sigdata=}, {last=}. Try re-running {file_stem=}"
+            )
+            if sigdata[0] >= max_hash:
+                break
+            last = sigdata
+            yield (
+                HashSig(sig=sigdata, doc_id=-1, file_id=-1, reader_id=reader_id, file_stem=file_stem)
+                if index_file
+                else HashSig(sig=sigdata, doc_id=data[-1], file_id=reader_id, reader_id=reader_id, file_stem=file_stem)
+            )
+
+
+class MinhashDedupSignature(PipelineStep):
+    """Minhash Deduplication: First Pipeline Step
+
+        Compute the minhash signature for each document and write it to disk.
+
+    Args:
+        output_folder: output folder
+        config: minhash configuration (a MinhashConfig object)
+    """
+
+    type = "🫂 - DEDUP"
+    name = "🎯 MinHash stage 1"
+
+    def __init__(
+        self,
+        output_folder: DataFolderLike,
+        config: MinhashConfig = None,
+        language: str = Languages.english,
+        skip_existing_sigs: bool = False,
+    ):
+        super().__init__()
+        self.output_folder = get_datafolder(output_folder)
+        self.config = config or MinhashConfig()
+        self.num_hashes = self.config.num_buckets * self.config.hashes_per_bucket
+        self._parameters = None
+        self._hash_func = create_hash_func(self.config.hash_config)
+        self.language = language
+        self.word_tokenizer = load_word_tokenizer(language)
+        self.skip_existing_sigs = skip_existing_sigs
+
+    @property
+    def parameters(self):
+        """Minhash parameters
+
+        Create parameters for a random bijective permutation function
+        that maps a 32/64-bit hash value to another 32/64-bit hash value.
+        http://en.wikipedia.org/wiki/Universal_hashing
+
+        Note: For 64-bit hashes the upper-bound for codomain is not [0,2**64) but [0,2**61 - 1)
+        """
+        if self._parameters is None:
+            gen = np.random.RandomState(self.config.seed)
+            self._parameters = (
+                gen.randint(1, _mersenne_prime, dtype=np.uint64, size=(1, self.num_hashes)),
+                gen.randint(0, _mersenne_prime, dtype=np.uint64, size=(1, self.num_hashes)),
+            )
+        return self._parameters
+
+    def get_signature(self, shingles: np.ndarray) -> list[list[int]]:
+        """Get the signature for a set of shingles (n-grams)
+
+        Args:
+            shingles: shingles (n-grams) numpy uint64 array of size (N, 1)
+
+        Returns:
+            list (num buckets) of lists of integers (hashes)
+        """
+        a, b = self.parameters
+        phv = (shingles * a + b) % _mersenne_prime
+        if self.config.hash_config.precision == 32:
+            phv = np.bitwise_and(phv, self.config.hash_config.max)
+        return [
+            x.tolist()
+            for x in np.split(np.min(phv, axis=0).astype(self.config.hash_config.np_dtype), self.config.num_buckets)
+        ]
+
+    def get_shingles(self, text: str) -> np.ndarray:
+        """Get shingles (hashed n-grams) from a string of text
+
+        Shingles are created by hashing n-grams of simplified text (lower cases, whitespace normalized, no punctuation, etc).
+
+        Args:
+            text: input text
+
+        Returns:
+            numpy array of shingles: dtype = uint64, shape = (number of n_grams in string, 1)
+        """
+        return np.fromiter(
+            [
+                self._hash_func(" ".join(x))
+                for x in ngrams(
+                    self.word_tokenizer.word_tokenize(simplify_text(text, self.config.norm_config)),
+                    self.config.n_grams,
+                )
+            ],
+            dtype=np.uint64,
+        ).reshape((-1, 1))
+
+    def check_can_skip_sig_writing(self, rank):
+        if not self.skip_existing_sigs:
+            return False, None
+
+        # check if the files exist
+        if any(
+            not self.output_folder.exists(f"bucket_{bi:03d}/{rank:05d}.minhash.sig")
+            for bi in range(self.config.num_buckets)
+        ):
+
