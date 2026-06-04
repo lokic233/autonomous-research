@@ -1,0 +1,50 @@
+claim_id: CLAIM-0062
+project_id: PROJ-0032
+stage: seed
+status: seed
+claim: 'Using the SAME Pydantic model for structured LLM output, OpenAI strict Structured-Outputs
+  ENFORCES declared value constraints (minimum/maximum/minLength/maxLength/pattern/multipleOf)
+  since May 2025, while vLLM default structured_outputs path (backend=auto -> xgrammar)
+  silently compiles a grammar that DROPS every one of these keywords, so a measurable
+  non-zero fraction of grammar-ACCEPTED outputs VIOLATE the developer-declared constraint
+  with no warning, no error, identical API surface -> a serving-stack PORTABILITY
+  CLIFF that turns validated into structurally-shaped-only purely by changing base_url.
+  NOVEL QUANTITY = the cross-backend ENFORCEMENT-DIVERGENCE rate: P(grammar-accepted
+  AND Pydantic-constraint-violating) under vLLM-auto, >0 BY CONSTRUCTION of the grammar,
+  =0 for the same schema under OpenAI-strict post-May-2025. Invisible at every observable
+  surface (same JSON Schema bytes, same 200 OK, same parse success; Pydantic re-validation
+  is NOT in vLLM default server path). NULL EXIT: if xgrammar at the pinned version
+  DOES enforce these keywords (drop-rate D->0, violation-rate V->0), the divergence
+  vanishes and the claim is KILLED -> falsifiable, not construction-forced.'
+why_it_matters: "Cross-area production-seam (data-systems-for-ml x agentic/serving),\
+  \ CLAIM-0059 winning shape: a KNOWN mechanism (guided decoding enforces structure\
+  \ not semantics) at an UNAUDITED org-seam between two INDEPENDENTLY-OWNED subsystems\
+  \ (Pydantic schema-gen vs vLLM+xgrammar decoder), neither owning the semantic-enforcement\
+  \ guarantee. RESIDUAL NOVELTY > first-quantification: a DIFFERENTIAL PORTABILITY\
+  \ CLIFF newly OPENED by OpenAI closing its half May-2025, invisible at all API surfaces.\
+  \ \u2605 CLEARS killer #10 (the prevalence trap that yellowed CLAIM-0060): measurable\
+  \ ENTIRELY on PUBLIC data -- JSONSchemaBench (Geng 2501.10868) + the open-source\
+  \ xgrammar compiler -- NO private traffic constant. Cleared all 10 killers (prod-framework\
+  \ prior-art: vLLM/xgrammar/Outlines/lm-format-enforcer/Instructor/LangChain/OpenAI\
+  \ all checked, none close the seam at the serving default; Instructor/LangChain\
+  \ client-side re-validate = different subsystem the server does not run). LIVE RISK\
+  \ = killer #3 (committee may call it just \"xgrammar ignores semantics\") -> defense\
+  \ = the OpenAI-vs-vLLM divergence as the IRREDUCIBLE headline. Could-it-fail clean\
+  \ (xgrammar version coverage). Scout self-rating GREEN-eligible ~65%."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r7-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0075 result, then ros exp complete --exp EXP-0075 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0075
+created_at: '2026-06-04T17:35:17Z'
+last_updated: '2026-06-04T17:35:54Z'
