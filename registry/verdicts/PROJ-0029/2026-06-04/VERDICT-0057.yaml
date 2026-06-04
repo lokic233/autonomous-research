@@ -1,0 +1,96 @@
+verdict_id: VERDICT-0057
+claim_id: CLAIM-0059
+project_id: PROJ-0029
+date: '2026-06-04'
+experiment_ids:
+- EXP-0068
+experiment_paths:
+- experiments/2026-06-04/EXP-0068
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED, no fatal objections). \u2605 THE CLAIM-0058\
+  \ KILL PATTERN DOES NOT REPLICATE \u2014 3 reviewers (novelty_killer, systems_reviewer,\
+  \ product_realist) each INDEPENDENTLY VERIFIED in >=2 production codebases (datatrove\
+  \ TextNormConfig/simplify_text, BigCode near_deduplication, NeMo-Curator fuzzy-dedup,\
+  \ text-dedup preprocess) that NO tool offers a model-tokenizer-normalizer alignment\
+  \ mode, NFKC+casefold is NOT the default, and the dedup normalizer is fixed/internal\
+  \ with no tokenizer-alignment field. THE SEAM IS GENUINELY OPEN in production dedup\
+  \ tooling. GREEN blocked not by the seam being closed (it's open) but by: (1) the\
+  \ mechanism is INCREMENTAL (an instance of the well-known IR normalization-mismatch\
+  \ principle Manning IIR sec2.2 applied on the UAX#15 Unicode-equivalence substrate"
+- the theory_skeptic notes the GT+mitigation share the same operator making the normalizable
+  arm near-tautological by construction)
+- "(2) the FN=1.00 headline is valid for the MECHANISM DEMO but UNREPRESENTATIVE of\
+  \ production magnitude \u2014 production defaults already do lowercase+diacritic-strip+punct-removal,\
+  \ catching MOST of the variation"
+- the L1 must report the RESIDUAL FN (model-identical pairs missed AFTER production
+  normalization). GREEN gate = residual FN >= 1pct of model-identical pairs on a real
+  multilingual corpus
+- RED if <0.1pct (seam open but toothless).
+required_evidence:
+- 'L1 (the ONLY number that determines green-vs-red): (1) run real PRODUCTION dedup
+  defaults (datatrove simplify_text lowercase+NFD-diacritic-strip+punct-removal+whitespace/number-norm'
+- "text-dedup preprocess lowercase+non-word-split) against a real multilingual corpus\
+  \ (C4-multilingual or OSCAR subset) with a real model tokenizer (SentencePiece NFKC+casefold).\
+  \ Measure the RESIDUAL FN rate \u2014 model-identical pairs missed AFTER production\
+  \ normalization. If >=1pct in multilingual slices -> GREEN"
+- "if <0.1pct -> RED (toothless). (2) prevalence survey: count NFKC-compatibility-only\
+  \ dup pairs (fullwidth<->halfwidth, ligature<->expansion, precomposed<->combining\
+  \ \u2014 EXCLUDING case variants already caught by production lowercase) in >=2\
+  \ real corpora"
+- 'report as fraction of total model-identical near-dup pairs. (3) shingle-type sensitivity:
+  word-shingles + BPE-token-shingles (common in production), not only char-5. (4)
+  partial-coupling regime: mixed pairs (some normalizable + some non-normalizable
+  diffs) to exit the 0/1 rails. MANDATORY RELATED WORK: Manning/Raghavan/Schutze IIR
+  sec2.2 normalization-mismatch principle (the general mechanism this instantiates)'
+- UAX#15 (substantive not glancing)
+- datatrove/text-dedup source (seam-open evidence).
+map_delta_proposals:
+- "CLAIM-0059 -> YELLOW (5/5 unanimous no-RED no-fatal). \u2605 FIRST YELLOW where\
+  \ the production-tooling seam-open stress-test (the CLAIM-0058 kill pattern) SURVIVED\
+  \ \u2014 3 reviewers independently verified in >=2 codebases that the seam IS genuinely\
+  \ open (no tool aligns normalizers). Mechanism REAL + seam OPEN"
+- GREEN GATED on the L1 RESIDUAL FN after production defaults (the 1.00 headline is
+  a mechanism-demo, not a production-representative magnitude). Residual >=1pct on
+  multilingual -> GREEN
+- "<0.1pct -> RED (toothless). Reframe contribution as: the dedup x model-tokenizer\
+  \ instance of the normalization-mismatch principle (IIR sec2.2) on the UAX#15 substrate,\
+  \ with the seam demonstrably open in production tooling + a quantified residual\
+  \ safety/privacy/contamination surface. ORCHESTRATOR DECISION: the L1 (residual-FN\
+  \ on real multilingual corpus) is a meaningful, well-specified, real-data measurement\
+  \ with a clean gate (>=1pct or <0.1pct). The real question: is it worth driving?\
+  \ The ceiling is 'an incremental instance of normalization-mismatch' \u2014 so even\
+  \ if residual >=1pct, it's a MODEST contribution (yellow-to-narrow-green). But the\
+  \ safety angle (hidden dup exposure -> memorization/contamination) + the seam-genuinely-open\
+  \ finding + the clean gate make it worth ONE cheap real-corpus measurement before\
+  \ converging. Will register and drive the L1 as a cost-aware single-step (the residual-FN\
+  \ measurement is CPU/cheap on a downloaded corpus slice)."
+baseline_requirements:
+- "datatrove simplify_text defaults (lowercase+NFD-diacritic-strip+punct-removal+whitespace/number-norm)\
+  \ \u2014 the REAL weak baseline, NOT raw/NFC (which no production system uses)"
+- "text-dedup preprocess (lowercase+non-word-char-split) \u2014 2nd production baseline"
+- "IR normalization-mismatch (Manning IIR sec2.2) \u2014 the general principle this\
+  \ instantiates (must cite+distinguish)"
+- UAX#15 Unicode equivalence-class substrate
+committee_run_dir: experiments/2026-06-04/EXP-0068/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T02:18:31Z'
