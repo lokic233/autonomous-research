@@ -96,9 +96,20 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r5-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0063; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal WEAKEN: real-LM L1 (EXP-0063, Qwen2.5-7B+0.5B, vLLM hard guided_choice)\
+  \ settled it. Test1 CAUSAL leg SURVIVED (unconstrained 7B abstains 0.84 where constraint\
+  \ forces misroute=1.0 -> constraint IS the coercer). Test2 MONITORABILITY leg FALSIFIED\
+  \ (LLM-as-judge semantic monitor recall=1.000, 80/80; 0.91 neutral framing; non-degenerate\
+  \ 67.5pct-YES on correct routings) -> the near-miss is NOT plausible enough to evade\
+  \ reflection on real logits; only a SYNTACTIC validator is blind. KEY = CAPABILITY\
+  \ INVERSION: the two legs NEVER co-occur on one model (capable=causal-but-monitorable;\
+  \ weak-0.5B=unmonitorable-degenerate-but-base-already-misroutes-so-not-causal).\
+  \ CLAIM-0055 needs BOTH on one model \u2014 not observed on real LMs. Support-removal\
+  \ coercion is real+causal; the safety/monitorability framing is overstated. Stopped\
+  \ at the pre-reg cost-aware gate (Test2 failed -> Tests3-5 not run). The conceptual\
+  \ surviving point: only a syntactic schema-validator is blind, not a semantic monitor."
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-03T23:09:39Z'
-last_updated: '2026-06-04T00:20:50Z'
+last_updated: '2026-06-04T00:24:09Z'
