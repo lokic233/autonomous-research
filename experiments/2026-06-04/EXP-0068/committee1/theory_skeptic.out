@@ -1,0 +1,29 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- Tautology-by-construction: GT defined as "identical under NFKC+casefold" AND mitigation = apply NFKC+casefold. Pairs in NORMALIZABLE arm are constructed so the ONLY difference is codepoints that collapse under NFKC. So a deduper that doesn't apply NFKC will, by definition, see differing shingles; one that does will, by definition, see identical strings. FN=1.00 → 0.00 is a restatement of the construction, not an empirical discovery.
+- FN=1.00 saturation at frac=0.05 is expected from char-5-shingling: a single normalizable codepoint perturbs ~5 shingles; with even modest counts and the deduper not collapsing the equivalence class, raw Jaccard drops below any T. No emergent behavior — just shingle locality × identity-class mismatch.
+- "Flat across T=[0.5,0.9]" is a direct consequence: if raw-view Jaccard ≈ 0 (table shows 0.030–0.001 at frac≥0.5), no threshold lift recovers them. This is arithmetic, not phenomenon.
+- "Step→PRIMARY-ONLY" downgrade confirms there is NO LSH-band step: the divergence acts purely upstream of LSH on Jaccard, exactly what UAX#15 + standard MinHash theory predict. No nontrivial S-curve interaction.
+
+CONFOUNDS:
+- GT/mitigation circularity: the "true dup" oracle and the "fix" are the same operator (NFKC+casefold). The experiment cannot fail by construction in the NORMALIZABLE arm.
+- "Matched edit distance" control rules out raw-edit-distance-as-difficulty, but does NOT rule out the trivial-by-construction read above — it only confirms the mechanism is normalization-specific (which UAX#15 already tells us).
+- Char-5-shingles inflates the per-substitution shingle delta; behavior under word-shingles or BPE-token-shingles (more common in production) is untested and could change the rate at which FN saturates.
+- Synthetic worst-case: every change in the NORMALIZABLE arm is normalizable; real corpora mix normalizable + non-normalizable diffs. The L0 chooses the maximally-coupled regime.
+
+ASSUMPTIONS_UNTESTED:
+- Real-world prevalence: what fraction of true near-dup pairs in C4/OSCAR-class corpora differ ONLY (or predominantly) by NFKC-collapsible codepoints? Without this, FN=1.00 in the synthetic arm has unknown bite. The L0 conflates "mechanism exists" with "mechanism matters."
+- Shingling choice (k=5 chars) is unjustified vs production word/BPE shingles; sensitivity not reported.
+- The asymmetry direction (model normalizes MORE than deduper) is asserted as the typical case but not characterized against any real model×pipeline survey.
+- Production-tooling defaults (the orchestrator's own #1 stress-test) are a systems question, not addressed here — but it's a load-bearing assumption for the THEORETICAL importance of the claim.
+
+STATISTICAL_GAPS:
+- ±0.00 over 7 seeds at FN ∈ {1.00, 0.00} is not "tight variance" — it's "deterministic by construction." Reporting seed-variance on a degenerate two-point distribution overstates statistical rigor.
+- No power analysis or effect-size in any non-saturated regime; the experiment lives entirely at the rails (1.00 / 0.00) and cannot detect partial coupling.
+- No reporting of a regime where the coupling is partial (e.g., mixed normalizable+typo within the same pair) — this would be the only setting where the seven-seed variance is meaningful.
+- No comparison vs a strong null baseline (e.g., random byte-level perturbation at matched Hamming distance) beyond the typo arm; would strengthen the "divergence, not difficulty" claim.
+
+RATIONALE: The L0 cleanly DEMONSTRATES the mechanism (and the alias control is well-designed to defeat "difficulty" confounds), but the headline numbers (FN=1.00 → 0.00, ±0.00 across seeds, flat in T) are predicted analytically from UAX#15 (Unicode equivalence classes) + standard MinHash shingle theory (Lee2022, Broder1997) — i.e., this is EXPECTED COMPLEXITY, not an emergent or surprising phenomenon. The GT-and-mitigation share the same operator (NFKC+casefold), making the NORMALIZABLE arm a near-tautology. The empirical bite — i.e., whether this matters — depends entirely on (a) real-corpus prevalence of normalizable-only diffs and (b) production-tooling defaults (the #1 stress-test, which is a systems question). On THEORY grounds I cannot vote green: nothing here that basic Unicode + MinHash theory doesn't already predict. I cannot vote red either: the experiment is honestly run, the alias control is the right one, the secondary step was honestly downgraded, and the claim would survive if (a)+(b) come back favorable. YELLOW — gated on L1 showing partial-coupling regimes (not saturated 0/1), real-shingle sensitivity, and a real-corpus prevalence estimate that converts "mechanism exists" into "mechanism matters."
+```

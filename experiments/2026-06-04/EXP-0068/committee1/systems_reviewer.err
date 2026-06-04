@@ -724,3 +724,1109 @@ class MinhashDedupSignature(PipelineStep):
             for bi in range(self.config.num_buckets)
         ):
 
+exec
+/bin/zsh -lc "gh search code 'TextNormConfig repo:huggingface/datatrove' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/utils/text.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'normalize | casefold | NFKC repo:ChenghaoMou/text-dedup' --limit 20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 216ms:
+import re
+import unicodedata
+from dataclasses import dataclass
+from functools import lru_cache
+from itertools import tee
+from typing import Iterable
+
+import regex
+
+from datatrove.utils.typeshelper import Languages
+
+
+PUNCTUATION = "!/—”:％１〈&(、━\\【#%「」，】；+^]~“《„';’{|∶´[=-`*．（–？！：$～«〉,><》)?）。…@_.\"}►»" + "".join(
+    map(
+        chr,
+        (x for a, b in ((0, 9), (11, 13), (13, 32), (127, 160)) for x in range(a, b)),
+    )
+)
+TERMINAL_PUNCTUATION = {
+    "᪩",
+    "？",
+    "⁈",
+    "𑩂",
+    "．",
+    "꩞",
+    "𑅃",
+    "﹗",
+    "𑂾",
+    "\u1b7d",
+    "፧",
+    "𑅂",
+    "꡶",
+    "꘎",
+    "⁉",
+    "࠾",
+    "᪨",
+    "𑊩",
+    "𑱂",
+    "᱿",
+    "𖩮",
+    "᥅",
+    "\U00011f43",
+    "\U00011f44",
+    "﹒",
+    "𑈹",
+    "𑈸",
+    "።",
+    "܂",
+    "؞",
+    "꛳",
+    "\U00010f88",
+    "𑗍",
+    "𐩖",
+    "𑙂",
+    "\u061d",
+    "꩟",
+    "᠉",
+    "\u1b7e",
+    "𑗗",
+    "᰼",
+    "𑻸",
+    "؟",
+    "𑪜",
+    "꧉",
+    "𑗉",
+    "𐽙",
+    "𖫵",
+    "𖬷",
+    "܀",
+    "꓿",
+    "᜵",
+    "𑗏",
+    "𑁇",
+    "𑗓",
+    "𑥄",
+    "៖",
+    "𑥆",
+    "𑗑",
+    "𑗒",
+    "꯫",
+    "۔",
+    "𐩗",
+    "\U00010f86",
+    "꡷",
+    "\u2e54",
+    "｡",
+    "៕",
+    "߹",
+    "⸮",
+    ".",
+    "𑇅",
+    "࠹",
+    "𛲟",
+    "꫰",
+    "꤯",
+    "𐽗",
+    "᭞",
+    "𑜼",
+    "፨",
+    "𑃁",
+    "꣏",
+    "𑇟",
+    "𖬸",
+    "𑪛",
+    "𑜾",
+    "࠷",
+    "𝪈",
+    "?",
+    "𑃀",
+    "𑗃",
+    "！",
+    "։",
+    "꣎",
+    "॥",
+    "𑗖",
+    "᭛",
+    "᠃",
+    "!",
+    "၊",
+    "𖺘",
+    "⁇",
+    "𑗌",
+    "𑑋",
+    "𖭄",
+    "᭟",
+    "𑅁",
+    "𑙁",
+    "⸼",
+    "꩝",
+    "𑗋",
+    "。",
+    "꧈",
+    "꫱",
+    "𑜽",
+    "𐽖",
+    "𑂿",
+    "᙮",
+    "។",
+    "꛷",
+    "\U00010f89",
+    "៚",
+    "᥄",
+    "𑗕",
+    "𑗎",
+    "᪪",
+    "᭚",
+    "࠽",
+    "𑇞",
+    "𑗊",
+    "𐽘",
+    "\u2e53",
+    "𑗔",
+    "𖩯",
+    "𑇍",
+    "𑻷",
+    "𐽕",
+    "𑩃",
+    "।",
+    "𑗂",
+    "𑇆",
+    "𑁈",
+    "။",
+    "᱾",
+    "𑱁",
+    "꘏",
+    "܁",
+    "᜶",
+    "‼",
+    "𑈻",
+    "‽",
+    "᪫",
+    "﹖",
+    "𑑌",
+    "𑈼",
+    "\U00010f87",
+    "𑗐",
+    "៙",
+    "᰻",
+}
+# add other scripts
+PUNCTUATION_SET = set(PUNCTUATION).union(TERMINAL_PUNCTUATION)
+PUNCTUATION_TRANS = str.maketrans(PUNCTUATION, " " * len(PUNCTUATION))
+
+
+@dataclass
+class TextNormConfig:
+    lowercase: bool = True
+    norm_whitespace: bool = True
+    remove_punctuation: bool = True
+    norm_unicode_diacritics: bool = True
+    norm_numbers: bool = True
+    norm_weekdays: bool = False
+    norm_monthnames: bool = False
+
+
+DEF_TEXT_NORM_CONFIG = TextNormConfig()
+# Match digits in any script, allowing for different decimal separators
+# One or more digits in any script
+# Common decimal separators (period, comma, Arabic decimal, etc)
+# Optional decimal part with digits
+# we need regex and not re for this one to match unicode
+NUMBERS_PATTERN = regex.compile(
+    r"\p{Nd}+([.,،٫⎖⎗⎘]{1}\p{Nd}+)?",
+    regex.VERBOSE | regex.UNICODE,
+)
+WHITESPACE_PATTERN = re.compile(r"\s+")
+# WARNING: english specific
+WEEKDAYS_PATTERN = re.compile(r"monday|tuesday|wednesday|thursday|friday|saturday|sunday")
+MONTHS_PATTERN = re.compile(r"january|february|march|april|may|june|july|august|september|october|november|december")
+
+
+def simplify_text(text: str, config=DEF_TEXT_NORM_CONFIG) -> str:
+    """Performs the following operations to increase recall when looking for matches between documents:
+    - number normalization
+    - weekday normalization
+    - month normalization
+    - lowercase text
+    - replace all whitespace with a single " "
+    - remove all punctuation
+    - convert diacritics
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 684ms:
+huggingface/datatrove:src/datatrove/utils/text.py: class TextNormConfig:
+huggingface/datatrove:src/datatrove/utils/perplexity.py: from datatrove.utils.text import TextNormConfig, simplify_text
+huggingface/datatrove:src/datatrove/utils/perplexity.py: config=TextNormConfig(
+huggingface/datatrove:src/datatrove/pipeline/dedup/bloom_filter.py: from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+huggingface/datatrove:src/datatrove/pipeline/dedup/bloom_filter.py: norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+huggingface/datatrove:src/datatrove/pipeline/decont/n_grams.py: from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+huggingface/datatrove:src/datatrove/pipeline/decont/n_grams.py: norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+huggingface/datatrove:src/datatrove/pipeline/dedup/minhash.py: from datatrove.utils.text import TextNormConfig, ngrams, simplify_text
+huggingface/datatrove:src/datatrove/pipeline/dedup/minhash.py: norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+huggingface/datatrove:src/datatrove/pipeline/dedup/sentence_dedup.py: TextNormConfig,
+huggingface/datatrove:src/datatrove/pipeline/dedup/sentence_dedup.py: norm_config: TextNormConfig = field(default_factory=TextNormConfig)
+huggingface/datatrove:src/datatrove/pipeline/stats/contamination_stats.py: from datatrove.utils.text import TextNormConfig, simplify_text
+huggingface/datatrove:src/datatrove/pipeline/stats/contamination_stats.py: norm_config: TextNormConfig = TextNormConfig(),
+huggingface/datatrove:tests/pipeline/text/test_text.py: from src.datatrove.utils.text import PUNCTUATION, TextNormConfig, simplify_text
+huggingface/datatrove:tests/pipeline/text/test_text.py: config = TextNormConfig(norm_numbers=True, remove_punctuation=True, norm_whitespace=True)
+
+ succeeded in 681ms:
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/huggingface/datatrove/main/src/datatrove/utils/text.py | sed -n '140,260p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+    "\U00010f89",
+    "៚",
+    "᥄",
+    "𑗕",
+    "𑗎",
+    "᪪",
+    "᭚",
+    "࠽",
+    "𑇞",
+    "𑗊",
+    "𐽘",
+    "\u2e53",
+    "𑗔",
+    "𖩯",
+    "𑇍",
+    "𑻷",
+    "𐽕",
+    "𑩃",
+    "।",
+    "𑗂",
+    "𑇆",
+    "𑁈",
+    "။",
+    "᱾",
+    "𑱁",
+    "꘏",
+    "܁",
+    "᜶",
+    "‼",
+    "𑈻",
+    "‽",
+    "᪫",
+    "﹖",
+    "𑑌",
+    "𑈼",
+    "\U00010f87",
+    "𑗐",
+    "៙",
+    "᰻",
+}
+# add other scripts
+PUNCTUATION_SET = set(PUNCTUATION).union(TERMINAL_PUNCTUATION)
+PUNCTUATION_TRANS = str.maketrans(PUNCTUATION, " " * len(PUNCTUATION))
+
+
+@dataclass
+class TextNormConfig:
+    lowercase: bool = True
+    norm_whitespace: bool = True
+    remove_punctuation: bool = True
+    norm_unicode_diacritics: bool = True
+    norm_numbers: bool = True
+    norm_weekdays: bool = False
+    norm_monthnames: bool = False
+
+
+DEF_TEXT_NORM_CONFIG = TextNormConfig()
+# Match digits in any script, allowing for different decimal separators
+# One or more digits in any script
+# Common decimal separators (period, comma, Arabic decimal, etc)
+# Optional decimal part with digits
+# we need regex and not re for this one to match unicode
+NUMBERS_PATTERN = regex.compile(
+    r"\p{Nd}+([.,،٫⎖⎗⎘]{1}\p{Nd}+)?",
+    regex.VERBOSE | regex.UNICODE,
+)
+WHITESPACE_PATTERN = re.compile(r"\s+")
+# WARNING: english specific
+WEEKDAYS_PATTERN = re.compile(r"monday|tuesday|wednesday|thursday|friday|saturday|sunday")
+MONTHS_PATTERN = re.compile(r"january|february|march|april|may|june|july|august|september|october|november|december")
+
+
+def simplify_text(text: str, config=DEF_TEXT_NORM_CONFIG) -> str:
+    """Performs the following operations to increase recall when looking for matches between documents:
+    - number normalization
+    - weekday normalization
+    - month normalization
+    - lowercase text
+    - replace all whitespace with a single " "
+    - remove all punctuation
+    - convert diacritics
+    - unicode normalize
+
+    Args:
+        text
+
+    Returns:
+        modified text
+    """
+    # We should apply the transformation in such order so that, we do same transformations
+    # incrementaly as we would do if we applied each from scratch.
+    # Eg.
+    # 1|2|3 -> 000
+    # vs
+    # 1|2|3 -> 0
+
+    # lower case
+    if config.lowercase:
+        text = text.lower()
+    if config.norm_numbers:
+        text = NUMBERS_PATTERN.sub("0", text)
+    if config.norm_weekdays:
+        text = WEEKDAYS_PATTERN.sub("WEEKDAY", text)
+    if config.norm_monthnames:
+        text = MONTHS_PATTERN.sub("MONTH", text)
+
+    # convert punctuation to spaces
+    if config.remove_punctuation:
+        text = text.translate(PUNCTUATION_TRANS)
+
+    # remove consecutive spaces, newlines, tabs in the middle and in the beginning / end
+    if config.norm_whitespace:
+        text = WHITESPACE_PATTERN.sub(" ", text.strip())
+    # diacritics/unicode normalization
+    if config.norm_unicode_diacritics:
+        text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
+
+    return text.strip()
+
+
+# from https://tedboy.github.io/nlps/_modules/nltk/util.html#ngrams
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'gh repo view ChenghaoMou/text-dedup --json url,description,defaultBranchRef' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'unicodedata repo:ChenghaoMou/text-dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'normalize repo:ChenghaoMou/text-dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 464ms:
+{"defaultBranchRef":{"name":"main"},"description":"All-in-one text de-duplication","url":"https://github.com/ChenghaoMou/text-dedup"}
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 585ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 842ms:
+ChenghaoMou/text-dedup:src/text_dedup/utils/preprocess.py: def normalize(line: str) -> str:
+ChenghaoMou/text-dedup:src/text_dedup/utils/preprocess.py: Normalize a line of text. Source: https://github.com/facebookresearch/cc_net/blob/bda555bd1cf1ee2e0b925363e62a61cd46c8b60d/cc_net/text_normalizer.py#L180
+ChenghaoMou/text-dedup:tests/test_utils/test_preprocess.py: assert normalize("Hello, world!") == "hello world"
+ChenghaoMou/text-dedup:tests/test_utils/test_preprocess.py: assert normalize("   ") == ""
+ChenghaoMou/text-dedup:tests/test_utils/test_preprocess.py: assert normalize("\n\t  ") == ""
+
+exec
+/bin/zsh -lc "gh search code '\"normalize(\" repo:ChenghaoMou/text-dedup src/text_dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code '\"--normalize\" repo:ChenghaoMou/text-dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/ChenghaoMou/text-dedup/main/src/text_dedup/utils/preprocess.py | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 379ms:
+#!/usr/bin/env python
+# @Date    : 2023-05-06 19:39:27
+# @Author  : Chenghao Mou (mouchenghao@gmail.com)
+
+import regex as re
+
+DIGIT_RE = re.compile(r"\d")
+PUNCT_OR_NON_PRINTING_CHARS_RE = re.compile(r"[\p{P}\p{C}\p{S}]+")
+
+
+def normalize(line: str) -> str:
+    """
+    Normalize a line of text. Source: https://github.com/facebookresearch/cc_net/blob/bda555bd1cf1ee2e0b925363e62a61cd46c8b60d/cc_net/text_normalizer.py#L180
+
+    Parameters
+    ----------
+    line : str
+        The line of text to normalize.
+
+    Returns
+    -------
+    str
+        The normalized line of text.
+
+    Examples
+    --------
+    >>> normalize("Hello, world!")
+    'hello world'
+    >>> normalize("Hello, 123!\\n\\t\\b")
+    'hello 000'
+    """
+    line = line.strip()
+    if not line:
+        return line
+    line = line.lower()
+    line = DIGIT_RE.sub("0", line)
+    line = PUNCT_OR_NON_PRINTING_CHARS_RE.sub("", line)
+    return line
+
+
+def news_copy_preprocessing(text: str) -> str:
+    """
+    This is the same preprocessing code used NEWS-COPY benchmark.
+
+    Prameters
+    ---------
+    text : str
+        The input text to be processed.
+
+    Returns
+    -------
+    str
+        The processed text.
+    """
+    chars_to_remove = r'"#$%&\()*+/:;<=>@[\\]^_`{|}~.?,!\''
+    text = text.replace("-\n", "").replace("\n", " ")
+    text = text.translate(str.maketrans("", "", chars_to_remove))
+    text = text.encode("ascii", "ignore").decode()
+    return text
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 540ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 675ms:
+exec
+/bin/zsh -lc "gh search code '\"normalize_data\" repo:ChenghaoMou/text-dedup' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code '\"normalize\" \"click.option\" repo:ChenghaoMou/text-dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code '\"MinHash\" repo:ChenghaoMou/text-dedup src/text_dedup' --limit 50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 366ms:
+hook: PostToolUse Completed
+ succeeded in 441ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 451ms:
+exec
+/bin/zsh -lc "gh repo clone ChenghaoMou/text-dedup /tmp/text-dedup -- --depth 1 >/tmp/clone_textdedup.log 2>&1 || true; find /tmp/text-dedup/src/text_dedup -maxdepth 3 -type f | sed -n '1,120p'" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 1450ms:
+/tmp/text-dedup/src/text_dedup/bloom_filter.py
+/tmp/text-dedup/src/text_dedup/suffix_array.py
+/tmp/text-dedup/src/text_dedup/config/io/__init__.py
+/tmp/text-dedup/src/text_dedup/config/io/output_configs.py
+/tmp/text-dedup/src/text_dedup/config/io/input_configs.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/suffix_array.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/simhash.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/__init__.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/minhash.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/base.py
+/tmp/text-dedup/src/text_dedup/config/algorithms/bloom.py
+/tmp/text-dedup/src/text_dedup/config/__init__.py
+/tmp/text-dedup/src/text_dedup/config/debug.py
+/tmp/text-dedup/src/text_dedup/config/base.py
+/tmp/text-dedup/src/text_dedup/simhash.py
+/tmp/text-dedup/src/text_dedup/__init__.py
+/tmp/text-dedup/src/text_dedup/utils/jaccard.py
+/tmp/text-dedup/src/text_dedup/utils/env.py
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py
+/tmp/text-dedup/src/text_dedup/utils/timer.py
+/tmp/text-dedup/src/text_dedup/utils/__init__.py
+/tmp/text-dedup/src/text_dedup/utils/tokenization.py
+/tmp/text-dedup/src/text_dedup/utils/hashfunc.py
+/tmp/text-dedup/src/text_dedup/utils/logger.py
+/tmp/text-dedup/src/text_dedup/utils/ftfy_utils.py
+/tmp/text-dedup/src/text_dedup/utils/progress.py
+/tmp/text-dedup/src/text_dedup/utils/union_find.py
+/tmp/text-dedup/src/text_dedup/py.typed
+/tmp/text-dedup/src/text_dedup/data_sources/io.py
+/tmp/text-dedup/src/text_dedup/data_sources/__init__.py
+/tmp/text-dedup/src/text_dedup/minhash.py
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/text-dedup/src/text_dedup/minhash.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+from typing import cast
+
+import polars as pl
+from datasets import Dataset
+from polars.dataframe import DataFrame
+from polars_grouper import super_merger
+
+from text_dedup.config import Config
+from text_dedup.config import MinHashAlgorithmConfig
+from text_dedup.data_sources.io import load_dataset
+from text_dedup.data_sources.io import save_dataset
+from text_dedup.utils.jaccard import jaccard_similarity
+from text_dedup.utils.logger import log
+from text_dedup.utils.progress import use_custom_progress_bar
+from text_dedup.utils.timer import Timer
+
+
+def load_and_preprocess(config: Config) -> tuple[Dataset, int, int]:
+    """Load and preprocess the dataset."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    ds = load_dataset(config)
+    original_len = len(ds)
+    result: Dataset = ds.filter(  # pyright: ignore[reportUnknownMemberType]
+        algo.get_filtering_func(),
+        input_columns=[algo.text_column],
+        num_proc=config.algorithm.num_proc,
+        desc="Filtering...",
+    )
+    filtered_len = len(result)
+    return result, original_len, filtered_len
+
+
+def fingerprint(config: Config, ds: Dataset) -> Dataset:
+    """Fingerprint the dataset."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    result: Dataset = ds.map(
+        function=algo.get_embed_func(),
+        input_columns=[algo.text_column, algo.internal_index_column],
+        remove_columns=[col for col in ds.column_names if col != algo.internal_index_column],
+        num_proc=config.algorithm.num_proc,
+        batched=True,
+        batch_size=1,
+        desc="Fingerprinting...",
+    )
+    return result
+
+
+def cluster(config: Config, ds: Dataset) -> dict[int, int]:
+    """Cluster the dataset."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    signatures: DataFrame = ds.select_columns(["__band_idx__", "__band_val__", algo.internal_index_column]).to_polars()  # pyright: ignore[reportUnknownMemberType, reportAssignmentType]
+    clusters = (
+        signatures.group_by(["__band_idx__", "__band_val__"])
+        .agg(pl.col(algo.internal_index_column))
+        .filter(pl.col(algo.internal_index_column).list.len() > 1)
+        .select(pl.col(algo.internal_index_column).alias("values"))
+        .with_row_index(name="index")
+    )
+    exploded_df = clusters.explode("values")
+    combinations = (
+        exploded_df.join(exploded_df, on="index")
+        .filter(pl.col("values") < pl.col("values_right"))
+        .rename({"values": "src", "values_right": "dst"})
+        .drop("index")
+    )
+    grouped = super_merger(combinations, from_col_name="src", to_col_name="dst")
+    mapping = pl.concat([
+        grouped.select(pl.col("src").alias("id"), pl.col("group")).unique(),
+        grouped.select(pl.col("dst").alias("id"), pl.col("group")).unique(),
+    ]).unique()
+
+    mapping = (
+        mapping.group_by("group")
+        .agg(pl.col("id"), pl.min("id").alias("cluster"))
+        .select(pl.col("id"), pl.col("cluster"))
+        .explode("id")
+    )
+
+    return dict(mapping.iter_rows(named=False))
+
+
+def assign(config: Config, ds: Dataset, parents: dict[int, int]) -> Dataset:
+    """Assign cluster id to the dataset."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    ds = ds.map(  # pyright: ignore[reportUnknownMemberType]
+        function=lambda record: {  # pyright: ignore[reportUnknownLambdaType]
+            algo.cluster_column: parents.get(
+                record[algo.internal_index_column],  # pyright: ignore[reportUnknownArgumentType]
+                record[algo.internal_index_column],  # pyright: ignore[reportUnknownArgumentType]
+            ),
+            "__duplicate__": record[algo.internal_index_column] in parents,
+        },
+        with_indices=False,
+        # ! parents is pickled to multiple processes
+        num_proc=config.algorithm.num_proc,
+        desc="Assigning initial clusters...",
+    )
+    return ds
+
+
+def check_false_positives(config: Config, ds: Dataset) -> tuple[Dataset, dict[int, int]]:
+    """Check false positives."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    ds_candidates = ds.filter(  # pyright: ignore[reportUnknownMemberType]
+        function=lambda x: x["__duplicate__"],  # pyright: ignore[reportUnknownLambdaType]
+        num_proc=algo.num_proc,
+    )
+    candidates: DataFrame = ds_candidates.select_columns([  # pyright: ignore[reportUnknownMemberType, reportAssignmentType]
+        algo.internal_index_column,
+        algo.text_column,
+        algo.cluster_column,
+    ]).to_polars()
+    cluster_num = candidates.unique(algo.cluster_column).shape[0]
+    candidates = candidates.join(candidates, on=algo.cluster_column).filter(
+        pl.col(algo.internal_index_column) < pl.col(f"{algo.internal_index_column}_right")
+    )
+    verified_pairs = len(candidates)
+    tokenizer = algo.get_ngrams_func()
+    results = (
+        candidates.with_columns(
+            jaccard_score=pl.struct(pl.all()).map_elements(
+                lambda record: jaccard_similarity(  # pyright: ignore[reportAny]
+                    set(tokenizer(record[algo.text_column])),  # pyright: ignore[reportAny]
+                    set(tokenizer(record[f"{algo.text_column}_right"])),  # pyright: ignore[reportAny]
+                ),
+                return_dtype=pl.Float64,
+            )
+        )
+        .filter(pl.col("jaccard_score") >= algo.threshold)
+        .with_columns([
+            pl.col(algo.internal_index_column).alias("idx1"),
+            pl.col(f"{algo.internal_index_column}_right").alias("idx2"),
+        ])
+    )
+
+    assignment = (
+        results.select([pl.col("idx1").alias("idx"), pl.col(algo.cluster_column)])
+        .vstack(results.select([pl.col("idx2").alias("idx"), pl.col(algo.cluster_column)]))
+        .unique()
+        # update the cluster id to the minimum index
+        .group_by(algo.cluster_column)
+        .agg(pl.col("idx"), pl.min("idx").alias("cluster_id"))
+        .select([pl.col("idx"), pl.col("cluster_id")])
+        .explode("idx")
+    )
+
+    new_parents = dict(assignment.iter_rows(named=False))
+    total_true_positives = len(new_parents)
+    total_false_positives = len(ds_candidates) - total_true_positives
+    total_true_positive_clusters = len(set(new_parents.values()))
+
+    log.info(f"Verified {cluster_num} clusters/{verified_pairs} pairs")
+    log.info(f"False Positives   : {total_false_positives}")
+    log.info(f"True Positives    : {total_true_positives}")
+    log.info(f"True Clusters     : {total_true_positive_clusters}")
+
+    ds = ds.map(  # pyright: ignore[reportUnknownMemberType]
+        function=lambda record: {  # pyright: ignore[reportUnknownLambdaType]
+            algo.cluster_column: new_parents.get(
+                record[algo.internal_index_column],
+                record[algo.internal_index_column],  # pyright: ignore[reportUnknownArgumentType]
+            )
+        },
+        with_indices=False,
+        # ! new_parents is pickled
+        num_proc=config.algorithm.num_proc,
+        desc="Updating clusters...",
+    )
+
+    return ds, new_parents
+
+
+def remove_duplicates(config: Config, ds: Dataset) -> Dataset:
+    """Remove duplicates from the dataset."""
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    if not config.output.skip_filtering:
+        result: Dataset = ds.filter(  # pyright: ignore[reportUnknownMemberType]
+            function=lambda record: record[algo.cluster_column] == record[algo.internal_index_column],  # pyright: ignore[reportUnknownLambdaType]
+            with_indices=False,
+            num_proc=config.algorithm.num_proc,
+            desc="Removing duplicates...",
+        )
+        return result
+    return ds
+
+
+def main(config: Config) -> None:
+    """
+    Running MinHash algorithm.
+
+    Parameters
+    ----------
+    config: Config
+        The deduplication configuration object.
+
+    """
+
+    algo = cast(MinHashAlgorithmConfig, config.algorithm)
+    timer = Timer()
+
+    with timer("Total", enable_spin=False), use_custom_progress_bar():
+        with timer("Preprocessing", enable_spin=False):
+            ds, ORIGINAL_LEN, FILTERED_LEN = load_and_preprocess(config)
+            log.info(f"Filtered {ORIGINAL_LEN - FILTERED_LEN} records")
+
+        with timer("MinHashing", enable_spin=False):
+            embedded = fingerprint(config, ds)
+
+        with timer("Clustering"):
+            assignment = cluster(config, embedded)
+            ds = assign(config, ds, assignment)
+
+        with timer("Verifying"):
+            if algo.check_false_positive:
+                ds, assignment = check_false_positives(config, ds)
+
+        with timer("Filtering", enable_spin=False):
+            final_data = remove_duplicates(config, ds)
+
+        with timer("Saving"):
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,180p' /tmp/text-dedup/src/text_dedup/config/algorithms/minhash.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# pyright: reportAny=false
+# pyright: reportExplicitAny=false
+from collections.abc import Callable
+from functools import partial
+from typing import Any
+from typing import Literal
+from typing import override
+
+import numpy as np
+import numpy.typing as npt
+import regex as re
+from scipy.integrate import quad as integrate
+
+from text_dedup.config.algorithms.base import AlgorithmConfig
+from text_dedup.utils.tokenization import ngrams
+
+
+def optimal_param(
+    threshold: float,
+    num_perm: int,
+    false_positive_weight: float = 0.5,
+    false_negative_weight: float = 0.5,
+) -> tuple[int, int]:  # pragma: no cover
+    """
+    Compute the optimal `MinHashLSH` parameter that minimizes the weighted sum
+    of false positive and false negative areas, taken from datasketch.
+
+    You can also refer to the interactive demo at https://huggingface.co/spaces/bigcode/near-deduplication.
+
+    Parameters
+    ----------
+    threshold : float
+        The threshold for similarity.
+    num_perm : int
+        The number of permutations.
+    false_positive_weight : float
+        The weight of false positive.
+    false_negative_weight : float
+        The weight of false negative.
+
+    Returns
+    -------
+    tuple[int, int]
+        The optimal `b` (bands) and `r` (rows) parameters.
+    """
+
+    def false_positive_area(threshold: float, b: int, r: int) -> float:
+        """Source: `datasketch.lsh`"""
+
+        def proba(s: float) -> float:
+            return float(1 - (1 - s ** float(r)) ** float(b))
+
+        a, _ = integrate(proba, 0.0, threshold)
+        return float(a)
+
+    def false_negative_area(threshold: float, b: int, r: int) -> float:
+        """Source: `datasketch.lsh`"""
+
+        def proba(s: float) -> float:
+            return float(1 - (1 - (1 - s ** float(r)) ** float(b)))
+
+        a, _ = integrate(proba, threshold, 1.0)
+        return float(a)
+
+    min_error = float("inf")
+    opt = (0, 0)
+    for b in range(1, num_perm + 1):
+        max_r = int(num_perm / b)
+        for r in range(1, max_r + 1):
+            fp = false_positive_area(threshold, b, r)
+            fn = false_negative_area(threshold, b, r)
+            error = fp * false_positive_weight + fn * false_negative_weight
+            if error < min_error:
+                min_error = error
+                opt = (b, r)
+    return opt
+
+
+class MinHashAlgorithmConfig(AlgorithmConfig):
+    algo_name: Literal["minhash"] = "minhash"
+    hash_bits: int = 64
+    hash_func_name: Literal["sha1", "xxh3"] = "xxh3"
+    bands: int | None = None
+    rows: int | None = None
+    num_perm: int
+    ngram_size: int = 1
+    threshold: float
+    min_length: int = 5
+    false_positive_weight: float = 0.5
+    false_negative_weight: float = 0.5
+    check_false_positive: bool = False
+    _modulo_prime: np.uint
+    _max_hash: np.uint
+    _dtype: type
+
+    # 64bit config is backwards compatibility mode.
+    # it uses 64bit types but almost entirely 32bit data, except for one mersenne prime 2^61
+    # why legacy implementations used mersenne primes for modulo:
+    # https://en.wikipedia.org/wiki/Universal_hashing#Hashing_strings
+    # (dtype, max_hash, modulo_prime)
+    _hash_config: dict[int, tuple[type, Any, Any]] = {  # noqa: RUF012
+        64: (np.uint64, np.uint32((1 << 32) - 1), np.uint64((1 << 61) - 1)),
+        # 32, 16bit configs do not use a mersenne prime number.
+        # The original reason for using mersenne prime was speed.
+        # Testing reveals there is no benefit to using a 2^61 mersenne prime number for division
+        32: (np.uint32, np.uint32((1 << 32) - 1), np.uint32((1 << 32) - 5)),
+        16: (np.uint16, np.uint16((1 << 16) - 1), np.uint16((1 << 16) - 15)),
+    }
+
+    @override
+    def model_post_init(self, context: Any) -> None:
+        super().model_post_init(context)
+        if self.bands is None and self.rows is None:
+            # Compute the optimal `MinHashLSH` parameter that minimizes the weighted sum
+            # of probabilities of false positive and false negative, taken from datasketch.
+            # You can also refer to the interactive demo at https://huggingface.co/spaces/bigcode/near-deduplication.
+            # The following assumes a "perfect hash". using 16bit hashes might challenge this assumption
+            # lower precision dtype will cause more collisions, so higher false_positives and fewer false negatives.
+            # Both effects move the result towards more documents being considered duplicates.
+            self.bands, self.rows = optimal_param(
+                self.threshold,
+                self.num_perm,
+                false_positive_weight=self.false_positive_weight,
+                false_negative_weight=self.false_negative_weight,
+            )
+
+        DTYPE, MAX_HASH, MODULO_PRIME = self.get_hash_config()
+        self._dtype = DTYPE
+        self._modulo_prime = MODULO_PRIME
+        self._max_hash = MAX_HASH
+
+    def get_hash_config(self) -> tuple[type, Any, Any]:
+        return self._hash_config[self.hash_bits]
+
+    @property
+    def hash_func(self) -> Callable[[bytes], int]:
+        match self.hash_func_name:
+            case "sha1":
+                from text_dedup.utils.hashfunc import sha1_hash
+
+                result = partial(sha1_hash, d=min(self.hash_bits, 32))
+            case "xxh3":
+                from text_dedup.utils.hashfunc import xxh3_hash
+
+                result = partial(xxh3_hash, seed=self.seed, bits=min(self.hash_bits, 32))
+        return result
+
+    @property
+    def hash_ranges(self) -> list[tuple[int, int]]:
+        bands = self.bands or 0
+        rows = self.rows or 0
+        return [(i * rows, (i + 1) * rows) for i in range(bands)]
+
+    @property
+    def permutations(self) -> tuple[np.ndarray, np.ndarray]:
+        """
+        for minhash, we need to make a lot of hashes(=num_perms).
+        In many previous implementations, this is achieved through a method described in
+        `Universal classes of hash functions` https://doi.org/10.1016/0022-0000(79)90044-8
+        There we start with a know good hash x (=hash_func) and permutate it as the following:
+        `new_hash = (a * x + b) mod prime mod max_hash` we need one a (!=0), b pair per new hash
+        the following produces these a, b pairs
+        """
+        if self._rng is None:
+            raise ValueError("RNG is not materialized")  # noqa: TRY003
+
+        # a is a multiplier so should not be 0
+        a = self._rng.randint(1, self._modulo_prime, size=(self.num_perm,), dtype=self._dtype)
+        b = self._rng.randint(0, self._modulo_prime, size=(self.num_perm,), dtype=self._dtype)
+
+        return a, b
+
+    def get_filtering_func(self) -> Callable[[str], bool]:
+        tokenize_func = self._get_tokenize_func()
+
+        def f(text: str) -> bool:
+            return len(tokenize_func(text)) >= self.min_length
+
+        return f
+
+
+hook: PostToolUse
+exec
+/bin/zsh -lc 'grep -R "normalize" -n /tmp/text-dedup/src/text_dedup | head -80' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:11:def normalize(line: str) -> str:
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:13:    Normalize a line of text. Source: https://github.com/facebookresearch/cc_net/blob/bda555bd1cf1ee2e0b925363e62a61cd46c8b60d/cc_net/text_normalizer.py#L180
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:18:        The line of text to normalize.
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:23:        The normalized line of text.
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:27:    >>> normalize("Hello, world!")
+/tmp/text-dedup/src/text_dedup/utils/preprocess.py:29:    >>> normalize("Hello, 123!\\n\\t\\b")
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '180,380p' /tmp/text-dedup/src/text_dedup/config/algorithms/minhash.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+
+    def _get_tokenize_func(self) -> Callable[[str], list[str]]:
+        NON_ALPHA = re.compile(r"\W", re.UNICODE)
+
+        def f(content: str) -> list[str]:
+            return [t for t in NON_ALPHA.split(content.lower()) if t]
+
+        return f
+
+    def get_ngrams_func(self) -> Callable[[str], set[bytes]]:
+        tokenize_func = self._get_tokenize_func()
+
+        def f(content: str) -> set[bytes]:
+            return {
+                bytes(" ".join(t).lower(), "utf-8")
+                for t in ngrams(tokenize_func(content), self.ngram_size, self.min_length)
+            }
+
+        return f
+
+    def get_embed_func(
+        self,
+    ) -> Callable[[list[str], list[int]], dict[str, list[int | bytes]]]:
+        """Create a function that embeds a string into a list of (index, hash, length) tuples."""
+        # Fall back to pure Python implementation
+        # a, b are each np.ndarray arrays containing {num_perm} pairs of random numbers used for building new hashes
+        # the formula is a * x(base hash of each shingle) + b
+        a, b = self.permutations
+        hash_func = self.hash_func
+        hash_ranges = self.hash_ranges
+        ngrams_func = self.get_ngrams_func()
+
+        def f(text_col: list[str], idx_col: list[int]) -> dict[str, list[int | bytes]]:
+            # split content on whitespace (NON_ALPHA regex), tokenize with ngrams(), and join these n-grams into a single space separated string.
+            # we then convert to lower case and then bytestrings which is then hashed. Only unique hashed n-grams are left.
+            content: str = text_col[0]
+            idx: int = idx_col[0]
+            tokens: set[bytes] = ngrams_func(content)
+            hashvalues: npt.NDArray[Any] = np.array([hash_func(token) for token in tokens], dtype=self._dtype).reshape(  # pyright: ignore[reportUnknownVariableType]
+                len(tokens), 1
+            )
+            # Permute the hash values to produce new universal hashes
+            # Element-wise multiplication with 'hashvalues' and a (non 0 random value) and then adding b
+            # Then, take modulo 'MODULO_PRIME' and bitwise_and with 'MAX_HASH' to keep only the necessary bits.
+            hashvalues = (hashvalues * a + b) % self._modulo_prime & self._max_hash
+            # this part is where the name "min" of minhash comes from
+            # this stacks all the hashes and then takes the minimum from each column
+            masks: npt.NDArray[Any] = np.full(shape=self.num_perm, dtype=self._dtype, fill_value=self._max_hash)  # pyright: ignore[reportUnknownVariableType]
+            hashvalues = np.vstack([hashvalues, masks]).min(axis=0)
+            # Originally, byteswap was done for speed. Testing shows it has a negligible impact
+            # keeping for backward compatibility, even though theoretically and empirically
+            # it doesn't matter if it is there or not. github.com/ekzhu/datasketch/issues/114
+            return {
+                "__band_idx__": list(range(len(hash_ranges))),
+                "__band_val__": [bytes(hashvalues[start:end].byteswap().data) for (start, end) in hash_ranges],
+                self.internal_index_column: [idx for _ in hash_ranges],
+            }
+
+        return f
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "gh search repos 'NVIDIA NeMo Curator' --limit 5" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'NFKC repo:NVIDIA/NeMo-Curator' --limit 50" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'normalize repo:NVIDIA/NeMo-Curator' --limit 50" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ exited 1 in 268ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID A12A:6A79:2CDC1C9D:2D4D2C6F:6A20DED2 and timestamp 2026-06-04 02:11:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=50&q=NFKC+repo%3ANVIDIA%2FNeMo-Curator)
+
+ exited 1 in 277ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID CDE0:3550B7:2CFEFF2E:2D7082EA:6A20DED2 and timestamp 2026-06-04 02:11:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=50&q=normalize+repo%3ANVIDIA%2FNeMo-Curator)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 828ms:
+spiraldb/spiraldb-nemo-curator	SpiralDB connectors for NVIDIA NeMo Curator	public	2026-05-22T18:00:55Z
+tmquan/prepdata	Data preparation using NVIDIA NeMo Curator	public	2026-03-24T21:27:54Z
+leeroopedia/workflow-nvidia-nemo-curator-semantic-deduplication	GPU-accelerated semantic deduplication using KMeans clustering and pairwise cosine similarity for text and multimodal datasets (NVIDIA NeMo Curator)	public	2026-02-14T18:30:05Z
+leeroopedia/workflow-nvidia-nemo-curator-fuzzy-deduplication	GPU-accelerated near-duplicate detection for text datasets using MinHash + LSH with NVIDIA NeMo Curator	public	2026-02-14T18:24:07Z
+leeroopedia/workflow-nvidia-nemo-curator-video-curation-pipeline	End-to-end GPU-accelerated pipeline for curating high-quality video clip datasets from raw video files using NVIDIA NeMo Curator	public	2026-02-14T18:12:24Z
+
+exec
+/bin/zsh -lc 'git ls-remote https://github.com/NVIDIA/NeMo-Curator.git HEAD' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 500ms:
+b823cdeb5c530311a3ff3f306a30f103c9a6c8ac	HEAD
+
+exec
+/bin/zsh -lc 'git clone --depth 1 https://github.com/NVIDIA/NeMo-Curator.git /tmp/NeMo-Curator >/tmp/clone_nemo.log 2>&1 || true; find /tmp/NeMo-Curator -maxdepth 3 -type f | head -50' in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 3639ms:
+/tmp/NeMo-Curator/CODE_OF_CONDUCT.md
+/tmp/NeMo-Curator/.cursor/rules/resources-configuration.mdc
+/tmp/NeMo-Curator/.cursor/rules/coding-standards.mdc
+/tmp/NeMo-Curator/.cursor/rules/executors.mdc
+/tmp/NeMo-Curator/.cursor/rules/processing-stage-patterns.mdc
+/tmp/NeMo-Curator/.cursor/rules/modality-structure.mdc
+/tmp/NeMo-Curator/.cursor/rules/composite-stage-patterns.mdc
+/tmp/NeMo-Curator/.cursor/rules/task-patterns.mdc
+/tmp/NeMo-Curator/.cursor/rules/pipeline-structure.mdc
+/tmp/NeMo-Curator/codecov.yml
+/tmp/NeMo-Curator/docker/Dockerfile
+/tmp/NeMo-Curator/docker/common/install_ffmpeg.sh
+/tmp/NeMo-Curator/docker/common/install_haproxy.sh
+/tmp/NeMo-Curator/docker/common/install_etcd_nats.sh
+/tmp/NeMo-Curator/LICENSE
+/tmp/NeMo-Curator/uv.lock
+/tmp/NeMo-Curator/CHANGELOG.md
+/tmp/NeMo-Curator/.pre-commit-config.yaml
+/tmp/NeMo-Curator/Makefile
+/tmp/NeMo-Curator/CITATION.cff
+/tmp/NeMo-Curator/pyproject.toml
+/tmp/NeMo-Curator/tests/metrics/__init__.py
+/tmp/NeMo-Curator/tests/metrics/test_metrics_utils.py
+/tmp/NeMo-Curator/tests/conftest.py
+/tmp/NeMo-Curator/tests/tasks/test_utils.py
+/tmp/NeMo-Curator/tests/tasks/test_audio_task.py
+/tmp/NeMo-Curator/tests/tasks/__init__.py
+/tmp/NeMo-Curator/tests/tasks/test_video.py
+/tmp/NeMo-Curator/tests/tasks/test_tasks.py
+/tmp/NeMo-Curator/tests/core/test_utils.py
+/tmp/NeMo-Curator/tests/core/test___init__.py
+/tmp/NeMo-Curator/tests/core/test_cudf_placeholder.py
+/tmp/NeMo-Curator/tests/core/__init__.py
+/tmp/NeMo-Curator/tests/core/test_slurm_ray_client.py
+/tmp/NeMo-Curator/tests/core/test_get_ray_client.py
+/tmp/NeMo-Curator/tests/L0_Unit_Test_CPU.sh
+/tmp/NeMo-Curator/tests/config/test_run.py
+/tmp/NeMo-Curator/tests/config/__init__.py
+/tmp/NeMo-Curator/tests/backends/test_utils.py
+/tmp/NeMo-Curator/tests/backends/__init__.py
+/tmp/NeMo-Curator/tests/backends/utils.py
+/tmp/NeMo-Curator/tests/backends/test_integration.py
+/tmp/NeMo-Curator/tests/__init__.py
+/tmp/NeMo-Curator/tests/pipelines/test_pipelines.py
+/tmp/NeMo-Curator/tests/pipelines/__init__.py
+/tmp/NeMo-Curator/tests/pipelines/test_per_stage_runtime_env.py
+/tmp/NeMo-Curator/tests/utils/test_split_large_files.py
+/tmp/NeMo-Curator/tests/utils/test_writer_utils.py
+/tmp/NeMo-Curator/tests/utils/test_grouping.py
+/tmp/NeMo-Curator/tests/utils/test_merge_file_prefixes.py
+
