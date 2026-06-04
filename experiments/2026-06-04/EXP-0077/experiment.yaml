@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORT. Verified on installed libs (datasets 4.8.5, pillow 12.2.0,
+  torch 2.12.0, torchvision 0.27.0): (a) datasets.Image.encode_example(PIL object)
+  DESTROYS EXIF orientation tag (6->None); (b) path cell PRESERVES it (6); (c) PIL
+  Image.open default ignores orientation; (d) torchvision decode_jpeg default apply_exif_orientation=False.
+  Real f=2.75% non-identity orientation on 400 Open Images V7 original Flickr photos
+  (served HF parquet sets ~0 BECAUSE already destroyed at publish). Main: M1(passthrough,tag)
+  consumer-EXIF toggle=42.1pp per-tagged-image flip; M2(re-encode,tag destroyed) toggle=0pp;
+  composed cross-mirror score fork = f*flip = 1.16pp@f=2.75%, 2.1pp@5%, 4.2pp@10%,
+  10.5pp@25%. Controls held: identity-orient(tag=1)=0pp all; requant-only drift=0pp.
+  Novel chain (dormant-tag->serialization-destruction->irreversible invisible cross-mirror
+  score fork) verified end-to-end. No null exits fired.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0077/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T20:14:31Z'
 prompt_version: ''

@@ -47,17 +47,28 @@ why_it_matters: 'Cross-area production-seam (multimodal x data), FIRST-GREEN (CL
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0077
+  summary: 'SUPPORT. Verified on installed libs (datasets 4.8.5, pillow 12.2.0, torch
+    2.12.0, torchvision 0.27.0): (a) datasets.Image.encode_example(PIL object) DESTROYS
+    EXIF orientation tag (6->None); (b) path cell PRESERVES it (6); (c) PIL Image.open
+    default ignores orientation; (d) torchvision decode_jpeg default apply_exif_orientation=False.
+    Real f=2.75% non-identity orientation on 400 Open Images V7 original Flickr photos
+    (served HF parquet sets ~0 BECAUSE already destroyed at publish). Main: M1(passthrough,tag)
+    consumer-EXIF toggle=42.1pp per-tagged-image flip; M2(re-encode,tag destroyed)
+    toggle=0pp; composed cross-mirror score fork = f*flip = 1.16pp@f=2.75%, 2.1pp@5%,
+    4.2pp@10%, 10.5pp@25%. Controls held: identity-orient(tag=1)=0pp all; requant-only
+    drift=0pp. Novel chain (dormant-tag->serialization-destruction->irreversible invisible
+    cross-mirror score fork) verified end-to-end. No null exits fired.'
+  data_path: experiments/2026-06-04/EXP-0077/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0077 result, then ros exp complete --exp EXP-0077 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0077; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0077
+active_experiments: []
 created_at: '2026-06-04T19:27:46Z'
-last_updated: '2026-06-04T19:29:01Z'
+last_updated: '2026-06-04T20:14:41Z'
