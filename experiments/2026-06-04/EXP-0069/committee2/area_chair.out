@@ -1,0 +1,44 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: green
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: green, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: green}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "Frame contribution as EMPIRICAL MEASUREMENT of a known IR mechanism (IIR §2.2 normalization-mismatch), not as a novel mechanism — all three YELLOW voters independently flagged this altitude",
+  "Lead with the operationally grounded metrics (45.2% prevalence on real docs, 34.6% MinHash-T=0.8 survival) not the 95.1% twin-construction rate which is structurally predicted by Unicode UAX#15 once the experiment design is fixed (theory_skeptic, correct)",
+  "Acknowledge tokenizer-family scope: finding holds for NFKC+casefold normalizers (T5/SentencePiece nfkc_cf family); a raw-bytes BPE tokenizer (GPT-2/Llama) inverts the relationship; a BERT-multilingual NFD+lower tokenizer ≈ production and the gap vanishes (theory_skeptic, valid confound — not fatal because NFKC+casefold IS the pervasive multilingual default, but must be stated)",
+  "Report bootstrap CI / SE on residual_FN_rate per-language and pooled (theory_skeptic — computable, should be done)",
+  "Verify text-dedup (ChenghaoMou/text-dedup) default normalizer to substantiate '≥2 codebases, none do NFKC' beyond datatrove+NeMo (evaluation_prosecutor mandatory baseline, novelty_killer related work)"
+]
+MANDATORY_BASELINES: [
+  "text-dedup default normalizer verification (evaluation_prosecutor)",
+  "Per-character driver concentration analysis — Gini / top-10 char share of residual FN to confirm it is not a single-mode artifact (theory_skeptic)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0059", change: "status YELLOW→GREEN; altitude = 'empirical measurement (workshop-finding) on known IR mechanism, not mechanism claim'; tags += [safety/privacy, multilingual, currently-unpatched]; add edge to IIR-§2.2 as parent-mechanism; add edge to UAX#15 as structural-driver; scope-note: 'NFKC+casefold tokenizer family only'"}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+
+DECISION RULE APPLIED. Committee#1 pre-committed a clear gate: "residual FN ≥1% of model-identical pairs on a real multilingual corpus → GREEN; <0.1% → RED (toothless)." L1 (EXP-0069) returned 95.1% on real C4-multilingual across 5 languages. The gate is met by 95×. Per-language minimum (ar 55.6%) still clears by 55×. No reviewer disputes the gate is met. No reviewer issued a RED. No fatal prior-art collision was found. Overriding a pre-committed gate without a FATAL objection would be intellectually dishonest — the committee's integrity requires honoring self-set decision rules in both directions.
+
+AGGREGATION OF YELLOWS — LEGITIMATE BUT NOT FATAL:
+
+(1) novelty_killer (YELLOW): Correctly identifies the mechanism as textbook IR (IIR Ch.2) and the driver as by-spec Unicode (UAX#15). The claim is an EMPIRICAL MEASUREMENT on a known mechanism, not a mechanism discovery — novelty_killer's own words: "workshop-finding altitude, not a mechanism paper." This is a framing requirement, not a gate-override. novelty_killer explicitly states: "no fatal collision," "empirical measurement on real multilingual data appears genuinely unreported," and "the hidden-exposure is currently-true." The YELLOW is about novelty altitude, and I accept that altitude classification — it is folded into the MAP_DELTA as a scope note. But altitude = workshop-finding does not mean verdict = not-green; the gate was about TEETHINESS (is the seam real and material?), not about mechanism novelty, and novelty_killer agrees the seam is real.
+
+(2) evaluation_prosecutor (YELLOW): Correctly notes that L1 twins are constructed via NFKC(d), not mined from organic cross-site duplicates. This is a valid methodological distinction: 95.1% measures the CAPABILITY GAP (what percentage of model-identical pairs escape production dedup), not the IN-THE-WILD miss rate (how many actual crawled near-duplicates are missed). However: (a) the 45.2% prevalence — the fraction of REAL docs carrying compatibility characters — is endogenous, not constructed; (b) Metric B (34.6% MinHash-T=0.8 survival) demonstrates the gap persists under production-realistic shingling, not just exact-string; (c) the committee#1 gate was stated as "residual FN ≥1% of model-identical pairs" — the L1 measured exactly this. The KILLER_EXPERIMENT proposed (mine organic pairs) would strengthen the finding but is an enhancement, not a precondition for the gate the committee itself set. I note it as REQUIRED_EVIDENCE for artifact completion, not as a gate-block.
+
+(3) theory_skeptic (YELLOW): The strongest analytical critique. The 95.1% IS structurally predicted once you choose NFKC-twin construction + NFD-production comparison — it is close to "fraction of compat-bearing docs whose compat chars survive NFD" ≈ 1.0 by Unicode definition. theory_skeptic correctly identifies that the DEFENSIBLE headline numbers are prevalence (45.2%) and Metric B (34.6%), not 95.1%. I accept this reframing — the REQUIRED_EVIDENCE mandates leading with those metrics. theory_skeptic also explicitly states: "Gate met as stated (95.1% vs ≥1%, by 95×)" and "I do NOT have [a FATAL objection]." YELLOW is about framing and statistical rigor (CIs, second corpus), not about the evidence failing the gate.
+
+GREEN VOTERS — WELL-GROUNDED:
+
+(4) systems_reviewer (GREEN): Verified no shipping dedup system implements NFKC+casefold alignment (datatrove, NeMo Curator, vLLM ecosystem). The finding is a real, currently-unpatched cross-system failure mode. Contribution type = insight (measured failure mode + scale), not implementation.
+
+(5) product_realist (GREEN): The 95% hidden exposure is CURRENTLY REAL, operationally significant for multilingual LLM training safety (memorization, privacy, eval-contamination), trivially fixable, and no production tool patches it. This is actionable guidance, not theoretical concern.
+
+PRIOR-ART ADEQUACY: Committee#1 found prior-art search adequate and identified no collision. novelty_killer's search was permission-blocked this session but from established domain knowledge (Lee et al. 2022, IIR, UAX#15, Penedo et al./datatrove, text-dedup) found no collision — explicitly: "I know of no published work reporting THIS specific measurement (tokenizer-as-GT residual FN of production dedup on real multilingual web)." The mechanism is acknowledged as known (IIR §2.2); the empirical measurement on real data is unreported. ADEQUATE with the caveat that a live search could surface a near-collision in the large multilingual data-quality literature — this is a residual risk, not a fatal gap.
+
+ANTI-HALLUCINATION: The packet's evidence chain is grounded in: (a) real C4-multilingual data streamed from HF datasets-server (not injected), (b) Unicode specification (UAX#15) for NFD vs NFKC distinction (verifiable), (c) datatrove source code for production normalizer (URL-cited, verifiable), (d) L0 mechanism arm with matched controls (harness-owned GT, never read by deduper). No reviewer flagged a hallucination or unverifiable claim in the evidence chain.
+
+SYNTHESIS: This is v3's first GREEN. It merits it. The mechanism is proven (L0), the seam is verified open in production (≥2 codebases, committee#1), and the L1 real-data measurement decisively meets the committee's own pre-committed gate. The finding's altitude is empirical-measurement-on-known-mechanism (workshop-level), not mechanism-discovery — and the MAP_DELTA reflects that honestly. But altitude does not determine verdict color; the GATE determines verdict color, and the gate is met by 95×. The three YELLOW voters each explicitly state the gate is met and offer no fatal objection. The currently-unpatched 95% exposure on multilingual web text is a genuine safety/privacy finding. GREEN confirmed.
+
+PROMPT_VERSION: v001
+```
