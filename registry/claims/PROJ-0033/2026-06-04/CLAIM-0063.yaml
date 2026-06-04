@@ -40,17 +40,33 @@ why_it_matters: "Cross-area production-seam (agentic-systems x data-systems/seri
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0076
+  summary: 'PARTIAL-SUPPORT (scoped). Pinned current: ai@6.0.196 (provider-utils@4.0.27,
+    vendors secure-json-parse), zod@4.4.3, secure-json-parse@4.1.0, lossless-json@4.3.0,
+    node v22.22.3. Verified REAL path: doParseToolCall -> safeParseJSON({text,schema=asSchema(tool.inputSchema)})
+    -> secureJsonParse (native JSON.parse float64, only proto-pollution scan) -> validateTypes(Zod).
+    N=11009 probes (6509>2^53 incl 9 real public snowflakes, 4500 control). z.number()
+    DEFAULT: silent_pass=1.0 (6231/6231 corrupted accepted), realistic-ID survival
+    0.0037<0.01, control band survival=1.0 -> SEAM OPEN, novel core HOLDS. z.number().int()
+    KILLED at Zod v4: .int() now uses Number.isSafeInteger, rejects 0/6509 unsafe
+    ints (silent_pass=0) -> that sub-leg FALSIFIED honestly. Python negative control
+    HELD: json.loads + Pydantic 2.13.4 survival=1.0 both bands -> seam is the JS runtime,
+    not LLM/schema. Unrecoverability DEMONSTRATED: .refine(isSafeInteger) rejects
+    but cannot recover; JSON.parse reviver sees rounded float (1234567890123456768!=...789);
+    lossless-json recovers exactly but is NOT the AI SDK default. Prevalence: 21.3%
+    of 150 sampled APIs.guru public APIs declare int64; snowflakes/ns-timestamps always
+    >2^53. DISPOSITION: SUPPORT scoped to plain z.number() default; drop over-broad
+    ''.int() also blind'' wording (false at current Zod).'
+  data_path: experiments/2026-06-04/EXP-0076/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0076 result, then ros exp complete --exp EXP-0076 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0076; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0076
+active_experiments: []
 created_at: '2026-06-04T18:36:47Z'
-last_updated: '2026-06-04T18:37:39Z'
+last_updated: '2026-06-04T18:58:05Z'

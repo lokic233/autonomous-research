@@ -48,6 +48,25 @@ supporting_evidence:
     LangChain (no shipped-prompt auto-load), LlamaIndex. Novelty = artifact->DB DISCARD
     surviving a competent user, NOT ''prompts help''.'
   data_path: experiments/2026-06-04/EXP-0072/
+- exp_id: EXP-0073
+  summary: 'L1 SUPPORT. #1 decisive test: arctic-embed-s default_prompt_name=null,
+    so plain .encode() applies NO query prompt; A(plain)=0.7292 < B(encode_query)=0.8229
+    R@10 on SciFact (+9.4pp). Seam is REAL at the wrapper boundary, NOT closed inside
+    ST -> claim is not a costume. In-situ Chroma default SentenceTransformerEmbeddingFunction
+    reproduces the A-number (0.7226 ~0.73) through the real production code path.
+    Cross-model: arctic-m +63pp, arctic-xs +14.8pp (all dpn=null, all A<B); bge-base-en-v1.5
+    ships NO prompt = could-it-fail control. Cross-dataset: SciFact +9.4pp, NFCorpus
+    +2.9pp. All 5 committee#1 required-evidence items met; relabeled DISCARD->fail-to-auto-load.
+    NOT self-converged -> submit to committee#2.'
+  data_path: experiments/2026-06-04/EXP-0073/
+- exp_id: EXP-0073
+  summary: 'L1 SUPPORT. #1 decisive: arctic-embed-s default_prompt_name=null; plain
+    .encode() applies NO query prompt; A=0.7292 < B=0.8229 R@10 SciFact (+9.4pp).
+    Seam REAL at wrapper boundary, NOT inside ST. In-situ Chroma default wrapper reproduces
+    A-number 0.7226. Cross-model arctic-m +63pp, arctic-xs +14.8pp; bge-base no-prompt
+    control. Cross-dataset SciFact +9.4pp, NFCorpus +2.9pp. All 5 committee items
+    met. NOT self-converged -> committee#2.'
+  data_path: experiments/2026-06-04/EXP-0073/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0060
@@ -56,12 +75,10 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r7-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0074 result, then ros exp complete --exp EXP-0074 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0073; convene committee if candidate-grade
 blocking_on: ''
 active_experiments:
-- EXP-0073
 - EXP-0074
 created_at: '2026-06-04T16:31:28Z'
-last_updated: '2026-06-04T17:35:20Z'
+last_updated: '2026-06-04T18:58:51Z'

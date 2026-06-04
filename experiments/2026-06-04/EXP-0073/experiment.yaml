@@ -12,12 +12,17 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L1 SUPPORT. #1 decisive: arctic-embed-s default_prompt_name=null;
+  plain .encode() applies NO query prompt; A=0.7292 < B=0.8229 R@10 SciFact (+9.4pp).
+  Seam REAL at wrapper boundary, NOT inside ST. In-situ Chroma default wrapper reproduces
+  A-number 0.7226. Cross-model arctic-m +63pp, arctic-xs +14.8pp; bge-base no-prompt
+  control. Cross-dataset SciFact +9.4pp, NFCorpus +2.9pp. All 5 committee items met.
+  NOT self-converged -> committee#2.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0073/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T18:58:44Z'
 prompt_version: ''
