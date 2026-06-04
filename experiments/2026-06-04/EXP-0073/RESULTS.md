@@ -57,17 +57,40 @@ wrapper, not just in a bare-ST simulation.**
 ---
 
 ## CROSS-MODEL — generality across self-describing models (committee item 3)
-SciFact, exact cosine NN. Each model's `config_sentence_transformers.json` inspected live to VERIFY it ships a
-prompt before counting it.
+SciFact, exact cosine NN, A=plain `.encode()` vs B=`encode_query()`. Each model's
+`config_sentence_transformers.json` inspected live to VERIFY it ships a non-empty query prompt before counting it.
 
-PENDING_CROSSMODEL_TABLE
+| model | params | ships query prompt? | default_prompt_name | A R@10 | B R@10 | Δ R@10 | A==B? |
+|---|---|---|---|---|---|---|---|
+| **Snowflake/snowflake-arctic-embed-s** (decisive) | 33M | yes | **null** | 0.7292 | 0.8229 | **+0.0937** | no |
+| **Snowflake/snowflake-arctic-embed-m** | 109M | yes | **null** | 0.2356 | 0.8680 | **+0.6324** | no |
+| **Snowflake/snowflake-arctic-embed-xs** | 23M | yes | **null** | 0.6254 | 0.7733 | **+0.1479** | no |
+| mixedbread-ai/mxbai-embed-large-v1 (cross-family) | 335M | yes | null | _running_ | _running_ | _running_ | — |
+| BAAI/bge-base-en-v1.5 (no-prompt CONTROL) | 109M | **NO** (prompts=None) | null | _running_ | _running_ | (≈0 expected) | yes expected |
+
+**All three confirmed self-describing models show A < B** (the seam every time), spanning the Snowflake family
+across 23M–109M params. In every case `default_prompt_name=null`, so plain `.encode()` applies no prompt and
+only `encode_query()` does. The effect size varies by model (+9pp to +63pp) — arctic-m is dramatically more
+prompt-dependent (A=0.24 without the prompt). **BAAI/bge-base-en-v1.5 ships NO prompt → it is a could-it-fail
+control (A==B expected), exactly like e5-small-v2 in the L0.** (mxbai/bge rows complete in a still-running
+sequential job; crossmodel.json/csv updated as each lands — the ≥2-model committee minimum is already met by
+the three Snowflake models.)
 
 ---
 
 ## CROSS-DATASET — generality across BEIR datasets (committee item 4)
 Snowflake/snowflake-arctic-embed-s, exact cosine NN, A=plain `.encode()` vs B=`encode_query()`.
 
-PENDING_CROSSDATASET_TABLE
+| dataset | n docs | n queries | A R@10 | B R@10 | Δ R@10 |
+|---|---|---|---|---|---|
+| **SciFact** | 5,183 | 300 | 0.7292 | 0.8229 | **+0.0937** |
+| **NFCorpus** | 3,633 | 323 | 0.1251 | 0.1539 | **+0.0288** |
+| FiQA | ~57k | 648 | _running_ | _running_ | _running_ |
+
+**Both confirmed datasets show A < B** — the effect is not SciFact-specific. The magnitude is domain-dependent
+(SciFact +9.4pp; NFCorpus, a hard biomedical-IR set with low absolute recall, +2.9pp), but the **direction is
+consistent: plain `.encode()` always loses ground vs `encode_query()`.** (FiQA completes in the same running
+job; crossdataset.json/csv updated when it lands — the ≥2-dataset committee minimum is already met.)
 
 ---
 
@@ -81,8 +104,25 @@ contract; the DB-wrapper boundary silently does not honor it), not on the (decad
 
 ---
 
-## DISPOSITION
-PENDING_DISPOSITION
+## DISPOSITION — **SUPPORT** → committee#2
+
+The #1 decisive test — committee#1's single most load-bearing untested assertion — **resolves in the claim's
+favor.** `default_prompt_name` is null on arctic-embed-s, so plain `.encode()` (what every wrapper's `__call__`
+invokes) applies NO query prompt; only `encode_query()` does. A (0.7292) < B (0.8229), a +9.4pp R@10 seam.
+**The discard happens at the wrapper boundary, NOT inside SentenceTransformers — the claim is real, not a costume.**
+
+All five committee required-evidence items are met:
+1. ✅ ST `.encode()` vs `.encode_query()` directly tested → **A < B** (seam confirmed real; NOT closed inside ST).
+2. ✅ In-situ Chroma end-to-end (`add()`+`query()`, default wrapper) reproduces the A-number (0.7226 ≈ 0.73), NOT B.
+3. ✅ ≥2 additional self-describing models (arctic-m +63pp, arctic-xs +14.8pp) — all A<B; bge-base = no-prompt control.
+4. ✅ ≥2 datasets (SciFact +9.4pp, NFCorpus +2.9pp) — effect not SciFact-specific.
+5. ✅ Relabeled "DISCARD" → "fail to auto-load shipped prompt by default" throughout.
+
+**This is NOT self-converged.** Submitting to committee#2 for the green shot. The honest scope: a vector-DB
+integration-default seam (packaging axis), modest-to-large effect (domain/model dependent), not a new prompt
+mechanism. The strongest framing the evidence supports: *a competent user who picks a self-describing model and
+uses the standard DB integration silently loses the model's own shipped query-prompt contract at the wrapper
+boundary, costing up to ~+9pp R@10 (more on prompt-heavy models), reproduced through the real Chroma code path.*
 
 ## ENV / REPRO
 - sentence-transformers 5.5.1, torch 2.12.0, chromadb 1.5.9, CPU; reused venv /Users/dengcchi/exp0072_work/venv.
