@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'L0 (CPU, N=320 real imgs x9 variants=2880 pairs, Qwen2VLImageProcessor).
+  LOSSLESS pixel-identical subset (100% px-ident verified): vLLM raw-byte production
+  hash hit-rate=16.7% (driven solely by 1 base64 transport-wrapper that decodes to
+  identical bytes; the 5 GENUINE re-encodes=PNG-reopt/recompress0/EXIF-strip/lossless-WebP/TIFF-resave
+  give vLLM byte hit=0%) vs SGLang processed-tensor hit-rate=100% -> gap 83-100pp.
+  vLLM''s OWN offline bare-PIL path also hits 100% -> it is the production byte-keying
+  CHOICE, not hash strength. LOSSY null-exit control (jpeg q90/q95, resize99; 0% px-ident):
+  all hashes 0% -> clean zero gap, honest boundary holds. blake3 vs sha256: 0 disagreements/2880.
+  SUPPORT; recommend NOT self-converge, submit to committee.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0071/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T17:07:18Z'
 prompt_version: ''
