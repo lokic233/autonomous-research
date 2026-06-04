@@ -17,7 +17,7 @@ def _worker(sch_str, inst_str, q):
     except Exception as e:
         q.put(("err", str(e)[:120]))
 
-def accepts_isolated(sch_str, inst_str, timeout=8):
+def accepts_isolated(sch_str, inst_str, timeout=3):
     ctx = mp.get_context("fork")
     q = ctx.Queue()
     p = ctx.Process(target=_worker, args=(sch_str, inst_str, q))
@@ -105,6 +105,12 @@ def wilson(k,n,z=1.96):
 
 if __name__=="__main__":
     schemas = json.load(open("/tmp/constraint_schemas.json"))
+    import random, sys
+    random.seed(42)
+    N_SAMPLE = int(sys.argv[1]) if len(sys.argv)>1 else 400
+    if len(schemas) > N_SAMPLE:
+        schemas = random.sample(schemas, N_SAMPLE)
+    print(f"sampled {len(schemas)} constraint-bearing schemas (seed=42)", flush=True)
     OUT="/Users/dengcchi/autonomous-research-v3/experiments/2026-06-04/EXP-0075"
     results=[]; D_eligible=0; D_dropped=0; crashes=0; timeouts=0
     viol_accepted=[]
@@ -144,7 +150,7 @@ if __name__=="__main__":
         except Exception as e:
             row["status"]="pyerr:"+str(e)[:60]
         results.append(row)
-        if (n+1)%200==0:
+        if (n+1)%50==0:
             print(f"  ...{n+1}/{len(schemas)} processed | eligible={D_eligible} dropped={D_dropped} crashes={crashes} timeouts={timeouts}", flush=True)
 
     D = (D_dropped/D_eligible) if D_eligible else float('nan')
