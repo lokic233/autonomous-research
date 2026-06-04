@@ -12,12 +12,21 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORT. Composition (a-d) verified in installed pandas 3.0.3/numpy
+  2.4.6/pyarrow 24.0.0/sklearn 1.9.0: pandas nanops.nanmean keeps fp16 sum+count accumulator
+  (source L697-712); numpy mean upcasts fp32 (sum=inf, mean=finite); sklearn fp64;
+  fp16 survives parquet (halffloat). SWEEP: pandas->inf when N*mag>65504, ->nan when
+  N>65504 (incl unit-scale), exactly as predicted; numpy/sklearn finite. REAL California
+  housing: 8/9 features pandas inf/nan after fp16 (incl MedInc mean=3.87 - small mean
+  NOT protective at N=20640), 6/9 show full 3-way divergence (pandas inf/numpy quantized
+  ~1e-4/sklearn fp64 ~1e-6). CONTROL fp32/fp64: all 3 tools agree ~1e-5, no divergence
+  -> fp16 isolated as cause. std/var diverge too. Null rejected. Magnitude-frequency
+  objection refuted on real data.'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0079/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T22:21:41Z'
 prompt_version: ''
