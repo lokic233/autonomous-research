@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'KILL: CLAIM-0062 FALSIFIED at pinned xgrammar 0.2.1 (latest, 2026-05-17).
+  Claim premise (xgrammar DROPS every one of min/max/minLength/maxLength/pattern/multipleOf)
+  is FALSE: xgrammar ENFORCES 5/8 keyword families cleanly (minimum,maximum,minLength,maxLength,pattern);
+  only multipleOf is wholesale-dropped. Real-corpus D=0.052 (95%CI[0.040,0.067]) over
+  1027 JSONSchemaBench constraint tests, far below pre-registered IT-MATTERS threshold
+  D>=0.30. V>=0.10 NOT met on a common keyword (maximum drop=4.8%, a boundary-magnitude
+  bug). Differential-portability-cliff headline does not hold (vLLM-auto is mostly
+  closed on these keywords). Residual = localized bugs only: pattern-length co-enforcement
+  bug (all 245 length drops had pattern; 0 without), integer-range boundary leaks
+  (max=130/153/180), number-range/multipleOf not enforced. OpenAI-strict control held
+  (D_openai=0); client-revalidation control held. No corpus massaging. Clean version-driven
+  kill per prereg could-it-fail branch.'
+result_effect: kill
 artifacts_path: experiments/2026-06-04/EXP-0075/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T18:26:30Z'
 prompt_version: ''

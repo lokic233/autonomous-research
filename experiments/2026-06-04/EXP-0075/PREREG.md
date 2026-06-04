@@ -39,8 +39,11 @@ constraint-bearing schemas. Fallback (if unavailable/offline): build a corpus of
 models with Field constraints + hand-collected public JSON Schemas bearing the 8 keywords.
 Target N >= 100 constraint-bearing schemas. Document source + size + provenance.
 
-## PINNED VERSIONS (to be filled at runtime, load-bearing)
-xgrammar==?, vllm==(N/A on CPU mac, cite version that ships this xgrammar), pydantic==?, jsonschema==?
+## PINNED VERSIONS (filled at runtime, load-bearing)
+xgrammar==0.2.1 (LATEST on PyPI, wheel uploaded 2026-05-17), pydantic==2.13.4, jsonschema==4.26.0,
+torch==2.12.0, transformers==5.10.1, apache-tvm-ffi==0.1.11; python 3.12.13+meta arm64 Darwin.
+vLLM not installed (CPU mac; mechanism lives in xgrammar's compiler, tested directly via
+Grammar.from_json_schema — the exact artifact vLLM-auto invokes).
 THE CLAIM IS VERSION-DEPENDENT. If the pinned xgrammar ENFORCES these keywords -> D->0, V->0 -> KILL.
 
 ## PRE-REGISTERED NULL

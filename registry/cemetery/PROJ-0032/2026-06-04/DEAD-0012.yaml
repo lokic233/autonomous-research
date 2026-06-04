@@ -1,0 +1,61 @@
+dead_id: DEAD-0012
+original_claim_id: CLAIM-0062
+original_claim: 'Using the SAME Pydantic model for structured LLM output, OpenAI strict
+  Structured-Outputs ENFORCES declared value constraints (minimum/maximum/minLength/maxLength/pattern/multipleOf)
+  since May 2025, while vLLM default structured_outputs path (backend=auto -> xgrammar)
+  silently compiles a grammar that DROPS every one of these keywords, so a measurable
+  non-zero fraction of grammar-ACCEPTED outputs VIOLATE the developer-declared constraint
+  with no warning, no error, identical API surface -> a serving-stack PORTABILITY
+  CLIFF that turns validated into structurally-shaped-only purely by changing base_url.
+  NOVEL QUANTITY = the cross-backend ENFORCEMENT-DIVERGENCE rate: P(grammar-accepted
+  AND Pydantic-constraint-violating) under vLLM-auto, >0 BY CONSTRUCTION of the grammar,
+  =0 for the same schema under OpenAI-strict post-May-2025. Invisible at every observable
+  surface (same JSON Schema bytes, same 200 OK, same parse success; Pydantic re-validation
+  is NOT in vLLM default server path). NULL EXIT: if xgrammar at the pinned version
+  DOES enforce these keywords (drop-rate D->0, violation-rate V->0), the divergence
+  vanishes and the claim is KILLED -> falsifiable, not construction-forced.'
+reason_killed: 'KILL: CLAIM-0062 FALSIFIED at pinned xgrammar 0.2.1 (latest, 2026-05-17).
+  Claim premise (xgrammar DROPS every one of min/max/minLength/maxLength/pattern/multipleOf)
+  is FALSE: xgrammar ENFORCES 5/8 keyword families cleanly (minimum,maximum,minLength,maxLength,pattern);
+  only multipleOf is wholesale-dropped. Real-corpus D=0.052 (95%CI[0.040,0.067]) over
+  1027 JSONSchemaBench constraint tests, far below pre-registered IT-MATTERS threshold
+  D>=0.30. V>=0.10 NOT met on a common keyword (maximum drop=4.8%, a boundary-magnitude
+  bug). Differential-portability-cliff headline does not hold (vLLM-auto is mostly
+  closed on these keywords). Residual = localized bugs only: pattern-length co-enforcement
+  bug (all 245 length drops had pattern; 0 without), integer-range boundary leaks
+  (max=130/153/180), number-range/multipleOf not enforced. OpenAI-strict control held
+  (D_openai=0); client-revalidation control held. No corpus massaging. Clean version-driven
+  kill per prereg could-it-fail branch.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0075
+duplicate_patterns:
+- 'Using the SAME Pydantic model for structured LLM output, OpenAI strict Structured-Outputs
+  ENFORCES declared value constraints (minimum/maximum/minLength/maxLength/pattern/multipleOf)
+  since May 2025, while vLLM default structured_outputs path (backend=auto -> xgrammar)
+  silently compiles a grammar that DROPS every one of these keywords, so a measurable
+  non-zero fraction of grammar-ACCEPTED outputs VIOLATE the developer-declared constraint
+  with no warning, no error, identical API surface -> a serving-stack PORTABILITY
+  CLIFF that turns validated into structurally-shaped-only purely by changing base_url.
+  NOVEL QUANTITY = the cross-backend ENFORCEMENT-DIVERGENCE rate: P(grammar-accepted
+  AND Pydantic-constraint-violating) under vLLM-auto, >0 BY CONSTRUCTION of the grammar,
+  =0 for the same schema under OpenAI-strict post-May-2025. Invisible at every observable
+  surface (same JSON Schema bytes, same 200 OK, same parse success; Pydantic re-validation
+  is NOT in vLLM default server path). NULL EXIT: if xgrammar at the pinned version
+  DOES enforce these keywords (drop-rate D->0, violation-rate V->0), the divergence
+  vanishes and the claim is KILLED -> falsifiable, not construction-forced.'
+- 200 2025 accepted api auto backend base bytes changing claim cliff compiles constraint
+  constraints construction cross declared default developer divergence does drop drops
+  enforce enforcement enforces error every exit falsifiable forced fraction grammar
+  identical into invisible json keywords killed llm maximum maxlength may measurable
+  minimum minlength model multipleof non not novel null observable one only openai
+  output outputs parse path pattern pinned portability post purely pydantic quantity
+  rate same schema server serving shaped silently since stack strict structurally
+  structured success surface these turns under url using validated validation value
+  vanishes version violate violating violation vllm warning while xgrammar zero
+revival_conditions: 'Narrower bug-report claim could survive: xgrammar pattern-length
+  co-enforcement bug + integer boundary leaks + no number-range/multipleOf, ~5-8%
+  silent OpenAI-vs-vLLM divergence on public schemas. Below IT-MATTERS bar; not the
+  broad cliff thesis.'
+related_prior_work: []
+date_killed: '2026-06-04T18:26:37Z'

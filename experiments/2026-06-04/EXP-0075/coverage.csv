@@ -1,0 +1,9 @@
+keyword,clean_single_keyword_enforced,real_corpus_drop_rate,real_corpus_dropped_over_tested,verdict
+minimum,True,0.036,6/166,mostly_enforced_integer_boundary_bug
+maximum,True,0.048,6/124,mostly_enforced_integer_boundary_bug
+exclusiveMinimum,True,0.333,1/3,enforced_clean_boundary_leak
+exclusiveMaximum,True,0.667,2/3,enforced_clean_boundary_leak
+multipleOf,False,0.667,2/3,WHOLESALE_DROPPED
+minLength,True,0.144,15/104,enforced_alone_dropped_with_pattern
+maxLength,True,0.171,21/123,enforced_alone_dropped_with_pattern
+pattern,True,0.000,0/501,fully_enforced
