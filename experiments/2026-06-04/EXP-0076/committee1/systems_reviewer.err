@@ -129,3 +129,1604 @@ hook: PostToolUse
  exited -1 in 64700ms:
  succeeded in 215ms:
 hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc 'ls -la /Users/dengcchi/autonomous-research-v3 | head -100 && ls -la /Users/dengcchi/autonomous-research-v3/prompts 2>/dev/null | head -100 && ls -la /Users/dengcchi/autonomous-research-v3/prompts/_shared 2>/dev/null | head -100' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 348ms:
+total 88
+drwxr-xr-x  22 dengcchi  staff   704 Jun  4 07:45 .
+drwxr-x---+ 95 dengcchi  staff  3040 Jun  4 12:05 ..
+drwxr-xr-x  16 dengcchi  staff   512 Jun  4 12:04 .git
+-rw-r--r--   1 dengcchi  staff   259 Jun  4 10:07 .gitignore
+-rw-r--r--   1 dengcchi  staff  3106 Jun  2 12:22 CUTOVER_RUNBOOK.md
+-rw-r--r--   1 dengcchi  staff  1221 Jun  3 06:46 DECISION_expand_lightweight.md
+-rw-r--r--   1 dengcchi  staff  2699 Jun  2 17:24 HANDOFF_r1_to_r2.md
+-rw-r--r--   1 dengcchi  staff  2516 Jun  2 23:21 HANDOFF_r2_to_r3.md
+-rw-r--r--   1 dengcchi  staff  2856 Jun  3 03:22 HANDOFF_r3_to_r4.md
+-rw-r--r--   1 dengcchi  staff  3594 Jun  3 00:15 ORCHESTRATOR_CHARTER.md
+-rw-r--r--   1 dengcchi  staff  2222 Jun  3 04:48 QUIESCENCE_r4_001.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  3123 Jun  3 05:33 QUIESCENCE_r4_002.SUPERSEDED.md
+-rw-r--r--   1 dengcchi  staff  2055 Jun  3 07:42 RESEARCHER_CHARTER.md
+drwxr-xr-x   6 dengcchi  staff   192 Jun  3 17:01 experiments
+drwxr-xr-x   5 dengcchi  staff   160 Jun  3 02:14 learning
+drwxr-xr-x  36 dengcchi  staff  1152 Jun  4 07:45 operational
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 prior_art
+drwxr-xr-x  36 dengcchi  staff  1152 Jun  4 11:37 projects
+drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
+-rw-r--r--   1 dengcchi  staff  3696 Jun  3 08:36 research-os.config.yaml
+drwxr-xr-x  10 dengcchi  staff   320 Jun  3 17:22 runtime
+drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 -maxdepth 4 \\( -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' \\) 2>/dev/null" in /Users/dengcchi
+ succeeded in 6560ms:
+ succeeded in 41500ms:
+exec
+/bin/zsh -lc "git -C /Users/dengcchi/autonomous-research-v3 ls-files | grep -E '(_committee_common_v001\\.md|TOOLING_v001\\.md)"'$'"'" in /Users/dengcchi
+hook: PostToolUse
+ exited 1 in 184ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'command -v fd || command -v fdfind || command -v rg || command -v mdfind' in /Users/dengcchi
+ succeeded in 0ms:
+/usr/bin/mdfind
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'ps -eo pid,ppid,command | grep "find /Users/dengcchi/autonomous-research-v3" | grep -v grep' in /Users/dengcchi
+ succeeded in 1581ms:
+30942 30941 find /Users/dengcchi/autonomous-research-v3/experiments -path */EXP-0064/experiment.yaml
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "mdfind \"kMDItemFSName == '_committee_common_v001.md' || kMDItemFSName == 'TOOLING_v001.md'\" | head -20" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 289ms:
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+
+hook: PostToolUse Completed
+codex
+I found the prompt files under `research-os`. The prior-art hits so far point to inference-serving systems and JSON-schema/tooling docs, so I’m narrowing on whether any of them actually solve the parsed-int64 corruption mechanism rather than just mention schemas.
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+External page loading is filtered in this environment, but the search results gave retrievable URLs. I’m going to use direct GitHub/docs queries where possible and keep the verdict tied to what is actually observable.
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi
+ succeeded in 0ms:
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vercel-labs/mcp-to-ai-sdk/main/src/index.ts | grep -n -E \"z\\.number|int\\(|integer|safe|Number\\.isSafeInteger|int64\" | head -80" in /Users/dengcchi
+hook: PostToolUse
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents | head -80' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vercel/ai/main/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx | grep -n -E \"z\\.number|z\\.int|integer|int64|schema|tool\" | head -80" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 845ms:
+hook: PostToolUse
+ succeeded in 1001ms:
+3:description: Learn about tool calling and multi-step calls (using stopWhen) with AI SDK Core.
+8:As covered under Foundations, [tools](/docs/foundations/tools) are objects that can be called by the model to perform a specific task.
+9:Function tools and dynamic tools contain several core elements:
+11:- **`description`**: An optional description of the tool that can influence when the tool is picked. It can be a string or a function that derives the description from the tool's context and experimental sandbox.
+12:- **`inputSchema`**: A [Zod schema](/docs/foundations/tools#schemas) or a [JSON schema](/docs/reference/ai-sdk-core/json-schema) that defines the input parameters. The schema is consumed by the LLM, and also used to validate the LLM tool calls.
+13:- **`execute`**: An optional async function that is called with the inputs from the tool call. It produces a value of type `RESULT` (generic type). It is optional because you might want to forward tool calls to the client or to a queue instead of executing them in the same process.
+14:- **`strict`**: _(optional, boolean)_ Enables strict tool calling when supported by the provider
+17:  You can use the [`tool`](/docs/reference/ai-sdk-core/tool) helper function to
+21:The `tools` parameter of `generateText` and `streamText` is an object that has the tool names as keys and the tools as values:
+25:import { generateText, tool, isStepCount } from 'ai';
+30:  tools: {
+31:    weather: tool({
+48:  When a model uses a tool, it is called a "tool call" and the output of the
+49:  tool is called a "tool result".
+58:description sent to the model should depend on the current tool context or
+61:The description function is resolved before the tool definition is sent to the
+62:model for each generation step. It receives the matching tool `context` from
+63:`toolsContext` and the current `experimental_sandbox`, if one was provided. If `prepareStep`
+64:updates `toolsContext` or `experimental_sandbox`, the next step uses those updated values.
+67:import { generateText, tool } from 'ai';
+70:const shell = tool({
+97:  tools: { shell },
+98:  toolsContext: {
+108:When enabled, language model providers that support strict tool calling will only generate tool calls that are valid according to your defined `inputSchema`.
+109:This increases the reliability of tool calling.
+110:However, not all schemas may be supported in strict mode, and what is supported depends on the specific provider.
+112:By default, strict mode is disabled. You can enable it per-tool by setting `strict: true`:
+115:tool({
+120:  strict: true, // Enable strict validation for this tool
+134:You can specify example inputs for your tools to help guide the model on how input data should be structured.
+135:When supported by providers, input examples can help when JSON schema itself does not fully specify the intended
+139:tool({
+155:  Only the Anthropic providers supports tool input examples natively. Other
+161:By default, tools with an `execute` function run automatically as the model calls them. Configure approval with `toolApproval` on `generateText`, `streamText`, or `ToolLoopAgent`.
+163:`toolApproval` can be either:
+165:- A `GenericToolApprovalFunction` for all tool calls
+166:- A per-tool map of statuses and/or `SingleToolApprovalFunction` callbacks (either function may return `undefined` for the same effect as `'not-applicable'`)
+168:The older `needsApproval` property on `tool()` definitions is deprecated. Existing code still works, but new code should move approval logic to `toolApproval`.
+170:### Configure `toolApproval`
+175:  tools: { runCommand },
+176:  toolApproval: {
+183:In the per-tool object form, each key can be one of four statuses, either as a
+186:- `'not-applicable'`: the tool is executed without an approval flow. This is the default behavior.
+187:- `'approved'`: record an automatic approval by emitting approval request/response parts in the output, then execute the tool
+188:- `'denied'`: record an automatic denial by emitting approval request/response parts in the output, then surface a denied tool output
+195:toolApproval: {
+203:#### Generic `toolApproval` function
+205:Pass a `GenericToolApprovalFunction` as `toolApproval` to handle every tool
+206:call in one place. The callback receives `toolCall`, `tools`, `toolsContext`,
+214:  tools: { runCommand },
+215:  toolApproval: ({
+216:    toolCall,
+217:    tools,
+218:    toolsContext,
+222:    if (toolCall.toolName === 'runCommand' && !toolCall.dynamic) {
+223:      // Inspect toolCall.input, cross-tool state, messages, or runtimeContext for policy.
+232:The same pattern works for `streamText` and for `toolApproval` on
+233:[`ToolLoopAgent`](/docs/agents/building-agents#tools) when you need one policy
+234:across all tools.
+236:For a per-tool object instead, each key can be a `SingleToolApprovalFunction`
+237:that receives the tool input and options `toolCallId`, `messages`, `toolContext`
+238:(the same shape as tool execution `context`, without `abortSignal`), and
+241:This is useful for tools that perform sensitive operations like executing commands, processing payments, modifying data, and more potentially dangerous actions.
+245:When a tool requires manual approval, `generateText` and `streamText` don't pause execution. Instead, they complete and return `tool-approval-request` parts in the result content. This means the manual approval flow requires two calls to the model: the first returns the approval request, and the second (after receiving the approval response) either executes the tool or informs the model that approval was denied.
+247:Manual approval comes from `toolApproval` returning `'user-approval'`. If the
+248:tool should just execute normally, use `'not-applicable'`, return `undefined`
+250:the setting entirely. If `toolApproval` returns `'approved'` or `'denied'` or
+258:1. Call `generateText` or `streamText` with `toolApproval`
+259:2. The model generates a tool call
+260:3. The call returns `tool-approval-request` parts in `result.content`
+262:5. Add a `tool-approval-response` to the messages array
+264:7. If approved, the tool runs and returns a result. If denied, the model sees the denial and responds accordingly.
+268:After calling `generateText` or `streamText`, check `result.content` for `tool-approval-request` parts:
+278:  tools: { runCommand },
+285:  if (part.type === 'tool-approval-request' && !part.isAutomatic) {
+287:    console.log(part.toolCall); // Contains toolName, input, etc.
+292:To respond, create a `tool-approval-response` and add it to your messages:
+300:  if (part.type === 'tool-approval-request' && !part.isAutomatic) {
+302:      type: 'tool-approval-response',
+312:messages.push({ role: 'tool', content: approvals });
+
+hook: PostToolUse Completed
+ succeeded in 1281ms:
+[
+  {
+    "name": ".changeset",
+    "path": ".changeset",
+    "sha": "bc7796f14b01b5f9dd264ef05fa06afc502ed22e",
+    "size": 0,
+    "url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.changeset?ref=main",
+    "html_url": "https://github.com/vercel-labs/mcp-to-ai-sdk/tree/main/.changeset",
+    "git_url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/trees/bc7796f14b01b5f9dd264ef05fa06afc502ed22e",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.changeset?ref=main",
+      "git": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/trees/bc7796f14b01b5f9dd264ef05fa06afc502ed22e",
+      "html": "https://github.com/vercel-labs/mcp-to-ai-sdk/tree/main/.changeset"
+    }
+  },
+  {
+    "name": ".github",
+    "path": ".github",
+    "sha": "2bf75f31572b63ff7ff00187a95405e539913d3b",
+    "size": 0,
+    "url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.github?ref=main",
+    "html_url": "https://github.com/vercel-labs/mcp-to-ai-sdk/tree/main/.github",
+    "git_url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/trees/2bf75f31572b63ff7ff00187a95405e539913d3b",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.github?ref=main",
+      "git": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/trees/2bf75f31572b63ff7ff00187a95405e539913d3b",
+      "html": "https://github.com/vercel-labs/mcp-to-ai-sdk/tree/main/.github"
+    }
+  },
+  {
+    "name": ".gitignore",
+    "path": ".gitignore",
+    "sha": "d5ece60e42ceb85c9f770344ca9952d06073323e",
+    "size": 56,
+    "url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.gitignore?ref=main",
+    "html_url": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/.gitignore",
+    "git_url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/d5ece60e42ceb85c9f770344ca9952d06073323e",
+    "download_url": "https://raw.githubusercontent.com/vercel-labs/mcp-to-ai-sdk/main/.gitignore",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/.gitignore?ref=main",
+      "git": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/d5ece60e42ceb85c9f770344ca9952d06073323e",
+      "html": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/.gitignore"
+    }
+  },
+  {
+    "name": "CHANGELOG.md",
+    "path": "CHANGELOG.md",
+    "sha": "6cbed4fdf313c35a6ec2dbc5dc795c95c564b8d7",
+    "size": 292,
+    "url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/CHANGELOG.md?ref=main",
+    "html_url": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/CHANGELOG.md",
+    "git_url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/6cbed4fdf313c35a6ec2dbc5dc795c95c564b8d7",
+    "download_url": "https://raw.githubusercontent.com/vercel-labs/mcp-to-ai-sdk/main/CHANGELOG.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/CHANGELOG.md?ref=main",
+      "git": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/6cbed4fdf313c35a6ec2dbc5dc795c95c564b8d7",
+      "html": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/CHANGELOG.md"
+    }
+  },
+  {
+    "name": "CLAUDE.md",
+    "path": "CLAUDE.md",
+    "sha": "fac422499d704910aee20394171ac28efc25d997",
+    "size": 3174,
+    "url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/CLAUDE.md?ref=main",
+    "html_url": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/CLAUDE.md",
+    "git_url": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/fac422499d704910aee20394171ac28efc25d997",
+    "download_url": "https://raw.githubusercontent.com/vercel-labs/mcp-to-ai-sdk/main/CLAUDE.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/contents/CLAUDE.md?ref=main",
+      "git": "https://api.github.com/repos/vercel-labs/mcp-to-ai-sdk/git/blobs/fac422499d704910aee20394171ac28efc25d997",
+      "html": "https://github.com/vercel-labs/mcp-to-ai-sdk/blob/main/CLAUDE.md"
+    }
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "rm -rf /tmp/mcp-to-ai-sdk-review && git clone --depth 1 https://github.com/vercel-labs/mcp-to-ai-sdk.git /tmp/mcp-to-ai-sdk-review >/dev/null 2>&1 && grep -RInE \"z\\.number|z\\.int|integer|int64|safeInteger|Number\\.isSafeInteger\" /tmp/mcp-to-ai-sdk-review/src /tmp/mcp-to-ai-sdk-review/packages /tmp/mcp-to-ai-sdk-review 2>/dev/null | head -120" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/bridgear/secure-json-parse/master/index.js | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/vercel/ai/main/packages/provider-utils/src/parse-json.ts | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://raw.githubusercontent.com/vllm-project/vllm/main/docs/features/tool_calling.md | grep -n -E "json|JSON|argument|schema|tool|int64|integer|parse" | head -120' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 467ms:
+404: Not Found
+hook: PostToolUse
+ succeeded in 547ms:
+import {
+  JSONParseError,
+  TypeValidationError,
+  type JSONValue,
+} from '@ai-sdk/provider';
+import { secureJsonParse } from './secure-json-parse';
+import { safeValidateTypes, validateTypes } from './validate-types';
+import type { FlexibleSchema } from './schema';
+
+/**
+ * Parses a JSON string into an unknown object.
+ *
+ * @param text - The JSON string to parse.
+ * @returns {JSONValue} - The parsed JSON object.
+ */
+export async function parseJSON(options: {
+  text: string;
+  schema?: undefined;
+}): Promise<JSONValue>;
+/**
+ * Parses a JSON string into a strongly-typed object using the provided schema.
+ *
+ * @template T - The type of the object to parse the JSON into.
+ * @param {string} text - The JSON string to parse.
+ * @param {Validator<T>} schema - The schema to use for parsing the JSON.
+ * @returns {Promise<T>} - The parsed object.
+ */
+export async function parseJSON<T>(options: {
+  text: string;
+  schema: FlexibleSchema<T>;
+}): Promise<T>;
+export async function parseJSON<T>({
+  text,
+  schema,
+}: {
+  text: string;
+  schema?: FlexibleSchema<T>;
+}): Promise<T> {
+  try {
+    const value = secureJsonParse(text);
+
+    if (schema == null) {
+      return value;
+    }
+
+    return await validateTypes<T>({ value, schema });
+  } catch (error) {
+    if (
+      JSONParseError.isInstance(error) ||
+      TypeValidationError.isInstance(error)
+    ) {
+      throw error;
+    }
+
+    throw new JSONParseError({ text, cause: error });
+  }
+}
+
+export type ParseResult<T> =
+  | { success: true; value: T; rawValue: unknown }
+  | {
+      success: false;
+      error: JSONParseError | TypeValidationError;
+      rawValue: unknown;
+    };
+
+/**
+ * Safely parses a JSON string and returns the result as an object of type `unknown`.
+ *
+ * @param text - The JSON string to parse.
+ * @returns {Promise<object>} Either an object with `success: true` and the parsed data, or an object with `success: false` and the error that occurred.
+ */
+export async function safeParseJSON(options: {
+  text: string;
+  schema?: undefined;
+}): Promise<ParseResult<JSONValue>>;
+/**
+ * Safely parses a JSON string into a strongly-typed object, using a provided schema to validate the object.
+ *
+ * @template T - The type of the object to parse the JSON into.
+ * @param {string} text - The JSON string to parse.
+ * @param {Validator<T>} schema - The schema to use for parsing the JSON.
+ * @returns An object with either a `success` flag and the parsed and typed data, or a `success` flag and an error object.
+ */
+export async function safeParseJSON<T>(options: {
+  text: string;
+  schema: FlexibleSchema<T>;
+}): Promise<ParseResult<T>>;
+export async function safeParseJSON<T>({
+  text,
+  schema,
+}: {
+  text: string;
+  schema?: FlexibleSchema<T>;
+}): Promise<ParseResult<T>> {
+  try {
+    const value = secureJsonParse(text);
+
+    if (schema == null) {
+      return { success: true, value: value as T, rawValue: value };
+    }
+
+    return await safeValidateTypes<T>({ value, schema });
+  } catch (error) {
+    return {
+      success: false,
+      error: JSONParseError.isInstance(error)
+        ? error
+        : new JSONParseError({ text, cause: error }),
+      rawValue: undefined,
+    };
+  }
+}
+
+export function isParsableJson(input: string): boolean {
+  try {
+    secureJsonParse(input);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+hook: PostToolUse
+ succeeded in 655ms:
+3:vLLM currently supports named function calling, as well as the `auto`, `required` (as of `vllm>=0.8.3`), and `none` options for the `tool_choice` field in the chat completion API.
+7:Start the server with tool calling enabled. This example uses Meta's Llama 3.1 8B model, so we need to use the `llama3_json` tool calling chat template from the vLLM examples directory:
+11:    --enable-auto-tool-choice \
+12:    --tool-call-parser llama3_json \
+13:    --chat-template examples/tool_chat_template_llama3.1_json.jinja
+16:Next, make a request that triggers the model to use the available tools:
+22:    import json
+28:    tool_functions = {"get_weather": get_weather}
+30:    tools = [
+51:        tools=tools,
+52:        tool_choice="auto",
+55:    tool_call = response.choices[0].message.tool_calls[0].function
+56:    print(f"Function called: {tool_call.name}")
+57:    print(f"Arguments: {tool_call.arguments}")
+58:    print(f"Result: {tool_functions[tool_call.name](**json.loads(tool_call.arguments))}")
+71:* Setting up the server with tool calling enabled
+72:* Defining an actual function to handle tool calls
+73:* Making a request with `tool_choice="auto"`
+76:You can also specify a particular function using named function calling by setting `tool_choice={"type": "function", "function": {"name": "get_weather"}}`. Note that this will use the structured outputs backend - so the first time this is used, there will be several seconds of latency (or more) as the FSM is compiled for the first time before it is cached for subsequent requests.
+80:1. Define appropriate tools in the request
+82:3. Handle the tool calls in your application logic
+84:For more advanced usage, including parallel tool calls and different model-specific parsers, see the sections below.
+91:vLLM will use structured outputs to ensure the response matches the tool parameter object defined by the JSON schema in the `tools` parameter.
+92:For best results, we recommend ensuring that the expected output format / schema is specified in the prompt to ensure that the model's intended generation is aligned with the schema that it's being forced to generate by the structured outputs backend.
+94:To use a named function, you need to define the functions in the `tools` parameter of the chat completion request, and
+95:specify the `name` of one of the tools in the `tool_choice` parameter of the chat completion request.
+99:vLLM supports the `tool_choice='required'` option in the chat completion API. Similar to the named function calling, it also uses structured outputs, so this is enabled by default and will work with any supported model. However, support for alternative decoding backends are on the [roadmap](../usage/v1_guide.md#features) for the V1 engine.
+101:When tool_choice='required' is set, the model is guaranteed to generate one or more tool calls based on the specified tool list in the `tools` parameter. The number of tool calls depends on the user's query. The output format strictly follows the schema defined in the `tools` parameter.
+105:vLLM supports the `tool_choice='none'` option in the chat completion API. When this option is set, the model will not generate any tool calls and will respond with regular text content only, even if tools are defined in the request.
+108:    When tools are specified in the request, vLLM includes tool definitions in the prompt by default, regardless of the `tool_choice` setting. To exclude tool definitions when `tool_choice='none'`, use the `--exclude-tools-when-tool-choice-none` option.
+112:Whether vLLM enforces the tool parameter schema during generation depends on the `tool_choice` mode:
+114:| `tool_choice` value | Schema-constrained decoding | Behavior |
+116:| Named function | Yes (via structured outputs backend) | Arguments are guaranteed to be valid JSON conforming to the function's parameter schema. |
+117:| `"required"` | Yes (via structured outputs backend) | Same as named function. The model must produce at least one tool call. |
+118:| `"auto"` | No | The model generates freely. A tool-call parser extracts tool calls from the raw text. Arguments may be malformed or not match the schema. |
+119:| `"none"` | N/A | No tool calls are produced. |
+121:When schema conformance matters, prefer `tool_choice="required"` or named function calling over `"auto"`.
+125:The [OpenAI API](https://platform.openai.com/docs/guides/function-calling#strict-mode) supports a `strict` field on function definitions. When set to `true`, OpenAI uses constrained decoding to guarantee that tool-call arguments match the function schema, even in `tool_choice="auto"` mode.
+127:vLLM **does not implement** `strict` mode today. The `strict` field is accepted in requests (to avoid breaking clients that set it), but it has no effect on decoding behavior. In auto mode, argument validity depends entirely on the model's output quality and the parser's extraction logic.
+135:* `--enable-auto-tool-choice` -- **mandatory** Auto tool choice. It tells vLLM that you want to enable the model to generate its own tool calls when it
+137:* `--tool-call-parser` -- select the tool parser to use (listed below). Additional tool parsers
+138:will continue to be added in the future. You can also register your own tool parsers in the `--tool-parser-plugin`.
+139:* `--tool-parser-plugin` -- **optional** tool parser plugin used to register user defined tool parsers into vllm, the registered tool parser name can be specified in `--tool-call-parser`.
+140:* `--chat-template` -- **optional** for auto tool choice. It's the path to the chat template which handles `tool`-role messages and `assistant`-role messages
+141:that contain previously generated tool calls. Hermes, Mistral and Llama models have tool-compatible chat templates in their
+142:`tokenizer_config.json` files, but you can specify a custom template. This argument can be set to `tool_use` if your model has a tool use-specific chat
+143:template configured in the `tokenizer_config.json`. In this case, it will be used per the `transformers` specification. More on this [here](https://huggingface.co/docs/transformers/en/chat_templating#why-do-some-models-have-multiple-templates)
+144:from HuggingFace; and you can find an example of this in a `tokenizer_config.json` [here](https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B/blob/main/tokenizer_config.json).
+146:If your favorite tool-calling model is not supported, please feel free to contribute a parser & tool use chat template!
+149:    With `tool_choice="auto"`, tool-call arguments are extracted from the model's raw text output by the selected parser. No schema-level constraint is applied during decoding, so arguments may occasionally be malformed or violate the function's parameter schema. See [Constrained Decoding Behavior](#constrained-decoding-behavior) for details.
+159:_Note that the Hermes 2 **Theta** models are known to have degraded tool call quality and capabilities due to the merge
+162:Flags: `--tool-call-parser hermes`
+173:1. Mistral 7B struggles to generate parallel tool calls correctly.
+174:2. **For Transformers tokenization backend only**: Mistral's `tokenizer_config.json` chat template requires tool call IDs that are exactly 9 digits, which is
+178:    * [examples/tool_chat_template_mistral.jinja](../../examples/tool_chat_template_mistral.jinja) - this is the "official" Mistral chat template, but tweaked so that
+179:      it works with vLLM's tool call IDs (provided `tool_call_id` fields are truncated to the last 9 digits)
+180:    * [examples/tool_chat_template_mistral_parallel.jinja](../../examples/tool_chat_template_mistral_parallel.jinja) - this is a "better" version that adds a tool-use system prompt
+181:      when tools are provided, that results in much better reliability when working with parallel tool calling.
+187:    `--tool-call-parser mistral`
+191:    `--tokenizer_mode hf --config_format hf --load_format hf --tool-call-parser mistral --chat-template examples/tool_chat_template_mistral_parallel.jinja`
+196:    1. The official format that is used by default with `auto` or `mistral` arguments:
+201:    2. The Transformers format, when available, that is used with `hf` arguments:
+203:        `--tokenizer_mode hf --config_format hf --load_format hf --chat-template examples/tool_chat_template_mistral_parallel.jinja`
+205:### Llama Models (`llama3_json`)
+215:The tool calling that is supported is the [JSON-based tool calling](https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/#json-based-tool-calling). For [pythonic tool calling](https://github.com/meta-llama/llama-models/blob/main/models/llama3_2/text_prompt_format.md#zero-shot-function-calling) introduced by the Llama-3.2 models, see the `pythonic` tool parser below. As for Llama 4 models, it is recommended to use the `llama4_pythonic` tool parser.
+217:Other tool calling formats like the built-in python tool calling or custom tool calling are not supported.
+221:1. Parallel tool calls are not supported for Llama 3, but it is supported in Llama 4 models.
+225:VLLM provides two JSON-based chat templates for Llama 3.1 and 3.2:
+227:* [examples/tool_chat_template_llama3.1_json.jinja](../../examples/tool_chat_template_llama3.1_json.jinja) - this is the "official" chat template for the Llama 3.1
+229:* [examples/tool_chat_template_llama3.2_json.jinja](../../examples/tool_chat_template_llama3.2_json.jinja) - this extends upon the Llama 3.1 chat template by adding support for
+232:Recommended flags: `--tool-call-parser llama3_json --chat-template {see_above}`
+234:VLLM also provides a pythonic and JSON-based chat template for Llama 4, but pythonic tool calling is recommended:
+236:* [examples/tool_chat_template_llama4_pythonic.jinja](../../examples/tool_chat_template_llama4_pythonic.jinja) - this is based on the [official chat template](https://www.llama.com/docs/model-cards-and-prompt-formats/llama4/) for the Llama 4 models.
+238:For Llama 4 model, use `--tool-call-parser llama4_pythonic --chat-template examples/tool_chat_template_llama4_pythonic.jinja`.
+246:    Recommended flags: `--tool-call-parser granite4`
+250:    Recommended flags: `--tool-call-parser granite --chat-template examples/tool_chat_template_granite.jinja`
+252:    [examples/tool_chat_template_granite.jinja](../../examples/tool_chat_template_granite.jinja): this is a modified chat template from the original on Hugging Face. Parallel function calls are supported.
+256:    Recommended flags: `--tool-call-parser granite`
+262:    Recommended flags: `--tool-call-parser granite-20b-fc --chat-template examples/tool_chat_template_granite_20b_fc.jinja`
+264:    [examples/tool_chat_template_granite_20b_fc.jinja](../../examples/tool_chat_template_granite_20b_fc.jinja): this is a modified chat template from the original on Hugging Face, which is not vLLM-compatible. It blends function description elements from the Hermes template and follows the same system prompt as "Response Generation" mode from [the paper](https://arxiv.org/abs/2407.00121). Parallel function calls are supported.
+275:* Although this implementation also supports InternLM2, the tool call results are not stable when testing with the `internlm/internlm2-chat-7b` model.
+277:Recommended flags: `--tool-call-parser internlm --chat-template examples/tool_chat_template_internlm2_tool.jinja`
+286:Flags: `--tool-call-parser jamba`
+290:The xLAM tool parser is designed to support models that generate tool calls in various JSON formats. It detects function calls in several different output styles:
+292:1. Direct JSON arrays: Output strings that are JSON arrays starting with `[` and ending with `]`
+293:2. Thinking tags: Using `<think>...</think>` tags containing JSON arrays
+294:3. Code blocks: JSON in code blocks (```json ...```)
+295:4. Tool calls tags: Using `[TOOL_CALLS]` or `<tool_call>...</tool_call>` tags
+297:Parallel function calls are supported, and the parser can effectively separate text content from tool calls.
+306:* For Llama-based xLAM models: `--tool-call-parser xlam --chat-template examples/tool_chat_template_xlam_llama.jinja`
+307:* For Qwen-based xLAM models: `--tool-call-parser xlam --chat-template examples/tool_chat_template_xlam_qwen.jinja`
+311:For Qwen2.5, the chat template in tokenizer_config.json has already included support for the Hermes-style tool use. Therefore, you can use the `hermes` parser to enable tool calls for Qwen models. For more detailed information, please refer to the official [Qwen documentation](https://qwen.readthedocs.io/en/latest/framework/function_call.html#vllm)
+316:Flags: `--tool-call-parser hermes`
+322:* `MiniMaxAi/MiniMax-M1-40k` (use with [examples/tool_chat_template_minimax_m1.jinja](../../examples/tool_chat_template_minimax_m1.jinja))
+323:* `MiniMaxAi/MiniMax-M1-80k` (use with [examples/tool_chat_template_minimax_m1.jinja](../../examples/tool_chat_template_minimax_m1.jinja))
+325:Flags: `--tool-call-parser minimax --chat-template examples/tool_chat_template_minimax_m1.jinja`
+331:* `deepseek-ai/DeepSeek-V3-0324` (use with [examples/tool_chat_template_deepseekv3.jinja](../../examples/tool_chat_template_deepseekv3.jinja))
+332:* `deepseek-ai/DeepSeek-R1-0528` (use with [examples/tool_chat_template_deepseekr1.jinja](../../examples/tool_chat_template_deepseekr1.jinja))
+334:Flags: `--tool-call-parser deepseek_v3 --chat-template {see_above}`
+340:* `deepseek-ai/DeepSeek-V3.1` (use with [examples/tool_chat_template_deepseekv31.jinja](../../examples/tool_chat_template_deepseekv31.jinja))
+342:Flags: `--tool-call-parser deepseek_v31 --chat-template {see_above}`
+351:Flags: `--tool-call-parser openai`
+359:Flags: `--tool-call-parser kimi_k2`
+369:* For non-reasoning: `--tool-call-parser hunyuan_a13b`
+370:* For reasoning: `--tool-call-parser hunyuan_a13b --reasoning-parser hunyuan_a13b`
+378:Flags: `--tool-call-parser cohere_command3 --reasoning-parser cohere_command3`
+380:Note: the Cohere tool parser requires the `cohere_melody` package, which is not installed by default. Before using this parser please install the [cohere_melody](https://pypi.org/project/cohere-melody/) package.
+389:Flags: `--tool-call-parser longcat`
+399:Flags: `--tool-call-parser glm45`
+408:Flags: `--tool-call-parser glm47`
+427:Flags: `--tool-call-parser functiongemma --chat-template examples/tool_chat_template_functiongemma.jinja`
+441:Flags: `--tool-call-parser qwen3_xml`
+445:Olmo 3 models output tool calls in a format that is very similar to the one expected by the `pythonic` parser (see below), with a few differences. Each tool call is a pythonic string, but the parallel tool calls are newline-delimited, and the calls are wrapped within XML tags as `<function_calls>..</function_calls>`. In addition, the parser also allows JSON boolean and null literals (`true`, `false`, and `null`) in addition to the pythonic ones (`True`, `False`, and `None`).
+452:Flags: `--tool-call-parser olmo3`
+465:Flags: `--tool-call-parser gigachat3`
+469:Use the chat template from the examples folder; it fixes several OpenAI compatibility issues: `--chat-template /vllm-workspace/examples/tool_chat_template_apertus.jinja`
+476:Flags: `--tool-call-parser apertus`
+480:A growing number of models output a python list to represent tool calls instead of using JSON. This has the advantage of inherently supporting parallel tool calls and removing ambiguity around the JSON schema required for tool calls. The `pythonic` tool parser can support such models.
+490:* The model must not generate both text and tool calls in the same generation. This may not be hard to change for a specific model, but the community currently lacks consensus on which tokens to emit when starting and ending tool calls.  (In particular, the Llama 3.2 models emit no such tokens.)
+491:* Llama's smaller models struggle to use tools effectively.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 6707ms:
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatecomment.ts:23:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatepages.ts:289:                  .record(z.union([z.string(), z.number(), z.null()]))
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatepage.ts:79:                    z.union([z.string(), z.number(), z.null()]),
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetusers.ts:17:            page_size: z.number().optional(),
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:108:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:219:                    relation: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:246:                    rollup: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:417:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:632:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:94:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:311:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:529:              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:566:                              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:619:                              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:674:                      relation: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:701:                      rollup: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/search_documentation.ts:16:        page: z.number().describe("The page number").default(0),
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/space_search.ts:15:        limit: z.number().describe("Number of results to return").default(10),
+
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/fastify/secure-json-parse/main/index.js | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/colinhacks/zod/main/packages/zod/src/v4/core/checks.ts | grep -n -E \"safe|int|Number\\.isSafeInteger|ZodNumber|number\" | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/colinhacks/zod/main/packages/zod/src/v4/classic/schemas.ts | grep -n -E \"int\\(|number\\(|safe|Number\\.isSafeInteger\" | head -100" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 517ms:
+'use strict'
+
+const hasBuffer = typeof Buffer !== 'undefined'
+const suspectProtoRx = /"(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])"\s*:/
+const suspectConstructorRx = /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/
+
+/**
+ * @description Internal parse function that parses JSON text with security checks.
+ * @private
+ * @param {string|Buffer} text - The JSON text string or Buffer to parse.
+ * @param {Function} [reviver] - The JSON.parse() optional reviver argument.
+ * @param {import('./types').ParseOptions} [options] - Optional configuration object.
+ * @returns {*} The parsed object.
+ * @throws {SyntaxError} If a forbidden prototype property is found and `options.protoAction` or
+ * `options.constructorAction` is `'error'`.
+ */
+function _parse (text, reviver, options) {
+  // Normalize arguments
+  if (options == null) {
+    if (reviver !== null && typeof reviver === 'object') {
+      options = reviver
+      reviver = undefined
+    }
+  }
+
+  if (hasBuffer && Buffer.isBuffer(text)) {
+    text = text.toString()
+  }
+
+  // BOM checker
+  if (text && text.charCodeAt(0) === 0xFEFF) {
+    text = text.slice(1)
+  }
+
+  // Parse normally, allowing exceptions
+  const obj = JSON.parse(text, reviver)
+
+  // Ignore null and non-objects
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+
+  const protoAction = (options && options.protoAction) || 'error'
+  const constructorAction = (options && options.constructorAction) || 'error'
+
+  // options: 'error' (default) / 'remove' / 'ignore'
+  if (protoAction === 'ignore' && constructorAction === 'ignore') {
+    return obj
+  }
+
+  if (protoAction !== 'ignore' && constructorAction !== 'ignore') {
+    if (suspectProtoRx.test(text) === false && suspectConstructorRx.test(text) === false) {
+      return obj
+    }
+  } else if (protoAction !== 'ignore' && constructorAction === 'ignore') {
+    if (suspectProtoRx.test(text) === false) {
+      return obj
+    }
+  } else {
+    if (suspectConstructorRx.test(text) === false) {
+      return obj
+    }
+  }
+
+  // Scan result for proto keys
+  return filter(obj, { protoAction, constructorAction, safe: options && options.safe })
+}
+
+/**
+ * @description Scans and filters an object for forbidden prototype properties.
+ * @param {Object} obj - The object being scanned.
+ * @param {import('./types').ParseOptions} [options] - Optional configuration object.
+ * @returns {Object|null} The filtered object, or `null` if safe mode is enabled and issues are found.
+ * @throws {SyntaxError} If a forbidden prototype property is found and `options.protoAction` or
+ * `options.constructorAction` is `'error'`.
+ */
+function filter (obj, { protoAction = 'error', constructorAction = 'error', safe } = {}) {
+  let next = [obj]
+
+  while (next.length) {
+    const nodes = next
+    next = []
+
+    for (const node of nodes) {
+      if (protoAction !== 'ignore' && Object.prototype.hasOwnProperty.call(node, '__proto__')) { // Avoid calling node.hasOwnProperty directly
+        if (safe === true) {
+          return null
+        } else if (protoAction === 'error') {
+          throw new SyntaxError('Object contains forbidden prototype property')
+        }
+
+        delete node.__proto__ // eslint-disable-line no-proto
+      }
+
+      if (constructorAction !== 'ignore' &&
+          Object.prototype.hasOwnProperty.call(node, 'constructor') &&
+          node.constructor !== null &&
+          typeof node.constructor === 'object' &&
+          Object.prototype.hasOwnProperty.call(node.constructor, 'prototype')) { // Avoid calling node.hasOwnProperty directly
+        if (safe === true) {
+          return null
+        } else if (constructorAction === 'error') {
+          throw new SyntaxError('Object contains forbidden prototype property')
+        }
+
+        delete node.constructor
+      }
+
+      for (const key in node) {
+        const value = node[key]
+        if (value && typeof value === 'object') {
+          next.push(value)
+        }
+      }
+    }
+  }
+  return obj
+}
+
+/**
+ * @description Parses a given JSON-formatted text into an object.
+ * @param {string|Buffer} text - The JSON text string or Buffer to parse.
+ * @param {Function} [reviver] - The `JSON.parse()` optional reviver argument, or options object.
+ * @param {import('./types').ParseOptions} [options] - Optional configuration object.
+ * @returns {*} The parsed object.
+ * @throws {SyntaxError} If the JSON text is malformed or contains forbidden prototype properties
+ * when `options.protoAction` or `options.constructorAction` is `'error'`.
+ */
+function parse (text, reviver, options) {
+  const { stackTraceLimit } = Error
+  Error.stackTraceLimit = 0
+  try {
+    return _parse(text, reviver, options)
+  } finally {
+    Error.stackTraceLimit = stackTraceLimit
+  }
+}
+
+/**
+ * @description Safely parses a given JSON-formatted text into an object.
+ * @param {string|Buffer} text - The JSON text string or Buffer to parse.
+ * @param {Function} [reviver] - The `JSON.parse()` optional reviver argument.
+ * @returns {*|null|undefined} The parsed object, `null` if security issues found, or `undefined` on parse error.
+ */
+function safeParse (text, reviver) {
+  const { stackTraceLimit } = Error
+  Error.stackTraceLimit = 0
+  try {
+    return _parse(text, reviver, { safe: true })
+  } catch {
+    return undefined
+  } finally {
+    Error.stackTraceLimit = stackTraceLimit
+  }
+}
+
+module.exports = parse
+module.exports.default = parse
+module.exports.parse = parse
+module.exports.safeParse = safeParse
+module.exports.scan = filter
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 500ms:
+11:export interface $ZodCheckDef {
+20:export interface $ZodCheckInternals<T> {
+28:export interface $ZodCheck<in T = never> {
+44:export interface $ZodCheckLessThanDef extends $ZodCheckDef {
+50:export interface $ZodCheckLessThanInternals<T extends util.Numeric = util.Numeric> extends $ZodCheckInternals<T> {
+56:  number: "number",
+57:  bigint: "bigint",
+60:export interface $ZodCheckLessThan<T extends util.Numeric = util.Numeric> extends $ZodCheck<T> {
+68:    const origin = numericOriginMap[typeof def.value as "number" | "bigint" | "object"];
+100:export interface $ZodCheckGreaterThanDef extends $ZodCheckDef {
+106:export interface $ZodCheckGreaterThanInternals<T extends util.Numeric = util.Numeric> extends $ZodCheckInternals<T> {
+111:export interface $ZodCheckGreaterThan<T extends util.Numeric = util.Numeric> extends $ZodCheck<T> {
+119:    const origin = numericOriginMap[typeof def.value as "number" | "bigint" | "object"];
+151:// https://stackoverflow.com/questions/3966484/why-does-modulus-operator-return-fractional-number-in-javascript/31711034#31711034
+153:export interface $ZodCheckMultipleOfDef<T extends number | bigint = number | bigint> extends $ZodCheckDef {
+158:export interface $ZodCheckMultipleOfInternals<T extends number | bigint = number | bigint>
+164:export interface $ZodCheckMultipleOf<T extends number | bigint = number | bigint> extends $ZodCheck<T> {
+168:export const $ZodCheckMultipleOf: core.$constructor<$ZodCheckMultipleOf<number | bigint>> =
+178:        throw new Error("Cannot mix number and bigint in multiple_of check.");
+180:        typeof payload.value === "bigint"
+181:          ? payload.value % (def.value as bigint) === BigInt(0)
+182:          : util.floatSafeRemainder(payload.value, def.value as number) === 0;
+186:        origin: typeof payload.value as "number",
+188:        divisor: def.value as number,
+199:// interface $ZodCheckFiniteDef extends $ZodCheckDef {
+203:// export interface $ZodCheckFinite extends $ZodCheckInternals<number> {
+206://     | errors.$ZodIssueTooBig<"number", number>
+207://     | errors.$ZodIssueTooSmall<"number", number>;
+221://         origin: "number",
+244:export type $ZodNumberFormats = "int32" | "uint32" | "float32" | "float64" | "safeint";
+246:export interface $ZodCheckNumberFormatDef extends $ZodCheckDef {
+247:  check: "number_format";
+248:  format: $ZodNumberFormats;
+252:export interface $ZodCheckNumberFormatInternals extends $ZodCheckInternals<number> {
+254:  issc: errors.$ZodIssueInvalidType | errors.$ZodIssueTooBig<"number"> | errors.$ZodIssueTooSmall<"number">;
+256:  //   minimum?: number | undefined;
+260:export interface $ZodCheckNumberFormat extends $ZodCheck<number> {
+270:    const isInt = def.format?.includes("int");
+271:    const origin = isInt ? "int" : "number";
+279:      if (isInt) bag.pattern = regexes.integer;
+310:          //   origin: "number",
+316:        if (!Number.isSafeInteger(input)) {
+323:              note: "Integers must be within the safe integer range.",
+335:              note: "Integers must be within the safe integer range.",
+349:          origin: "number",
+361:          origin: "number",
+378:export type $ZodBigIntFormats = "int64" | "uint64";
+380:export interface $ZodCheckBigIntFormatDef extends $ZodCheckDef {
+381:  check: "bigint_format";
+385:export interface $ZodCheckBigIntFormatInternals extends $ZodCheckInternals<bigint> {
+387:  issc: errors.$ZodIssueTooBig<"bigint"> | errors.$ZodIssueTooSmall<"bigint">;
+390:export interface $ZodCheckBigIntFormat extends $ZodCheck<bigint> {
+413:          origin: "bigint",
+425:          origin: "bigint",
+441:export interface $ZodCheckMaxSizeDef extends $ZodCheckDef {
+443:  maximum: number;
+446:export interface $ZodCheckMaxSizeInternals<T extends util.HasSize = util.HasSize> extends $ZodCheckInternals<T> {
+451:export interface $ZodCheckMaxSize<T extends util.HasSize = util.HasSize> extends $ZodCheck<T> {
+466:      const curr = (inst._zod.bag.maximum ?? Number.POSITIVE_INFINITY) as number;
+491:export interface $ZodCheckMinSizeDef extends $ZodCheckDef {
+493:  minimum: number;
+496:export interface $ZodCheckMinSizeInternals<T extends util.HasSize = util.HasSize> extends $ZodCheckInternals<T> {
+501:export interface $ZodCheckMinSize<T extends util.HasSize = util.HasSize> extends $ZodCheck<T> {
+516:      const curr = (inst._zod.bag.minimum ?? Number.NEGATIVE_INFINITY) as number;
+541:export interface $ZodCheckSizeEqualsDef extends $ZodCheckDef {
+543:  size: number;
+546:export interface $ZodCheckSizeEqualsInternals<T extends util.HasSize = util.HasSize> extends $ZodCheckInternals<T> {
+551:export interface $ZodCheckSizeEquals<T extends util.HasSize = util.HasSize> extends $ZodCheck<T> {
+595:export interface $ZodCheckMaxLengthDef extends $ZodCheckDef {
+597:  maximum: number;
+600:export interface $ZodCheckMaxLengthInternals<T extends util.HasLength = util.HasLength> extends $ZodCheckInternals<T> {
+605:export interface $ZodCheckMaxLength<T extends util.HasLength = util.HasLength> extends $ZodCheck<T> {
+620:      const curr = (inst._zod.bag.maximum ?? Number.POSITIVE_INFINITY) as number;
+646:export interface $ZodCheckMinLengthDef extends $ZodCheckDef {
+648:  minimum: number;
+651:export interface $ZodCheckMinLengthInternals<T extends util.HasLength = util.HasLength> extends $ZodCheckInternals<T> {
+656:export interface $ZodCheckMinLength<T extends util.HasLength = util.HasLength> extends $ZodCheck<T> {
+671:      const curr = (inst._zod.bag.minimum ?? Number.NEGATIVE_INFINITY) as number;
+697:export interface $ZodCheckLengthEqualsDef extends $ZodCheckDef {
+699:  length: number;
+
+ succeeded in 528ms:
+116:  safeParse(data: unknown, params?: core.ParseContext<core.$ZodIssue>): parse.ZodSafeParseResult<core.output<this>>;
+118:  safeParseAsync(
+132:  safeEncode(
+136:  safeDecode(
+140:  safeEncodeAsync(
+144:  safeDecodeAsync(
+192:  /** @deprecated Try safe-parsing `undefined` (this is what `isOptional` does internally):
+196:   * const isOptional = schema.safeParse(undefined).success; // true
+201:   * @deprecated Try safe-parsing `null` (this is what `isNullable` does internally):
+205:   * const isNullable = schema.safeParse(null).success; // true
+235:  inst.safeParse = (data, params) => parse.safeParse(inst, data, params);
+237:  inst.safeParseAsync = async (data, params) => parse.safeParseAsync(inst, data, params);
+238:  inst.spa = inst.safeParseAsync;
+243:  inst.safeEncode = (data, params) => parse.safeEncode(inst, data, params);
+244:  inst.safeDecode = (data, params) => parse.safeDecode(inst, data, params);
+245:  inst.safeEncodeAsync = async (data, params) => parse.safeEncodeAsync(inst, data, params);
+246:  inst.safeDecodeAsync = async (data, params) => parse.safeDecodeAsync(inst, data, params);
+349:      return this.safeParse(undefined).success;
+352:      return this.safeParse(null).success;
+1037:  /** Consider `z.int()` instead. This API is considered *legacy*; it will never be removed but a better alternative exists. */
+1038:  int(params?: string | core.$ZodCheckNumberFormatParams): this;
+1039:  /** @deprecated This is now identical to `.int()`. Only numbers in the safe integer range are accepted. */
+1040:  safe(params?: string | core.$ZodCheckNumberFormatParams): this;
+1049:  /** @deprecated In v4 and later, z.number() does not allow infinite values by default. This is a no-op. */
+1089:    int(params) {
+1090:      return this.check(int(params));
+1092:    safe(params) {
+1093:      return this.check(int(params));
+1123:  inst.isInt = (bag.format ?? "").includes("int") || Number.isSafeInteger(bag.multipleOf ?? 0.5);
+1128:export function number(params?: string | core.$ZodNumberParams): ZodNumber {
+1129:  return core._number(ZodNumber, params);
+1146:export function int(params?: string | core.$ZodCheckNumberFormatParams): ZodInt {
+1147:  return core._int(ZodNumberFormat, params);
+1234:export function bigint(params?: string | core.$ZodBigIntParams): ZodBigInt {
+1235:  return core._bigint(ZodBigInt, params);
+1466:  safeExtend<U extends core.$ZodLooseShape>(
+1551:    safeExtend(incoming) {
+1552:      return util.safeExtend(this, incoming);
+2720:    return union([string(params), number(), boolean(), _null(), array(jsonSchema), record(string(), jsonSchema)]);
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/josdejong/lossless-json/main/README.md | grep -n -E \"loss|number|parse|BigInt|JSON\\.parse|precision\" | head -100" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /tmp/mcp-to-ai-sdk-review -maxdepth 3 -type f | sed 's#/tmp/mcp-to-ai-sdk-review/##' | head -120" in /Users/dengcchi
+exec
+/bin/zsh -lc "grep -RInE \"jsonSchema|fromJson|zod|integer|int64|z\\.number|z\\.int\" /tmp/mcp-to-ai-sdk-review --exclude-dir=.git | head -200" in /Users/dengcchi
+hook: PostToolUse
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://raw.githubusercontent.com/sidorares/json-bigint/master/README.md | grep -n -E "BigInt|parse|number|precision|JSON.parse|64" | head -100' in /Users/dengcchi
+ succeeded in 232ms:
+pnpm-lock.yaml
+LICENSE
+CHANGELOG.md
+.changeset/config.json
+mcp-tools-cli.ts
+README.md
+samples/grep-app-test.ts
+mcps/mcp.grep.app/searchGitHub.ts
+mcps/mcp.grep.app/client.ts
+mcps/mcp.grep.app/index.ts
+mcps/mcp.vercel.com/get_access_to_vercel_url.ts
+mcps/mcp.vercel.com/check_domain_availability_and_price.ts
+mcps/mcp.vercel.com/list_teams.ts
+mcps/mcp.vercel.com/list_projects.ts
+mcps/mcp.vercel.com/list_deployments.ts
+mcps/mcp.vercel.com/web_fetch_vercel_url.ts
+mcps/mcp.vercel.com/client.ts
+mcps/mcp.vercel.com/get_project.ts
+mcps/mcp.vercel.com/get_deployment.ts
+mcps/mcp.vercel.com/get_deployment_build_logs.ts
+mcps/mcp.vercel.com/index.ts
+mcps/mcp.vercel.com/search_vercel_documentation.ts
+mcps/mcp.vercel.com/deploy_to_vercel.ts
+.gitignore
+package.json
+.github/workflows/release.yml
+lib/tool-generator.ts
+lib/index-generator.ts
+lib/client-generator.ts
+lib/mcp-client.ts
+lib/utils.ts
+lib/oauth-handler.ts
+lib/formatter.ts
+tsconfig.json
+generate-samples.sh
+.git/config
+.git/shallow
+.git/HEAD
+.git/info/exclude
+.git/logs/HEAD
+.git/description
+.git/hooks/commit-msg.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/sendemail-validate.sample
+.git/hooks/pre-commit.sample
+.git/hooks/applypatch-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/pre-receive.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-push.sample
+.git/hooks/update.sample
+.git/hooks/push-to-checkout.sample
+.git/index
+.git/packed-refs
+CLAUDE.md
+
+hook: PostToolUse
+ succeeded in 296ms:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:16:        version: 5.0.29(zod@4.1.5)
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:20:      json-schema-to-zod:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:26:      zod:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:52:      zod: ^3.25.76 || ^4
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:58:      zod: ^3.25.76 || ^4
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:331:      zod: ^3.25.76 || ^4
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:640:  json-schema-to-zod@2.6.1:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:961:  zod-to-json-schema@3.24.6:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:964:      zod: ^3.24.1
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:966:  zod@3.25.76:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:969:  zod@4.1.5:
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:974:  '@ai-sdk/gateway@1.0.15(zod@4.1.5)':
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:977:      '@ai-sdk/provider-utils': 3.0.7(zod@4.1.5)
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:978:      zod: 4.1.5
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:980:  '@ai-sdk/provider-utils@3.0.7(zod@4.1.5)':
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:985:      zod: 4.1.5
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1250:      zod: 3.25.76
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1251:      zod-to-json-schema: 3.24.6(zod@3.25.76)
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1282:  ai@5.0.29(zod@4.1.5):
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1284:      '@ai-sdk/gateway': 1.0.15(zod@4.1.5)
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1286:      '@ai-sdk/provider-utils': 3.0.7(zod@4.1.5)
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1288:      zod: 4.1.5
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1633:  json-schema-to-zod@2.6.1: {}
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1910:  zod-to-json-schema@3.24.6(zod@3.25.76):
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1912:      zod: 3.25.76
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1914:  zod@3.25.76: {}
+/tmp/mcp-to-ai-sdk-review/pnpm-lock.yaml:1916:  zod@4.1.5: {}
+/tmp/mcp-to-ai-sdk-review/README.md:55:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/README.md:104:npm install ai zod @modelcontextprotocol/sdk
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatecomment.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatecomment.ts:23:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetself.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatepages.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatepages.ts:289:                  .record(z.union([z.string(), z.number(), z.null()]))
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetcomments.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatepage.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatepage.ts:79:                    z.union([z.string(), z.number(), z.null()]),
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionmovepages.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetusers.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetusers.ts:17:            page_size: z.number().optional(),
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionduplicatepage.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notiongetuser.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:108:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:219:                    relation: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:246:                    rollup: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:417:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notioncreatedatabase.ts:632:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:94:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:311:            z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:529:              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:566:                              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:619:                              z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:674:                      relation: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/notionupdatedatabase.ts:701:                      rollup: z.intersection(
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.notion.com/mcp/fetch.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.grep.app/searchGitHub.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_users.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_issue.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_team.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/create_project.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/update_project.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_issue_labels.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/update_issue.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_issues.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_comments.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/create_issue.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_user.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_teams.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_projects.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/search_documentation.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/search_documentation.ts:16:        page: z.number().describe("The page number").default(0),
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_documents.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_issue_status.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_issue_statuses.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_project.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/create_issue_label.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_project_labels.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/list_cycles.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/create_comment.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.linear.app/sse/get_document.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/get_access_to_vercel_url.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/check_domain_availability_and_price.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/list_teams.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/list_projects.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/list_deployments.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/web_fetch_vercel_url.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/get_project.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/get_deployment.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/get_deployment_build_logs.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/search_vercel_documentation.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/mcp.vercel.com/deploy_to_vercel.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/hf_doc_search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/model_search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/dataset_search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/dataset_details.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/space_search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/space_search.ts:15:        limit: z.number().describe("Number of results to return").default(10),
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/paper_search.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/model_details.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/hf_whoami.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/mcps/huggingface.co/mcp/gr1_flux1_schnell_infer.ts:3:import { z } from "zod";
+/tmp/mcp-to-ai-sdk-review/package.json:37:    "json-schema-to-zod": "^2.6.1",
+/tmp/mcp-to-ai-sdk-review/package.json:39:    "zod": "^4.1.5"
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:1:import { jsonSchemaToZod } from "json-schema-to-zod";
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:37:    const zodSchema = jsonSchemaToZod(schema);
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:39:    const match = zodSchema.match(/^z\.object\(([\s\S]*)\)$/);
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:40:    let innerSchema = match ? match[1] : zodSchema;
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:61:    // Fallback to manual generation if json-schema-to-zod fails
+/tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts:94:import { z } from 'zod';
+/tmp/mcp-to-ai-sdk-review/CLAUDE.md:43:   - Uses `json-schema-to-zod` for automatic schema conversion
+/tmp/mcp-to-ai-sdk-review/CLAUDE.md:58:**Schema Conversion**: JSON Schema from MCP tools is automatically converted to Zod schemas using `json-schema-to-zod` with manual fallback.
+
+hook: PostToolUse
+ succeeded in 600ms:
+1:# lossless-json
+6:import { parse, stringify } from 'lossless-json'
+10:// JSON.parse will lose some digits and a whole number:
+11:console.log(JSON.stringify(JSON.parse(text)))
+15:// LosslessJSON.parse will preserve all numbers and even the formatting:
+16:console.log(stringify(parse(text)))
+20:The following in-depth article explains what happens there: [Why does JSON.parse corrupt large numbers and how to solve this?](https://jsoneditoronline.org/indepth/parse/why-does-json-parse-corrupt-large-numbers/)
+22:**How does it work?** The library works exactly the same as the native `JSON.parse` and `JSON.stringify`. The difference is that `lossless-json` preserves information of big numbers. `lossless-json` parses numeric values not as a regular number but as a `LosslessNumber`, a lightweight class which stores the numeric value as a string. One can perform regular operations with a `LosslessNumber`, and it will throw an error when this would result in losing information.
+24:**When to use?** If you have to deal with JSON data that contains `long` values for example, coming from an application like C++, Java, or C#. The trade-off is that `lossless-json` is slower than the native `JSON.parse` and `JSON.stringify` functions, so be careful when performance is a bottleneck for you.
+28:- No risk of losing numeric information when working with big numbers.
+29:- Maintain the formatting of numbers.
+33:- Customizable: parse numeric values into any data type, like `BigNumber`, `bigint`, `number`, or a mix of them.
+34:- Compatible with the native, built-in `JSON.parse` and `JSON.stringify`.
+43:Install via [npm](https://www.npmjs.com/package/lossless-json):
+46:npm install lossless-json
+56:import { parse, stringify } from 'lossless-json'
+58:const json = parse('{"foo":"bar"}') // {foo: 'bar'}
+64:Numbers are parsed into a `LosslessNumber`, which can be used like a regular number in numeric operations. Converting to a number will throw an error when this would result in losing information due to truncation, overflow, or underflow.
+67:import { parse } from 'lossless-json'
+70:const json = parse(text)
+73:console.log(json.normal.valueOf()) // number, 2.3
+75:// LosslessNumbers can be used as regular numbers
+76:console.log(json.normal + 2) // number, 4.3
+78:// but the following operation will throw an error as it would result in information loss
+80:// throws Error: Cannot safely convert LosslessNumber to number:
+81://   "123456789012345678901" will be parsed as 123456789012345680000 and lose information
+84:### BigInt
+86:JavaScript natively supports `bigint`: big integers that can hold a large number of digits, instead of the about 15 digits that a regular `number` can hold. It is a typical use case to want to parse integer numbers into a `bigint`, and all other values into a regular `number`. This can be achieved with a custom `numberParser`:
+89:import { parse, isInteger } from 'lossless-json'
+92:  // parse integer values into a bigint, and use a regular number otherwise
+93:  numberParser: (value) => {
+94:    return isInteger(value) ? BigInt(value) : parseFloat(value)
+99:const json = parse(text, null, options)
+103://   2.3, // number
+108:You can adjust the logic to your liking, using utility functions like `isInteger`, `isNumber`, `isSafeNumber`. The number parser shown above is included in the library and is named `parseNumberAndBigInt`.
+111:### BigInt support using native `JSON.parse`
+113:Since some time, the reviver callback of the native `JSON.parse` function has a new parameter `context.source`. This new parameter allows to parse numeric values into any data type like `BigInt` or `BigNumber`, similar to the `numberParser` callback of `lossless-json`. So for parsing `BigInt` or `BigNumber` values, it is no longer necessary to use a special library like `lossless-json`.
+117:Stringifying `BigInt` values is not possible, unless you want to serialize them into a string with quotes. That is possible by [monkey patching a method `BigInt.prototype.toJSON`](https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574). However, when parsing this data again, it is not possible to know whether a string containing an integer number was intended to be a string or a bigint.
+119:Here is a minimal example of parsing data with support for `BigInt` using the native `JSON.parse`. A similar solution can be worked out for other data types.
+122:function parseWithBigInt(text) {
+125:  return JSON.parse(text, (_key, value, context) => {
+126:    const isBigInt = 
+127:      typeof value === 'number' &&
+131:    return isBigInt
+132:        ? BigInt(context.source) 
+137:const text = '{"number":1.23,"int":42,"bigint":9123372036854000123}'
+138:const data = parseWithBigInt(text)
+141://   number: 1.23,
+147:### Validate safe numbers
+149:If you want parse a json string into an object with regular numbers, but want to validate that no numeric information is lost, you write your own number parser and use `isSafeNumber` to validate the numbers:
+152:import { parse, isSafeNumber } from 'lossless-json'
+155:  parseNumber: (value) => {
+157:      throw new Error(`Cannot safely convert value '${value}' into a number`)
+160:    return parseFloat(value)
+164:// will parse with success if all values can be represented with a number
+165:let json = parse('[1,2,3]', undefined, options)
+166:console.log(json) // [1, 2, 3] (regular numbers)
+168:// will throw an error when some of the values are too large to represent correctly as number
+170:  let json = parse('[1,2e+500,3]', undefined, options)
+172:  console.log(err) // throws Error 'Cannot safely convert value '2e+500' into a number'
+178:To use the library in conjunction with your favorite BigNumber library, for example [decimal.js](https://github.com/MikeMcl/decimal.js/). You have to define a custom number parser and stringifier:
+181:import { parse, stringify } from 'lossless-json'
+184:const parseDecimal = (value) => new Decimal(value)
+191:// parse JSON, operate on a Decimal value, then stringify again
+193:const json = parse(text, undefined, { parseNumber: parseDecimal }) 
+207:The library is compatible with the native `JSON.parse` and `JSON.stringify`, and also comes with the optional `reviver` and `replacer` arguments that allow you to serialize for example data classes in a custom way. Here is an example demonstrating how you can stringify a `Date` in a different way than the built-in `reviveDate` utility function.
+212:import { parse, stringify } from 'lossless-json'
+247:const parsed = parse(text, customDateReviver)
+248:console.log(parsed)
+258:### parse(text [, reviver [, options]])
+260:The `LosslessJSON.parse()` function parses a string as JSON, optionally transforming the value produced by parsing.
+263:  The string to parse as JSON. See the JSON object for a description of JSON syntax.
+266:- **@param** `ParseOptions | ParseNumber [options]` Pass options to customize the way numbers are parsed and duplicate keys are handled. See description below. For backward compatibility it is possible to pass a `parseNumber` function here instead of an object with property `parseNumber`. 
+269:- **@throws** Throws a SyntaxError exception if the string to parse is not valid JSON.
+273:The `options` argument in the function `parse` is either an object with properties `{ parseNumber, onDuplicateKey }`, or it is a `parseNumber` function (for backward compatibility). It has the following properties:
+275:- **@param** `{function(value: string) : unknown} [parseNumber]`
+276:  Pass an optional custom number parser. Input is a string, and the output can be any numeric value: `number`, `bigint`, `LosslessNumber`, or a custom `BigNumber` library. By default, all numeric values are parsed into a `LosslessNumber`.
+277:- **@param** `{function(info: { key: string, position: number, oldValue: unknown, newValue: unknown }) : unknown | undefined} [onDuplicateKey]`
+299:### stringify(value [, replacer [, space [, numberStringifiers]]])
+305:- **@param** `{((key: string, value: unknown) => unknown) | Array.<string | number>} [replacer]`
+306:  A function that alters the behavior of the stringification process, or an array with strings or numbers that serve as a whitelist for selecting the properties of the value object to be included in the JSON string. If this value is `null` or not provided, all properties of the object are included in the resulting JSON string.
+307:- **@param** `{number | string | undefined} [space]`
+308:  A `string` or `number` that is used to insert white space into the output JSON string for readability purposes. If this is a `number`, it indicates the number of space characters to use as white space. Values less than 1 indicate that no space should be used. If this is a `string`, the `string` is used as white space. If this parameter is not provided (or is `null`), no white space is used.
+309:- **@param** `{Array<{test: (value: unknown) => boolean, stringify: (value: unknown) => string}>} [numberStringifiers]`
+310:  An optional list with additional number stringifiers, for example to serialize a `BigNumber`. The output of the function must be valid stringified JSON number. When `undefined` is returned, the property will be deleted from the object. The difference with using a `replacer` is that the output of a `replacer` must be JSON and will be stringified afterwards, whereas the output of the `numberStringifiers` is already stringified JSON.
+313:- **@throws** Throws a SyntaxError when one of the `numberStringifiers` does not return valid output.
+320:new LosslessNumber(value: number | string) : LosslessNumber
+325:- `.valueOf(): number | bigint`
+326:  Convert the `LosslessNumber` into a regular `number` or `bigint`. A `number` is returned for safe numbers and decimal values that only lose some insignificant digits. A `bigint` is returned for large integer numbers. An `Error` is thrown for values that will overflow or underflow. Examples:
+329:  // a safe number
+331:  // number 23.4
+335:  // number 0.6666666666666666
+343:  // Error: Cannot safely convert to number: the value '2.3e+500' would overflow and become Infinity
+347:  // Error: Cannot safely convert to number: the value '2.3e-500' would underflow and become 0
+353:  Get the string representation of the lossless number.
+358:  Lossless numbers contain a property `isLosslessNumber` which can be used to
+373:  Test whether a string contains a numeric value which can be safely represented by a JavaScript `number` without losing any information. Returns false when digits would be truncated of an integer or decimal, or when the number would overflow or underflow. When passing `{ approx: true }` as config, the function will be less strict and allow losing insignificant digits of a decimal value. Examples:
+385:- `toSafeNumberOrThrow(value: string, config?: { approx: boolean }) : number`
+387:  Convert a string into a number when it is safe to do so, otherwise throw an informative error.
+391:  When the provided `value` is an unsafe number, describe what the reason is: `overflow`, `underflow`, `truncate_integer`, `truncate_float`. Returns `undefined` when the value is safe.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 548ms:
+6:JSON.parse/stringify with bigints support. Based on Douglas Crockford [JSON.js](https://github.com/douglascrockford/JSON-js) package and [bignumber.js](https://github.com/MikeMcl/bignumber.js) library.
+8:Native `Bigint` was added to JS recently, so we added an option to leverage it instead of `bignumber.js`. However, the parsing with native `BigInt` is kept an option for backward compability.
+10:While most JSON parsers assume numeric values have same precision restrictions as IEEE 754 double, JSON specification _does not_ say anything about number precision. Any floating point number in decimal (optionally scientific) notation is valid JSON value. It's a good idea to serialize values which might fall out of IEEE 754 integer precision as strings in your JSON api, but `{ "value" : 9223372036854775807}`, for example, is still a valid RFC4627 JSON string, and in most JS runtimes the result of `JSON.parse` is this object: `{ value: 9223372036854776000 }`
+24:var r = JSON.parse(json);
+25:console.log('JSON.parse(input).value : ', r.value.toString());
+26:console.log('JSON.stringify(JSON.parse(input)):', JSON.stringify(r));
+28:console.log('\n\nbig number JSON:');
+29:var r1 = JSONbig.parse(json);
+30:console.log('JSONbig.parse(input).value : ', r1.value.toString());
+31:console.log('JSONbig.stringify(JSONbig.parse(input)):', JSONbig.stringify(r1));
+40:JSON.parse(input).value :  9223372036854776000
+41:JSON.stringify(JSON.parse(input)): {"value":9223372036854776000,"v2":123}
+44:big number JSON:
+45:JSONbig.parse(input).value :  9223372036854775807
+46:JSONbig.stringify(JSONbig.parse(input)): {"value":9223372036854775807,"v2":123}
+51:The behaviour of the parser is somewhat configurable through 'options'
+55:Specifies the parsing should be "strict" towards reporting duplicate-keys in the parsed string.
+56:The default follows what is allowed in standard json and resembles the behavior of JSON.parse, but overwrites any previous values with the last one assigned to the duplicate-key.
+69:var works = JSONbig.parse(dupkeys);
+70:console.log('JSON.parse(dupkeys).dupkey: %s', works.dupkey);
+73:  fails = JSONstrict.parse(dupkeys);
+86:Duplicate Key test with big number JSON
+88:JSON.parse(dupkeys).dupkey: value 2
+95:Specifies if BigInts should be stored in the object as a string, rather than the default BigNumber.
+97:Note that this is a dangerous behavior as it breaks the default functionality of being able to convert back-and-forth without data type changes (as this will convert all BigInts to be-and-stay strings).
+105:console.log('\n\nStoring the BigInt as a string, instead of a BigNumber');
+107:var withInt = JSONbig.parse(key);
+108:var withString = JSONbigString.parse(key);
+119:Storing the BigInt as a string, instead of a BigNumber
+125:#### options.useNativeBigInt, boolean, default false
+127:Specifies if parser uses native BigInt instead of bignumber.js
+133:var JSONbigNative = require('json-bigint')({ useNativeBigInt: true });
+135:console.log(`\n\nStoring the Number as native BigInt, instead of a BigNumber`);
+137:var normal = JSONbig.parse(key);
+138:var nativeBigInt = JSONbigNative.parse(key);
+142:  typeof nativeBigInt.key
+149:Storing the Number as native BigInt, instead of a BigNumber
+157:Specifies if all numbers should be stored as BigNumber.
+169:var normal = JSONbig.parse(key);
+170:var always = JSONbigAlways.parse(key);
+183:Default type: number, With option type: object
+187:If you want to force all numbers to be parsed as native `BigInt`
+193:  useNativeBigInt: true,
+202:parse() call will throw an error. If set to "ignore" the prroperty and it;s value is skipped from parsing and object building.
+210:const user = JSONbig.parse('{ "__proto__": { "admin": true }, "id": 12345 }');
+217:- [Re: \[Json\] Limitations on number size?](http://www.ietf.org/mail-archive/web/json/current/msg00297.html)
+218:- [Is there any proper way to parse JSON with large numbers? (long, bigint, int64)](http://stackoverflow.com/questions/18755125/node-js-is-there-any-proper-way-to-parse-json-with-large-numbers-long-bigint)
+219:- [What is JavaScript's Max Int? What's the highest Integer value a Number can go to without losing precision?](http://stackoverflow.com/questions/307179/what-is-javascripts-max-int-whats-the-highest-integer-value-a-number-can-go-t)
+220:- [Large numbers erroneously rounded in Javascript](http://stackoverflow.com/questions/1379934/large-numbers-erroneously-rounded-in-javascript)
+222:### Note on native BigInt support
+226:Full support out-of-the-box, stringifies BigInts as pure numbers (no quotes, no `n`)
+232:`s === JSONbig.stringify(JSONbig.parse(s))` but
+234:`o !== JSONbig.parse(JSONbig.stringify(o))`
+238:`JSONbig` stringify `123n` as `123`, which becomes `number` (aka `123` not `123n`) by default when being reparsed.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,140p' /tmp/mcp-to-ai-sdk-review/lib/tool-generator.ts" in /Users/dengcchi
+ succeeded in 0ms:
+import { jsonSchemaToZod } from "json-schema-to-zod";
+
+export interface ToolDefinition {
+  name: string;
+  description?: string;
+  inputSchema: any;
+}
+
+export function validateToolName(name: string): string {
+  // Ensure the tool name is a valid TypeScript identifier
+  const validName = name.replace(/[^a-zA-Z0-9_]/g, "");
+  if (!validName || /^[0-9]/.test(validName)) {
+    throw new Error(
+      `Invalid tool name: ${name}. Must be a valid TypeScript identifier.`
+    );
+  }
+  return validName;
+}
+
+function escapeStringForTypeScript(str: string): string {
+  // Check if the string contains newlines or is long enough to benefit from template literals
+  if (str.includes('\n') || str.length > 80) {
+    // Use template literal for multi-line strings
+    const escaped = str.replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    return `\`${escaped}\``;
+  }
+  // Use JSON.stringify for simple strings
+  return JSON.stringify(str);
+}
+
+function generateZodSchema(schema: any): string {
+  if (!schema || !schema.properties) {
+    return "{}";
+  }
+
+  try {
+    const zodSchema = jsonSchemaToZod(schema);
+    // Remove the outer z.object() wrapper since we'll add it in the template
+    const match = zodSchema.match(/^z\.object\(([\s\S]*)\)$/);
+    let innerSchema = match ? match[1] : zodSchema;
+    
+    // Post-process to convert multi-line strings in .describe() calls to template literals
+    innerSchema = innerSchema.replace(
+      /\.describe\(("(?:[^"\\]|\\.)*")\)/g, 
+      (match, quotedString) => {
+        try {
+          // Parse the quoted string to get the actual content
+          const description = JSON.parse(quotedString);
+          // Use our escaping function to decide between quotes and template literals
+          const escaped = escapeStringForTypeScript(description);
+          return `.describe(${escaped})`;
+        } catch (e) {
+          // If parsing fails, return the original
+          return match;
+        }
+      }
+    );
+    
+    return innerSchema;
+  } catch (error) {
+    // Fallback to manual generation if json-schema-to-zod fails
+    console.error(
+      `Warning: Failed to convert schema for ${JSON.stringify(
+        schema
+      )}, using fallback`
+    );
+    process.exit(1);
+  }
+}
+
+export function generateAISDKTool(
+  tool: ToolDefinition,
+  mcpUrl: string,
+  useSSE: boolean
+): string {
+  // Validate and sanitize tool name
+  const toolName = validateToolName(tool.name);
+
+  // Validate URL
+  try {
+    new URL(mcpUrl);
+  } catch {
+    throw new Error(`Invalid MCP URL: ${mcpUrl}`);
+  }
+
+  // Generate schema with proper validation
+  const schemaCode = generateZodSchema(tool.inputSchema);
+  if (!schemaCode) {
+    throw new Error(`Failed to generate schema for tool: ${tool.name}`);
+  }
+
+  return `import { tool } from 'ai';
+import { type Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { z } from 'zod';
+
+// Auto-generated wrapper for MCP tool: ${tool.name}
+// Source: ${mcpUrl}
+export const ${toolName}ToolWithClient = (getClient: () => Promise<Client> | Client) => tool({
+  description: ${escapeStringForTypeScript(tool.description || "")},
+  inputSchema: z.object(${schemaCode}),
+  execute: async (args): Promise<string> => {
+    const client = await getClient();
+    const result = await client.callTool({
+      name: ${escapeStringForTypeScript(tool.name)},
+      arguments: args
+    });
+    
+    // Handle different content types from MCP
+    if (Array.isArray(result.content)) {
+      return result.content
+        .map((item: unknown) => typeof item === 'string' ? item : JSON.stringify(item))
+        .join('\\n');
+    } else if (typeof result.content === 'string') {
+      return result.content;
+    } else {
+      return JSON.stringify(result.content);
+    }
+  }
+});
+`;
+}
+hook: PostToolUse
+exec
+/bin/zsh -lc "node -e \"const {jsonSchemaToZod}=require('/tmp/mcp-to-ai-sdk-review/node_modules/json-schema-to-zod'); console.log('have')\" 2>&1 | head -20" in /Users/dengcchi
+ succeeded in 0ms:
+zsh:1: command not found: node
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "grep -RIn \"format.*int64\\|case.*integer\\|z.number\" /tmp/mcp-to-ai-sdk-review/node_modules/json-schema-to-zod 2>/dev/null | head -120" in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'curl -L --max-time 20 -s https://raw.githubusercontent.com/StefanTerdell/json-schema-to-zod/master/src/parsers/parseSchema.ts | grep -n -E "integer|number|int64|format" | head -80' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://unpkg.com/json-schema-to-zod@2.6.1/dist/cjs/parsers/parseNumber.js | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 20 -s https://raw.githubusercontent.com/StefanTerdell/json-schema-to-zod/master/src/parsers/parseNumber.ts | sed -n '1,220p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 464ms:
+127:    its.a.primitive(schema, "number") ||
+128:    its.a.primitive(schema, "integer")
+182:    primitive: <T extends "string" | "number" | "integer" | "boolean" | "null">(
+
+hook: PostToolUse
+ succeeded in 472ms:
+import { JsonSchemaObject } from "../Types.js";
+import { withMessage } from "../utils/withMessage.js";
+
+export const parseNumber = (
+  schema: JsonSchemaObject & { type: "number" | "integer" },
+) => {
+  let r = "z.number()";
+
+  if (schema.type === "integer") {
+    r += withMessage(schema, "type", () => [".int(", ")"]);
+  } else {
+    r += withMessage(schema, "format", ({ value }) => {
+      if (value === "int64") {
+        return [".int(", ")"];
+      }
+    });
+  }
+
+  r += withMessage(schema, "multipleOf", ({ value, json }) => {
+    if (value === 1) {
+      if (r.startsWith("z.number().int(")) {
+        return;
+      }
+
+      return [".int(", ")"];
+    }
+
+    return [`.multipleOf(${json}`, ", ", ")"];
+  });
+
+  if (typeof schema.minimum === "number") {
+    if (schema.exclusiveMinimum === true) {
+      r += withMessage(schema, "minimum", ({ json }) => [
+        `.gt(${json}`,
+        ", ",
+        ")",
+      ]);
+    } else {
+      r += withMessage(schema, "minimum", ({ json }) => [
+        `.gte(${json}`,
+        ", ",
+        ")",
+      ]);
+    }
+  } else if (typeof schema.exclusiveMinimum === "number") {
+    r += withMessage(schema, "exclusiveMinimum", ({ json }) => [
+      `.gt(${json}`,
+      ", ",
+      ")",
+    ]);
+  }
+
+  if (typeof schema.maximum === "number") {
+    if (schema.exclusiveMaximum === true) {
+      r += withMessage(schema, "maximum", ({ json }) => [
+        `.lt(${json}`,
+        ", ",
+        ")",
+      ]);
+    } else {
+      r += withMessage(schema, "maximum", ({ json }) => [
+        `.lte(${json}`,
+        ", ",
+        ")",
+      ]);
+    }
+  } else if (typeof schema.exclusiveMaximum === "number") {
+    r += withMessage(schema, "exclusiveMaximum", ({ json }) => [
+      `.lt(${json}`,
+      ", ",
+      ")",
+    ]);
+  }
+
+  return r;
+};
+
+ succeeded in 541ms:
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseNumber = void 0;
+const withMessage_js_1 = require("../utils/withMessage.js");
+const parseNumber = (schema) => {
+    let r = "z.number()";
+    if (schema.type === "integer") {
+        r += (0, withMessage_js_1.withMessage)(schema, "type", () => [".int(", ")"]);
+    }
+    else {
+        r += (0, withMessage_js_1.withMessage)(schema, "format", ({ value }) => {
+            if (value === "int64") {
+                return [".int(", ")"];
+            }
+        });
+    }
+    r += (0, withMessage_js_1.withMessage)(schema, "multipleOf", ({ value, json }) => {
+        if (value === 1) {
+            if (r.startsWith("z.number().int(")) {
+                return;
+            }
+            return [".int(", ")"];
+        }
+        return [`.multipleOf(${json}`, ", ", ")"];
+    });
+    if (typeof schema.minimum === "number") {
+        if (schema.exclusiveMinimum === true) {
+            r += (0, withMessage_js_1.withMessage)(schema, "minimum", ({ json }) => [
+                `.gt(${json}`,
+                ", ",
+                ")",
+            ]);
+        }
+        else {
+            r += (0, withMessage_js_1.withMessage)(schema, "minimum", ({ json }) => [
+                `.gte(${json}`,
+                ", ",
+                ")",
+            ]);
+        }
+    }
+    else if (typeof schema.exclusiveMinimum === "number") {
+        r += (0, withMessage_js_1.withMessage)(schema, "exclusiveMinimum", ({ json }) => [
+            `.gt(${json}`,
+            ", ",
+            ")",
+        ]);
+    }
+    if (typeof schema.maximum === "number") {
+        if (schema.exclusiveMaximum === true) {
+            r += (0, withMessage_js_1.withMessage)(schema, "maximum", ({ json }) => [
+                `.lt(${json}`,
+                ", ",
+                ")",
+            ]);
+        }
+        else {
+            r += (0, withMessage_js_1.withMessage)(schema, "maximum", ({ json }) => [
+                `.lte(${json}`,
+                ", ",
+                ")",
+            ]);
+        }
+    }
+    else if (typeof schema.exclusiveMaximum === "number") {
+        r += (0, withMessage_js_1.withMessage)(schema, "exclusiveMaximum", ({ json }) => [
+            `.lt(${json}`,
+            ", ",
+            ")",
+        ]);
+    }
+    return r;
+};
+exports.parseNumber = parseNumber;
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed

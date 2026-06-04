@@ -1,0 +1,32 @@
+I attempted live prior-art search via both the Meta external web search and WebSearch tools; both were permission-denied in this session. I am therefore grounding the novelty assessment in canonical, well-established documented prior art (which is reliable for this mechanism), and flagging the inability to run a fresh composite-search as a caveat.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "RFC 8259 (The JSON Data Interchange Format) §6 'Numbers'", url: "https://www.rfc-editor.org/rfc/rfc8259#section-6", why_close: "Explicitly warns implementations that JSON numbers exceeding IEEE-754 double precision lose precision and create interoperability hazards. This IS the root mechanism; the claim's loss is a direct instance."}
+- {cite: "Nicolas Seriot, 'Parsing JSON is a Minefield'", url: "https://seriot.ch/projects/parsing_json.html", why_close: "Canonical empirical survey documenting that JSON parsers (incl. native JS) silently round large integers to float64; the cross-implementation precision-loss phenomenon is already cataloged."}
+- {cite: "X/Twitter Snowflake IDs — `id` vs `id_str` developer guidance", url: "https://developer.twitter.com/en/docs/twitter-ids", why_close: "The 64-bit-ID-in-JS precision-loss problem is the textbook motivating case for this entire seam; mitigations (string IDs) are long-documented."}
+- {cite: "Zod docs — `.int()` / `.safe()` number validators", url: "https://zod.dev/api?id=numbers", why_close: "Zod explicitly ships `.safe()`/`.int()` to enforce Number.isSafeInteger; that bare z.number() does NOT is documented expected behavior, not a discovery."}
+- {cite: "json-bigint / lossless-json READMEs", url: "https://github.com/josdejong/lossless-json", why_close: "These libraries exist precisely as the parse-time recovery the claim notes is 'not default' — the unrecoverability-post-parse fact is the stated reason they exist."}
+
+NAMING_VS_MECHANISM:
+The MECHANISM (IEEE-754 double rounding at JSON.parse time; bare z.number() not gating safe-int; native-parse-based secure-json-parse) is fully known and is CONCEDED by the authors (killer-#3, "mechanism = IEEE-754/ECMA-262, no named-quantity paper"). Mechanism delta ≈ zero. The remaining novelty is almost entirely NAMING/RE-SCOPING: re-labeling a known number-model hazard onto a trendy named stack (AI SDK v6 → secure-json-parse → Zod). The one candidate "real delta" — JOINT blindness of two named defenses — is a deductive consequence of two individually-documented behaviors, not a discovered interaction. The genuinely-novel-ish bit is the empirical packaging: first measurement of this exact composite (named-stack joint-blindness + post-parse unrecoverability + Python/Pydantic negative control isolating it to the JS runtime). That is an empirical/awareness contribution, modest, not a mechanism.
+
+FATAL_COLLISIONS:
+- None on the EXACT composite empirical claim (no prior work found — and could not run live search — that measures joint-blindness in the specific AI-SDK+secure-json-parse+Zod path with a cross-language control). This is why this is NOT a clean kill (yellow, not red).
+- Full collision on the MECHANISM with ≥2 independent sources (RFC 8259 §6 + Seriot's minefield + Zod docs). The authors already concede this, so it is not disqualifying for an explicitly-empirical claim — but it caps the contribution to "measured a known hazard in a named pipeline."
+
+MANDATORY_RELATED_WORK (authors MUST cite, or the framing reads as rediscovery):
+- RFC 8259 §6 (JSON number interoperability / float64 limitation)
+- Nicolas Seriot, "Parsing JSON is a Minefield"
+- X/Twitter Snowflake `id` vs `id_str` precision-loss guidance
+- Zod `.int()` / `.safe()` validator docs + the relevant Zod issue thread on safe-integer enforcement
+- json-bigint / lossless-json (recovery-at-parse-time prior art)
+- MDN Number.MAX_SAFE_INTEGER / Number.isSafeInteger / ECMA-262
+
+RATIONALE:
+Per RFC 8259 §6 and Seriot's "minefield" survey, large-integer→float64 precision loss in JSON parsing is canonical, decades-old prior art; per Zod's own docs, bare z.number() omitting a safe-int check is documented expected behavior with `.safe()`/`.int()` as the shipped fix. So the mechanism carries ~no novelty, and the authors correctly concede this. I cannot KILL (red) because I found no prior work covering the EXACT composite empirical measurement (named-stack joint-blindness + unrecoverability + Python negative control), and live search was unavailable to confirm absence — so a fatal-collision kill is not verified. But the novelty is thin and predominantly naming/re-scoping. The vote is gated on packet stress-test #1: if mcp-to-ai-sdk / AI SDK codegen emits `z.number().int()` (or `z.int()`) for an int64 ID field — which would close the seam — the surviving "developer hand-writes z.number() for an ID" case collapses to plain known precision loss and the contribution becomes naming-only, which should drop to RED. Until L1 resolves the real codegen/recommended default for ID fields, and provided ALL mandatory related work above is cited up front, this is a YELLOW: a valid but modest empirical confirmation of a known hazard, not a novel mechanism.
+
+PROMPT_VERSION: v001
+```

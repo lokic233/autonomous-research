@@ -1,0 +1,13 @@
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SentenceTransformers", url: "https://www.sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html", overlap: "Ships encode_query/encode_document and prompt_name support; this is the core mechanism, not new."},
+  {system: "MTEB", url: "https://github.com/embeddings-benchmark/mteb/pull/1221", overlap: "Merged support for query/passage-specific SentenceTransformers prompts in evaluation; overlaps with honoring prompt metadata outside bare ST."},
+  {system: "Chroma", url: "https://github.com/chroma-core/chroma/blob/main/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py", overlap: "Shipping wrapper calls SentenceTransformer.encode(), so it demonstrates the reported missing-default seam rather than solving it."},
+  {system: "LangChain HuggingFaceEmbeddings", url: "https://github.com/langchain-ai/langchain/blob/master/libs/partners/huggingface/langchain_huggingface/embeddings/huggingface.py", overlap: "Provides query_encode_kwargs escape hatch, but default query path falls back to encode_kwargs when unset; configurable integration, not automatic shipped-prompt loading."},
+  {system: "LlamaIndex HuggingFaceEmbedding", url: "https://github.com/run-llama/llama_index/blob/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py", overlap: "Uses prompt_name='query'/'text', but its utility only hard-codes selected model families such as BGE/Instructor, so overlap is partial and not general artifact self-description."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: The reported seam holds on the packet evidence: real ST config default_prompt_name=null, SciFact exact NN A=0.7292 vs B=0.8229, Chroma in-situ default R@10=0.7226, three arctic models, and two BEIR datasets. Gaps: only small BEIR-scale retrieval workloads, one production DB wrapper measured end-to-end, no large-corpus latency/ANN/refresh workload, no production telemetry, and no demonstrated patch adopted by shipping wrappers.
+RATIONALE: Prompted query/document embedding is already implemented in SentenceTransformers and recognized by MTEB PR#1221; OSS search across vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM found no relevant existing query-prompt wrapper mechanism in those inference/cache/kernel systems. The packet establishes a real wrapper-boundary failure, not an ST costume, and the Chroma path is good evidence that a competent user can lose the shipped query prompt silently. But as systems work, the contribution is a packaging/default integration finding around existing prompt machinery, with modest scale evidence. Prompt version: v001.
+```

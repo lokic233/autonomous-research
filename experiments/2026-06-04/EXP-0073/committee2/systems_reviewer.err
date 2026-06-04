@@ -880,3 +880,280 @@ hook: PostToolUse Completed
  exited -1 in 37603ms:
 exec
 /bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.codex /Users/dengcchi/.claude -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/run-llama/llama_index/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/utils.py | sed -n '1,260p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 507ms:
+from typing import Optional
+
+import requests
+
+DEFAULT_HUGGINGFACE_EMBEDDING_MODEL = "BAAI/bge-small-en"
+DEFAULT_INSTRUCT_MODEL = "hkunlp/instructor-base"
+
+# Originally pulled from:
+# https://github.com/langchain-ai/langchain/blob/v0.0.257/libs/langchain/langchain/embeddings/huggingface.py#L10
+DEFAULT_EMBED_INSTRUCTION = "Represent the document for retrieval: "
+DEFAULT_QUERY_INSTRUCTION = (
+    "Represent the question for retrieving supporting documents: "
+)
+DEFAULT_QUERY_BGE_INSTRUCTION_EN = (
+    "Represent this question for searching relevant passages: "
+)
+DEFAULT_QUERY_BGE_INSTRUCTION_ZH = "为这个句子生成表示以用于检索相关文章："
+
+BGE_MODELS = (
+    "BAAI/bge-small-en",
+    "BAAI/bge-small-en-v1.5",
+    "BAAI/bge-base-en",
+    "BAAI/bge-base-en-v1.5",
+    "BAAI/bge-large-en",
+    "BAAI/bge-large-en-v1.5",
+    "BAAI/bge-small-zh",
+    "BAAI/bge-small-zh-v1.5",
+    "BAAI/bge-base-zh",
+    "BAAI/bge-base-zh-v1.5",
+    "BAAI/bge-large-zh",
+    "BAAI/bge-large-zh-v1.5",
+)
+INSTRUCTOR_MODELS = (
+    "hku-nlp/instructor-base",
+    "hku-nlp/instructor-large",
+    "hku-nlp/instructor-xl",
+    "hkunlp/instructor-base",
+    "hkunlp/instructor-large",
+    "hkunlp/instructor-xl",
+)
+
+
+def get_query_instruct_for_model_name(model_name: Optional[str]) -> str:
+    """Get query text instruction for a given model name."""
+    if model_name in INSTRUCTOR_MODELS:
+        return DEFAULT_QUERY_INSTRUCTION
+    if model_name in BGE_MODELS:
+        if "zh" in model_name:
+            return DEFAULT_QUERY_BGE_INSTRUCTION_ZH
+        return DEFAULT_QUERY_BGE_INSTRUCTION_EN
+    return ""
+
+
+def format_query(
+    query: str, model_name: Optional[str], instruction: Optional[str] = None
+) -> str:
+    if instruction is None:
+        instruction = get_query_instruct_for_model_name(model_name)
+    # NOTE: strip() enables backdoor for defeating instruction prepend by
+    # passing empty string
+    return f"{instruction} {query}".strip()
+
+
+def get_text_instruct_for_model_name(model_name: Optional[str]) -> str:
+    """Get text instruction for a given model name."""
+    return DEFAULT_EMBED_INSTRUCTION if model_name in INSTRUCTOR_MODELS else ""
+
+
+def format_text(
+    text: str, model_name: Optional[str], instruction: Optional[str] = None
+) -> str:
+    if instruction is None:
+        instruction = get_text_instruct_for_model_name(model_name)
+    # NOTE: strip() enables backdoor for defeating instruction prepend by
+    # passing empty string
+    return f"{instruction} {text}".strip()
+
+
+def get_pooling_mode(model_name: Optional[str]) -> str:
+    pooling_config_url = (
+        f"https://huggingface.co/{model_name}/raw/main/1_Pooling/config.json"
+    )
+
+    try:
+        response = requests.get(pooling_config_url)
+        config_data = response.json()
+
+        cls_token = config_data.get("pooling_mode_cls_token", False)
+        mean_tokens = config_data.get("pooling_mode_mean_tokens", False)
+
+        if mean_tokens:
+            return "mean"
+        elif cls_token:
+            return "cls"
+    except requests.exceptions.RequestException:
+        print(
+            "Warning: Pooling config file not found; pooling mode is defaulted to 'cls'."
+        )
+    return "cls"
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://www.sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html | sed -n '/encode_query/,/encode_document/p' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1 | grep -i 'sentence\\|embedding\\|prompt_name\\|encode_query' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1 | grep -i 'sentence\\|embedding\\|prompt_name\\|encode_query' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://github.com/embeddings-benchmark/mteb/pull/1221 | grep -o 'Prompts["'^<]*'"\\|prompt["'^<]*'"' | head -20" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 180ms:
+zsh:1: no matches found: https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1
+
+ succeeded in 183ms:
+zsh:1: no matches found: https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1883ms:
+<p>If you are unsure whether you should use <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode()</span></code></a>, <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_query()</span></code></a>, or <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_document" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_document"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_document()</span></code></a>,
+your best bet is to use <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_query()</span></code></a> and <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_document" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_document"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_document()</span></code></a> for Information Retrieval tasks
+<dt class="sig sig-object py" id="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query">
+<span class="sig-name descname"><span class="pre">encode_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AudioDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">VideoDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">MessageDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">MessageDict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'image'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'audio'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'video'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AudioDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">VideoDict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AudioDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">VideoDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">MessageDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">MessageDict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'image'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'audio'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'video'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AudioDict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">VideoDict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sentence_embedding'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'token_embeddings'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence_embedding'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'float32'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'int8'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'uint8'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'binary'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ubinary'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.12)"><span class="pre">device</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'input'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'output'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'processes'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.12)"><span class="pre">Tensor</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/huggingface/sentence-transformers/blob/main/sentence_transformers\sentence_transformer\model.py#L217-L274"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode_query" title="Link to this definition"></a></dt>
+<dd><p>Computes embeddings specifically optimized for query representation.</p>
+<p>This method is a specialized version of <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode()</span></code></a> that differs in exactly two ways:</p>
+<ol class="arabic simple">
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">prompt_name</span></code> or <code class="docutils literal notranslate"><span class="pre">prompt</span></code> is provided, it uses a predefined “query” prompt,
+if available in the model’s <code class="docutils literal notranslate"><span class="pre">prompts</span></code> dictionary.</p></li>
+<li><p>It sets the <code class="docutils literal notranslate"><span class="pre">task</span></code> to “query”. If the model has a <a class="reference internal" href="../base/modules.html#sentence_transformers.base.modules.Router" title="sentence_transformers.base.modules.Router"><code class="xref py py-class docutils literal notranslate"><span class="pre">Router</span></code></a>
+module, it will use the “query” task type to route the input through the appropriate submodules.</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Adjusting <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> can significantly improve processing speed. The optimal value depends on your
+hardware, model size, precision, and input length. Benchmark a few batch sizes on a small subset of your
+data to find the best value.</p>
+</div>
+<p>All other parameters are identical to <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode()</span></code></a>. See <a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.encode" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.encode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode()</span></code></a> for the full parameter documentation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sentence_transformers.sentence_transformer.model.SentenceTransformer.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.eval" title="Link to this definition"></a></dt>
+<dd><p>Sets the module in evaluation mode.</p>
+<p>This has any effect only on certain modules. See documentations of
+particular modules for details of their behaviors in training/evaluation
+mode, if they are affected, e.g. <code class="xref py py-class docutils literal notranslate"><span class="pre">Dropout</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm</span></code>,
+etc.</p>
+<p>This is equivalent with <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.train" title="(in PyTorch v2.12)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">self.train(False)</span></code></a>.</p>
+<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/notes/autograd.html#locally-disable-grad-doc" title="(in PyTorch v2.12)"><span>Locally disabling gradient computation</span></a> for a comparison between
+<cite>.eval()</cite> and several similar mechanisms that may be confused with it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../base/modules.html#sentence_transformers.base.modules.Module" title="sentence_transformers.base.modules.Module">Module</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sentence_transformers.sentence_transformer.model.SentenceTransformer.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../base/evaluation.html#sentence_transformers.base.evaluation.BaseEvaluator" title="sentence_transformers.base.evaluation.evaluator.BaseEvaluator"><span class="pre">BaseEvaluator</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/huggingface/sentence-transformers/blob/main/sentence_transformers\base\model.py#L1353-L1366"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.evaluate" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the model based on an evaluator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> (<a class="reference internal" href="../base/evaluation.html#sentence_transformers.base.evaluation.BaseEvaluator" title="sentence_transformers.base.evaluation.BaseEvaluator"><em>BaseEvaluator</em></a>) – The evaluator used to evaluate the model.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path where the evaluator can write the results. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluation results.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sentence_transformers.sentence_transformer.model.SentenceTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">train_objectives:</span> <span class="pre">~collections.abc.Iterable[tuple[~torch.utils.data.dataloader.DataLoader,</span> <span class="pre">~torch.nn.modules.module.Module]],</span> <span class="pre">evaluator:</span> <span class="pre">~sentence_transformers.base.evaluation.evaluator.BaseEvaluator</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">epochs:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">steps_per_epoch=None,</span> <span class="pre">scheduler:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'WarmupLinear',</span> <span class="pre">warmup_steps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10000,</span> <span class="pre">optimizer_class:</span> <span class="pre">type[~torch.optim.optimizer.Optimizer]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'torch.optim.adamw.AdamW'&gt;,</span> <span class="pre">optimizer_params:</span> <span class="pre">dict[str,</span> <span class="pre">object]</span> <span class="pre">=</span> <span class="pre">{'lr':</span> <span class="pre">2e-05},</span> <span class="pre">weight_decay:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.01,</span> <span class="pre">evaluation_steps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">output_path:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">save_best_model:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">max_grad_norm:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">use_amp:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">callback:</span> <span class="pre">~collections.abc.Callable[[float,</span> <span class="pre">int,</span> <span class="pre">int],</span> <span class="pre">None]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">show_progress_bar:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">checkpoint_path:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">checkpoint_save_steps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">500,</span> <span class="pre">checkpoint_save_total_limit:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">resume_from_checkpoint:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/huggingface/sentence-transformers/blob/main/sentence_transformers\sentence_transformer\fit_mixin.py#L161-L404"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.fit" title="Link to this definition"></a></dt>
+<dd><p>Deprecated training method from before Sentence Transformers v3.0, it is recommended to use
+<a class="reference internal" href="trainer.html#sentence_transformers.sentence_transformer.trainer.SentenceTransformerTrainer" title="sentence_transformers.sentence_transformer.trainer.SentenceTransformerTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SentenceTransformerTrainer</span></code></a> instead. This method uses
+<a class="reference internal" href="trainer.html#sentence_transformers.sentence_transformer.trainer.SentenceTransformerTrainer" title="sentence_transformers.sentence_transformer.trainer.SentenceTransformerTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SentenceTransformerTrainer</span></code></a> behind the scenes, but does
+not provide as much flexibility as the Trainer itself.</p>
+<p>This training approach uses a list of DataLoaders and Loss functions to train the model. Each DataLoader
+is sampled in turn for one batch. We sample only as many batches from each DataLoader as there are in the
+smallest one to make sure of equal training with each dataset, i.e. round robin sampling.</p>
+<p>This method should produce equivalent results in v3.0+ as before v3.0, but if you encounter any issues
+with your existing training scripts, then you may wish to use
+<a class="reference internal" href="#sentence_transformers.sentence_transformer.model.SentenceTransformer.old_fit" title="sentence_transformers.sentence_transformer.model.SentenceTransformer.old_fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SentenceTransformer.old_fit</span></code></a> instead.
+That uses the old training method from before v3.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_objectives</strong> – Tuples of (DataLoader, LossFunction). Pass
+more than one for multi-task learning</p></li>
+<li><p><strong>evaluator</strong> – An evaluator (sentence_transformers.sentence_transformer.evaluation)
+evaluates the model performance during training on held-
+
+ succeeded in 6291ms:
+prompt","copilot_hide_hovercard","copilot_icebreakers_experiment_dashboard","copilot_icebreakers_experiment_hyperspace","copilot_immersive_code_block_transition_wrap","copilot_immersive_embedded_deferred_payload","copilot_immersive_embedded_draggable","copilot_immersive_embedded_header_button","copilot_immersive_embedded_implicit_references","copilot_immersive_embedded_skip_copilot_api_token_for_dotcom_context","copilot_immersive_file_block_transition_open","copilot_immersive_file_preview_keep_mounted","copilot_immersive_job_result_preview","copilot_immersive_structured_model_picker","copilot_immersive_task_hyperlinking","copilot_immersive_task_within_chat_thread","copilot_mc_cli_resume_any_users_task","copilot_mission_control_agent_filtering","copilot_mission_control_agents_task_list","copilot_mission_control_always_send_integration_id","copilot_mission_control_chronicle_commands","copilot_mission_control_chronicle_commands_dropdown","copilot_mission_control_cli_private_icon","copilot_mission_control_cli_session_status","copilot_mission_control_environment_list_icons","copilot_mission_control_initial_data_spinner","copilot_mission_control_logs_incremental","copilot_mission_control_sandbox_remote_bypass","copilot_mission_control_session_filters","copilot_mission_control_task_alive_updates","copilot_mission_control_task_sharing","copilot_mission_control_tasks_repo_filter","copilot_org_policy_page_focus_mode","copilot_pr_chat_enhancements","copilot_redirect_header_button_to_agents","copilot_resource_panel","copilot_scroll_preview_tabs","copilot_share_active_subthread","copilot_spaces_ga","copilot_spaces_individual_policies_ga","copilot_spaces_pagination","copilot_spark_empty_state","copilot_spark_handle_nil_friendly_name","copilot_swe_agent_authorization_status_ui","copilot_swe_agent_hide_model_picker_if_only_auto","copilot_swe_agent_pr_comment_model_picker","copilot_swe_agent_pull_request_merged_trigger","copilot_swe_agent_pull_request_opened_trigger","copilot_swe_agent_pull_request_synchronize_trigger","copilot_swe_agent_use_subagents","copilot_task_api_github_rest_style","copilot_token_based_billing","copilot_unconfigured_is_inherited","copilot_usage_metrics_ga","copilot_user_can_upgrade_plan_field","copilot_workbench_slim_line_top_tabs","copilot_workbench_ubb","create_ghas_hard_budgets","custom_instructions_file_references","dashboard_indexeddb_caching","dashboard_lists_max_age_filter","dashboard_universe_2025_feedback_dialog","flex_cta_groups_mvp","ga_enterprise_teams_ui","global_nav_react","hyperspace_2025_logged_out_batch_1","hyperspace_2025_logged_out_batch_2","hyperspace_2025_logged_out_batch_3","ipm_budget_deep_linking","ipm_global_transactional_message_agents","ipm_global_transactional_message_copilot","ipm_global_transactional_message_issues","ipm_global_transactional_message_prs","ipm_global_transactional_message_repos","ipm_global_transactional_message_spaces","issue_cca_modal_open","issue_cca_multi_assign_modal","issue_cca_visualization","issue_fields_global_search","issues_expanded_file_types","issues_lazy_load_comment_box_suggestions","issues_react_chrome_container_query_fix","issues_search_type_gql","landing_pages_ninetailed","landing_pages_web_vitals_tracking","lifecycle_label_name_updates","low_quality_classifier","marketing_pages_search_explore_provider","memex_default_issue_create_repository","memex_live_update_hovercard","memex_mwl_filter_field_delimiter","memex_remove_deprecated_type_issue","merge_status_header_feedback","notifications_menu_defer_labels","oauth_authorize_clickjacking_protection","octocaptcha_origin_optimization","prs_conversations_react","prs_css_anchor_positioning","repos_contributors_limited_default_range","rules_insights_filter_bar_created","rules_required_reviewers_block_description","sample_network_conn_type","secret_scanning_pattern_alerts_link","security_center_artifact_filters_popover","session_logs_ungroup_reasoning_text","site_copilot_max_plans","site_features_copilot_universe","site_github_app_ga_page","site_global_nav_spark_models_removed","site_homepage_collaborate_video","spark_prompt_secret_scanning","spark_server_connection_status","suppress_automated_browser_vitals","viewscreen_sandbox","warn_inaccessible_attachments","webp_support","workbench_store_readonly"],"copilotApiOverrideUrl":"https://api.githubcopilot.com"}
+prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb · GitHub
+prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb" />
+prompts for encoding queries versus encoding passages. SentenceTransformers provides this functionality through two features:
+prompts for encoding queries versus encoding passages. SentenceTransformers provides this functionality through two features:
+prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb" />
+prompts for encoding queries versus encoding passages. SentenceTransformers provides this functionality through two features:
+prompt">
+prompts repo_models_playground /embeddings-benchmark/mteb/models" data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame" data-hotkey="g m" data-command-id="repositories:go-to-models" data-analytics-event="{&quot;category&quot;:&quot;Underline navbar&quot;,&quot;action&quot;:&quot;Click tab&quot;,&quot;label&quot;:&quot;Models&quot;,&quot;target&quot;:&quot;UNDERLINE_NAV.TAB&quot;}" data-view-component="true" class="UnderlineNav-item no-wrap js-responsive-underlinenav-item js-selected-navigation-item">
+prompts","headRepositoryName":"mteb","headRepositoryOwnerLogin":"clinia","headSha":"d273405fde849e85fa88ac567db65cb128411a27","id":2072521423,"isInAdvisoryRepo":false,"mergedBy":"KennethEnevoldsen","mergedByName":"Kenneth Enevoldsen","mergedByAvatarUrl":"https://avatars.githubusercontent.com/u/23721977?v=4","mergedTime":"2024-10-03T11:10:34Z","number":1221,"relayId":"PR_kwDOHH5H1c57iCrP","state":"MERGED","title":"feat: leverage SentenceTransformers' query/passage specific prompts","titleHtml":"feat: leverage SentenceTransformers' query/passage specific prompts","viewerAllowedNonCommentReviewTypes":[]},"repository":{"codespacesEnabled":false,"editorEnabled":false,"defaultBranch":"main","id":478037973,"isEnterprise":false,"name":"mteb","ownerLogin":"embeddings-benchmark","userNameDisplayConfiguration":"handle"},"urls":{"changes":"/embeddings-benchmark/mteb/pull/1221/changes","checks":"/embeddings-benchmark/mteb/pull/1221/checks","commits":"/embeddings-benchmark/mteb/pull/1221/commits","conversation":"/embeddings-benchmark/mteb/pull/1221","files":"/embeddings-benchmark/mteb/pull/1221/files","findings":"/embeddings-benchmark/mteb/pull/1221/findings","overview":"/embeddings-benchmark/mteb/pull/1221/overview","walkthrough":"/embeddings-benchmark/mteb/pull/1221/walkthrough"},"user":{"canChangeBase":false,"canComment":false,"canEditTitle":false,"notices":[]},"viewerPendingReview":null,"viewSettings":{"dockedPanelWidth":null},"pageTitle":"feat: leverage SentenceTransformers' query/passage specific prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb","stack":null}},"title":"feat: leverage SentenceTransformers' query/passage specific prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb","appPayload":{"helpUrl":"https://docs.github.com","refListCacheKey":"v0:1780561621.0","transactionalMessageBanner":null,"enabled_features":{"move_new_comments_ui":false,"copilot_code_review_findings_ui":false,"copilot_code_review_findings_pr_view":false,"copilot_workspace":false,"cotd_derive_thread_previews":false,"prx_dynamic_split_pref":false,"prx_files":false,"pulls-files-skip-prefer-any-solo-entry":false,"generate_groups_on_files_view":false,"prx_robust_small_screen_support":false,"pull_request_stacks":false,"pull_request_stacks_statuses_v2":true,"pull_request_stacks_show_all_entries_statuses":false,"cotd_ui":true,"validation_platform_ci_analysis_check_runs_enabled":false,"pull_request_merge_status_button_opt_out":false,"react_data_router_pull_request_files":false}},"meta":{"title":"feat: leverage SentenceTransformers' query/passage specific prompts by dbuades · Pull Request #1221 · embeddings-benchmark/mteb"}}
+prompts
+prompts" aria-describedby="_R_en5qmd1d_" class="PullRequestBranchName-module__branchName__SCtl2 prc-BranchName-BranchName-CMTaU" data-component="BranchName">clinia:feat/query-passage-prompts
+prompts
+prompts
+prompts" aria-describedby="_R_7bssmd1d_" class="PullRequestBranchName-module__branchName__SCtl2 prc-BranchName-BranchName-CMTaU" data-component="BranchName">clinia:feat/query-passage-prompts
+prompts
+prompts for encoding queries versus encoding passages. SentenceTransformers provides this functionality through two features:
+prompt dictionary via the [prompts](https://sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html#sentence_transformers.SentenceTransformer) argument.
+prompt_name](https://sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html#sentence_transformers.SentenceTransformer.encode) argument. If the argument matches a key in the prompt dictionary, that prompt will be used automatically.
+prompt_name`, I added a new `prompt_type` argument and renamed `prompt_name` to `task_name`. The other change is that `encode_queries` and `encode_corpus` now specify `query` and `passage` as their respective `prompt_type` argument, which matches SentenceTransformers&#39; default. As a side benefit, this allows instruct models to also have specific prompts for queries and passages. 
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/sgl-project/sglang/git/trees/main?recursive=1' | grep -i 'prompt_name\\|encode_query\\|sentence_transformer' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/vllm-project/vllm/git/trees/main?recursive=1' | grep -i 'prompt_name\\|encode_query\\|sentence_transformer' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/flashinfer-ai/flashinfer/git/trees/main?recursive=1' | grep -i 'prompt_name\\|encode_query\\|sentence_transformer\\|embedding' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/NVIDIA/TensorRT-LLM/git/trees/main?recursive=1' | grep -i 'prompt_name\\|encode_query\\|sentence_transformer' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/LMCache/LMCache/git/trees/main?recursive=1' | grep -i 'prompt_name\\|encode_query\\|sentence_transformer\\|embedding' | head -80" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 852ms:
+ succeeded in 2249ms:
+hook: PostToolUse Completed
+ succeeded in 4447ms:
+ succeeded in 4730ms:
+hook: PostToolUse
+ succeeded in 7671ms:
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 64365ms:
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SentenceTransformers", url: "https://www.sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html", overlap: "Ships encode_query/encode_document and prompt_name support; this is the core mechanism, not new."},
+  {system: "MTEB", url: "https://github.com/embeddings-benchmark/mteb/pull/1221", overlap: "Merged support for query/passage-specific SentenceTransformers prompts in evaluation; overlaps with honoring prompt metadata outside bare ST."},
+  {system: "Chroma", url: "https://github.com/chroma-core/chroma/blob/main/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py", overlap: "Shipping wrapper calls SentenceTransformer.encode(), so it demonstrates the reported missing-default seam rather than solving it."},
+  {system: "LangChain HuggingFaceEmbeddings", url: "https://github.com/langchain-ai/langchain/blob/master/libs/partners/huggingface/langchain_huggingface/embeddings/huggingface.py", overlap: "Provides query_encode_kwargs escape hatch, but default query path falls back to encode_kwargs when unset; configurable integration, not automatic shipped-prompt loading."},
+  {system: "LlamaIndex HuggingFaceEmbedding", url: "https://github.com/run-llama/llama_index/blob/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py", overlap: "Uses prompt_name='query'/'text', but its utility only hard-codes selected model families such as BGE/Instructor, so overlap is partial and not general artifact self-description."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: The reported seam holds on the packet evidence: real ST config default_prompt_name=null, SciFact exact NN A=0.7292 vs B=0.8229, Chroma in-situ default R@10=0.7226, three arctic models, and two BEIR datasets. Gaps: only small BEIR-scale retrieval workloads, one production DB wrapper measured end-to-end, no large-corpus latency/ANN/refresh workload, no production telemetry, and no demonstrated patch adopted by shipping wrappers.
+RATIONALE: Prompted query/document embedding is already implemented in SentenceTransformers and recognized by MTEB PR#1221; OSS search across vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM found no relevant existing query-prompt wrapper mechanism in those inference/cache/kernel systems. The packet establishes a real wrapper-boundary failure, not an ST costume, and the Chroma path is good evidence that a competent user can lose the shipped query prompt silently. But as systems work, the contribution is a packaging/default integration finding around existing prompt machinery, with modest scale evidence. Prompt version: v001.
+```
+tokens used
+98,712
