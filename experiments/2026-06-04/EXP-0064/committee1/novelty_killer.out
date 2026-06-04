@@ -1,0 +1,71 @@
+I have ≥2 independent sources per collision check. Synthesizing my novelty verdict.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Krell et al., Efficient Sequence Packing without Cross-contamination, arXiv:2107.02027",
+   url: "https://arxiv.org/abs/2107.02027",
+   why_close: "The seminal packer (SPFHP/NNLSHP) this claim targets. VERIFIED (abstract): its
+   'without impacting performance' = MATHEMATICAL EQUIVALENCE of the packed vs unpacked model via
+   attention masking. ZERO mention of batch composition / GNS / effective batch / within-batch
+   diversity. So the packet's framing — that the batch-composition axis is uncovered by Krell — is
+   CORRECT. Not a collision; it's the gap the claim correctly identifies."}
+- {cite: "McCandlish et al., An Empirical Model of Large-Batch Training, arXiv:1812.06162",
+   url: "https://arxiv.org/abs/1812.06162",
+   why_close: "Defines B_simple=tr(Σ)/||g||^2. The estimator presumes IID minibatch sampling (Σ =
+   per-example covariance, minibatch variance Σ/B); length-sort breaks exactly that assumption. The
+   claim's premise is standard, not novel — it is APPLYING a known statistic to a non-IID regime."}
+- {cite: "Random-reshuffling / data-order variance literature: e.g. arXiv:1708.01383, 2007.03509,
+   2205.03914 (and Gürbüzbalaban 'Why Random Reshuffling Beats SGD')",
+   url: "https://arxiv.org/abs/2007.03509",
+   why_close: "Establishes (multiple independent sources) that minibatch ORDER / non-IID sampling
+   changes SGD gradient variance & convergence. The core mechanism 'non-IID batches => different
+   gradient variance' is well-trodden; this claim is a SPECIAL CASE (length-sort-induced correlation)."}
+- {cite: "HF Transformers Trainer group_by_length; fairseq sortish-sampler",
+   url: "https://huggingface.co/docs/transformers/main_classes/trainer",
+   why_close: "VERIFIED group_by_length exists as production practice. Length-bucketing is a KNOWN
+   IID-breaker — sortish-sampler exists precisely to re-inject randomness lost to length grouping.
+   The 'sorting by length reduces batch diversity' observation is folklore, not new."}
+- {cite: "Zhang et al., How Does Critical Batch Size Scale in Pre-training?, arXiv:2410.21676",
+   url: "https://arxiv.org/abs/2410.21676",
+   why_close: "The practical GNS consequence (critical/effective batch size). Mandatory context for any
+   'effective-batch tax' claim; not cited in the packet."}
+
+NAMING_VS_MECHANISM: Predominantly a SYNTHESIS + RENAMING delta, with a thin genuine mechanism increment.
+The three constituent facts are each independently established: (a) length-bucketing breaks batch IID-ness
+[group_by_length / sortish sampler], (b) non-IID/correlated batches change gradient variance [reshuffling
+literature, ≥2 sources], (c) GNS = the gradient-variance/effective-batch statistic [McCandlish]. "Effective-
+batch tax" is a NEW NAME for the already-known consequence (variance↑ ⇒ effective batch↓). The ONLY real
+mechanism delta is the specific, MEASURED chaining: production packer length-sort → length⊥domain coupling
+(MI=0.232 bits, measured) → lower within-batch domain entropy → GNS inflation, and that this is invisible to
+Krell's attention-only equivalence. That chaining is not pre-empted by any single paper — but it is heavily
+IMPLIED by the union of (a)+(b)+(c), i.e. derivable from existing knowledge rather than surprising.
+
+FATAL_COLLISIONS: NONE. No single source — and certainly not ≥2 independent sources (the bar for a KILL) —
+demonstrates the length-sorted-packing→domain-correlated-batch→GNS-inflation pathway. The within-MINIBATCH
+domain-diversity angle is specifically uncovered: data-mixing literature (survey arXiv:2604.16380) operates at
+the corpus/mixture-weight level, NOT within the batch. No collision => no kill.
+
+MANDATORY_RELATED_WORK:
+- Random-reshuffling / data-order gradient-variance literature (Gürbüzbalaban et al.; arXiv:1708.01383,
+  2007.03509) — REQUIRED; without it the "non-IID batch ⇒ higher GNS" core reads as discovered, not applied.
+- group_by_length (HF Trainer) + fairseq sortish-sampler — REQUIRED to ground that length-bucketing is a
+  known IID-breaker; otherwise the contribution overclaims discovering the diversity collapse.
+- McCandlish 1812.06162 IID assumption (cited) + Krell 2107.02027 (cited) — keep.
+- arXiv:2410.21676 critical-batch-size scaling — ADD; it is the practical frame for an "effective-batch tax."
+
+RATIONALE: Verdict = YELLOW (not RED, not GREEN). NOT RED: I ran a live ≥2-source sweep (arXiv API +
+Krell/McCandlish abstracts + HF docs) and found NO fatal collision — the exact measured pathway is genuinely
+unpublished, and the within-minibatch domain-diversity axis is a real gap (Krell is attention-only, verified;
+data-mixing work is corpus-level, verified). NOT GREEN: the mechanism is a synthesis of three independently
+established results (length-bucketing breaks IID [group_by_length/sortish sampler]; non-IID changes variance
+[reshuffling literature, ≥2 sources]; GNS measures it [McCandlish]); "effective-batch tax" is a new name for a
+known consequence, and the genuine increment is narrow (packer-specific length↔domain coupling, quantified).
+The L0's own bounded 1.10–1.22x decaying to ~1.0 at production pack density (dpp>5) further shrinks the
+novelty-times-magnitude product. GREEN requires either a clean uncovered mechanism OR a strong effect; this is
+a known-mechanism synthesis with a small, regime-narrow effect. YELLOW conditional on: (1) reframing the
+contribution as "quantifying, via GNS, a known IID-breaking effect specifically induced by length-sorted
+PACKING" rather than discovering a new phenomenon, and (2) citing the four mandatory-related-work items above.
+Prompt version: v001.
+```
