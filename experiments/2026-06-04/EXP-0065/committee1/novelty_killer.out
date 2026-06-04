@@ -1,0 +1,30 @@
+I have ≥2 retrievable, independently-verified sources. Confirmed: PR#8425's flagged root cause is a *correctness/chunk-boundary* axis ("placeholders cannot be prefilled partially"), distinct from the claim's *latency* axis — so the feared maintainer collision does not double-verify on the exact mechanism. Here is my vote.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Agrawal et al., Taming Throughput-Latency Tradeoff with Sarathi-Serve, arXiv:2403.02310 (OSDI'24)",
+   url: "https://arxiv.org/abs/2403.02310",
+   why_close: "IS the baseline whose 'stall-free' guarantee the claim says is broken. VERIFIED text-only: abstract/metadata mention no multimodal or vision encoder. So the guarantee was never claimed FOR multimodal — the claim extends an explicitly text-scoped result to a regime the original never covered. Good for novelty, but means the headline 'guarantee broken' overstates: it was never given."}
+- {cite: "vLLM PR#8425 (disable chunked-prefill + prefix-caching for multimodal)",
+   url: "https://github.com/vllm-project/vllm/pull/8425",
+   why_close: "Maintainers already say multimodal 'do not work quite well with chunked prefill'. VERIFIED root cause = a DIFFERENT axis: 'multimodal placeholders cannot be prefilled partially' (chunk-boundary correctness/flakiness) + prefix-cache hashing — NOT the per-image fixed-ViT-cost LATENCY axis. Follow-ups #8346/#8348 address placeholder tracking + cache hashing, not per-image fixed compute."}
+- {cite: "ModServe: Modality- and Stage-Aware Resource Disaggregation for Multimodal Serving, arXiv:2502.00937",
+   url: "https://arxiv.org/abs/2502.00937",
+   why_close: "Academic multimodal-serving system with modality-aware scheduling + stage disaggregation explicitly targeting tail-latency SLOs. Adjacent prior art the authors do NOT cite. Its solution (disaggregate the encoder stage) is the production trend that could moot in-engine interleaving stalls — a framing threat, not a mechanism collision (abstract does not cover the image-count-vs-token-budget axis)."}
+
+NAMING_VS_MECHANISM: Real mechanism delta, NOT renaming. The claim's axis — per-image FIXED ViT cost, budget-invisible, driven by image COUNT k at fixed total tokens T, surviving the encoder-cache RECOMPUTE fix — is verifiably distinct from the two known issues: PR#8425 = chunk-boundary correctness ("can't partially prefill a placeholder"); encoder-cache PRs = recompute/prefix-cache-hashing. Neither is the per-image fixed-compute latency axis. The anti-circular control (r=0 -> spike EXACTLY 1.000) shows the dependence is the mechanism, not an artifact. HOWEVER the novelty is INCREMENTAL: the qualitative headline ("stall-free broken for multimodal") is exactly what PR#8425 already states; the genuinely-new piece is the narrow isolated axis + its quantification, and that piece is still SIM-LEVEL (anchored-but-unmeasured r,B) — so the novel contribution is not yet empirically separated from the already-known issues.
+
+FATAL_COLLISIONS: NONE meeting the ≥2-independent-source KILL bar. PR#8425 (correctness axis) and Sarathi-Serve (text-only) do NOT jointly assert the image-count-driven latency axis; no second source corroborates the exact mechanism in either direction. No verified double-collision -> not RED.
+
+MANDATORY_RELATED_WORK:
+- Sarathi-Serve (2403.02310) — must state explicitly it is TEXT-ONLY; reframe headline from "guarantee broken" to "guarantee never extended to multimodal; here is the quantified gap."
+- vLLM PR#8425 + follow-ups #8346/#8348 — must cite and EXPLICITLY contrast: claim's axis (per-image fixed-compute latency) vs maintainers' axis (placeholder chunk-boundary correctness + cache hashing). This contrast IS the novelty argument and must be made in writing, not just asserted.
+- ModServe (2502.00937) — must cite; address whether encoder-stage DISAGGREGATION (production trend) sidesteps the interleaving stall entirely, which would bound impact.
+- vLLM-V1 / SGLang encoder-cache PRs (e.g. SGLang #5456) — cite as the production baseline and show the residual axis survives them.
+
+RATIONALE: Not RED — the mechanism is verifiably a distinct axis from the maintainer-flagged correctness issue (PR#8425 confirmed: "placeholders cannot be prefilled partially", not per-image fixed latency), and no ≥2-source collision exists on the exact claim. Not GREEN — novelty is narrow and incremental: it quantifies one isolated, currently-unmeasured (sim-level r,B) sub-axis of an interaction maintainers already flagged qualitatively, the headline ("guarantee broken") overstates a guarantee Sarathi-Serve never gave multimodal, and the closest academic system (ModServe, uncited) plus the encoder-disaggregation trend threaten the impact framing. YELLOW: the contribution is real but contingent on (a) the L1 microbench measuring real r,B to separate it empirically from the known PR#8425/encoder-cache issues, and (b) the writeup explicitly contrasting the latency axis vs the correctness axis and citing ModServe.
+
+PROMPT_VERSION: v001
+```
