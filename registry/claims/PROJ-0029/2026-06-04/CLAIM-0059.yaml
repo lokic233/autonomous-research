@@ -93,6 +93,11 @@ supporting_evidence:
     \ 13-23% (still >=13x gate). Anti-circular: GT=model_norm eq harness-computed,\
     \ never read by tested production normalizer, no injection in headline. GREEN."
   data_path: experiments/2026-06-04/EXP-0069/
+- exp_id: EXP-0070
+  summary: 'Editorial revision: all 5 committee#2 conditions addressed (altitude reframed,
+    lead-metric rewritten, tokenizer-scope-note added, bootstrap-CIs computed, text-dedup-normalizer
+    verified). Ready for committee#3 re-run toward unanimous GREEN.'
+  data_path: experiments/2026-06-04/EXP-0070/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0057
@@ -104,11 +109,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: 'EXP-0070: editorial revision (5 framing conditions from committee#2)
-  -> re-committee#3 for unanimous GREEN. No new experiments; text+CIs+code-verify.'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0070; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0070
+active_experiments: []
 created_at: '2026-06-04T01:33:03Z'
-last_updated: '2026-06-04T03:20:01Z'
+last_updated: '2026-06-04T03:25:35Z'
