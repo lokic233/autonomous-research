@@ -1,0 +1,109 @@
+verdict_id: VERDICT-0054
+claim_id: CLAIM-0056
+project_id: PROJ-0026
+date: '2026-06-04'
+experiment_ids:
+- EXP-0064
+experiment_paths:
+- experiments/2026-06-04/EXP-0064
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "NONE (5/5 unanimous YELLOW, no RED \u2014 L0 honest: pre-registered, anti-circular\
+  \ guard honored, PARTIAL matches the data, null exits adjudicated). GREEN blocked\
+  \ on 3 convergent grounds: (1) MECHANISM REAL BUT EXPECTED \u2014 novelty_killer\
+  \ verified (>=2 sources) no single paper pre-empts the exact pathway, but its 3\
+  \ constituent facts are each established: group_by_length/fairseq-sortish-sampler\
+  \ break batch-IID, non-IID batches change gradient variance (reshuffling lit Gurbuzbalaban\
+  \ 1708.01383/2007.03509), McCandlish B_simple measures it. Contribution = SYNTHESIS+QUANTIFICATION\
+  \ of known results, not discovery"
+- '''effective-batch tax'' is a new name not a new phenomenon'
+- "(2) EFFECT BOUNDED + REGIME-NARROW \u2014 the >=1.3 headline is unsupported (realistic\
+  \ 1.10-1.22x"
+- only 1 of 3 MAXLEN points statistically significant, the 'monotone decay' is 3 points
+  w/ wide CIs not established
+- production pretraining packs DENSE dpp>>5 where the effect VANISHES
+- NeMo already ships first_fit_decreasing vs first_fit_shuffle with a convergence
+  warning)
+- "(3) TWO UNREBUTTED CONFOUNDS block the causal claim \u2014 (a) LENGTH-STRATIFIED-SHUFFLE\
+  \ control MISSING: length-homogeneity + domain-homogeneity are ALIASED, so 'domain\
+  \ diversity collapse' is CORRELATIONAL not causal without it"
+- '(b) CHUNKED/LOCAL-SORT baseline missing: production practice is global-shuffle-THEN-local-sort-within-chunks
+  (Megatron-style), so global-sort may be a STRAWMAN'
+- + the frozen-tiny-model (V=1024 D=8 analytic-CE) is a degenerate gradient geometry
+  that cannot bound real-training GNS (all 5 reviewers).
+required_evidence:
+- "L1 (5 items, gated before real GPU budget): (1) LENGTH-STRATIFIED-SHUFFLE control\
+  \ (matched length distribution per batch but domain-randomized) to ISOLATE domain-homogeneity\
+  \ from length-homogeneity \u2014 the unrebutted confound that blocks the causal\
+  \ domain pathway"
+- (2) DYNAMIC GNS mid-training on a real >=100M model (frozen tiny analytic-CE is
+  degenerate)
+- (3) END-TO-END validation loss at fixed token budget (prove GNS inflation -> a real
+  convergence penalty
+- GNS is proxy only)
+- "(4) CHUNKED/LOCAL-SORT baseline (Megatron-style global-shuffle-then-local-sort,\
+  \ the ACTUAL production practice \u2014 global-sort may be a strawman)"
+- '(5) multi-corpus replication (>=1 non-stdlib corpus, >>4 domains, natural length-domain
+  joint). MANDATORY related work: reshuffling/data-order variance (Gurbuzbalaban 1708.01383,
+  2007.03509), HF group_by_length + fairseq sortish-sampler, Zhang 2410.21676 critical-batch-size,
+  NeMo first_fit_decreasing-vs-shuffle. REFRAME headline ''>=1.3x'' -> ''bounded 1.10-1.22x
+  at low dpp, decaying to ~1.0 at production density'''
+- reframe contribution as 'quantifying via GNS a known IID-breaking effect' not 'discovering
+  a new phenomenon'.
+map_delta_proposals:
+- CLAIM-0056 -> YELLOW/conditional (committee#1, 5/5 unanimous no-RED). Headline reframed
+  '>=1.3x' -> 'bounded 1.10-1.22x at low docs-per-pack, decaying to ~1.0 at production
+  density'
+- 'tag regime-narrow. Mechanism CONFIRMED (sorted=lower within-batch domain entropy
+  everywhere) + cleared killer-#10 (genuinely-uncertain L0, null-exit-B within-pack-averaging
+  bounded it) BUT GREEN blocked: synthesis-of-known-results not discovery (group_by_length+reshuffling-lit+McCandlish
+  each established'
+- NeMo ships the contrast), regime-narrow (production packs dense), + 2 unrebutted
+  confounds (length-vs-domain ALIASING needs a length-stratified-shuffle control
+- 'global-vs-chunked-sort strawman) + frozen-tiny-model GNS can''t bound real training.
+  ORCHESTRATOR DECISION: accept the reframed yellow + CONVERGE rather than spend a
+  heavy 5-item real-pretraining L1 on a modest-ceiling synthesis-quantification claim
+  that''s regime-narrow + NeMo-already-ships-the-contrast (cost-aware/lightweight).
+  Honest contribution recorded: length-sorted packing measurably collapses within-batch
+  domain entropy + inflates GNS up to 1.22x in the low-dpp regime, bounded by within-pack
+  averaging. LESSONS: (1) a claim asserting a CAUSAL pathway (length->DOMAIN->GNS)
+  must include the control that breaks the ALIAS (length-stratified-shuffle) at L0,
+  else it''s correlational'
+- (2) screen the baseline vs ACTUAL production practice (chunked-local-sort), not
+  the naive global version
+- (3) 'X breaks IID-assumption Y, measured via Z' where X,Y,Z are each established
+  = synthesis-quantification (modest ceiling), a yellow-not-green class (companion
+  to the textbook-mechanism killer).
+baseline_requirements:
+- "Chunked/locally-sorted packing (Megatron global-shuffle-then-local-sort) \u2014\
+  \ the actual production practice"
+- "Length-stratified-shuffle (matched length dist, domain-randomized) \u2014 isolates\
+  \ the confound"
+- reshuffling/data-order variance (Gurbuzbalaban 1708.01383, 2007.03509)
+- HF group_by_length + fairseq sortish-sampler
+- Zhang 2410.21676 critical-batch-size
+- NeMo first_fit_decreasing vs first_fit_shuffle (ships the contrast already)
+- McCandlish 1812.06162 (GNS, IID assumption)
+- Krell 2107.02027 (attention-axis-only)
+committee_run_dir: experiments/2026-06-04/EXP-0064/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T00:38:09Z'
