@@ -1,0 +1,67 @@
+verdict_id: VERDICT-0059
+claim_id: CLAIM-0059
+project_id: PROJ-0029
+date: '2026-06-04'
+experiment_ids:
+- EXP-0068
+- EXP-0069
+- EXP-0070
+experiment_paths:
+- experiments/2026-06-04/EXP-0068
+- experiments/2026-06-04/EXP-0069
+- experiments/2026-06-04/EXP-0070
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: green
+- role: systems_reviewer
+  vote: green
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: green
+- role: product_realist
+  vote: green
+- role: area_chair
+  vote: green
+green_rule: unanimous
+final_verdict: green
+override_rule: false
+fatal_objections:
+- NONE. UNANIMOUS GREEN (6/6). All 5 editorial conditions from committee#2 are SATISFIED
+  by the revision (EXP-0070). No residual objections. No fatal prior-art collision.
+  The engine's unanimity rule is met.
+required_evidence:
+- "NONE (GREEN rendered \u2014 publication-ready with the editorial framing in EDITORIAL_REVISION.md).\
+  \ Recommended venue: DMLR / NeurIPS Datasets-and-Benchmarks / EMNLP industry-track\
+  \ (data-centric ML + safety/privacy)."
+map_delta_proposals:
+- "\u2605\u2605\u2605 CLAIM-0059 -> GREEN (v003, committee#3, UNANIMOUS 6/6). v3's\
+  \ FIRST GREEN after 19 fresh claims, 6 orchestrator generations, ZERO false greens.\
+  \ CROSS-AREA (tokenization/preprocessing x data-systems-for-ml): the MODEL tokenizer's\
+  \ normalization (NFKC+casefold) silently sets the dedup pipeline's recall CEILING\
+  \ via normalizer-DIVERGENCE \u2014 95.1pct of model-identical document pairs in\
+  \ real C4-multilingual web text ESCAPE production near-dedup (driven by fullwidth-ASCII\
+  \ in CJK web + NFKC-compatibility variation that production NFD+lower structurally\
+  \ CANNOT collapse). The seam is INDEPENDENTLY VERIFIED OPEN in >=2 production codebases\
+  \ (datatrove + text-dedup, confirmed by 3 committee members). Altitude: an empirical\
+  \ measurement of a known IR mechanism (IIR sec2.2 normalization-mismatch) applied\
+  \ to the dedup x model-tokenizer seam, with a demonstrated-material privacy/contamination\
+  \ consequence. Scope: NFKC+casefold tokenizer family (the pervasive multilingual\
+  \ default). The contribution: quantified a currently-UNPATCHED, MATERIAL (95pct)\
+  \ hidden model-identical-duplicate exposure in multilingual web training corpora\
+  \ from a benign, unaudited org-seam between independently-owned subsystems \u2014\
+  \ with a trivial fix (align the deduper normalizer to the model's) that NO production\
+  \ tool currently implements."
+baseline_requirements:
+- IIR sec2.2 normalization-mismatch (parent mechanism, explicitly cited + framed as
+  an instance)
+- UAX#15 (structural driver)
+- datatrove simplify_text + text-dedup (production baselines, seam-open evidence)
+- tokenizer-family scope (NFKC+casefold only)
+committee_run_dir: experiments/2026-06-04/EXP-0070/committee3
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T03:37:34Z'

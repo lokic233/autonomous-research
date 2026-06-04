@@ -1,7 +1,7 @@
 claim_id: CLAIM-0059
 project_id: PROJ-0029
 stage: seed
-status: seed
+status: green
 claim: "In a standard near-duplicate dedup pipeline (MinHash+LSH over char/word shingles),\
   \ the document-pair FALSE-NEGATIVE rate (missed true duplicates, where 'true duplicate'\
   \ = IDENTICAL under the MODEL tokenizer's normalization) is driven by the Unicode-equivalence\
@@ -106,12 +106,20 @@ verdict_history:
 - verdict_id: VERDICT-0058
   date: '2026-06-04'
   result: yellow
+- verdict_id: VERDICT-0059
+  date: '2026-06-04'
+  result: green
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0070; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "\u2605\u2605\u2605 GREEN (VERDICT-0059, committee#3, 6/6 UNANIMOUS).\
+  \ v3's FIRST GREEN. Cross-area (tokenization x data-systems): normalizer-divergence\
+  \ drives dedup FN \u2014 95.1pct of model-identical pairs escape production near-dedup\
+  \ on real C4-multilingual, driven by fullwidth-ASCII + NFKC-compatibility that NFD\
+  \ structurally cannot collapse. Seam independently verified open (>=2 codebases).\
+  \ Publication-ready."
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-04T01:33:03Z'
-last_updated: '2026-06-04T03:25:35Z'
+last_updated: '2026-06-04T03:38:38Z'
