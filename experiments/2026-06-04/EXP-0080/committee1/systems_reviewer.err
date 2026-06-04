@@ -791,3 +791,234 @@ hook: PostToolUse
 hook: PostToolUse Completed
  succeeded in 15033ms:
  succeeded in 15158ms:
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=%22cat.codes%22+repo:sgl-project/sglang' | grep -E '\"total_count\"|\"html_url\"|\"path\"' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=%22cat.codes%22+repo:NVIDIA/TensorRT-LLM' | grep -E '\"total_count\"|\"html_url\"|\"path\"' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=%22cat.codes%22+repo:LMCache/LMCache' | grep -E '\"total_count\"|\"html_url\"|\"path\"' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=%22cat.codes%22+repo:vllm-project/vllm' | grep -E '\"total_count\"|\"html_url\"|\"path\"' | head -40" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 415ms:
+ succeeded in 446ms:
+ succeeded in 437ms:
+ succeeded in 434ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 130959ms:
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22cat.codes%22%20%22different%22%20repo:pandas-dev/pandas' | grep -E '\"total_count\"|\"html_url\"|\"title\"' | head -60" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22categorical%20codes%22%20%22different%22%20repo:pandas-dev/pandas' | grep -E '\"total_count\"|\"html_url\"|\"title\"' | head -60" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22cat.codes%22%20%22machine%20learning%22%20repo:pandas-dev/pandas' | grep -E '\"total_count\"|\"html_url\"|\"title\"' | head -60" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22dictionary_encode%22%20%22order%22%20repo:apache/arrow' | grep -E '\"total_count\"|\"html_url\"|\"title\"' | head -80" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 364ms:
+  "total_count": 0,
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 662ms:
+  "total_count": 9,
+      "html_url": "https://github.com/apache/arrow/issues/22304",
+      "title": "[C++][Python] Support ExtensionType arrays in more kernels",
+        "html_url": "https://github.com/asfimport",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/issues/18713",
+      "title": "[C++][Python] Allow to specify a dictionary type for dictionary_encode() function",
+        "html_url": "https://github.com/asfimport",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/pull/36073",
+      "title": "GH-36036: [C++][Python][Parquet] Implement Float16 logical type",
+        "html_url": "https://github.com/benibus",
+        "html_url": "https://github.com/apache/arrow/pull/36073",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/issues/15042",
+      "title": "[Python][Parquet] Column statistics incorrect for Dictionary Column in Parquet",
+        "html_url": "https://github.com/rustyconover",
+          "html_url": "https://github.com/wjones127",
+        "html_url": "https://github.com/apache/arrow/milestone/1",
+        "title": "11.0.0",
+          "html_url": "https://github.com/kou",
+        "html_url": "https://github.com/wjones127",
+        "total_count": 2,
+      "html_url": "https://github.com/apache/arrow/issues/27536",
+      "title": "[C++] Casting dictionary type to use different index type",
+        "html_url": "https://github.com/asfimport",
+        "html_url": "https://github.com/apache/arrow/milestone/32",
+        "title": "5.0.0",
+          "html_url": "https://github.com/rok",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/pull/10191",
+      "title": "ARROW-12731: [R] Use InMemoryDataset for Table/RecordBatch in dplyr code",
+        "html_url": "https://github.com/nealrichardson",
+        "html_url": "https://github.com/apache/arrow/pull/10191",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/pull/8894",
+      "title": "ARROW-10322: [C++][Dataset] Minimize Expression",
+        "html_url": "https://github.com/bkietz",
+        "html_url": "https://github.com/apache/arrow/pull/8894",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/issues/6284",
+      "title": "secondary index vs dictionary implementation using pyarrow",
+        "html_url": "https://github.com/healiseu",
+        "total_count": 0,
+      "html_url": "https://github.com/apache/arrow/pull/909",
+      "title": "ARROW-439: [Python] Add option in \"to_pandas\" conversions to yield Categorical from String/Binary arrays",
+        "html_url": "https://github.com/fjetter",
+        "html_url": "https://github.com/apache/arrow/pull/909",
+        "total_count": 0,
+
+ succeeded in 931ms:
+  "total_count": 17,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/51489",
+      "title": "BUG: Concat 2 dataframes with different `PeriodIndex` raises an exception when using `keys` parameter",
+        "html_url": "https://github.com/corralien",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/22130",
+      "title": "Writing categorical columns to HDF5 takes >100x than writing the corresponding ints",
+        "html_url": "https://github.com/jpiabrantes",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/49539",
+      "title": "ENH: Label Encoder",
+        "html_url": "https://github.com/Dorivis",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/23955",
+      "title": "Bug: Pivot fails for MultiIndex If existing index is used.",
+        "html_url": "https://github.com/srajanpaliwal",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/86",
+        "title": "1.4",
+          "html_url": "https://github.com/jreback",
+        "total_count": 26,
+      "html_url": "https://github.com/pandas-dev/pandas/pull/39163",
+      "title": "API/BUG: always try to operate inplace when setting with loc/iloc[foo, bar]",
+        "html_url": "https://github.com/jbrockmendel",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/80",
+        "title": "1.3",
+          "html_url": "https://github.com/jreback",
+        "html_url": "https://github.com/pandas-dev/pandas/pull/39163",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/pull/34293",
+      "title": "ENH: categorical scatter plot",
+        "html_url": "https://github.com/MarcoGorelli",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/80",
+        "title": "1.3",
+          "html_url": "https://github.com/jreback",
+        "html_url": "https://github.com/pandas-dev/pandas/pull/34293",
+        "total_count": 1,
+      "html_url": "https://github.com/pandas-dev/pandas/pull/35797",
+      "title": "BUG: Fix is_categorical_dtype for Sparse[category]",
+        "html_url": "https://github.com/dsaxton",
+        "html_url": "https://github.com/pandas-dev/pandas/pull/35797",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/31177",
+      "title": "Setting multiindex with columns that contain list as element raises TypeError",
+        "html_url": "https://github.com/matthewgson",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/7820",
+      "title": "Index([1,2,.np.nan]).get_indexer([np.nan]) returns wrong value?",
+        "html_url": "https://github.com/jankatins",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/16",
+        "title": "1.0.0",
+          "html_url": "https://github.com/wesm",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/31912",
+      "title": "Obtain the category codes from `CategoricalDtype`",
+        "html_url": "https://github.com/ssche",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/15457",
+      "title": "\"TypeError: unorderable types\" in Python3 when column for MultiIndex contains tuple and int",
+        "html_url": "https://github.com/toobaz",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/55",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 1042ms:
+  "total_count": 124,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/12509",
+      "title": "append a categorical with different categories to the existing",
+        "html_url": "https://github.com/dneise",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/33245",
+      "title": "API: should unordered categoricals sort by codes or by categories? (sort vs rank inconsistency)",
+        "html_url": "https://github.com/jbrockmendel",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/115",
+        "title": "4.0",
+          "html_url": "https://github.com/lithomas1",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/44099",
+      "title": "BUG: `pd.concat` produces frames with inconsistent order when concating the ones with categorical indices",
+        "html_url": "https://github.com/dchigarev",
+          "html_url": "https://github.com/flippy1313",
+        "html_url": "https://github.com/flippy1313",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/pull/64951",
+      "title": "BUG: fix CategoricalIndex.union/intersection with mismatched category order",
+        "html_url": "https://github.com/jbrockmendel",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/124",
+        "title": "3.1",
+          "html_url": "https://github.com/jbrockmendel",
+        "html_url": "https://github.com/pandas-dev/pandas/pull/64951",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/10254",
+      "title": "API/BUG: inconsistent plotting of new CategoricalIndex",
+        "html_url": "https://github.com/jorisvandenbossche",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/43617",
+      "title": "BUG: Incorrect factorization for ordinal vs nominal variable",
+        "html_url": "https://github.com/Intangible-pg18",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/60642",
+      "title": "BUG: MultiIndex union/difference not commutative",
+        "html_url": "https://github.com/ssche",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/22224",
+      "title": "API: Standardize ExtensionDtype subtype name",
+        "html_url": "https://github.com/TomAugspurger",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/29111",
+      "title": "API: Remove nan-likes from MultiIndex levels",
+        "html_url": "https://github.com/topper-123",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/36861",
+      "title": "ENH: Rolling mode",
+        "html_url": "https://github.com/twoertwein",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/12341",
+      "title": "Categorical data not supported in plots of parallel coordinates",
+        "html_url": "https://github.com/tantrev",
+        "total_count": 2,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/14613",
+      "title": "append / concat category  with different categories fails in HDF5",
+        "html_url": "https://github.com/littlegreenbean33",
+        "total_count": 0,
+      "html_url": "https://github.com/pandas-dev/pandas/issues/33276",
+      "title": "EA interface - requirements for \"hashable, value+order-preserving ndarray\"",
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "pandas.Categorical/.cat.codes", url: "https://pandas.pydata.org/docs/reference/api/pandas.Categorical.codes.html", overlap: "Implements local integer codes as positions in the categories array; docs describe mechanism but not the cross-shard ML feature-contract failure."},
+  {system: "pandas categorical docs", url: "https://pandas.pydata.org/docs/user_guide/categorical.html", overlap: "Documents inferred categories from observed data and CategoricalDtype to enforce shared categories; partial overlap, not framed as portable-code hazard across shards."},
+  {system: "pyarrow.compute.dictionary_encode", url: "https://arrow.apache.org/docs/python/generated/pyarrow.compute.dictionary_encode.html", overlap: "Implements dictionary encoding; overlapping primitive, not the claimed cross-shard feature-contract insight."},
+  {system: "pandas issue tracker", url: "https://github.com/pandas-dev/pandas/issues/44099", overlap: "Closest found issue concerns concat/category-order inconsistency, not parquet-shard .cat.codes silently corrupting ML features."},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM", url: "https://github.com/vllm-project/vllm", overlap: "No relevant categorical-code/parquet feature-contract mechanism found in targeted OSS search; these systems are largely unrelated LLM inference stacks."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Synthetic L0 evidence is internally strong for the pandas/Arrow composition, including null boundary and RF cross-check, but realistic-scale validity is still insufficient evidence: only 50 categories, two shards, synthetic target, CPU, and no public partitioned dataset or production-style pipeline consuming .cat.codes across many files. Holds mechanistically for partial-observation shards, but L1 is needed.
+RATIONALE: Prompt version v001. I did not find a pandas/pyarrow issue or PR that owns the exact cross-shard ".cat.codes as silent ML feature contract" failure; searches for "cat.codes parquet", "cat.codes across files", and "cat.codes machine learning" were negative for the decisive issue, while related hits are about concat/category ordering or Arrow dictionary backend behavior. pandas docs state codes are positions in the categories array and categories are inferred from observed values, and they show CategoricalDtype for shared categories, but I did not find an explicit warning that .cat.codes are non-portable feature IDs across separately cast shards. This clears RED on shipping-system prior art, but remains YELLOW because the artifact is an empirical coupling insight over existing pandas/Arrow mechanisms, not a systems design, and realistic workload reproducibility is not yet shown.
+```
+tokens used
+92,983

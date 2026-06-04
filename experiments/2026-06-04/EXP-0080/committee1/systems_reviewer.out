@@ -1,0 +1,13 @@
+```text
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "pandas.Categorical/.cat.codes", url: "https://pandas.pydata.org/docs/reference/api/pandas.Categorical.codes.html", overlap: "Implements local integer codes as positions in the categories array; docs describe mechanism but not the cross-shard ML feature-contract failure."},
+  {system: "pandas categorical docs", url: "https://pandas.pydata.org/docs/user_guide/categorical.html", overlap: "Documents inferred categories from observed data and CategoricalDtype to enforce shared categories; partial overlap, not framed as portable-code hazard across shards."},
+  {system: "pyarrow.compute.dictionary_encode", url: "https://arrow.apache.org/docs/python/generated/pyarrow.compute.dictionary_encode.html", overlap: "Implements dictionary encoding; overlapping primitive, not the claimed cross-shard feature-contract insight."},
+  {system: "pandas issue tracker", url: "https://github.com/pandas-dev/pandas/issues/44099", overlap: "Closest found issue concerns concat/category-order inconsistency, not parquet-shard .cat.codes silently corrupting ML features."},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM", url: "https://github.com/vllm-project/vllm", overlap: "No relevant categorical-code/parquet feature-contract mechanism found in targeted OSS search; these systems are largely unrelated LLM inference stacks."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Synthetic L0 evidence is internally strong for the pandas/Arrow composition, including null boundary and RF cross-check, but realistic-scale validity is still insufficient evidence: only 50 categories, two shards, synthetic target, CPU, and no public partitioned dataset or production-style pipeline consuming .cat.codes across many files. Holds mechanistically for partial-observation shards, but L1 is needed.
+RATIONALE: Prompt version v001. I did not find a pandas/pyarrow issue or PR that owns the exact cross-shard ".cat.codes as silent ML feature contract" failure; searches for "cat.codes parquet", "cat.codes across files", and "cat.codes machine learning" were negative for the decisive issue, while related hits are about concat/category ordering or Arrow dictionary backend behavior. pandas docs state codes are positions in the categories array and categories are inferred from observed values, and they show CategoricalDtype for shared categories, but I did not find an explicit warning that .cat.codes are non-portable feature IDs across separately cast shards. This clears RED on shipping-system prior art, but remains YELLOW because the artifact is an empirical coupling insight over existing pandas/Arrow mechanisms, not a systems design, and realistic workload reproducibility is not yet shown.
+```
