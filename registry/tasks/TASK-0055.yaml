@@ -1,0 +1,33 @@
+task_id: TASK-0055
+kind: research
+parent: orchestrator-r6-001
+assignee: researcher-0063
+session_id: ''
+project_id: PROJ-0027
+claim_id: CLAIM-0057
+exp_id: EXP-0065
+status: open
+summary: "L0: chunked-prefill stall-free guarantee broken for multimodal \u2014 ITL\
+  \ p99 driven by image COUNT not image-token-count. Discrete-event Sarathi scheduler;\
+  \ ViT cost=per_image_fixed+per_token_marginal*tokens (ratio EXTERNALLY ANCHORED\
+  \ from published Qwen2-VL/ViT microbench, SWEPT not tuned); ALIAS-BREAK fix total-image-tokens\
+  \ T vary image count (1xT vs kx(T/k)); measure decode ITL p99 vs k. RISKY: spike\
+  \ grows with k at fixed T. NULL EXIT: invariant to k -> claim FALSE -> honest negative.\
+  \ Report the crossover ratio. anti-circular (outcome from external ViT-cost-ratio\
+  \ not a tuned knob); PERSISTENT-SEEDER loop"
+evidence_delta: ''
+opened_at: '2026-06-04T00:46:07Z'
+updated_at: '2026-06-04T00:46:07Z'
+closed_at: ''
+history:
+- ts: '2026-06-04T00:46:07Z'
+  event: open
+  by: orchestrator-r6-001
+  note: "L0: chunked-prefill stall-free guarantee broken for multimodal \u2014 ITL\
+    \ p99 driven by image COUNT not image-token-count. Discrete-event Sarathi scheduler;\
+    \ ViT cost=per_image_fixed+per_token_marginal*tokens (ratio EXTERNALLY ANCHORED\
+    \ from published Qwen2-VL/ViT microbench, SWEPT not tuned); ALIAS-BREAK fix total-image-tokens\
+    \ T vary image count (1xT vs kx(T/k)); measure decode ITL p99 vs k. RISKY: spike\
+    \ grows with k at fixed T. NULL EXIT: invariant to k -> claim FALSE -> honest\
+    \ negative. Report the crossover ratio. anti-circular (outcome from external ViT-cost-ratio\
+    \ not a tuned knob); PERSISTENT-SEEDER loop"
