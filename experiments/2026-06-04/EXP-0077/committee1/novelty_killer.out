@@ -1,0 +1,31 @@
+Live external web search (`WebSearch` / `three_pai_external_web_search`) is **not permitted in this environment** — both denied. I cannot complete the mandated ≥2-source live prior-art sweep, so I am reasoning from retrievable known literature and flagging the verification gap honestly. Per anti-coping rules I mark unverifiable points as such.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Parmar, Zhang, Zhu — On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR 2022",
+   url: "https://arxiv.org/abs/2104.11222",
+   why_close: "GENRE COLLISION (not naming). Establishes the exact template this claim instantiates: a benign-looking publisher/library PREPROCESSING DEFAULT (resizing impl) silently forks an evaluation metric across byte-different pipelines, invisibly, with no model/data change. The claim's 'serialize-default x decoder-default -> eval non-reproducibility' is the same shape at a different seam (EXIF serialization vs resizing). This is the strongest adjacency and is NOT cited in the packet."}
+- {cite: "Recht, Roelofs, Schmidt, Shankar — Do ImageNet Classifiers Generalize to ImageNet?, ICML 2019",
+   url: "https://arxiv.org/abs/1902.10811",
+   why_close: "Same-benchmark SCORE NON-REPRODUCIBILITY across nominally-identical reconstructions. Different mechanism (re-collection/selection, not serialization) but identical phenomenon-class ('which copy of the benchmark you pulled changes the score'). Mandatory to distinguish."}
+- {cite: "Dodge & Karam — Understanding how image quality affects deep neural networks, QoMEX 2016",
+   url: "https://arxiv.org/abs/1604.04004",
+   why_close: "Codec/quality-driven accuracy drift. The claim's requant control (0.0pp) correctly isolates AGAINST this — so it's a control-not-confound, but it's the canonical adjacent 'serialization changes pixels -> score' incumbent and should be cited."}
+- {cite: "EXIF-orientation display/loader footgun (CloudFactory; orientation-robustness lit, Google arXiv:1911.07201 per packet)",
+   url: "https://arxiv.org/abs/1911.07201",
+   why_close: "The incumbent the claim explicitly distinguishes. Confirmed: this is the known rotation effect, NOT the claimed serialization-fork coupling."}
+
+NAMING_VS_MECHANISM: Real mechanism delta, not a rename. The contribution is NOT "EXIF rotation hurts accuracy" (footgun) — it is the composition: (publish-time PIL re-encode IRREVERSIBLY destroys a dormant tag) x (both read-defaults ignore the tag -> INVISIBLE under default eval) -> two byte-different mirrors of ONE benchmark silently fork only for EXIF-honoring consumers. The load-bearing novelty (irreversibility + cross-mirror invisibility, located at the serialization step rather than the loader) is genuinely distinct from the loader-side footgun. It does NOT collapse to the rotation footgun. => clears killer #3 on novelty grounds, against RED.
+
+FATAL_COLLISIONS: None VERIFIED. The MECHANISM-EXACT collision ("HF push_to_hub serialization destroying EXIF -> cross-mirror benchmark non-reproducibility") I could not confirm exists in literature — but I also could NOT run the mandated live search to confirm it does NOT (tools denied). Per the ≥2-independent-source KILL rule, I have <2 verified sources for any collision, so no KILL is warranted. This is the reason I cannot vote GREEN: the packet's "no literature hits" is self-reported and UNVERIFIED by an independent searcher this round.
+
+MANDATORY_RELATED_WORK:
+- Parmar et al. 2104.11222 (preprocessing-default -> eval non-reproducibility genre) — REQUIRED; without it the novelty reads as an unacknowledged re-instantiation of a known template.
+- Recht et al. 1902.10811 (same-benchmark cross-copy score non-reproducibility) — REQUIRED to claim the cross-mirror-fork framing is new.
+- Dodge & Karam 1604.04004 (codec/quality -> accuracy) — to position the requant control.
+- HF datasets Image.encode_example / PIL save EXIF-strip behavior (the packet's L0 step-0) — cite the exact installed-lib provenance.
+
+RATIONALE: The mechanism delta over the rotation footgun is real (irreversibility + serialization-seam + cross-mirror invisibility), so this does NOT collapse to killer #3's known footgun => not RED. But novelty is INCREMENTAL, not clearly above bar: it instantiates the well-established "publisher preprocessing default silently forks the eval score" template (Parmar et al. CVPR 2022, arXiv:2104.11222) at a new seam, and the same-benchmark score-non-reproducibility phenomenon is itself prior (Recht et al. arXiv:1902.10811) — neither is cited or distinguished in the packet. Combined with my inability to independently verify the load-bearing "no literature hits" claim (live search denied this session, <2 sources), the honest hostile call is YELLOW: novelty survives as a genuine-but-incremental coupling pending (a) explicit positioning against the preprocessing-non-reproducibility genre, and (b) an independent prior-art sweep that confirms no mechanism-exact incumbent. A GREEN would require both gaps closed.
+```

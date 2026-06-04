@@ -340,3 +340,1057 @@ mcp: meta_core/three_pai_external_web_search (completed)
 hook: PostToolUse
 hook: PostToolUse Completed
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datasets/main/src/datasets/features/image.py | sed -n '120,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/pytorch/vision/main/torchvision/io/image.py | sed -n '150,260p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 346ms:
+        elif isinstance(value, (bytes, bytearray)):
+            return {"path": None, "bytes": value}
+        elif isinstance(value, np.ndarray):
+            # convert the image array to PNG/TIFF bytes
+            return encode_np_array(value)
+        elif isinstance(value, PIL.Image.Image):
+            # convert the PIL image to bytes (default format is PNG/TIFF)
+            return encode_pil_image(value)
+        elif value.get("path") is not None and os.path.isfile(value["path"]):
+            # we set "bytes": None to not duplicate the data if they're already available locally
+            return {"bytes": None, "path": value.get("path")}
+        elif value.get("bytes") is not None or value.get("path") is not None:
+            # store the image bytes, and path is used to infer the image format using the file extension
+            return {"bytes": value.get("bytes"), "path": value.get("path")}
+        else:
+            raise ValueError(
+                f"An image sample should have one of 'path' or 'bytes' but they are missing or None in {value}."
+            )
+
+    def decode_example(self, value: dict, token_per_repo_id=None) -> "PIL.Image.Image":
+        """Decode example image file into image data.
+
+        Args:
+            value (`str` or `dict`):
+                A string with the absolute image file path, a dictionary with
+                keys:
+
+                - `path`: String with absolute or relative image file path.
+                - `bytes`: The bytes of the image file.
+            token_per_repo_id (`dict`, *optional*):
+                To access and decode
+                image files from private repositories on the Hub, you can pass
+                a dictionary repo_id (`str`) -> token (`bool` or `str`).
+
+        Returns:
+            `PIL.Image.Image`
+        """
+        if not self.decode:
+            raise RuntimeError("Decoding is disabled for this feature. Please use Image(decode=True) instead.")
+
+        if config.PIL_AVAILABLE:
+            import PIL.Image
+            import PIL.ImageOps
+        else:
+            raise ImportError("To support decoding images, please install 'Pillow'.")
+
+        if token_per_repo_id is None:
+            token_per_repo_id = {}
+
+        path, bytes_ = value["path"], value["bytes"]
+        if bytes_ is None:
+            if path is None:
+                raise ValueError(f"An image should have one of 'path' or 'bytes' but both are None in {value}.")
+            else:
+                if is_local_path(path):
+                    image = PIL.Image.open(path)
+                else:
+                    source_url = path.split("::")[-1]
+                    pattern = (
+                        config.HUB_DATASETS_URL
+                        if source_url.startswith(config.HF_ENDPOINT)
+                        else config.HUB_DATASETS_HFFS_URL
+                    )
+                    source_url_fields = string_to_dict(source_url, pattern)
+                    token = (
+                        token_per_repo_id.get(source_url_fields["repo_id"]) if source_url_fields is not None else None
+                    )
+                    download_config = DownloadConfig(token=token)
+                    with xopen(path, "rb", download_config=download_config) as f:
+                        bytes_ = BytesIO(f.read())
+                    image = PIL.Image.open(bytes_)
+        else:
+            image = PIL.Image.open(BytesIO(bytes_))
+        image.load()  # to avoid "Too many open files" errors
+        if image.getexif().get(PIL.Image.ExifTags.Base.Orientation) is not None:
+            image = PIL.ImageOps.exif_transpose(image)
+        if self.mode and self.mode != image.mode:
+            image = image.convert(self.mode)
+        return image
+
+    def flatten(self) -> Union["FeatureType", dict[str, "FeatureType"]]:
+        """If in the decodable state, return the feature itself, otherwise flatten the feature into a dictionary."""
+        from .features import Value
+
+        return (
+            self
+            if self.decode
+            else {
+                "bytes": Value("binary"),
+                "path": Value("string"),
+            }
+        )
+
+    def cast_storage(self, storage: Union[pa.StringArray, pa.StructArray, pa.ListArray]) -> pa.StructArray:
+        """Cast an Arrow array to the Image arrow storage type.
+        The Arrow types that can be converted to the Image pyarrow storage type are:
+
+        - `pa.string()` - it must contain the "path" data
+        - `pa.large_string()` - it must contain the "path" data (will be cast to string if possible)
+        - `pa.binary()` - it must contain the image bytes
+        - `pa.struct({"bytes": pa.binary()})`
+        - `pa.struct({"path": pa.string()})`
+        - `pa.struct({"bytes": pa.binary(), "path": pa.string()})`  - order doesn't matter
+        - `pa.list(*)` - it must contain the image array data
+
+        Args:
+            storage (`Union[pa.StringArray, pa.StructArray, pa.ListArray]`):
+                PyArrow array to cast.
+
+        Returns:
+            `pa.StructArray`: Array in the Image arrow storage type, that is
+                `pa.struct({"bytes": pa.binary(), "path": pa.string()})`.
+        """
+        if pa.types.is_large_string(storage.type):
+            try:
+                storage = storage.cast(pa.string())
+            except pa.ArrowInvalid as e:
+                raise ValueError(
+                    f"Failed to cast large_string to string for Image feature. "
+                    f"This can happen if string values exceed 2GB. "
+                    f"Original error: {e}"
+                ) from e
+        if pa.types.is_string(storage.type):
+            bytes_array = pa.array([None] * len(storage), type=pa.binary())
+            storage = pa.StructArray.from_arrays([bytes_array, storage], ["bytes", "path"], mask=storage.is_null())
+        elif pa.types.is_large_binary(storage.type):
+            storage = array_cast(
+                storage, pa.binary()
+            )  # this can fail in case of big images, paths should be used instead
+            path_array = pa.array([None] * len(storage), type=pa.string())
+            storage = pa.StructArray.from_arrays([storage, path_array], ["bytes", "path"], mask=storage.is_null())
+        elif pa.types.is_binary(storage.type):
+            path_array = pa.array([None] * len(storage), type=pa.string())
+            storage = pa.StructArray.from_arrays([storage, path_array], ["bytes", "path"], mask=storage.is_null())
+        elif pa.types.is_struct(storage.type):
+            if storage.type.get_field_index("bytes") >= 0:
+                bytes_array = storage.field("bytes")
+            else:
+                bytes_array = pa.array([None] * len(storage), type=pa.binary())
+            if storage.type.get_field_index("path") >= 0:
+                path_array = storage.field("path")
+
+hook: PostToolUse
+ succeeded in 455ms:
+    """
+    Takes an input tensor in CHW layout (or HW in the case of grayscale images)
+    and saves it in a PNG file.
+
+    Args:
+        input (Tensor[channels, image_height, image_width]): int8 image tensor of
+            ``c`` channels, where ``c`` must be 1 or 3.
+        filename (str or ``pathlib.Path``): Path to save the image.
+        compression_level (int): Compression factor for the resulting file, it must be a number
+            between 0 and 9. Default: 6
+    """
+    if not torch.jit.is_scripting() and not torch.jit.is_tracing():
+        _log_api_usage_once(write_png)
+    output = encode_png(input, compression_level)
+    write_file(filename, output)
+
+
+def decode_jpeg(
+    input: Union[torch.Tensor, list[torch.Tensor]],
+    mode: ImageReadMode = ImageReadMode.UNCHANGED,
+    device: Union[str, torch.device] = "cpu",
+    apply_exif_orientation: bool = False,
+) -> Union[torch.Tensor, list[torch.Tensor]]:
+    """Decode JPEG image(s) into 3D RGB or grayscale Tensor(s), on CPU or CUDA.
+
+    The values of the output tensor are uint8 between 0 and 255.
+
+    .. note::
+        When using a CUDA device, passing a list of tensors is more efficient than repeated individual calls to ``decode_jpeg``.
+        When using CPU the performance is equivalent.
+        The CUDA version of this function has explicitly been designed with thread-safety in mind.
+        This function does not return partial results in case of an error.
+
+    Args:
+        input (Tensor[1] or list[Tensor[1]]): a (list of) one dimensional uint8 tensor(s) containing
+            the raw bytes of the JPEG image. The tensor(s) must be on CPU,
+            regardless of the ``device`` parameter.
+        mode (str or ImageReadMode): The mode to convert the image to, e.g. "RGB".
+            Default is "UNCHANGED".  See :class:`~torchvision.io.ImageReadMode`
+            for available modes.
+        device (str or torch.device): The device on which the decoded image will
+            be stored. If a cuda device is specified, the image will be decoded
+            with `nvjpeg <https://developer.nvidia.com/nvjpeg>`_. This is only
+            supported for CUDA version >= 10.1
+
+            .. betastatus:: device parameter
+
+            .. warning::
+                There is a memory leak in the nvjpeg library for CUDA versions < 11.6.
+                Make sure to rely on CUDA 11.6 or above before using ``device="cuda"``.
+        apply_exif_orientation (bool): apply EXIF orientation transformation to the output tensor.
+            Default: False. Only implemented for JPEG format on CPU.
+
+    Returns:
+        output (Tensor[image_channels, image_height, image_width] or list[Tensor[image_channels, image_height, image_width]]):
+            The values of the output tensor(s) are uint8 between 0 and 255.
+            ``output.device`` will be set to the specified ``device``
+
+
+    """
+    if not torch.jit.is_scripting() and not torch.jit.is_tracing():
+        _log_api_usage_once(decode_jpeg)
+    _assert_has_image_ops()
+    if isinstance(device, str):
+        device = torch.device(device)
+    if isinstance(mode, str):
+        mode = ImageReadMode[mode.upper()]
+
+    if isinstance(input, list):
+        if len(input) == 0:
+            raise ValueError("Input list must contain at least one element")
+        if not all(isinstance(t, torch.Tensor) for t in input):
+            raise ValueError("All elements of the input list must be tensors.")
+        if not all(t.device.type == "cpu" for t in input):
+            raise ValueError("Input list must contain tensors on CPU.")
+        if device.type == "cuda":
+            return torch.ops.image.decode_jpegs_cuda(input, mode.value, device)
+        else:
+            return [torch.ops.image.decode_jpeg(img, mode.value, apply_exif_orientation) for img in input]
+
+    else:  # input is tensor
+        if input.device.type != "cpu":
+            raise ValueError("Input tensor must be a CPU tensor")
+        if device.type == "cuda":
+            return torch.ops.image.decode_jpegs_cuda([input], mode.value, device)[0]
+        else:
+            return torch.ops.image.decode_jpeg(input, mode.value, apply_exif_orientation)
+
+
+def encode_jpeg(
+    input: Union[torch.Tensor, list[torch.Tensor]], quality: int = 75
+) -> Union[torch.Tensor, list[torch.Tensor]]:
+    """Encode RGB tensor(s) into raw encoded jpeg bytes, on CPU or CUDA.
+
+    .. note::
+        Passing a list of CUDA tensors is more efficient than repeated individual calls to ``encode_jpeg``.
+        For CPU tensors the performance is equivalent.
+
+    Args:
+        input (Tensor[channels, image_height, image_width] or List[Tensor[channels, image_height, image_width]]):
+            (list of) uint8 image tensor(s) of ``c`` channels, where ``c`` must be 1 or 3
+        quality (int): Quality of the resulting JPEG file(s). Must be a number between
+            1 and 100. Default: 75
+
+    Returns:
+        output (Tensor[1] or list[Tensor[1]]): A (list of) one dimensional uint8 tensor(s) that contain the raw bytes of the JPEG file.
+    """
+    if not torch.jit.is_scripting() and not torch.jit.is_tracing():
+        _log_api_usage_once(encode_jpeg)
+    _assert_has_image_ops()
+    if quality < 1 or quality > 100:
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datasets/main/src/datasets/features/image.py | sed -n '1,130p'" in /Users/dengcchi
+ succeeded in 0ms:
+import os
+import sys
+import warnings
+from dataclasses import dataclass, field
+from io import BytesIO
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
+
+import numpy as np
+import pyarrow as pa
+
+from .. import config
+from ..download.download_config import DownloadConfig
+from ..table import array_cast
+from ..utils.file_utils import is_local_path, is_remote_url, xopen
+from ..utils.py_utils import first_non_null_value, no_op_if_value_is_null, string_to_dict
+
+
+if TYPE_CHECKING:
+    import PIL.Image
+
+    from .features import FeatureType
+
+
+_IMAGE_COMPRESSION_FORMATS: Optional[list[str]] = None
+_NATIVE_BYTEORDER = "<" if sys.byteorder == "little" else ">"
+# Origin: https://github.com/python-pillow/Pillow/blob/698951e19e19972aeed56df686868f1329981c12/src/PIL/Image.py#L3126 minus "|i1" which values are not preserved correctly when saving and loading an image
+_VALID_IMAGE_ARRAY_DTPYES = [
+    np.dtype("|b1"),
+    np.dtype("|u1"),
+    np.dtype("<u2"),
+    np.dtype(">u2"),
+    np.dtype("<i2"),
+    np.dtype(">i2"),
+    np.dtype("<u4"),
+    np.dtype(">u4"),
+    np.dtype("<i4"),
+    np.dtype(">i4"),
+    np.dtype("<f4"),
+    np.dtype(">f4"),
+    np.dtype("<f8"),
+    np.dtype(">f8"),
+]
+
+
+@dataclass
+class Image:
+    """Image [`Feature`] to read image data from an image file.
+
+    Input: The Image feature accepts as input:
+    - A `str`: Absolute path to the image file (i.e. random access is allowed).
+    - A `pathlib.Path`: path to the image file (i.e. random access is allowed).
+    - A `dict` with the keys:
+
+        - `path`: String with relative path of the image file to the archive file.
+        - `bytes`: Bytes of the image file.
+
+      This is useful for parquet or webdataset files which embed image files.
+
+    - An `np.ndarray`: NumPy array representing an image.
+    - A `PIL.Image.Image`: PIL image object.
+
+    Output: The Image features output data as `PIL.Image.Image` objects.
+
+    Args:
+        mode (`str`, *optional*):
+            The mode to convert the image to. If `None`, the native mode of the image is used.
+        decode (`bool`, defaults to `True`):
+            Whether to decode the image data. If `False`,
+            returns the underlying dictionary in the format `{"path": image_path, "bytes": image_bytes}`.
+
+    Examples:
+
+    ```py
+    >>> from datasets import load_dataset, Image
+    >>> ds = load_dataset("AI-Lab-Makerere/beans", split="train")
+    >>> ds.features["image"]
+    Image(decode=True, id=None)
+    >>> ds[0]["image"]
+    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x500 at 0x15E52E7F0>
+    >>> ds = ds.cast_column('image', Image(decode=False))
+    {'bytes': None,
+     'path': '/root/.cache/huggingface/datasets/downloads/extracted/b0a21163f78769a2cf11f58dfc767fb458fc7cea5c05dccc0144a2c0f0bc1292/train/healthy/healthy_train.85.jpg'}
+    ```
+    """
+
+    mode: Optional[str] = None
+    decode: bool = True
+    id: Optional[str] = field(default=None, repr=False)
+    # Automatically constructed
+    dtype: ClassVar[str] = "PIL.Image.Image"
+    pa_type: ClassVar[Any] = pa.struct({"bytes": pa.binary(), "path": pa.string()})
+    _type: str = field(default="Image", init=False, repr=False)
+
+    def __call__(self):
+        return self.pa_type
+
+    def encode_example(self, value: Union[str, bytes, bytearray, dict, np.ndarray, "PIL.Image.Image"]) -> dict:
+        """Encode example into a format for Arrow.
+
+        Args:
+            value (`str`, `np.ndarray`, `PIL.Image.Image` or `dict`):
+                Data passed as input to Image feature.
+
+        Returns:
+            `dict` with "path" and "bytes" fields
+        """
+        if config.PIL_AVAILABLE:
+            import PIL.Image
+        else:
+            raise ImportError("To support encoding images, please install 'Pillow'.")
+
+        if isinstance(value, list):
+            value = np.array(value)
+
+        if isinstance(value, str):
+            return {"path": value, "bytes": None}
+        elif isinstance(value, Path):
+            return {"path": str(value.absolute()), "bytes": None}
+        elif isinstance(value, (bytes, bytearray)):
+            return {"path": None, "bytes": value}
+        elif isinstance(value, np.ndarray):
+            # convert the image array to PNG/TIFF bytes
+            return encode_np_array(value)
+        elif isinstance(value, PIL.Image.Image):
+            # convert the PIL image to bytes (default format is PNG/TIFF)
+            return encode_pil_image(value)
+        elif value.get("path") is not None and os.path.isfile(value["path"]):
+            # we set "bytes": None to not duplicate the data if they're already available locally
+            return {"bytes": None, "path": value.get("path")}
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/huggingface/datasets/main/src/datasets/features/image.py | grep -n \"def encode_pil_image\\|def encode_np_array\" -A50" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 160ms:
+369:def encode_pil_image(image: "PIL.Image.Image") -> dict:
+370-    if hasattr(image, "filename") and image.filename != "":
+371-        return {"path": image.filename, "bytes": None}
+372-    else:
+373-        return {"path": None, "bytes": image_to_bytes(image)}
+374-
+375-
+376:def encode_np_array(array: np.ndarray) -> dict:
+377-    if config.PIL_AVAILABLE:
+378-        import PIL.Image
+379-    else:
+380-        raise ImportError("To support encoding images, please install 'Pillow'.")
+381-
+382-    dtype = array.dtype
+383-    dtype_byteorder = dtype.byteorder if dtype.byteorder != "=" else _NATIVE_BYTEORDER
+384-    dtype_kind = dtype.kind
+385-    dtype_itemsize = dtype.itemsize
+386-
+387-    dest_dtype = None
+388-
+389-    # Multi-channel array case (only np.dtype("|u1") is allowed)
+390-    if array.shape[2:]:
+391-        if dtype_kind not in ["u", "i"]:
+392-            raise TypeError(
+393-                f"Unsupported array dtype {dtype} for image encoding. Only {dest_dtype} is supported for multi-channel arrays."
+394-            )
+395-        dest_dtype = np.dtype("|u1")
+396-        if dtype != dest_dtype:
+397-            warnings.warn(f"Downcasting array dtype {dtype} to {dest_dtype} to be compatible with 'Pillow'")
+398-    # Exact match
+399-    elif dtype in _VALID_IMAGE_ARRAY_DTPYES:
+400-        dest_dtype = dtype
+401-    else:  # Downcast the type within the kind (np.can_cast(from_type, to_type, casting="same_kind") doesn't behave as expected, so do it manually)
+402-        while dtype_itemsize >= 1:
+403-            dtype_str = dtype_byteorder + dtype_kind + str(dtype_itemsize)
+404-            if np.dtype(dtype_str) in _VALID_IMAGE_ARRAY_DTPYES:
+405-                dest_dtype = np.dtype(dtype_str)
+406-                warnings.warn(f"Downcasting array dtype {dtype} to {dest_dtype} to be compatible with 'Pillow'")
+407-                break
+408-            else:
+409-                dtype_itemsize //= 2
+410-        if dest_dtype is None:
+411-            raise TypeError(
+412-                f"Cannot downcast dtype {dtype} to a valid image dtype. Valid image dtypes: {_VALID_IMAGE_ARRAY_DTPYES}"
+413-            )
+414-
+415-    image = PIL.Image.fromarray(array.astype(dest_dtype))
+416-    return {"path": None, "bytes": image_to_bytes(image)}
+417-
+418-
+419-def objects_to_list_of_image_dicts(
+420-    objs: Union[list[str], list[dict], list[np.ndarray], list["PIL.Image.Image"]],
+421-) -> list[dict]:
+422-    """Encode a list of objects into a format suitable for creating an extension array of type `ImageExtensionType`."""
+423-    if config.PIL_AVAILABLE:
+424-        import PIL.Image
+425-    else:
+426-        raise ImportError("To support encoding images, please install 'Pillow'.")
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'curl -L --silent https://raw.githubusercontent.com/huggingface/datasets/main/src/datasets/features/image.py | grep -n "def image_to_bytes" -A45' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 134ms:
+358:def image_to_bytes(image: "PIL.Image.Image") -> bytes:
+359-    """Convert a PIL Image object to bytes using native compression if possible, otherwise use PNG/TIFF compression."""
+360-    buffer = BytesIO()
+361-    if image.format in list_image_compression_formats():
+362-        format = image.format
+363-    else:
+364-        format = "PNG" if image.mode in ["1", "L", "LA", "RGB", "RGBA"] else "TIFF"
+365-    image.save(buffer, format=format)
+366-    return buffer.getvalue()
+367-
+368-
+369-def encode_pil_image(image: "PIL.Image.Image") -> dict:
+370-    if hasattr(image, "filename") and image.filename != "":
+371-        return {"path": image.filename, "bytes": None}
+372-    else:
+373-        return {"path": None, "bytes": image_to_bytes(image)}
+374-
+375-
+376-def encode_np_array(array: np.ndarray) -> dict:
+377-    if config.PIL_AVAILABLE:
+378-        import PIL.Image
+379-    else:
+380-        raise ImportError("To support encoding images, please install 'Pillow'.")
+381-
+382-    dtype = array.dtype
+383-    dtype_byteorder = dtype.byteorder if dtype.byteorder != "=" else _NATIVE_BYTEORDER
+384-    dtype_kind = dtype.kind
+385-    dtype_itemsize = dtype.itemsize
+386-
+387-    dest_dtype = None
+388-
+389-    # Multi-channel array case (only np.dtype("|u1") is allowed)
+390-    if array.shape[2:]:
+391-        if dtype_kind not in ["u", "i"]:
+392-            raise TypeError(
+393-                f"Unsupported array dtype {dtype} for image encoding. Only {dest_dtype} is supported for multi-channel arrays."
+394-            )
+395-        dest_dtype = np.dtype("|u1")
+396-        if dtype != dest_dtype:
+397-            warnings.warn(f"Downcasting array dtype {dtype} to {dest_dtype} to be compatible with 'Pillow'")
+398-    # Exact match
+399-    elif dtype in _VALID_IMAGE_ARRAY_DTPYES:
+400-        dest_dtype = dtype
+401-    else:  # Downcast the type within the kind (np.can_cast(from_type, to_type, casting="same_kind") doesn't behave as expected, so do it manually)
+402-        while dtype_itemsize >= 1:
+403-            dtype_str = dtype_byteorder + dtype_kind + str(dtype_itemsize)
+
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/huggingface/datasets/issues/6252 | python3 -m json.tool | sed -n '1,140p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/huggingface/datasets/pulls/6739 | python3 -m json.tool | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22EXIF%22+%22benchmark%22+%22score%22+%22orientation%22' | python3 -m json.tool | sed -n '1,180p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 595ms:
+{
+    "url": "https://api.github.com/repos/huggingface/datasets/issues/6252",
+    "repository_url": "https://api.github.com/repos/huggingface/datasets",
+    "labels_url": "https://api.github.com/repos/huggingface/datasets/issues/6252/labels{/name}",
+    "comments_url": "https://api.github.com/repos/huggingface/datasets/issues/6252/comments",
+    "events_url": "https://api.github.com/repos/huggingface/datasets/issues/6252/events",
+    "html_url": "https://github.com/huggingface/datasets/issues/6252",
+    "id": 1906375378,
+    "node_id": "I_kwDODunzps5xoPrS",
+    "number": 6252,
+    "title": "exif_transpose not done to Image (PIL problem)",
+    "user": {
+        "login": "rhajou",
+        "id": 108274349,
+        "node_id": "U_kgDOBnQirQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/108274349?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/rhajou",
+        "html_url": "https://github.com/rhajou",
+        "followers_url": "https://api.github.com/users/rhajou/followers",
+        "following_url": "https://api.github.com/users/rhajou/following{/other_user}",
+        "gists_url": "https://api.github.com/users/rhajou/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/rhajou/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/rhajou/subscriptions",
+        "organizations_url": "https://api.github.com/users/rhajou/orgs",
+        "repos_url": "https://api.github.com/users/rhajou/repos",
+        "events_url": "https://api.github.com/users/rhajou/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/rhajou/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+    },
+    "labels": [
+        {
+            "id": 1935892871,
+            "node_id": "MDU6TGFiZWwxOTM1ODkyODcx",
+            "url": "https://api.github.com/repos/huggingface/datasets/labels/enhancement",
+            "name": "enhancement",
+            "color": "a2eeef",
+            "default": true,
+            "description": "New feature or request"
+        }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": {
+        "url": "https://api.github.com/repos/huggingface/datasets/milestones/10",
+        "html_url": "https://github.com/huggingface/datasets/milestone/10",
+        "labels_url": "https://api.github.com/repos/huggingface/datasets/milestones/10/labels",
+        "id": 9038583,
+        "node_id": "MI_kwDODunzps4Aier3",
+        "number": 10,
+        "title": "3.0",
+        "description": "Next major release",
+        "creator": {
+            "login": "mariosasko",
+            "id": 47462742,
+            "node_id": "MDQ6VXNlcjQ3NDYyNzQy",
+            "avatar_url": "https://avatars.githubusercontent.com/u/47462742?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/mariosasko",
+            "html_url": "https://github.com/mariosasko",
+            "followers_url": "https://api.github.com/users/mariosasko/followers",
+            "following_url": "https://api.github.com/users/mariosasko/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mariosasko/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/mariosasko/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mariosasko/subscriptions",
+            "organizations_url": "https://api.github.com/users/mariosasko/orgs",
+            "repos_url": "https://api.github.com/users/mariosasko/repos",
+            "events_url": "https://api.github.com/users/mariosasko/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/mariosasko/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+        },
+        "open_issues": 3,
+        "closed_issues": 5,
+        "state": "open",
+        "created_at": "2023-02-13T16:22:42Z",
+        "updated_at": "2024-08-21T09:35:06Z",
+        "due_on": null,
+        "closed_at": null
+    },
+    "comments": 2,
+    "created_at": "2023-09-21T08:11:46Z",
+    "updated_at": "2024-03-19T15:29:43Z",
+    "closed_at": "2024-03-19T15:29:43Z",
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+    },
+    "body": "### Feature request\n\nI noticed that some of my images loaded using PIL have some metadata related to exif that can rotate them when loading.\r\nSince the dataset.features.Image uses PIL for loading, the loaded image may be rotated (width and height will be inverted) thus for tasks as object detection and layoutLM this can create some inconsistencies (between input bboxes and input images). \r\n\r\nFor now there is no option in datasets.features.Image to specify that. We need to do the following when preparing examples (when preparing images for training, test or inference): \r\n```\r\nfrom PIL import Image, ImageOps \r\npil = ImageOps.exif_transpose(pil)\r\n```\r\n\r\nreference: https://stackoverflow.com/a/63950647/5720150 \r\n\r\nIs it possible to add this by default to the datasets.feature.Image ? or to add the option to do the ImageOps.exif_transpose?\r\n\r\nThank you\n\n### Motivation\n\nPrevent having inverted data related to exif metadata that may affect object detection tasks\n\n### Your contribution\n\nChanging in datasets.featrues.Image I can help with that. ",
+    "closed_by": {
+        "login": "mariosasko",
+        "id": 47462742,
+        "node_id": "MDQ6VXNlcjQ3NDYyNzQy",
+        "avatar_url": "https://avatars.githubusercontent.com/u/47462742?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mariosasko",
+        "html_url": "https://github.com/mariosasko",
+        "followers_url": "https://api.github.com/users/mariosasko/followers",
+        "following_url": "https://api.github.com/users/mariosasko/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mariosasko/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mariosasko/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mariosasko/subscriptions",
+        "organizations_url": "https://api.github.com/users/mariosasko/orgs",
+        "repos_url": "https://api.github.com/users/mariosasko/repos",
+        "events_url": "https://api.github.com/users/mariosasko/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mariosasko/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+    },
+    "reactions": {
+        "url": "https://api.github.com/repos/huggingface/datasets/issues/6252/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/huggingface/datasets/issues/6252/timeline",
+    "performed_via_github_app": null,
+
+hook: PostToolUse
+ succeeded in 883ms:
+{
+    "url": "https://api.github.com/repos/huggingface/datasets/pulls/6739",
+    "id": 1777867806,
+    "node_id": "PR_kwDODunzps5p-Bwe",
+    "html_url": "https://github.com/huggingface/datasets/pull/6739",
+    "diff_url": "https://github.com/huggingface/datasets/pull/6739.diff",
+    "patch_url": "https://github.com/huggingface/datasets/pull/6739.patch",
+    "issue_url": "https://api.github.com/repos/huggingface/datasets/issues/6739",
+    "number": 6739,
+    "state": "closed",
+    "locked": false,
+    "title": "Transpose images with EXIF Orientation tag",
+    "user": {
+        "login": "mariosasko",
+        "id": 47462742,
+        "node_id": "MDQ6VXNlcjQ3NDYyNzQy",
+        "avatar_url": "https://avatars.githubusercontent.com/u/47462742?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mariosasko",
+        "html_url": "https://github.com/mariosasko",
+        "followers_url": "https://api.github.com/users/mariosasko/followers",
+        "following_url": "https://api.github.com/users/mariosasko/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mariosasko/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mariosasko/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mariosasko/subscriptions",
+        "organizations_url": "https://api.github.com/users/mariosasko/orgs",
+        "repos_url": "https://api.github.com/users/mariosasko/repos",
+        "events_url": "https://api.github.com/users/mariosasko/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mariosasko/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+    },
+    "body": "Closes https://github.com/huggingface/datasets/issues/6252",
+    "created_at": "2024-03-18T16:43:06Z",
+    "updated_at": "2025-07-03T11:33:18Z",
+    "closed_at": "2024-03-19T15:29:42Z",
+    "merged_at": "2024-03-19T15:29:41Z",
+    "merge_commit_sha": "19b40860acf3b3ba8db727fcf3b1b99ebb8d7e33",
+    "assignees": [],
+    "requested_reviewers": [],
+    "requested_teams": [],
+    "labels": [],
+    "milestone": null,
+    "draft": false,
+    "commits_url": "https://api.github.com/repos/huggingface/datasets/pulls/6739/commits",
+    "review_comments_url": "https://api.github.com/repos/huggingface/datasets/pulls/6739/comments",
+    "review_comment_url": "https://api.github.com/repos/huggingface/datasets/pulls/comments{/number}",
+    "comments_url": "https://api.github.com/repos/huggingface/datasets/issues/6739/comments",
+    "statuses_url": "https://api.github.com/repos/huggingface/datasets/statuses/4d91f88f55ef89995a39ea608f43790626b237f6",
+    "head": {
+        "label": "huggingface:image-exif_transpose",
+        "ref": "image-exif_transpose",
+        "sha": "4d91f88f55ef89995a39ea608f43790626b237f6",
+        "user": {
+            "login": "huggingface",
+            "id": 25720743,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjI1NzIwNzQz",
+            "avatar_url": "https://avatars.githubusercontent.com/u/25720743?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/huggingface",
+            "html_url": "https://github.com/huggingface",
+            "followers_url": "https://api.github.com/users/huggingface/followers",
+            "following_url": "https://api.github.com/users/huggingface/following{/other_user}",
+            "gists_url": "https://api.github.com/users/huggingface/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/huggingface/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/huggingface/subscriptions",
+            "organizations_url": "https://api.github.com/users/huggingface/orgs",
+            "repos_url": "https://api.github.com/users/huggingface/repos",
+            "events_url": "https://api.github.com/users/huggingface/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/huggingface/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+        },
+        "repo": {
+            "id": 250213286,
+            "node_id": "MDEwOlJlcG9zaXRvcnkyNTAyMTMyODY=",
+            "name": "datasets",
+            "full_name": "huggingface/datasets",
+            "private": false,
+            "owner": {
+                "login": "huggingface",
+                "id": 25720743,
+                "node_id": "MDEyOk9yZ2FuaXphdGlvbjI1NzIwNzQz",
+                "avatar_url": "https://avatars.githubusercontent.com/u/25720743?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/huggingface",
+                "html_url": "https://github.com/huggingface",
+                "followers_url": "https://api.github.com/users/huggingface/followers",
+                "following_url": "https://api.github.com/users/huggingface/following{/other_user}",
+                "gists_url": "https://api.github.com/users/huggingface/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/huggingface/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/huggingface/subscriptions",
+                "organizations_url": "https://api.github.com/users/huggingface/orgs",
+                "repos_url": "https://api.github.com/users/huggingface/repos",
+                "events_url": "https://api.github.com/users/huggingface/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/huggingface/received_events",
+                "type": "Organization",
+                "user_view_type": "public",
+                "site_admin": false
+            },
+            "html_url": "https://github.com/huggingface/datasets",
+            "description": "\ud83e\udd17 The largest hub of ready-to-use datasets for AI models with fast, easy-to-use and efficient data manipulation tools",
+            "fork": false,
+            "url": "https://api.github.com/repos/huggingface/datasets",
+            "forks_url": "https://api.github.com/repos/huggingface/datasets/forks",
+            "keys_url": "https://api.github.com/repos/huggingface/datasets/keys{/key_id}",
+            "collaborators_url": "https://api.github.com/repos/huggingface/datasets/collaborators{/collaborator}",
+            "teams_url": "https://api.github.com/repos/huggingface/datasets/teams",
+            "hooks_url": "https://api.github.com/repos/huggingface/datasets/hooks",
+            "issue_events_url": "https://api.github.com/repos/huggingface/datasets/issues/events{/number}",
+            "events_url": "https://api.github.com/repos/huggingface/datasets/events",
+            "assignees_url": "https://api.github.com/repos/huggingface/datasets/assignees{/user}",
+            "branches_url": "https://api.github.com/repos/huggingface/datasets/branches{/branch}",
+            "tags_url": "https://api.github.com/repos/huggingface/datasets/tags",
+            "blobs_url": "https://api.github.com/repos/huggingface/datasets/git/blobs{/sha}",
+            "git_tags_url": "https://api.github.com/repos/huggingface/datasets/git/tags{/sha}",
+            "git_refs_url": "https://api.github.com/repos/huggingface/datasets/git/refs{/sha}",
+            "trees_url": "https://api.github.com/repos/huggingface/datasets/git/trees{/sha}",
+            "statuses_url": "https://api.github.com/repos/huggingface/datasets/statuses/{sha}",
+            "languages_url": "https://api.github.com/repos/huggingface/datasets/languages",
+            "stargazers_url": "https://api.github.com/repos/huggingface/datasets/stargazers",
+            "contributors_url": "https://api.github.com/repos/huggingface/datasets/contributors",
+            "subscribers_url": "https://api.github.com/repos/huggingface/datasets/subscribers",
+            "subscription_url": "https://api.github.com/repos/huggingface/datasets/subscription",
+            "commits_url": "https://api.github.com/repos/huggingface/datasets/commits{/sha}",
+            "git_commits_url": "https://api.github.com/repos/huggingface/datasets/git/commits{/sha}",
+            "comments_url": "https://api.github.com/repos/huggingface/datasets/comments{/number}",
+            "issue_comment_url": "https://api.github.com/repos/huggingface/datasets/issues/comments{/number}",
+            "contents_url": "https://api.github.com/repos/huggingface/datasets/contents/{+path}",
+            "compare_url": "https://api.github.com/repos/huggingface/datasets/compare/{base}...{head}",
+            "merges_url": "https://api.github.com/repos/huggingface/datasets/merges",
+            "archive_url": "https://api.github.com/repos/huggingface/datasets/{archive_format}{/ref}",
+            "downloads_url": "https://api.github.com/repos/huggingface/datasets/downloads",
+            "issues_url": "https://api.github.com/repos/huggingface/datasets/issues{/number}",
+            "pulls_url": "https://api.github.com/repos/huggingface/datasets/pulls{/number}",
+            "milestones_url": "https://api.github.com/repos/huggingface/datasets/milestones{/number}",
+            "notifications_url": "https://api.github.com/repos/huggingface/datasets/notifications{?since,all,participating}",
+            "labels_url": "https://api.github.com/repos/huggingface/datasets/labels{/name}",
+            "releases_url": "https://api.github.com/repos/huggingface/datasets/releases{/id}",
+            "deployments_url": "https://api.github.com/repos/huggingface/datasets/deployments",
+            "created_at": "2020-03-26T09:23:22Z",
+            "updated_at": "2026-06-04T17:37:49Z",
+            "pushed_at": "2026-06-03T14:46:58Z",
+            "git_url": "git://github.com/huggingface/datasets.git",
+            "ssh_url": "git@github.com:huggingface/datasets.git",
+            "clone_url": "https://github.com/huggingface/datasets.git",
+            "svn_url": "https://github.com/huggingface/datasets",
+            "homepage": "https://huggingface.co/docs/datasets",
+            "size": 116067,
+            "stargazers_count": 21576,
+            "watchers_count": 21576,
+            "language": "Python",
+            "has_issues": true,
+            "has_projects": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "has_pages": false,
+            "has_discussions": true,
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1407ms:
+{
+    "total_count": 674,
+    "incomplete_results": false,
+    "items": [
+        {
+            "url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16",
+            "repository_url": "https://api.github.com/repos/guylamar2006/Neothesia",
+            "labels_url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16/labels{/name}",
+            "comments_url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16/comments",
+            "events_url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16/events",
+            "html_url": "https://github.com/guylamar2006/Neothesia/pull/16",
+            "id": 2945619587,
+            "node_id": "PR_kwDOM-_bDM6P_ue7",
+            "number": 16,
+            "title": "Bump image from 0.24.9 to 0.25.6",
+            "user": {
+                "login": "dependabot[bot]",
+                "id": 49699333,
+                "node_id": "MDM6Qm90NDk2OTkzMzM=",
+                "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+                "html_url": "https://github.com/apps/dependabot",
+                "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+                "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+                "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+                "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+                "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+                "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+                "type": "Bot",
+                "user_view_type": "public",
+                "site_admin": false
+            },
+            "labels": [
+                {
+                    "id": 7996486295,
+                    "node_id": "LA_kwDOM-_bDM8AAAAB3KCylw",
+                    "url": "https://api.github.com/repos/guylamar2006/Neothesia/labels/dependencies",
+                    "name": "dependencies",
+                    "color": "0366d6",
+                    "default": false,
+                    "description": "Pull requests that update a dependency file"
+                },
+                {
+                    "id": 8348700351,
+                    "node_id": "LA_kwDOM-_bDM8AAAAB8Z8Ovw",
+                    "url": "https://api.github.com/repos/guylamar2006/Neothesia/labels/rust",
+                    "name": "rust",
+                    "color": "000000",
+                    "default": false,
+                    "description": "Pull requests that update rust code"
+                }
+            ],
+            "state": "open",
+            "locked": false,
+            "assignees": [],
+            "milestone": null,
+            "comments": 1,
+            "created_at": "2025-03-25T07:49:56Z",
+            "updated_at": "2026-03-30T20:17:03Z",
+            "closed_at": null,
+            "assignee": null,
+            "author_association": "NONE",
+            "active_lock_reason": null,
+            "draft": false,
+            "pull_request": {
+                "url": "https://api.github.com/repos/guylamar2006/Neothesia/pulls/16",
+                "html_url": "https://github.com/guylamar2006/Neothesia/pull/16",
+                "diff_url": "https://github.com/guylamar2006/Neothesia/pull/16.diff",
+                "patch_url": "https://github.com/guylamar2006/Neothesia/pull/16.patch",
+                "merged_at": null
+            },
+            "body": "Bumps [image](https://github.com/image-rs/image) from 0.24.9 to 0.25.6.\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href=\"https://github.com/image-rs/image/blob/main/CHANGES.md\">image's changelog</a>.</em></p>\n<blockquote>\n<h3>Version 0.25.6</h3>\n<p>Features:</p>\n<ul>\n<li>Improved format detection (<a href=\"https://redirect.github.com/image-rs/image/pull/2418\">#2418</a>)</li>\n<li>Implement writing ICC profiles for JPEG and PNG images (<a href=\"https://redirect.github.com/image-rs/image/pull/2389\">#2389</a>)</li>\n</ul>\n<p>Bug fixes:</p>\n<ul>\n<li>JPEG encoding bugfix (<a href=\"https://redirect.github.com/image-rs/image/pull/2387\">#2387</a>)</li>\n<li>Expanded ICO format detection (<a href=\"https://redirect.github.com/image-rs/image/pull/2434\">#2434</a>)</li>\n<li>Fixed EXR bug with NaNs (<a href=\"https://redirect.github.com/image-rs/image/pull/2381\">#2381</a>)</li>\n<li>Various documentation improvements</li>\n</ul>\n<h3>Version 0.25.5</h3>\n<p>Features:</p>\n<ul>\n<li>Added support for decoding 10-bit and 12-bit AVIF</li>\n<li>Initial, opt-in serde support for an enum. This may be extended to other types in the future.</li>\n</ul>\n<p>Bug fixes:</p>\n<ul>\n<li><a href=\"https://redirect.github.com/image-rs/image/pull/2373\">Multiple bug fixes in AVIF decoding</a></li>\n<li>The <code>rayon</code> feature now correctly toggles the use of <code>rayon</code> when encoding AVIF. (Previously it would be either always on or always off depending on the version of the <code>ravif</code> crate in your dependency tree.)</li>\n<li>&quot;jfif&quot; file extension for JPEG images is now recognized</li>\n</ul>\n<h3>Version 0.25.4</h3>\n<p>Features:</p>\n<ul>\n<li>Much faster decoding of lossless WebP due to a variety of optimizations. Our benchmarks show 2x to 2.5x improvement.</li>\n<li>Added support for orientation metadata, so that e.g. smartphone camera images could be displayed correctly:\n<ul>\n<li>Added <code>ImageDecoder::orientation()</code> and implemented orientation metadata extraction for JPEG, WebP and TIFF formats</li>\n<li>Added <code>DynamicImage::apply_orientation()</code> to apply the orientation to an image</li>\n</ul>\n</li>\n<li>Added support for extracting Exif metadata from images via <code>ImageDecoder::exif_metadata()</code>, and implemented it for JPEG and WebP formats</li>\n<li>Added <code>ImageEncoder::set_icc_profile()</code> and implemented it for WebP format. Pull requests with implementations for other formats are welcome.</li>\n<li>Added <code>DynamicImage::fast_blur()</code> for a linear-time approximation of Gaussian blur, which is much faster at larger blur radii</li>\n</ul>\n<p>Bug fixes:</p>\n<ul>\n<li>Fixed some APNG images being decoded incorrectly</li>\n<li>Fixed the iterator over animated WebP frames to return <code>None</code> instead of an error when the end of the animation is reached</li>\n</ul>\n<h3>Version 0.25.3</h3>\n<p>Yanked! This version accidentally missed a commit that should have been\nincluded with the release. The <code>Orientation</code> struct should be in the\nappropriate module instead of the top-level. This release won't be supported.</p>\n<h3>Version 0.25.2</h3>\n<p>Features:</p>\n<ul>\n<li>Added the HDR encoder to supported formats in generic write methods with the\n<code>hdr</code> feature enabled. Supports 32-bit float RGB color only, for now.</li>\n<li>When cloning <code>ImageBuffer</code>, <code>DynamicImage</code> and <code>Frame</code> the existing buffer</li>\n</ul>\n<!-- raw HTML omitted -->\n</blockquote>\n<p>... (truncated)</p>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/image-rs/image/commit/f337e27aadaae8b86484429bc6020fef8a019c95\"><code>f337e27</code></a> Release 0.25.6 (<a href=\"https://redirect.github.com/image-rs/image/issues/2441\">#2441</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/0166f687e9276cec9081a72488ba1f0c9bd88608\"><code>0166f68</code></a> CI: add num-traits to public (<a href=\"https://redirect.github.com/image-rs/image/issues/2446\">#2446</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/ca9e2dceb436a8c5a8202797cb9e8a1573eba35e\"><code>ca9e2dc</code></a> add links to readme (<a href=\"https://redirect.github.com/image-rs/image/issues/2437\">#2437</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/95be33928ea284a4621bae7e06abb17025a66df4\"><code>95be339</code></a> Making clippy happy (<a href=\"https://redirect.github.com/image-rs/image/issues/2439\">#2439</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/c62d3ace614155ac46c95b85b1ec86db337d15c0\"><code>c62d3ac</code></a> Detect image/vnd.microsoft.icon mime types as ImageFormat::Ico (<a href=\"https://redirect.github.com/image-rs/image/issues/2434\">#2434</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/85f2412d552ddd2f576e16d023fd352589f4c605\"><code>85f2412</code></a> Fix missing spaces in JpegDecoder error message (<a href=\"https://redirect.github.com/image-rs/image/issues/2433\">#2433</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/b22ba14127749ce821b03119a492c776fc1846d4\"><code>b22ba14</code></a> Remove limits when parsing JPEG metadata (<a href=\"https://redirect.github.com/image-rs/image/issues/2429\">#2429</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/4ef6f1505cb0b320c530d8b0a029d0cfa4b13b14\"><code>4ef6f15</code></a> Fix unbalanced backticks in doc comments (<a href=\"https://redirect.github.com/image-rs/image/issues/2427\">#2427</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/d4054385a1b6071bfa34e045f4b598d31d68f41f\"><code>d405438</code></a> Reduce typo count (<a href=\"https://redirect.github.com/image-rs/image/issues/2426\">#2426</a>)</li>\n<li><a href=\"https://github.com/image-rs/image/commit/68159de1c1f57653c0ce93422921b32633b6bd45\"><code>68159de</code></a> Update resize and blurs doc (<a href=\"https://redirect.github.com/image-rs/image/issues/2424\">#2424</a>)</li>\n<li>Additional commits viewable in <a href=\"https://github.com/image-rs/image/compare/v0.24.9...v0.25.6\">compare view</a></li>\n</ul>\n</details>\n<br />\n\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=image&package-manager=cargo&previous-version=0.24.9&new-version=0.25.6)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot merge` will merge this PR after your CI passes on it\n- `@dependabot squash and merge` will squash and merge this PR after your CI passes on it\n- `@dependabot cancel merge` will cancel a previously requested merge and block automerging\n- `@dependabot reopen` will reopen this PR if it is closed\n- `@dependabot close` will close this PR and stop Dependabot recreating it. You can achieve the same result by closing it manually\n- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency\n- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)\n\n\n</details>",
+            "reactions": {
+                "url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16/reactions",
+                "total_count": 0,
+                "+1": 0,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 0,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0
+            },
+            "timeline_url": "https://api.github.com/repos/guylamar2006/Neothesia/issues/16/timeline",
+            "performed_via_github_app": null,
+            "state_reason": null,
+            "score": 1.0
+        },
+        {
+            "url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36",
+            "repository_url": "https://api.github.com/repos/ACTA-Team/news-acta",
+            "labels_url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36/labels{/name}",
+            "comments_url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36/comments",
+            "events_url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36/events",
+            "html_url": "https://github.com/ACTA-Team/news-acta/pull/36",
+            "id": 4548921383,
+            "node_id": "PR_kwDOR_Ltkc7gqs10",
+            "number": 36,
+            "title": "Complete Media Management System with Verifiable Storage  #28",
+            "user": {
+                "login": "temi-Dee",
+                "id": 74737098,
+                "node_id": "MDQ6VXNlcjc0NzM3MDk4",
+                "avatar_url": "https://avatars.githubusercontent.com/u/74737098?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/temi-Dee",
+                "html_url": "https://github.com/temi-Dee",
+                "followers_url": "https://api.github.com/users/temi-Dee/followers",
+                "following_url": "https://api.github.com/users/temi-Dee/following{/other_user}",
+                "gists_url": "https://api.github.com/users/temi-Dee/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/temi-Dee/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/temi-Dee/subscriptions",
+                "organizations_url": "https://api.github.com/users/temi-Dee/orgs",
+                "repos_url": "https://api.github.com/users/temi-Dee/repos",
+                "events_url": "https://api.github.com/users/temi-Dee/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/temi-Dee/received_events",
+                "type": "User",
+                "user_view_type": "public",
+                "site_admin": false
+            },
+            "labels": [],
+            "state": "open",
+            "locked": false,
+            "assignees": [],
+            "milestone": null,
+            "comments": 3,
+            "created_at": "2026-05-29T13:44:54Z",
+            "updated_at": "2026-06-01T12:59:16Z",
+            "closed_at": null,
+            "assignee": null,
+            "author_association": "CONTRIBUTOR",
+            "issue_field_values": [],
+            "type": null,
+            "active_lock_reason": null,
+            "draft": false,
+            "pull_request": {
+                "url": "https://api.github.com/repos/ACTA-Team/news-acta/pulls/36",
+                "html_url": "https://github.com/ACTA-Team/news-acta/pull/36",
+                "diff_url": "https://github.com/ACTA-Team/news-acta/pull/36.diff",
+                "patch_url": "https://github.com/ACTA-Team/news-acta/pull/36.patch",
+                "merged_at": null
+            },
+            "body": "Closes #28\n\n---\n\n# \ud83d\ude80 ACTA Pull Request\r\n\r\nMark with an `x` all the checkboxes that apply (like `[x]`)\r\n\r\n- [x] Closes #\r\n- [x] Added tests (if necessary)\r\n- [x] Run tests\r\n- [x] Run formatting\r\n- [x] Evidence attached\r\n- [x] Commented the code\r\n\r\n#closes 28\r\n\r\n### \ud83d\udccc Type of Change\r\n\r\n- [x] Documentation (updates to README, docs, or comments)\r\n- [x] Bug fix (non-breaking change which fixes an issue)\r\n- [x] Enhancement (non-breaking change which adds functionality)\r\n- [x] Breaking change (fix or feature that would cause existing functionality to change)\r\n\r\n---\r\n\r\n## \ud83d\udcdd Changes description\r\n\r\n---\r\n\r\n## \ud83d\udcf8 Evidence (A Loom/Cap video is required as evidence, we WON'T merge if there's no proof)\r\n\r\n---\r\n\r\n## \u23f0 Time spent breakdown\r\n\r\n---\r\n\r\n## \ud83c\udf0c Comments\r\n\r\n---\r\n\r\nThank you for contributing to ACTA! We hope you can continue contributing to this project.\r\n\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n## Summary by CodeRabbit\n\n* **New Features**\n  * Full-featured media library admin (search, filters, pagination, bulk edit/delete)\n  * Image upload with optional Stellar hash anchoring and automated optimization/variants\n  * Orphaned-media detection, rescan and cleanup UI\n  * Cover image picker and article cover support; media detail modal with edit/delete\n\n* **Chores**\n  * Storage schema, buckets, and access policies added\n  * Dev/editor config and dependency updates (image processing, Stellar SDK, CLI script)\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+            "reactions": {
+                "url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36/reactions",
+                "total_count": 0,
+                "+1": 0,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 0,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0
+            },
+            "timeline_url": "https://api.github.com/repos/ACTA-Team/news-acta/issues/36/timeline",
+            "performed_via_github_app": null,
+            "state_reason": null,
+            "score": 1.0
+        },
+        {
+            "url": "https://api.github.com/repos/zouantchaw/mtl-archives-search/issues/20",
+            "repository_url": "https://api.github.com/repos/zouantchaw/mtl-archives-search",
+            "labels_url": "https://api.github.com/repos/zouantchaw/mtl-archives-search/issues/20/labels{/name}",
+            "comments_url": "https://api.github.com/repos/zouantchaw/mtl-archives-search/issues/20/comments",
+            "events_url": "https://api.github.com/repos/zouantchaw/mtl-archives-search/issues/20/events",
+            "html_url": "https://github.com/zouantchaw/mtl-archives-search/issues/20",
+            "id": 4511771768,
+            "node_id": "I_kwDOQFNJR88AAAABDOwseA",
+            "number": 20,
+            "title": "Autoresearch: detect orientation, crop, and scan-quality issues at scale",
+            "user": {
+                "login": "zouantchaw",
+                "id": 44246692,
+                "node_id": "MDQ6VXNlcjQ0MjQ2Njky",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ exited 1 in 147672ms:
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "Hugging Face datasets", url: "https://github.com/huggingface/datasets/blob/main/src/datasets/features/image.py", overlap: "High: Image.encode_example has path passthrough vs PIL-object image.save re-encode path; current decode path applies ImageOps.exif_transpose when EXIF orientation exists."},
+  {system: "Hugging Face datasets issue/PR", url: "https://github.com/huggingface/datasets/issues/6252 / https://github.com/huggingface/datasets/pull/6739", overlap: "Medium: upstream already recognized EXIF orientation causing task inconsistency and shipped EXIF transpose; does not claim serialization-time mirror score fork."},
+  {system: "torchvision", url: "https://github.com/pytorch/vision/blob/main/torchvision/io/image.py", overlap: "Medium: decode_jpeg exposes apply_exif_orientation with default False; covers consumer-toggle half of the mechanism."},
+  {system: "image-rs", url: "https://github.com/image-rs/image/blob/main/CHANGES.md", overlap: "Low/medium: supports orientation metadata extraction/application; generic EXIF handling, not benchmark mirror reproducibility."},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM", url: "https://github.com/vllm-project/vllm ; https://github.com/sgl-project/sglang ; https://github.com/LMCache/LMCache ; https://github.com/flashinfer-ai/flashinfer ; https://github.com/NVIDIA/TensorRT-LLM", overlap: "No material overlap found in targeted search; these are LLM serving/KV/kernel stacks, not image dataset serialization systems."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: Holds as an L0 mechanism check, but scale/materiality is not yet enough for green. The packet’s real Open Images sample gives f=2.75% and composed fork=1.16pp, below its own 2pp materiality bar; >=2pp depends on f>=5% regimes not yet shown on a benchmark-scale eval. Reproducibility artifact is controlled but small: 400-image prevalence sample plus 140-image effect study, CPU only, one model family, and fork only manifests for EXIF-honoring consumers.
+RATIONALE: The claim does not collapse entirely to the known EXIF display/upload footgun: the packet’s chain is specifically serializer choice -> irreversible metadata destruction -> byte-different mirrors -> score fork under EXIF-honoring decode, and I did not find an OSS system among the required LLM inference stacks that already implements or documents that full coupling. However, important pieces are already shipping and recognized: HF datasets has the path/PIL encode paths and image.save re-encode behavior in its Image feature, HF issue #6252 explicitly reports EXIF orientation causing task inconsistencies, PR #6739 shipped EXIF transpose, and torchvision’s decode_jpeg default False creates the cited decoder-default branch. That makes the contribution an empirical systems insight about a cross-component failure mode, not a full system design. Vote yellow because the mechanism is credible and distinct from a plain rotation footgun, but realistic impact and artifact breadth remain insufficient for green.
+tokens used
+70,986
