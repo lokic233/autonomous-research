@@ -33,3 +33,40 @@ Using AI Gateway (Meta Model API upstream)
 [0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001","engine":"FILENAME"}
 [0m
 [0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mpwd && ls -la | head -30
+/Users/dengcchi
+total 2824424
+drwxr-x---+  96 dengcchi  staff       3072 Jun  4 13:26 .
+drwxr-xr-x    5 root      admin        160 Jun  3 15:07 ..
+-r--------    1 dengcchi  staff          7 Feb  9 15:55 .CFUserTextEncoding
+-rw-r--r--@   1 dengcchi  staff      18436 Jun  2 14:33 .DS_Store
+drwx------+  10 dengcchi  staff        320 Apr 30 06:01 .Trash
+drwxr-x---    4 dengcchi  staff        128 Mar  3 11:08 .android
+-rw-------    1 dengcchi  staff        344 Mar 13 13:28 .arcrc
+drwxr-xr-x    3 dengcchi  staff         96 Feb 10 09:23 .aspnet
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:05 .buckconfig.d
+drwxr-xr-x    3 dengcchi  staff         96 May 28 22:24 .bun
+drwxr-xr-x   11 dengcchi  staff        352 Jun  4 13:03 .cache
+drwxr-xr-x    3 dengcchi  staff         96 Feb  9 16:07 .cisco
+drwxr-xr-x   26 dengcchi  staff        832 Jun  4 08:05 .claude
+drwxr-xr-x   16 dengcchi  staff        512 May 26 12:28 .claude-templates
+-rw-r--r--    1 dengcchi  staff       6189 Jun  4 13:26 .claude.json
+drwxr-xr-x   20 dengcchi  staff        640 Jun  4 13:26 .codex
+drwxr-xr-x    7 dengcchi  staff        224 Jun  3 15:15 .config
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:07 .cursor
+drwx------   10 dengcchi  staff        320 Jun  3 15:09 .fb-sks-agent
+drwx------    6 dengcchi  staff        192 Jun  3 15:09 .fb-sks-agent-lowbox
+drwxr-xr-x   12 dengcchi  staff        384 Jun  4 13:24 .gemini
+-rw-r--r--    1 dengcchi  staff        403 Feb  9 16:00 .gitconfig
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 07:59 .kube
+-rw-------    1 dengcchi  staff         20 Apr 10 10:58 .lesshst
+drwxr-xr-x    5 dengcchi  staff        160 Mar  3 10:29 .llms
+drwxr-xr-x    5 dengcchi  staff        160 Apr 13 17:37 .local
+drwxr-xr-x   13 dengcchi  staff        416 Jun  4 13:27 .navi
+drwxr-xr-x    6 dengcchi  staff        192 Apr 15 23:32 .npm
+drwxr-xr-x    8 dengcchi  staff        256 Jun  1 00:00 .ondemand
+[0m
+[0m$ [0mfind /Users/dengcchi -type f -name "*committee_common*" 2>/dev/null | head -20

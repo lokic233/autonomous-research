@@ -1,0 +1,37 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "Independent live prior-art search confirming no mechanism-exact incumbent (novelty_killer was denied search tools; packet's 'no literature hits' is self-reported and unverified — GREEN blocked until ≥2-source sweep completes)",
+  "Real prevalence f on a standard benchmark (ImageNet-1k val) — if f=0 there, the cross-mirror fork is falsified for the benchmark that matters most",
+  "Killer experiment (evaluation_prosecutor): run an unmodified standard eval harness (e.g., OpenCLIP zero-shot) on original-file dataset vs HF-mirror dataset end-to-end — if delta=0.0 under default loaders, the 'real-world reproducibility' framing collapses to a theoretical edge case",
+  "Measurement of real EXIF-honoring consumer population: what fraction of downstream eval pipelines actually call exif_transpose / apply_exif_orientation=True? Without this, the fork is latent-but-never-triggered",
+  "≥1 additional model family (ViT or rotation-augmented CNN) to test whether the 42.1pp per-tagged flip is architecture-dependent or collapses under augmentation",
+  "Tighter CI on f from a larger raw sample (current n=400 gives Wilson CI ±~1.6pp, straddling the 5% materiality threshold)"
+]
+MANDATORY_BASELINES: [
+  "Unmodified standard evaluation harness (OpenCLIP, timm, ELEVATER) on original vs HF-mirror — the claim must survive under real eval infrastructure, not a constructed consumer",
+  "ImageNet-1k val EXIF prevalence scan (f) — the canonical benchmark; if f=0, materiality is zero for the most-cited use case"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0064", change: "HOLD at L0-YELLOW; do NOT advance to L1. Attach required-evidence list as gate conditions for re-submission. Tag as 'incremental-composition' subtype under cross-area coupling."}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Unanimous YELLOW from all five reviewers, and I concur — the mechanism is real but the claim does not yet clear the bar for GREEN advancement.
+
+**What survives.** The serialization-destruction chain is empirically verified: step-0 kill-gate survived in pinned libraries, identity-orientation and JPEG-requantization controls both held at 0.0pp, isolating the EXIF-destruction pathway from codec noise. The coupling IS distinct from the known EXIF-rotation display footgun — the load-bearing novelty is that a DORMANT tag (ignored by both read-defaults) is IRREVERSIBLY destroyed at serialization time, producing byte-different mirrors with NO pixel change and no dataset-card diff. This is not a rename; all five reviewers agree on that point. The claim correctly survives killer #3 as "not the footgun."
+
+**What blocks GREEN — three independent obstacles, any one of which is sufficient:**
+
+(1) PRIOR-ART SEARCH INADEQUATE. The novelty_killer was denied live search tools and explicitly states "<2 verified sources for any collision." Per my standing rule, I cannot emit GREEN without adequate prior-art search. More critically, Parmar et al. (CVPR 2022, arXiv 2104.11222) — "preprocessing default silently forks an evaluation metric across byte-different pipelines" — is a direct genre collision that is NOT cited or distinguished in the packet. Recht et al. (ICML 2019, arXiv 1902.10811) — same-benchmark score non-reproducibility across nominally-identical copies — is the phenomenon-class incumbent. Until the claim explicitly positions against both AND an independent searcher confirms no mechanism-exact collision exists, novelty status is unresolved.
+
+(2) MATERIALITY BELOW THE PROJECT'S OWN BAR. At the only measured real prevalence (Open Images V7 val f=2.75%), the composed cross-mirror fork is 1.16pp — below the pre-registered 2pp threshold. The ≥2pp regime requires f≥5%, which the packet sources from literature phone-roll ranges (3–25%) but does NOT demonstrate on any standard benchmark. The 8 HF parquet benchmarks scanned show f≈0 — consistent with EXIF already destroyed at publish time, which actually demonstrates that the mechanism has ALREADY fired in the wild and the surviving-tag regime is the minority case. Theory_skeptic correctly flags: the 42.1pp per-tagged flip is the trivial upper bound for a 90° rotation on an orientation-sensitive CNN (n_tagged=6, no CI reported), and a ViT or rotation-augmented model could collapse it. Without ImageNet-1k val f measurement and broader model coverage, the materiality argument rests on hypotheticals.
+
+(3) CONSUMER POPULATION UNMEASURED. The evaluation_prosecutor's objection is unrebutted: the fork is INVISIBLE under default loaders (PIL Image.open ignores EXIF; torchvision decode_jpeg apply_exif_orientation=False, stable 0.15→0.27). The score fork only manifests for a consumer that honors EXIF. No reviewer found evidence that any major eval harness does so by default. The HF dataset viewer and browsers honor it (display context), but model evaluation pipelines — the context where "benchmark score" is defined — appear not to. If the killer experiment (standard harness, original vs mirror, end-to-end) yields delta=0.0, the "cross-mirror score non-reproducibility" framing is falsified for the use case that matters. The claim would survive as a metadata-hygiene finding but not as a reproducibility threat.
+
+**Novelty altitude assessment (the decisive #1 stress-test).** The claim clears the footgun — it is NOT "EXIF rotation hurts accuracy" restated. But it does NOT clear the MECHANISM-KNOWN ceiling at the altitude CLAIM-0059 cleared. CLAIM-0059's tokenizer-normalizer→dedup-recall was a coupling where NEITHER endpoint independently predicted the outcome; here, PIL-strip-on-save and decoder-ignores-EXIF EACH independently and obviously predict the outcome once composed (theory_skeptic). The novelty is the COMPOSITION at a specific seam (serialization-time, irreversible, invisible), which is incremental — a new instantiation of the established "publisher preprocessing default silently forks eval scores" template (Parmar et al.). Incremental-but-real = YELLOW, not RED or GREEN.
+
+**Path to GREEN (L1 gate conditions):** (a) Independent live prior-art sweep confirming no mechanism-exact incumbent; (b) explicit positioning against Parmar et al. 2104.11222 and Recht et al. 1902.10811; (c) ImageNet-1k val f measurement; (d) killer experiment with unmodified standard eval harness; (e) ≥1 additional model family; (f) measurement or credible estimate of EXIF-honoring consumer population in eval pipelines. If (d) yields delta=0.0 under all standard harnesses, the claim converges as a well-controlled negative/hygiene result (valuable, but L0-terminal, not L1-promotable).
+
+Prompt version: v001.
+```
