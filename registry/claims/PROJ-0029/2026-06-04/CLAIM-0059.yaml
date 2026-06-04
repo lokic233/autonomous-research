@@ -63,17 +63,29 @@ why_it_matters: "2nd CROSS-AREA coupling claim (different seam from CLAIM-0058).
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0068
+  summary: 'HELD (primary divergence-drives-FN). Normalizable arm: model-identical
+    dups -> deduper FN=1.00 under raw/NFC (weaker than model), FN=0.00 under NFKC/NFKC+casefold
+    (aligned). Aligning normalizer collapses FN to baseline (mitigation null arm confirms
+    coupling IS divergence). ALIAS CONTROL passes: at MATCHED raw edit distance the
+    typo arm is FLAT across all 4 normalizers (Jaccard identical to 3dp) while normalizable-arm
+    FN swings 1.00<->0.00 -> cause is normalizer DIVERGENCE not difficulty (N2 did
+    not fire). N1 did not fire: NFC as blind as raw. FN flat across thresholds T in
+    [0.5,0.9] and confirmed in real 64-perm banded MinHash-LSH. SECONDARY step: PRIMARY-ONLY
+    (FN saturated at 1.00, no genuine step; divergence acts upstream of LSH on the
+    Jaccard the LSH sees, not the S-curve). Novel cross-area seam: model tokenizer
+    normalizer sets dedup recall ceiling -> hidden-duplicate/memorization/contamination
+    risk.'
+  data_path: experiments/2026-06-04/EXP-0068/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0068 result, then ros exp complete --exp EXP-0068 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0068; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0068
+active_experiments: []
 created_at: '2026-06-04T01:33:03Z'
-last_updated: '2026-06-04T01:33:03Z'
+last_updated: '2026-06-04T02:05:28Z'

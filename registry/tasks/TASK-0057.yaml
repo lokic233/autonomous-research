@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0029
 claim_id: CLAIM-0059
 exp_id: EXP-0068
-status: open
+status: done
 summary: "L0 cross-area: dedup FN driven by normalizer DIVERGENCE (model NFKC+casefold\
   \ vs deduper NFC/raw) not edit-distance. From-scratch MinHash+LSH, internal-normalizer=param;\
   \ GT=identical-under-model-normalization (harness, never read by deduper). ALIAS\
@@ -18,8 +18,8 @@ summary: "L0 cross-area: dedup FN driven by normalizer DIVERGENCE (model NFKC+ca
   \ next)"
 evidence_delta: ''
 opened_at: '2026-06-04T01:33:33Z'
-updated_at: '2026-06-04T01:33:33Z'
-closed_at: ''
+updated_at: '2026-06-04T02:05:28Z'
+closed_at: '2026-06-04T02:05:28Z'
 history:
 - ts: '2026-06-04T01:33:33Z'
   event: open
@@ -33,3 +33,7 @@ history:
     \ from the inherent LSH S-curve artifact (step is SECONDARY/flagged, NOT the headline;\
     \ primary=divergence-drives-FN is robust). PERSISTENT-SEEDER loop (prefer cross-area\
     \ next)"
+- ts: '2026-06-04T02:05:28Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0065 completed EXP EXP-0068 (support)
