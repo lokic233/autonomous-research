@@ -1,0 +1,11 @@
+{
+  "insitu_chroma_default_wrapper": {"1": 0.4675, "5": 0.6489444444444443, "10": 0.7225555555555555, "20": 0.7512222222222222},
+  "decisive_bareST_A_R10": 0.7292222222222222,
+  "decisive_bareST_B_encode_query_R10": 0.8228888888888889,
+  "insitu_vs_bareST_A_gap_R10": -0.006666666666666688,
+  "matches_A_number": true,
+  "gap_explained": "HNSW cosine ANN approximation (Chroma default index) vs exact cosine NN in bare-ST; -0.67pp, within 3pp tolerance. R@1 identical (0.4675).",
+  "chromadb_version": "1.5.9",
+  "code_path": "DEFAULT SentenceTransformerEmbeddingFunction(model_name='Snowflake/snowflake-arctic-embed-s'); collection.add() + collection.query(); __call__ -> self._model.encode() with NO prompt/prompt_name; base EmbeddingFunction.embed_query documents doc/query asymmetry then falls back to __call__, ST subclass does NOT override.",
+  "interpretation": "Production Chroma path lands on the A-number (~0.73), NOT the B-number (0.82). The +9.4pp is lost in situ through the real wrapper."
+}
