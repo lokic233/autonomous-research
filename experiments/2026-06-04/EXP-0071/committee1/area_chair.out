@@ -1,0 +1,45 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE: [
+  "1. Lossless-re-encode prevalence in real VLM-serving or agent-RAG traffic from a NAMED source (production trace, WildVision, LMSYS multimodal arena, or instrumented client SDK pipeline) — not a hand-curated transform list. This is the single gate: if lossless fraction < ~5% of real requests, the 100pp gap is mechanically correct but operationally trivial and the claim weakens to a footnote.",
+  "2. FLOPs and/or TTFT saved per recovered hit under realistic working-set pressure, including processed-tensor cache memory overhead (decoded float tensors are ~10-50x larger per entry than compressed transport bytes — SGLang's advantage may partially erode under memory-constrained eviction).",
+  "3. Reverse-confound test: processor-version drift (Qwen2VLImageProcessor patch upgrade) silently invalidating processed-tensor hashes while byte hashes survive. If this is nonzero, the cross-framework comparison is confounded in the other direction.",
+  "4. Baseline: vLLM with client-injected mm_uuid on the same traffic to measure how much of the gap the existing escape hatch already closes when actually used.",
+  "5. At least one additional framework (HuggingFace TGI or TensorRT-LLM) checked for byte-vs-processed keying to establish whether byte-keying is an industry-wide default or a vLLM-specific quirk."
+]
+
+MANDATORY_BASELINES: [
+  "vLLM with client-injected mm_uuid (existing mitigation, measures org-seam cost)",
+  "HuggingFace TGI multimodal cache keying (establishes industry baseline)",
+  "SGLang under memory-constrained eviction (processed-tensor entries are larger — does eviction erase the hit-rate advantage?)"
+]
+
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0060",
+  change: "HOLD at L0-complete / L1-gated. Tag contribution_type = 'empirical_measurement_of_known_mechanism' (not 'new_failure_mode'). L1 scope: items 1-5 from REQUIRED_EVIDENCE. Advance beyond L1 ONLY if lossless-re-encode prevalence ≥ 5% in a named real-traffic source AND net FLOPs/TTFT gain survives memory-pressure and reverse-confound tests. If prevalence < 5%, converge as 'confirmed-but-marginal' with no further escalation."
+}
+
+PRIOR_ART_ADEQUATE: no
+
+RATIONALE:
+Unanimous 5/5 yellow — and unusually, the five reviewers converge on the SAME bottleneck rather than flagging orthogonal issues, which strengthens the yellow rather than suggesting disagreement that could be resolved by weighing evidence.
+
+THE MECHANISM IS REAL AND THE L0 IS CLEAN. The cross-framework divergence is a verifiable code-level fact: vLLM hasher.py keys on transport bytes (with mm_processor_cache ON by default, 4GB LRU), SGLang mm_utils.py hash_feature keys on processed pixel_values tensors. On genuine lossless re-encodes (PNG re-opt, EXIF strip, PNG→lossless-WebP, client TIFF re-save), vLLM hits 0%, SGLang hits 100%, pixel-identity verified at max_abs_diff==0. The lossy null-exit holds honestly (JPEG q90/q95, resize → 0pp gap, both correctly miss). The strict-gate miss (all-lossless 16.7% vs pre-registered ≤10%) is NOT disqualifying: the 16.7% is driven solely by L4_base64_rewrap which is byte-identical and correctly hits — it is not a false miss but a non-re-encode. The genuine-re-encode denominator (0%) is the mechanistically correct one and clears the gate decisively. Transparent reporting of both denominators is noted as a positive methodological signal.
+
+THE MECHANISM IS NOT NOVEL. All five reviewers agree, and the packet itself concedes this: cache-key over-specification ("key domain is too broad for the equivalence class") is pre-2020 systems folklore (RFC 7234 cache-key semantics, perceptual hashing, content-addressable dedup, build-system canonicalization). The "fix" — hash the processed tensor — already ships in SGLang. vLLM's own mm_uuid/EXIF-ImageID override is smoking-gun evidence that maintainers already know byte-hashing is fragile. The defensible contribution is therefore EMPIRICAL, not ALGORITHMIC: a measured, verbatim-transcribed, pixel-identity-verified cross-framework divergence with a clean null-exit. That is a valid contribution but must be framed as "quantified a known design-point mismatch" not "discovered a new failure mode." Any L1 framing it as discovery will be correctly attacked.
+
+PRIOR-ART SEARCH IS INADEQUATE. The novelty_killer explicitly reports that live web-search tools were denied, preventing independent verification of the "no prior paper/framework-doc names this as a hit-rate ceiling" claim. Per area-chair rules, GREEN requires adequate prior-art search. The packet's own citations (vLLM hasher.py, SGLang mm_utils.py, mm_uuid override) are code-level, not literature-level. The novelty_killer identified five relevant prior-work classes (pHash/CAS, RFC 7234, GPTCache, vLLM mm_uuid, SGLang hash_feature) from recall alone but could not search for a paper that already measures the cross-framework gap — this gap in verification is itself a reason to hold at yellow. L1 must include a proper literature search with ≥2 independent sources confirming the prior-art negative.
+
+THE DECISIVE QUESTION IS UNMEASURED. Every reviewer independently identifies the same bottleneck: the 100pp gap is conditional on lossless pixel-preserving re-encoding occurring, and the L0 provides zero production telemetry on its prevalence. The theory_skeptic correctly notes the 100pp is the DEFINITIONAL consequence of keying one canonicalization step too early — it is what basic cache-key theory predicts and therefore not surprising when measured. The product_realist notes that dominant CDN traffic is lossy (JPEG re-compression, resize for bandwidth) — the zero-gap arm. The evaluation_prosecutor flags that the 5 genuine re-encode types are hand-curated, not sampled from a traffic distribution. The question is binary: if lossless re-encodes are common (≥5-10% of real VLM/agent-RAG requests — plausible for agent pipelines that hold PIL objects and re-serialize, or privacy-motivated EXIF stripping), the seam is material and an L1 measuring FLOPs/TTFT is warranted. If they are rare (<5%), the seam is real-but-trivial and the claim converges as a confirmed curiosity.
+
+STRICT-GATE RULING: The base64-rewrap-driven 16.7% is a correct hit on a non-re-encode and should not count against the gate. The genuine-re-encode 0% is the right denominator. Gate passes on the mechanistically relevant subset.
+
+ORG-SEAM IS REAL BUT NOT DISQUALIFYING for L0→L1. The mm_uuid fix requires the source/client to inject a stable UUID that survives the re-encode boundary — the serving team cannot fix unilaterally. This is a real adoption barrier (product_realist) but strengthens the case that the gap persists in practice even though maintainers know about it: knowing ≠ fixing when the fix requires cross-org coordination.
+
+ADVANCE CONDITIONS FOR L1: All five items in REQUIRED_EVIDENCE must be scoped into L1. The L1 is an empirical prevalence + cost measurement, NOT a mechanism discovery. If L1 confirms prevalence ≥ 5% in named real traffic AND net FLOPs/TTFT gain survives memory-pressure and reverse-confound tests, advance further. If prevalence < 5%, converge as confirmed-but-marginal. Prompt version v001.
+```
