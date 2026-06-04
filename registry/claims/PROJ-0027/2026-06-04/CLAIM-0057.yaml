@@ -1,0 +1,72 @@
+claim_id: CLAIM-0057
+project_id: PROJ-0027
+stage: seed
+status: seed
+claim: "In production multimodal LLM serving with chunked prefill enabled (the vLLM-V1/SGLang\
+  \ default after the encoder-cache work), the per-iteration vision-encoder (ViT)\
+  \ compute burst is scheduled ATOMICALLY and is NOT governed by the prefill token\
+  \ budget \u2014 so decode-side inter-token-latency (ITL) p99 tail inflation from\
+  \ an interleaved image request is governed by ViT encoder cost (driven by image\
+  \ COUNT and per-image fixed overheads), NOT by the image-token count the chunk-prefill\
+  \ token budget accounts for. For two multimodal requests with IDENTICAL total image-token\
+  \ counts but different image COUNTS (one large image vs many small summing to the\
+  \ same token count), Sarathi-style chunked prefill produces materially different\
+  \ decode ITL p99 spikes, because the token-budget scheduler prices both identically\
+  \ while the ViT forward (run unchunked, per-image) does not \u2014 so the stall-free\
+  \ guarantee chunked prefill provides for text is silently broken for multimodal\
+  \ by an amount the token budget cannot see."
+why_it_matters: "FRESH AREA (multimodal-serving: chunked-prefill x vision-encoder).\
+  \ EMPIRICAL-phenomenon. CLEARS killer #10 (GENUINE NULL EXIT: ITL could be image-count-INVARIANT\
+  \ at fixed tokens -> claim FALSE -> honest negative; the risky prediction is image-count-DEPENDENCE\
+  \ at fixed token-count) + Lesson B (built-in causal-alias control: fix total image-token-count\
+  \ T, vary image count = the length-stratified-shuffle analogue) + Lesson C (production\
+  \ baseline = chunked-prefill+per-image-encoder-cache per vLLM-V1/SGLang PR#5456,\
+  \ NOT the naive chunked-prefill-off strawman). Passes the rest: NOT metric-validity\
+  \ (decode ITL p99 = Sarathi-Serve's native SLO); NOT closed-form (image-count<->ITL-spike\
+  \ depends on empirical ViT batching/padding/kernel-launch); foundational incumbent\
+  \ Sarathi-Serve (2403.02310 OSDI24) named+benchmarked+IS the baseline (its bound\
+  \ = token-work/iter; the L0 tests that guarantee under multimodal); NOT known-mechanism-costume\
+  \ + STRONGEST baseline; NOT wrong-currency; NOT trivially-small (per-image ViT fixed\
+  \ cost = real multi-ms bursts inside 10-30ms decode iters -> visible p99; anchored\
+  \ structurally); standard mitigation (encoder cache) MODELED IN as baseline + claim\
+  \ survives (cache removes RECOMPUTE not first-touch BURST placement); citations\
+  \ read (Qwen2-VL ViT-tokens+FLOPs both scale w/ pixels -> resolution doesn't cleanly\
+  \ decouple -> decouple on image COUNT at fixed tokens). \u2605 FLAGGED LIVE RISKS\
+  \ (scout-honest, adjudicate upfront \u2014 exactly the recent-yellow failure modes):\
+  \ (#9 acknowledgment) vLLM PR#8425 ALREADY says 'multimodal+chunked-prefill doesn't\
+  \ work well' + encoder-cache PRs fixed a version -> defense = the residual LATENCY\
+  \ breakage mis-accounted by the token budget is a DIFFERENT unacknowledged axis\
+  \ from the recompute/correctness bug they fixed \u2014 PLAUSIBLE BUT THIN (committee\
+  \ may judge 'quantifying a known interaction', modest ceiling); (Lesson A synthesis)\
+  \ 'token budget is the wrong unit, image-count is the driver' is real but adjacent\
+  \ to obvious-once-stated \u2014 the genuine null exit is the defense. L0 (CPU, no\
+  \ GPU): discrete-event Sarathi chunked-prefill scheduler (token budget B/iter, decode\
+  \ piggyback, ITL=iter walltime); ViT cost = per_image_fixed + per_token_marginal*tokens,\
+  \ ratio EXTERNALLY ANCHORED from published Qwen2-VL/ViT microbench (SWEPT across\
+  \ the plausible range, NOT tuned). Alias-break: fix total image-tokens T, vary image\
+  \ count (1xT vs kx(T/k)), steady decode background, measure decode ITL p99. RISKY:\
+  \ spike(k-small)>spike(1-large), grows with k at fixed T. NULL EXIT: ITL invariant\
+  \ to k at fixed T -> token budget IS the right unit -> claim FALSE -> honest negative\
+  \ (informative: encoder-cache fix restored stall-fairness). Anti-circular: outcome\
+  \ depends on the measured/swept ViT cost ratio (external), not a tuned knob -> report\
+  \ the crossover. Topic: multimodal-serving. L1: real vLLM-V1 (chunked-prefill+encoder-cache\
+  \ ON) on H100 devgpu014 serving Qwen2-VL-7B, mixed trace steady-decode + injected\
+  \ multimodal at fixed total-image-tokens varying image count -> real decode ITL\
+  \ p99/p999 + SLO-violation rate attributable to image-count vs token-count."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0065 result, then ros exp complete --exp EXP-0065 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0065
+created_at: '2026-06-04T00:45:38Z'
+last_updated: '2026-06-04T00:45:38Z'
