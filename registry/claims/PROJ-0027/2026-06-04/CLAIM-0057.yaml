@@ -68,14 +68,17 @@ supporting_evidence:
     p99) reported honestly. Sim-level; L1 must measure real r,B on H100 Qwen2-VL-7B.'
   data_path: experiments/2026-06-04/EXP-0065/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0055
+  date: '2026-06-04'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0065; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0055=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments:
 - EXP-0066
 created_at: '2026-06-04T00:45:38Z'
-last_updated: '2026-06-04T00:58:09Z'
+last_updated: '2026-06-04T01:10:48Z'

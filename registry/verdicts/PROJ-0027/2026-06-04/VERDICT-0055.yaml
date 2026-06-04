@@ -1,0 +1,96 @@
+verdict_id: VERDICT-0055
+claim_id: CLAIM-0057
+project_id: PROJ-0027
+date: '2026-06-04'
+experiment_ids:
+- EXP-0065
+experiment_paths:
+- experiments/2026-06-04/EXP-0065
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: red
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- 'product_realist RED (evidence-based, partially unrebutted) + 3 GREEN-blockers:
+  (1) the prereg PRIMARY metric (stream-p99) FACTUALLY FAILED at realistic Qwen2-VL
+  params (1.000 across T=256-1280, r=64-1024 by the packet''s own table)'
+- the pivot to WORST-ITERATION ITL is honest but operationally weaker (NOT Sarathi-Serve's
+  standard windowed-p99 SLO)
+- "(2) the 1.25-5.9x worst-iter headline rests on an ANCHORED-BUT-UNMEASURED r (16x\
+  \ range from back-of-envelope Nsight arithmetic) \u2014 production CUDA Graphs/torch.compile\
+  \ could collapse the 200-kernel launch chain ~10x -> push r toward 0 -> into the\
+  \ L0's OWN anti-circular null region (evaluation_prosecutor's killer experiment)"
+- "(3) \u2605 the LOAD-BEARING assumption \u2014 ViT runs k SEPARATE atomic forwards\
+  \ vs BATCHES k images into one forward \u2014 is UNTESTED (theory_skeptic): if vLLM-V1's\
+  \ encoder-cache path batches k images, k*f collapses to ~f and the ENTIRE image-count\
+  \ axis VANISHES. Mechanism is verified-IN-SIM (anti-circular r=0 control + causal\
+  \ fix-T-vary-k) but the L0 confirms self-consistency of the sim, NOT reality on\
+  \ hardware. Novelty REAL but INCREMENTAL (no >=2-source collision"
+- "distinct from PR#8425 correctness-axis + Sarathi text-only) \u2014 but 'stall-free\
+  \ broken for multimodal' OVERSTATES (Sarathi never gave that guarantee for multimodal"
+- reframe to 'never extended to multimodal'). ModServe 2502.00937 uncited.
+required_evidence:
+- 'L1 (real-vLLM microbench, clear path to RED): (1) measure ACTUAL per-image-fixed
+  (intercept) + per-token-marginal (slope) on real vLLM-V1 + chunked-prefill + encoder-cache
+  ON, H100, Qwen2-VL-7B, WITH production runtime flags (CUDA Graphs / torch.compile
+  state) -> report r=intercept/slope with CIs (if r collapses under graph capture,
+  claim is FALSIFIED by its own null control)'
+- "(2) test whether the encoder BATCHES k images in one forward or runs k SEPARATE\
+  \ forwards (determines k*f vs ~f \u2014 the load-bearing assumption)"
+- (3) measure BOTH worst-iter ITL AND stream-p99 at fixed T, vary k, realistic T{256,512,1024,1280}
+  with PRODUCTION B (not assumed 512
+- vLLM-V1 default may be 2048-8192)
+- (4) variance/CIs on spike ratios (L0 was deterministic)
+- '(5) sweep production B {512..8192} (if B>>T, the coalescence regime shifts). REFRAME:
+  ''stall-free guarantee NEVER EXTENDED to multimodal'' not ''broken'''
+- headline REGIME-BOUNDED not HELD
+- cite ModServe 2502.00937, Sarathi text-only scope, PR#8425 correctness-vs-latency
+  contrast.
+map_delta_proposals:
+- 'CLAIM-0057 -> YELLOW (committee#1, 4y+1RED). Mechanism verified-IN-SIM (anti-circular
+  passes, causal design, cleared killer-#10 w/ a real null region) but GREEN blocked:
+  prereg PRIMARY stream-p99 FAILED at realistic T (effect is worst-iter-stall-only,
+  opposite regime)'
+- headline magnitude rests on UNMEASURED r that production CUDA Graphs could collapse
+  into the null region
+- 'the k-separate-vs-batched-ViT-forward load-bearing assumption is UNTESTED. ORCHESTRATOR
+  DECISION: accept the reframed yellow + CONVERGE rather than spend a real-vLLM-microbench
+  L1 on a regime-bounded (worst-iter-only) modest-ceiling claim whose headline could
+  evaporate under CUDA Graphs / encoder batching (cost-aware, the CLAIM-0054/0056
+  pattern). Honest scoped finding recorded: a per-image-fixed-ViT latency axis exists
+  in sim (budget-invisible, worst-iter, small-T) but its REAL magnitude depends on
+  untested encoder-batching + CUDA-Graph behavior'
+- "reframe 'never extended to multimodal' not 'broken'. The real-r-microbench + encoder-batching-test\
+  \ is owed-not-pursued. LESSON: for a SIM claim whose magnitude = f(an UNMEASURED\
+  \ hardware constant), the L0 establishes the mechanism but the magnitude is a real-L1\
+  \ question \u2014 AND production runtime optimizations (CUDA Graphs collapsing kernel-launch\
+  \ fixed costs) can move the constant into the claim's own null region. Screen at\
+  \ design: 'does a standard production runtime optimization neutralize the fixed-cost\
+  \ the claim depends on?' (a runtime-mitigation cousin of killer #7)."
+baseline_requirements:
+- "Sarathi-Serve TEXT-ONLY chunked-prefill (the guarantee's actual scope \u2014 reframe\
+  \ from 'broken' to 'never extended')"
+- "vLLM-V1 + encoder-cache + chunked-prefill WITH CUDA Graphs (production config \u2014\
+  \ effect must survive real runtime opts)"
+- "vLLM CUDA-Graphs/torch.compile ViT encoder (collapses the per-image kernel-launch\
+  \ fixed cost \u2014 if r collapses, falsified by own null control)"
+- ModServe 2502.00937 (encoder-disaggregation, bounds the impact framing)
+committee_run_dir: experiments/2026-06-04/EXP-0065/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T01:10:48Z'
