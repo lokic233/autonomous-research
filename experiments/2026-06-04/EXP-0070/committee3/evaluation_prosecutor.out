@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: green
+MANDATORY_BASELINES: [{"name": "text-dedup / datatrove MinHash", "why": "Production standard for near-deduplication", "repo_or_cite": "ChenghaoMou/text-dedup, huggingface/datatrove"}]
+STRAWMAN_RISKS: ["Previously at risk of comparing against a toy deduper; mitigated by verifying against text-dedup's actual regex/normalization logic and evaluating against real MinHash at T=0.8 with 5-gram char shingles."]
+MISSING_METRICS: ["None. Elevating MinHash survival (34.6%) to the lead metric correctly captures the operational impact, replacing the tautological exact-string mismatch rate."]
+KILLER_EXPERIMENT: "Running the exact Dolma or RedPajama near-dedup pipeline end-to-end on the C4 twin pairs to verify if secondary filters (e.g., quality heuristics or length thresholds) inadvertently catch the twins before or during MinHash. However, the isolated MinHash T=0.8 test is sufficient to validate the core claim of the seam."
+RATIONALE: "The editorial conditions strictly improved the evaluation posture. By anchoring the lead metric to MinHash survival (34.6% [33.6%, 35.6%]) rather than the structurally guaranteed exact-match escape (95.1%), the evaluation now measures true operational consequence. Verifying the specific normalization logic of ChenghaoMou/text-dedup confirms the baseline is a genuine production kernel, entirely neutralizing the strawman risk."
+```

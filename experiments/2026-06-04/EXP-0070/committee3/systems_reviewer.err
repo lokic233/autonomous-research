@@ -1,0 +1,1220 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi/autonomous-research-v3
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e90ac-a444-7e32-b680-d5ca926c766c
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#3 (RE-RUN for unanimous GREEN) — CLAIM-0059 — editorial conditions from committee#2 NOW ADDRESSED
+## This is a RE-COMMITTEE after committee#2 rendered FINAL_VERDICT:green (area_chair) but the engine's unanimity rule required all members green. The 3 YELLOW reviewers' editorial conditions have ALL been addressed (EXP-0070 EDITORIAL_REVISION.md). Vote honestly: if your concern is SATISFIED by the revision, vote GREEN; if NOT satisfied, state what's still missing. The evidence (L1 95.1% residual FN on real C4-multilingual) + the mechanism (L0) + the verified-open-seam are UNCHANGED — only the framing/completeness items are updated.
+
+## THE 5 EDITORIAL CONDITIONS — NOW ADDRESSED:
+(1) ALTITUDE REFRAMED: positioned as 'empirical measurement of the textbook IR normalization-mismatch (IIR §2.2, cited explicitly) applied to the dedup×model-tokenizer seam, with a demonstrated-material privacy/contamination consequence' — NOT a novel mechanism claim.
+(2) LEAD METRIC REWRITTEN: headline = '45.2% of real multilingual docs have a model-identical NFKC-twin; 34.6% survive real MinHash at T=0.8' (operationally grounded). The 95.1% exact-escape rate is demoted to a supporting figure (conceded as structurally UAX#15-predicted once the design is fixed).
+(3) TOKENIZER-FAMILY SCOPE NOTE: bounded to NFKC+casefold (T5/SentencePiece nfkc_cf, the pervasive multilingual default); raw-bytes BPE (GPT-2/Llama) INVERTS; BERT-multilingual NFD+lower ≈ production → gap vanishes. Scope honest.
+(4) BOOTSTRAP 95% CIs (B=10000, nonparametric percentile, from EXP-0069 real C4 per-pair indicators): pooled 0.9515 [0.9469,0.9558]; ja 0.984[0.980,0.988]; zh 0.999[0.997,1.00]; de 0.947[0.928,0.964]; fr 0.946[0.931,0.960]; ar 0.556[0.519,0.593]. MinHash-survival (the lead operational metric): 0.346[0.336,0.356]. Every per-language lower bound clears the 1% gate by >=51x (ar) to >=997x (zh).
+(5) TEXT-DEDUP VERIFIED: ChenghaoMou/text-dedup near-dedup path uses re.compile(r'\W+',re.UNICODE) split + .lower() — NO NFKC, NO casefold. Substantiates >=2 production codebases (datatrove + text-dedup) misaligned with NFKC+casefold.
+(CHAIR BASELINE) GINI/CONCENTRATION: per-pair dominant-class Gini=0.852; fullwidth_ascii top-1=77.4% BUT >=3 classes hold >=1% (fullwidth_ascii, other_compat=ß/typographic ~19%, super/sub). de/fr clear the gate at ~94.6% with ZERO fullwidth-ASCII → >=2 structurally distinct Unicode drivers. NOT a single-mode artifact.
+
+## THE UNCHANGED EVIDENCE (from committee#2):
+L0 mechanism: FN=1.00 total-miss under weaker deduper / 0.00 aligned; alias control (typo arm FLAT at matched edit-distance) passes; reproduced under real banded MinHash-LSH.
+L1: residual FN 95.1% (8605/9044) on REAL C4-multilingual (21300 docs, 5 languages). 34.6% survive real MinHash at T=0.8.
+Seam INDEPENDENTLY VERIFIED OPEN: 3 committee#1 members checked >=2 production codebases (datatrove, BigCode, NeMo-Curator, text-dedup) — NO tool offers model-normalizer-alignment mode, NFKC+casefold is NOT the default, dedup normalizer is fixed/internal.
+Prior-art adequate (committee#1): no fatal collision.
+
+## COMMITTEE#2 VERDICT-0058 CONTEXT: area_chair rendered GREEN; 2 reviewers green; 3 reviewers yellow on the 5 editorial conditions above (ALL now addressed). The chair explicitly ruled the yellows 'editorial-not-blocking'. Engine unanimity rule required re-committee.
+
+## EDITORIAL_REVISION.md
+# EDITORIAL_REVISION — EXP-0070 / CLAIM-0059 — researcher-0067
+
+**Purpose.** Editorial revision of EXP-0069 (which met the GREEN gate, residual_FN_rate = 95.1% on real
+C4-multilingual). NO new experiments. This document addresses the **5 framing/completeness conditions** the
+committee#2 (VERDICT-0058) identified as the path from YELLOW → unanimous GREEN, plus the **chair-mandated
+driver-concentration baseline**. All numbers are re-derived deterministically from EXP-0069's real corpus
+(21,300 C4 docs) and verified to reproduce EXP-0069's point estimates exactly before bootstrapping.
+
+---
+
+## CONDITION 1 — REFRAME ALTITUDE (this is a measurement, not a new mechanism)
+
+> **Framing (use as the abstract's altitude-setting sentences):**
+> The normalization / equivalence-class mismatch we measure is **not a newly discovered mechanism** — it is the
+> classic information-retrieval phenomenon described in Manning, Raghavan & Schütze, *Introduction to
+> Information Retrieval* (IIR) **§2.2 ("Determining the vocabulary of terms" → token normalization &
+> equivalence classing)**: two independent text-processing stages that adopt **different equivalence relations**
+> over surface forms will disagree on which strings are "the same," and the disagreement is exactly the
+> symmetric difference of their equivalence classes. **Our contribution is empirical, not conceptual:** we
+> *measure the magnitude* of that known mismatch at a specific, previously-unquantified seam — the
+> **near-dedup normalizer × model-tokenizer normalizer** seam — on real multilingual web text, and we show it
+> has a **demonstrated-material safety/privacy/contamination consequence** (model-identical duplicates that the
+> production deduper structurally cannot collapse → memorization / eval-contamination exposure). We claim the
+> *measurement and its consequence*, not the existence of the mechanism.
+
+IIR §2.2 is cited explicitly. The mechanism (equivalence-class mismatch between two normalizers) is textbook;
+the **45.2% prevalence on real C4** and the **34.6% survival through production MinHash** are the new facts.
+
+---
+
+## CONDITION 2 — LEAD METRIC (operationally-grounded, not the construction rate)
+
+`theory_skeptic` is correct that the **95.1% twin-construction/escape rate is structurally predicted by
+UAX#15 once the experiment design is fixed** (NFD-canonical can never collapse a compatibility character, and
+`.lower()` ≠ `casefold()`, so a model-identical-by-NFKC twin is *almost tautologically* not prod-identical —
+the only question is how often the design is *applicable*). We therefore **demote 95.1% from the headline** and
+**lead with the two operationally-grounded numbers** that demonstrate real-world impact:
+
+> **HEADLINE (rewritten):**
+> **45.2%** of real multilingual web documents (C4: ja/zh/ar/de/fr) have a **model-identical NFKC-twin** — a
+> different-but-tokenizer-equivalent rendering that a production near-dedup pipeline treats as a *distinct*
+> document. Of those model-identical pairs, **34.6%** survive **real MinHash near-dedup at threshold T=0.8**
+> (5-gram char shingles over production-normalized text) — i.e. they are *not* caught even by shingle-based
+> approximate matching, the actual production mechanism. These are hidden, tokenizer-identical duplicates that
+> reach the model.
+
+The 95.1% exact-string escape rate is retained as a **supporting / explanatory** figure (it explains *why* the
+operational numbers are nonzero), not as the lead claim.
+
+| role | metric | value [95% CI] |
+|------|--------|----------------|
+| **LEAD** | prevalence: real docs with a model-identical NFKC-twin | **45.2%** (9,044 / 20,000) |
+| **LEAD** | of those pairs, survive real MinHash @ T=0.8 | **34.6%** [33.6%, 35.6%] |
+| support | exact-string residual_FN_rate (structurally predicted) | 95.1% [94.7%, 95.6%] |
+| support | word-token Jaccard<0.8 survival | 58.7% |
+
+---
+
+## CONDITION 3 — TOKENIZER-FAMILY SCOPE NOTE (honest bound on the claim)
+
+
+## ORCHESTRATOR NOTE: ALL 5 editorial conditions + the chair's Gini baseline are addressed. The evidence, mechanism, seam-verification, and prior-art are UNCHANGED (and were already committee#2-GREEN-by-chair). If your editorial concern is now SATISFIED → vote GREEN. If something is STILL missing → state it specifically. The integrity of this re-committee is that it adjudicates the REVISION, not re-litigates the evidence (which the chair already ruled GREEN). Real 6/6 by role.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*TOOLING*' -g '*committee*'" in /Users/dengcchi/autonomous-research-v3
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/Users/dengcchi/autonomous-research-v3
+CUTOVER_RUNBOOK.md
+DECISION_expand_lightweight.md
+HANDOFF_r1_to_r2.md
+HANDOFF_r2_to_r3.md
+HANDOFF_r3_to_r4.md
+ORCHESTRATOR_CHARTER.md
+QUIESCENCE_r4_001.SUPERSEDED.md
+QUIESCENCE_r4_002.SUPERSEDED.md
+RESEARCHER_CHARTER.md
+experiments
+learning
+prior_art
+projects
+registry
+research-os.config.yaml
+runtime
+sessions
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+I’ll read the committee/tooling rules first, then do the systems prior-art check against the named OSS stacks so the vote is grounded in retrievable implementations rather than the packet’s framing alone.
+exec
+/bin/zsh -lc "find . -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' -o -iname '*committee*' -o -iname '*tooling*'" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 222ms:
+./learning/roles/committee.md
+./experiments/2026-06-04/EXP-0069/COMMITTEE2_PACKET.md
+./experiments/2026-06-04/EXP-0069/committee2
+./experiments/2026-06-04/EXP-0067/committee1
+./experiments/2026-06-04/EXP-0067/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0068/committee1
+./experiments/2026-06-04/EXP-0068/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0064/committee1
+./experiments/2026-06-04/EXP-0064/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0065/committee1
+./experiments/2026-06-04/EXP-0065/COMMITTEE1_PACKET.md
+./experiments/2026-06-04/EXP-0070/COMMITTEE3_PACKET.md
+./experiments/2026-06-04/EXP-0070/committee3
+./experiments/2026-06-03/EXP-0034/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0034/committee2
+./experiments/2026-06-03/EXP-0033/committee1
+./experiments/2026-06-03/EXP-0033/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0056/committee1
+./experiments/2026-06-03/EXP-0056/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0051/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0051/committee2
+./experiments/2026-06-03/EXP-0058/committee1
+./experiments/2026-06-03/EXP-0058/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0035/committee1
+./experiments/2026-06-03/EXP-0035/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0061/committee1
+./experiments/2026-06-03/EXP-0061/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0059/committee1
+./experiments/2026-06-03/EXP-0059/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0050/committee1
+./experiments/2026-06-03/EXP-0050/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0044/committee1
+./experiments/2026-06-03/EXP-0044/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0017/committee1
+./experiments/2026-06-03/EXP-0017/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0010/committee1
+./experiments/2026-06-03/EXP-0010/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0019/committee1
+./experiments/2026-06-03/EXP-0019/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0021/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0021/committee2
+./experiments/2026-06-03/EXP-0042/committee1
+./experiments/2026-06-03/EXP-0042/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0045/committee1
+./experiments/2026-06-03/EXP-0045/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0020/committee1
+./experiments/2026-06-03/EXP-0020/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0027/committee1
+./experiments/2026-06-03/EXP-0027/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0018/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0018/committee2
+./experiments/2026-06-03/EXP-0011/committee1
+./experiments/2026-06-03/EXP-0011/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0016/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0016/committee2
+./experiments/2026-06-03/EXP-0029/committee1
+./experiments/2026-06-03/EXP-0029/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0037/committee1
+./experiments/2026-06-03/EXP-0037/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0039/committee1
+./experiments/2026-06-03/EXP-0039/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0062/committee1
+./experiments/2026-06-03/EXP-0062/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0054/committee1
+./experiments/2026-06-03/EXP-0054/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0038/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0038/committee2
+./experiments/2026-06-03/EXP-0007/committee1
+./experiments/2026-06-03/EXP-0007/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0009/committee1
+./experiments/2026-06-03/EXP-0009/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0036/committee1
+./experiments/2026-06-03/EXP-0036/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0013/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0013/committee2
+./experiments/2026-06-03/EXP-0014/committee1
+./experiments/2026-06-03/EXP-0014/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0022/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0022/committee2
+./experiments/2026-06-03/EXP-0040/committee1
+./experiments/2026-06-03/EXP-0040/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0023/committee1
+./experiments/2026-06-03/EXP-0023/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0015/committee1
+./experiments/2026-06-03/EXP-0015/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0012/committee1
+./experiments/2026-06-03/EXP-0012/COMMITTEE1_PACKET.md
+./experiments/2026-06-03/EXP-0048/COMMITTEE2_PACKET.md
+./experiments/2026-06-03/EXP-0048/committee2
+./experiments/2026-06-02/EXP-0005/committee1
+./experiments/2026-06-02/EXP-0005/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0002/committee1
+./experiments/2026-06-02/EXP-0002/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0004/committee1
+./experiments/2026-06-02/EXP-0004/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0001/committee1
+./experiments/2026-06-02/EXP-0001/COMMITTEE1_PACKET.md
+./experiments/2026-06-02/EXP-0006/committee1
+./experiments/2026-06-02/EXP-0006/COMMITTEE1_PACKET.md
+./runtime/orchestrator/committee_queue.yaml
+./runtime/cron/committee_health.log
+./runtime/cron/committee_health.alive
+
+exec
+/bin/zsh -lc "find .. -path '*_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md'" in /Users/dengcchi/autonomous-research-v3
+2026-06-04T03:28:37.851014Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc "find prompts .codex .llms experiments -path '*_committee_common_v001.md' -o -path '*_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find . -type f -name '*.md' | sed 's#"'^./##'"' | grep -E 'committee_common|TOOLING|shared|prompt|systems' | head -100" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 134ms:
+mcp: meta_core/three_pai_external_web_search started
+ exited 1 in 27336ms:
+find: ../Music/Music: Operation not permitted
+find: ../Pictures/Photos Library.photoslibrary: Operation not permitted
+find: ../Desktop: Operation not permitted
+find: ../Library/Application Support/CallHistoryTransactions: Operation not permitted
+find: ../Library/Application Support/com.apple.sharedfilelist: Operation not permitted
+find: ../Library/Application Support/Knowledge: Operation not permitted
+find: ../Library/Application Support/com.apple.TCC: Operation not permitted
+find: ../Library/Application Support/FileProvider: Operation not permitted
+find: ../Library/Application Support/AddressBook: Operation not permitted
+find: ../Library/Application Support/FaceTime: Operation not permitted
+find: ../Library/Application Support/DifferentialPrivacy: Operation not permitted
+find: ../Library/Application Support/com.apple.avfoundation/Frecents: Operation not permitted
+find: ../Library/Application Support/CallHistoryDB: Operation not permitted
+find: ../Library/Assistant/SiriVocabulary: Operation not permitted
+find: ../Library/Daemon Containers: Operation not permitted
+find: ../Library/Autosave Information: Operation not permitted
+find: ../Library/IdentityServices: Operation not permitted
+find: ../Library/Messages: Operation not permitted
+find: ../Library/HomeKit: Operation not permitted
+find: ../Library/Sharing: Operation not permitted
+find: ../Library/com.apple.aiml.instrumentation: Operation not permitted
+find: ../Library/Mail: Operation not permitted
+find: ../Library/Trial: Operation not permitted
+find: ../Library/AppleMediaServices: Operation not permitted
+find: ../Library/DuetExpertCenter: Operation not permitted
+find: ../Library/Accounts: Operation not permitted
+find: ../Library/Safari: Operation not permitted
+find: ../Library/Biome: Operation not permitted
+find: ../Library/IntelligencePlatform: Operation not permitted
+find: ../Library/Shortcuts: Operation not permitted
+find: ../Library/Suggestions: Operation not permitted
+find: ../Library/Weather: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks-news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.photolibraryd.private: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedback: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.telephonyutilities.callservicesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.swtransparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ArchiveUtility.PKSignedContainer: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.accessibility.voicebanking: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.searchpartyuseragent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.referenceResolution: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.stocks: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.usernoted: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.VoiceMemos.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.contacts: Operation not permitted
+find: ../Library/Group Containers/.SiriTodayViewExtension: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.secure-control-center-preferences: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.chronod: Operation not permitted
+find: ../Library/Group Containers/UBF8T346G9.com.microsoft.wdav: Operation not permitted
+find: ../Library/Group Containers/com.apple.MailPersonaStorage: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.private.translation: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.appstoreagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.portrait.BackgroundReplacement: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmfcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.liveactivitiesd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.amsondevicestoraged: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.SiriTTS: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes.import: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.calendar: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.userfeedbacklearning: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.gamecenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tips: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.loginwindow.persistent-apps: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.spotlight: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.studentd: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.ManagedSettings: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.sharingd: Operation not permitted
+find: ../Library/Group Containers/74J34U3R6X.com.apple.iWork: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.printtool: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.corerepair: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.news: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.scopedbookmarkagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.weather: Operation not permitted
+find: ../Library/Group Containers/com.apple.systempreferences.cache: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.feedbacklogger: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.controlcenter: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.remembers: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.notes: Operation not permitted
+find: ../Library/Group Containers/com.apple.stickersd.group: Operation not permitted
+find: ../Library/Group Containers/243LU875E5.groups.com.apple.podcasts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.UserNotifications: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.tipsnext: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.moments: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Safari.SandboxBroker: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.transparency: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.reminders: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.findmy.findmylocateagent: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mail: Operation not permitted
+find: ../Library/Group Containers/com.apple.bird: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.DeviceActivity: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Journal: Operation not permitted
+find: ../Library/Group Containers/com.apple.Home.group: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.iCloudDrive: Operation not permitted
+find: ../Library/Group Containers/6KKW3K37TU.io.cyberhaven.lightbeam: Operation not permitted
+find: ../Library/Group Containers/group.is.workflow.my.app: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.energykit: Operation not permitted
+find: ../Library/Group Containers/com.apple.PreviewLegacySignaturesConversion: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.siri.ASR.shared: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.replicatord: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.Photos.PhotosFileProvider: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.icloud.fmipcore: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.AppleSpell: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.mlhost: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.PegasusConfiguration: Operation not permitted
+find: ../Library/Group Containers/group.is.workflow.shortcuts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.shortcuts: Operation not permitted
+find: ../Library/Group Containers/group.com.apple.inputmethod.chineseim: Operation not permitted
+find: ../Library/Containers/com.apple.PressAndHold/Data: Operation not permitted
+find: ../Library/Containers/com.apple.languageassetd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.macintosh/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.SiriPrivateLearningAnalytics.SiriUserSegmentation/Data: Operation not permitted
+find: ../Library/Containers/com.apple.QuickTimePlayerX/Data: Operation not permitted
+find: ../Library/Containers/com.apple.VoiceMemos: Operation not permitted
+find: ../Library/Containers/com.apple.mlhost.TelemetryWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ax.KonaTTSSupport.KonaSynthesizer/Data: Operation not permitted
+find: ../Library/Containers/com.apple.archiveutility: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.gradient/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ScreenTimeAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.LighthouseBitacoraFramework.BitacoraWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.InferenceExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Home.HomeEnergyWidgets/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mobiletimer-framework.MobileTimerIntents/Data: Operation not permitted
+find: ../Library/Containers/com.facebook.ptoken.PExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.weather.widget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.controls.screenshot/Data: Operation not permitted
+find: ../Library/Containers/com.apple.systempreferences.SpotlightIndexExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.calendar.CalendarIntentsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.ODDIPoirotMetricsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.iWork.Numbers/Data: Operation not permitted
+find: ../Library/Containers/com.apple.quicklook.QuickLookUIService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.PlatformSSO.AccessKey/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.sonoma/Data: Operation not permitted
+find: ../Library/Containers/com.apple.poirot.MessagesAnalyticsWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.iCal.CalendarWidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.contacts.donation-agent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.photolibraryd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.speech.MacinTalkFramework.WardaSynthesizer/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.image/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.media-indexer/Data: Operation not permitted
+find: ../Library/Containers/com.apple.WorkflowKit.ShortcutsViewService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.BKAgentService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.tips.Widget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mediastream.mstreamd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.news.tag/Data: Operation not permitted
+find: ../Library/Containers/com.apple.LookupViewService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.tonelibraryd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Maps/Data/Maps: Operation not permitted
+find: ../Library/Containers/com.apple.Notes.SpotlightIndexExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AMPDeviceDiscoveryAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.systempreferences.AppleIDSettings/Data: Operation not permitted
+find: ../Library/Containers/com.apple.SafariPlatformSupport.Helper/Data: Operation not permitted
+find: ../Library/Containers/com.apple.aiml.mlpt.FedStats.MLHostPluginClassB/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.BrowserDataImportingService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.parsec.SafariBrowsingAssistantWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Home: Operation not permitted
+find: ../Library/Containers/com.apple.Safari: Operation not permitted
+find: ../Library/Containers/com.apple.Keyboard-Settings.extension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.agent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.IOUIAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.podcasts.SpotlightIndexExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.SAExtensionOrchestrator/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.CacheDeleteExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.reminders.WidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.BiomeSELFIngestor/Data: Operation not permitted
+find: ../Library/Containers/com.apple.unilog.SiriUploadWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.aiml.RepackagingWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AMPArtworkAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.FollowUpSettings.FollowUpSettingsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.clock.WorldClockWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.reminders.macOSIntentsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.findmy.FindMyWidgetPeople/Data: Operation not permitted
+find: ../Library/Containers/com.apple.PeopleViewService.PeopleWidget-macOS/Data: Operation not permitted
+find: ../Library/Containers/com.apple.reminders.spotlightindexextension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.news.widget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.accessibility.axassetsd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.shortcuts.ShortcutLiveActivityWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.PeopleViewService.SelectPerson-iOS/Data: Operation not permitted
+find: ../Library/Containers/com.apple.SiriMetrics.SiriTurnRestatementExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.speech.MacinTalkFramework.MacinTalkAUSP/Data: Operation not permitted
+find: ../Library/Containers/com.apple.photoanalysisd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.sequoia/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Photos.PhotosReliveWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.iWork.Pages/Data: Operation not permitted
+find: ../Library/Containers/com.apple.controls.display/Data: Operation not permitted
+find: ../Library/Containers/com.apple.notificationcenterui/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.aerials/Data: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.IFTranscriptSELFIngestor/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Sound-Settings.SoundIntents/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.dynamic/Data: Operation not permitted
+find: ../Library/Containers/com.apple.aiml.mlpt.FedStats.MLHostPlugin/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mail: Operation not permitted
+find: ../Library/Containers/com.apple.iBooks.iBooksSpotlightExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AMSUIPaymentViewService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.DataDetectorsLocalSources/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Photos/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CharacterPaletteIM/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.metrics.ExperimentationExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.aiml.UnilogTelemetryWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.MobileSMS: Operation not permitted
+find: ../Library/Containers/com.apple.PlatformSSOToken/Data: Operation not permitted
+find: ../Library/Containers/com.apple.SafariFoundation.CredentialProviderExtensionHelper/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Music.MusicCacheExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.LoginUserService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AppStore/Data: Operation not permitted
+find: ../Library/Containers/com.apple.news.widgetintents/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.ODDIPoirotExperimentationExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.QuickLookUIFramework.QLPreviewGenerationExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.agent.controls/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Siri/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AppleMediaServicesUI.UtilityExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.VoiceMemos.VoiceMemosSettingsWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Notes: Operation not permitted
+find: ../Library/Containers/com.apple.shortcuts.ShortcutsWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.printcenter.PrintCenterWidget/Data: Operation not permitted
+find: ../Library/Containers/nl.root3.support/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.metrics.AssetMetricsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mail.SpotlightIndexExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.MediaMLPluginApp.MediaMLExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Batteries.BatteriesAvocadoWidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.MailCacheDelete/Data: Operation not permitted
+find: ../Library/Containers/com.apple.NeptuneOneExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mlhost.CloudWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.metrics.DevicePropertiesExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ManagedSettings.ManagedSettingsMacOSExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Dictionary/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.GMSSELFIngestor/Data: Operation not permitted
+find: ../Library/Containers/com.apple.journal.widgets/Data: Operation not permitted
+find: ../Library/Containers/com.apple.TextEdit/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AccessibilitySettingsWidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CryptoTokenKit.pivtoken/Data: Operation not permitted
+find: ../Library/Containers/com.apple.windowmanager.ShowDesktopEducation/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Displays-Settings.extension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.SiriSuggestionsLightHousePlugin/Data: Operation not permitted
+find: ../Library/Containers/com.facebook.ptoken/Data: Operation not permitted
+find: ../Library/Containers/com.apple.geod/Data: Operation not permitted
+find: ../Library/Containers/com.apple.news: Operation not permitted
+find: ../Library/Containers/com.apple.TV.TVCacheExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.speech.SpeechSynthesisServerXPC/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CaptiveNetworkAssistant/Data: Operation not permitted
+find: ../Library/Containers/com.apple.DifferentialPrivacy.TelemetryAggregator/Data: Operation not permitted
+find: ../Library/Containers/com.apple.calculator.CalculatorWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.WindowManager.controls/Data: Operation not permitted
+find: ../Library/Containers/com.apple.texttospeech.SiriAUSP/Data: Operation not permitted
+find: ../Library/Containers/com.apple.routined/Data: Operation not permitted
+find: ../Library/Containers/com.apple.findmy.FindMyWidgetItems/Data: Operation not permitted
+find: ../Library/Containers/com.apple.inputmethod.SCIM/Data: Operation not permitted
+find: ../Library/Containers/com.apple.SiriUI.SiriUISetupXPC/Data: Operation not permitted
+find: ../Library/Containers/com.apple.corerecents.recentsd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.stocks.widget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetIntentsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Notes.WidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.systempreferences.GeneralSettings/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.SafariWidgetExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.LinkedNotesUIService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Preview/Data: Operation not permitted
+find: ../Library/Containers/com.apple.UsageTrackingAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Home.HomeWidget.Interactive/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CoreRoutine.helperservice/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.metrics.MetricsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CryptoTokenKit.ctkcard.ctkcardtoken/Data: Operation not permitted
+find: ../Library/Containers/com.apple.notes.exchangenotesd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.journal.widgets.secure/Data: Operation not permitted
+find: ../Library/Containers/com.apple.stocks: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.IFTelemetrySELFIngestor/Data: Operation not permitted
+find: ../Library/Containers/com.apple.dock.controls/Data: Operation not permitted
+find: ../Library/Containers/com.apple.lighthouse.PnROnDeviceWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.SafariLinkExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Safari.WebApp: Operation not permitted
+find: ../Library/Containers/com.apple.unilog.search.MacMailSearchLogProcessor/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Internet-Accounts-Settings.extension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.quicklook.ui.helper/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CMViewSrvc/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.ODDIMetricsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AvatarUI.AvatarPickerMemojiPicker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.SiriNCService/Data: Operation not permitted
+find: ../Library/Containers/com.apple.Notes.IntentsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.unilog.SearchUploadWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.ax.MauiTTSSupport.MauiAUSP/Data: Operation not permitted
+find: ../Library/Containers/com.apple.BluetoothFileExchange/Data: Operation not permitted
+find: ../Library/Containers/com.apple.weather.WeatherIntents/Data: Operation not permitted
+find: ../Library/Containers/com.apple.AirPlayUIAgent/Data: Operation not permitted
+find: ../Library/Containers/com.apple.voicebankingd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.siri.ODDIExperimentationExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.systempreferences/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CloudDocs.iCloudDriveFileProvider/Data: Operation not permitted
+find: ../Library/Containers/com.apple.VoiceMemos.RecordWidget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.parsec.SafariAssistantWorker/Data: Operation not permitted
+find: ../Library/Containers/com.apple.podcasts.widget/Data: Operation not permitted
+find: ../Library/Containers/com.apple.contacts.ContactsCoreSpotlightExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.wallpaper.extension.legacy/Data: Operation not permitted
+find: ../Library/Containers/com.apple.mediaanalysisd/Data: Operation not permitted
+find: ../Library/Containers/com.apple.CalendarWidget.IntentsExtension/Data: Operation not permitted
+find: ../Library/Containers/com.apple.MobileSMS.MessagesActionExtension/Data: Operation not permitted
+find: ../Library/ContainerManager: Operation not permitted
+find: ../Library/PersonalizationPortrait: Operation not permitted
+find: ../Library/Photos: Operation not permitted
+find: ../Library/Metadata/CoreSpotlight: Operation not permitted
+find: ../Library/Metadata/com.apple.IntelligentSuggestions: Operation not permitted
+find: ../Library/Cookies: Operation not permitted
+find: ../Library/CoreFollowUp: Operation not permitted
+find: ../Library/StatusKit: Operation not permitted
+find: ../Library/DoNotDisturb: Operation not permitted
+find: ../Library/Caches/com.apple.Music: Operation not permitted
+find: ../Library/Caches/com.apple.HomeKit: Operation not permitted
+find: ../Library/Caches/CloudKit: Operation not permitted
+find: ../Library/Caches/com.apple.Safari: Operation not permitted
+find: ../Library/Caches/com.apple.containermanagerd: Operation not permitted
+find: ../Library/Caches/com.apple.Safari.SafeBrowsing: Operation not permitted
+find: ../Library/Caches/com.apple.homed: Operation not permitted
+find: ../Library/Caches/com.apple.ap.adprivacyd: Operation not permitted
+find: ../Movies/TV: Operation not permitted
+../autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+../research-os/prompts/committee/_committee_common_v001.md
+../research-os/prompts/_shared/TOOLING_v001.md
+find: ../.Trash: Operation not permitted
+find: ../Documents: Operation not permitted
+find: ../Downloads: Operation not permitted
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The local prompt files are not present under this repo path by those exact names; the packet includes the common rules inline, so I’m applying those and using the requested OSS search axis. I’m also checking the experiment artifact rather than relying only on the pasted excerpt.
+exec
+/bin/zsh -lc 'find experiments/2026-06-04/EXP-0070 -maxdepth 2 -type f -print' in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc 'find experiments/2026-06-04/EXP-0069 -maxdepth 2 -type f -print' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+experiments/2026-06-04/EXP-0070/EDITORIAL_REVISION.md
+experiments/2026-06-04/EXP-0070/code/bootstrap_gini.py
+experiments/2026-06-04/EXP-0070/COMMITTEE3_PACKET.md
+experiments/2026-06-04/EXP-0070/experiment.yaml
+experiments/2026-06-04/EXP-0070/results/bootstrap_gini.json
+experiments/2026-06-04/EXP-0070/PRE_REGISTRATION.md
+experiments/2026-06-04/EXP-0070/committee3/evaluation_prosecutor.out
+experiments/2026-06-04/EXP-0070/committee3/theory_skeptic.out
+experiments/2026-06-04/EXP-0070/committee3/systems_reviewer.out
+experiments/2026-06-04/EXP-0070/committee3/_runner.log
+experiments/2026-06-04/EXP-0070/committee3/.members.txt
+experiments/2026-06-04/EXP-0070/committee3/evaluation_prosecutor.err
+experiments/2026-06-04/EXP-0070/committee3/theory_skeptic.err
+experiments/2026-06-04/EXP-0070/committee3/systems_reviewer.err
+experiments/2026-06-04/EXP-0070/committee3/product_realist.out
+experiments/2026-06-04/EXP-0070/committee3/novelty_killer.out
+experiments/2026-06-04/EXP-0070/committee3/area_chair.err
+experiments/2026-06-04/EXP-0070/committee3/novelty_killer.err
+experiments/2026-06-04/EXP-0070/committee3/product_realist.err
+
+ succeeded in 0ms:
+experiments/2026-06-04/EXP-0069/COMMITTEE2_PACKET.md
+experiments/2026-06-04/EXP-0069/code/measure.py
+experiments/2026-06-04/EXP-0069/code/normalizers.py
+experiments/2026-06-04/EXP-0069/code/measure_final.py
+experiments/2026-06-04/EXP-0069/code/fetch_c4.py
+experiments/2026-06-04/EXP-0069/code/fetch_c4b.py
+experiments/2026-06-04/EXP-0069/code/measure_real.py
+experiments/2026-06-04/EXP-0069/code/measure2.py
+experiments/2026-06-04/EXP-0069/code/measure3.py
+experiments/2026-06-04/EXP-0069/experiment.yaml
+experiments/2026-06-04/EXP-0069/results/measure_final_5lang.json
+experiments/2026-06-04/EXP-0069/results/measure_realexposure_jazh.json
+experiments/2026-06-04/EXP-0069/results/measure_injection_jazh.json
+experiments/2026-06-04/EXP-0069/RESULTS.md
+experiments/2026-06-04/EXP-0069/PRE_REGISTRATION.md
+experiments/2026-06-04/EXP-0069/committee2/evaluation_prosecutor.out
+experiments/2026-06-04/EXP-0069/committee2/theory_skeptic.out
+experiments/2026-06-04/EXP-0069/committee2/systems_reviewer.out
+experiments/2026-06-04/EXP-0069/committee2/_runner.log
+experiments/2026-06-04/EXP-0069/committee2/.members.txt
+experiments/2026-06-04/EXP-0069/committee2/evaluation_prosecutor.err
+experiments/2026-06-04/EXP-0069/committee2/theory_skeptic.err
+experiments/2026-06-04/EXP-0069/committee2/systems_reviewer.err
+experiments/2026-06-04/EXP-0069/committee2/.v3_notified.ready
+experiments/2026-06-04/EXP-0069/committee2/_runner_retry.log
+experiments/2026-06-04/EXP-0069/committee2/product_realist.out
+experiments/2026-06-04/EXP-0069/committee2/novelty_killer.out
+experiments/2026-06-04/EXP-0069/committee2/area_chair.out
+experiments/2026-06-04/EXP-0069/committee2/area_chair.err
+experiments/2026-06-04/EXP-0069/committee2/_status.txt
+experiments/2026-06-04/EXP-0069/committee2/novelty_killer.err
+experiments/2026-06-04/EXP-0069/committee2/product_realist.err
+experiments/2026-06-04/EXP-0069/data/c4_ja.jsonl
+experiments/2026-06-04/EXP-0069/data/c4_ar.jsonl
+experiments/2026-06-04/EXP-0069/data/c4_de.jsonl
+experiments/2026-06-04/EXP-0069/data/c4_fr.jsonl
+experiments/2026-06-04/EXP-0069/data/c4_zh.jsonl
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' experiments/2026-06-04/EXP-0069/RESULTS.md" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "sed -n '1,220p' experiments/2026-06-04/EXP-0070/EDITORIAL_REVISION.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# EDITORIAL_REVISION — EXP-0070 / CLAIM-0059 — researcher-0067
+
+**Purpose.** Editorial revision of EXP-0069 (which met the GREEN gate, residual_FN_rate = 95.1% on real
+C4-multilingual). NO new experiments. This document addresses the **5 framing/completeness conditions** the
+committee#2 (VERDICT-0058) identified as the path from YELLOW → unanimous GREEN, plus the **chair-mandated
+driver-concentration baseline**. All numbers are re-derived deterministically from EXP-0069's real corpus
+(21,300 C4 docs) and verified to reproduce EXP-0069's point estimates exactly before bootstrapping.
+
+---
+
+## CONDITION 1 — REFRAME ALTITUDE (this is a measurement, not a new mechanism)
+
+> **Framing (use as the abstract's altitude-setting sentences):**
+> The normalization / equivalence-class mismatch we measure is **not a newly discovered mechanism** — it is the
+> classic information-retrieval phenomenon described in Manning, Raghavan & Schütze, *Introduction to
+> Information Retrieval* (IIR) **§2.2 ("Determining the vocabulary of terms" → token normalization &
+> equivalence classing)**: two independent text-processing stages that adopt **different equivalence relations**
+> over surface forms will disagree on which strings are "the same," and the disagreement is exactly the
+> symmetric difference of their equivalence classes. **Our contribution is empirical, not conceptual:** we
+> *measure the magnitude* of that known mismatch at a specific, previously-unquantified seam — the
+> **near-dedup normalizer × model-tokenizer normalizer** seam — on real multilingual web text, and we show it
+> has a **demonstrated-material safety/privacy/contamination consequence** (model-identical duplicates that the
+> production deduper structurally cannot collapse → memorization / eval-contamination exposure). We claim the
+> *measurement and its consequence*, not the existence of the mechanism.
+
+IIR §2.2 is cited explicitly. The mechanism (equivalence-class mismatch between two normalizers) is textbook;
+the **45.2% prevalence on real C4** and the **34.6% survival through production MinHash** are the new facts.
+
+---
+
+## CONDITION 2 — LEAD METRIC (operationally-grounded, not the construction rate)
+
+`theory_skeptic` is correct that the **95.1% twin-construction/escape rate is structurally predicted by
+UAX#15 once the experiment design is fixed** (NFD-canonical can never collapse a compatibility character, and
+`.lower()` ≠ `casefold()`, so a model-identical-by-NFKC twin is *almost tautologically* not prod-identical —
+the only question is how often the design is *applicable*). We therefore **demote 95.1% from the headline** and
+**lead with the two operationally-grounded numbers** that demonstrate real-world impact:
+
+> **HEADLINE (rewritten):**
+> **45.2%** of real multilingual web documents (C4: ja/zh/ar/de/fr) have a **model-identical NFKC-twin** — a
+> different-but-tokenizer-equivalent rendering that a production near-dedup pipeline treats as a *distinct*
+> document. Of those model-identical pairs, **34.6%** survive **real MinHash near-dedup at threshold T=0.8**
+> (5-gram char shingles over production-normalized text) — i.e. they are *not* caught even by shingle-based
+> approximate matching, the actual production mechanism. These are hidden, tokenizer-identical duplicates that
+> reach the model.
+
+The 95.1% exact-string escape rate is retained as a **supporting / explanatory** figure (it explains *why* the
+operational numbers are nonzero), not as the lead claim.
+
+| role | metric | value [95% CI] |
+|------|--------|----------------|
+| **LEAD** | prevalence: real docs with a model-identical NFKC-twin | **45.2%** (9,044 / 20,000) |
+| **LEAD** | of those pairs, survive real MinHash @ T=0.8 | **34.6%** [33.6%, 35.6%] |
+| support | exact-string residual_FN_rate (structurally predicted) | 95.1% [94.7%, 95.6%] |
+| support | word-token Jaccard<0.8 survival | 58.7% |
+
+---
+
+## CONDITION 3 — TOKENIZER-FAMILY SCOPE NOTE (honest bound on the claim)
+
+> **Scope.** This finding holds **specifically for models whose tokenizer normalizer is NFKC + casefold** — the
+> SentencePiece/T5 `nfkc_cf` normalizer family, which is the **pervasive multilingual default** (T5/mT5,
+> ByT5-adjacent SP configs, many XLM/multilingual SP tokenizers, and any tokenizer.json declaring an
+> `Nmt`/`NFKC`+`Lowercase`/casefold normalizer). For this family, the model's notion of "identical" is
+> NFKC+casefold, which is **strictly coarser** than the production deduper's NFD+lowercase — hence the gap.
+>
+> The relationship **does not hold uniformly across tokenizer families**, and we state the boundaries:
+> - **Raw-bytes BPE (GPT-2 / Llama / most GPT-family):** the tokenizer applies **no Unicode normalization** —
+>   its "identical" is **byte/string-identical**. A production deduper that *does* normalize is then *more*
+>   aggressive than the model, so there is **no model-identical-but-prod-distinct gap in this direction** (the
+>   relationship inverts: the model is the stricter equivalence). The seam's teeth require model-coarser-than-prod.
+> - **BERT-multilingual-style (NFD/NFC + lowercase + strip-accents):** the tokenizer's normalization is
+>   **≈ the production deduper's** (both are canonical-decomposition + lowercase). The two equivalence relations
+>   nearly coincide, so **the gap collapses toward zero**.
+>
+> The claim is therefore: *for the NFKC+casefold tokenizer family (the dominant multilingual default), the
+> dedup×tokenizer seam leaks model-identical duplicates at the measured rates.* Outside that family the
+> magnitude is bounded by how far the tokenizer's normalizer sits from NFKC+casefold.
+
+---
+
+## CONDITION 4 — BOOTSTRAP CONFIDENCE INTERVALS
+
+**Method.** Re-derived the **per-pair residual-FN indicator** (1 if `prod(d) ≠ prod(twin)` for a GT
+model-identical pair, else 0) directly from EXP-0069's real C4 jsonl using the identical `measure_final`
+logic (`normalizers.model_norm` / `prod_norm`). Verified the per-language and pooled point estimates reproduce
+EXP-0069 *exactly*. Nonparametric percentile bootstrap, **B = 10,000**, seed = 20260604, resampling the
+per-pair indicator with replacement (for a 0/1 sample, the resample-mean distribution is exactly
+Binomial(N, p̂)/N — generated via an exact Bernoulli-geometric sampler; no numpy dependency, no parametric
+approximation). 95% CI = [2.5th, 97.5th] percentile of resample means.
+
+### residual_FN_rate — per language + pooled (95% bootstrap CI)
+| lang | n model-identical pairs | residual_FN_rate | 95% CI |
+|------|------------------------|------------------|--------|
+| ja (Japanese) | 3,610 | 0.9839 | **[0.9795, 0.9878]** |
+| zh (Chinese)  | 3,317 | 0.9985 | **[0.9970, 0.9997]** |
+| de (German)   | 587   | 0.9472 | **[0.9284, 0.9642]** |
+| fr (French)   | 856   | 0.9463 | **[0.9311, 0.9603]** |
+| ar (Arabic)   | 674   | 0.5564 | **[0.5193, 0.5935]** |
+| **POOLED**    | 9,044 | **0.9515** | **[0.9469, 0.9558]** |
+
+**Every language's lower CI bound clears the 1% GREEN gate by ≥51× (Arabic, the weakest) to ≥997× (Chinese).**
+The pooled lower bound is 94.7%. The gate is not within an order of magnitude of any interval.
+
+### MinHash-survival sub-rate (the LEAD operational number), 95% bootstrap CI
+| metric | n (fn pairs) | rate | 95% CI |
+|--------|--------------|------|--------|
+| survive real MinHash near-dedup @ T=0.8 (char 5-gram Jaccard<0.8) | 8,605 | **0.3463** | **[0.3361, 0.3562]** |
+
+The headline operational claim (34.6% survive production MinHash) has a tight ±1% CI well clear of any
+"could-be-an-artifact" regime.
+
+---
+
+## CONDITION 5 — text-dedup NORMALIZER VERIFICATION (≥2 production codebases misalign with NFKC+casefold)
+
+**Source inspected:** `ChenghaoMou/text-dedup` (GitHub), the widely-used MinHash/SimHash dedup toolkit used in
+several open LLM data pipelines.
+
+**What its near-dedup preprocessing actually does** (its `NON_ALPHA` tokenization path, used by the
+MinHash/MinHashLSH deduplicators):
+- It splits text on a **non-alphanumeric regex** — `NON_ALPHA = re.compile(r"\W+", re.UNICODE)` (equivalently
+  `[^A-Za-z0-9_]+` under the Unicode flag) — to produce the tokens that are then n-gram-shingled and hashed.
+- There is **NO `unicodedata.normalize("NFKC", ...)`** and **NO `casefold()`** in this path. Case handling, when
+  present, is plain ASCII `.lower()`; the dominant transform is the `\W+` split + whitespace rejoin.
+
+**Conclusion (substantiates ≥2 production codebases off NFKC+casefold):**
+1. **datatrove** (`simplify_text`): lowercase → **NFD (canonical-only)** → strip combining marks → strip ASCII
+   punctuation → digit→0 → collapse whitespace. **NFD ≠ NFKC; `.lower()` ≠ `casefold()`.** → misaligned.
+2. **text-dedup** (`NON_ALPHA` `\W+` split + `.lower()`): **no NFKC, no casefold, no canonical decomposition at
+   all** — purely a lowercase + non-word-character split. → misaligned.
+
+Neither production deduper applies the model tokenizer's NFKC+casefold equivalence. The seam is **not a
+single-library quirk** — it is present across the two most common open-source dedup defaults. (EXP-0069's
+cross-check arm confirms the *consequence*: under the text-dedup `\W+` arm the European/Arabic residual drops to
+13–23% — because aggressive non-word splitting collapses more punctuation-class variation — but **still ≥13×
+the GREEN gate**, and the CJK fullwidth-letter residual is ~unchanged because fullwidth letters are `\w` word
+characters and survive the split.)
+
+---
+
+## CHAIR BASELINE — DRIVER CONCENTRATION (Gini / top-class share): is it a single-mode artifact?
+
+**Question:** is the residual driven by a single Unicode class (which would make the result a narrow
+fullwidth-ASCII artifact), or is it genuinely multi-modal? Computed two concentration views.
+
+### (a) Per-pair dominant-class assignment (each FN pair → its top residual-driving class)
+| class | dominant in # FN pairs | share |
+|-------|------------------------|-------|
+| fullwidth_ascii | 6,663 | **77.4%** |
+| other_compat (ß→ss, ™, ℃, …, ′″, º, etc.) | 1,634 | **19.0%** |
+| super/subscript & modifier | 140 | 1.6% |
+| halfwidth_kana_hangul | 66 | 0.8% |
+| fraction | 30 | 0.3% |
+| ligature (ﬁ→fi, Arabic) | 27 | 0.3% |
+| + 5 more classes (fullwidth_sign, enclosed_circled, cjk_squared, roman_numeral, presentation_form) | ≤14 each | <0.2% each |
+
+- **Gini (per-pair dominant class) = 0.852**; **top-1 share = 77.4%**; **top-10 share = 99.98%**.
+- **Classes holding ≥1% of dominant-pair mass = 3** (fullwidth_ascii, other_compat, super_subscript_modifier).
+
+### (b) Char-level residual-driving counts (every residual-causing character)
+| | value |
+|--|--|
+| total residual-driving chars | 342,738 |
+| top-1 class share (fullwidth_ascii) | 87.6% |
+| top-10 class share | 99.99% |
+| **Gini** | **0.870** |
+
+**Interpretation (the chair's question, answered):** the residual is **dominant-but-not-monolithic**.
+Fullwidth-ASCII is the clear primary mode (77–88% depending on view), exactly as predicted — **but it is NOT
+the only class**. A substantial, independent **second mode (`other_compat`: German ß→ss, typographic compat
+℃/™/…/′″/º) drives ~19% of FN pairs**, and a non-trivial third mode (super/subscript). The European languages
+(de/fr at 94.6–94.7% residual) clear the gate **without any fullwidth-ASCII at all**, proving the seam has
+teeth from at least two structurally distinct Unicode sources (CJK fullwidth + Latin/typographic casefold-compat).
+The high Gini reflects a **heavy-but-not-degenerate** distribution: ≥3 classes each carry ≥1% of the signal, so
+the result is **not a single-mode artifact**. (If fullwidth-ASCII were the *only* driver, de/fr would sit at the
+gate floor, not at 94%+.)
+
+---
+
+## SUMMARY: all 6 conditions addressed
+1. ✅ Altitude reframed — empirical measurement of IIR §2.2 normalization/equivalence-class mismatch at the
+   dedup×tokenizer seam, with demonstrated material privacy/contamination consequence. Mechanism not claimed novel.
+2. ✅ Lead metric rewritten — leads with **45.2% prevalence** + **34.6% MinHash survival**; 95.1% demoted to support.
+3. ✅ Tokenizer-family scope note — bounded to NFKC+casefold family; raw-bytes BPE inverts, BERT-NFD collapses.
+4. ✅ Bootstrap 95% CIs — per-language + pooled (B=10k); every lower bound ≥51× the gate; MinHash-survival CI ±1%.
+5. ✅ text-dedup normalizer verified — `\W+` split + lower, **no NFKC/casefold**; ≥2 production codebases misalign.
+6. ✅ Chair baseline — Gini 0.85 (per-pair) / 0.87 (char); top-1 77–88% but ≥3 classes ≥1% → multi-modal, not artifact.
+
+**Disposition:** GREEN gate remains met (this revision does not move the gate; it reframes, bounds, and
+quantifies uncertainty). Effect = **SUPPORT**. Ready for committee#3 re-run toward unanimous GREEN.
+Artifacts: `results/bootstrap_gini.json` (CIs + concentration), `PRE_REGISTRATION.md`. Did NOT touch .converged.
+
+— researcher-0067, 2026-06-04
+
+ succeeded in 0ms:
+# RESULTS — EXP-0069 / CLAIM-0059 — researcher-0066 (L1, DECISIVE)
+
+## OUTCOME: **GREEN GATE MET — SUPPORT.** residual_FN_rate = **95.1%** (≫ 1% gate).
+
+The normalizer-divergence seam is NOT toothless. On REAL multilingual web text (C4), of document pairs
+that are IDENTICAL under the model tokenizer's normalization (NFKC+casefold), **95.1% ESCAPE the
+production dedup pipeline's default normalization** (datatrove `simplify_text`). The residual is driven
+overwhelmingly by **NFKC-compatibility variation that production's lowercase+NFD+strip-Mn pipeline does
+NOT collapse** — chiefly **fullwidth ASCII** (CJK) and **German ß / ligatures / typographic compat** (European).
+This is a material hidden model-identical-duplicate exposure (memorization / privacy / eval-contamination risk).
+
+---
+
+## ★ THE NUMBER (METRIC A — NFKC-twin, injection-free, the headline)
+For each REAL doc d, its most natural model-identical twin = `NFKC(d)` (the canonical Unicode rendering a
+different site would use). Counted only when twin≠d AND `model_norm(d)==model_norm(twin)` (GT: model-identical).
+residual FN = production dedup fails to match (`prod(d)≠prod(twin)`).
+
+| metric | value |
+|--------|-------|
+| total real docs (5 langs × 4000, ja 5300→4000) | 20,000 |
+| model-identical (d, NFKC-twin) pairs formable | 9,044 |
+| **residual_FN_rate = pairs escaping production dedup / model-identical pairs** | **0.9514 (95.1%)** |
+| pair-formable / prevalence (docs with a distinct model-identical twin) | **45.2%** |
+
+### Per language (residual_FN_rate, prevalence)
+| lang | model-identical pairs | residual FN | **residual_FN_rate** | prevalence (pair-formable) |
+|------|----------------------|-------------|----------------------|----------------------------|
+| ja (Japanese) | 3610 | 3552 | **0.984** | 0.903 |
+| zh (Chinese)  | 3317 | 3312 | **0.998** | 0.829 |
+| de (German)   | 587  | 556  | **0.947** | 0.147 |
+| fr (French)   | 856  | 810  | **0.946** | 0.214 |
+| ar (Arabic)   | 674  | 375  | **0.556** | 0.169 |
+
+→ Every language clears the GREEN gate by ≥55×. CJK clears by ~98×. **GREEN.**
+
+---
+
+## WHICH UNICODE EQUIVALENCE CLASSES DRIVE THE RESIDUAL (attribution)
+Counts = residual-driving characters (a char c where `model(c)≠c` AND `prod(c)≠prod(model(c))`):
+
+| class | residual-driving char count (5-lang) | what it is | why production misses it |
+|-------|--------------------------------------|------------|--------------------------|
+| **fullwidth_ascii** | 300,261 | Ａ-Ｚ ０-９ etc. (pervasive in CJK web) | NFKC→ASCII; production **NFD is canonical-only**, never touches compat |
+| other_compat | 23,850 | **ß→ss**, …→..., ™→tm, ℃→°c, º, ′″ | production `.lower()` ≠ casefold (ß stays ß); NFD keeps compat signs |
+| halfwidth_kana_hangul | 14,148 | ﾊﾝｶｸ kana | compat (NFKC) not canonical (NFD) |
+| fullwidth_sign | 1,330 | ＄￥％＃ | compat |
+| super/subscript & modifier | 1,071 | ², ₃, ᵃ | compat |
+| enclosed/circled | 1,029 | ①②㈱ | compat |
+| cjk_squared | 331 | ㌔㍑ | compat |
+| roman_numeral | 268 | Ⅳ→iv | compat |
+| ligature | 262 | ﬁ→fi (Latin), Arabic ligatures | compat |
+| fraction | 154 | ½→1⁄2 | compat |
+
+**Root cause (one sentence):** the model normalizer uses **NFKC (compatibility) + casefold**, while the
+production deduper uses **NFD (canonical) + lowercase** — NFD by definition leaves every COMPATIBILITY
+character distinct, and `lower()` ≠ `casefold()` (ß, ligatures). The residual is exactly the
+compatibility+casefold gap between NFKC+casefold and NFD+lower.
+
+---
+
+## METRIC B — does the SHINGLE / TOKEN representation change the picture? (production uses shingles, not exact match)
+Of the 8,605 exact-string residual FNs, how many ALSO escape under Jaccard<0.8 of the production-normalized text:
+
+| representation | still a FN | rate of the residual FNs |
+|----------------|-----------|--------------------------|
+| 5-gram char shingles (Jaccard<0.8) | 2,980 | 34.6% |
+| whitespace word tokens (Jaccard<0.8) | 5,050 | 58.7% |
+
+→ The residual is NOT merely an exact-string artifact. A large share survives even production's real
+SHINGLE-based MinHash matching at T=0.8 — because a fullwidth-saturated CJK doc and its ASCII twin share
+**few** production-normalized char-5-grams (fullwidth char ≠ ascii char at the shingle level too). Word-token
+escape is even higher. Consistent with L0 (EXP-0068), where the divergence projects model-identical pairs to
+low Jaccard the LSH cannot recover. (Docs with only a FEW fullwidth chars stay high-Jaccard → caught by shingles,
+which is why shingle-FN < exact-FN; the seam's teeth are in the heavily-variant docs.)
+
+---
+
+## CROSS-CHECK: text-dedup normalizer arm (lowercase + split on \W)
+Re-run METRIC A with the second production default (text-dedup `\W+` split):
+| lang | residual_FN_rate (text-dedup arm) |
+|------|-----------------------------------|
+| de | 0.203 | fr | 0.225 | ar | 0.132 |
+(text-dedup's aggressive non-word splitting collapses more punctuation-class variation, so the European/Arabic
+residual drops to 13–23% — STILL ≥13× the GREEN gate. CJK fullwidth-letter residual remains ~unchanged because
+fullwidth letters are word chars and survive \W splitting too.) **Both production defaults clear GREEN.**
+
+---
+
+## DATA SOURCE + CAVEATS (stated clearly)
+- **REAL corpus:** `allenai/c4` (C4-multilingual), validation splits, streamed live from the HuggingFace
+  datasets-server `/rows` API to the Mac. 21,300 real web documents: ja 5,300, zh/ar/de/fr 4,000 each
+  (measured on 4,000/lang = 20,000). Saved to `data/c4_*.jsonl` (189 MB). NO injection in METRIC A — the
+  variation is ALREADY PRESENT in the real text; the model-identical twin is the doc's own NFKC rendering.
+- **MODEL normalizer (GT standard):** `NFKC(casefold(x))` — the tokenizer normalization standard per the claim
+  (used by mBERT/XLM-R-family NFKC tokenizers + casefold). Harness-computed GT; never read by the tested signal.
+- **PRODUCTION normalizer (tested signal):** REAL datatrove `simplify_text` default = lowercase → NFD →
+  strip combining marks (Mn) → strip ASCII punctuation → collapse whitespace → digit→'0'. Cross-checked with
+  text-dedup `\W+` preprocess. The tested signal NEVER reads the GT (anti-circular).
+- CAVEAT: the model GT is the *standard* NFKC+casefold, not a specific loaded tokenizer.json normalizer; this is
+  the equivalence standard named in CLAIM-0059 and validated in L0. A specific tokenizer that does only NFC would
+  shrink the gap, but NFKC+casefold is the pervasive multilingual-tokenizer default and the claim's stated GT.
+- CAVEAT: METRIC A's twin is `NFKC(d)` (readable canonical form) while GT equality uses full `NFKC(casefold(...))`;
+  pairs are only counted when model-identical under the full GT, so this is conservative (some ß-only docs need
+  casefold to be model-identical and are correctly included).
+
+---
+
+## ANTI-CIRCULAR / HONESTY
+- GT = `model_norm` equality, harness-computed. Tested signal = production normalizer output, which never
+  reads the GT. The residual is the disagreement between the two independent equivalence relations on REAL text.
+- No injection in the headline metric — fullwidth/ß/ligature variation is endogenous to real C4.
+- RED was a live outcome: if production NFD+lower had collapsed the compat classes, residual→~0. It did not,
+  because NFD is canonical-only and `lower()`≠casefold — a real, structural Unicode fact, not a tuned artifact.
+- The one "caught" demonstration case (a doc whose only variation was fullwidth *punctuation* ！？, which
+  production strips) confirms the harness is not trivially always-FN: production DOES catch punctuation-only
+  variation; the residual is specifically the letter/digit/ligature/ß compatibility gap.
+
+---
+
+## DISPOSITION: **GREEN gate MET (residual_FN_rate 95.1% ≫ 1%).**
+Material hidden model-identical-duplicate exposure attributable to the normalizer-divergence seam, on real
+multilingual web text, driven by NFKC-compatibility (fullwidth/ligature/compat) + casefold(ß) variation that
+production dedup normalization structurally cannot collapse. Recommend committee#2 (per orchestrator).
+Did NOT self-converge / did NOT touch .converged.
+
+— researcher-0066, 2026-06-04
+
+hook: PostToolUse
+exec
+/bin/zsh -lc 'cat experiments/2026-06-04/EXP-0070/results/bootstrap_gini.json' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+{
+  "B": 10000,
+  "seed": 20260604,
+  "per_lang_residual_fn_rate_CI": {
+    "ja": {
+      "n_pairs": 3610,
+      "point": 0.9839335180055402,
+      "ci_lo": 0.9797783933518005,
+      "ci_hi": 0.9880886426592798
+    },
+    "zh": {
+      "n_pairs": 3317,
+      "point": 0.9984926138076575,
+      "ci_lo": 0.996985227615315,
+      "ci_hi": 0.9996985227615315
+    },
+    "ar": {
+      "n_pairs": 674,
+      "point": 0.5563798219584569,
+      "ci_lo": 0.5192878338278932,
+      "ci_hi": 0.5934718100890207
+    },
+    "de": {
+      "n_pairs": 587,
+      "point": 0.9471890971039182,
+      "ci_lo": 0.9284497444633731,
+      "ci_hi": 0.9642248722316865
+    },
+    "fr": {
+      "n_pairs": 856,
+      "point": 0.9462616822429907,
+      "ci_lo": 0.9310747663551402,
+      "ci_hi": 0.9602803738317757
+    }
+  },
+  "pooled_residual_fn_rate_CI": {
+    "n_pairs": 9044,
+    "point": 0.9514595311808934,
+    "ci_lo": 0.9471472799646175,
+    "ci_hi": 0.9558823529411765
+  },
+  "pooled_minhash_survival_rate_CI": {
+    "n_fn_pairs": 8605,
+    "point": 0.3463102847181871,
+    "ci_lo": 0.33631609529343404,
+    "ci_hi": 0.3565368971528181
+  },
+  "concentration": {
+    "char_level": {
+      "total_driving_chars": 342738,
+      "top1_class_share": 0.8760656828247816,
+      "top10_class_share": 0.9999007988609375,
+      "gini": 0.8702332393840193,
+      "by_class": {
+        "fullwidth_ascii": 300261,
+        "other_compat": 23850,
+        "halfwidth_kana_hangul": 14148,
+        "fullwidth_sign": 1330,
+        "super_subscript_modifier": 1071,
+        "enclosed_circled": 1029,
+        "cjk_squared": 331,
+        "roman_numeral": 268,
+        "ligature": 262,
+        "fraction": 154,
+        "presentation_form": 34
+      }
+    },
+    "per_pair_dominant_class": {
+      "total_fn_pairs": 8605,
+      "top1_class_share": 0.7743172574084835,
+      "top10_class_share": 0.999767576990122,
+      "gini": 0.8519993661190641,
+      "classes_geq_1pct": [
+        "fullwidth_ascii",
+        "other_compat",
+        "super_subscript_modifier"
+      ],
+      "by_class": {
+        "fullwidth_ascii": 6663,
+        "other_compat": 1634,
+        "super_subscript_modifier": 140,
+        "halfwidth_kana_hangul": 66,
+        "fraction": 30,
+        "ligature": 27,
+        "fullwidth_sign": 14,
+        "enclosed_circled": 10,
+        "cjk_squared": 10,
+        "roman_numeral": 9,
+        "presentation_form": 2
+      }
+    }
+  }
+}
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'cat experiments/2026-06-04/EXP-0069/results/measure_final_5lang.json' in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+{
+  "langs": [
+    "ja",
+    "zh",
+    "ar",
+    "de",
+    "fr"
+  ],
+  "maxd": 4000,
+  "total_docs": 20000,
+  "METRIC_A_nfkc_twin": {
+    "model_identical_pairs": 9044,
+    "residual_fn": 8605,
+    "residual_fn_rate": 0.9514595311808934,
+    "pair_formable_rate": 0.4522
+  },
+  "METRIC_B_representation": {
+    "note": "of the exact-string residual FNs, how many ALSO escape under shingle/word Jaccard<T",
+    "T": 0.8,
+    "char_shingle_still_fn": 2980,
+    "word_token_still_fn": 5050,
+    "char_shingle_fn_rate_of_A": 0.3463102847181871,
+    "word_token_fn_rate_of_A": 0.5868680999418943
+  },
+  "class_drivers": {
+    "fullwidth_ascii": 300261,
+    "other_compat": 23850,
+    "halfwidth_kana_hangul": 14148,
+    "fullwidth_sign": 1330,
+    "super_subscript_modifier": 1071,
+    "enclosed_circled": 1029,
+    "cjk_squared": 331,
+    "roman_numeral": 268,
+    "ligature": 262,
+    "fraction": 154,
+    "presentation_form": 34
+  },
+  "per_lang": {
+    "ja": {
+      "docs": 4000,
+      "pairs": 3610,
+      "residual_fn": 3552,
+      "pair_formable_rate": 0.9025,
+      "residual_fn_rate": 0.9839335180055402
+    },
+    "zh": {
+      "docs": 4000,
+      "pairs": 3317,
+      "residual_fn": 3312,
+      "pair_formable_rate": 0.82925,
+      "residual_fn_rate": 0.9984926138076575
+    },
+    "ar": {
+      "docs": 4000,
+      "pairs": 674,
+      "residual_fn": 375,
+      "pair_formable_rate": 0.1685,
+      "residual_fn_rate": 0.5563798219584569
+    },
+    "de": {
+      "docs": 4000,
+      "pairs": 587,
+      "residual_fn": 556,
+      "pair_formable_rate": 0.14675,
+      "residual_fn_rate": 0.9471890971039182
+    },
+    "fr": {
+      "docs": 4000,
+      "pairs": 856,
+      "residual_fn": 810,
+      "pair_formable_rate": 0.214,
+      "residual_fn_rate": 0.9462616822429907
+    }
+  }
+}
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebookresearch/datatrove/main/src/datatrove/utils/text.py | grep -n \"def simplify_text\\|normalize\\|lower\\|casefold\\|NFKC\\|NFD\" | head -80" in /Users/dengcchi/autonomous-research-v3
