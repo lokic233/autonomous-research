@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'FALSIFIED. Pre-registered NULL holds exactly on the real load_dataset(parquet,streaming)->interleave_datasets(p=[.9,.1])->.shuffle(buffer)
+  path (datasets 4.8.5, pyarrow 24.0.0). Realized per-batch rare-source(B) fraction
+  is BYTE-IDENTICAL across B-shard-counts {1,4,16,64}: max zero-B run=0 batches, per-batch
+  std=0.96-1.03x Bernoulli null, mean=0.099 (vs configured 0.10). No divergence to
+  shrink monotonically -> kill-shot control returns null. Verified in installed source:
+  RandomlyCyclingMultiSourcesExamplesIterable cycles sources per-example via rng.choice(p)
+  UPSTREAM of the buffer, independent of shard count; each source''s shards are concatenated
+  into one logical sub-stream. Raw-interleave probe: B positions/gaps/idx ordering
+  identical for 1 vs 64 shards (meanGap 10.28 ex, maxGap 75 ex). The A-shard-cardinality
+  x B-buffer-fill coupling does not exist on this path: per-example Categorical cycling
+  decouples shard layout from buffer arrival. Honest negative.'
+result_effect: kill
 artifacts_path: experiments/2026-06-04/EXP-0078/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T21:45:43Z'
 prompt_version: ''

@@ -1,7 +1,7 @@
 claim_id: CLAIM-0065
 project_id: PROJ-0035
 stage: seed
-status: seed
+status: killed
 claim: 'When a multi-source training corpus is published as HF datasets Parquet/Arrow
   shards, the data teams choice of how many shards each source is split into silently
   determines the minimum batch-level source/label imbalance achievable by the training
@@ -46,16 +46,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0078
+  summary: 'FALSIFIED. Pre-registered NULL holds exactly on the real load_dataset(parquet,streaming)->interleave_datasets(p=[.9,.1])->.shuffle(buffer)
+    path (datasets 4.8.5, pyarrow 24.0.0). Realized per-batch rare-source(B) fraction
+    is BYTE-IDENTICAL across B-shard-counts {1,4,16,64}: max zero-B run=0 batches,
+    per-batch std=0.96-1.03x Bernoulli null, mean=0.099 (vs configured 0.10). No divergence
+    to shrink monotonically -> kill-shot control returns null. Verified in installed
+    source: RandomlyCyclingMultiSourcesExamplesIterable cycles sources per-example
+    via rng.choice(p) UPSTREAM of the buffer, independent of shard count; each source''s
+    shards are concatenated into one logical sub-stream. Raw-interleave probe: B positions/gaps/idx
+    ordering identical for 1 vs 64 shards (meanGap 10.28 ex, maxGap 75 ex). The A-shard-cardinality
+    x B-buffer-fill coupling does not exist on this path: per-example Categorical
+    cycling decouples shard layout from buffer arrival. Honest negative.'
+  data_path: experiments/2026-06-04/EXP-0078/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r8-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0078 result, then ros exp complete --exp EXP-0078 --effect
-  ...
+lifecycle_state: done
+next_action: killed -> cemetery; no further action
 blocking_on: ''
-active_experiments:
-- EXP-0078
+active_experiments: []
 created_at: '2026-06-04T20:56:35Z'
-last_updated: '2026-06-04T20:59:22Z'
+last_updated: '2026-06-04T21:45:50Z'

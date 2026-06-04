@@ -1,0 +1,64 @@
+dead_id: DEAD-0013
+original_claim_id: CLAIM-0065
+original_claim: 'When a multi-source training corpus is published as HF datasets Parquet/Arrow
+  shards, the data teams choice of how many shards each source is split into silently
+  determines the minimum batch-level source/label imbalance achievable by the training
+  teams fixed IterableDataset.shuffle(buffer_size=N). For realistic configs the REALIZED
+  early-training batch composition diverges from the configured interleave_datasets(probabilities=p)
+  mix by >20-40 percentage points for the rarest source during the first ~buffer_size/throughput
+  steps, and the divergence is a function of SHARD COUNT, not of p or N alone. Mechanism:
+  interleave cycles sources at the example level UPSTREAM of the buffer, but when
+  a rare source occupies very few shards, ALL its examples enter the buffer in one/few
+  contiguous bursts as that shard is reached -> for a large fraction of training the
+  buffer contains ZERO examples of the rare source, then a glut; the batch-level realized
+  fraction is BIMODAL and time-localized, not Bernoulli(p). The configured p is correct
+  in epoch-MEAN but violated at every STEP. NULL EXIT: if interleaves per-example
+  cycling already spreads a few-shard source finely enough that the buffer never starves
+  (divergence ~0 independent of shard count), the claim is FALSIFIED.'
+reason_killed: 'FALSIFIED. Pre-registered NULL holds exactly on the real load_dataset(parquet,streaming)->interleave_datasets(p=[.9,.1])->.shuffle(buffer)
+  path (datasets 4.8.5, pyarrow 24.0.0). Realized per-batch rare-source(B) fraction
+  is BYTE-IDENTICAL across B-shard-counts {1,4,16,64}: max zero-B run=0 batches, per-batch
+  std=0.96-1.03x Bernoulli null, mean=0.099 (vs configured 0.10). No divergence to
+  shrink monotonically -> kill-shot control returns null. Verified in installed source:
+  RandomlyCyclingMultiSourcesExamplesIterable cycles sources per-example via rng.choice(p)
+  UPSTREAM of the buffer, independent of shard count; each source''s shards are concatenated
+  into one logical sub-stream. Raw-interleave probe: B positions/gaps/idx ordering
+  identical for 1 vs 64 shards (meanGap 10.28 ex, maxGap 75 ex). The A-shard-cardinality
+  x B-buffer-fill coupling does not exist on this path: per-example Categorical cycling
+  decouples shard layout from buffer arrival. Honest negative.'
+killing_verdict: ''
+killing_experiments:
+- EXP-0078
+duplicate_patterns:
+- 'When a multi-source training corpus is published as HF datasets Parquet/Arrow shards,
+  the data teams choice of how many shards each source is split into silently determines
+  the minimum batch-level source/label imbalance achievable by the training teams
+  fixed IterableDataset.shuffle(buffer_size=N). For realistic configs the REALIZED
+  early-training batch composition diverges from the configured interleave_datasets(probabilities=p)
+  mix by >20-40 percentage points for the rarest source during the first ~buffer_size/throughput
+  steps, and the divergence is a function of SHARD COUNT, not of p or N alone. Mechanism:
+  interleave cycles sources at the example level UPSTREAM of the buffer, but when
+  a rare source occupies very few shards, ALL its examples enter the buffer in one/few
+  contiguous bursts as that shard is reached -> for a large fraction of training the
+  buffer contains ZERO examples of the rare source, then a glut; the batch-level realized
+  fraction is BIMODAL and time-localized, not Bernoulli(p). The configured p is correct
+  in epoch-MEAN but violated at every STEP. NULL EXIT: if interleaves per-example
+  cycling already spreads a few-shard source finely enough that the buffer never starves
+  (divergence ~0 independent of shard count), the claim is FALSIFIED.'
+- achievable all alone already arrow batch bernoulli bimodal buffer bursts but choice
+  claim composition configs configured contains contiguous corpus correct count cycles
+  cycling data datasets determines divergence diverges during each early enough enter
+  epoch every example examples exit falsified few finely first fixed fraction from
+  function glut how imbalance independent interleave interleaves into iterabledataset
+  its label large level localized many mean mechanism minimum mix multi never not
+  null occupies one parquet per percentage points probabilities published rare rarest
+  reached realistic realized shard shards shuffle silently size source sources split
+  spreads starves step steps teams then throughput time training upstream very violated
+  when zero
+revival_conditions: Would require a DIFFERENT streaming path that reads sources in
+  shard-concatenated order into the buffer (e.g. concatenate_datasets or a single
+  multi-shard dataset WITHOUT interleave's per-example cycling), where a rare source's
+  few shards DO enter contiguously. interleave_datasets specifically immunizes against
+  this.
+related_prior_work: []
+date_killed: '2026-06-04T21:45:50Z'
