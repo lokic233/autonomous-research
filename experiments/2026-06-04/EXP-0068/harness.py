@@ -73,6 +73,21 @@ def apply_typo(doc, rng, positions):
         chars[i] = repl; applied += 1
     return "".join(chars), applied
 
+def apply_normalizable_at(doc, positions):
+    """Apply a compat/case/combining-equivalent swap at EACH given position (matched-count control).
+    Guarantees NFKC+casefold-equivalence preserved."""
+    chars = list(doc)
+    applied = 0
+    for i in positions:
+        ch = chars[i]
+        if ch in PRECOMP:
+            chars[i] = PRECOMP[ch]; applied += 1
+        elif ch in FULLWIDTH:
+            chars[i] = FULLWIDTH[ch]; applied += 1
+        elif ch.isalpha() and ch.lower()!=ch.upper():
+            chars[i] = ch.upper() if ch.islower() else ch.lower(); applied += 1
+    return "".join(chars), applied
+
 def normalizable_positions(doc):
     return [i for i,ch in enumerate(doc) if ch in FULLWIDTH or ch in PRECOMP or (ch.isalpha() and ch.lower()!=ch.upper())]
 
@@ -117,26 +132,29 @@ def lsh_collide(sig1, sig2, b, r):
     return False
 
 # ---------- experiment ----------
-def run_pair_eval(arm, dedup_norm_name, M, num_perms, b, r, n_pairs, base_len, seed):
-    """Build n_pairs (doc1,doc2) under `arm` with M changes, run deduper under dedup_norm_name.
-    Returns dict: fn_rate (over MODEL-identical pairs), flag_rate, mean_jaccard, n_gt_dup."""
-    rng = random.Random(seed*1000 + hash(arm)%997 + hash(dedup_norm_name)%97)
+def run_pair_eval(arm, dedup_norm_name, M, num_perms, b, r, n_pairs, base_len, seed, frac=None):
+    """Build n_pairs (doc1,doc2) under `arm`. If frac is given, M = round(frac * #normalizable_positions)
+    (corpus-composition / fraction sweep); else M is a fixed count. Matched edit distance across arms
+    (same positions, same count). Returns FN over MODEL-identical pairs + flag_rate + Jaccard stats."""
+    rng = random.Random(seed*1000 + hash(arm)%997 + hash(dedup_norm_name)%97 + (int(frac*1000) if frac else 0))
     perms, MAXH = make_perms(num_perms, seed=999)
     dn = NORMALIZERS[dedup_norm_name]
     n_gt = 0; n_missed = 0; jac_list = []; flagged = 0; n_total = 0
     for _ in range(n_pairs):
         doc1 = make_base_doc(rng, base_len)
+        npos = normalizable_positions(doc1)
+        if not npos:
+            continue
+        rng.shuffle(npos)
+        m_eff = round(frac*len(npos)) if frac is not None else min(M, len(npos))
+        m_eff = max(1, m_eff)
+        chosen = npos[:m_eff]
         if arm == 'normalizable':
-            doc2, applied = apply_normalizable(doc1, rng, M)
-            if applied == 0:  # skip if no swap possible
-                continue
+            doc2, applied = apply_normalizable_at(doc1, chosen)
         else:  # typo
-            pos = normalizable_positions(doc1)  # SAME position pool as normalizable arm -> matched
-            rng.shuffle(pos)
-            pos = pos[:M]
-            if not pos:
-                continue
-            doc2, applied = apply_typo(doc1, rng, pos)
+            doc2, applied = apply_typo(doc1, rng, chosen)
+        if applied == 0:
+            continue
         n_total += 1
         # HARNESS GT (model view) — deduper never sees this
         is_gt_dup = (model_normalize(doc1) == model_normalize(doc2))
@@ -153,7 +171,7 @@ def run_pair_eval(arm, dedup_norm_name, M, num_perms, b, r, n_pairs, base_len, s
                 n_missed += 1
     fn = (n_missed/n_gt) if n_gt else float('nan')
     return {
-        'arm':arm, 'dedup_norm':dedup_norm_name, 'M':M, 'b':b, 'r':r,
+        'arm':arm, 'dedup_norm':dedup_norm_name, 'M':M, 'frac':frac, 'b':b, 'r':r,
         'n_total':n_total, 'n_gt_dup':n_gt, 'n_missed':n_missed,
         'fn_rate':fn, 'flag_rate':(flagged/n_total if n_total else float('nan')),
         'mean_jaccard':(sum(jac_list)/len(jac_list) if jac_list else float('nan')),

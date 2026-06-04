@@ -14,3 +14,47 @@
   done b=32 r=4 typo         NFC            t=90s
   done b=32 r=4 typo         NFKC           t=97s
   done b=32 r=4 typo         NFKC+casefold  t=103s
+  done b=8 r=16 normalizable raw            t=110s
+  done b=8 r=16 normalizable NFC            t=116s
+  done b=8 r=16 normalizable NFKC           t=123s
+  done b=8 r=16 normalizable NFKC+casefold  t=129s
+  done b=8 r=16 typo         raw            t=135s
+  done b=8 r=16 typo         NFC            t=142s
+  done b=8 r=16 typo         NFKC           t=148s
+  done b=8 r=16 typo         NFKC+casefold  t=155s
+=== MAIN SWEEP (M=6, perms=64, pairs/seed=200, seeds=5) ===
+
+--- LSH b=16 r=8 (knee≈0.71) ---
+arm          norm           FN_rate           flag_rate         mean_J  n_gt
+normalizable raw            0.000±0.000       1.000±0.000       0.902   1000
+normalizable NFC            0.000±0.000       1.000±0.000       0.905   1000
+normalizable NFKC           0.000±0.000       1.000±0.000       0.999   1000
+normalizable NFKC+casefold  0.000±0.000       1.000±0.000       1.000   1000
+typo         raw            n/a(typo)         1.000±0.000       0.901   0
+typo         NFC            n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC           n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC+casefold  n/a(typo)         1.000±0.000       0.901   0
+
+--- LSH b=32 r=4 (knee≈0.42) ---
+arm          norm           FN_rate           flag_rate         mean_J  n_gt
+normalizable raw            0.000±0.000       1.000±0.000       0.902   1000
+normalizable NFC            0.000±0.000       1.000±0.000       0.905   1000
+normalizable NFKC           0.000±0.000       1.000±0.000       0.999   1000
+normalizable NFKC+casefold  0.000±0.000       1.000±0.000       1.000   1000
+typo         raw            n/a(typo)         1.000±0.000       0.901   0
+typo         NFC            n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC           n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC+casefold  n/a(typo)         1.000±0.000       0.901   0
+
+--- LSH b=8 r=16 (knee≈0.88) ---
+arm          norm           FN_rate           flag_rate         mean_J  n_gt
+normalizable raw            0.000±0.000       1.000±0.000       0.902   1000
+normalizable NFC            0.000±0.000       1.000±0.000       0.905   1000
+normalizable NFKC           0.000±0.000       1.000±0.000       0.999   1000
+normalizable NFKC+casefold  0.000±0.000       1.000±0.000       1.000   1000
+typo         raw            n/a(typo)         1.000±0.000       0.901   0
+typo         NFC            n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC           n/a(typo)         1.000±0.000       0.901   0
+typo         NFKC+casefold  n/a(typo)         1.000±0.000       0.901   0
+
+elapsed 154.7s
