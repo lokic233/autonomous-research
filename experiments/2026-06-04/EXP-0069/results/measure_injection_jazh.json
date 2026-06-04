@@ -1,0 +1,60 @@
+building sibling map...
+chars with any sibling: 8132; chars with PRODUCTION-INVISIBLE sibling: 3800
+{
+  "langs": [
+    "ja",
+    "zh"
+  ],
+  "maxd": 4000,
+  "total_docs": 8000,
+  "METRIC1_realistic_anyvariation": {
+    "pairs": 8000,
+    "residual_fn": 8000,
+    "residual_fn_rate": 1.0
+  },
+  "METRIC3_seam_production_invisible": {
+    "docs_with_invisible_variation": 8000,
+    "prevalence_rate": 1.0,
+    "pairs": 8000,
+    "residual_fn": 8000,
+    "residual_fn_rate": 1.0
+  },
+  "class_seen": {
+    "compat_letter_other": 6397721,
+    "compat_other": 3373511,
+    "fullwidth_halfwidth": 353387,
+    "enclosed_circled": 757,
+    "ligature": 18,
+    "letterlike_squared": 13,
+    "cjk_compat_ideograph": 6
+  },
+  "class_drivers": {
+    "compat_letter_other": 5573549,
+    "compat_other": 1818830,
+    "fullwidth_halfwidth": 322142,
+    "enclosed_circled": 757,
+    "letterlike_squared": 7,
+    "cjk_compat_ideograph": 1,
+    "ligature": 1
+  },
+  "per_lang": {
+    "ja": {
+      "docs": 4000,
+      "m1_pairs": 4000,
+      "m1_fn": 4000,
+      "m3_prev": 4000,
+      "m3_fn": 4000,
+      "m1_fn_rate": 1.0,
+      "m3_prevalence": 1.0
+    },
+    "zh": {
+      "docs": 4000,
+      "m1_pairs": 4000,
+      "m1_fn": 4000,
+      "m3_prev": 4000,
+      "m3_fn": 4000,
+      "m1_fn_rate": 1.0,
+      "m3_prevalence": 1.0
+    }
+  }
+}

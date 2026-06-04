@@ -78,6 +78,21 @@ supporting_evidence:
     normalizer sets dedup recall ceiling -> hidden-duplicate/memorization/contamination
     risk.'
   data_path: experiments/2026-06-04/EXP-0068/
+- exp_id: EXP-0069
+  summary: "DECISIVE L1 GREEN GATE MET. residual_FN_rate=95.1% (8605/9044 model-identical\
+    \ NFKC-twin pairs ESCAPE production datatrove simplify_text dedup norm) on 20k\
+    \ real C4-multilingual docs (ja/zh/ar/de/fr, streamed from HF datasets-server).\
+    \ Prevalence 45.2% of real docs have a distinct model-identical twin. Per-lang:\
+    \ zh 99.8%, ja 98.4%, de 94.7%, fr 94.6%, ar 55.6% \u2014 all >=55x the 1% gate.\
+    \ Driver = NFKC-COMPATIBILITY + casefold variation production CANNOT collapse:\
+    \ fullwidth ASCII (300k chars, CJK), German ss<-ss(sharp-s \xDF->ss via casefold\
+    \ not lower), ligatures/ellipsis/TM/compat signs. Root cause: model=NFKC+casefold\
+    \ vs production=NFD(canonical-only)+lower; NFD never touches compat chars and\
+    \ lower!=casefold. Robust: 34.6% of residual FNs survive even production 5-gram\
+    \ char-shingle MinHash at T=0.8 (58.7% word-token). text-dedup \\\\W arm: de/fr/ar\
+    \ 13-23% (still >=13x gate). Anti-circular: GT=model_norm eq harness-computed,\
+    \ never read by tested production normalizer, no injection in headline. GREEN."
+  data_path: experiments/2026-06-04/EXP-0069/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0057
@@ -86,12 +101,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: 'L1 EXP-0069 dispatched (researcher-0066): the decisive residual-FN measurement
-  on real multilingual text after production dedup normalization. ONE number: >=1pct
-  -> GREEN; <0.1pct -> RED.'
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0069; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0069
+active_experiments: []
 created_at: '2026-06-04T01:33:03Z'
-last_updated: '2026-06-04T02:30:14Z'
+last_updated: '2026-06-04T02:45:25Z'

@@ -1,0 +1,75 @@
+{
+  "langs": [
+    "ja",
+    "zh",
+    "ar",
+    "de",
+    "fr"
+  ],
+  "maxd": 4000,
+  "total_docs": 20000,
+  "METRIC_A_nfkc_twin": {
+    "model_identical_pairs": 9044,
+    "residual_fn": 8605,
+    "residual_fn_rate": 0.9514595311808934,
+    "pair_formable_rate": 0.4522
+  },
+  "METRIC_B_representation": {
+    "note": "of the exact-string residual FNs, how many ALSO escape under shingle/word Jaccard<T",
+    "T": 0.8,
+    "char_shingle_still_fn": 2980,
+    "word_token_still_fn": 5050,
+    "char_shingle_fn_rate_of_A": 0.3463102847181871,
+    "word_token_fn_rate_of_A": 0.5868680999418943
+  },
+  "class_drivers": {
+    "fullwidth_ascii": 300261,
+    "other_compat": 23850,
+    "halfwidth_kana_hangul": 14148,
+    "fullwidth_sign": 1330,
+    "super_subscript_modifier": 1071,
+    "enclosed_circled": 1029,
+    "cjk_squared": 331,
+    "roman_numeral": 268,
+    "ligature": 262,
+    "fraction": 154,
+    "presentation_form": 34
+  },
+  "per_lang": {
+    "ja": {
+      "docs": 4000,
+      "pairs": 3610,
+      "residual_fn": 3552,
+      "pair_formable_rate": 0.9025,
+      "residual_fn_rate": 0.9839335180055402
+    },
+    "zh": {
+      "docs": 4000,
+      "pairs": 3317,
+      "residual_fn": 3312,
+      "pair_formable_rate": 0.82925,
+      "residual_fn_rate": 0.9984926138076575
+    },
+    "ar": {
+      "docs": 4000,
+      "pairs": 674,
+      "residual_fn": 375,
+      "pair_formable_rate": 0.1685,
+      "residual_fn_rate": 0.5563798219584569
+    },
+    "de": {
+      "docs": 4000,
+      "pairs": 587,
+      "residual_fn": 556,
+      "pair_formable_rate": 0.14675,
+      "residual_fn_rate": 0.9471890971039182
+    },
+    "fr": {
+      "docs": 4000,
+      "pairs": 856,
+      "residual_fn": 810,
+      "pair_formable_rate": 0.214,
+      "residual_fn_rate": 0.9462616822429907
+    }
+  }
+}

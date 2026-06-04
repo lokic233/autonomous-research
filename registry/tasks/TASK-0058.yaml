@@ -6,7 +6,7 @@ session_id: ''
 project_id: PROJ-0029
 claim_id: CLAIM-0059
 exp_id: EXP-0069
-status: open
+status: done
 summary: 'L1 decisive: residual FN rate (model-identical dups missed AFTER production
   dedup normalization) on a real multilingual corpus. Real production dedup defaults
   (datatrove simplify_text lowercase+NFD-diacritic-strip+punct-removal OR text-dedup
@@ -17,8 +17,8 @@ summary: 'L1 decisive: residual FN rate (model-identical dups missed AFTER produ
   the general principle.'
 evidence_delta: ''
 opened_at: '2026-06-04T02:27:21Z'
-updated_at: '2026-06-04T02:27:21Z'
-closed_at: ''
+updated_at: '2026-06-04T02:45:25Z'
+closed_at: '2026-06-04T02:45:25Z'
 history:
 - ts: '2026-06-04T02:27:21Z'
   event: open
@@ -31,3 +31,7 @@ history:
     GREEN; <0.1pct -> RED (toothless). Also: NFKC-compatibility-only pair prevalence,
     word/BPE-shingle sensitivity, partial-coupling regime. Cite IIR sec2.2 normalization-mismatch
     as the general principle.'
+- ts: '2026-06-04T02:45:25Z'
+  event: done
+  by: exp-complete
+  note: assignee researcher-0066 completed EXP EXP-0069 (support)

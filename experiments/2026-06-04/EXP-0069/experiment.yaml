@@ -12,12 +12,24 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "DECISIVE L1 GREEN GATE MET. residual_FN_rate=95.1% (8605/9044 model-identical\
+  \ NFKC-twin pairs ESCAPE production datatrove simplify_text dedup norm) on 20k real\
+  \ C4-multilingual docs (ja/zh/ar/de/fr, streamed from HF datasets-server). Prevalence\
+  \ 45.2% of real docs have a distinct model-identical twin. Per-lang: zh 99.8%, ja\
+  \ 98.4%, de 94.7%, fr 94.6%, ar 55.6% \u2014 all >=55x the 1% gate. Driver = NFKC-COMPATIBILITY\
+  \ + casefold variation production CANNOT collapse: fullwidth ASCII (300k chars,\
+  \ CJK), German ss<-ss(sharp-s \xDF->ss via casefold not lower), ligatures/ellipsis/TM/compat\
+  \ signs. Root cause: model=NFKC+casefold vs production=NFD(canonical-only)+lower;\
+  \ NFD never touches compat chars and lower!=casefold. Robust: 34.6% of residual\
+  \ FNs survive even production 5-gram char-shingle MinHash at T=0.8 (58.7% word-token).\
+  \ text-dedup \\\\W arm: de/fr/ar 13-23% (still >=13x gate). Anti-circular: GT=model_norm\
+  \ eq harness-computed, never read by tested production normalizer, no injection\
+  \ in headline. GREEN."
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0069/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T02:45:25Z'
 prompt_version: ''
