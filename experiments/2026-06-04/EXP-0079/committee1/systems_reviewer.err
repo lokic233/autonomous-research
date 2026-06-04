@@ -89,3 +89,671 @@ zsh:1: command not found: rg
 hook: PostToolUse
 hook: PostToolUse Completed
 mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'find /Users/dengcchi -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null | head -20' in /Users/dengcchi
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+2026-06-04T22:27:42.530658Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc 'pkill -f "find /Users/dengcchi -name _committee_common_v001.md" || true' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 195ms:
+ exited -1 in 40463ms:
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.claude /Users/dengcchi/.codex /Users/dengcchi -maxdepth 4 \\( -name _committee_common_v001.md -o -name TOOLING_v001.md \\) 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://raw.githubusercontent.com/pandas-dev/pandas/main/pandas/core/nanops.py | sed -n '680,720p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://api.github.com/repos/pandas-dev/pandas/issues/20642 | sed -n '1,120p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 617ms:
+    axis : int, optional
+    skipna : bool, default True
+    mask : ndarray[bool], optional
+        nan-mask if known
+
+    Returns
+    -------
+    float
+        Unless input is a float array, in which case use the same
+        precision as the input array.
+
+    Examples
+    --------
+    >>> from pandas.core import nanops
+    >>> s = pd.Series([1, 2, np.nan])
+    >>> nanops.nanmean(s.values)
+    np.float64(1.5)
+    """
+    if values.dtype == object and len(values) > 1_000 and mask is None:
+        # GH#54754 if we are going to fail, try to fail-fast
+        nanmean(values[:1000], axis=axis, skipna=skipna)
+
+    dtype = values.dtype
+    values, mask = _get_values(values, skipna, fill_value=0, mask=mask)
+    dtype_sum = _get_dtype_max(dtype)
+    dtype_count = np.dtype(np.float64)
+
+    # not using needs_i8_conversion because that includes period
+    if dtype.kind in "mM":
+        dtype_sum = np.dtype(np.float64)
+    elif dtype.kind in "iu":
+        dtype_sum = np.dtype(np.float64)
+    elif dtype.kind == "f":
+        # GH#43929 float16 sum overflows easily; upcast like numpy does
+        dtype_sum = np.dtype(np.float64) if dtype == np.float16 else dtype
+        dtype_count = dtype
+
+    count = _get_counts(values.shape, mask, axis, dtype=dtype_count)
+    the_sum = values.sum(axis, dtype=dtype_sum)
+    the_sum = _ensure_numeric(the_sum)
+
+
+ succeeded in 661ms:
+{
+  "url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642",
+  "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+  "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642/labels{/name}",
+  "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642/comments",
+  "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642/events",
+  "html_url": "https://github.com/pandas-dev/pandas/issues/20642",
+  "id": 312667441,
+  "node_id": "MDU6SXNzdWUzMTI2Njc0NDE=",
+  "number": 20642,
+  "title": "weird NaN  in  mean() of float16 series",
+  "user": {
+    "login": "ubyjvovk",
+    "id": 3797695,
+    "node_id": "MDQ6VXNlcjM3OTc2OTU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3797695?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ubyjvovk",
+    "html_url": "https://github.com/ubyjvovk",
+    "followers_url": "https://api.github.com/users/ubyjvovk/followers",
+    "following_url": "https://api.github.com/users/ubyjvovk/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ubyjvovk/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ubyjvovk/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ubyjvovk/subscriptions",
+    "organizations_url": "https://api.github.com/users/ubyjvovk/orgs",
+    "repos_url": "https://api.github.com/users/ubyjvovk/repos",
+    "events_url": "https://api.github.com/users/ubyjvovk/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ubyjvovk/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 31404521,
+      "node_id": "MDU6TGFiZWwzMTQwNDUyMQ==",
+      "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Dtype%20Conversions",
+      "name": "Dtype Conversions",
+      "color": "e102d8",
+      "default": false,
+      "description": "Unexpected or buggy dtype conversions"
+    },
+    {
+      "id": 40153326,
+      "node_id": "MDU6TGFiZWw0MDE1MzMyNg==",
+      "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Duplicate%20Report",
+      "name": "Duplicate Report",
+      "color": "009800",
+      "default": false,
+      "description": "Duplicate issue or pull request"
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2018-04-09T20:03:59Z",
+  "updated_at": "2023-05-11T01:17:42Z",
+  "closed_at": "2018-04-09T20:34:22Z",
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I have a shuffled series with a bunch of sinvalues in float16, like this:\r\n\r\n```\r\n   tdata.time_sin\r\n   110405276   -0.183105\r\n   175560878   -0.301270\r\n   ...\r\n   130331292   -0.158813\r\n   6782127     -0.282471\r\n    Name: time_sin, Length: 18490389, dtype: float16\r\n```\r\nThere's no NaN values, everything's a sinus of something:\r\n```\r\ntdata.time_sin[np.isnan(tdata.time_sin) == True].count()\r\n0\r\n```\r\nBut for some reason, `mean() `chokes somewhere in the middle like it's overflowing:\r\n```\r\n\r\ntdata.time_sin.mean()\r\nnan\r\n\r\ntdata.time_sin[:328720].mean()\r\n0.0\r\n\r\ntdata.time_sin[:328721].mean()\r\nnan\r\n\r\ntdata.time_sin[328719:328722]\r\n117467643   -0.639648\r\n85318746     0.956055\r\n10829780     0.112000\r\nName: time_sin, dtype: float16\r\n```\r\nAnd it works fine when converted to float32:\r\n```\r\nfoo = tdata.time_sin.astype(np.float32)\r\nfoo.mean()\r\n\r\n0.20143597\r\n```\r\n\r\nIs this weird or am I missing something about float16?\r\n\r\nThis behavior persists after pickling and loading and sorting by index, although it now chokes much earlier:\r\n\r\n```\r\nzzz = pickle.load(open('timesin.pkl', 'rb'))\r\nbb = zzz.sort_index()\r\n\r\nbb[:74351].mean()\r\n-0.0\r\n\r\nbb[:74352].mean()\r\nnan\r\n\r\nbb[74350:74355]\r\n749371   -0.898438\r\n749393   -0.898438\r\n749432   -0.898438\r\n749447   -0.898438\r\n749479   -0.898438\r\nName: time_sin, dtype: float16\r\n\r\n```\r\n\r\n#### Problem description\r\n\r\n\r\n#### Expected Output\r\n\r\n#### Output of ``pd.show_versions()``\r\n\r\n<details>\r\n\r\npd.show_versions()\r\n\r\n\r\nINSTALLED VERSIONS\r\n------------------\r\ncommit: None\r\npython: 3.5.2.final.0\r\npython-bits: 64\r\nOS: Linux\r\nOS-release: 4.4.0-119-generic\r\nmachine: x86_64\r\nprocessor: x86_64\r\nbyteorder: little\r\nLC_ALL: en_US.UTF-8\r\nLANG: en_US.UTF-8\r\nLOCALE: en_US.UTF-8\r\n\r\npandas: 0.22.0\r\npytest: None\r\npip: 9.0.3\r\nsetuptools: 39.0.1\r\nCython: None\r\nnumpy: 1.14.2\r\nscipy: 1.0.1\r\npyarrow: None\r\nxarray: None\r\nIPython: 6.3.1\r\nsphinx: None\r\npatsy: None\r\ndateutil: 2.7.2\r\npytz: 2018.3\r\nblosc: None\r\nbottleneck: None\r\ntables: None\r\nnumexpr: None\r\nfeather: None\r\nmatplotlib: 2.2.2\r\nopenpyxl: None\r\nxlrd: None\r\nxlwt: None\r\nxlsxwriter: None\r\nlxml: None\r\nbs4: None\r\nhtml5lib: 1.0.1\r\nsqlalchemy: None\r\npymysql: None\r\npsycopg2: None\r\njinja2: 2.10\r\ns3fs: None\r\nfastparquet: None\r\npandas_gbq: None\r\npandas_datareader: None\r\n\r\n\r\n</details>\r\n",
+  "closed_by": {
+    "login": "jreback",
+    "id": 953992,
+    "node_id": "MDQ6VXNlcjk1Mzk5Mg==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/953992?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jreback",
+    "html_url": "https://github.com/jreback",
+    "followers_url": "https://api.github.com/users/jreback/followers",
+    "following_url": "https://api.github.com/users/jreback/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jreback/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jreback/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jreback/subscriptions",
+    "organizations_url": "https://api.github.com/users/jreback/orgs",
+    "repos_url": "https://api.github.com/users/jreback/repos",
+    "events_url": "https://api.github.com/users/jreback/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jreback/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/pandas-dev/pandas/issues/20642/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "completed",
+  "pinned_comment": null
+}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'pkill -f "find /Users/dengcchi/.llms /Users/dengcchi/.claude" || true' in /Users/dengcchi
+hook: PostToolUse
+ exited -1 in 15282ms:
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+ succeeded in 256ms:
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+exec
+/bin/zsh -lc "sed -n '1,240p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://api.github.com/repos/pandas-dev/pandas/issues/43929 | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s https://numpy.org/doc/stable/reference/generated/numpy.mean.html | tr '\\n' ' ' | sed 's/<["'^>]*>/ /g'"' | grep -o -i '.\\{0,120\\}float16.\\{0,160\\}' | head -5" in /Users/dengcchi
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 653ms:
+{
+  "url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929",
+  "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+  "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929/labels{/name}",
+  "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929/comments",
+  "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929/events",
+  "html_url": "https://github.com/pandas-dev/pandas/issues/43929",
+  "id": 1021226013,
+  "node_id": "I_kwDOAA0YD8483qwd",
+  "number": 43929,
+  "title": "BUG: Fix the `Float` type overflow issue for statistical functions.",
+  "user": {
+    "login": "tushushu",
+    "id": 33303747,
+    "node_id": "MDQ6VXNlcjMzMzAzNzQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33303747?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/tushushu",
+    "html_url": "https://github.com/tushushu",
+    "followers_url": "https://api.github.com/users/tushushu/followers",
+    "following_url": "https://api.github.com/users/tushushu/following{/other_user}",
+    "gists_url": "https://api.github.com/users/tushushu/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/tushushu/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/tushushu/subscriptions",
+    "organizations_url": "https://api.github.com/users/tushushu/orgs",
+    "repos_url": "https://api.github.com/users/tushushu/repos",
+    "events_url": "https://api.github.com/users/tushushu/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/tushushu/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 8935311,
+      "node_id": "MDU6TGFiZWw4OTM1MzEx",
+      "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Performance",
+      "name": "Performance",
+      "color": "a10c02",
+      "default": false,
+      "description": "Memory or execution speed performance"
+    },
+    {
+      "id": 2365504383,
+      "node_id": "MDU6TGFiZWwyMzY1NTA0Mzgz",
+      "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Reduction%20Operations",
+      "name": "Reduction Operations",
+      "color": "547c03",
+      "default": false,
+      "description": "sum, mean, min, max, etc."
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2021-10-08T15:34:59Z",
+  "updated_at": "2026-03-24T16:45:33Z",
+  "closed_at": "2026-03-24T16:45:33Z",
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### \r\n\r\n- [X] I have checked that this issue has not already been reported.\r\n\r\n- [X] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.\r\n\r\n- [ ] I have confirmed this bug exists on the master branch of pandas.\r\n\r\n\r\n### Reproducible Example\r\n\r\n```python\r\n>>> import pandas as pd\r\n>>> df = pd.DataFrame([60000.0, 60000.0], dtype=\"float16\")\r\n```\r\n\r\n\r\n```Python\r\n/Users/username/opt/miniconda3/lib/python3.7/site-packages/numpy/core/_methods.py:47: RuntimeWarning: overflow encountered in reduce\r\n  return umr_sum(a, axis, dtype, out, keepdims, initial, where)\r\n0    inf\r\ndtype: float16\r\n```\r\n\r\n\r\n### Issue Description\r\n\r\nI have read the source code of pandas recently, it seems that when pandas implement DataFrame.mean() method, it calculate the tot = elements.sum() first, and then divide by the count_of_elements secondly to get the mean_value. This could cause a overflow error even if the result shouldn't be a number out of dtype range.\r\n\r\n### Expected Behavior\r\n\r\n1. The example should return 60000.0\r\n2. For any Float dtype Series/DataFrame, the mean method should work and do not overflow.\r\n\r\n### Installed Versions\r\n\r\n<details>\r\n\r\nINSTALLED VERSIONS\r\n------------------\r\ncommit           : 73c68257545b5f8530b7044f56647bd2db92e2ba\r\npython           : 3.7.6.final.0\r\npython-bits      : 64\r\nOS               : Darwin\r\nOS-release       : 18.7.0\r\nVersion          : Darwin Kernel Version 18.7.0: Tue Jun 22 19:37:08 PDT 2021; root:xnu-4903.278.70~1/RELEASE_X86_64\r\nmachine          : x86_64\r\nprocessor        : i386\r\nbyteorder        : little\r\nLC_ALL           : None\r\nLANG             : None\r\nLOCALE           : None.UTF-8\r\n\r\npandas           : 1.3.3\r\nnumpy            : 1.19.2\r\npytz             : 2021.1\r\ndateutil         : 2.8.1\r\npip              : 20.0.2\r\nsetuptools       : 45.2.0.post20200210\r\nCython           : 0.29.22\r\npytest           : None\r\nhypothesis       : None\r\nsphinx           : None\r\nblosc            : None\r\nfeather          : None\r\nxlsxwriter       : None\r\nlxml.etree       : None\r\nhtml5lib         : None\r\npymysql          : None\r\npsycopg2         : None\r\njinja2           : 2.11.3\r\nIPython          : 7.21.0\r\npandas_datareader: None\r\nbs4              : 4.9.3\r\nbottleneck       : None\r\nfsspec           : None\r\nfastparquet      : None\r\ngcsfs            : None\r\nmatplotlib       : None\r\nnumexpr          : None\r\nodfpy            : None\r\nopenpyxl         : None\r\npandas_gbq       : None\r\npyarrow          : 3.0.0\r\npyxlsb           : None\r\ns3fs             : None\r\nscipy            : 1.6.2\r\nsqlalchemy       : None\r\ntables           : None\r\ntabulate         : 0.8.9\r\nxarray           : None\r\nxlrd             : None\r\nxlwt             : None\r\nnumba            : 0.53.1\r\n\r\n</details>\r\n",
+  "closed_by": {
+    "login": "mroeschke",
+    "id": 10647082,
+    "node_id": "MDQ6VXNlcjEwNjQ3MDgy",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10647082?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/mroeschke",
+    "html_url": "https://github.com/mroeschke",
+    "followers_url": "https://api.github.com/users/mroeschke/followers",
+    "following_url": "https://api.github.com/users/mroeschke/following{/other_user}",
+    "gists_url": "https://api.github.com/users/mroeschke/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/mroeschke/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/mroeschke/subscriptions",
+    "organizations_url": "https://api.github.com/users/mroeschke/orgs",
+    "repos_url": "https://api.github.com/users/mroeschke/repos",
+    "events_url": "https://api.github.com/users/mroeschke/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/mroeschke/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/pandas-dev/pandas/issues/43929/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "completed",
+  "pinned_comment": null
+}
+
+hook: PostToolUse Completed
+ succeeded in 1703ms:
+w).  Specifying a higher-precision accumulator using the    dtype    keyword can alleviate this issue.   By default,    float16    results are computed using    float32    intermediates for extra precision.   Examples      Try it in your browser!          &gt;&gt;&gt;   import     numpy
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s 'https://api.github.com/search/issues?q=repo:pandas-dev/pandas+float16+mean+overflow' | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 10 -s 'https://api.github.com/search/code?q=float16+mean+overflow+pandas' | sed -n '1,120p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'for repo in vllm-project/vllm sgl-project/sglang LMCache/LMCache flashinfer-ai/flashinfer NVIDIA/TensorRT-LLM; do echo $repo; curl -L --max-time 10 -s "https://api.github.com/search/code?q=repo:$repo+pandas+float16" | grep -E '"'\"total_count\"|\"html_url\"' | head -5; done" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 383ms:
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+hook: PostToolUse
+ succeeded in 740ms:
+{
+  "total_count": 10,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757/events",
+      "html_url": "https://github.com/pandas-dev/pandas/issues/48757",
+      "id": 1384640911,
+      "node_id": "I_kwDOAA0YD85Sh_GP",
+      "number": 48757,
+      "title": "BUG: in describe() result, mean is to NaN or Inf, when change float64 to float32 or float16",
+      "user": {
+        "login": "ruifeng96150",
+        "id": 17608115,
+        "node_id": "MDQ6VXNlcjE3NjA4MTE1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/17608115?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/ruifeng96150",
+        "html_url": "https://github.com/ruifeng96150",
+        "followers_url": "https://api.github.com/users/ruifeng96150/followers",
+        "following_url": "https://api.github.com/users/ruifeng96150/following{/other_user}",
+        "gists_url": "https://api.github.com/users/ruifeng96150/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/ruifeng96150/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/ruifeng96150/subscriptions",
+        "organizations_url": "https://api.github.com/users/ruifeng96150/orgs",
+        "repos_url": "https://api.github.com/users/ruifeng96150/repos",
+        "events_url": "https://api.github.com/users/ruifeng96150/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/ruifeng96150/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 76811,
+          "node_id": "MDU6TGFiZWw3NjgxMQ==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Bug",
+          "name": "Bug",
+          "color": "e10c02",
+          "default": false,
+          "description": null
+        },
+        {
+          "id": 31404521,
+          "node_id": "MDU6TGFiZWwzMTQwNDUyMQ==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Dtype%20Conversions",
+          "name": "Dtype Conversions",
+          "color": "e102d8",
+          "default": false,
+          "description": "Unexpected or buggy dtype conversions"
+        },
+        {
+          "id": 2365504383,
+          "node_id": "MDU6TGFiZWwyMzY1NTA0Mzgz",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Reduction%20Operations",
+          "name": "Reduction Operations",
+          "color": "547c03",
+          "default": false,
+          "description": "sum, mean, min, max, etc."
+        },
+        {
+          "id": 9449516617,
+          "node_id": "LA_kwDOAA0YD88AAAACMzwuSQ",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Describe/info/etc",
+          "name": "Describe/info/etc",
+          "color": "fa6f9e",
+          "default": false,
+          "description": "obj.describe, obj.info, requests for methods that look similar"
+        }
+      ],
+      "state": "open",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 2,
+      "created_at": "2022-09-24T11:29:01Z",
+      "updated_at": "2025-10-13T00:38:03Z",
+      "closed_at": null,
+      "assignee": null,
+      "author_association": "NONE",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "### Pandas version checks\n\n- [X] I have checked that this issue has not already been reported.\n\n- [X] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.\n\n- [X] I have confirmed this bug exists on the main branch of pandas.\n\n\n### Reproducible Example\n\n```python\ndf = pd.DataFrame({\"a\": range(1000)})\r\ndf.a = 1.2345678 * df.a\r\ndf[\"b\"] = df.a.astype(\"float16\")\r\ndf.describe()\r\n\r\n\ta\tb\r\ncount\t1000.000000\t1000.0000\r\nmean\t616.666616\tinf\r\nstd\t356.567176\tinf\r\nmin\t0.000000\t0.0000\r\n25%\t308.333308\t308.4375\r\n50%\t616.666616\t616.7500\r\n75%\t924.999924\t924.8750\r\nmax\t1233.333232\t1233.0000\n```\n\n\n### Issue Description\n\nwhen change the column to low float format, the mean or std will calc wrong. In this case mean ,616 to inf. and in some case will result NaN. such as (but there is no NaN value in the column):\r\ncount    674522.000000\r\nmean               NaN\r\nstd           0.000000\r\nmin         -17.359375\r\n25%          -1.610352\r\n50%          -0.280029\r\n75%           1.049805\r\nmax          19.984375\n\n### Expected Behavior\n\nsame as normal mean or std\n\n### Installed Versions\n\n\r\n\r\n/home/terry/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:30: UserWarning: Setuptools is replacing distutils.\r\n  warnings.warn(\"Setuptools is replacing distutils.\")\r\nOutput exceeds the [size limit](command:workbench.action.openSettings?%5B%22notebook.output.textLineLimit%22%5D). Open the full output data[ in a text editor](command:workbench.action.openLargeOutput?d7c6995f-7748-4ae8-b287-c2b83a57d071)\r\n\r\nINSTALLED VERSIONS\r\n------------------\r\ncommit           : 87cfe4e38bafe7300a6003a1d18bd80f3f77c763\r\npython           : 3.8.10.final.0\r\npython-bits      : 64\r\nOS               : Linux\r\nOS-release       : 5.15.0-46-generic\r\nVersion          : #49~20.04.1-Ubuntu SMP Thu Aug 4 19:15:44 UTC 2022\r\nmachine          : x86_64\r\nprocessor        : x86_64\r\nbyteorder        : little\r\nLC_ALL           : None\r\nLANG             : en_US.UTF-8\r\nLOCALE           : en_US.UTF-8\r\n\r\npandas           : 1.5.0\r\nnumpy            : 1.22.4\r\npytz             : 2022.1\r\ndateutil         : 2.8.2\r\nsetuptools       : 62.1.0\r\npip              : 22.2.2\r\nCython           : 0.29.30\r\npytest           : 7.1.2\r\nhypothesis       : None\r\n...\r\nxlrd             : 2.0.1\r\nxlwt             : None\r\nzstandard        : None\r\ntzdata           : 2022.1\r\n\r\n",
+      "reactions": {
+        "url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48757/timeline",
+      "performed_via_github_app": null,
+      "state_reason": null,
+      "pinned_comment": null,
+      "score": 1.0
+    },
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/64791",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/64791/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/64791/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/64791/events",
+      "html_url": "https://github.com/pandas-dev/pandas/pull/64791",
+      "id": 4123698211,
+      "node_id": "PR_kwDOAA0YD87Mzxfn",
+      "number": 64791,
+      "title": "BUG: Fix float16 overflow in nanmean/nansum by upcasting to float64",
+      "user": {
+        "login": "jbrockmendel",
+        "id": 8078968,
+        "node_id": "MDQ6VXNlcjgwNzg5Njg=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/8078968?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/jbrockmendel",
+        "html_url": "https://github.com/jbrockmendel",
+        "followers_url": "https://api.github.com/users/jbrockmendel/followers",
+        "following_url": "https://api.github.com/users/jbrockmendel/following{/other_user}",
+        "gists_url": "https://api.github.com/users/jbrockmendel/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/jbrockmendel/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/jbrockmendel/subscriptions",
+        "organizations_url": "https://api.github.com/users/jbrockmendel/orgs",
+        "repos_url": "https://api.github.com/users/jbrockmendel/repos",
+        "events_url": "https://api.github.com/users/jbrockmendel/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/jbrockmendel/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 76811,
+          "node_id": "MDU6TGFiZWw3NjgxMQ==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Bug",
+          "name": "Bug",
+          "color": "e10c02",
+          "default": false,
+          "description": null
+        }
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": {
+        "url": "https://api.github.com/repos/pandas-dev/pandas/milestones/124",
+        "html_url": "https://github.com/pandas-dev/pandas/milestone/124",
+        "labels_url": "https://api.github.com/repos/pandas-dev/pandas/milestones/124/labels",
+        "id": 13923793,
+        "node_id": "MI_kwDOAA0YD84A1HXR",
+        "number": 124,
+        "title": "3.1",
+        "description": "",
+        "creator": {
+          "login": "jbrockmendel",
+          "id": 8078968,
+          "node_id": "MDQ6VXNlcjgwNzg5Njg=",
+          "avatar_url": "https://avatars.githubusercontent.com/u/8078968?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/jbrockmendel",
+          "html_url": "https://github.com/jbrockmendel",
+          "followers_url": "https://api.github.com/users/jbrockmendel/followers",
+          "following_url": "https://api.github.com/users/jbrockmendel/following{/other_user}",
+          "gists_url": "https://api.github.com/users/jbrockmendel/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/jbrockmendel/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/jbrockmendel/subscriptions",
+          "organizations_url": "https://api.github.com/users/jbrockmendel/orgs",
+          "repos_url": "https://api.github.com/users/jbrockmendel/repos",
+          "events_url": "https://api.github.com/users/jbrockmendel/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/jbrockmendel/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "open_issues": 22,
+        "closed_issues": 817,
+        "state": "open",
+        "created_at": "2025-10-17T21:46:20Z",
+        "updated_at": "2026-06-04T21:15:26Z",
+        "due_on": null,
+        "closed_at": null
+      },
+      "comments": 1,
+      "created_at": "2026-03-23T20:58:43Z",
+      "updated_at": "2026-03-24T16:52:45Z",
+      "closed_at": "2026-03-24T16:45:32Z",
+      "assignee": null,
+      "author_association": "MEMBER",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "draft": false,
+      "pull_request": {
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 2644ms:
+sgl-project/sglang
+LMCache/LMCache
+flashinfer-ai/flashinfer
+NVIDIA/TensorRT-LLM
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: red
+EXISTING_IMPLEMENTATIONS: [
+  {system: "pandas", url: "https://github.com/pandas-dev/pandas/issues/20642", overlap: "Exact prior report: float16 Series.mean() returns NaN from overflow; reporter notes astype(float32).mean() works."},
+  {system: "pandas", url: "https://github.com/pandas-dev/pandas/issues/43929", overlap: "Prior issue identifies pandas mean as sum-then-divide overflow for float16 and requests no-overflow behavior."},
+  {system: "pandas", url: "https://github.com/pandas-dev/pandas/issues/48757", overlap: "Prior issue reports describe()/mean/std on float16 returning inf/NaN after float64->float16 conversion."},
+  {system: "pandas", url: "https://github.com/pandas-dev/pandas/pull/64791", overlap: "Shipping/merged mitigation: 'Fix float16 overflow in nanmean/nansum by upcasting to float64' for pandas 3.1; current main nanops.py explicitly special-cases float16."},
+  {system: "NumPy", url: "https://numpy.org/doc/stable/reference/generated/numpy.mean.html", overlap: "Documents that float16 mean uses float32 intermediates by default, explaining the finite NumPy endpoint."},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM", url: "https://github.com/vllm-project/vllm; https://github.com/sgl-project/sglang; https://github.com/LMCache/LMCache; https://github.com/flashinfer-ai/flashinfer; https://github.com/NVIDIA/TensorRT-LLM", overlap: "Searched for the requested OSS systems; no relevant implementation of pandas/NumPy/sklearn feature-column reduction divergence found."}
+]
+CONTRIBUTION_TYPE: integration-only
+SCALE_REALISM: Realistic overflow thresholds are demonstrated for N=20640 California housing after forced fp16 storage, and pandas issues include much larger real user Series. But packet gives insufficient evidence that production feature stores commonly persist ordinary tabular features as fp16 and then run pandas default reductions; current pandas main also contains an upcast fix, so the window is version-specific.
+RATIONALE: Prompt version v001. The packet's strongest claimed absence of prior art is false: pandas issue #20642 is literally "weird NaN in mean() of float16 series"; #43929 and #48757 independently report float16 mean/describe inf/NaN overflow; PR #64791 fixes it by upcasting float16 in nanmean/nansum. NumPy separately documents the contrasting endpoint: float16 mean uses float32 intermediates. That leaves a useful compatibility test and bug archaeology, not a systems insight/design. The three-tool comparison is glue over known endpoint policies rather than a new mechanism.
+tokens used
+68,341
