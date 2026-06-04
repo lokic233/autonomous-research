@@ -1,0 +1,34 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE:
+  - "L1 MANDATORY: Run real production dedup defaults (datatrove simplify_text with lowercase+NFD-diacritic-strip+punct-removal, text-dedup lowercase+non-word-split) against real multilingual corpus (C4-multilingual or OSCAR subset) with a real model tokenizer (SentencePiece NFKC+casefold). Measure RESIDUAL FN rate — model-identical pairs missed AFTER production normalization. This is the only number that matters for practical significance. If residual FN is negligible (<0.1% of pairs), the seam is open but toothless → RED. If material (≥1% of pairs in multilingual slices), the claim converts to GREEN."
+  - "Prevalence survey: count NFKC-compatibility-only duplicate pairs (fullwidth↔halfwidth, ligature↔expansion, precomposed↔combining — EXCLUDING case variants already caught by production lowercase) in ≥2 real corpora. Report as fraction of total model-identical near-dup pairs."
+  - "Shingle-type sensitivity: repeat the L0 mechanism test under word-shingles and BPE-token-shingles (common in production), not only char-5-shingles. Report whether FN saturation onset shifts."
+  - "Partial-coupling regime: construct mixed pairs (some normalizable + some non-normalizable diffs in same pair) to exit the degenerate 0/1 rails and demonstrate a partial FN gradient. This is where the 7-seed variance becomes meaningful."
+
+MANDATORY_BASELINES:
+  - "datatrove simplify_text defaults (lowercase + NFD-diacritic-strip + punctuation-removal + whitespace/number normalization) as the WEAK baseline — NOT raw/NFC, which no production system uses"
+  - "text-dedup preprocess (lowercase + non-word-char splitting) as a second production baseline"
+  - "IR normalization-mismatch principle (Manning/Raghavan/Schütze IIR §2.2) must be cited as the general mechanism; the claim must be framed as the dedup×model-tokenizer INSTANCE, not a new phenomenon"
+  - "UAX#15 must be cited substantively (not glancingly) as the equivalence-class substrate"
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0059", change: "status remains HELD/yellow; add condition: L1 must use production-default baselines (not raw/NFC) and report residual FN on real multilingual corpus; add mandatory_related_work: [IIR§2.2 normalization-mismatch, UAX#15, datatrove/text-dedup source as seam-open evidence]; add note: FN=1.00 headline is valid for the mechanism demo but UNREPRESENTATIVE of production magnitude — L1 must report the RESIDUAL rate after production defaults"}
+
+PRIOR_ART_ADEQUATE: yes
+
+RATIONALE:
+All five reviewers independently reached YELLOW with convergent reasoning, and no reviewer raised an unrebutted RED. The committee agrees on three points:
+
+(1) THE SEAM IS GENUINELY OPEN — the decisive #1 stress-test (the CLAIM-0058 kill pattern) does NOT replicate. The novelty_killer, systems_reviewer, and product_realist each independently verified in ≥2 production codebases (datatrove TextNormConfig/simplify_text, BigCode near_deduplication, NeMo Curator fuzzy dedup, text-dedup preprocess) that NO tool offers a model-tokenizer-normalizer alignment mode, NFKC+casefold is not the default, and the dedup normalizer is fixed/internal with no tokenizer-alignment field. The claim survives the kill test that destroyed CLAIM-0058.
+
+(2) THE MECHANISM IS REAL BUT INCREMENTAL — the novelty_killer correctly identifies the underlying phenomenon as an instance of the well-known IR normalization-mismatch principle (index-time vs query-time normalizer disagreement costs recall; Manning IIR §2.2) applied on the UAX#15 Unicode equivalence substrate. The theory_skeptic notes the GT and mitigation share the same operator (NFKC+casefold), making the NORMALIZABLE arm near-tautological by construction. The empirical deltas — (a) choosing the model tokenizer's normalizer as the GT equivalence relation and (b) localizing the effect UPSTREAM of LSH (Jaccard collapses, not S-curve perturbation) — are genuine but incremental. The L0 is an honest, well-controlled mechanism demonstration, not a surprising discovery.
+
+(3) THE HEADLINE MAGNITUDE IS UNREPRESENTATIVE — this is the committee's central concern and the reason GREEN is blocked. The evaluation_prosecutor identifies the decisive flaw: the L0 injects case differences (upper↔lower) into the normalizable arm, then benchmarks against raw/NFC (no casefolding) as the weak baseline. But production dedupers (datatrove, text-dedup) lowercase by default. The FN=1.00 "total miss" includes pairs that production would already catch. The novelty_killer confirms: "the FN=1.00 'total miss' is an artifact of the raw/NFC strawman. Real datatrove would already collapse the case- and diacritic-normalizable classes; only the NFKC-COMPATIBILITY residue (fullwidth↔halfwidth, ligature↔expansion) genuinely survives." The seam is therefore NARROWER than the L0 suggests. The product_realist concurs: operational significance is regime-dependent and scales with the unmeasured fraction of compatibility-variant pairs. The theory_skeptic adds that the ±0.00 variance over 7 seeds is "deterministic by construction" (degenerate two-point distribution), not evidence of tight replication.
+
+RESOLUTION: The claim is well-constructed, honestly run, and survives the production-tooling kill test. The mechanism is verified. But the L0 overstates the practical magnitude by using a strawman baseline no production system employs. The claim cannot advance to GREEN until L1 demonstrates a non-trivial RESIDUAL false-negative rate after real production dedup defaults on a real multilingual corpus. If L1 shows the NFKC-compatibility residue (excluding case and diacritics already handled) drives ≥1% surviving model-identical duplicates in multilingual web crawl, the claim converts to a strong GREEN with a clear, actionable fix (align normalizers). If the residue is negligible, the mechanism is real but toothless — RED on practical grounds despite a clean theoretical demonstration. YELLOW pending that decisive L1 measurement.
+```
