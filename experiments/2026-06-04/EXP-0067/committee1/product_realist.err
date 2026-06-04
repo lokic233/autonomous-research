@@ -43,3 +43,22 @@ drwxr-xr-x   8 dengcchi  staff   256 Jun  2 14:59 registry
 drwxr-xr-x  10 dengcchi  staff   320 Jun  3 17:22 runtime
 drwxr-xr-x   3 dengcchi  staff    96 Jun  2 11:38 sessions
 [0m
+[0m$ [0mfind /Users/dengcchi -name "_shared" -type d 2>/dev/null | head
+/Users/dengcchi/research-os/prompts/_shared
+[0m
+[0m$ [0mls -la /Users/dengcchi/research-os/prompts/_shared/ | head -n 50
+total 16
+drwxr-xr-x  4 dengcchi  staff   128 May 31 03:23 .
+drwxr-xr-x  7 dengcchi  staff   224 May 31 23:07 ..
+-rw-r--r--  1 dengcchi  staff  1709 May 31 03:23 HEARTBEAT_v001.md
+-rw-r--r--  1 dengcchi  staff  2782 May 31 04:02 TOOLING_v001.md
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+[0m
+[0m→ [0mRead ../research-os/prompts/committee/_committee_common_v001.md
+[0m→ [0mRead ../research-os/prompts/_shared/TOOLING_v001.md
+[0m% [0mWebFetch https://arxiv.org/abs/2512.03553
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"Llama Guard streaming moderation chunk size window overlap"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"vLLM token flush chunk granularity streaming SSE output"}

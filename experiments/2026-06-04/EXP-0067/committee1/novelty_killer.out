@@ -1,0 +1,31 @@
+I attempted live prior-art verification via two web-search tools; both were blocked by missing permissions in this session. Per my mandate I will not fabricate live retrievals — instead I cite established, retrievable prior art from my own knowledge (cutoff Jan 2026) and flag the verification caveat explicitly. The decisive issue is that the scout's "ZERO direct hits" claim missed the single most-deployed production streaming-guardrails framework.
+
+```
+ROLE: novelty_killer  VOTE: red
+
+CLOSEST_PRIOR_WORK:
+- {cite: "NVIDIA NeMo Guardrails — Streaming Output Rails",
+   url: "https://docs.nvidia.com/nemo/guardrails/latest/user-guides/advanced/streaming.html (+ github.com/NVIDIA/NeMo-Guardrails)",
+   why_close: "Production guardrails framework whose STREAMING OUTPUT MODERATION config exposes exactly `chunk_size` (tokens accumulated before the output rail runs — the flush/SSE knob) AND `context_size` (overlap tokens carried from the previous chunk). `context_size` exists PRECISELY because a violating span split across a chunk boundary is otherwise missed. This IS the claim's mechanism: bounded window misses boundary-straddling phrases; fix = overlap window must exceed chunk size by the unit length. The claim's headline (chunk granularity degrades recall; recovery at W >= chunk + max-unit) is the documented design rationale of `context_size` vs `chunk_size`. The scout's prior-art note ('ZERO direct hits', 'Orca/vLLM silent on the safety window') OMITTED this framework, which directly ties segment formation to the moderation window."}
+- {cite: "Overlapping-window / stride for split units in chunked NLP (HF token-classification `stride`; RAG chunk-overlap; streaming-ASR look-ahead)",
+   url: "https://huggingface.co/docs/transformers/main/en/main_classes/pipelines (token-classification stride)",
+   why_close: "The recovery law W* ~= 2*C ('window must hold current chunk + a full lookback so any unit straddling the latest boundary lands in one re-scanned window') is textbook chunk-overlap folklore: to avoid splitting an entity of length L across windows you set overlap >= L. The L0 re-derives this for token phrases under a different label."}
+- {cite: "Guardrails AI — streaming validators",
+   url: "https://www.guardrailsai.com/docs",
+   why_close: "Independent second guardrails framework that runs validators over accumulating stream fragments and documents handling of content split across chunks — confirms the chunk-vs-validation-window coupling is a known, solved engineering concern, not an uncrossed seam."}
+
+NAMING_VS_MECHANISM: Naming/framing, not mechanism. The MECHANISM (chunk granularity degrades streaming-moderation recall via boundary-straddling spans) and the FIX (overlap window >= chunk + unit-length) are both already implemented and documented (NeMo `chunk_size`/`context_size`; HF `stride`). The only residual delta is the SOCIOTECHNICAL FRAMING — "runtime team owns chunk_size, a separate safety team owns W, neither knows the other's parameter." That org-seam is an assumption, not a demonstrated empirical object, and it is contradicted by the dominant production pattern where chunk and overlap are CO-OWNED in one guardrails config (so the seam is closed by construction). The L0 (Aho-Corasick toy, 5x30k) is a controlled re-quantification of a known effect, not a new mechanism.
+
+FATAL_COLLISIONS:
+- NeMo Guardrails streaming output rails: `context_size` is literally the overlap-W remedy for chunk-boundary misses → both the phenomenon and the W>=chunk+unit recovery condition are prior-implemented. The "uncrossed seam / latency team can't pick W" novelty does not survive: the canonical production tool bundles both knobs and documents the dependency. This collapses the central novelty claim.
+- The W* ~= 2*C "recovery point" is the generic overlap>=unit-length result (HF stride / RAG overlap), so the headline quantitative finding is not novel as a principle.
+[Both are independent bodies of prior art → the ≥2-source bar for the collision is met from knowledge; however I could NOT live-retrieve this session (web tools permission-blocked), so I flag residual verification risk on exact `context_size` semantics — a reviewer with web access should confirm before final aggregation.]
+
+MANDATORY_RELATED_WORK:
+- NVIDIA NeMo Guardrails streaming output rails (chunk_size/context_size) — MUST be cited and explicitly differentiated; failure to cite it is the disqualifying gap.
+- Guardrails AI streaming validation.
+- Chunk-overlap/stride literature (HF token-classification stride; RAG chunk-overlap; streaming-ASR windowing) for the W>=chunk+unit recovery law.
+- Adversarial token-splitting / fragmentation jailbreaks (to sharpen the claimed benign-vs-adversarial distinction, which is currently the only clean differentiator).
+
+RATIONALE: The claim's stated novelty ("first uncrossed cross-area seam; latency knob silently lowers safety recall; W>=chunk+max-phrase recovery") is undercut by NeMo Guardrails, whose streaming output-rail `context_size`/`chunk_size` design is the same mechanism AND the same fix, and by generic chunk-overlap=unit-length folklore (HF stride, RAG overlap). The scout's "ZERO direct hits" is therefore inaccurate — it missed the flagship production framework directly on point. What remains is an org-seam FRAMING (naming) plus a controlled re-measurement of a known effect, which does not clear a mechanism-novelty bar. To move off RED the authors would need to (a) cite and empirically distinguish NeMo's co-owned chunk/context config, and (b) demonstrate the org-seam is real and consequential in deployed stacks (e.g., that production moderators are commonly bounded-window with W set blind to flush size) rather than assumed. Verification caveat: web retrieval was unavailable this session; citations are from knowledge with retrievable URLs and should be confirmed at aggregation.
+```
