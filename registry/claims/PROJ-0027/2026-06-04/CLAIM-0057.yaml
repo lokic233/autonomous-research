@@ -56,18 +56,26 @@ why_it_matters: "FRESH AREA (multimodal-serving: chunked-prefill x vision-encode
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0065
+  summary: 'REGIME-BOUNDED. Mechanism CONFIRMED + anti-circular control passes (r=0
+    -> exactly k-invariant). At fixed total image-tokens T, decode ITL spikes grow
+    with image COUNT k (token-budget-invisible per-image ViT fixed cost). Materiality
+    flips by metric: worst-iteration ITL (SLO single-stall) material at SMALL T<=B
+    (crossover r=16@T256, r=64@T1024, up to 7.3x@r4096), stream-p99 material at LARGE
+    T>>B (up to 6.8x). Realistic Qwen2-VL band r~64-1024 + image size ~256-1280 ->
+    worst-iter MATERIAL 1.25x-5.9x. Genuine NULL region exists (T>>B worst-iter; small-T
+    p99) reported honestly. Sim-level; L1 must measure real r,B on H100 Qwen2-VL-7B.'
+  data_path: experiments/2026-06-04/EXP-0065/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0066 result, then ros exp complete --exp EXP-0066 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0065; convene committee if candidate-grade
 blocking_on: ''
 active_experiments:
-- EXP-0065
 - EXP-0066
 created_at: '2026-06-04T00:45:38Z'
-last_updated: '2026-06-04T00:48:59Z'
+last_updated: '2026-06-04T00:58:09Z'

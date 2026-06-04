@@ -12,12 +12,19 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'REGIME-BOUNDED. Mechanism CONFIRMED + anti-circular control passes
+  (r=0 -> exactly k-invariant). At fixed total image-tokens T, decode ITL spikes grow
+  with image COUNT k (token-budget-invisible per-image ViT fixed cost). Materiality
+  flips by metric: worst-iteration ITL (SLO single-stall) material at SMALL T<=B (crossover
+  r=16@T256, r=64@T1024, up to 7.3x@r4096), stream-p99 material at LARGE T>>B (up
+  to 6.8x). Realistic Qwen2-VL band r~64-1024 + image size ~256-1280 -> worst-iter
+  MATERIAL 1.25x-5.9x. Genuine NULL region exists (T>>B worst-iter; small-T p99) reported
+  honestly. Sim-level; L1 must measure real r,B on H100 Qwen2-VL-7B.'
+result_effect: keep-exploring
 artifacts_path: experiments/2026-06-04/EXP-0065/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T00:58:09Z'
 prompt_version: ''
