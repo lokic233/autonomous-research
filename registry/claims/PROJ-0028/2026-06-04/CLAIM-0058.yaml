@@ -1,0 +1,83 @@
+claim_id: CLAIM-0058
+project_id: PROJ-0028
+stage: seed
+status: seed
+claim: "An inference-runtime streaming knob \u2014 the token-flush chunk granularity\
+  \ (tokens accumulated before emitting a partial completion, tuned for ITL smoothing\
+  \ / SSE batching / throughput) \u2014 causally degrades the RECALL of a separately-owned\
+  \ incremental output safety filter, because policy-violating multi-token phrases\
+  \ straddle flush boundaries and the stateless/bounded-window moderator never sees\
+  \ them intact. As chunk size grows from 1 token toward realistic SSE batch sizes\
+  \ (4-16 tok/flush, the production default), the streaming moderator's detection\
+  \ recall on a fixed set of violating spans drops MONOTONICALLY and non-trivially\
+  \ (predicted >15-30pp recall loss at production chunk sizes for multi-token phrases),\
+  \ EVEN THOUGH the full completion is byte-identical and a whole-text scan of the\
+  \ same filter flags 100%. NULL EXIT: if recall is flat across chunk sizes (filter\
+  \ re-scans an unbounded re-accumulated buffer, or phrases are single-token, or default\
+  \ window-overlap already exceeds max-phrase-length), the coupling is absent and\
+  \ the claim is FALSE."
+why_it_matters: "FIRST CROSS-AREA coupling claim (acting on scout-M's mined-out signal:\
+  \ single-area train-eff+eval-safety exhausted). Couples INFERENCE-RUNTIME (owns\
+  \ the flush/chunk knob, tuned for ITL/SSE, no model of the safety window) x EVAL-SAFETY\
+  \ (owns the streaming moderator, benchmarked on WHOLE completions, no model of the\
+  \ flush schedule); the shared UNMODELED object = the flush boundary fragmenting\
+  \ multi-token violation spans. EMPIRICAL, NO closed form. Passes all 10 killers\
+  \ + 3 lessons + runtime-mitigation: #10 GENUINE NULL EXIT (unbounded-rescan moderator\
+  \ -> flat 100% -> FALSE; effect requires the common latency-motivated bounded/stateless\
+  \ config; parameter-dependent on chunk-size x phrase-length, not construction-forced;\
+  \ the null is itself a publishable 'seam-safe-by-current-practice' negative); #9\
+  \ NOT-textbook (phrase-fragmentation-across-emit-boundaries is not a named result;\
+  \ Orca OSDI22 + vLLM + Llama-Guard/OpenAI-Moderation/2512.03553/2604.14865 are SILENT\
+  \ on the seam); LESSON-A SYNTHESIS DEFENSE = the cross-seam BENIGN interaction via\
+  \ the runtime's flush schedule is the non-obvious novelty (streaming + finite-window\
+  \ each individually known; their runtime-knob-driven interaction unstudied; driven\
+  \ by the RUNTIME's param NOT an adversary -> distinct from the Unicode-homoglyph\
+  \ adversarial-input attack); LESSON-B alias control (byte-IDENTICAL completion across\
+  \ flush schedules + whole-text-rescan=100% ceiling + phrase-length sweep at fixed\
+  \ chunk -> isolates fragmentation from filter-weakness); LESSON-C + #7 + #4 PRODUCTION\
+  \ baseline = sliding-window-with-OVERLAP moderator (the standard mitigation, NOT\
+  \ a naive per-chunk strawman) + test the overlap recovery point (overlap>=max-phrase-len);\
+  \ RUNTIME-MITIGATION explicitly cleared (info-fragmentation at flush boundaries\
+  \ is NOT a fixed cost that CUDA-Graphs/batching/caching heal \u2014 they change\
+  \ WHEN tokens flush not whether a windowed moderator reconstitutes a split phrase;\
+  \ only the safety-side window fix neutralizes = the tested recovery arm); #1 not-metric-validity\
+  \ (recall vs harness-owned GT span-membership, whole-text control pins 100% ceiling);\
+  \ #5 right-currency (safety recall pp, what the safety team cares about); #6 not-trivially-small\
+  \ (>15-30pp at realistic chunk sizes w/ real multi-token-phrase lexicon, anchored\
+  \ not assumed); #8 citations read. Anti-circular: GT = planted-violation-span membership\
+  \ (harness-owned, never read by the filter); the Aho-Corasick/regex filter reads\
+  \ only emitted partial chunks; recall computed by comparing alerts to GT. ORCHESTRATOR\
+  \ GUARD: the L0 MUST report recall-vs-chunk-size AGAINST the PRODUCTION sliding-window-overlap\
+  \ baseline (not only stateless-per-delta) + find the overlap recovery point \u2014\
+  \ does DEFAULT overlap already heal it (already-mitigated -> weaken) or not (real\
+  \ gap)? = the make-or-break. L0 (CPU, no GPU): synthetic token streams, controlled\
+  \ fraction w/ planted multi-token violations (real lexicon: slurs/obfuscated bigrams-trigrams/banned-instructions)\
+  \ at known positions; real Aho-Corasick/regex filter runs INCREMENTALLY over flushed\
+  \ chunks as the runtime emits; IV = chunk granularity {1,2,4,8,16,32} x moderator\
+  \ {stateless-per-delta, sliding-window-overlap-W, unbounded-rescan}; recall vs GT.\
+  \ NULL: unbounded-rescan flat 100% (sanity); if bounded arms ALSO flat -> FALSE.\
+  \ PRIOR-ART: Orca OSDI22 + vLLM (silent on safety window); Llama-Guard + OpenAI-Moderation\
+  \ + 2512.03553 + 2604.14865 (evaluate on segments/completions, never tie segment\
+  \ formation to the flush schedule); seam returned ZERO direct hits. NOVELTY = a\
+  \ latency-tuning runtime knob silently lowering safety RECALL via benign span fragmentation\
+  \ across the org seam. Topic: inference-runtime x eval-and-safety. L1: real vLLM/TGI\
+  \ SSE at varying output_token_chunk + real streaming moderator (Llama-Guard-streaming/OpenAI-Moderation-incremental)\
+  \ on a real red-team multi-token-violation set -> recall vs flush granularity +\
+  \ validate overlap>=max-phrase-len recovers."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r6-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0067 result, then ros exp complete --exp EXP-0067 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0067
+created_at: '2026-06-04T01:17:43Z'
+last_updated: '2026-06-04T01:18:15Z'

@@ -1,0 +1,39 @@
+task_id: TASK-0056
+kind: research
+parent: orchestrator-r6-001
+assignee: researcher-0064
+session_id: ''
+project_id: PROJ-0028
+claim_id: CLAIM-0058
+exp_id: EXP-0066
+status: open
+summary: "L0 cross-area: token-flush chunk granularity degrades streaming safety-filter\
+  \ recall via phrase fragmentation. Synthetic streams + planted multi-token violations\
+  \ (real lexicon); real Aho-Corasick/regex filter runs INCREMENTALLY over flushed\
+  \ chunks; IV chunk{1,2,4,8,16,32} x moderator{stateless-per-delta, sliding-window-overlap-W,\
+  \ unbounded-rescan}; recall vs GT. \u2605 GUARD/make-or-break: report recall vs\
+  \ chunk-size AGAINST the production SLIDING-WINDOW-OVERLAP baseline + find the overlap\
+  \ RECOVERY POINT (does default overlap already heal it=weaken, or not=real gap?).\
+  \ NULL EXIT: unbounded-rescan flat 100% (sanity); if bounded arms ALSO flat -> FALSE.\
+  \ anti-circular (GT=planted-span-membership never read by filter; whole-text-rescan=100%\
+  \ ceiling); alias control (byte-identical completion across flush schedules + phrase-length\
+  \ sweep); PERSISTENT-SEEDER loop"
+evidence_delta: ''
+opened_at: '2026-06-04T01:18:15Z'
+updated_at: '2026-06-04T01:18:15Z'
+closed_at: ''
+history:
+- ts: '2026-06-04T01:18:15Z'
+  event: open
+  by: orchestrator-r6-001
+  note: "L0 cross-area: token-flush chunk granularity degrades streaming safety-filter\
+    \ recall via phrase fragmentation. Synthetic streams + planted multi-token violations\
+    \ (real lexicon); real Aho-Corasick/regex filter runs INCREMENTALLY over flushed\
+    \ chunks; IV chunk{1,2,4,8,16,32} x moderator{stateless-per-delta, sliding-window-overlap-W,\
+    \ unbounded-rescan}; recall vs GT. \u2605 GUARD/make-or-break: report recall vs\
+    \ chunk-size AGAINST the production SLIDING-WINDOW-OVERLAP baseline + find the\
+    \ overlap RECOVERY POINT (does default overlap already heal it=weaken, or not=real\
+    \ gap?). NULL EXIT: unbounded-rescan flat 100% (sanity); if bounded arms ALSO\
+    \ flat -> FALSE. anti-circular (GT=planted-span-membership never read by filter;\
+    \ whole-text-rescan=100% ceiling); alias control (byte-identical completion across\
+    \ flush schedules + phrase-length sweep); PERSISTENT-SEEDER loop"
