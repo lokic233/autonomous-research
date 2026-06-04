@@ -7,8 +7,8 @@ t0=time.time()
 SEEDS=[1,2,3,4,5]
 NORMS=['raw','NFC','NFKC','NFKC+casefold']
 ARMS=['normalizable','typo']
-NUM_PERMS=128
-N_PAIRS=400
+NUM_PERMS=64
+N_PAIRS=200
 BASE_LEN=80
 M=6
 # Production LSH: b*r=128. knee≈(1/b)^(1/r). Use b=16,r=8 -> knee≈0.69; also b=32,r=4 ->0.42; b=8,r=16->0.84
@@ -27,7 +27,7 @@ for (b,r) in LSH_CONFIGS:
     for arm in ARMS:
         for nm in NORMS:
             runs=[H.run_pair_eval(arm,nm,M,NUM_PERMS,b,r,N_PAIRS,BASE_LEN,s) for s in SEEDS]
-            results.extend(runs)
+            print(f"  done b={b} r={r} {arm:<12} {nm:<14} t={time.time()-t0:.0f}s",flush=True)
             fn_m,fn_ci=ci95([x['fn_rate'] for x in runs])
             fl_m,fl_ci=ci95([x['flag_rate'] for x in runs])
             jac_m,_=ci95([x['mean_jaccard'] for x in runs])
@@ -35,7 +35,7 @@ for (b,r) in LSH_CONFIGS:
             agg.append({'b':b,'r':r,'arm':arm,'norm':nm,'fn_mean':fn_m,'fn_ci':fn_ci,
                         'flag_mean':fl_m,'flag_ci':fl_ci,'jac_mean':jac_m,'n_gt':ngt})
 
-with open('results/main_sweep.json','w') as f: json.dump({'agg':agg,'raw':results},f,indent=1)
+with open('results/main_sweep.json','w') as f: json.dump({'agg':agg},f,indent=1)
 
 print(f"=== MAIN SWEEP (M={M}, perms={NUM_PERMS}, pairs/seed={N_PAIRS}, seeds={len(SEEDS)}) ===")
 for (b,r) in LSH_CONFIGS:

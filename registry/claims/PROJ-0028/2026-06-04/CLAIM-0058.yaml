@@ -79,13 +79,20 @@ supporting_evidence:
     runtime must set W>=chunk+max-phrase-len, a param neither org owns alone.'
   data_path: experiments/2026-06-04/EXP-0067/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0056
+  date: '2026-06-04'
+  result: red
 revival_conditions: ''
 owner: orchestrator-r6-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0067; convene committee if candidate-grade
+lifecycle_state: done
+next_action: "terminal RED: mechanism prior-implemented (NeMo Guardrails chunk_size/context_size/RollingBuffer);\
+  \ recovery law textbook W>=C+L; org-seam asserted-not-demonstrated + contradicted\
+  \ by NeMo co-location; W=16 baseline strawman. Prior-art search factually wrong\
+  \ (missed NeMo Guardrails \u2014 the production framework that already implements+ships\
+  \ the mechanism+fix)."
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-04T01:17:43Z'
-last_updated: '2026-06-04T01:24:55Z'
+last_updated: '2026-06-04T01:50:47Z'

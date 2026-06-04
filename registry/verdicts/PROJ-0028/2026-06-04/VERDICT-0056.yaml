@@ -1,0 +1,93 @@
+verdict_id: VERDICT-0056
+claim_id: CLAIM-0058
+project_id: PROJ-0028
+date: '2026-06-04'
+experiment_ids:
+- EXP-0067
+experiment_paths:
+- experiments/2026-06-04/EXP-0067
+committee_version: v001
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: red
+- role: systems_reviewer
+  vote: red
+- role: evaluation_prosecutor
+  vote: red
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: red
+green_rule: unanimous
+final_verdict: red
+override_rule: false
+fatal_objections:
+- "PRIOR-ART SEARCH FACTUALLY WRONG (>=2 sources, unrebutted): NeMo Guardrails streaming\
+  \ output rails ALREADY SHIPS+DOCUMENTS the claimed mechanism AND the fix \u2014\
+  \ chunk_size (tokens buffered before the output rail) + context_size (overlap tokens\
+  \ carried across chunk boundaries), RollingBuffer in buffer.py implements EXACTLY\
+  \ the sliding-window-with-overlap moderator the L0 tests. Two reviewers cite specific\
+  \ param names + doc URLs + code. The 'ZERO direct hits' assessment was wrong ->\
+  \ the central 'first uncrossed cross-area seam' novelty COLLAPSES"
+- 'RECOVERY LAW W*~2C IS TEXTBOOK: W >= C + L_max - 1 is the standard overlap condition
+  for ANY windowed scanner over chunked input (HF token-classification stride, RAG
+  chunk-overlap, streaming-ASR windowing). theory_skeptic: the L0 is a controlled
+  RE-MEASUREMENT of a known invariant'
+- no goodness-of-fit vs the predicted law was run (if the fit is exact, the result
+  IS the known invariant)
+- "ORG-SEAM (the only residual novelty after NeMo) HAS ZERO EVIDENCE: no config audit/postmortem/team-structure\
+  \ citation/deployed-config survey \u2014 it's an ASSUMPTION, and CONTRADICTED by\
+  \ the dominant production pattern (NeMo co-locates chunk_size+context_size in ONE\
+  \ guardrails config, closing the seam by construction)"
+- 'W=16 ''production baseline'' is a STRAWMAN: real semantic moderators (Llama-Guard-class)
+  need 128+ tokens of context'
+- at realistic W>=128, W>>2C holds naturally for all tested C and the fragmentation
+  effect VANISHES
+- no latency/memory justification for W this small.
+required_evidence:
+- "None terminal \u2014 mechanism prior-implemented (NeMo chunk_size/context_size\
+  \ + RollingBuffer)"
+- recovery law W>=C+L is textbook chunk-overlap
+- W=16 baseline strawman (real W>=128 -> effect zero)
+- 'org-seam asserted-not-demonstrated + contradicted by NeMo co-location. To ever
+  revive: (a) cite + empirically differentiate NeMo Guardrails (what does the claim
+  ADD beyond what NeMo ships?)'
+- (b) ground a small-W bounded-window moderator in a real deployment config
+- (c) DEMONSTRATE the org-seam with a config audit/postmortem/survey (not assume it)
+- (d) show recall<100% at REALISTIC W=128/256 for Llama-Guard-class context.
+map_delta_proposals:
+- 'CLAIM-0058 -> RED/REJECTED (committee#1, 5/6, the first cross-area claim). All
+  3 novelty pillars broken: mechanism PRIOR-IMPLEMENTED (NeMo Guardrails chunk_size/context_size/RollingBuffer
+  ships it + the fix)'
+- recovery law W*~2C is TEXTBOOK chunk-overlap (W>=C+L_max-1)
+- org-seam (the only residual) ASSERTED-not-demonstrated + contradicted by NeMo co-location
+- "W=16 baseline a strawman (real W>=128 -> effect zero). PROJ-0028 converged. No\
+  \ false green. \u2605 DISTILL-WORTHY LESSON (cross-area-specific): (1) PRIOR-ART\
+  \ for a cross-area claim must include the PRODUCTION FRAMEWORKS that ALREADY couple\
+  \ the two areas (NeMo Guardrails / Guardrails AI for runtime x safety), NOT just\
+  \ academic papers + inference engines \u2014 the seam may be uncrossed in PAPERS\
+  \ but CLOSED in production TOOLING (a framework that co-locates both knobs IS the\
+  \ cross-area integration). 'Zero paper hits' != 'uncrossed seam'. (2) An ORG-SEAM\
+  \ / 'two teams configure independently' novelty must be DEMONSTRATED (config audit/postmortem/survey),\
+  \ not assumed \u2014 and is refuted if a production framework co-owns both knobs.\
+  \ (3) the production baseline must be the REALISTIC parameter (semantic-moderator\
+  \ W>=128), not a small-W strawman where the effect exists. APPLIES NOW to CLAIM-0059\
+  \ (sibling cross-area): must check production dedup frameworks (datatrove/text-dedup)\
+  \ for whether they ALREADY align the deduper normalizer to the tokenizer, + whether\
+  \ the normalizer-divergence org-seam is demonstrated not assumed."
+baseline_requirements:
+- NeMo Guardrails streaming output rails chunk_size/context_size + RollingBuffer (the
+  canonical production system that ALREADY implements the mechanism + fix)
+- "realistic window W=128/256 (Llama-Guard semantic-moderator context \u2014 if recall\
+  \ 100pct there for all C, the threat doesn't exist)"
+- unbounded-rescan compute cost at 1-4KB completions (if negligible, bounded-window
+  is never the rational production choice)
+- W>=C+L_max-1 textbook overlap invariant (HF stride, RAG overlap, streaming-ASR)
+committee_run_dir: experiments/2026-06-04/EXP-0067/committee1
+verbatim_votes_summary: ''
+key_structural_finding: ''
+disposition: ''
+created_at: '2026-06-04T01:49:36Z'
