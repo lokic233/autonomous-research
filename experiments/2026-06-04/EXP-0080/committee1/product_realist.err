@@ -88,3 +88,36 @@ researchers
 [0m
 [0m→ [0mRead research-os/prompts/committee/_committee_common_v001.md
 [0m→ [0mRead research-os/prompts/_shared/TOOLING_v001.md
+[0m
+[0m$ [0mgh search issues --repo pandas-dev/pandas "cat.codes stable across files" 2>&1 | head -30
+zsh:1: command not found: gh
+[0m
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"pandas cat.codes stable across files parquet shards categorical codes differ site:github.com"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"pandas astype category codes differ between files \"cat.codes\" parquet shards"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"\"cat.codes\" \"across files\" pandas github issue"}
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"pandas categorical codes differ \"astype category\" parquet"}
+[0m% [0mWebFetch https://pandas.pydata.org/docs/user_guide/categorical.html
+[0m
+[0m$ [0mcurl -s https://pandas.pydata.org/docs/user_guide/categorical.html | grep -i "code" | head -20
+with R’s <code class="docutils literal notranslate"><span class="pre">factor</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Categoricals</span></code> are a pandas data type corresponding to categorical variables in
+number of possible values (<code class="docutils literal notranslate"><span class="pre">categories</span></code>; <code class="docutils literal notranslate"><span class="pre">levels</span></code> in R). Examples are gender,
+<p>All values of categorical data are either in <code class="docutils literal notranslate"><span class="pre">categories</span></code> or <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>. Order is defined by
+the order of <code class="docutils literal notranslate"><span class="pre">categories</span></code>, not lexical order of the values. Internally, the data structure
+consists of a <code class="docutils literal notranslate"><span class="pre">categories</span></code> array and an integer array of <code class="docutils literal notranslate"><span class="pre">codes</span></code> which point to the real value in
+the <code class="docutils literal notranslate"><span class="pre">categories</span></code> array.</p>
+<p>Categorical <code class="docutils literal notranslate"><span class="pre">Series</span></code> or columns in a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be created in several ways:</p>
+<p>By specifying <code class="docutils literal notranslate"><span class="pre">dtype=&quot;category&quot;</span></code> when constructing a <code class="docutils literal notranslate"><span class="pre">Series</span></code>:</p>
+<p>By converting an existing <code class="docutils literal notranslate"><span class="pre">Series</span></code> or column to a <code class="docutils literal notranslate"><span class="pre">category</span></code> dtype:</p>
+<p>By using special functions, such as <a class="reference internal" href="../reference/api/pandas.cut.html#pandas.cut" title="pandas.cut"><code class="xref py py-func docutils literal notranslate"><span class="pre">cut()</span></code></a>, which groups data into
+<p>By passing a <a class="reference internal" href="../reference/api/pandas.Categorical.html#pandas.Categorical" title="pandas.Categorical"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Categorical</span></code></a> object to a <code class="docutils literal notranslate"><span class="pre">Series</span></code> or assigning it to a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>.</p>
+<p>Categorical data has a specific <code class="docutils literal notranslate"><span class="pre">category</span></code> <a class="reference internal" href="basics.html#basics-dtypes"><span class="std std-ref">dtype</span></a>:</p>
+<code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be batch converted to categorical either during or after construction.</p>
+<p>This can be done during construction by specifying <code class="docutils literal notranslate"><span class="pre">dtype=&quot;category&quot;</span></code> in the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> constructor:</p>
+<p>Analogously, all columns in an existing <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be batch converted using <a class="reference internal" href="../reference/api/pandas.DataFrame.astype.html#pandas.DataFrame.astype" title="pandas.DataFrame.astype"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataFrame.astype()</span></code></a>:</p>
+<p>In the examples above where we passed <code class="docutils literal notranslate"><span class="pre">dtype='category'</span></code>, we used the default
+<p>To control those behaviors, instead of passing <code class="docutils literal notranslate"><span class="pre">'category'</span></code>, use an instance
+of <code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code>.</p>
+<p>Similarly, a <code class="docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> can be used with a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> to ensure that categories
+[0m
+[0m⚙ [0mmeta_core_three_pai_external_web_search {"natural_language_query":"\"cat.codes\" \"different\" \"parquet\" \"pandas\" \"shard\""}

@@ -1,0 +1,39 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "L1 must include a Global-CategoricalDtype / OrdinalEncoder baseline showing deltaR2 collapses to ~0 with standard schema management — this isolates the claim as a missing-practice coupling, not a framework defect (evaluation_prosecutor's killer experiment, unrebutted)",
+  "L1 must include a permutation-baseline (uniform-random code reassignment of matched cardinality) to show observed deltaR2 matches or is bounded by the trivial-scramble prediction — without this the effect size is uninterpretable beyond 'codes are scrambled' (theory_skeptic, unrebutted)",
+  "L1 must include at least one non-tree model class (e.g., linear on one-hot, or neural embedding) to bound the generality claim beyond axis-aligned splitters (theory_skeptic, unrebutted)",
+  "L1 must provide evidence that a real consumer pattern reads raw .cat.codes cross-shard as ML features — either a public repo/pipeline example, a survey, or a documented anti-pattern occurrence — because the sociotechnical load-bearing assumption is asserted, not measured (theory_skeptic + product_realist convergence)",
+  "L1 must use a real partitioned public dataset (Criteo/NYC-taxi/similar) with naturally partial-observation shards to confirm the f-distribution falls in the 0.1–0.4 band where the smoking gun fires, not at f~0 or f~1 where the claim is moot (theory_skeptic)"
+]
+MANDATORY_BASELINES: [
+  "Global CategoricalDtype (pd.CategoricalDtype(categories=fixed_list)) applied before .cat.codes extraction — the standard pandas fix",
+  "sklearn.preprocessing.OrdinalEncoder fitted on global vocabulary — the standard ML-pipeline fix",
+  "Permutation baseline: replace shared-category codes with uniform-random integers of matched cardinality to establish the trivial-scramble deltaR2 floor"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0067 (storage-encoding-semantics x feature-contract)", change: "Advance to L1 conditional on all REQUIRED_EVIDENCE items + MANDATORY_BASELINES being pre-registered. Tag altitude='framing-composition-over-documented-mechanism' (not mechanism-novelty). If L1 Global-CategoricalDtype baseline zeroes deltaR2: reclassify contribution as 'missing-practice awareness' rather than 'cross-area coupling discovery'. If real-consumer-pattern evidence is negative (no real pipeline found using raw .cat.codes cross-shard): downgrade to RED (strawman pipeline)."}
+PRIOR_ART_ADEQUATE: yes
+RATIONALE:
+
+UNANIMOUS YELLOW — honest, well-controlled experiment sitting at documented-mechanism altitude with a thin but real framing delta. Aggregation by stress-test:
+
+STRESS-TEST A (issue-tracker collision): CLEARED. All five reviewers searched independently (novelty_killer cites pandas #44099, #22143; systems_reviewer searched "cat.codes parquet", "cat.codes across files", "cat.codes machine learning"). The closest hits are concat/category-ordering issues, NOT the cross-shard .cat.codes-as-ML-feature-contract framing. No triaged issue, no merged fix. This is NOT a CLAIM-0066 repeat — no RED trigger from the issue tracker. Anti-hallucination rule honored: collision absence verified across ≥2 independent reviewer searches with cited URLs.
+
+STRESS-TEST B (altitude — non-obvious coupling vs. documented folklore): THIS IS THE GATING QUESTION and the reason for YELLOW, not GREEN. Four of five reviewers converge on the same diagnosis: the MECHANISM (astype('category') sorts over observed values; codes are positional in the sorted categories array) is fully documented in pandas docs (novelty_killer cites the Categorical.codes API reference). The NON-PORTABILITY circulates as community folklore (novelty_killer: SO Q54731396; systems_reviewer: CategoricalDtype docs prescribe the fix). Theory_skeptic sharpens this: "the cross-shard mismatch follows by definition of 'sort'" — nothing theoretically surprising, and tree-R2 collapse on scrambled integer codes is elementary splitter theory. The claim's defense (A emits strings only; B's per-file docs don't fire the cross-shard alarm; B never fits an encoder) is coherent but thin — it amounts to "the docs don't warn about THIS specific downstream consequence," which is a documentation-coverage gap, not a mechanism discovery. Evaluation_prosecutor delivers the strongest structural blow: the multi-shard pipeline is a STRAWMAN because it omits standard schema management (Global CategoricalDtype, OrdinalEncoder) that any Dask/multi-file practitioner would apply. This objection is unrebutted and must be addressed at L1 with the mandatory baselines.
+
+STRESS-TEST C (not standard leakage): CLEARED. Product_realist and the packet itself establish the distinction: no fitted estimator, contract set by storage cast, not fit-transform. Kapoor-Narayanan 2023 is orthogonal (within-dataset train/test contamination). This distinction is real and sufficient.
+
+WHY NOT GREEN: I cannot emit GREEN when (i) the mechanism is documented and the non-portability is folklore (novelty_killer, theory_skeptic — unrebutted), (ii) the evaluation_prosecutor's strawman/mandatory-baseline objection is unrebutted (standard practices trivially prevent the failure), and (iii) the sociotechnical load-bearing assumption (real consumers use raw .cat.codes cross-shard) is asserted but unmeasured (theory_skeptic + product_realist convergence). GREEN requires that these are addressed, not merely acknowledged.
+
+WHY NOT RED: (i) No issue-tracker collision — the CLAIM-0066 RED trigger is definitively absent. (ii) The framing delta is real: no pandas doc, SO answer, or issue explicitly warns that astype('category').cat.codes produces UNSTABLE ML FEATURE IDS across separately-cast shards — the consequence framing + the exact f=0 null boundary + the monotonic dose-response is a genuine empirical composition that was not found pre-existing. (iii) The experiment is exceptionally clean: pandas 3.0.3 (current), composition a/b/c verified with probes, realistic SNR (R2~0.78, not inflated), RF cross-check, 12-seed stability, two mechanistically distinct arms, all could-fail audits clean. Honest, non-rigged L0 work deserves advancement to L1, not termination.
+
+DISAGREEMENT RESOLUTION: No reviewer-to-reviewer disagreement exists (all YELLOW). The five reviewers' concerns are COMPLEMENTARY, not conflicting: novelty_killer establishes the thin framing delta; systems_reviewer confirms no shipping-system collision; evaluation_prosecutor identifies the mandatory baselines; theory_skeptic bounds what is and isn't surprising; product_realist scopes the real-world niche. All five concerns are incorporated into the REQUIRED_EVIDENCE and MANDATORY_BASELINES lists for L1.
+
+DECISION: Advance to L1 with the five required evidence items and three mandatory baselines pre-registered. The L1 verdict hinges on: does the Global-CategoricalDtype baseline zero deltaR2 (expected yes — confirming this is a missing-practice issue, not a framework defect)? Does a real consumer pattern exist in the wild? Does the f-distribution on real partitioned data fall in the hazardous band? If L1 answers these, the claim's altitude resolves to either a valuable "missing-practice awareness" contribution (GREEN at that reduced altitude) or a strawman (RED). Current altitude: framing-composition-over-documented-mechanism.
+
+Prompt version: v001. Committee #1. All reviewer votes received and weighed by cited evidence, not vote count.
+```
