@@ -1,0 +1,59 @@
+claim_id: CLAIM-0065
+project_id: PROJ-0000
+stage: seed
+status: seed
+claim: 'When a multi-source training corpus is published as HF datasets Parquet/Arrow
+  shards, the data teams choice of how many shards each source is split into silently
+  determines the minimum batch-level source/label imbalance achievable by the training
+  teams fixed IterableDataset.shuffle(buffer_size=N). For realistic configs the REALIZED
+  early-training batch composition diverges from the configured interleave_datasets(probabilities=p)
+  mix by >20-40 percentage points for the rarest source during the first ~buffer_size/throughput
+  steps, and the divergence is a function of SHARD COUNT, not of p or N alone. Mechanism:
+  interleave cycles sources at the example level UPSTREAM of the buffer, but when
+  a rare source occupies very few shards, ALL its examples enter the buffer in one/few
+  contiguous bursts as that shard is reached -> for a large fraction of training the
+  buffer contains ZERO examples of the rare source, then a glut; the batch-level realized
+  fraction is BIMODAL and time-localized, not Bernoulli(p). The configured p is correct
+  in epoch-MEAN but violated at every STEP. NULL EXIT: if interleaves per-example
+  cycling already spreads a few-shard source finely enough that the buffer never starves
+  (divergence ~0 independent of shard count), the claim is FALSIFIED.'
+why_it_matters: "Cross-area production-seam (training-efficiency x data/sharding),\
+  \ FIRST-GREEN (CLAIM-0059) shape, designed to CLEAR the SHARPENED incremental-composition\
+  \ ceiling that yellowed CLAIM-0064. \u2605 Clears the test cleanly: looking ONLY\
+  \ at A (data team): \"source X written as 1/few shards\" predicts NOTHING about\
+  \ training balance -- contiguous storage is the universal correct default, example\
+  \ COUNT per source unchanged, \"I stored exactly p_X, mix is correct\". Looking\
+  \ ONLY at B (training team): \"I set probabilities=p, buffer_size=N\" -> reasonably\
+  \ predicts \"realized mix converges to p, buffer_size only affects local shuffle\
+  \ randomness\"; B has NO visibility into per-source shard count + interleave gives\
+  \ correct mix IN EXPECTATION over an epoch. The SURPRISE (bimodal time-localized\
+  \ rare-source starvation -> >20-40pp per-step divergence) emerges ONLY from composing\
+  \ A shard-granularity x B buffer-fill-from-stream-head -- NEITHER endpoint predicts\
+  \ it from its own side. Structurally identical to CLAIM-0059 (NFKC vs NFC each correct\
+  \ on its own side, dedup-escape only emergent). Public-measurable (synthetic/public\
+  \ corpora + open datasets lib, no private constant); version-stable (reservoir buffer\
+  \ + shard-sequential streaming stable since datasets 1.x); STRONGEST baseline (the\
+  \ users own configured p intent); clean DECISIVE L0 (shard-count-monotonicity control\
+  \ is the kill-shot: divergence must SHRINK monotonically as rare-source shard count\
+  \ rises). MAKE-OR-BREAK (run FIRST): does interleaves example-level cycling already\
+  \ spread the rare source regardless of shard count? If yes -> null -> falsified.\
+  \ Mosaic StreamingDataset engineers AROUND this (per-sample global shuffle) = evidence\
+  \ the seam is real+unsolved in vanilla HF, NOT prior art. Scout-K self-rating GREEN-eligible\
+  \ (conditional on the monotonicity control). Honest risk: interleaves per-example\
+  \ cycling may de-correlate a single rare shard more than expected -> the L0 control\
+  \ isolates exactly this."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r8-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-04T20:56:35Z'
+last_updated: '2026-06-04T20:56:35Z'
