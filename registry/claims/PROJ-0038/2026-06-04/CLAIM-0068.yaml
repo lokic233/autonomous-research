@@ -1,0 +1,66 @@
+claim_id: CLAIM-0068
+project_id: PROJ-0038
+stage: seed
+status: seed
+claim: 'A float column containing IEEE-754 NaN written to Parquet by pandas (DataFrame.to_parquet
+  engine=pyarrow) silently stores those NaNs as NULL (pyarrow from_pandas defaults
+  preserve_index/pandas-missing-semantics so float NaN -> null; verified file statistics.null_count=2
+  for a 2-NaN column), whereas the IDENTICAL logical column written by any non-pandas
+  Arrow-native writer (polars/Rust arrow-rs, DuckDB C++, pyarrow-direct, JVM/Spark)
+  stores them as NaN VALUES (null_count=0) -- so the SAME downstream reader running
+  the SAME GROUP BY / JOIN / SUM produces a MEASURABLY DIFFERENT result depending
+  ONLY on which runtime WROTE the file. Verified end-to-end on cli:devvm14382 across
+  THREE runtimes (pandas/pyarrow, polars 1.41.2, DuckDB 1.5.3), TWO independent readers:
+  count(distinct k)=2 (pandas-written) vs 3 (polars/duckdb-written); self-join using(k)
+  = 5 vs 9 rows; sum(v) over a single-NaN col = 3.0 (finite) vs NaN. NULL EXIT: float
+  columns with NO NaN (only finite + true nulls) -> Delta=0 (effect is NaN-specific
+  not a generic round-trip artifact); if real-world float columns rarely carry NaN
+  (most missingness already true-null) the blast radius shrinks (the L0 MEASURES this
+  prevalence directly).'
+why_it_matters: "Cross-area CROSS-RUNTIME production-seam (data-systems x data-systems\
+  \ across LANGUAGE/RUNTIME boundary), textbook FIRST-GREEN (CLAIM-0059) structure\
+  \ -- the convergent pivot BOTH scout-Q + scout-R recommended after the within-language\
+  \ frontier proved saturated, validated by scout-S. \u2605 CLEARS ALL FOUR GATES\
+  \ with empirical end-to-end verification: (1) INCREMENTAL-COMPOSITION -- the pandas\
+  \ side documents only its OWN in-memory \"NaN means NA\" rule (to_parquet docs do\
+  \ NOT say the FILE gets NULLs where you wrote NaN, nor that another writer would\
+  \ differ); the reader side (polars Missing-data guide, DuckDB) documents only its\
+  \ OWN in-memory NaN-vs-null model; NEITHER predicts the divergence from its own\
+  \ side, the cross-writer file-provenance -> foreign-reader-aggregate-flip is in\
+  \ NOBODY docs (false-by-documentation gate PASSED -- checked both sides cite only\
+  \ their own behavior). (2) \u2605 FRAMEWORK-ISSUE-TRACKER on BOTH runtimes (the\
+  \ CLAIM-0066 gate) -- searched apache/arrow + pandas-dev + pola-rs/polars + duckdb;\
+  \ all hits are the OPPOSITE/known direction (nullable-int Hive errors, fastparquet,\
+  \ to_pandas Int64) -- NO issue/PR reports the cross-writer NaN-vs-null Parquet correctness\
+  \ seam. (3) VERIFY-THE-COMPOSITION -- actually RAN write-A/read-B both directions\
+  \ on real runtimes, 2 independent readers (not assumed); integer-valued falsifiable\
+  \ signals. (4) NOT-FOLKLORE -- pandas in-memory NaN=NA is famous, but the file-provenance\
+  \ -> foreign-runtime-reader categorically-different-aggregate consequence is not\
+  \ in any doc/README/blog/tracker; folklore is about the in-memory model, the SEAM\
+  \ is about on-disk bytes + a foreign reader. Public-data-measurable (parquet null_count\
+  \ + NaN-presence FINGERPRINTS the writer; corpus scan classifies provenance + quantifies\
+  \ at-risk files), version-stable (from_pandas default predates+persists pandas 1.x->3.x;\
+  \ polars 1.41 read-side has STABILIZED toward NaN-preservation, sharpening the seam).\
+  \ FOUR independent orgs (pandas-dev/pola-rs/duckdb/apache-arrow-rs) = the canonical\
+  \ lakehouse Python-writer x Rust-or-DuckDB-reader seam. Scout-S self-rating GREEN\
+  \ 8/10. MAIN RISK = PREVALENCE (how often real float cols carry NaN vs already-null)\
+  \ -> the L0 turns it into a MEASUREMENT not an assumption. Secondary: \"NaN-as-NA\
+  \ is famous\" -> rebuttal = the file-provenance->foreign-reader aggregate flip is\
+  \ the novel undocumented measurable consequence, not the in-memory convention."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r8-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0081 result, then ros exp complete --exp EXP-0081 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0081
+created_at: '2026-06-04T23:27:15Z'
+last_updated: '2026-06-04T23:28:13Z'
