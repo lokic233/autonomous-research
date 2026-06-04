@@ -1,0 +1,66 @@
+claim_id: CLAIM-0069
+project_id: PROJ-0039
+stage: seed
+status: seed
+claim: 'A pandas-written ORDERED Categorical column is encoded in Parquet as an Arrow
+  dictionary<values=string, indices=int8, ordered=1>; pandas honors that domain ordering
+  for MIN/MAX/sort/comparison, but DuckDB (and Polars) SILENTLY DROP the ordered flag
+  and fall back to LEXICOGRAPHIC comparison, flipping MAX(severity)/MIN/GROUPBY-MAX
+  to a WRONG category with NO warning. Verified on cli:devvm14382 (pandas 3.0.3/pyarrow
+  24.0.0 writer; DuckDB 1.5.3 + polars 1.41.2 readers): on a 6-level domain scale
+  trace<debug<info<warn<error<fatal (lexical order differs), GROUPBY g MAX(sev) pandas-vs-DuckDB
+  on the IDENTICAL file = 100.0% of 2000 groups DISAGREE; global MAX pandas=fatal
+  vs DuckDB=warn; global MIN pandas=trace vs DuckDB=debug; both readers emit ZERO
+  warnings. Even pyarrow itself has no min_max kernel for an ordered dictionary (ArrowNotImplementedError)
+  -> the ordering is honored by LITERALLY ONLY the pandas layer. NULL EXIT: same logical
+  data written as a PLAIN STRING column -> both engines lexical -> 100% AGREEMENT
+  (isolates the ordered=1 dictionary flag as the sole cause); a domain scale that
+  is already alphabetical -> lexical==domain -> no flip (screen selects scales where
+  the two orders differ: severity/sizes/low-med-high).'
+why_it_matters: "Cross-area CROSS-RUNTIME production-seam (data-systems across LANGUAGE/RUNTIME\
+  \ boundary), textbook FIRST-GREEN (CLAIM-0059) structure + structural TWIN of scout-S\
+  \ CLAIM-0068 but DISTINCT (value-of-aggregate divergence = WHICH category is max,\
+  \ not null-counting -> no overlap with PROJ-0038). scout-T GREEN-rated, all 4 gates\
+  \ cleared with real measured divergence. \u2605 INCREMENTAL-COMPOSITION: neither\
+  \ endpoint predicts from its own side -- pandas docs (to_parquet, CategoricalDtype)\
+  \ say ordered=True imposes an ordering but NOTHING about other engines dropping\
+  \ it; DuckDB Parquet/ENUM docs (\"ENUM behaves exactly like VARCHAR\") describe\
+  \ DuckDBs OWN lexicographic comparison, never mention an incoming Arrow dictionary\
+  \ carries ordered=1 it ignores; NOWHERE does either side document the cross-runtime\
+  \ CONSEQUENCE that MAX(severity) returns a different category by reader. \u2605\
+  \ FRAMEWORK-ISSUE-TRACKER on BOTH (the CLAIM-0066 gate): searched apache/arrow +\
+  \ pandas-dev + duckdb + pola-rs issues/PRs -- the closest (polars PR#23016, Polars\
+  \ intentionally lexical) documents POLARS OWN internal choice, does NOT report reading\
+  \ a pandas ordered=1 parquet + silently flipping aggregates; NO issue/PR on any\
+  \ of the 4 repos reports THIS pandas-ordered-categorical -> foreign-runtime aggregate-flip\
+  \ seam. \u2605 VERIFY-THE-COMPOSITION: RAN write-pandas/read-DuckDB+Polars on real\
+  \ runtimes, divergence OBSERVED (100% group disagreement, global MAX fatal vs warn),\
+  \ control verified (plain-string -> 100% agreement). NOT-FOLKLORE: the INVERSE of\
+  \ common belief -- practitioners assume ordered=True travels with the file (the\
+  \ bit DOES travel, but only pandas reads it); no SO/blog/tracker documents the silent\
+  \ aggregate flip. Public-measurable (any domain-ordered category where lexical!=domain:\
+  \ log-severity/education/t-shirt-sizes), version-stable (ordered bit in Arrow/Parquet\
+  \ spec; DuckDB lexical is core SQL stable across 1.x; Polars committed to lexical\
+  \ going forward). HONEST RISK: lead with DuckDB (Polars PR#23016 makes Polars partly-documented;\
+  \ DuckDB has NO such design note + no warning = cleanest endpoint); skeptic \"ordering\
+  \ undefined for categoricals in SQL\" -> rebuttal = the writer EXPLICITLY serialized\
+  \ non-default ordered=1 to assert a domain order, pandas honors it, the reader silently\
+  \ OVERRIDES it with zero warning = a genuine cross-runtime correctness divergence\
+  \ (file metadata says one thing, reader does another). Scout-T self-rating GREEN."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r8-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0082 result, then ros exp complete --exp EXP-0082 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0082
+created_at: '2026-06-04T23:42:25Z'
+last_updated: '2026-06-04T23:43:15Z'
