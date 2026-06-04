@@ -1351,3 +1351,727 @@ hook: PostToolUse
 /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.HAFhDttV06/st/sentence_transformers/base/model.py:1309:        with open(config_sentence_transformers_json_path, encoding="utf8") as fIn:
 
 hook: PostToolUse Completed
+ succeeded in 6599ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.AMMcEsOnY8/lmcache/lmcache/cli/commands/query/__init__.py:138:            prompt_name, prompt_value = engine_stats["prompt_tokens"]
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.AMMcEsOnY8/lmcache/lmcache/cli/commands/query/__init__.py:139:            metrics.add("prompt_tokens", prompt_name, int(prompt_value))
+
+hook: PostToolUse
+ succeeded in 7571ms:
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'for repo in vllm-project/vllm sgl-project/sglang NVIDIA/TensorRT-LLM; do tmp=$(mktemp -d); git clone --depth 1 https://github.com/$repo.git "$tmp/repo" >/dev/null 2>&1; echo "== $repo =="; grep -R "SentenceTransformer'"\\|encode_query\\|config_sentence_transformers\\|prompt_name\" -n \""'$tmp/repo" 2>/dev/null | sed -n '"'1,60p'; done" in /Users/dengcchi
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/milvus-io/milvus-model.git "$tmp/m" >/dev/null 2>&1; sed -n '"'1,90p' \""'$tmp/m/src/pymilvus/model/dense/sentence_transformer.py"' in /Users/dengcchi
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/chroma-core/chroma.git "$tmp/chroma" >/dev/null 2>&1; grep -R "class SentenceTransformerEmbeddingFunction'"\\|def __call__\\|embed_query\\|encode(\" -n \""'$tmp/chroma/chromadb" 2>/dev/null | grep -E "sentence_transformer_embedding_function|embedding_functions" | sed -n '"'1,140p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/UKPLab/sentence-transformers.git "$tmp/st" >/dev/null 2>&1; sed -n '"'218,330p' \""'$tmp/st/sentence_transformers/sentence_transformer/model.py"; sed -n '"'270,305p' \""'$tmp/st/sentence_transformers/base/model.py"; sed -n '"'1057,1075p' \""'$tmp/st/sentence_transformers/base/model.py"; sed -n '"'1231,1246p' \""'$tmp/st/sentence_transformers/base/model.py"' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 1044ms:
+from typing import List
+
+import numpy as np
+
+from pymilvus.model.base import BaseEmbeddingFunction
+from pymilvus.model.utils import import_sentence_transformers
+
+
+class SentenceTransformerEmbeddingFunction(BaseEmbeddingFunction):
+    def __init__(
+        self,
+        model_name: str = "all-MiniLM-L6-v2",
+        batch_size: int = 32,
+        query_instruction: str = "",
+        doc_instruction: str = "",
+        device: str = "cpu",
+        normalize_embeddings: bool = True,
+        **kwargs,
+    ):
+        import_sentence_transformers()
+        from sentence_transformers import SentenceTransformer
+        self.model_name = model_name
+        self.query_instruction = query_instruction
+        self.doc_instruction = doc_instruction
+        self.batch_size = batch_size
+        self.normalize_embeddings = normalize_embeddings
+
+        _model_config = dict({"model_name_or_path": model_name, "device": device}, **kwargs)
+        self.model = SentenceTransformer(**_model_config)
+
+    def __call__(self, texts: List[str]) -> List[np.array]:
+        return self._encode(texts)
+
+    def _encode(self, texts: List[str]) -> List[np.array]:
+        embs = self.model.encode(
+            texts, 
+            batch_size=self.batch_size,
+            show_progress_bar=False,
+            convert_to_numpy=True,
+            normalize_embeddings=self.normalize_embeddings
+        )
+        return list(embs)
+
+    @property
+    def dim(self):
+        return self.model.get_sentence_embedding_dimension()
+
+    def encode_queries(self, queries: List[str]) -> List[np.array]:
+        instructed_queries = [self.query_instruction + query for query in queries]
+        return self._encode(instructed_queries)
+
+    def encode_documents(self, documents: List[str]) -> List[np.array]:
+        instructed_documents = [self.doc_instruction + document for document in documents]
+        return self._encode(instructed_documents)
+
+    def _encode_query(self, query: str) -> np.array:
+        instructed_query = self.query_instruction + query
+        embs = self.model.encode(
+            sentences=[instructed_query],
+            batch_size=1,
+            show_progress_bar=False,
+            convert_to_numpy=True,
+            normalize_embeddings=self.normalize_embeddings,
+        )
+        return embs[0]
+
+    def _encode_document(self, document: str) -> np.array:
+        instructed_document = self.doc_instruction + document
+        embs = self.model.encode(
+            sentences=[instructed_document],
+            batch_size=1,
+            show_progress_bar=False,
+            convert_to_numpy=True,
+            normalize_embeddings=self.normalize_embeddings,
+        )
+        return embs[0]
+
+hook: PostToolUse Completed
+ succeeded in 5219ms:
+    def encode_query(
+        self,
+        inputs: list[SingleInput] | SingleInput,
+        prompt_name: str | None = None,
+        prompt: str | None = None,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        output_value: Literal["sentence_embedding", "token_embeddings"] | None = "sentence_embedding",
+        precision: Literal["float32", "int8", "uint8", "binary", "ubinary"] = "float32",
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        device: str | list[str | torch.device] | None = None,
+        normalize_embeddings: bool = False,
+        truncate_dim: int | None = None,
+        pool: dict[Literal["input", "output", "processes"], Any] | None = None,
+        chunk_size: int | None = None,
+        **kwargs,
+    ) -> list[Tensor] | np.ndarray | Tensor | dict[str, Tensor] | list[dict[str, Tensor]]:
+        """
+        Computes embeddings specifically optimized for query representation.
+
+        This method is a specialized version of :meth:`encode` that differs in exactly two ways:
+
+        1. If no ``prompt_name`` or ``prompt`` is provided, it uses a predefined "query" prompt,
+           if available in the model's ``prompts`` dictionary.
+        2. It sets the ``task`` to "query". If the model has a :class:`~sentence_transformers.base.modules.Router`
+           module, it will use the "query" task type to route the input through the appropriate submodules.
+
+        .. tip::
+
+            Adjusting ``batch_size`` can significantly improve processing speed. The optimal value depends on your
+            hardware, model size, precision, and input length. Benchmark a few batch sizes on a small subset of your
+            data to find the best value.
+
+        All other parameters are identical to :meth:`encode`. See :meth:`encode` for the full parameter documentation.
+        """
+        if prompt_name is None and prompt is None and "query" in self.prompts:
+            prompt_name = "query"
+
+        return self.encode(
+            inputs=inputs,
+            prompt_name=prompt_name,
+            prompt=prompt,
+            batch_size=batch_size,
+            show_progress_bar=show_progress_bar,
+            output_value=output_value,
+            precision=precision,
+            convert_to_numpy=convert_to_numpy,
+            convert_to_tensor=convert_to_tensor,
+            device=device,
+            normalize_embeddings=normalize_embeddings,
+            truncate_dim=truncate_dim,
+            pool=pool,
+            chunk_size=chunk_size,
+            task="query",
+            **kwargs,
+        )
+
+    @deprecated_kwargs(sentences="inputs")
+    def encode_document(
+        self,
+        inputs: list[SingleInput] | SingleInput,
+        prompt_name: str | None = None,
+        prompt: str | None = None,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        output_value: Literal["sentence_embedding", "token_embeddings"] | None = "sentence_embedding",
+        precision: Literal["float32", "int8", "uint8", "binary", "ubinary"] = "float32",
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        device: str | list[str | torch.device] | None = None,
+        normalize_embeddings: bool = False,
+        truncate_dim: int | None = None,
+        pool: dict[Literal["input", "output", "processes"], Any] | None = None,
+        chunk_size: int | None = None,
+        **kwargs,
+    ) -> list[Tensor] | np.ndarray | Tensor | dict[str, Tensor] | list[dict[str, Tensor]]:
+        """
+        Computes embeddings specifically optimized for document/passage representation.
+
+        This method is a specialized version of :meth:`encode` that differs in exactly two ways:
+
+        1. If no ``prompt_name`` or ``prompt`` is provided, it uses the first available prompt from the following
+           candidates: ``"document"``, ``"passage"``, ``"corpus"`` (checked in that order).
+        2. It sets the ``task`` to "document". If the model has a :class:`~sentence_transformers.base.modules.Router`
+           module, it will use the "document" task type to route the input through the appropriate submodules.
+
+        .. tip::
+
+            Adjusting ``batch_size`` can significantly improve processing speed. The optimal value depends on your
+            hardware, model size, precision, and input length. Benchmark a few batch sizes on a small subset of your
+            data to find the best value.
+
+        All other parameters are identical to :meth:`encode`. See :meth:`encode` for the full parameter documentation.
+        """
+        if prompt_name is None and prompt is None:
+            for candidate_prompt_name in ["document", "passage", "corpus"]:
+                if candidate_prompt_name in self.prompts:
+                    prompt_name = candidate_prompt_name
+                    break
+
+        return self.encode(
+            inputs=inputs,
+            prompt_name=prompt_name,
+            prompt=prompt,
+            batch_size=batch_size,
+            show_progress_bar=show_progress_bar,
+            output_value=output_value,
+            precision=precision,
+            convert_to_numpy=convert_to_numpy,
+            convert_to_tensor=convert_to_tensor,
+            device=device,
+            normalize_embeddings=normalize_embeddings,
+        Args:
+            prompt: An explicit prompt string, or None.
+            prompt_name: A key into ``self.prompts``, or None.
+
+        Returns:
+            The resolved prompt string, or None if no prompt applies.
+        """
+        if prompt is None:
+            if prompt_name is not None:
+                try:
+                    prompt = self.prompts[prompt_name]
+                except KeyError:
+                    raise ValueError(
+                        f"Prompt name '{prompt_name}' not found in the configured prompts dictionary with keys {list(self.prompts.keys())!r}."
+                    )
+            elif self.default_prompt_name is not None:
+                prompt = self.prompts.get(self.default_prompt_name, None)
+        elif prompt_name is not None:
+            logger.warning(
+                "Provide either a `prompt`, a `prompt_name`, or neither, but not both. "
+                "Ignoring the `prompt_name` in favor of `prompt`."
+            )
+        return prompt
+
+    def get_backend(self) -> Literal["torch", "onnx", "openvino"]:
+        """Return the backend used for inference, which can be one of "torch", "onnx", or "openvino".
+
+        Returns:
+            str: The backend used for inference.
+        """
+        return self.backend
+
+    @property
+    def modalities(self) -> list[Modality]:
+        """Return the list of modalities supported by this model, e.g. ``["text"]`` or ``["text", "image", "message"]``."""
+        return getattr(self[0], "modalities", ["text"])
+        # Check if the config_sentence_transformers.json file exists (exists since v2 of the framework)
+        config_sentence_transformers_json_path = load_file_path(
+            model_name_or_path,
+            "config_sentence_transformers.json",
+            token=token,
+            cache_folder=cache_folder,
+            revision=revision,
+            local_files_only=local_files_only,
+        )
+        if config_sentence_transformers_json_path is not None:
+            with open(config_sentence_transformers_json_path, encoding="utf8") as fIn:
+                model_config = json.load(fIn)
+
+            if (
+                "__version__" in model_config
+                and "sentence_transformers" in model_config["__version__"]
+                and version.parse(model_config["__version__"]["sentence_transformers"]) > version.parse(__version__)
+            ):
+                logger.warning(
+        User-provided prompts and default_prompt_name take precedence over saved config values.
+        Saved prompts are only used for keys not already present in ``self.prompts``, or where the
+        current value is ``None`` (i.e. a default placeholder, not yet filled by the user or config).
+        Empty string ``""`` is treated as an intentional user-provided value and will not be overwritten.
+        """
+        # Only update prompts that aren't already set by the user or defaults
+        for prompt_name, prompt_text in model_config.get("prompts", {}).items():
+            if prompt_name not in self.prompts or self.prompts[prompt_name] is None:
+                self.prompts[prompt_name] = prompt_text
+        if self.default_prompt_name is None:
+            self.default_prompt_name = model_config.get("default_prompt_name", None)
+
+    def _load_converted_modules(
+        self,
+        model_name_or_path: str,
+        token: bool | str | None,
+
+ succeeded in 10245ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/cloudflare_workers_ai_embedding_function.py:80:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/text2vec_embedding_function.py:30:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/text2vec_embedding_function.py:44:        embeddings = self._model.encode(list(input), convert_to_numpy=True)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/morph_embedding_function.py:63:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_langchain_embedding_function.py:74:    def embed_query(self, query: str) -> List[float]:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_langchain_embedding_function.py:84:        return cast(List[float], self.embedding_function.embed_query(query))
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_langchain_embedding_function.py:103:    def __call__(self, input: Union[Documents, Images]) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/nomic_embedding_function.py:56:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/nomic_embedding_function.py:66:    def embed_query(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/onnx_mini_lm_l6_v2.py:161:            encoded = [self.tokenizer.encode(d) for d in batch]
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/onnx_mini_lm_l6_v2.py:258:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/jina_embedding_function.py:132:                        base64_string = base64.b64encode(img_bytes).decode("utf-8")
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/jina_embedding_function.py:184:    def __call__(self, input: Embeddable) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/jina_embedding_function.py:206:    def embed_query(self, input: Embeddable) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/mistral_embedding_function.py:34:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/huggingface_embedding_function.py:60:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/huggingface_embedding_function.py:183:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_cloud_splade_embedding_function.py:79:    def __call__(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/open_clip_embedding_function.py:109:    def __call__(self, input: Embeddable) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/perplexity_embedding_function.py:67:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/fastembed_sparse_embedding_function.py:68:    def __call__(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/fastembed_sparse_embedding_function.py:106:    def embed_query(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/google_embedding_function.py:79:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/google_embedding_function.py:272:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/google_embedding_function.py:420:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/google_embedding_function.py:551:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/openai_embedding_function.py:111:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/roboflow_embedding_function.py:70:    def __call__(self, input: Embeddable) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/roboflow_embedding_function.py:88:                base64_image = base64.b64encode(buffer.getvalue()).decode("utf-8")
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py:7:class SentenceTransformerEmbeddingFunction(EmbeddingFunction[Documents]):
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py:49:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py:58:        embeddings = self._model.encode(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/ollama_embedding_function.py:50:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/instructor_embedding_function.py:44:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/instructor_embedding_function.py:59:            embeddings = self._model.encode(input, convert_to_numpy=True)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/instructor_embedding_function.py:62:            embeddings = self._model.encode(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/together_ai_embedding_function.py:72:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/bm25_embedding_function.py:94:    def __call__(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/bm25_embedding_function.py:132:    def embed_query(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/cohere_embedding_function.py:61:    def __call__(self, input: Embeddable) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/cohere_embedding_function.py:99:                    base64_string = base64.b64encode(img_bytes).decode("utf-8")
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_bm25_embedding_function.py:81:    def _encode(self, text: str) -> SparseVector:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_bm25_embedding_function.py:116:    def __call__(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_bm25_embedding_function.py:123:            sparse_vectors.append(self._encode(document))
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_bm25_embedding_function.py:127:    def embed_query(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/voyageai_embedding_function.py:66:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/huggingface_sparse_embedding_function.py:61:    def __call__(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/huggingface_sparse_embedding_function.py:106:    def embed_query(self, input: Documents) -> SparseVectors:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/amazon_bedrock_embedding_function.py:54:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_cloud_qwen_embedding_function.py:103:    def __call__(self, input: Documents) -> Embeddings:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.i893lk7c3V/chroma/chromadb/utils/embedding_functions/chroma_cloud_qwen_embedding_function.py:131:    def embed_query(self, input: Documents) -> Embeddings:
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/vllm-project/vllm.git "$tmp/v" >/dev/null 2>&1; sed -n '"'250,310p' \""'$tmp/v/vllm/entrypoints/pooling/embed/io_processor.py"; sed -n '"'440,485p' \""'$tmp/v/docs/models/pooling_models/embed.md"' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 13939ms:
+        ctx.final_res_batch = final_res_batch
+
+        return None
+
+    #################################################################
+    # Cohere Request Preprocessing & Postprocessing
+    #################################################################
+
+    @staticmethod
+    def _load_task_instructions(hf_config: Any) -> dict[str, str] | None:
+        """Extract ``task_instructions`` from the HF model config."""
+        ti = getattr(hf_config, "task_instructions", None)
+        if not isinstance(ti, dict) or not ti:
+            return None
+        return {k: v for k, v in ti.items() if isinstance(v, str)}
+
+    @staticmethod
+    def _load_st_prompts(
+        model: str | Any,
+        revision: str | None,
+    ) -> dict[str, str] | None:
+        """Load ``task_instructions`` from ``config_sentence_transformers.json``."""
+        from vllm.transformers_utils.repo_utils import get_hf_file_to_dict
+
+        try:
+            cfg = get_hf_file_to_dict(
+                "config_sentence_transformers.json", str(model), revision
+            )
+        except (ValueError, OSError):
+            return None
+
+        if cfg is None:
+            return None
+        prompts = cfg.get("prompts")
+        if not isinstance(prompts, dict) or not prompts:
+            return None
+        return {k: v for k, v in prompts.items() if isinstance(v, str)}
+
+    @staticmethod
+    def _mixed_input_to_messages(
+        inp: CohereEmbedInput,
+        *,
+        task_prefix: str | None = None,
+    ) -> list[ChatCompletionMessageParam]:
+        """Build chat messages from a mixed text+image input.
+
+        When *task_prefix* is given, it is used as the system prompt.
+        """
+        messages: list[ChatCompletionMessageParam] = []
+        if task_prefix is not None:
+            messages.append(
+                CustomChatCompletionMessageParam(
+                    role="system",
+                    content=[
+                        ChatCompletionContentPartTextParam(
+                            type="text", text=task_prefix
+                        )
+                    ],
+                )
+            )
+
+      }
+    }
+    ```
+
+#### Truncation
+
+The `truncate` parameter controls how inputs exceeding the model's maximum sequence length are handled:
+
+| Value | Behavior |
+| ----- | --------- |
+| `END` (default) | Keep the first tokens, drop the end |
+| `START` | Keep the last tokens, drop the beginning |
+| `NONE` | Return an error if the input is too long |
+
+#### Input type and prompt prefixes
+
+The `input_type` field selects a prompt prefix to prepend to each text input. The available values
+depend on the model:
+
+- **Models with `task_instructions` in `config.json`**: The keys from the `task_instructions` dict are
+  the valid `input_type` values and the corresponding value is prepended to each text.
+- **Models with `config_sentence_transformers.json` prompts**: The keys from the `prompts` dict are
+  the valid `input_type` values. For example, `Snowflake/snowflake-arctic-embed-xs` defines `"query"`,
+  so setting `input_type: "query"` prepends `"Represent this sentence for searching relevant passages: "`.
+- **Other models**: `input_type` is not accepted and will raise a validation error if passed.
+
+## More examples
+
+More examples can be found here: [examples/pooling/embed](../../../examples/pooling/embed)
+
+## Supported Features
+
+### Enable/disable normalize
+
+You can enable or disable normalize via `use_activation`.
+
+### Matryoshka Embeddings
+
+[Matryoshka Embeddings](https://sbert.net/examples/sentence_transformer/training/matryoshka/README.html#matryoshka-embeddings) or [Matryoshka Representation Learning (MRL)](https://arxiv.org/abs/2205.13147) is a technique used in training embedding models. It allows users to trade off between performance and cost.
+
+!!! warning
+    Not all embedding models are trained using Matryoshka Representation Learning. To avoid misuse of the `dimensions` parameter, vLLM returns an error for requests that attempt to change the output dimension of models that do not support Matryoshka Embeddings.
+
+    For example, setting `dimensions` parameter while using the `BAAI/bge-m3` model will result in the following error.
+
+    ```json
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/vllm-project/vllm.git "$tmp/v" >/dev/null 2>&1; grep -R "_load_st_prompts'"\\|input_type\\|task_prefix\" -n \""'$tmp/v/vllm/entrypoints/pooling/embed" | sed -n '"'1,220p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 12523ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/protocol.py:113:    input_type: str | None = None
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:59:        ) or self._load_st_prompts(self.model_config.model, self.model_config.revision)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:62:                "Loaded prompt prefixes for input_type: %s",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:267:    def _load_st_prompts(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:292:        task_prefix: str | None = None,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:296:        When *task_prefix* is given, it is used as the system prompt.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:299:        if task_prefix is not None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:305:                            type="text", text=task_prefix
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:388:        input_type = request.input_type
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:389:        self._validate_input_type(input_type)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:404:            task_prefix = self._get_task_instruction_prefix(input_type)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:406:            if task_prefix is None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:420:                    task_prefix=task_prefix,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:434:                    self._apply_task_instruction(texts, input_type),
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:440:        task_prefix = self._get_task_instruction_prefix(input_type)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:442:            self._mixed_input_to_messages(inp, task_prefix=task_prefix) for inp in input
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:519:    def _validate_input_type(self, input_type: str | None) -> None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:520:        """Raise if *input_type* is not supported by this model."""
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:521:        if input_type is None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:525:                f"Unsupported input_type {input_type!r}. "
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:526:                "This model does not define any input_type task instructions."
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:528:        if input_type not in self.task_instructions:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:531:                f"Unsupported input_type {input_type!r}. Supported values: {supported}"
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:537:        input_type: str | None,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:539:        """Prepend the task-instruction prefix for *input_type*.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:543:        prefix = self._get_task_instruction_prefix(input_type)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:548:    def _get_task_instruction_prefix(self, input_type: str | None) -> str | None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:549:        """Return the task-instruction prefix for *input_type*, or ``None``."""
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:550:        if not self.task_instructions or input_type is None:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.8ibmVtqDmY/v/vllm/entrypoints/pooling/embed/io_processor.py:552:        return self.task_instructions.get(input_type) or None
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/run-llama/llama_index.git "$tmp/li" >/dev/null 2>&1; sed -n '"'1,140p' \""'$tmp/li/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/utils.py"; sed -n '"'130,215p' \""'$tmp/li/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py"' in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 44780ms:
+from typing import Optional
+
+import requests
+
+DEFAULT_HUGGINGFACE_EMBEDDING_MODEL = "BAAI/bge-small-en"
+DEFAULT_INSTRUCT_MODEL = "hkunlp/instructor-base"
+
+# Originally pulled from:
+# https://github.com/langchain-ai/langchain/blob/v0.0.257/libs/langchain/langchain/embeddings/huggingface.py#L10
+DEFAULT_EMBED_INSTRUCTION = "Represent the document for retrieval: "
+DEFAULT_QUERY_INSTRUCTION = (
+    "Represent the question for retrieving supporting documents: "
+)
+DEFAULT_QUERY_BGE_INSTRUCTION_EN = (
+    "Represent this question for searching relevant passages: "
+)
+DEFAULT_QUERY_BGE_INSTRUCTION_ZH = "为这个句子生成表示以用于检索相关文章："
+
+BGE_MODELS = (
+    "BAAI/bge-small-en",
+    "BAAI/bge-small-en-v1.5",
+    "BAAI/bge-base-en",
+    "BAAI/bge-base-en-v1.5",
+    "BAAI/bge-large-en",
+    "BAAI/bge-large-en-v1.5",
+    "BAAI/bge-small-zh",
+    "BAAI/bge-small-zh-v1.5",
+    "BAAI/bge-base-zh",
+    "BAAI/bge-base-zh-v1.5",
+    "BAAI/bge-large-zh",
+    "BAAI/bge-large-zh-v1.5",
+)
+INSTRUCTOR_MODELS = (
+    "hku-nlp/instructor-base",
+    "hku-nlp/instructor-large",
+    "hku-nlp/instructor-xl",
+    "hkunlp/instructor-base",
+    "hkunlp/instructor-large",
+    "hkunlp/instructor-xl",
+)
+
+
+def get_query_instruct_for_model_name(model_name: Optional[str]) -> str:
+    """Get query text instruction for a given model name."""
+    if model_name in INSTRUCTOR_MODELS:
+        return DEFAULT_QUERY_INSTRUCTION
+    if model_name in BGE_MODELS:
+        if "zh" in model_name:
+            return DEFAULT_QUERY_BGE_INSTRUCTION_ZH
+        return DEFAULT_QUERY_BGE_INSTRUCTION_EN
+    return ""
+
+
+def format_query(
+    query: str, model_name: Optional[str], instruction: Optional[str] = None
+) -> str:
+    if instruction is None:
+        instruction = get_query_instruct_for_model_name(model_name)
+    # NOTE: strip() enables backdoor for defeating instruction prepend by
+    # passing empty string
+    return f"{instruction} {query}".strip()
+
+
+def get_text_instruct_for_model_name(model_name: Optional[str]) -> str:
+    """Get text instruction for a given model name."""
+    return DEFAULT_EMBED_INSTRUCTION if model_name in INSTRUCTOR_MODELS else ""
+
+
+def format_text(
+    text: str, model_name: Optional[str], instruction: Optional[str] = None
+) -> str:
+    if instruction is None:
+        instruction = get_text_instruct_for_model_name(model_name)
+    # NOTE: strip() enables backdoor for defeating instruction prepend by
+    # passing empty string
+    return f"{instruction} {text}".strip()
+
+
+def get_pooling_mode(model_name: Optional[str]) -> str:
+    pooling_config_url = (
+        f"https://huggingface.co/{model_name}/raw/main/1_Pooling/config.json"
+    )
+
+    try:
+        response = requests.get(pooling_config_url)
+        config_data = response.json()
+
+        cls_token = config_data.get("pooling_mode_cls_token", False)
+        mean_tokens = config_data.get("pooling_mode_mean_tokens", False)
+
+        if mean_tokens:
+            return "mean"
+        elif cls_token:
+            return "cls"
+    except requests.exceptions.RequestException:
+        print(
+            "Warning: Pooling config file not found; pooling mode is defaulted to 'cls'."
+        )
+    return "cls"
+        text_instruction: Optional[str] = None,
+        normalize: bool = True,
+        model: Optional[Any] = "deprecated",
+        tokenizer: Optional[Any] = "deprecated",
+        embed_batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
+        cache_folder: Optional[str] = None,
+        trust_remote_code: bool = False,
+        device: Optional[str] = None,
+        callback_manager: Optional[CallbackManager] = None,
+        parallel_process: bool = False,
+        target_devices: Optional[List[str]] = None,
+        show_progress_bar: bool = False,
+        **model_kwargs,
+    ):
+        device = device or infer_torch_device()
+        cache_folder = cache_folder or get_cache_dir()
+
+        for variable, value in [
+            ("model", model),
+            ("tokenizer", tokenizer),
+            ("pooling", pooling),
+            ("tokenizer_name", tokenizer_name),
+        ]:
+            if value != "deprecated":
+                raise ValueError(
+                    f"{variable} is deprecated. Please remove it from the arguments."
+                )
+        if model_name is None:
+            raise ValueError("The `model_name` argument must be provided.")
+
+        model = SentenceTransformer(
+            model_name,
+            device=device,
+            cache_folder=cache_folder,
+            trust_remote_code=trust_remote_code,
+            prompts={
+                "query": query_instruction
+                or get_query_instruct_for_model_name(model_name),
+                "text": text_instruction
+                or get_text_instruct_for_model_name(model_name),
+            },
+            **model_kwargs,
+        )
+        if max_length:
+            model.max_seq_length = max_length
+        else:
+            max_length = model.max_seq_length
+
+        super().__init__(
+            embed_batch_size=embed_batch_size,
+            callback_manager=callback_manager,
+            model_name=model_name,
+            max_length=max_length,
+            normalize=normalize,
+            query_instruction=query_instruction,
+            text_instruction=text_instruction,
+            show_progress_bar=show_progress_bar,
+        )
+        self._device = device
+        self._model = model
+        self._parallel_process = parallel_process
+        self._target_devices = target_devices
+
+    @classmethod
+    def class_name(cls) -> str:
+        return "HuggingFaceEmbedding"
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        reraise=True,
+    )
+    def _embed_with_retry(
+        self,
+        inputs: List[Union[str, BytesIO]],
+        prompt_name: Optional[str] = None,
+    ) -> List[List[float]]:
+        """
+        Generates embeddings with retry mechanism.
+
+        Args:
+            inputs: List of texts or images to embed
+            prompt_name: Optional prompt type
+
+        Returns:
+            List of embedding vectors
+
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 137693ms:
+== vllm-project/vllm ==
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/conftest.py:454:            from sentence_transformers import SentenceTransformer
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/conftest.py:456:            self.model = SentenceTransformer(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_embed_utils.py:221:    # SentenceTransformers mteb score to a constant
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_embed_utils.py:253:    print("SentenceTransformers:", st_dtype, st_main_score)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_embed_utils.py:257:    # than SentenceTransformers, so we only perform one-sided testing.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_score_utils.py:288:    # SentenceTransformers mteb score to a constant
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_score_utils.py:306:    print("SentenceTransformers:", st_dtype, st_main_score)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/models/language/pooling_mteb_test/mteb_score_utils.py:310:    # than SentenceTransformers, so we only perform one-sided testing.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/embed/test_correctness_mteb.py:41:    print("SentenceTransformer main score: ", st_main_score)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/embed/test_correctness_mteb.py:45:    # than SentenceTransformers, so we only perform one-sided testing.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/scoring/test_cross_encoder_correctness_mteb.py:42:    print("SentenceTransformer main score: ", st_main_score)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/scoring/test_cross_encoder_correctness_mteb.py:46:    # than SentenceTransformers, so we only perform one-sided testing.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/scoring/test_cross_encoder_correctness_mteb.py:56:    print("SentenceTransformer main score: ", st_main_score)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/tests/entrypoints/pooling/scoring/test_cross_encoder_correctness_mteb.py:60:    # than SentenceTransformers, so we only perform one-sided testing.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/vllm/entrypoints/pooling/embed/io_processor.py:271:        """Load ``task_instructions`` from ``config_sentence_transformers.json``."""
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/vllm/entrypoints/pooling/embed/io_processor.py:276:                "config_sentence_transformers.json", str(model), revision
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.3Hg2DN0qNX/repo/docs/models/pooling_models/embed.md:461:- **Models with `config_sentence_transformers.json` prompts**: The keys from the `prompts` dict are
+== sgl-project/sglang ==
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.sxqsDJggR1/repo/python/sglang/test/runners.py:105:    from sentence_transformers import SentenceTransformer
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.sxqsDJggR1/repo/python/sglang/test/runners.py:111:        model = SentenceTransformer(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.sxqsDJggR1/repo/python/sglang/test/runners.py:141:        model = SentenceTransformer(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.sxqsDJggR1/repo/sgl-model-gateway/e2e_test/embeddings/test_correctness.py:108:    from sentence_transformers import SentenceTransformer
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.sxqsDJggR1/repo/sgl-model-gateway/e2e_test/embeddings/test_correctness.py:114:    model = SentenceTransformer(model_path, trust_remote_code=True, device="cpu")
+== NVIDIA/TensorRT-LLM ==
+
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SentenceTransformers", url: "https://github.com/UKPLab/sentence-transformers/blob/main/sentence_transformers/sentence_transformer/model.py", overlap: "Upstream mechanism exists: encode_query/encode_document select artifact prompt names when available; this supports the packet's artifact-contract premise, not the DB-boundary discard claim."},
+  {system: "vLLM embeddings endpoint", url: "https://github.com/vllm-project/vllm/blob/main/vllm/entrypoints/pooling/embed/io_processor.py", overlap: "Partial shipping overlap: loads config_sentence_transformers.json prompts and exposes them via input_type, but input_type=None does not auto-apply query/document defaults; this weakens any absolute 'no serving system does this' framing, but does not close vector-DB wrapper seam."},
+  {system: "Chroma SentenceTransformerEmbeddingFunction", url: "https://github.com/chroma-core/chroma/blob/main/chromadb/utils/embedding_functions/sentence_transformer_embedding_function.py", overlap: "Open seam: calls SentenceTransformer.encode(...) in __call__ with no prompt_name/prompt and no encode_query path."},
+  {system: "milvus-model/pymilvus SentenceTransformerEmbeddingFunction", url: "https://github.com/milvus-io/milvus-model/blob/main/src/pymilvus/model/dense/sentence_transformer.py", overlap: "Open seam: query_instruction/doc_instruction default to empty strings and are manually prepended; artifact prompts are not read."},
+  {system: "LangChain HuggingFaceEmbeddings", url: "https://github.com/langchain-ai/langchain/blob/master/libs/partners/huggingface/langchain_huggingface/embeddings/huggingface.py", overlap: "Open by default: query_encode_kwargs/encode_kwargs exist but default empty; wrapper calls encode with user-supplied kwargs only."},
+  {system: "LlamaIndex HuggingFaceEmbedding", url: "https://github.com/run-llama/llama_index/blob/main/llama-index-integrations/embeddings/llama-index-embeddings-huggingface/llama_index/embeddings/huggingface/base.py", overlap: "Open for Snowflake-style shipped query prompts: wrapper passes prompts={'query': '', 'text': ''} for unknown models, and ST treats empty string as intentional, so saved artifact prompts are not used."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: Evidence holds for one real BEIR/SciFact workload and one asymmetric-prompt model with a strong +9.37pp Recall@10 paired-bootstrap CI [+6.3,+13.0]pp, plus an empty-prompt control. Gaps remain: no actual Chroma/pymilvus end-to-end run, only one dataset, one primary prompt-bearing model, exact CPU cosine NN rather than ANN/vector-DB production indexing, no latency/cost/concurrency measurements.
+RATIONALE: PROMPT_VERSION=v001. This is not just "prompts help retrieval": the packet shows the prompt is shipped inside config_sentence_transformers.json and SentenceTransformers has encode_query/encode_document paths that consume prompt names, while several vector-DB/RAG wrappers bypass that contract through default encode(...) calls or empty manual instruction fields. The effect evidence is clean enough for support at L0, but the systems contribution is a boundary-contract failure plus wrapper mechanism, not a broader serving design. vLLM already ships partial artifact-prompt loading via input_type, so the strongest "production systems never implement this" version is false outside vector-DB wrappers; within the cited vector-DB/RAG wrappers, the seam remains open.
+tokens used
+112,175

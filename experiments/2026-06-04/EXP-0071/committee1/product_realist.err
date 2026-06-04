@@ -12,3 +12,122 @@ Run `metacode migrate-from-claude` to copy them to ~/.agents/skills/, or `agent-
 [0m⚙ [0mmeta_core_search_files {"pattern":"_committee_common_v001.md"}
 [0m✱ [0mGlob "**/_committee_common_v001.md"[90m 0 matches[0m
 [0m→ [0mRead .
+[0m✱ [0mGlob "**/_committee_common_v001.md"[90m in . · 0 matches[0m
+[0m
+[0m$ [0mpwd
+/Users/dengcchi
+[0m
+[0m$ [0mfind /Users/dengcchi -name "_committee_common_v001.md" 2>/dev/null | head -20
+[0m
+[0m$ [0mls -la | head -50
+total 2824424
+drwxr-x---+  94 dengcchi  staff       3008 Jun  4 10:19 .
+drwxr-xr-x    5 root      admin        160 Jun  3 15:07 ..
+-r--------    1 dengcchi  staff          7 Feb  9 15:55 .CFUserTextEncoding
+-rw-r--r--@   1 dengcchi  staff      18436 Jun  2 14:33 .DS_Store
+drwx------+  10 dengcchi  staff        320 Apr 30 06:01 .Trash
+drwxr-x---    4 dengcchi  staff        128 Mar  3 11:08 .android
+-rw-------    1 dengcchi  staff        344 Mar 13 13:28 .arcrc
+drwxr-xr-x    3 dengcchi  staff         96 Feb 10 09:23 .aspnet
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:05 .buckconfig.d
+drwxr-xr-x    3 dengcchi  staff         96 May 28 22:24 .bun
+drwxr-xr-x    9 dengcchi  staff        288 Jun  3 15:16 .cache
+drwxr-xr-x    3 dengcchi  staff         96 Feb  9 16:07 .cisco
+drwxr-xr-x   26 dengcchi  staff        832 Jun  4 08:05 .claude
+drwxr-xr-x   16 dengcchi  staff        512 May 26 12:28 .claude-templates
+-rw-r--r--    1 dengcchi  staff       6189 Jun  4 10:19 .claude.json
+drwxr-xr-x   26 dengcchi  staff        832 Jun  4 10:17 .codex
+drwxr-xr-x    7 dengcchi  staff        224 Jun  3 15:15 .config
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 10:07 .cursor
+drwx------   10 dengcchi  staff        320 Jun  3 15:09 .fb-sks-agent
+drwx------    6 dengcchi  staff        192 Jun  3 15:09 .fb-sks-agent-lowbox
+drwxr-xr-x   12 dengcchi  staff        384 Jun  4 10:17 .gemini
+-rw-r--r--    1 dengcchi  staff        403 Feb  9 16:00 .gitconfig
+drwxr-xr-x    4 dengcchi  staff        128 Jun  4 07:59 .kube
+-rw-------    1 dengcchi  staff         20 Apr 10 10:58 .lesshst
+drwxr-xr-x    5 dengcchi  staff        160 Mar  3 10:29 .llms
+drwxr-xr-x    5 dengcchi  staff        160 Apr 13 17:37 .local
+drwxr-xr-x   13 dengcchi  staff        416 Jun  4 10:19 .navi
+drwxr-xr-x    6 dengcchi  staff        192 Apr 15 23:32 .npm
+drwxr-xr-x    8 dengcchi  staff        256 Jun  1 00:00 .ondemand
+drwxr-xr-x    3 dengcchi  staff         96 May 28 23:04 .opencode
+drwxr-xr-x    2 dengcchi  staff         64 Feb  9 16:00 .osquery
+-rw-r--r--    1 dengcchi  staff       4096 Feb 10 14:06 .scm.sqlite
+drwxr-xr-x   14 dengcchi  staff        448 Apr 13 17:27 .ssh
+drwxr-xr-x    8 dengcchi  staff        256 Jun  4 07:50 .uie-companion
+-rw-------    1 dengcchi  staff       2086 May 19 13:42 .viminfo
+drwxr-xr-x    3 dengcchi  staff         96 May 22 22:12 .viz-plan
+drwxr-xr-x    3 dengcchi  staff         96 Feb  9 16:48 .vpn
+drwxr-xr-x    3 dengcchi  staff         96 May 27 10:41 .vscode-fb-basecamp-mkt
+drwxr-xr-x    4 dengcchi  staff        128 Feb 10 14:05 .vscode-fb-mkt
+drwxr-xr-x    3 dengcchi  staff         96 Feb 10 14:14 .vscode-fb-stable
+-rw-r--r--    1 dengcchi  staff         47 Feb 19 16:48 .zprofile
+-rw-------    1 dengcchi  staff      40722 Jun  4 07:25 .zsh_history
+drwx------  121 dengcchi  staff       3872 Jun  4 07:56 .zsh_sessions
+-rw-r--r--    1 dengcchi  staff        378 Apr 28 00:23 .zshrc
+drwx------@   6 dengcchi  staff        192 May 22 22:13 Applications
+drwx------+ 142 dengcchi  staff       4544 Jun  2 14:33 Desktop
+drwx------+  16 dengcchi  staff        512 May 27 11:04 Documents
+drwx------@  76 dengcchi  staff       2432 May 29 12:48 Downloads
+drwx------@  85 dengcchi  staff       2720 May 31 03:00 Library
+[0m
+[0m$ [0mfind /Users/dengcchi -maxdepth 3 -name "*committee*" 2>/dev/null | head -30
+/Users/dengcchi/agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+/Users/dengcchi/agent_infra_committee_code_20260529T083946Z.tar.gz
+/Users/dengcchi/.gemini/history/committee
+/Users/dengcchi/.gemini/history/green-direction-committee
+/Users/dengcchi/.gemini/history/committee-r1
+/Users/dengcchi/.gemini/history/rescue-committee
+/Users/dengcchi/.gemini/history/committee-r3
+/Users/dengcchi/.gemini/history/committee-r2
+/Users/dengcchi/.gemini/tmp/committee
+/Users/dengcchi/.gemini/tmp/green-direction-committee
+/Users/dengcchi/.gemini/tmp/committee-r1
+/Users/dengcchi/.gemini/tmp/rescue-committee
+/Users/dengcchi/.gemini/tmp/committee-r3
+/Users/dengcchi/.gemini/tmp/committee-r2
+/Users/dengcchi/ros-poc/runtime/run_committee_b32.sh
+/Users/dengcchi/ros-poc/runtime/committee_run_1
+/Users/dengcchi/branchable_replay_review/committee
+/Users/dengcchi/branchable_replay_review/committee_R2
+/Users/dengcchi/branchable_replay_review/committee_R3
+/Users/dengcchi/branchable_replay_review/rescue_committee
+/Users/dengcchi/branchable_replay_review/committee_R1
+/Users/dengcchi/branchable_replay_review/green_direction_committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R3
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R2
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-rescue-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-green-direction-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R1
+/Users/dengcchi/Library/LaunchAgents/com.researchos.v3.committee_health.plist
+/Users/dengcchi/afar-src/committees
+[0m
+[0m$ [0mfind /Users/dengcchi/afar-src/committees -name "_committee_common_v001.md" 2>/dev/null
+[0m
+[0m$ [0mls /Users/dengcchi/afar-src/committees/ 2>/dev/null | head -30
+agent_infra_architect.json
+agent_infra_architect.md
+founder_strategist.json
+founder_strategist.md
+hostile_reviewer.json
+hostile_reviewer.md
+implementer.json
+implementer.md
+paper_strategist.json
+paper_strategist.md
+prior_art_investigator.json
+prior_art_investigator.md
+skeptical_practitioner.json
+skeptical_practitioner.md
+workload_auditor.json
+workload_auditor.md
+[0m
+[0m$ [0mfind /Users/dengcchi/branchable_replay_review -name "_committee_common_v001.md" 2>/dev/null
+[0m
+[0m$ [0mfind /Users/dengcchi -name "TOOLING_v001.md" 2>/dev/null | head -10
+[0m
+[0m$ [0mls -la /Users/dengcchi/*.md 2>/dev/null | head -20
+-rw-r--r--  1 dengcchi  staff   6054 Jun  4 08:02 /Users/dengcchi/mrs-tpu-devserver-handoff.md
+-rw-r--r--@ 1 dengcchi  staff  13764 Mar  2 11:42 /Users/dengcchi/vision_tax_investigation_report.md
+[0m

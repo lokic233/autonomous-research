@@ -541,3 +541,239 @@ hook: PostToolUse
 1260:     return data_hash(f)
 
 hook: PostToolUse Completed
+codex
+The local rules match the packet text. I’ve confirmed the key vLLM/SGLang code paths; I’m doing one more pass over docs/repos for whether other shipping systems expose the same processed-pixel cache-key mechanism or only unrelated KV/kernel caches.
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+urls=[
+'https://docs.vllm.ai/en/latest/serving/engine_args.html',
+'https://docs.vllm.ai/en/latest/features/multimodal_inputs.html',
+'https://docs.sglang.ai/backend/server_arguments.html',
+'https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html',
+'https://docs.lmcache.ai/',
+]
+for u in urls:
+ print('\\nURL',u)
+ try:
+  text=urllib.request.urlopen(u,timeout=20).read().decode('utf-8','replace')
+  low=text.lower()
+  for term in ['mm_processor_cache','multi-modal processor cache','multimodal','image','pixel_values','kv cache reuse','cache']:
+   idx=low.find(term.lower())
+   if idx>=0:
+    print(term, text[max(0,idx-100):idx+220].replace('\\n',' ')[:500])
+ except Exception as e:
+  print('ERR',type(e).__name__,e)
+PY" in /Users/dengcchi
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request, urllib.parse, json
+queries=[
+ 'repo:vllm-project/vllm mm_processor_cache',
+ 'repo:vllm-project/vllm MultiModalHasher original_bytes',
+ 'repo:sgl-project/sglang hash_feature pixel_values multimodal cache',
+ 'repo:LMCache/LMCache multimodal image cache pixel_values',
+ 'repo:NVIDIA/TensorRT-LLM multimodal image cache pixel_values',
+ 'repo:huggingface/text-generation-inference multimodal image cache pixel_values',
+]
+for q in queries:
+ print('\\nQUERY', q)
+ url='https://api.github.com/search/code?'+urllib.parse.urlencode({'q':q,'per_page':5})
+ req=urllib.request.Request(url, headers={'Accept':'application/vnd.github+json','User-Agent':'codex-review'})
+ try:
+  data=json.load(urllib.request.urlopen(req,timeout=20))
+  for it in data.get('items',[]): print(it.get('html_url'))
+ except Exception as e:
+  print('ERR',type(e).__name__,e)
+PY" in /Users/dengcchi
+ succeeded in 1112ms:
+
+QUERY repo:vllm-project/vllm mm_processor_cache
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+QUERY repo:vllm-project/vllm MultiModalHasher original_bytes
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+QUERY repo:sgl-project/sglang hash_feature pixel_values multimodal cache
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+QUERY repo:LMCache/LMCache multimodal image cache pixel_values
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+QUERY repo:NVIDIA/TensorRT-LLM multimodal image cache pixel_values
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+QUERY repo:huggingface/text-generation-inference multimodal image cache pixel_values
+ERR HTTPError HTTP Error 403: rate limit exceeded
+
+ succeeded in 2077ms:
+
+URL https://docs.vllm.ai/en/latest/serving/engine_args.html
+ERR HTTPError HTTP Error 403: Forbidden
+
+URL https://docs.vllm.ai/en/latest/features/multimodal_inputs.html
+ERR HTTPError HTTP Error 403: Forbidden
+
+URL https://docs.sglang.ai/backend/server_arguments.html
+ERR HTTPError HTTP Error 404: Not Found
+
+URL https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html
+multimodal a></li> <li class="toctree-l2"><a class="reference internal" href="../examples/curl_chat_client_for_multimodal.html">Curl Chat Client For Multimodal</a></li> <li class="toctree-l2"><a class="reference internal" href="../examples/curl_completion_client.html">Curl Completion Client</a></li> <li class="toctree-l2"><a clas
+image                         <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="TensorRT-LLM - Home"/>     <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="TensorRT-LLM - Home"/>           <p class="title logo__title
+kv cache reuse ial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />      <title>KV cache reuse &#8212; TensorRT-LLM</title>            <script data-cfasync="false">     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";     document.documentElement.dataset.theme = localStora
+cache -scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />      <title>KV cache reuse &#8212; TensorRT-LLM</title>            <script data-cfasync="false">     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";     document.documentElement.dataset.theme = localStorage.
+
+URL https://docs.lmcache.ai/
+ERR HTTPError HTTP Error 403: Forbidden
+
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+for u in [
+'https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config.py',
+'https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/engine/arg_utils.py',
+'https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/serving/engine_args.md',
+'https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/features/multimodal_inputs.md',
+]:
+ print('\\nURL', u)
+ try:
+  lines=urllib.request.urlopen(u, timeout=20).read().decode('utf-8','replace').splitlines()
+  for i,l in enumerate(lines,1):
+   if 'mm_processor_cache' in l or 'mm-processor-cache' in l or 'Multi-modal processor' in l or 'multimodal processor' in l.lower():
+    print(f'{i}: {l[:240]}')
+ except Exception as e: print('ERR',type(e).__name__,e)
+PY" in /Users/dengcchi
+ succeeded in 1178ms:
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config.py
+ERR HTTPError HTTP Error 404: Not Found
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/engine/arg_utils.py
+555:     mm_processor_cache_gb: float = MultiModalConfig.mm_processor_cache_gb
+556:     mm_processor_cache_type: MMCacheType | None = (
+557:         MultiModalConfig.mm_processor_cache_type
+1224:             "--mm-processor-cache-gb", **multimodal_kwargs["mm_processor_cache_gb"]
+1227:             "--mm-processor-cache-type", **multimodal_kwargs["mm_processor_cache_type"]
+1605:             mm_processor_cache_gb=self.mm_processor_cache_gb,
+1606:             mm_processor_cache_type=self.mm_processor_cache_type,
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/serving/engine_args.md
+ERR HTTPError HTTP Error 404: Not Found
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/docs/source/features/multimodal_inputs.md
+ERR HTTPError HTTP Error 404: Not Found
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+urls=[
+'https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config/__init__.py',
+'https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config/multimodal.py',
+'https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config.py',
+]
+for u in urls:
+ print('\\nURL',u)
+ try:
+  lines=urllib.request.urlopen(u,timeout=20).read().decode().splitlines()
+  for i,l in enumerate(lines,1):
+   if 'mm_processor_cache_gb' in l or 'mm_processor_cache_type' in l or 'class MultiModalConfig' in l:
+    print(f'{i}: {l[:240]}')
+ except Exception as e:print('ERR',type(e).__name__,e)
+PY" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 802ms:
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config/__init__.py
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config/multimodal.py
+74: class MultiModalConfig:
+123:     mm_processor_cache_gb: float = Field(default=4, ge=0)
+129:     `mm_processor_cache_gb * (api_server_count + data_parallel_size)`.
+132:     mm_processor_cache_type: MMCacheType = "lru"
+137:     shared memory cache. Only effective when `mm_processor_cache_type` is
+247:         if self.mm_processor_cache_type != "shm" and (
+253:                 "'mm_processor_cache_type' is 'shm'."
+
+URL https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/config.py
+ERR HTTPError HTTP Error 404: Not Found
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import urllib.request
+u='https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/engine/arg_utils.py'
+lines=urllib.request.urlopen(u,timeout=20).read().decode().splitlines()
+for lo,hi in [(1216,1232),(540,562)]:
+ print('\\nRANGE',lo,hi)
+ for i in range(lo,hi+1): print(f'{i}: {lines[i-1]}')
+PY" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 268ms:
+
+RANGE 1216 1232
+1216:         )
+1217:         multimodal_group.add_argument(
+1218:             "--media-io-kwargs", **multimodal_kwargs["media_io_kwargs"]
+1219:         )
+1220:         multimodal_group.add_argument(
+1221:             "--mm-processor-kwargs", **multimodal_kwargs["mm_processor_kwargs"]
+1222:         )
+1223:         multimodal_group.add_argument(
+1224:             "--mm-processor-cache-gb", **multimodal_kwargs["mm_processor_cache_gb"]
+1225:         )
+1226:         multimodal_group.add_argument(
+1227:             "--mm-processor-cache-type", **multimodal_kwargs["mm_processor_cache_type"]
+1228:         )
+1229:         multimodal_group.add_argument(
+1230:             "--mm-shm-cache-max-object-size-mb",
+1231:             **multimodal_kwargs["mm_shm_cache_max_object_size_mb"],
+1232:         )
+
+RANGE 540 562
+540:     shorthand when `quantization` is one of the values in
+541:     `ONLINE_QUANT_SHORTHAND_NAMES`."""
+542:     allow_deprecated_quantization: bool = ModelConfig.allow_deprecated_quantization
+543:     enforce_eager: bool = ModelConfig.enforce_eager
+544:     disable_custom_all_reduce: bool = ParallelConfig.disable_custom_all_reduce
+545:     language_model_only: bool = MultiModalConfig.language_model_only
+546:     limit_mm_per_prompt: dict[str, int | dict[str, int]] = get_field(
+547:         MultiModalConfig, "limit_per_prompt"
+548:     )
+549:     enable_mm_embeds: bool = MultiModalConfig.enable_mm_embeds
+550:     interleave_mm_strings: bool = MultiModalConfig.interleave_mm_strings
+551:     media_io_kwargs: dict[str, dict[str, Any]] = get_field(
+552:         MultiModalConfig, "media_io_kwargs"
+553:     )
+554:     mm_processor_kwargs: dict[str, Any] | None = MultiModalConfig.mm_processor_kwargs
+555:     mm_processor_cache_gb: float = MultiModalConfig.mm_processor_cache_gb
+556:     mm_processor_cache_type: MMCacheType | None = (
+557:         MultiModalConfig.mm_processor_cache_type
+558:     )
+559:     mm_shm_cache_max_object_size_mb: int = (
+560:         MultiModalConfig.mm_shm_cache_max_object_size_mb
+561:     )
+562:     mm_encoder_only: bool = MultiModalConfig.mm_encoder_only
+
+codex
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/mm_utils.py#L1244-L1256", overlap: "Shipping multimodal embedding-cache hash over processed ndarray/torch tensor features; directly implements the proposed processed-domain key."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/blob/main/vllm/multimodal/hasher.py#L61-L84", overlap: "Shipping hasher uses decoded pixel array for bare PIL.Image but original transport bytes for MediaWithBytes; also has EXIF ImageID UUID escape hatch."},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/blob/main/vllm/config/multimodal.py#L123-L132", overlap: "Shipping multimodal processor cache exists and defaults to 4GB LRU, so the byte-vs-pixel key choice is on a real cache path."},
+  {system: "TensorRT-LLM", url: "https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html", overlap: "KV-cache reuse documented, but I found no evidence in the searched docs/source snippets of processed-pixel multimodal cache-key canonicalization."},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer", overlap: "Kernel/KV-cache infrastructure; no found overlap with VLM image preprocessor cache keys."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: L0 holds for the stated synthetic/controlled workload: 320 images x 9 variants, genuine lossless re-encodes at 0% vLLM byte-key hits vs 100% SGLang processed-tensor hits, and lossy controls at 0%/0%. Realistic production materiality is insufficient evidence: the decisive constant, prevalence of lossless pixel-preserving re-encoding in real VLM-serving or agent/RAG traffic, is unmeasured; TTFT/FLOPs savings are also unmeasured. The strict gate miss on all-lossless 16.7% is not a systems kill because base64 rewrap is byte-identical and correctly hits, but it must be reported with the genuine-reencode denominator.
+RATIONALE: Prompt version v001. This is not a new systems design: processed-domain hashing is already shipping in SGLang, and vLLM already has a decoded-array path plus mm_uuid/ImageID escape hatch. The useful contribution is the measured cross-system hash-domain mismatch and clean null exit, not a new cache mechanism. Yellow because the mechanism is real and reproducible enough for L0, but production scale impact depends on an unmeasured workload distribution; without named traffic prevalence and wall-time/FLOP savings, green would overclaim.
+tokens used
+43,311

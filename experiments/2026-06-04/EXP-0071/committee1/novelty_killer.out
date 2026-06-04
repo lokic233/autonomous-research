@@ -1,0 +1,40 @@
+Live web-search tools were denied in this environment, so I cannot independently re-verify the prior-art negative via ≥2 external sources. Per my own rule ("a KILL collision must be verified in ≥2 independent sources"), I therefore cannot assert a fatal collision — and I will not green a novelty I couldn't independently confirm. I reason from the packet's cited source evidence (vLLM `hasher.py`, SGLang `mm_utils.py` `hash_feature`, vLLM `mm_uuid`/EXIF-ImageID override) plus established literature I can recall.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "vLLM mm_uuid / EXIF-ImageID cache-key override (vllm multimodal hashing, hasher.py + mm_uuid plumbing)",
+   url: "https://github.com/vllm-project/vllm (multimodal/hasher.py, mm_processor_cache)",
+   why_close: "SMOKING GUN — maintainers ALREADY know byte-hashing over-specifies image identity and ship a client/source-gated escape hatch (the org-seam in the packet). This is the single most damaging-to-novelty artifact: the 'unknown problem' is a known-and-partially-mitigated one. Caps the contribution to 'measured cross-framework divergence', not 'discovered a new failure mode'."},
+  {cite: "SGLang processed-tensor hashing (mm_utils.py hash_feature over pixel_values)",
+   url: "https://github.com/sgl-project/sglang (mm_utils.py)",
+   why_close: "The 'fix' already exists in production in a peer framework — so the mechanism delta is 'two frameworks chose different equivalence classes', not a new algorithm. Proves feasibility but also proves the design point is already occupied."},
+  {cite: "Perceptual/content hashing + content-addressable image dedup (pHash; CDN image normalization)",
+   url: "https://www.phash.org/ ; classic CAS/perceptual-hash literature",
+   why_close: "The general insight 'byte hash over-specifies image equivalence' is decades old in image dedup/CDN. The VLM-serving instantiation is the only new wrapper."},
+  {cite: "Cache-key canonicalization / 'key over-specifies the equivalence class' (pre-2020 systems folklore; HTTP cache key normalization, Vary)",
+   url: "RFC 7234 cache key semantics / general systems literature",
+   why_close: "This IS the mechanism. Packet concedes it. Mechanism is textbook."},
+  {cite: "Semantic/approximate LLM caching (GPTCache) and multimodal prefix/KV reuse extensions",
+   url: "https://github.com/zilliztech/GPTCache",
+   why_close: "Adjacent work on relaxing cache-key equivalence classes for LLM serving; must be positioned against."}
+]
+
+NAMING_VS_MECHANISM: The MECHANISM is NOT novel — it is classic cache-key canonicalization ("key over-specifies the equivalence class"), explicitly conceded in the packet, and the "fix" (hash the processed tensor) already ships in SGLang. So this is not a new algorithm/primitive. What is genuinely new is EMPIRICAL/OBSERVATIONAL: a code-grounded, named, measured demonstration that the two leading OSS VLM servers sit on OPPOSITE sides of the cache-key domain for the SAME primitive, with a 100pp gap on genuine lossless re-encodes and an honest null on lossy. That cross-framework divergence — and the absence (claimed, not independently verified here) of any paper/framework doc naming it as a hit-rate ceiling — is a real but NARROW delta. Verdict: more than renaming, but the novelty lives entirely in the measurement + framing, not the mechanism.
+
+FATAL_COLLISIONS: [
+  "NONE VERIFIED to red-gate standard (≥2 independent sources). I could not run live prior-art search (web tools denied), so I cannot certify the 'no prior work names this' claim — this is itself a reason not to green at committee#1.",
+  "NEAR-FATAL to the FRAMING (not the result): vLLM's own mm_uuid/EXIF override is maintainer acknowledgement that byte-hashing is fragile. Any L1 that frames this as a newly-discovered problem will be correctly attacked. It must be framed as 'quantifying a known-fragile design point + a previously-unmeasured cross-framework gap + prevalence'."
+]
+
+MANDATORY_RELATED_WORK: [
+  "vLLM mm_uuid / EXIF-ImageID cache-key override (must be cited as prior acknowledgement; failing to cite = dishonest novelty)",
+  "SGLang hash_feature / processed-tensor keying (the existing 'fix')",
+  "Perceptual hashing (pHash) and content-addressable image dedup / CDN image normalization",
+  "Cache-key canonicalization / HTTP Vary + RFC 7234 cache-key semantics (mechanism provenance)",
+  "Semantic/approximate LLM caching (GPTCache) and multimodal prefix/KV-cache reuse work"
+]
+
+RATIONALE: Mechanism novelty is essentially zero by the packet's own admission (cache-key over-specification, pre-2020) and the fix already exists in SGLang (mm_utils.py). The defensible novelty is empirical: a clean, verbatim-transcribed, pixel-identity-verified measurement of a 100pp cross-framework hit-rate gap on genuine lossless re-encodes, with an honest lossy null. That is a valid contribution but a MODEST one, and it is contingent on two things the L0 does NOT yet establish: (1) the unmeasured prevalence of lossless pixel-preserving re-encodes in real traffic (the orchestrator's #1 stress-test — if rare, the seam is real-but-trivial and novelty collapses to a curiosity), and (2) proper positioning against vLLM's own mm_uuid override, which already signals maintainer awareness. I cannot red: no fatal collision is verified to my ≥2-source standard, and live search was unavailable. I cannot green: mechanism is old, the prior-art negative is unverified by me, and the contribution's weight depends on an unmeasured production constant. YELLOW — advance ONLY to an L1 that (a) measures lossless-re-encode prevalence in real VLM/agent-RAG traffic and (b) cites the mm_uuid override + perceptual-hash/CAS lineage so the novelty is correctly scoped as 'quantified cross-framework divergence', not 'new failure mode'.
+```
