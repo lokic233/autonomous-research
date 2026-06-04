@@ -1,0 +1,93 @@
+{
+  "B": 10000,
+  "seed": 20260604,
+  "per_lang_residual_fn_rate_CI": {
+    "ja": {
+      "n_pairs": 3610,
+      "point": 0.9839335180055402,
+      "ci_lo": 0.9797783933518005,
+      "ci_hi": 0.9880886426592798
+    },
+    "zh": {
+      "n_pairs": 3317,
+      "point": 0.9984926138076575,
+      "ci_lo": 0.996985227615315,
+      "ci_hi": 0.9996985227615315
+    },
+    "ar": {
+      "n_pairs": 674,
+      "point": 0.5563798219584569,
+      "ci_lo": 0.5192878338278932,
+      "ci_hi": 0.5934718100890207
+    },
+    "de": {
+      "n_pairs": 587,
+      "point": 0.9471890971039182,
+      "ci_lo": 0.9284497444633731,
+      "ci_hi": 0.9642248722316865
+    },
+    "fr": {
+      "n_pairs": 856,
+      "point": 0.9462616822429907,
+      "ci_lo": 0.9310747663551402,
+      "ci_hi": 0.9602803738317757
+    }
+  },
+  "pooled_residual_fn_rate_CI": {
+    "n_pairs": 9044,
+    "point": 0.9514595311808934,
+    "ci_lo": 0.9471472799646175,
+    "ci_hi": 0.9558823529411765
+  },
+  "pooled_minhash_survival_rate_CI": {
+    "n_fn_pairs": 8605,
+    "point": 0.3463102847181871,
+    "ci_lo": 0.33631609529343404,
+    "ci_hi": 0.3565368971528181
+  },
+  "concentration": {
+    "char_level": {
+      "total_driving_chars": 342738,
+      "top1_class_share": 0.8760656828247816,
+      "top10_class_share": 0.9999007988609375,
+      "gini": 0.8702332393840193,
+      "by_class": {
+        "fullwidth_ascii": 300261,
+        "other_compat": 23850,
+        "halfwidth_kana_hangul": 14148,
+        "fullwidth_sign": 1330,
+        "super_subscript_modifier": 1071,
+        "enclosed_circled": 1029,
+        "cjk_squared": 331,
+        "roman_numeral": 268,
+        "ligature": 262,
+        "fraction": 154,
+        "presentation_form": 34
+      }
+    },
+    "per_pair_dominant_class": {
+      "total_fn_pairs": 8605,
+      "top1_class_share": 0.7743172574084835,
+      "top10_class_share": 0.999767576990122,
+      "gini": 0.8519993661190641,
+      "classes_geq_1pct": [
+        "fullwidth_ascii",
+        "other_compat",
+        "super_subscript_modifier"
+      ],
+      "by_class": {
+        "fullwidth_ascii": 6663,
+        "other_compat": 1634,
+        "super_subscript_modifier": 140,
+        "halfwidth_kana_hangul": 66,
+        "fraction": 30,
+        "ligature": 27,
+        "fullwidth_sign": 14,
+        "enclosed_circled": 10,
+        "cjk_squared": 10,
+        "roman_numeral": 9,
+        "presentation_form": 2
+      }
+    }
+  }
+}
