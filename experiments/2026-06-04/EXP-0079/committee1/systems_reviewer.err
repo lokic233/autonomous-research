@@ -1,0 +1,91 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e94bf-3233-7d03-9823-730b4c196819
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0066 (PROJ-0036, data-systems/storage-format x downstream statistics)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT. Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge. NEW-COUPLING claim screened to clear the incremental-composition ceiling (the test that yellowed CLAIM-0064) — judge that altitude squarely.
+
+## ★★★ THE #1 STRESS-TEST (orchestrator flags FRONT-AND-CENTER — the two killers this claim must beat):
+A. INCREMENTAL-COMPOSITION / MECHANISM-KNOWN: is this a GENUINELY NEW coupling, or "fp16 is lossy / don't reduce in low precision, duh"? The KNOWN facts (fp16 has ~3 digits + range 65504; low-precision accumulation loses precision — bf16/fp16 FMA-accum lit 1904.06376, Kahan summation) are NOT the claim. The CLAIMED-NEW relationship: fp16-STORAGE (A's choice) x reduction-TOOL-CHOICE (B's idiom) produces a SILENT CROSS-TOOL DIVERGENCE — the SAME fp16 column gives pandas=inf/nan, numpy=quantized-finite, sklearn=correct, THREE answers, no error. THE DECISIVE QUESTION: does NEITHER endpoint predict this from its own side? Data team: "fp16 fits my magnitude-3.87 values" (TRUE about every stored ELEMENT; never sees the accumulator-over-N). ML team: "mean of a ~3.87 column is finite" (TRUE arithmetically; pandas's fp16-accumulator inf is invisible at the API — no dtype, no error). The surprise lives only in fp16-storage x pandas-fp16-accumulator-policy. Is that a publishable NEW coupling (-> SUPPORT) or does it collapse to "use float64 for reductions" folklore (-> YELLOW/RED)? Judge honestly vs CLAIM-0059 (NFKC-vs-NFC, neither side predicts 95% dup-escape) and CLAIM-0064 (both endpoints predicted the EXIF fork -> YELLOW).
+B. REALISTIC DEPLOYMENT: do people ACTUALLY store fp16 feature columns AND reduce them with pandas .mean()/.std() by default? If fp16 feature storage is rare, or everyone normalizes first, the seam is real-but-rarely-triggered. The real-data arm (below) addresses prevalence — scrutinize it.
+
+## CLAIM
+A numeric feature column stored as float16 (storage/transport cost decision) silently makes the same column's summary stat DEPEND ON WHICH REDUCTION TOOL computes it: pandas Series.mean()=inf/nan (fp16 accumulator, nanops.nanmean keeps dtype_sum=dtype_count=fp16 for float kinds), numpy ndarray.mean()=quantized-finite (fp32 accumulator), sklearn StandardScaler.mean_=correct (fp64). Three tools, three answers, no error. fp16 survives a pyarrow Parquet round-trip (seam traversed). NULL EXIT: fp32/fp64 storage -> all agree ~1e-5.
+
+## L0 RESULT (EXP-0079; CPU; pinned pandas 3.0.3 / numpy 2.4.6 / pyarrow 24.0.0 / sklearn 1.9.0)
+COMPOSITION VERIFIED IN INSTALLED SOURCE (a-d, re-read not assumed):
+ (a) pandas/core/nanops.py nanmean L697-712: dtype.kind=="f" => dtype_sum=dtype AND dtype_count=dtype (NO upcast) -> fp16 sum overflows 65504, fp16 COUNT overflows -> nan at N>65504.
+ (b) np.float16([100.]*2000).sum()=inf but .mean()=100.0 finite (fp32 mean accumulator).
+ (c) StandardScaler.mean_ -> fp64 correct. (d) fp16 survives parquet round-trip (dtype float16, pyarrow halffloat, bit-identical).
+SYNTHETIC SWEEP (63 cells, post-parquet) onsets EXACTLY as predicted: pandas->inf when N x magnitude > 65504; pandas->nan when N>65504 at EVERY magnitude incl unit-scale; numpy+sklearn always finite/correct; all three diverge (>=2 distinct answers) at every N>=1k.
+★ REAL-DATA ARM (California housing, N=20640, native features cast to fp16, all survived parquet) — REFUTES the magnitude-frequency objection on REAL public data: 8/9 features -> pandas inf/nan after fp16 INCLUDING MedInc (mean=3.87) + Latitude (35.6) -- a SMALL MEAN does NOT protect (the running fp16 SUM blows past 65504 at moderate N); 6/9 show the FULL 3-way divergence (pandas inf / numpy ~1e-4 relerr / sklearn ~1e-6); only AveBedrms (tiny values) escaped. Native magnitudes, not rigged.
+CONTROL (fp32/fp64, all 42 cells): all three tools agree, all finite, distinct=1, relerr~0 -> fp16 ISOLATED as the cause. BONUS: std()/var() also diverge (pandas/numpy inf where fp16 sum/sumsq overflows; sklearn fp64 finite).
+HONESTY CHECKS (none triggered): control did NOT diverge; pandas DID overflow at predicted N (no silent newer-pandas upcast); fp16 DID survive parquet; real arm native magnitudes. Pre-registered null (<=1e-3, identical across tools) DECISIVELY REJECTED.
+
+## PRIOR-ART: no framework documents the cross-tool divergence (pandas to_numeric/numpy reduction notes mention generic precision loss, neither warns a STORED fp16 feature makes .mean() return inf vs quantized by tool); no GitHub issue for "pandas float16 Series.mean overflow inf/nan" on current versions. Nearest lit (bf16/fp16 FMA-accum precision 1904.06376; Kahan/pairwise summation) = SUMMATION ERROR, not a storage-dtype x tool-choice silent-divergence SEAM. No active 2024-26 cluster. Committee scrutinize for a missed incumbent (e.g. a known pandas issue).
+
+## ORCHESTRATOR NOTE (NOT advocacy): clean, well-controlled L0 — composition verified in source (verify-the-composition discipline honored), control held, real-data arm refutes the prevalence objection on actual public data, honesty checks all clean. The make-or-break is stress-test A: is the SILENT CROSS-TOOL DIVERGENCE (three tools / three answers / no error, where neither endpoint predicts it) a publishable NEW coupling, or does a reviewer collapse it to "use float64 for reductions" folklore? And B: is fp16-feature-storage + pandas-reduction a realistic enough deployment? If new-coupling + realistic -> advance to an L1 (broader real feature stores + the actual pandas->inf reaching a downstream normalization/model). If it's folklore or fp16-feature-storage is rare -> YELLOW/converge. Judge honestly. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md'" in /Users/dengcchi
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
