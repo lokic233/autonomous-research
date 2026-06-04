@@ -6,7 +6,7 @@ import datasets
 from datasets import load_dataset, interleave_datasets
 
 BASE=os.path.dirname(os.path.abspath(__file__)); DATA=os.path.join(BASE,"data"); RES=os.path.join(BASE,"results")
-BATCH=256; N_STEPS=800; SEED=0
+BATCH=256; N_STEPS=400; SEED=0
 A_SHARDS=64
 
 def files(d): return [os.path.join(DATA,d,f) for f in sorted(os.listdir(os.path.join(DATA,d))) if f.endswith(".parquet")]
