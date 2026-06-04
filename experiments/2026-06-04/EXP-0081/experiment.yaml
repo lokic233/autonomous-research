@@ -12,12 +12,26 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'WEAKEN (real-but-rare). Mechanism CONFIRMED exactly: pandas to_parquet
+  float-NaN col null_count=2 (NaN->NULL) vs polars/duckdb null_count=0 (NaN-as-value);
+  SAME reader SAME query flips: self-join 5<->9 (both DuckDB+polars readers), sum(v)
+  3.0<->NaN (both readers), count(distinct) 2<->3 (DuckDB; reader-dependent on polars
+  n_unique). Readers do NOT coerce NaN->null on read (DuckDB+polars both see NaN=2
+  on arrow files). No-NaN control Delta=0 (effect is NaN-specific). BUT load-bearing
+  PREVALENCE = 0/244 real public float columns carry stored NaN across 13 files /
+  39.9M rows (NYC taxi yellow/green/fhvhv + 9 HF tabular datasets) -- real missingness
+  is ALWAYS true-NULL, never NaN-in-parquet. Aggregate-flip on real Titanic Age column:
+  Delta=0 as-stored (true-null); Delta!=0 ONLY under labeled NaN-injection (self-join
+  11192->42521, sum->NaN). Trigger surface narrow: pl.from_pandas collapses NaN->null
+  (Delta=0); divergence needs NaN-as-value reaching Arrow-native writer. Writer-fingerprint
+  sub-claim WEAKENED: created_by cannot distinguish pandas-via-pyarrow from pyarrow-direct
+  (identical ''parquet-cpp-arrow'' string, opposite NaN behavior). Versions: pandas
+  3.0.3, pyarrow 24.0.0, polars 1.41.2, duckdb 1.5.3.'
+result_effect: weaken
 artifacts_path: experiments/2026-06-04/EXP-0081/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T23:45:39Z'
 prompt_version: ''
