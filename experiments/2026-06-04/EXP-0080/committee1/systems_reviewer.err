@@ -127,3 +127,667 @@ mcp: meta_core/knowledge_load started
 mcp: meta_core/knowledge_load (failed)
 2026-06-04T22:56:01.797084Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
  succeeded in 44700ms:
+codex
+External page loading through the knowledge tool is filtered, so I’m using direct HTTP queries for public docs and GitHub search results.
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22category%20dtype%22%20%22cat.codes%22%20repo:pandas-dev/pandas' | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://pandas.pydata.org/docs/reference/api/pandas.Categorical.codes.html' | sed -n '1,80p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22categorical%20codes%22%20%22parquet%22%20repo:pandas-dev/pandas' | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22cat.codes%22%20%22across%20files%22%20repo:pandas-dev/pandas' | sed -n '1,120p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 478ms:
+{
+  "total_count": 0,
+  "incomplete_results": false,
+  "items": [
+
+  ],
+  "search_type": "lexical"
+}
+
+ succeeded in 484ms:
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pandas.Categorical.codes &#8212; pandas 3.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=956a7be408686d7d6a7b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=956a7be408686d7d6a7b" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/getting_started.css?v=8d8a0ed4" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/pandas.css?v=b7db95b1" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=956a7be408686d7d6a7b"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=956a7be408686d7d6a7b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=956a7be408686d7d6a7b" />
+
+    <script src="../../_static/documentation_options.js?v=9b3fc59f"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="pandas.pydata.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/pandas.Categorical.codes';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://pandas.pydata.org/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pandas.Categorical.ordered" href="pandas.Categorical.ordered.html" />
+    <link rel="prev" title="pandas.Categorical.categories" href="pandas.Categorical.categories.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="3.0.3" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+
+hook: PostToolUse
+ succeeded in 854ms:
+{
+  "total_count": 8,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051/events",
+      "html_url": "https://github.com/pandas-dev/pandas/issues/53051",
+      "id": 1693596547,
+      "node_id": "I_kwDOAA0YD85k8juD",
+      "number": 53051,
+      "title": "BUG: `DataFrame.pivot` fails with `pyarrow` backend if variable is already encoded as `dictionary`",
+      "user": {
+        "login": "randolf-scholz",
+        "id": 39696536,
+        "node_id": "MDQ6VXNlcjM5Njk2NTM2",
+        "avatar_url": "https://avatars.githubusercontent.com/u/39696536?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/randolf-scholz",
+        "html_url": "https://github.com/randolf-scholz",
+        "followers_url": "https://api.github.com/users/randolf-scholz/followers",
+        "following_url": "https://api.github.com/users/randolf-scholz/following{/other_user}",
+        "gists_url": "https://api.github.com/users/randolf-scholz/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/randolf-scholz/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/randolf-scholz/subscriptions",
+        "organizations_url": "https://api.github.com/users/randolf-scholz/orgs",
+        "repos_url": "https://api.github.com/users/randolf-scholz/repos",
+        "events_url": "https://api.github.com/users/randolf-scholz/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/randolf-scholz/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 76811,
+          "node_id": "MDU6TGFiZWw3NjgxMQ==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Bug",
+          "name": "Bug",
+          "color": "e10c02",
+          "default": false,
+          "description": null
+        },
+        {
+          "id": 13098779,
+          "node_id": "MDU6TGFiZWwxMzA5ODc3OQ==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Reshaping",
+          "name": "Reshaping",
+          "color": "02d7e1",
+          "default": false,
+          "description": "Concat, Merge/Join, Stack/Unstack, Explode"
+        },
+        {
+          "id": 3303158446,
+          "node_id": "MDU6TGFiZWwzMzAzMTU4NDQ2",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Arrow",
+          "name": "Arrow",
+          "color": "f9d0c4",
+          "default": false,
+          "description": "pyarrow functionality"
+        }
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+        {
+          "login": "aswinj18",
+          "id": 92645723,
+          "node_id": "U_kgDOBYWpWw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/92645723?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/aswinj18",
+          "html_url": "https://github.com/aswinj18",
+          "followers_url": "https://api.github.com/users/aswinj18/followers",
+          "following_url": "https://api.github.com/users/aswinj18/following{/other_user}",
+          "gists_url": "https://api.github.com/users/aswinj18/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/aswinj18/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/aswinj18/subscriptions",
+          "organizations_url": "https://api.github.com/users/aswinj18/orgs",
+          "repos_url": "https://api.github.com/users/aswinj18/repos",
+          "events_url": "https://api.github.com/users/aswinj18/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/aswinj18/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        }
+      ],
+      "milestone": null,
+      "comments": 6,
+      "created_at": "2023-05-03T08:11:23Z",
+      "updated_at": "2025-04-14T17:00:06Z",
+      "closed_at": "2025-04-14T17:00:05Z",
+      "assignee": {
+        "login": "aswinj18",
+        "id": 92645723,
+        "node_id": "U_kgDOBYWpWw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/92645723?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/aswinj18",
+        "html_url": "https://github.com/aswinj18",
+        "followers_url": "https://api.github.com/users/aswinj18/followers",
+        "following_url": "https://api.github.com/users/aswinj18/following{/other_user}",
+        "gists_url": "https://api.github.com/users/aswinj18/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/aswinj18/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/aswinj18/subscriptions",
+        "organizations_url": "https://api.github.com/users/aswinj18/orgs",
+        "repos_url": "https://api.github.com/users/aswinj18/repos",
+        "events_url": "https://api.github.com/users/aswinj18/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/aswinj18/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "author_association": "CONTRIBUTOR",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "### Pandas version checks\n\n- [X] I have checked that this issue has not already been reported.\n\n- [X] I have confirmed this bug exists on the [latest version](https://pandas.pydata.org/docs/whatsnew/index.html) of pandas.\n\n- [X] I have confirmed this bug exists on the [main branch](https://pandas.pydata.org/docs/dev/getting_started/install.html#installing-the-development-version-of-pandas) of pandas.\n\n\n### Reproducible Example\n\n```python\nimport pandas as pd\r\n\r\ndf = (\r\n    pd.DataFrame([(\"A\", 1), (\"B\", 2), (\"C\", 3)], columns=[\"var\", \"val\"])\r\n    .astype({\"var\": \"string\", \"val\": \"float32\"})\r\n    .astype({\"var\": \"category\", \"val\": \"float32\"})\r\n)\r\n\r\n# write and reload as parquet with pyarrow backend\r\ndf.to_parquet(\"demo.parquet\")\r\ndf = pd.read_parquet(\"demo.parquet\", dtype_backend=\"pyarrow\")\r\nprint(df.dtypes)  # var is now dictionary[int32,string]\r\n\r\ndf.pivot(columns=[\"var\"], values=[\"val\"])  # ✘ ArrowNotImplementedError\n```\n\n\n### Issue Description\n\nThis bug is caused by https://github.com/apache/arrow/issues/34890: currently, pyarrow's `dictionary_encode` is not idempotent, i.e. it fails with `ArrowNotImplementedError` instead of returning the data as-is if the array is already of dictionary type.\r\n\r\nSo, either one waits until it is fixed upstream by pyarrow, or an additional check needs to be added to test whether the series is already of dictionary data type.\n\n### Expected Behavior\n\nPivot should work with categorical data when using the pyarrow backend. \n\n### Installed Versions\n\n<details>\r\n\r\nINSTALLED VERSIONS\r\n------------------\r\ncommit           : 37ea63d540fd27274cad6585082c91b1283f963d\r\npython           : 3.11.3.final.0\r\npython-bits      : 64\r\nOS               : Linux\r\nOS-release       : 5.19.0-41-generic\r\nVersion          : #42~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 18 17:40:00 UTC 2\r\nmachine          : x86_64\r\nprocessor        : x86_64\r\nbyteorder        : little\r\nLC_ALL           : None\r\nLANG             : en_US.UTF-8\r\nLOCALE           : en_US.UTF-8\r\n\r\npandas           : 2.0.1\r\nnumpy            : 1.23.5\r\npytz             : 2023.3\r\ndateutil         : 2.8.2\r\nsetuptools       : 67.7.2\r\npip              : 23.1.2\r\nCython           : 0.29.34\r\npytest           : 7.3.1\r\nhypothesis       : None\r\nsphinx           : 7.0.0\r\nblosc            : None\r\nfeather          : None\r\nxlsxwriter       : None\r\nlxml.etree       : 4.9.2\r\nhtml5lib         : None\r\npymysql          : 1.0.3\r\npsycopg2         : None\r\njinja2           : 3.1.2\r\nIPython          : 8.13.1\r\npandas_datareader: None\r\nbs4              : 4.12.2\r\nbottleneck       : None\r\nbrotli           : None\r\nfastparquet      : 2023.4.0\r\nfsspec           : 2023.4.0\r\ngcsfs            : None\r\nmatplotlib       : 3.7.1\r\nnumba            : 0.57.0rc1\r\nnumexpr          : 2.8.4\r\nodfpy            : None\r\nopenpyxl         : 3.1.2\r\npandas_gbq       : None\r\npyarrow          : 11.0.0\r\npyreadstat       : None\r\npyxlsb           : None\r\ns3fs             : None\r\nscipy            : 1.10.1\r\nsnappy           : None\r\nsqlalchemy       : 1.4.48\r\ntables           : 3.8.0\r\ntabulate         : 0.9.0\r\nxarray           : 2023.4.2\r\nxlrd             : None\r\nzstandard        : None\r\ntzdata           : 2023.3\r\nqtpy             : None\r\npyqt5            : None\r\n\r\n</details>\r\n",
+      "reactions": {
+        "url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051/reactions",
+        "total_count": 1,
+        "+1": 1,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/pandas-dev/pandas/issues/53051/timeline",
+      "performed_via_github_app": null,
+      "state_reason": "completed",
+      "pinned_comment": null,
+      "score": 1.0
+    },
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/30228",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/30228/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/30228/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/30228/events",
+      "html_url": "https://github.com/pandas-dev/pandas/issues/30228",
+      "id": 536947426,
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 1109ms:
+{
+  "total_count": 20,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766/events",
+      "html_url": "https://github.com/pandas-dev/pandas/issues/48766",
+      "id": 1384856275,
+      "node_id": "I_kwDOAA0YD85SizrT",
+      "number": 48766,
+      "title": "ENH: find categorical code against categorical label/value",
+      "user": {
+        "login": "stevenlis",
+        "id": 33796896,
+        "node_id": "MDQ6VXNlcjMzNzk2ODk2",
+        "avatar_url": "https://avatars.githubusercontent.com/u/33796896?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/stevenlis",
+        "html_url": "https://github.com/stevenlis",
+        "followers_url": "https://api.github.com/users/stevenlis/followers",
+        "following_url": "https://api.github.com/users/stevenlis/following{/other_user}",
+        "gists_url": "https://api.github.com/users/stevenlis/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/stevenlis/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/stevenlis/subscriptions",
+        "organizations_url": "https://api.github.com/users/stevenlis/orgs",
+        "repos_url": "https://api.github.com/users/stevenlis/repos",
+        "events_url": "https://api.github.com/users/stevenlis/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/stevenlis/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 76812,
+          "node_id": "MDU6TGFiZWw3NjgxMg==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Enhancement",
+          "name": "Enhancement",
+          "color": "4E9A06",
+          "default": false,
+          "description": null
+        },
+        {
+          "id": 2822098,
+          "node_id": "MDU6TGFiZWwyODIyMDk4",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Indexing",
+          "name": "Indexing",
+          "color": "0b02e1",
+          "default": false,
+          "description": "Related to indexing on series/frames, not to indexes themselves"
+        },
+        {
+          "id": 78527356,
+          "node_id": "MDU6TGFiZWw3ODUyNzM1Ng==",
+          "url": "https://api.github.com/repos/pandas-dev/pandas/labels/Categorical",
+          "name": "Categorical",
+          "color": "e11d21",
+          "default": false,
+          "description": "Categorical Data Type"
+        }
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+        {
+          "login": "JgLemos",
+          "id": 45996615,
+          "node_id": "MDQ6VXNlcjQ1OTk2NjE1",
+          "avatar_url": "https://avatars.githubusercontent.com/u/45996615?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/JgLemos",
+          "html_url": "https://github.com/JgLemos",
+          "followers_url": "https://api.github.com/users/JgLemos/followers",
+          "following_url": "https://api.github.com/users/JgLemos/following{/other_user}",
+          "gists_url": "https://api.github.com/users/JgLemos/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/JgLemos/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/JgLemos/subscriptions",
+          "organizations_url": "https://api.github.com/users/JgLemos/orgs",
+          "repos_url": "https://api.github.com/users/JgLemos/repos",
+          "events_url": "https://api.github.com/users/JgLemos/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/JgLemos/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        }
+      ],
+      "milestone": null,
+      "comments": 13,
+      "created_at": "2022-09-25T00:54:26Z",
+      "updated_at": "2026-05-11T19:46:01Z",
+      "closed_at": "2026-05-11T19:46:01Z",
+      "assignee": {
+        "login": "JgLemos",
+        "id": 45996615,
+        "node_id": "MDQ6VXNlcjQ1OTk2NjE1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/45996615?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/JgLemos",
+        "html_url": "https://github.com/JgLemos",
+        "followers_url": "https://api.github.com/users/JgLemos/followers",
+        "following_url": "https://api.github.com/users/JgLemos/following{/other_user}",
+        "gists_url": "https://api.github.com/users/JgLemos/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/JgLemos/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/JgLemos/subscriptions",
+        "organizations_url": "https://api.github.com/users/JgLemos/orgs",
+        "repos_url": "https://api.github.com/users/JgLemos/repos",
+        "events_url": "https://api.github.com/users/JgLemos/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/JgLemos/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "author_association": "NONE",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "### Feature Type\n\n- [X] Adding new functionality to pandas\n\n- [ ] Changing existing functionality in pandas\n\n- [ ] Removing existing functionality in pandas\n\n\n### Problem Description\n\nI wish I could check the underlying code for each value against a categorical column directly without indexing and using `cat.codes`\r\n\r\nAssume I have the following dataframe\r\n```python\r\nimport pandas as pd\r\nfrom pandas.api.types import CategoricalDtype\r\n\r\ndata = {\r\n    'quarter': ['2019Q4', '2020Q1', '2020Q2', '2020Q3'],\r\n    'num': [12, 23, 34, 67]\r\n}\r\ndf = pd.DataFrame(data=data)\r\n\r\ncat = CategoricalDtype(categories=data['quarter'], ordered=True)\r\ndf.quarter = df.quarter.astype(cat)\r\n```\r\nI need to select all the rows *after* `2020Q2`. I have to first find the underlying code of the value/label `2020Q2`, but I can only do so by indexing the dataframe against it and then use `cat.codes`, and then indexing the array return to get the first value. This is a little bit tedious.\r\n\r\n```python\r\nc = df[df.quarter == '2020Q2'].quarter.cat.codes.values[0]\r\ndf[df.quarter.cat.codes > c]\r\n```\n\n### Feature Description\n\nRight now if you use `df.quarter.dtype.categories`, it only returns the categories as a list\r\n```\r\nIndex(['2019Q4', '2020Q1', '2020Q2', '2020Q3'], dtype='object')\r\n```\r\nIt would be great if there is a attribute to return a map of categories and codes together in a dictionary so that users could simply find the codes by using categories as dict keys\r\nFor example\r\n```\r\ndf.df.quarter.dtype.cats_codes\r\n```\r\nreturns\r\n```\r\n{'2019Q4': 1, '2020Q1': 2, '2020Q2': 3, '2020Q3': 4}\r\n```\n\n### Alternative Solutions\n\nMaybe it could also be a `get_cat_code()` function in pandas api so that users could input a category to get the underlying code, such as `get_cat_code(cat='2020Q2')`\n\n### Additional Context\n\n_No response_",
+      "reactions": {
+        "url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/pandas-dev/pandas/issues/48766/timeline",
+      "performed_via_github_app": null,
+      "state_reason": "completed",
+      "pinned_comment": null,
+      "score": 1.0
+    },
+    {
+      "url": "https://api.github.com/repos/pandas-dev/pandas/issues/51489",
+      "repository_url": "https://api.github.com/repos/pandas-dev/pandas",
+      "labels_url": "https://api.github.com/repos/pandas-dev/pandas/issues/51489/labels{/name}",
+      "comments_url": "https://api.github.com/repos/pandas-dev/pandas/issues/51489/comments",
+      "events_url": "https://api.github.com/repos/pandas-dev/pandas/issues/51489/events",
+      "html_url": "https://github.com/pandas-dev/pandas/issues/51489",
+      "id": 1590836244,
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent 'https://pandas.pydata.org/docs/user_guide/categorical.html' | grep -i -n -E 'cat.codes|codes|sort|CategoricalDtype|portable|dataset|categories' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://pandas.pydata.org/docs/reference/api/pandas.Categorical.codes.html' | grep -i -n -E 'codes|categories|read only|integer positions' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://arrow.apache.org/docs/python/generated/pyarrow.compute.dictionary_encode.html' | grep -i -n -E 'dictionary|encode|null|indices|first|order' | head -60" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22cat.codes%22%20%22parquet%22%20repo:pandas-dev/pandas' | grep -E '\"total_count\"|\"html_url\"|\"title\"' | head -80" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 261ms:
+11:    <title>pandas.Categorical.codes &#8212; pandas 3.0.3 documentation</title>
+54:    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/pandas.Categorical.codes';</script>
+66:    <link rel="prev" title="pandas.Categorical.categories" href="pandas.Categorical.categories.html" />
+604:<li class="toctree-l2"><a class="reference internal" href="pandas.CategoricalDtype.categories.html">pandas.CategoricalDtype.categories</a></li>
+607:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.from_codes.html">pandas.Categorical.from_codes</a></li>
+609:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.categories.html">pandas.Categorical.categories</a></li>
+611:<li class="toctree-l2 current active"><a class="current reference internal" href="#">pandas.Categorical.codes</a></li>
+615:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.set_categories.html">pandas.Categorical.set_categories</a></li>
+616:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.rename_categories.html">pandas.Categorical.rename_categories</a></li>
+617:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.reorder_categories.html">pandas.Categorical.reorder_categories</a></li>
+618:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.add_categories.html">pandas.Categorical.add_categories</a></li>
+619:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.remove_categories.html">pandas.Categorical.remove_categories</a></li>
+620:<li class="toctree-l2"><a class="reference internal" href="pandas.Categorical.remove_unused_categories.html">pandas.Categorical.remove_unused_categories</a></li>
+735:    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pandas.Categorical.codes</span></li>
+752:  <section id="pandas-categorical-codes">
+753:<h1>pandas.Categorical.codes<a class="headerlink" href="#pandas-categorical-codes" title="Link to this heading">#</a></h1>
+755:<dt class="sig sig-object py" id="pandas.Categorical.codes">
+756:<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Categorical.</span></span><span class="sig-name descname"><span class="pre">codes</span></span><a class="reference external" href="https://github.com/pandas-dev/pandas/blob/v3.0.3/pandas/core/arrays/categorical.py#L896-L937"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pandas.Categorical.codes" title="Link to this definition">#</a></dt>
+757:<dd><p>The category codes of this categorical index.</p>
+758:<p>Codes are an array of integers which are the positions of the actual
+759:values in the categories array.</p>
+765:<dt>ndarray[int]</dt><dd><p>A non-writable view of the <code class="docutils literal notranslate"><span class="pre">codes</span></code> array.</p>
+773:<dt><a class="reference internal" href="pandas.Categorical.from_codes.html#pandas.Categorical.from_codes" title="pandas.Categorical.from_codes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Categorical.from_codes</span></code></a></dt><dd><p>Make a Categorical from codes.</p>
+782:<span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+788:<span class="gp">&gt;&gt;&gt; </span><span class="n">ci</span><span class="o">.</span><span class="n">codes</span>
+792:<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">CategoricalIndex</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">])</span>
+793:<span class="gp">&gt;&gt;&gt; </span><span class="n">ci</span><span class="o">.</span><span class="n">codes</span>
+812:       href="pandas.Categorical.categories.html"
+817:        <p class="prev-next-title">pandas.Categorical.categories</p>
+848:<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas.Categorical.codes"><code class="docutils literal notranslate"><span class="pre">Categorical.codes</span></code></a></li>
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 432ms:
+16:    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+17:    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+465:<li class="toctree-l1"><a class="reference internal" href="scale.html">Scaling to large datasets</a></li>
+538:number of possible values (<code class="docutils literal notranslate"><span class="pre">categories</span></code>; <code class="docutils literal notranslate"><span class="pre">levels</span></code> in R). Examples are gender,
+544:<p>All values of categorical data are either in <code class="docutils literal notranslate"><span class="pre">categories</span></code> or <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>. Order is defined by
+545:the order of <code class="docutils literal notranslate"><span class="pre">categories</span></code>, not lexical order of the values. Internally, the data structure
+546:consists of a <code class="docutils literal notranslate"><span class="pre">categories</span></code> array and an integer array of <code class="docutils literal notranslate"><span class="pre">codes</span></code> which point to the real value in
+547:the <code class="docutils literal notranslate"><span class="pre">categories</span></code> array.</p>
+553:By converting to a categorical and specifying an order on the categories, sorting and
+554:min/max will use the logical order instead of the lexical order, see <a class="reference internal" href="#categorical-sort"><span class="std std-ref">here</span></a>.</p></li>
+574:<span class="go">Categories (3, str): [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+616:<span class="gp">   ....: </span>    <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span>
+629:<span class="go">Categories (3, str): [&#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+667:<p>Note that the categories present in each column differ; the conversion is done column by column, so
+668:only labels present in a given column are categories:</p>
+676:<span class="go">Categories (3, str): [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+685:<span class="go">Categories (3, str): [&#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+708:<span class="go">Categories (3, str): [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+717:<span class="go">Categories (3, str): [&#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+726:<li><p>Categories are inferred from the data.</p></li>
+727:<li><p>Categories are unordered.</p></li>
+730:of <code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code>.</p>
+731:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [26]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">pandas.api.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">CategoricalDtype</span>
+735:<span class="gp">In [28]: </span><span class="n">cat_type</span> <span class="o">=</span> <span class="n">CategoricalDtype</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+746:<span class="go">Categories (3, str): [&#39;b&#39; &lt; &#39;c&#39; &lt; &#39;d&#39;]</span>
+749:<p>Similarly, a <code class="docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> can be used with a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> to ensure that categories
+751:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [31]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">pandas.api.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">CategoricalDtype</span>
+755:<span class="gp">In [33]: </span><span class="n">cat_type</span> <span class="o">=</span> <span class="n">CategoricalDtype</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;abcd&quot;</span><span class="p">),</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+766:<span class="go">Categories (4, str): [&#39;a&#39; &lt; &#39;b&#39; &lt; &#39;c&#39; &lt; &#39;d&#39;]</span>
+775:<span class="go">Categories (4, str): [&#39;a&#39; &lt; &#39;b&#39; &lt; &#39;c&#39; &lt; &#39;d&#39;]</span>
+781:categories for each column, the <code class="docutils literal notranslate"><span class="pre">categories</span></code> parameter can be determined programmatically by
+782:<code class="docutils literal notranslate"><span class="pre">categories</span> <span class="pre">=</span> <span class="pre">pd.unique(df.to_numpy().ravel())</span></code>.</p>
+784:<p>If you already have <code class="docutils literal notranslate"><span class="pre">codes</span></code> and <code class="docutils literal notranslate"><span class="pre">categories</span></code>, you can use the
+785:<a class="reference internal" href="../reference/api/pandas.Categorical.from_codes.html#pandas.Categorical.from_codes" title="pandas.Categorical.from_codes"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_codes()</span></code></a> constructor to save the factorize step
+789:<span class="gp">In [38]: </span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">splitter</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">]))</span>
+816:<span class="go">Categories (3, str): [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+833:strings; categories will end up the same data type as the original values.</p>
+838:creation time. Use <code class="docutils literal notranslate"><span class="pre">categories</span></code> to change the categories after creation time.</p>
+842:<section id="categoricaldtype">
+843:<span id="categorical-categoricaldtype"></span><h2>CategoricalDtype<a class="headerlink" href="#categoricaldtype" title="Link to this heading">#</a></h2>
+846:<li><p><code class="docutils literal notranslate"><span class="pre">categories</span></code>: a sequence of unique values and no missing values</p></li>
+849:<p>This information can be stored in a <code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code>.
+850:The <code class="docutils literal notranslate"><span class="pre">categories</span></code> argument is optional, which implies that the actual categories
+852:<a class="reference internal" href="../reference/api/pandas.Categorical.html#pandas.Categorical" title="pandas.Categorical"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Categorical</span></code></a> is created. The categories are assumed to be unordered
+854:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [45]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">pandas.api.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">CategoricalDtype</span>
+856:<span class="gp">In [46]: </span><span class="n">CategoricalDtype</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+857:<span class="gh">Out[46]: </span><span class="go">CategoricalDtype(categories=[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], ordered=False, categories_dtype=str)</span>
+859:<span class="gp">In [47]: </span><span class="n">CategoricalDtype</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+860:<span class="gh">Out[47]: </span><span class="go">CategoricalDtype(categories=[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], ordered=True, categories_dtype=str)</span>
+862:<span class="gp">In [48]: </span><span class="n">CategoricalDtype</span><span class="p">()</span>
+863:<span class="gh">Out[48]: </span><span class="go">CategoricalDtype(categories=None, ordered=False, categories_dtype=None)</span>
+866:<p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> can be used in any place pandas
+872:<code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> when you want the default behavior of
+873:the categories being unordered, and equal to the set values present in the
+875:<code class="docutils literal notranslate"><span class="pre">dtype=CategoricalDtype()</span></code>.</p>
+879:<p>Two instances of <code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> compare equal
+880:whenever they have the same categories and order. When comparing two
+881:unordered categoricals, the order of the <code class="docutils literal notranslate"><span class="pre">categories</span></code> is not considered. Note
+882:that categories with different dtypes are not the same.</p>
+883:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [49]: </span><span class="n">c1</span> <span class="o">=</span> <span class="n">CategoricalDtype</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+886:<span class="gp">In [50]: </span><span class="n">c1</span> <span class="o">==</span> <span class="n">CategoricalDtype</span><span class="p">([</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+889:<span class="go"># Unequal, since the second CategoricalDtype is ordered</span>
+890:<span class="gp">In [51]: </span><span class="n">c1</span> <span class="o">==</span> <span class="n">CategoricalDtype</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+894:<p>All instances of <code class="docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> compare equal to the string <code class="docutils literal notranslate"><span class="pre">'category'</span></code>.</p>
+899:<p>Notice that the <code class="docutils literal notranslate"><span class="pre">categories_dtype</span></code> should be considered, especially when comparing with
+900:two empty <code class="docutils literal notranslate"><span class="pre">CategoricalDtype</span></code> instances.</p>
+915:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [56]: </span><span class="n">cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+937:<section id="working-with-categories">
+938:<span id="categorical-cat"></span><h2>Working with categories<a class="headerlink" href="#working-with-categories" title="Link to this heading">#</a></h2>
+939:<p>Categorical data has a <code class="docutils literal notranslate"><span class="pre">categories</span></code> and a <code class="docutils literal notranslate"><span class="pre">ordered</span></code> property, which list their
+941:exposed as <code class="docutils literal notranslate"><span class="pre">s.cat.categories</span></code> and <code class="docutils literal notranslate"><span class="pre">s.cat.ordered</span></code>. If you don’t manually
+942:specify categories and ordering, they are inferred from the passed arguments.</p>
+945:<span class="gp">In [61]: </span><span class="n">s</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
+952:<p>It’s also possible to pass in the categories in a specific order:</p>
+953:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [63]: </span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">]))</span>
+955:<span class="gp">In [64]: </span><span class="n">s</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
+969:<p>The result of <a class="reference internal" href="../reference/api/pandas.Series.unique.html#pandas.Series.unique" title="pandas.Series.unique"><code class="xref py py-meth docutils literal notranslate"><span class="pre">unique()</span></code></a> is not always the same as <code class="docutils literal notranslate"><span class="pre">Series.cat.categories</span></code>,
+970:because <code class="docutils literal notranslate"><span class="pre">Series.unique()</span></code> has a couple of guarantees, namely that it returns categories
+972:<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [66]: </span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;babc&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">CategoricalDtype</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;abcd&quot;</span><span class="p">)))</span>
+981:<span class="go">Categories (4, str): [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+
+ succeeded in 443ms:
+  "total_count": 0,
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 951ms:
+11:    <title>pyarrow.compute.dictionary_encode &#8212; Apache Arrow v24.0.0</title>
+50:    <script>DOCUMENTATION_OPTIONS.pagename = 'python/generated/pyarrow.compute.dictionary_encode';</script>
+59:    <link rel="canonical" href="https://arrow.apache.org/docs/python/generated/pyarrow.compute.dictionary_encode.html" />
+64:    <link rel="prev" title="pyarrow.compute.dictionary_decode" href="pyarrow.compute.dictionary_decode.html" />
+622:<li class="toctree-l4"><a class="reference internal" href="pyarrow.null.html">pyarrow.null</a></li>
+658:<li class="toctree-l4"><a class="reference internal" href="pyarrow.dictionary.html">pyarrow.dictionary</a></li>
+659:<li class="toctree-l4"><a class="reference internal" href="pyarrow.run_end_encoded.html">pyarrow.run_end_encoded</a></li>
+673:<li class="toctree-l4"><a class="reference internal" href="pyarrow.DictionaryType.html">pyarrow.DictionaryType</a></li>
+695:<li class="toctree-l4"><a class="reference internal" href="pyarrow.RunEndEncodedType.html">pyarrow.RunEndEncodedType</a></li>
+733:<li class="toctree-l4"><a class="reference internal" href="pyarrow.types.is_run_end_encoded.html">pyarrow.types.is_run_end_encoded</a></li>
+744:<li class="toctree-l4"><a class="reference internal" href="pyarrow.types.is_null.html">pyarrow.types.is_null</a></li>
+755:<li class="toctree-l4"><a class="reference internal" href="pyarrow.types.is_dictionary.html">pyarrow.types.is_dictionary</a></li>
+763:<li class="toctree-l4"><a class="reference internal" href="pyarrow.nulls.html">pyarrow.nulls</a></li>
+774:<li class="toctree-l4"><a class="reference internal" href="pyarrow.NullArray.html">pyarrow.NullArray</a></li>
+801:<li class="toctree-l4"><a class="reference internal" href="pyarrow.DictionaryArray.html">pyarrow.DictionaryArray</a></li>
+808:<li class="toctree-l4"><a class="reference internal" href="pyarrow.RunEndEncodedArray.html">pyarrow.RunEndEncodedArray</a></li>
+825:<li class="toctree-l4"><a class="reference internal" href="pyarrow.NullScalar.html">pyarrow.NullScalar</a></li>
+851:<li class="toctree-l4"><a class="reference internal" href="pyarrow.DictionaryScalar.html">pyarrow.DictionaryScalar</a></li>
+852:<li class="toctree-l4"><a class="reference internal" href="pyarrow.RunEndEncodedScalar.html">pyarrow.RunEndEncodedScalar</a></li>
+915:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.first.html">pyarrow.compute.first</a></li>
+916:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.first_last.html">pyarrow.compute.first_last</a></li>
+1099:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.indices_nonzero.html">pyarrow.compute.indices_nonzero</a></li>
+1103:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.is_null.html">pyarrow.compute.is_null</a></li>
+1105:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.true_unless_null.html">pyarrow.compute.true_unless_null</a></li>
+1115:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.run_end_encode.html">pyarrow.compute.run_end_encode</a></li>
+1156:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.dictionary_decode.html">pyarrow.compute.dictionary_decode</a></li>
+1157:<li class="toctree-l4 current active"><a class="current reference internal" href="#">pyarrow.compute.dictionary_encode</a></li>
+1162:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.drop_null.html">pyarrow.compute.drop_null</a></li>
+1167:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.array_sort_indices.html">pyarrow.compute.array_sort_indices</a></li>
+1169:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.partition_nth_indices.html">pyarrow.compute.partition_nth_indices</a></li>
+1174:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.sort_indices.html">pyarrow.compute.sort_indices</a></li>
+1177:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.fill_null.html">pyarrow.compute.fill_null</a></li>
+1178:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.fill_null_backward.html">pyarrow.compute.fill_null_backward</a></li>
+1179:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.fill_null_forward.html">pyarrow.compute.fill_null_forward</a></li>
+1182:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.list_parent_indices.html">pyarrow.compute.list_parent_indices</a></li>
+1198:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.DictionaryEncodeOptions.html">pyarrow.compute.DictionaryEncodeOptions</a></li>
+1212:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.NullOptions.html">pyarrow.compute.NullOptions</a></li>
+1227:<li class="toctree-l4"><a class="reference internal" href="pyarrow.compute.RunEndEncodeOptions.html">pyarrow.compute.RunEndEncodeOptions</a></li>
+1269:<li class="toctree-l4"><a class="reference internal" href="pyarrow.acero.OrderByNodeOptions.html">pyarrow.acero.OrderByNodeOptions</a></li>
+1556:    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyarrow.compute.dictionary_encode</span></li>
+1573:  <section id="pyarrow-compute-dictionary-encode">
+1574:<h1>pyarrow.compute.dictionary_encode<a class="headerlink" href="#pyarrow-compute-dictionary-encode" title="Link to this heading">#</a></h1>
+1576:<dt class="sig sig-object py" id="pyarrow.compute.dictionary_encode">
+1577:<span class="sig-prename descclassname"><span class="pre">pyarrow.compute.</span></span><span class="sig-name descname"><span class="pre">dictionary_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mask'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarrow.compute.dictionary_encode" title="Link to this definition">#</a></dt>
+1578:<dd><p>Dictionary-encode array.</p>
+1579:<p>Return a dictionary-encoded version of the input array.
+1580:This function does nothing if the input is already a dictionary array.</p>
+1586:<dt><strong>null_encoding</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, default “mask”</span></dt><dd><p>How to encode nulls in the input.
+1587:Accepted values are “mask” (null inputs emit a null in the indices
+1588:array), “encode” (null inputs emit a non-null index pointing to
+1589:a null value in the dictionary array).</p>
+1591:<dt><strong>options</strong><span class="classifier"><a class="reference internal" href="pyarrow.compute.DictionaryEncodeOptions.html#pyarrow.compute.DictionaryEncodeOptions" title="pyarrow.compute.DictionaryEncodeOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow.compute.DictionaryEncodeOptions</span></code></a>, optional</span></dt><dd><p>Alternative way of passing options.</p>
+1613:       href="pyarrow.compute.dictionary_decode.html"
+1618:        <p class="prev-next-title">pyarrow.compute.dictionary_decode</p>
+1649:<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyarrow.compute.dictionary_encode"><code class="docutils literal notranslate"><span class="pre">dictionary_encode()</span></code></a></li>
+1657:    <a href="https://github.com/apache/arrow/edit/main/docs/source/python/generated/pyarrow.compute.dictionary_encode.rst">
+
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 77632ms:
+exec
+/bin/zsh -lc "ps -ef | grep 'find /Users/dengcchi -maxdepth 6 -path' | grep -v grep" in /Users/dengcchi
+hook: PostToolUse
+ exited 1 in 929ms:
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.codex /Users/dengcchi/.claude -name '_committee_common_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 4 -type d \\( -name 'prompts' -o -name '_shared' \\) 2>/dev/null | head -50" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi/.llms /Users/dengcchi/.codex /Users/dengcchi/.claude -path '*/_shared/TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 11648ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts
+/Users/dengcchi/research-os/prompts
+/Users/dengcchi/research-os/prompts/_shared
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 15033ms:
+ succeeded in 15158ms:
