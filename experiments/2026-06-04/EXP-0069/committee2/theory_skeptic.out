@@ -1,0 +1,27 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- The 95.1% headline is largely a Unicode-spec tautology given the experiment design: GT = NFKC+casefold identity, twin = NFKC(d), production = NFD+lower. By Unicode definition NFD is canonical-only and CANNOT collapse compatibility characters, so any doc containing ANY compat char (fullwidth ASCII, ß, ligatures, enclosed, etc.) MUST produce a (d, NFKC(d)) pair that is GT-identical and prod-distinct. The 95.1% is therefore close to "fraction of compat-bearing docs whose compat chars survive NFD" ≈ ~1.0 by construction. The empirically novel number is the **45.2% prevalence** (docs containing ≥1 compat char) and the **34.6% MinHash-T=0.8 survival** (Metric B) — not 95.1%.
+- "No production tool does NFKC+casefold" — the gap is an engineering choice, not a deep finding; the magnitude follows mechanically from that choice plus Unicode's NFD vs NFKC distinction (textbook §3.7/UAX#15). The "surprise" is documentation of misalignment, not an emergent phenomenon.
+
+CONFOUNDS:
+- Twins are SYNTHESIZED via NFKC, not observed cross-site duplicates. Metric measures CAPABILITY GAP × prevalence-of-compat-chars, not in-the-wild missed-duplicate rate. A real measurement would require found near-duplicates across crawled sites where one uses fullwidth/compat and the other ASCII — not provided.
+- L1 GT = generic NFKC+casefold, not any specific tokenizer.json (packet flags this). Real tokenizer normalizers vary: GPT-2/Llama BPE on raw bytes (NO normalization → claim INVERTS, deduper would be the stronger normalizer), T5/SP NFKC, BERT-multi NFD+lower (≈ production!). The 95.1% holds ONLY for the NFKC+casefold tokenizer family.
+- The L1 does not re-demonstrate the L0 "align deduper → FN→baseline" arm on real C4 — assumed by extrapolation from synthetic L0.
+
+ASSUMPTIONS_UNTESTED:
+- That NFKC+casefold is THE model normalizer (untested against a specific shipping tokenizer.json on this corpus).
+- That synthetic NFKC-twins are a faithful proxy for actually-crawled near-duplicates differing in compat encoding.
+- That datatrove's NFD+lower is the dominant production normalizer in 2026 (cited >=2 codebases — packet asserts; not independently re-verified in this committee context).
+- Per-language driver attribution: zh/ja 99.8/98.4% may be dominated by a few high-frequency fullwidth chars; not a per-char ablation showing the distribution isn't a single-mode artifact (e.g., one common fullwidth digit/punct).
+
+STATISTICAL_GAPS:
+- No bootstrap CI / SE on residual_FN_rate (per-lang or pooled). With n=587 (de) to 3610 (ja), this is computable and should be reported.
+- Single corpus (C4 multilingual validation). No replication on a second multilingual web corpus (mC4 train shard, CC-100, OSCAR) to rule out C4-specific encoding artifacts.
+- No per-character driver concentration analysis (Gini / top-10 char share of residual FN). If one fullwidth char accounts for >50% of residual driving, the qualitative claim narrows to "fullwidth digit/punct hygiene" not "general compat gap".
+- Metric B (the methodologically strongest number, 34.6% MinHash-T=0.8 survival) is reported as a single point without CI and without per-language breakdown.
+
+RATIONALE:
+Gate met as stated (95.1% vs ≥1%, by 95×; Metric B 34.6% by 34×) — and committee#1 set this gate in advance, so a vote to RED would require a FATAL objection, which I do NOT have. Mechanism is theoretically sound (Unicode UAX#15: NFD cannot collapse compat; casefold ≠ lower for ß/ligatures — see Unicode TR#21 §1.3) and L0 mechanism arm HELD cleanly. Real-data prevalence (45.2% docs with compat chars; ja 90%, zh 83%) is a genuine, non-tautological finding. HOWEVER, the headline 95.1% is structurally predicted by basic Unicode theory once the experimenter chose NFKC-twin construction + NFD-production comparison — it is a capability-gap × compat-prevalence measurement, not a cross-site duplicate-miss measurement. The defensible finding is "~45% of real multilingual web docs carry compat chars that are structurally invisible to NFD-based dedup; ≥34% of resulting twins survive even production shingle-MinHash at T=0.8" — clearly above the 1% gate, but not the dramatic 95% framing. YELLOW: honest gate-clearance with mechanism proven, but the headline overstates novelty (Unicode-predicted) and the GT is constructive-proxy not observed-cross-site. Promote with the metric framed as Metric B + prevalence, not the 95.1% twin-construction number. v001.
+```

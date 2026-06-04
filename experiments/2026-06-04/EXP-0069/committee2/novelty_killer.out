@@ -1,0 +1,72 @@
+Live web-search tools are permission-blocked in this session, so I cannot execute a fresh retrieval. Per the rules I will flag that explicitly and reason from established, citable literature (which I know well for this domain) rather than assert an unverifiable collision. My mandate forbids a KILL unless a collision is verified in ≥2 independent sources — I have none, so novelty cannot be RED'd.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+PRIOR_ART_SEARCH_CAVEAT: Live external search (three_pai / WebSearch) was permission-blocked
+this session; I could NOT run fresh retrieval. The citations below are from established knowledge
+of the LLM-dedup / IR-normalization literature, with retrievable identifiers, NOT from a live pull.
+Therefore: no FATAL novelty KILL is asserted (a KILL requires ≥2 verified sources; I have none that
+collide). This is an honest YELLOW, not a block.
+
+CLOSEST_PRIOR_WORK:
+- {cite: "Lee et al., 'Deduplicating Training Data Makes Language Models Better', ACL 2022",
+   url: "arxiv.org/abs/2107.06499",
+   why_close: "Canonical LLM near-dedup (MinHash + suffix-array). Defines the NearDup normalization
+   (lowercase, strip punct) but does NOT analyze tokenizer-normalizer vs deduper-normalizer
+   divergence, and does NOT measure Unicode-compatibility residual FN. Adjacent, not colliding."}
+- {cite: "Manning, Raghavan, Schütze, 'Introduction to Information Retrieval', Ch.2 (normalization for indexing)",
+   url: "nlp.stanford.edu/IR-book/",
+   why_close: "This IS the parent mechanism ('IIR §2.2' the packet cites): index-time vs query-time
+   normalization MUST match or recall drops. The claim's mechanism is a textbook instance of this.
+   The mechanism is NOT new in the abstract — committee#1 already framed it so."}
+- {cite: "Unicode Standard Annex #15 (Normalization Forms)",
+   url: "unicode.org/reports/tr15/",
+   why_close: "The 'root cause' (NFD/canonical decomposition CANNOT collapse compatibility chars like
+   fullwidth ASCII; only NFKC does) is a BY-SPEC property of Unicode, not a discovery. The headline
+   driver (300k fullwidth chars escaping NFD) is definitional, not an empirical surprise."}
+- {cite: "Penedo et al., RefinedWeb/FineWeb + datatrove (simplify_text)",
+   url: "arxiv.org/abs/2306.01116",
+   why_close: "datatrove simplify_text IS the production normalizer under test — the artifact, not
+   prior art that anticipates the finding."}
+
+NAMING_VS_MECHANISM: The novelty is NOT a mechanism delta. The mechanism (normalizer divergence →
+systematic missed-duplicates) is textbook IR (IIR Ch.2) and the structural driver (NFD≠NFKC on
+compatibility chars) is by-spec Unicode (UAX#15). What is genuinely new is EMPIRICAL + framing:
+(1) using the model tokenizer's NFKC+casefold as the ground-truth definition of "duplicate," and
+(2) measuring production-tool residual FN against that GT on REAL C4-multilingual at 95.1%, driven by
+CJK fullwidth prevalence. That is an empirical-magnitude contribution on a known mechanism — a
+re-framing + measurement, not a new mechanism. Workshop-finding altitude, not a mechanism paper.
+
+FATAL_COLLISIONS: NONE asserted. I could not verify any ≥2-source collision (search blocked), and from
+memory I know of no published work reporting THIS specific measurement (tokenizer-as-GT residual FN of
+production dedup on real multilingual web). Absence of a verified collision = no novelty RED. I flag a
+RESIDUAL RISK that the large multilingual data-quality literature may contain a near-collision a live
+search would surface; committee#1's prior-art check was noted adequate, which I defer to but cannot
+independently re-confirm this session.
+
+MANDATORY_RELATED_WORK (authors MUST cite or the contribution reads as reinventing known IR):
+- Lee et al. 2022 (2107.06499) — LLM near-dedup baseline.
+- Manning/Raghavan/Schütze IIR Ch.2 — normalization-mismatch as the parent mechanism (frame the work
+  honestly as an instance + measurement, not a new mechanism).
+- UAX#15 — to state plainly that NFD-can't-catch-compat is definitional, so the seam is structural.
+- Penedo et al. (FineWeb/datatrove) — the production tool under test.
+- text-dedup (C. Mou, github.com/ChenghaoMou/text-dedup) — 2nd production dedup lib; authors should
+  verify the NFKC-gap there too to substantiate '≥2 codebases, none do NFKC.'
+- Carlini et al., 'Quantifying Memorization' (2202.07646) / Dodge et al. 'Documenting C4' (2104.08758)
+  — these ground the SAFETY/PRIVACY/contamination impact framing; without them the 'why it matters' is
+  an unbacked assertion.
+
+RATIONALE: On the novelty axis specifically (my lane), this is incremental: a known IR mechanism (IIR
+Ch.2) whose driver is a by-spec Unicode fact (UAX#15). committee#1 already classified the mechanism as
+incremental, and the magnitude (95.1%), while real and well-measured, does not convert a known
+mechanism into a novel one — it makes the EMPIRICAL finding strong, not the mechanism new. I do NOT
+RED it: I have no verified fatal collision, the empirical measurement on real multilingual data appears
+genuinely unreported, and the hidden-exposure is currently-true (no production tool does NFKC).
+I do NOT GREEN it on novelty grounds: it is a re-framing + measurement of a textbook mechanism, which
+is the definition of YELLOW for this role. The headline 95.1% answers committee#1's TEETHINESS gate
+(seam is real, not toothless) — that is a legitimate basis for the AREA CHAIR to weigh toward GREEN on
+the EVIDENCE axis — but novelty_killer's honest verdict is YELLOW: real, incremental, empirically-driven,
+no fatal collision, mandatory related work above must be cited so it is not mistaken for a mechanism claim.
+PROMPT_VERSION: v001
+```

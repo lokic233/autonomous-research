@@ -1142,3 +1142,906 @@ exec
 exec
 /bin/zsh -lc "gh search code 'NFKC repo:NVIDIA/TensorRT-LLM' --limit 20" in /Users/dengcchi/autonomous-research-v3
 hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 365ms:
+hook: PostToolUse Completed
+ succeeded in 369ms:
+ succeeded in 381ms:
+hook: PostToolUse
+ succeeded in 404ms:
+hook: PostToolUse Completed
+ succeeded in 493ms:
+exec
+/bin/zsh -lc "gh search code 'dedup repo:vllm-project/vllm' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'dedup repo:sgl-project/sglang' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'dedup repo:LMCache/LMCache' --limit 20" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "gh search code 'dedup repo:flashinfer-ai/flashinfer' --limit 20" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "gh search code 'dedup repo:NVIDIA/TensorRT-LLM' --limit 20" in /Users/dengcchi/autonomous-research-v3
+ exited 1 in 245ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID D845:6A79:2D2AB590:2D9C66BE:6A20EA8A and timestamp 2026-06-04 03:01:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=dedup+repo%3Asgl-project%2Fsglang)
+
+ exited 1 in 240ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID 82C8:35D02C:2CB3C968:2D26BCA7:6A20EA8A and timestamp 2026-06-04 03:01:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=dedup+repo%3ALMCache%2FLMCache)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ exited 1 in 279ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID CB6B:9FD2A:2C9D12E5:2D10D3FE:6A20EA8A and timestamp 2026-06-04 03:01:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=dedup+repo%3Aflashinfer-ai%2Fflashinfer)
+
+hook: PostToolUse Completed
+ succeeded in 519ms:
+vllm-project/vllm:examples/ray_serving/elastic_ep/serve_deepseek_v2.sh: export RAY_DEDUP_LOGS=0
+vllm-project/vllm:rust/src/tokenizer/src/hf.rs: ids.dedup();
+vllm-project/vllm:rust/src/tokenizer/src/hf.rs: ids.dedup();
+vllm-project/vllm:vllm/compilation/codegen.py: # Dedup by identity, not equality: safe because FX graph args
+vllm-project/vllm:vllm/config/vllm.py: dedup_sizes = list(set(self.compilation_config.cudagraph_capture_sizes))
+vllm-project/vllm:vllm/config/vllm.py: i for i in dedup_sizes if i <= max_num_tokens
+vllm-project/vllm:cmake/external_projects/deepgemm.cmake: # Dedup interpreters that resolve to the same CPython.
+vllm-project/vllm:rust/src/text/src/lower.rs: // dedup condition that avoids redundant entries.
+vllm-project/vllm:vllm/v1/simple_kv_offload/manager.py: # Dedup against blocks already scheduled.
+vllm-project/vllm:vllm/distributed/kv_transfer/kv_connector/v1/nixl/tp_mapping.py: # GQA dedup: when K < remote_tp_size, several remote ranks
+vllm-project/vllm:vllm/model_executor/layers/fused_moe/runner/moe_runner.py: # a pure shape function of its inputs and preserve subgraph dedup.
+vllm-project/vllm:vllm/model_executor/layers/fused_moe/runner/moe_runner.py: subgraph dedup for identical-architecture models (e.g. Phi-MoE).
+vllm-project/vllm:.buildkite/performance-benchmarks/scripts/compare-json-results.py: dedup_i = 1
+vllm-project/vllm:.buildkite/performance-benchmarks/scripts/compare-json-results.py: dedup_i += 1
+vllm-project/vllm:.buildkite/performance-benchmarks/scripts/compare-json-results.py: suffix = f"_{dedup_i}"
+vllm-project/vllm:vllm/distributed/kv_transfer/kv_connector/v1/mooncake/store/worker.py: # Check which blocks already exist (dedup)
+vllm-project/vllm:vllm/distributed/kv_transfer/kv_connector/v1/mooncake/store/worker.py: # deduplication. For attention layers the value is already a tensor;
+vllm-project/vllm:cmake/utils.cmake: # `<major>.<minor>`, dedupes them and then sorts them in ascending order and
+vllm-project/vllm:csrc/custom_all_reduce.cuh: // deduplicate the addresses. That means if the allocator reuses some
+vllm-project/vllm:rust/src/tokenizer/src/tiktoken.rs: /// above `vocab_upper_bound` (e.g. an engine sampling bug). We dedupe
+vllm-project/vllm:rust/src/tokenizer/src/tiktoken.rs: /// deduped across calls so streaming decode does not spam the log for
+vllm-project/vllm:vllm/compilation/caching.py: """Storage for standalone compiled artifacts with content-based deduplication.
+vllm-project/vllm:vllm/compilation/caching.py: Deduplication works via a two-level indirection:
+vllm-project/vllm:vllm/v1/worker/gpu_model_runner.py: """Deduplication key for attention groups within a KV cache group.
+vllm-project/vllm:vllm/v1/worker/gpu_model_runner.py: # Dedupe based on full class name; this is a bit safer than
+vllm-project/vllm:vllm/v1/attention/backends/flex_attention.py: dim: int = -1,  # axis along which to deduplicate
+vllm-project/vllm:vllm/v1/attention/backends/flex_attention.py: 3. For each group, deduplicate the blocks using unique_static_unsorted
+vllm-project/vllm:vllm/v1/attention/backends/flex_attention.py: 4. Create BlockMask using the deduplicated block indices
+vllm-project/vllm:vllm/distributed/kv_transfer/kv_connector/utils.py: Deduplicated list of attention backend classes.
+vllm-project/vllm:vllm/distributed/kv_transfer/kv_connector/utils.py: the transfer policy.  This method only stores and deduplicates.
+vllm-project/vllm:benchmarks/kernels/benchmark_selective_state_update.py: batch, nheads)], deduped by effective_batch. Filters pairs that exceed
+vllm-project/vllm:benchmarks/kernels/benchmark_selective_state_update.py: "effective_batch = batch * nheads; cross-product is deduped by eb.",
+vllm-project/vllm:vllm/model_executor/layers/quantization/turboquant/config.py: # Deduplicate (if num_layers <= 2*n)
+
+ exited 1 in 245ms:
+HTTP 403: API rate limit exceeded for user ID 274299910. If you reach out to GitHub Support for help, please include the request ID 97A9:2C2FFD:2EA1ED0E:2F13F92D:6A20EA8A and timestamp 2026-06-04 03:01:30 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) (https://api.github.com/search/code?page=1&per_page=20&q=dedup+repo%3ANVIDIA%2FTensorRT-LLM)
+
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'mkdir -p /tmp/prior_art_repos && cd /tmp/prior_art_repos && if [ ! -d Curator ]; then git clone --depth 1 --filter=blob:none https://github.com/NVIDIA-NeMo/Curator.git; fi && find Curator -iname '"'*dedup*' -o -iname '*minhash*' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 4739ms:
+Updating files:   0% (2/1846)Updating files:   1% (19/1846)Updating files:   2% (37/1846)Updating files:   3% (56/1846)Updating files:   4% (74/1846)Updating files:   5% (93/1846)Updating files:   6% (111/1846)Updating files:   7% (130/1846)Updating files:   8% (148/1846)Updating files:   9% (167/1846)Updating files:  10% (185/1846)Updating files:  11% (204/1846)Updating files:  12% (222/1846)Updating files:  13% (240/1846)Updating files:  14% (259/1846)Updating files:  15% (277/1846)Updating files:  16% (296/1846)Updating files:  17% (314/1846)Updating files:  18% (333/1846)Updating files:  19% (351/1846)Updating files:  20% (370/1846)Updating files:  21% (388/1846)Updating files:  22% (407/1846)Updating files:  23% (425/1846)Updating files:  24% (444/1846)Updating files:  25% (462/1846)Updating files:  26% (480/1846)Updating files:  27% (499/1846)Updating files:  28% (517/1846)Updating files:  29% (536/1846)Updating files:  30% (554/1846)Updating files:  31% (573/1846)Updating files:  32% (591/1846)Updating files:  33% (610/1846)Updating files:  34% (628/1846)Updating files:  35% (647/1846)Updating files:  36% (665/1846)Updating files:  37% (684/1846)Updating files:  38% (702/1846)Updating files:  39% (720/1846)Updating files:  40% (739/1846)Updating files:  41% (757/1846)Updating files:  42% (776/1846)Updating files:  43% (794/1846)Updating files:  44% (813/1846)Updating files:  45% (831/1846)Updating files:  46% (850/1846)Updating files:  47% (868/1846)Updating files:  48% (887/1846)Updating files:  49% (905/1846)Updating files:  50% (923/1846)Updating files:  51% (942/1846)Updating files:  52% (960/1846)Updating files:  53% (979/1846)Updating files:  54% (997/1846)Updating files:  55% (1016/1846)Updating files:  56% (1034/1846)Updating files:  57% (1053/1846)Updating files:  58% (1071/1846)Updating files:  59% (1090/1846)Updating files:  60% (1108/1846)Updating files:  61% (1127/1846)Updating files:  62% (1145/1846)Updating files:  63% (1163/1846)Updating files:  64% (1182/1846)Updating files:  65% (1200/1846)Updating files:  66% (1219/1846)Updating files:  67% (1237/1846)Updating files:  68% (1256/1846)Updating files:  69% (1274/1846)Updating files:  70% (1293/1846)Updating files:  71% (1311/1846)Updating files:  72% (1330/1846)Updating files:  73% (1348/1846)Updating files:  74% (1367/1846)Updating files:  75% (1385/1846)Updating files:  76% (1403/1846)Updating files:  77% (1422/1846)Updating files:  78% (1440/1846)Updating files:  79% (1459/1846)Updating files:  80% (1477/1846)Updating files:  81% (1496/1846)Updating files:  82% (1514/1846)Updating files:  83% (1533/1846)Updating files:  84% (1551/1846)Updating files:  85% (1570/1846)Updating files:  86% (1588/1846)Updating files:  87% (1607/1846)Updating files:  88% (1625/1846)Updating files:  89% (1643/1846)Updating files:  90% (1662/1846)Updating files:  91% (1680/1846)Updating files:  92% (1699/1846)Updating files:  93% (1717/1846)Updating files:  94% (1736/1846)Updating files:  95% (1754/1846)Updating files:  96% (1773/1846)Updating files:  97% (1791/1846)Updating files:  98% (1810/1846)Updating files:  99% (1828/1846)Updating files: 100% (1846/1846)Updating files: 100% (1846/1846), done.
+Curator/tests/stages/deduplication
+Curator/tests/stages/deduplication/fuzzy/test_minhash_stage.py
+Curator/tests/stages/deduplication/fuzzy/test_minhash.py
+Curator/tests/stages/image/dedup
+Curator/tests/stages/image/dedup/test_dedup_filter.py
+Curator/tests/stages/text/deduplication
+Curator/docs/curate-video/process-data/dedup.md
+Curator/docs/curate-video/tutorials/split-dedup.md
+Curator/docs/curate-video/tutorials/_images/dedup-plot.png
+Curator/docs/about/concepts/deduplication.md
+Curator/docs/curate-images/tutorials/dedup-workflow.md
+Curator/docs/curate-text/process-data/deduplication
+Curator/docs/curate-text/process-data/deduplication/semdedup.md
+Curator/nemo_curator/config/text/fuzzy_deduplication_pipeline.yaml
+Curator/nemo_curator/config/text/semantic_deduplication_pipeline.yaml
+Curator/nemo_curator/config/text/exact_deduplication_pipeline.yaml
+Curator/nemo_curator/stages/deduplication
+Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py
+Curator/nemo_curator/stages/image/deduplication
+Curator/nemo_curator/stages/text/deduplication
+Curator/fern/versions/v25.09/pages/curate-video/process-data/dedup.mdx
+Curator/fern/versions/v25.09/pages/curate-video/tutorials/split-dedup.mdx
+Curator/fern/versions/v25.09/pages/about/concepts/deduplication.mdx
+Curator/fern/versions/v25.09/pages/curate-images/tutorials/dedup-workflow.mdx
+Curator/fern/versions/v25.09/pages/curate-text/process-data/deduplication
+Curator/fern/versions/v25.09/pages/curate-text/process-data/deduplication/semdedup.mdx
+Curator/fern/versions/v26.02/pages/curate-video/process-data/dedup.mdx
+Curator/fern/versions/v26.02/pages/curate-video/tutorials/split-dedup.mdx
+Curator/fern/versions/v26.02/pages/curate-video/tutorials/_images/dedup-plot.png
+Curator/fern/versions/v26.02/pages/about/concepts/deduplication.mdx
+Curator/fern/versions/v26.02/pages/curate-images/tutorials/dedup-workflow.mdx
+Curator/fern/versions/v26.02/pages/curate-text/process-data/deduplication
+Curator/fern/versions/v26.02/pages/curate-text/process-data/deduplication/semdedup.mdx
+Curator/fern/versions/v26.04/pages/curate-video/process-data/dedup.mdx
+Curator/fern/versions/v26.04/pages/curate-video/tutorials/split-dedup.mdx
+Curator/fern/versions/v26.04/pages/curate-video/tutorials/_images/dedup-plot.png
+Curator/fern/versions/v26.04/pages/about/concepts/deduplication.mdx
+Curator/fern/versions/v26.04/pages/curate-images/tutorials/dedup-workflow.mdx
+Curator/fern/versions/v26.04/pages/curate-text/process-data/deduplication
+Curator/fern/versions/v26.04/pages/curate-text/process-data/deduplication/semdedup.mdx
+Curator/fern/versions/main/pages/curate-video/process-data/dedup.mdx
+Curator/fern/versions/main/pages/curate-video/tutorials/split-dedup.mdx
+Curator/fern/versions/main/pages/curate-video/tutorials/_images/dedup-plot.png
+Curator/fern/versions/main/pages/about/concepts/deduplication.mdx
+Curator/fern/versions/main/pages/curate-images/tutorials/dedup-workflow.mdx
+Curator/fern/versions/main/pages/curate-text/process-data/deduplication
+Curator/fern/versions/main/pages/curate-text/process-data/deduplication/semdedup.mdx
+Curator/fern/assets/images/dedup-plot.png
+Curator/tutorials/math/5_deduplication.py
+Curator/tutorials/image/getting-started/image_dedup_example.py
+Curator/tutorials/text/deduplication
+Curator/benchmarking/scripts/semdedup_identification_benchmark.py
+Curator/benchmarking/scripts/dedup_removal_benchmark.py
+Curator/benchmarking/scripts/fuzzy_dedup_identification_benchmark.py
+Curator/benchmarking/scripts/exact_dedup_identification_benchmark.py
+
+exec
+/bin/zsh -lc "grep -R \"NFKC\\|normalize\\|casefold\\|lower\" -n /tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication /tmp/prior_art_repos/Curator/nemo_curator/stages/text/deduplication /tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication | head -120" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/fuzzy/identify_duplicates.py:130:            # If user has not specified row_group_size_rows, set it to the lower of 10% of the number of removal ids or 1M (default) or a minimum of 1k (for small datasets)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:56:        self.path_normalizer = lambda x: x
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:66:        self.path_normalizer = self.fs.unstrip_protocol if is_remote_url(self.input_path) else (lambda x: x)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/pairwise_io.py:94:                centroid_dirs[centroid_id] = self.path_normalizer(entry)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:91:            max_samples_per_batch (int): The number of data samples to use for batches of the pairwise distance computation. This computation is done throughout both fit predict. The default should suit most cases. The total number of elements in the batched pairwise distance computation is max_samples_per_batch * n_clusters. It might become necessary to lower this number when n_clusters becomes prohibitively large.
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:200:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:330:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:386:            df = self.normalize_embeddings_col_in_df(df, self.embedding_field)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:449:    def normalize_embeddings_col_in_df(df: "cudf.DataFrame", embedding_col: str) -> "cudf.DataFrame":
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:451:        normalized_tensor = tensor / torch.norm(tensor, dim=1, keepdim=True)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:452:        df[embedding_col] = create_list_series_from_1d_or_2d_ar(cp.asarray(normalized_tensor), index=df.index)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:459:        Embeddings are normalized. For cosine we'll need to normalize the centroids as well.
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:461:        normalized_embeddings = get_array_from_df(df, embedding_col)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:462:        # We normalize the centroids as well for cosine distance
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:463:        normalized_centroids = centroids / cp.linalg.norm(centroids, axis=1, keepdims=True)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:466:            cp.sum((normalized_embeddings - centroids[df["centroid"].values]) ** 2, axis=1)
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:470:                normalized_embeddings * normalized_centroids[df["centroid"].values],
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/semantic/kmeans.py:529:        max_samples_per_batch (int): The number of data samples to use for batches of the pairwise distance computation. This computation is done throughout both fit predict. The default should suit most cases. The total number of elements in the batched pairwise distance computation is max_samples_per_batch * n_clusters. It might become necessary to lower this number when n_clusters becomes prohibitively large.
+/tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/exact/identification.py:252:            # If user has not specified row_group_size_rows, set it to the lower of 10% of the number of removal ids or 1M (default) or a minimum of 1k (for small datasets)
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/fuzzy.md:166:# Example: less strict matching (more pairs detected, lower required similarity)
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/fuzzy.md:259:- **Memory**: Adjust `bands_per_iteration` (lower = less memory, more iterations)
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,260p' /tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+# Copyright (c) 2025, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Literal
+
+import cudf
+import numpy as np
+import rmm
+
+from nemo_curator.stages.base import ProcessingStage
+from nemo_curator.stages.deduplication.fuzzy.utils import CURATOR_DEFAULT_MINHASH_FIELD
+from nemo_curator.stages.deduplication.id_generator import CURATOR_DEDUP_ID_STR, get_id_generator_actor
+from nemo_curator.stages.deduplication.io_utils import DeduplicationIO
+from nemo_curator.stages.resources import Resources
+from nemo_curator.tasks import FileGroupTask
+from nemo_curator.utils.file_utils import create_or_overwrite_dir, get_fs
+
+if TYPE_CHECKING:
+    from nemo_curator.backends.base import WorkerMetadata
+
+
+class MinHash(ABC):
+    """
+    Base class for computing minhash signatures of a document corpus
+    """
+
+    def __init__(
+        self,
+        seed: int = 42,
+        num_hashes: int = 260,
+        char_ngrams: int = 24,
+        use_64bit_hash: bool = False,
+    ):
+        """
+        Parameters
+        ----------
+        seed: Seed for minhash permutations
+        num_hashes: Length of minhash signature (No. of minhash permutations)
+        char_ngrams: Width of text window (in characters) while computing minhashes.
+        use_64bit_hash: Whether to use a 64 bit hash function.
+        """
+        self.num_hashes = num_hashes
+        self.char_ngram = char_ngrams
+        self.seed = seed
+        self.use_64bit_hash = use_64bit_hash
+
+    def generate_seeds(self, n_permutations: int = 260, seed: int = 0, bit_width: int = 32) -> np.ndarray:
+        """
+        Generate seeds for all minhash permutations based on the given seed.
+        This is a placeholder that child classes should implement if needed.
+        """
+        msg = "Child classes should implement this method if needed"
+        raise NotImplementedError(msg)
+
+    @abstractmethod
+    def compute_minhashes(self, text_series: Any) -> Any:  # noqa: ANN401
+        """
+        Compute minhash signatures for the given dataframe text column.
+        """
+
+
+class GPUMinHash(MinHash):
+    def __init__(
+        self,
+        seed: int = 42,
+        num_hashes: int = 260,
+        char_ngrams: int = 24,
+        use_64bit_hash: bool = False,
+        pool: bool = False,
+    ):
+        # Initialize parent class
+        MinHash.__init__(
+            self,
+            seed=seed,
+            num_hashes=num_hashes,
+            char_ngrams=char_ngrams,
+            use_64bit_hash=use_64bit_hash,
+        )
+
+        # Initialize memory pool for cuDF
+        if pool:
+            rmm.reinitialize(pool_allocator=pool)
+
+        # Generate seeds
+        self.seeds = self.generate_seeds(
+            n_permutations=self.num_hashes,
+            seed=self.seed,
+            bit_width=64 if self.use_64bit_hash else 32,
+        )
+
+    def generate_seeds(self, n_permutations: int = 260, seed: int = 0, bit_width: int = 32) -> np.ndarray:
+        """
+        Generate seeds for all minhash permutations based on the given seed.
+        """
+        gen = np.random.RandomState(seed)
+
+        if bit_width == 32:  # noqa: PLR2004
+            MERSENNE_PRIME = np.uint32((1 << 31) - 1)  # noqa: N806
+            dtype = np.uint32
+        elif bit_width == 64:  # noqa: PLR2004
+            # For 64-bit, use a larger prime number suitable for 64-bit operations
+            MERSENNE_PRIME = np.uint64((1 << 61) - 1)  # noqa: N806
+            dtype = np.uint64
+        else:
+            msg = "Unsupported bit width. Use either 32 or 64."
+            raise ValueError(msg)
+
+        return np.array(
+            [
+                (
+                    gen.randint(1, MERSENNE_PRIME, dtype=dtype),
+                    gen.randint(0, MERSENNE_PRIME, dtype=dtype),
+                )
+                for _ in range(n_permutations)
+            ],
+            dtype=dtype,
+        )
+
+    def minhash32(self, ser: cudf.Series) -> cudf.Series:
+        """
+        Compute 32bit minhashes based on the MurmurHash3 algorithm
+        """
+        if not isinstance(ser, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        seeds_a = cudf.Series(self.seeds[:, 0], dtype="uint32")
+        seeds_b = cudf.Series(self.seeds[:, 1], dtype="uint32")
+
+        return ser.str.minhash(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+
+    def minhash64(self, ser: cudf.Series) -> cudf.Series:
+        """
+        Compute 64bit minhashes based on the MurmurHash3 algorithm
+        """
+        if not isinstance(ser, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        seeds_a = cudf.Series(self.seeds[:, 0], dtype="uint64")
+        seeds_b = cudf.Series(self.seeds[:, 1], dtype="uint64")
+
+        return ser.str.minhash64(a=seeds_a, b=seeds_b, seed=self.seeds[0][0], width=self.char_ngram)
+
+    def compute_minhashes(self, text_series: cudf.Series) -> cudf.Series:
+        """
+        Compute minhash signatures for the given text series.
+
+        Parameters
+        ----------
+        text_series: cudf.Series
+            Series containing text data to compute minhashes for
+
+        Returns
+        -------
+        cudf.Series containing minhash signatures
+        """
+        if not isinstance(text_series, cudf.Series):
+            msg = "Expected data of type cudf.Series"
+            raise TypeError(msg)
+
+        # Compute minhashes
+        minhash_method = self.minhash64 if self.use_64bit_hash else self.minhash32
+        return minhash_method(text_series)
+
+
+class MinHashStage(ProcessingStage[FileGroupTask, FileGroupTask], DeduplicationIO):
+    """
+    ProcessingStage for computing MinHash signatures on documents for fuzzy deduplication.
+
+    This stage takes FileGroupTask containing paths to input documents and produces
+    FileGroupTask containing paths to computed minhash signature files. It uses GPU-accelerated
+    MinHash computation to generate locality-sensitive hash signatures that can be used
+    for approximate duplicate detection.
+
+    The stage automatically handles:
+    - Reading input files (JSONL or Parquet format)
+    - Assigning unique Integer IDs to documents using the IdGenerator actor
+    - Computing MinHash signatures using GPU acceleration
+    - Writing results to Parquet files
+
+    Parameters
+    ----------
+    output_path : str
+        Base path where minhash output files will be written
+    text_field : str, default="text"
+        Name of the field containing text to compute minhashes from
+    minhash_field : str, default="_minhash_signature"
+        Name of the field where minhash signatures will be stored
+    char_ngrams : int, default=24
+        Width of character n-grams for minhashing
+    num_hashes : int, default=260
+        Number of hash functions (length of minhash signature)
+    seed : int, default=42
+        Random seed for reproducible minhash generation
+    use_64bit_hash : bool, default=False
+        Whether to use 64-bit hash functions (vs 32-bit)
+    read_format : Literal["jsonl", "parquet"], default="jsonl"
+        Format of input files
+    read_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for reading input files
+    write_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for writing output files
+
+    Examples
+    --------
+    >>> stage = MinHashStage(
+    ...     output_path="/path/to/minhash/output",
+    ...     text_field="content",
+    ...     num_hashes=128,
+    ...     char_ngrams=5
+    ... )
+    >>> # Use in a pipeline to process document batches
+    """
+
+    def __init__(  # noqa: PLR0913
+        self,
+        output_path: str,
+        text_field: str = "text",
+        minhash_field: str = CURATOR_DEFAULT_MINHASH_FIELD,
+        char_ngrams: int = 24,
+        num_hashes: int = 260,
+        seed: int = 42,
+        use_64bit_hash: bool = False,
+        read_format: Literal["jsonl", "parquet"] = "jsonl",
+        read_kwargs: dict[str, Any] | None = None,
+        write_kwargs: dict[str, Any] | None = None,
+        pool: bool = True,
+    ):
+        # Set ProcessingStage attributes
+        self.name = self.__class__.__name__
+        self.resources = Resources(gpus=1.0)  # Requires 1 GPU
+
+        self.text_field = text_field
+        self.minhash_field = minhash_field
+        self.char_ngrams = char_ngrams
+        self.num_hashes = num_hashes
+        self.seed = seed
+        self.use_64bit_hash = use_64bit_hash
+        self.read_format = read_format
+        self.read_kwargs = read_kwargs or {}
+        self.write_kwargs = write_kwargs or {}
+        self.pool = pool
+        # Initialize the minhash processor in setup
+        self.minhash_processor = None
+        self.id_generator = None
+
+        self.output_fs = get_fs(output_path, self.write_kwargs.get("storage_options", {}))
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,200p' /tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/fuzzy.mdx 2>/dev/null || find /tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication -type f -maxdepth 1 -print" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/exact.md
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/index.md
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/fuzzy.md
+/tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/semdedup.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '200,360p' /tmp/prior_art_repos/Curator/nemo_curator/stages/deduplication/fuzzy/minhash.py && sed -n '1,140p' /tmp/prior_art_repos/Curator/docs/curate-text/process-data/deduplication/fuzzy.md" in /Users/dengcchi/autonomous-research-v3
+ succeeded in 0ms:
+    minhash_field : str, default="_minhash_signature"
+        Name of the field where minhash signatures will be stored
+    char_ngrams : int, default=24
+        Width of character n-grams for minhashing
+    num_hashes : int, default=260
+        Number of hash functions (length of minhash signature)
+    seed : int, default=42
+        Random seed for reproducible minhash generation
+    use_64bit_hash : bool, default=False
+        Whether to use 64-bit hash functions (vs 32-bit)
+    read_format : Literal["jsonl", "parquet"], default="jsonl"
+        Format of input files
+    read_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for reading input files
+    write_kwargs : dict[str, Any] | None, default=None
+        Additional keyword arguments for writing output files
+
+    Examples
+    --------
+    >>> stage = MinHashStage(
+    ...     output_path="/path/to/minhash/output",
+    ...     text_field="content",
+    ...     num_hashes=128,
+    ...     char_ngrams=5
+    ... )
+    >>> # Use in a pipeline to process document batches
+    """
+
+    def __init__(  # noqa: PLR0913
+        self,
+        output_path: str,
+        text_field: str = "text",
+        minhash_field: str = CURATOR_DEFAULT_MINHASH_FIELD,
+        char_ngrams: int = 24,
+        num_hashes: int = 260,
+        seed: int = 42,
+        use_64bit_hash: bool = False,
+        read_format: Literal["jsonl", "parquet"] = "jsonl",
+        read_kwargs: dict[str, Any] | None = None,
+        write_kwargs: dict[str, Any] | None = None,
+        pool: bool = True,
+    ):
+        # Set ProcessingStage attributes
+        self.name = self.__class__.__name__
+        self.resources = Resources(gpus=1.0)  # Requires 1 GPU
+
+        self.text_field = text_field
+        self.minhash_field = minhash_field
+        self.char_ngrams = char_ngrams
+        self.num_hashes = num_hashes
+        self.seed = seed
+        self.use_64bit_hash = use_64bit_hash
+        self.read_format = read_format
+        self.read_kwargs = read_kwargs or {}
+        self.write_kwargs = write_kwargs or {}
+        self.pool = pool
+        # Initialize the minhash processor in setup
+        self.minhash_processor = None
+        self.id_generator = None
+
+        self.output_fs = get_fs(output_path, self.write_kwargs.get("storage_options", {}))
+        self.output_path = self.output_fs.sep.join([output_path, self.name])
+        create_or_overwrite_dir(self.output_path, storage_options=self.write_kwargs.get("storage_options", {}))
+
+    def setup(self, _worker_metadata: "WorkerMetadata | None" = None) -> None:
+        """Initialize the GPU MinHash processor and ID generator."""
+        # Initialize the ID generator (will be shared across workers)
+
+        try:
+            self.id_generator = get_id_generator_actor()
+        except ValueError as e:
+            err_msg = """
+            Failed to get ID generator actor. Start an ID generator actor via `create_id_generator_actor` if calling this stage directly.
+            If using the FuzzyDedup API this should be started automatically.
+            """
+            raise ValueError(err_msg) from e
+
+        # Initialize the GPU minhash processor
+        self.minhash_processor = GPUMinHash(
+            seed=self.seed,
+            num_hashes=self.num_hashes,
+            char_ngrams=self.char_ngrams,
+            use_64bit_hash=self.use_64bit_hash,
+            pool=self.pool,
+        )
+
+    def inputs(self) -> tuple[list[str], list[str]]:
+        """Define input requirements."""
+        return (["data"], [])
+
+    def outputs(self) -> tuple[list[str], list[str]]:
+        """Define outputs - produces FileGroupTask with minhash files."""
+        return (["data"], [])
+
+    def process(self, task: FileGroupTask) -> FileGroupTask:
+        """
+        Process a group of files to compute minhashes.
+
+        Args:
+            task: FileGroupTask containing file paths to process
+
+        Returns:
+            FileGroupTask containing paths to minhash output files
+        """
+
+        if self.minhash_processor is None or self.id_generator is None:
+            msg = "MinHash processor or ID generator not initialized. Call setup() first."
+            raise RuntimeError(msg)
+
+        output_file = self.output_fs.sep.join([self.output_path, f"{task._uuid}.parquet"])
+
+        read_kwargs = self.read_kwargs.copy()
+
+        # Read input file based on format
+        if self.read_format == "jsonl":
+            df = self.read_jsonl(filepath=task.data, columns=[self.text_field], assign_id=True, **read_kwargs)
+        elif self.read_format == "parquet":
+            df = self.read_parquet(filepath=task.data, columns=[self.text_field], assign_id=True, **read_kwargs)
+        else:
+            msg = f"Unsupported read format: {self.read_format}"
+            raise ValueError(msg)
+
+        result_df = df[[CURATOR_DEDUP_ID_STR]]
+        result_df[self.minhash_field] = self.minhash_processor.compute_minhashes(df[self.text_field])
+
+        # Write output file
+        self.write_parquet(df=result_df, filepath=output_file, **self.write_kwargs)
+
+        # Return FileGroupTask with output file
+        return FileGroupTask(
+            task_id=f"{task.task_id}",
+            dataset_name=f"{task.dataset_name}_minhash",
+            data=[output_file],
+            _metadata={
+                **task._metadata,
+                "minhash_field": self.minhash_field,
+                "num_hashes": self.num_hashes,
+                "storage_options": self.write_kwargs.get("storage_options"),
+            },
+            _stage_perf=task._stage_perf,
+        )
+---
+description: "Identify and remove near-duplicate documents using MinHash and LSH with GPU acceleration"
+categories: ["how-to-guides"]
+tags: ["fuzzy-dedup", "minhash", "lsh", "gpu", "ray"]
+personas: ["data-scientist-focused", "mle-focused"]
+difficulty: "intermediate"
+content_type: "how-to"
+modality: "text-only"
+---
+
+(text-process-data-dedup-fuzzy)=
+
+# Fuzzy Duplicate Removal
+
+Find and remove near-duplicate documents with small edits or reformatting using MinHash and Locality Sensitive Hashing (LSH). This approach identifies candidate pairs with a similarity threshold efficiently at scale on GPU.
+
+For other approaches, refer to {ref}`Deduplication <text-process-data-dedup>`.
+
+## How It Works
+
+Fuzzy deduplication uses MinHash and LSH to find near-duplicate content:
+
+1. Computes MinHash signatures over character n-grams
+2. Uses Locality Sensitive Hashing (LSH) to find candidate matches
+3. Builds a graph of duplicate relationships
+4. Identifies groups of near-duplicate documents
+
+Ideal for detecting documents with minor differences such as formatting changes, typos, or small edits, where documents share a high degree of overlapping content.
+
+## Before You Start
+
+**Prerequisites**:
+
+- Ray cluster with GPU support (required for distributed processing)
+- Stable document identifiers for removal (either existing IDs or IDs generated by the workflow and removal stages)
+
+```{note}
+**Running in Docker**: When running fuzzy deduplication inside the NeMo Curator container, ensure the container is started with `--gpus all` so that Ray workers can access the GPU. Without GPU access, you may see `CUDARuntimeError` or `AttributeError: 'CUDARuntimeError' object has no attribute 'msg'`. Also activate the virtual environment with `source /opt/venv/env.sh` after entering the container.
+```
+
+## Quick Start
+
+Get started with fuzzy deduplication using the following example of identifying duplicates, then remove them:
+```python
+from nemo_curator.core.client import RayClient
+from nemo_curator.stages.deduplication.fuzzy.workflow import FuzzyDeduplicationWorkflow
+from nemo_curator.stages.text.deduplication.removal_workflow import TextDuplicatesRemovalWorkflow
+
+ray_client = RayClient()
+ray_client.start()
+
+# Step 1: Identify duplicates
+fuzzy_workflow = FuzzyDeduplicationWorkflow(
+    input_path="input_data/",
+    cache_path="./cache",
+    output_path="./results",
+    text_field="text",
+    perform_removal=False,
+    input_filetype="parquet",
+    char_ngrams=24,
+    num_bands=20,
+    minhashes_per_band=13
+)
+fuzzy_workflow.run()
+# Duplicate IDs saved to ./results/FuzzyDuplicateIds/
+
+# Step 2: Remove duplicates
+removal_workflow = TextDuplicatesRemovalWorkflow(
+    input_path="input_data/",
+    ids_to_remove_path="./results/FuzzyDuplicateIds",
+    output_path="./deduplicated",
+    input_filetype="parquet",
+    id_field="_curator_dedup_id",
+    duplicate_id_field="_curator_dedup_id",
+    id_generator_path="./results/fuzzy_id_generator.json"
+)
+removal_workflow.run()
+# Clean dataset saved to ./deduplicated/
+```
+
+## Configuration
+
+Configure fuzzy deduplication using these key parameters:
+
+```{list-table} Key Configuration Parameters
+:header-rows: 1
+:widths: 25 15 20 40
+
+* - Parameter
+  - Type
+  - Default
+  - Description
+* - `input_path`
+  - str | list[str]
+  - None
+  - Path(s) to input files or directories
+* - `cache_path`
+  - str
+  - Required
+  - Directory to cache intermediate results
+* - `output_path`
+  - str
+  - Required
+  - Directory to write duplicate IDs and ID generator
+* - `text_field`
+  - str
+  - "text"
+  - Name of the text field in input data
+* - `char_ngrams`
+  - int
+  - 24
+  - Character n-gram size for MinHash (recommended: >= 20)
+* - `num_bands`
+  - int
+  - 20
+  - Number of LSH bands (affects similarity threshold)
+* - `minhashes_per_band`
+  - int
+  - 13
+  - Number of hashes per LSH band
+* - `bands_per_iteration`
+  - int
+  - 5
+  - Bands processed per iteration (memory tuning)
+* - `use_64_bit_hash`
+  - bool
+  - False
+  - Use 64-bit hash (more memory, fewer collisions)
+* - `seed`
+  - int
+  - 42
+  - Random seed for MinHash permutations
+* - `input_filetype`
+  - str
+  - "parquet"
+  - Input file format ("parquet" or "jsonl")
+* - `input_blocksize`
+  - str | int
+  - "1GiB"
+  - Size of input blocks for processing
+
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L https://huggingface.co/docs/tokenizers/en/api/normalizers | sed -n '1,180p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L https://raw.githubusercontent.com/google/sentencepiece/master/doc/normalization.md | sed -n '1,220p'" in /Users/dengcchi/autonomous-research-v3
+exec
+/bin/zsh -lc "curl -L https://www.unicode.org/reports/tr15/tr15-57.html | grep -i -A3 -B3 'compatibility' | head -80" in /Users/dengcchi/autonomous-research-v3
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 301ms:
+100  3181  100  3181    0     0  10149      0 --:--:-- --:--:-- --:--:-- 10162
+# Use custom normalization rule
+By default, SentencePiece normalizes the input sentence with a variant of Unicode
+[NFKC](https://en.wikipedia.org/wiki/Unicode_equivalence).
+
+SentencePiece allows us to define custom normalization rule, which is stored in the model file.
+
+## Use pre-defined normalization rule
+SentencePiece provides the following pre-defined normalization rule. It is recommended to use one of them unless you have any special reasons.
+
+* **nmt_nfkc**: [NFKC](https://en.wikipedia.org/wiki/Unicode_equivalence) normalization with some additional normalization around spaces. (default)
+* **nfkc**:  original NFKC normalization.
+* **nmt_nfkc_cf**: nmt_nfkc + [Unicode case folding](https://www.w3.org/International/wiki/Case_folding) (mostly lower casing)
+* **nfkc_cf**: nfkc + [Unicode case folding](https://www.w3.org/International/wiki/Case_folding).
+* **identity**: no normalization
+
+You can choose the normalization rule with `--normalization_rule_name` flag.
+```
+% spm_train --normalization_rule_name=identity --input=<input> --model_prefix=<model file> --vocab_size=8000                                                                                                                                                                                
+```
+
+NOTE: Due to the limitation of normalization algorithm, full NFKC normalization is not implemented. [builder.h] describes example character sequences not normalized by our NFKC implementation.
+
+The difference between **nmt_nfkc** and **nfkc** can be found via ```diff -u data/nfkc.tsv data/nmt_nfkc.tsv``` command.
+
+## Use custom normalization rule
+The normalization is performed with user-defined string-to-string mappings and leftmost longest matching.
+
+You can use custom normalization rule by preparing a TSV file formatted as follows:
+```
+41 302 300      1EA6
+41 302 301      1EA4
+41 302 303      1EAA
+...
+```
+In this sample, UCS4 sequence [41 302 300] (hex) is converted into [1EA6] (hex). When there are ambiguities in the conversions, the longest rule is used.
+Note that the tab is used as a delimiter for source and target sequence and space is used as a delimiter for UCS4 characters. We can make the target sequence empty to remove some specific characters from the text.
+See [data/nfkc.tsv](../data/nfkc.tsv) as an example. Once a TSV file is prepared, you can specify it with `--normalization_rule_tsv` flag.
+```
+% spm_train --normalization_rule_tsv=<rule tsv file> --input=<input> --model_prefix=<model file> --vocab_size=8000                                                                                                                                                                             
+```
+
+`<model file>` embeds the normalization rule so the same normalization rule is applied when `<model file>` is used.
+
+
+## Command line tool to perform normalization
+```
+% spm_normalize --model=<model_file> file1 file2.. 
+% spm_normalize --normalization_rule_tsv=custom.tsv file1 file2..
+```
+The first command line uses the normalization rule embedded in the model file. The second command line uses the normalization rule in TSV file and is useful to make normalization rule interactively.
+
+ succeeded in 315ms:
+100  138k    0  138k    0     0   410k      0 --:--:-- --:--:-- --:--:--  411k
+  <ul class="toc">
+    <li>1&nbsp;<a href="#Introduction">Introduction</a>
+    <ul class="toc">
+      <li>1.1&nbsp;<a href="#Canon_Compat_Equivalence">Canonical and Compatibility Equivalence</a></li>
+      <li>1.2&nbsp;<a href="#Norm_Forms">Normalization Forms</a></li>
+      <li>1.3&nbsp;<a href="#Description_Norm">Description of the Normalization Process</a></li>
+      <li>1.4&nbsp;<a href="#Concatenation">Concatenation of Normalized Strings</a></li>
+--
+  <h2>1 <a name="Introduction" href="#Introduction">Introduction</a></h2>
+  
+  <p>This annex provides subsidiary information about
+  Unicode normalization. It describes canonical and compatibility equivalence
+  and the four normalization forms, providing
+  examples, and elaborates on the formal specification of Unicode normalization,
+  with further explanations and implementation notes.</p>
+--
+  <i>Section 2.12, Equivalent Sequences and Normalization</i> in 
+  [<a href="../tr41/tr41-36.html#Unicode">Unicode</a>].</p>
+  	
+  <h3>1.1 <a name="Canon_Compat_Equivalence" href="#Canon_Compat_Equivalence">Canonical and Compatibility Equivalence</a></h3>
+	
+	<p>The Unicode Standard defines two formal types of equivalence between characters: 
+	<i>canonical equivalence</i> 
+  and <i>compatibility equivalence</i>. Canonical equivalence is a fundamental equivalency between characters or 
+  sequences of characters which represent the same 
+	abstract character, and which when correctly displayed should always 
+  have the same visual appearance and 
+--
+    </table>
+  </div>
+
+  <p>Compatibility equivalence is a weaker type of equivalence 
+	between characters or sequences of characters which represent the same 
+	abstract character (or sequence of abstract characters), but which may have 
+  distinct visual appearances or behaviors. 
+  The visual appearances of the compatibility equivalent
+    forms typically constitute a subset of the expected range of visual
+    appearances of the character (or sequence of characters) they are equivalent to.
+    However, these variant forms may represent a visual distinction that
+    is significant in some textual contexts, but not in others. As a result,
+    greater care is required to determine when use of a compatibility
+    equivalent is appropriate. 
+  If the visual distinction is stylistic, 
+	then markup or styling could be used to represent the formatting 
+	information. However, some characters with compatibility decompositions are 
+	used in mathematical notation to represent a distinction of a semantic nature; 
+	replacing the use of distinct character codes by formatting in
+  such contexts may cause problems. <i>Figure 2</i> 
+  provides examples of compatibility equivalence.</p>
+
+  <p class="caption">Figure 2. <a name="Compatibility_Equivalence_Figure" href="#Compatibility_Equivalence_Figure">
+    Examples of Compatibility Equivalence</a></p>
+
+  <div align="center">
+    <table class="subtle">
+--
+    </table>
+  </div>
+
+  <p>Both canonical and compatibility equivalences are explained in more detail in 
+	<i>Chapter 2, General Structure</i>, and <i>Chapter 3, Conformance,</i>
+  	in [<a href="../tr41/tr41-36.html#Unicode">Unicode</a>].</p>
+  
+--
+  <p>Unicode Normalization Forms are formally defined normalizations
+  of Unicode strings which make it possible to determine whether any two Unicode strings are
+  equivalent to each other. Depending on the particular Unicode Normalization Form, that
+  equivalence can either be a canonical equivalence or a compatibility equivalence.</p>
+   
+  <p>Essentially, the Unicode Normalization Algorithm puts all
+  combining marks in a specified order, and uses rules for decomposition and composition to
+--
+    </tr>
+    <tr>
+      <td valign="TOP" height="40">Normalization Form&nbsp;KD (NFKD)</td>
+      <td valign="TOP" height="40">Compatibility Decomposition</td>
+    </tr>
+    <tr>
+      <td valign="TOP" height="60">Normalization Form&nbsp;KC (NFKC)</td>
+      <td valign="TOP" height="60">Compatibility Decomposition,<br>
+
