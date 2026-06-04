@@ -12,12 +12,23 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORT. pandas 3.0.3/pyarrow 24.0.0/sklearn 1.9.0 (newer than scout''s
+  2.3.3 - composition STILL holds). Verified composition: (a) astype(category) sorts
+  over OBSERVED values only -> 30/30=100% common codes differ under partial obs, 0/50
+  differ on full alphabet; (b) codes survive parquet round-trip, stay 100% divergent;
+  (c) pyarrow.dictionary_encode uses first-seen order, round-trips to .cat.codes (100%
+  differ, independent 2nd source). MAIN (realistic signal, global-map R2~0.78): partial-observation
+  sweep f={0,.1,.2,.4,.6} dR2(astype/HGB)=0.000/0.966/1.067/1.415/1.046 - strictly
+  monotone 0->0.4, f=0 dR2=0.000 EXACTLY (null boundary holds), seam R2 goes NEGATIVE
+  with zero error. RF cross-check f=0.4 dR2=1.414 (matches HGB). 2nd arm dictencode_shuffled
+  (genuine arrival divergence): dR2 high even at f=0 (1.535) - unconditionally unstable
+  via arrival order, mechanistically distinct from astype. All 4 pre-registered it-matters
+  criteria MET. Tail f=0.6 dip disclosed as high-variance (overlap shrinks).'
+result_effect: support
 artifacts_path: experiments/2026-06-04/EXP-0080/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-04T22:52:12Z'
 prompt_version: ''
