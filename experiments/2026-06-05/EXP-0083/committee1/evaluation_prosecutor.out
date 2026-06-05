@@ -1,0 +1,9 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: 
+- {name: "Wasmtime / Wasmer WASI defaults", why: "To determine if wazero's deterministic default is an anomaly or an accepted standard for WASM runtimes, which often prioritize reproducible execution sandboxes over host-coupled entropy.", repo_or_cite: "https://github.com/bytecodealliance/wasmtime"}
+STRAWMAN_RISKS: ["Assuming `NewModuleConfig()` is treated by the ecosystem as a 'production-ready secure default' rather than a 'deterministic pure baseline'. If host authors are well-aware that WASM capabilities must be explicitly wired up (like FS and network), claiming the default is a 'silent demotion' might be attacking a strawman.", "Assuming that guests expecting secure execution environments are routinely run by hosts that fail to provide `WithRandSource()`."]
+MISSING_METRICS: ["Ecosystem Prevalence Rate: The percentage of open-source wazero hosts that use `NewModuleConfig()` without injecting `WithRandSource(crypto/rand.Reader)` when executing third-party modules."]
+KILLER_EXPERIMENT: <A GitHub code search / AST scan across public wazero-dependents to measure how many production hosts actually fail to override the PRNG default. If 0% of mature projects fail to wire up crypto/rand, the vulnerability is a synthetic toy.>
+RATIONALE: The evaluation proves the mechanics of the ABI abstraction leak, but fails to prove its practical impact. Demonstrating a vulnerability using the bare `NewModuleConfig()` is a strawman unless we establish that real-world hosts actually deploy this config for security-sensitive guests. The L1 MUST include a prevalence study and a comparison against the default behaviors of Wasmtime/Wasmer to confirm if this is an anomalous hazard or standard WASM ecosystem design.
+```

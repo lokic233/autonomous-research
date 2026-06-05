@@ -1,0 +1,41 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE:
+- [RE-1] WASI Preview1 random_get entropy contract: cite the spec language on whether random_get mandates cryptographic-quality entropy. If yes, wazero's default is a spec violation (stronger claim). If no, the default is a documented non-CSPRNG choice and the "silent demotion" framing weakens materially. (theory_skeptic, unresolved)
+- [RE-2] Prevalence scan: GitHub code search / AST scan across public wazero-dependents measuring how many hosts use NewModuleConfig() without overriding WithRandSource when running guests that call crypto/rand or getrandom. If 0% of mature projects fail to wire up crypto/rand, the hazard is synthetic. (evaluation_prosecutor, product_realist, theory_skeptic)
+- [RE-3] Wasmtime / Wasmer default comparison: document whether competing WASI runtimes default to deterministic RNG+clocks or to host-coupled entropy. Systems_reviewer already surfaced that Wasmtime's WasiCtxBuilder provides secure_random with random state per context — if wazero is the anomaly, that strengthens the finding; if all runtimes default deterministic, it's ecosystem-normal and the claim shrinks to a documentation gap.
+- [RE-4] Doc-audit of composition warning: quote the actual wazero config.go doc strings for WithRandSource, WithSysWalltime, WithSysNanotime, WithSysNanosleep and demonstrate that no single doc string, example, or guide warns the COMPOUND effect (crypto/rand silently demoted). Theory_skeptic correctly flags that "none warns the composition" is asserted but not shown with quoted text.
+
+MANDATORY_BASELINES:
+- Wasmtime WASI defaults (secure_random / clock behavior) as the primary comparator runtime
+- Wasmer WASI defaults as a secondary comparator
+- SWC-120 / Consensys deterministic-VM-demotes-RNG guidance (must be cited as prior art, not ignored — biggest gap identified by novelty_killer)
+- CWE-330 / CWE-338 (already acknowledged; must appear in any write-up)
+- wazero ModuleConfig GoDoc per-knob documentation (the claim's own source material)
+
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0070", change: "Hold at L0-YELLOW. Do NOT advance to L1 until RE-1 through RE-4 are resolved. If RE-1 shows random_get mandates CSPRNG quality AND RE-2 shows non-trivial prevalence (>5% of sampled hosts ship bare defaults to crypto-calling guests) AND RE-3 confirms wazero is anomalous vs. Wasmtime/Wasmer -> advance to L1 with scope: prevalence + blast-radius + responsible-disclosure assessment. If RE-1 shows no CSPRNG mandate AND RE-2 shows near-zero prevalence -> converge as a documentation-quality finding (YELLOW-terminal) and do not spend an L1."}
+
+PRIOR_ART_ADEQUATE: no
+
+RATIONALE:
+Unanimous YELLOW across all five reviewers. The L0 experiment is methodologically clean — source-verified defaults, cross-process controls held, nulls clean, and the cross-language arm (Rust getrandom 10/10 identical under default, 10/10 distinct under control) genuinely lifts this above single-runtime CWE-330 folklore by proving the demotion is an ABI-boundary property of the host config, not a guest-language quirk. This is the real delta and every reviewer acknowledges it.
+
+However, four independent lines of evidence prevent GREEN:
+
+(1) PRIOR-ART SEARCH WAS INCOMPLETE. The novelty_killer explicitly reports live web search was permission-denied. Per the standing rule, GREEN cannot be issued without adequate prior-art search. The systems_reviewer partially compensated by surfacing CrowdSec PR #4495 and wetware/pkg issue #106 — both of which show downstream practitioners independently discovering and patching this exact composition in real wazero embeddings. This simultaneously validates the hazard (real people hit it) and narrows the novelty window (it is being independently found and fixed without a paper/CVE). The mandatory SWC-120 / deterministic-VM-demotes-RNG prior art (novelty_killer) is not yet cited in the claim's framing — this is the single largest gap.
+
+(2) THE WASI SPEC CONTRACT IS UNEXAMINED. The theory_skeptic correctly identifies that the "silent demotion of crypto/rand" framing depends critically on whether WASI preview1 random_get carries a CSPRNG contract. If the spec mandates cryptographic-quality entropy, wazero's default violates it and this is a spec-conformance finding (stronger). If the spec is silent or explicitly permits deterministic implementations, then wazero's choice is a documented design decision and "demotion" is an editorial characterization, not a technical fact. This is the single most load-bearing unresolved question.
+
+(3) PREVALENCE IS ZERO-EVIDENCE. All five reviewers flag this. The evaluation_prosecutor frames it most sharply: demonstrating a vulnerability using bare NewModuleConfig() is a strawman unless real-world hosts actually deploy this config for security-sensitive guests. The product_realist notes production guidance already prescribes overriding knobs. The CrowdSec/wetware evidence cuts both ways — it shows people hit it, but also that they fix it without needing a CVE/paper to tell them. Without an L1 prevalence scan, blast radius is unestablished.
+
+(4) NO REVIEWER'S YELLOW IS REBUTTED BY EVIDENCE IN THE PACKET. Every reviewer's reservation stands on its merits. The novelty_killer's SWC-120 parallel is unrebutted. The systems_reviewer's downstream-patches-exist finding is unrebutted. The evaluation_prosecutor's strawman risk is unrebutted. The theory_skeptic's WASI-spec-contract gap is unrebutted. Aggregation by evidence, not vote-count: five independent yellows with five distinct, unrebutted reservations = YELLOW, not "consensus trending GREEN."
+
+The clock-decoupling half adds breadth but not independent novelty — it is the same shape (documented per-knob default, arithmetic consequence of +1ms/read, no composition warning) and inherits the same yellow assessment. It does not independently lift the verdict.
+
+DISPOSITION: Hold at L0-YELLOW. The claim has a defensible kernel — the ABI-boundary composition is real, cross-language, and plausibly un-owned by any single surface — but it cannot advance to L1 until the four required-evidence items are resolved. The most efficient next step is RE-1 (WASI spec citation — one document read) followed by RE-3 (Wasmtime/Wasmer comparison — two doc reads), as these determine whether the framing is "spec violation" or "documented design choice," which gates whether RE-2 (prevalence scan — expensive) is worth running. Prompt version v001.
+```
