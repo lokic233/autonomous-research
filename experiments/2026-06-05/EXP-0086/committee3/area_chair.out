@@ -1,0 +1,30 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: green, theory_skeptic: yellow, product_realist: yellow}
+FATAL_OBJECTIONS: []
+REQUIRED_EVIDENCE: [
+  "Authenticated full-population AST scan of wazero importers to constrain prevalence CI (currently n=9, binomial 95% CI ~3%-60% — effectively unconstrained; GREEN-altitude prevalence requires either a population denominator or an explicit sampling-frame justification)",
+  "Citable preview1-era authoritative interpretation (WASI working group thread, security advisory, or reference-impl maintainer statement) resolving whether 'high-quality' + blocking-clause entails CSPRNG — without this, the preview1 violation claim remains interpretive rather than demonstrated",
+  "wazero's own ModuleConfig/WithRandSource documentation must be cited as prior art (the deterministic default is vendor-documented behavior, not a hidden flaw — the 'silent' framing holds only for the downstream guest, not for a runtime integrator reading the docs; omitting this citation is a gap)"
+]
+MANDATORY_BASELINES: [
+  "wazero WithRandSource(crypto/rand.Reader) — the vendor's own documented mitigation path (already implicitly present but must be explicitly cited as the vendor-acknowledged default-is-deterministic design)",
+  "CWE-330 / CWE-338 — the established hazard class this instantiates (novelty_killer, not in packet)",
+  "Wasmtime, Wasmer, Node/V8 uvwasi — already used as cross-runtime baselines (adequate)",
+  "Blockchain/consensus WASM engines (e.g., CosmWasm) — how strictly-deterministic environments handle random_get (omit vs mock) would strengthen the 'must OMIT' successor-spec argument (systems_reviewer)"
+]
+MAP_DELTA_PROPOSAL: {node: "CLAIM-0070", change: "altitude YELLOW-CONVERGE: narrow from 'new security finding' to 'conformance-synthesis / SoK of a known-class, vendor-documented hazard with novel cross-runtime + un-defendable-at-ABI framing'; drop or explicitly qualify preview1-violation claim as interpretive; retain successor-spec-violation as unambiguous; flag prevalence as bounded-signal-with-amplifier, not population-scale; contribution type = systematization-of-knowledge, not mechanism-discovery"}
+PRIOR_ART_ADEQUATE: no
+RATIONALE: Four of five reviewers vote YELLOW; the sole GREEN (evaluation_prosecutor) confirms methodological soundness — correct baselines, no strawman, definitive metric — but does not rebut the novelty-altitude or prevalence concerns that drive the other four votes. The evidence chain is genuinely strong and honestly presented, but the committee converges on a clear finding: this is a systematization-of-knowledge (SoK) contribution, not a new-mechanism discovery.
+
+The MECHANISM (fixed-seed-42 PRNG at WASI random_get demoting guest CSPRNG) is vendor-documented (wazero WithRandSource docs explicitly state the default is deterministic and that WithRandSource must be set for real entropy — novelty_killer correctly flags this as absent from the packet's prior-work list) and was independently rediscovered and patched ≥4 times (CrowdSec PR#4495, wetware#106, wapc-go, wazero#620), well past the ≥2-source collision bar. The mechanism is mundane (theory_skeptic: constant-seeded PRNG → constant output is tautological, not emergent).
+
+What IS genuinely un-owned is the SYNTHESIS: cross-language ABI-boundary demonstration + cross-runtime anomaly across all 4 major runtimes + un-defendable-by-correct-guest (no in-ABI entropy-quality query) + successor-spec conformance analysis + generator-propagated blast-radius identification. No single prior source binds these axes. This is real and publishable — but at SoK altitude, not new-mechanism altitude.
+
+The two residuals are load-bearing and unresolved: (A) Preview1 spec-violation strength is interpretive — the decisive "cryptographically secure" + "must OMIT" language is in the successor spec, not preview1; the blocking-clause argument is strong-but-contestable (theory_skeptic, novelty_killer, product_realist all flag this). No authoritative preview1-era interpretation has been cited to resolve it. (B) Prevalence is bounded-signal — n=9 with 2 unmitigated and a generator amplifier is a real non-zero signal, but the 95% binomial CI is ~3%-60%, which is essentially unconstrained (theory_skeptic). The auth-blocked full-population scan is the missing piece; without it, population-scale claims cannot be made.
+
+Prior-art search is ruled INADEQUATE: (1) Live web search was auth-blocked for the novelty_killer (the role most dependent on it); (2) wazero's own vendor documentation of the deterministic default — the single most relevant prior-art item for the "silent/hidden" framing — was identified by the novelty_killer from prior knowledge but is absent from the packet's cited prior work. The 'silent' claim must be narrowed: silent to the GUEST (true, well-evidenced), but documented to the integrator (true, undisclosed in packet). GREEN cannot be emitted with this gap.
+
+Net: an honest, well-evidenced YELLOW — the strongest YELLOW shape the committee has seen, with a clear path to GREEN (resolve residuals A and B, cite vendor docs, narrow claims to SoK altitude). A YELLOW-converge with the map delta narrowing contribution type to conformance-synthesis/SoK is the zero-false-green outcome. Prompt version v001.
+```
