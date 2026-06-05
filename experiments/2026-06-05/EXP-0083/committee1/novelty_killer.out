@@ -1,0 +1,28 @@
+I attempted live prior-art search (external web + WebSearch) but both were permission-denied in this environment, so I am grounding on canonical, retrievable sources from my own knowledge and flagging that the live-search step was blocked.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "wazero config.go / ModuleConfig.WithRandSource GoDoc", url: "https://pkg.go.dev/github.com/tetratelabs/wazero#ModuleConfig", why_close: "The default deterministic random source is wazero's OWN documented behavior; the GoDoc explicitly states the default is deterministic and tells users to pass crypto/rand.Reader for non-deterministic/production use. The single-knob fact in the claim is published vendor documentation, not a discovery."}
+- {cite: "SWC-120 'Weak Sources of Randomness from Chain Attributes' / Consensys smart-contract security best practices", url: "https://swcregistry.io/docs/SWC-120/", why_close: "Canonical, multi-source prior art for the GENERAL mechanism: a deterministic execution environment demotes any in-environment randomness to predictable, yielding identical/forgeable secrets. The blockchain/VM-determinism community has owned 'deterministic sandbox => insecure RNG' for years."}
+- {cite: "CWE-330 (Use of Insufficiently Random Values) + CWE-338 (Weak PRNG)", url: "https://cwe.mitre.org/data/definitions/338.html", why_close: "The harm chain (fixed seed -> identical ed25519 keys/token) is textbook CWE-338. The orchestrator already concedes this half is dead folklore."}
+- {cite: "WASI Preview1 random_get specification", url: "https://github.com/WebAssembly/WASI/blob/main/legacy/preview1/docs.md#random_get", why_close: "random_get is THE single documented WASI randomness syscall. That Go's crypto/rand.Reader (wasip1 port) and Rust getrandom->wasi both bottom out at random_get is by WASI design. The cross-language arm therefore confirms a definitional chokepoint, not a surprising emergent property."}
+
+NAMING_VS_MECHANISM:
+The mechanism is NOT new. It is a composition of three documented/folklore facts: (1) wazero's documented default deterministic random source, (2) the well-owned 'deterministic VM demotes randomness' hazard class (SWC-120, smart-contract/record-replay literature), and (3) the definitional fact that WASI funnels all guest CSPRNGs through one host syscall (random_get). The genuine delta is FRAMING/PACKAGING — naming the un-warned COMPOSITION and the ABI seam — plus a clean cross-language empirical demonstration. The cross-language arm is real work but it verifies something that follows directly from WASI's single-chokepoint design, so it is unsurprising rather than a new mechanism. This is a sharper articulation of known facts, not a mechanism invention.
+
+FATAL_COLLISIONS:
+- None VERIFIED in >=2 independent sources (I could not run live search; my knowledge surfaces no wazero-specific CVE/paper/issue owning this exact composition). Per the rules a KILL collision requires >=2 verified independent sources, so I do NOT cast RED on collision grounds.
+- However the NOVELTY is materially eroded: SWC-120 + smart-contract determinism guidance own the general phenomenon, and wazero's own docs own the single-knob defaults. The un-owned residue is narrow (the specific "no surface warns crypto/rand-is-demoted across WASI ABI in wazero" + clock-decoupling pairing).
+
+MANDATORY_RELATED_WORK (must be cited before any L1 advance, or this becomes an instant kill):
+- wazero ModuleConfig.WithRandSource / WithSysWalltime/Nanotime/Nanosleep GoDoc (the documented per-knob defaults).
+- SWC-120 + Consensys/Solidity randomness guidance (the canonical deterministic-VM-demotes-RNG prior art the authors currently do NOT cite — biggest gap).
+- CWE-330 / CWE-338.
+- WASI random_get spec (to honestly frame the cross-language arm as definitional, not emergent).
+- Record-replay determinism (Mozilla rr) and a WASM/WASI security survey (e.g. "Everything Old is New Again", USENIX Sec 2020) as adjacent abstraction-leak/sandbox-security context.
+
+RATIONALE:
+Not GREEN: the mechanism collapses to a documented default (wazero GoDoc) + a heavily-owned hazard class (SWC-120, CWE-338) + a definitional WASI chokepoint (random_get spec); the novelty is primarily a re-framing of these, and the cross-language ABI arm — while methodologically clean — confirms a consequence of WASI's documented single-syscall design rather than revealing a new mechanism. Not RED: I cannot verify a fatal wazero-specific collision in >=2 sources (and live search was blocked), and the specific composition (silent crypto/rand demotion across the WASI ABI by the DEFAULT config + the wall-clock-decoupling pairing, un-warned by any single surface) does plausibly lack an exact owner. The defensible contribution is an abstraction-leak/documentation-of-composition finding, which is YELLOW-grade novelty: publishable only if reframed against SWC-120-style prior art and pitched as a usability-security/abstraction-seam result, NOT as a new vulnerability class. The clock half is the same shape — documented default, no independent novelty.
+```
