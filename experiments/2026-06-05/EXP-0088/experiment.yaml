@@ -12,12 +12,20 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'CLAIM-0073 SUPPORTED on pinned DuckDB 1.5.3 (pandas 3.0.3). Default
+  read_csv (sample_size=20480) sniffs BIGINT from integer-only early rows; post-sample
+  3.14 SILENTLY truncated to 3 (dtype BIGINT, null_count=0, zero stderr/warning) at
+  4/4 sweep positions (20481/25000/30000/39000=100%). LOUD-vs-SILENT asymmetry: same
+  column, ''hello'' past sample -> ConversionException (even suggests sample_size=-1
+  fix), 3.14 -> silent. Causation: in-sample 3.14@row5 -> DOUBLE preserves; sample_size=-1
+  -> DOUBLE preserves; pandas full-file -> float64 preserves. Documented-promise violation.
+  Confirmed across read_csv/read_csv_auto/CREATE TABLE. NULL rejected, no falsifier
+  fired. Committee-ready.'
+result_effect: support
 artifacts_path: experiments/2026-06-05/EXP-0088/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-05T18:37:48Z'
 prompt_version: ''
