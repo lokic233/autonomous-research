@@ -1,0 +1,70 @@
+claim_id: CLAIM-0070
+project_id: PROJ-0040
+stage: seed
+status: seed
+claim: 'Under wazero (tetratelabs/wazero v1.12.0, pure-Go WASM runtime, real adoption:
+  CosmWasm/Dapr/Arcjet) DEFAULT ModuleConfig (NewModuleConfig()), a Go-WASI (GOOS=wasip1)
+  guest using the GOLD-STANDARD crypto/rand pattern (ed25519.GenerateKey(rand.Reader),
+  token := crypto/rand bytes) silently produces GLOBALLY IDENTICAL + PREDICTABLE secrets
+  across independent runs/processes (wazero default random_get = fixed-seed math/rand),
+  AND its context.WithTimeout / time.After deadlines DECOUPLE from real wall-clock
+  (wazero default clock_time_get = frozen 2022-01-01 +1ms/read, nanosleep = returns
+  immediately) -- both SILENTLY, no error, at the host<->WASI ABI boundary that NEITHER
+  the guest author (textbook-secure code) NOR the host author (minimal documented
+  NewModuleConfig()) treats as load-bearing. VERIFIED on devvm14382: same .wasm default
+  config -> byte-identical ed25519 pubkey 46a4405f...641cb876 + identical session
+  token across runs; WithRandSource(crypto/rand.Reader) -> different key (clean A/B).
+  Clock: 50ms context.WithTimeout busy-poll saw only ~4ms guest time + blew the 2M-iter
+  cap; time.After(100ms) took 939ms real host wall; WithSysWalltime/Nanotime/Nanosleep
+  -> correct (50ms@153ms, 100ms@100.5ms). NULL EXIT: keys differ run-to-run, or wazero
+  errors on random_get without a source, or crypto/rand bypasses WASI -> none happened
+  (byte-identical, falsifiable). NOVELTY = the COMPOSITION/abstraction-leak: a default
+  host config DEMOTES a CSPRNG to a fixed PRNG across the WASI ABI so the gold-standard
+  crypto/rand pattern does NOT protect you, + the clock-decoupling half (silent rate-limiter/retry/circuit-breaker
+  misfire) which is NOT RNG folklore. NOT the naive "wazero default rand is deterministic"
+  (per-knob documented + CWE folklore = dead); the surviving claim is the un-owned
+  guest-does-everything-right-yet-loses composition path for this young runtime.'
+why_it_matters: 'FRESH-DOMAIN (operating-systems-and-runtimes / security-crypto-engineering),
+  IMMATURE-WEDGE seam (the only un-saturated path per r10 finding: young tools postdate
+  the Jepsen/CVE/ReproBLAS waves so high-prevalence seams arent yet documented). CLAIM-0059
+  winning shape: subsystem A (Go wasip1 guest crypto/rand + context/time, assumes
+  real CSPRNG + monotonic clock) x subsystem B (wazero host NewModuleConfig() defaults:
+  fixed-seed random_get, frozen+1ms clock, instant nanosleep, deliberate sandbox choice)
+  -> A choice silently SETS a surprising CORRECTNESS property (predictable secrets
+  + decoupled deadlines) that NEITHER side predicts + NO error surfaces. scout-BB
+  GO 7/10, pre-VERIFIED end-to-end on a real wazero v1.12.0 install (byte-identical
+  keys + 939ms-vs-50ms clock divergence, clean A/B control, cleaned up). 6-GATE SCREEN:
+  #1 incremental-composition PASS (emergent join; per-knob docs warn individually,
+  NONE warns the composition that crypto/rand is demoted). #2 verify-the-composition
+  PASS (installed+probed, not assumed). #3 issue-tracker/CVE/paper PASS (composition
+  UN-OWNED: no wazero issue/CVE/paper; only generic RNG-CWE folklore + an unrelated
+  Go preemption issue #60857). #4 not-folklore = the WEAK gate (naive predictable-RNG
+  framing is dead CWE folklore -> MUST lead with the boundary-demotion-composition
+  + the clock-decoupling half, which is NOT RNG folklore + independently surprising).
+  #5 structural-prevalence PASS (crypto/rand for tokens/keys + context.WithTimeout
+  ubiquitous in Go-WASI; NewModuleConfig() is the canonical host entry; wazero has
+  real production adoption). #6 not-tautology PASS (L0 could have nulled; byte-identical
+  is real+falsifiable). LIVE RISK (gate 4): a hostile committee may rule the security
+  half documented-CWE-folklore-dressed-up -> defense = lead the thesis on the COMPOSITION
+  abstraction-leak (gold-standard crypto/rand silently demoted by a DEFAULT, un-owned
+  for this real young runtime) + the clock/timeout half. L0 strengthening: test across
+  SEPARATE OS processes/machines + other guest langs (Rust/AssemblyScript wasip1)
+  to prove its an ABI-boundary property not a Go-runtime quirk. scout-BB self-rating
+  7/10.'
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r10-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0083 result, then ros exp complete --exp EXP-0083 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0083
+created_at: '2026-06-05T16:08:36Z'
+last_updated: '2026-06-05T16:09:40Z'

@@ -1,0 +1,75 @@
+claim_id: CLAIM-0071
+project_id: PROJ-0041
+stage: seed
+status: seed
+claim: 'In fjall (fjall-rs/fjall v3.1.4, young Rust LSM embedded KV, real adoption:
+  brk Bitcoin Research Kit + atproto/Bluesky tooling; no Jepsen/CVE/crash-consistency
+  paper exists), journal corruption that destroys batch FRAMING (a torn/lost write
+  or out-of-order page writeback that removes an End marker -- the natural signature
+  of the DEFAULT PersistMode::Buffer) is silently treated as an incomplete trailing
+  batch: the DB OPENS SUCCESSFULLY WITH NO ERROR while silently DISCARDING ALL PersistMode::SyncAll-ACKNOWLEDGED
+  committed data written after the corruption point -- WHEREAS in-DATA corruption
+  (same byte budget, inside a value) is caught by the per-batch xxh3 checksum and
+  surfaced as a loud Err(JournalRecovery(ChecksumMismatch)). WHERE the corruption
+  lands (framing vs data), not how much, decides loud-fail vs silent-loss. VERIFIED
+  on devvm14382 fjall 3.1.4 (50 SyncAll-acknowledged keys, corrupt journal, reopen):
+  data_flip control (1 byte inside a value) -> open_ok=FALSE, loud ChecksumMismatch
+  (the NULL outcome, proves the discriminator); trailing torn-last-batch -> open_ok=true
+  49/50 (correct); mid_truncate -> open_ok=true 25/50 SILENT; mid_zero (out-of-order
+  writeback, later batches intact) -> 16/50 SILENT; mid_flip (spurious mid-stream
+  Start) -> 12/50 SILENT; early_trunc -> 1/50 SILENT. Mechanism: JournalBatchReader
+  on a framing desync -> truncate_to(last_valid_pos)+return None -> iterator ends
+  -> recovery for-loop ends NORMALLY -> clean open, post-corruption batches gone,
+  truncation only log::debug/trace (no error path); on checksum mismatch -> loud Err.
+  NULL EXIT: open fails loudly OR all 50 keys present -> did NOT happen on framing
+  corruption. NOVELTY = the LOUD-vs-SILENT recovery ASYMMETRY by corruption LOCATION
+  under the default durability mode + clean-open-no-error (fjall-specific, un-owned),
+  NOT generic "WALs lose data after a hole".'
+why_it_matters: "FRESH-DOMAIN (databases-and-storage-engines), IMMATURE-WEDGE seam\
+  \ (validated path: young tools postdate Jepsen/CVE/paper waves -> high-prevalence\
+  \ seams un-owned BECAUSE young; fjall is CAREFUL on obvious durability seams [fsyncs\
+  \ dirs, handles trailing tears] = a mature tools reviewers would say saturated,\
+  \ yet the loud-vs-silent recovery asymmetry has NO issue/CVE/paper owner). CLAIM-0059\
+  \ winning shape: A (write/durability path, default PersistMode::Buffer = write to\
+  \ OS buffer no fsync, SyncAll documented \"definitely durable\") x B (journal recovery\
+  \ JournalBatchReader, per-batch xxh3 + Start/End framing) -> As realistic crash\
+  \ signature (torn append/out-of-order writeback = FRAMING corruption) routes into\
+  \ Bs SILENT truncate branch, not Bs loud-checksum branch; neither side predicts\
+  \ silent acknowledged-data loss; docs dont warn (README says \"let it crash\" but\
+  \ the silent-truncate path produces NO error). scout-AA GO 4/5, pre-VERIFIED end-to-end\
+  \ on real fjall 3.1.4 with a clean A/B control (data_flip -> loud Err = null). 6-GATE:\
+  \ #1 incremental-composition PASS (durability-default x recovery-framing-logic;\
+  \ neither predicts silent loss). #2 verify PASS (installed+probed 3.1.4, measured).\
+  \ #3 issue/CVE/paper PASS UN-OWNED (no CVE/Jepsen/paper; #53 is cosmetic warning-suppression\
+  \ on a TRAILING batch, never identifies silent committed-data loss on NON-trailing\
+  \ corruption; #112/#113 = a different fixed clean-path memtable-rotation bug, the\
+  \ recovery behavior is STILL present in 3.1.4 + measured). #4 not-folklore = the\
+  \ live gate (generic \"WAL loses post-hole data\" is folklore -> MUST scope to the\
+  \ loud-vs-silent-by-LOCATION asymmetry + clean-open, fjall-specific). #5 prevalence\
+  \ PASS (Buffer is the DEFAULT; torn/partial writes are THE realistic crash signature\
+  \ it admits; fjall real+shipping). #6 not-tautology PASS (the data_flip control\
+  \ DID null with a loud Err -> discriminator real, not rigged). LIVE RISK: (folklore)\
+  \ frame the contribution as the ASYMMETRY not \"data loss\"; (#53) distinct+stronger\
+  \ (committed-acknowledged loss on non-trailing corruption w/ clean open). \u2605\
+  \ L1 HARDENING (scout-AA named it): replace hand-corruption with a REAL reordered-writeback\
+  \ crash harness (dm-log-writes / dm-flakey / CrashMonkey block-reorder replay) to\
+  \ prove the framing tear ARISES from the documented default under real power-loss,\
+  \ raising gate-5 from plausible-prevalent to demonstrably-arises. scout-AA self-rating\
+  \ 4/5."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r10-001
+prompt_version: ''
+lifecycle_state: experiment_running
+next_action: await EXP-0084 result, then ros exp complete --exp EXP-0084 --effect
+  ...
+blocking_on: ''
+active_experiments:
+- EXP-0084
+created_at: '2026-06-05T16:10:56Z'
+last_updated: '2026-06-05T16:11:54Z'
