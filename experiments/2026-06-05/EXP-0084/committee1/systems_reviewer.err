@@ -1,0 +1,74 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e98d0-1b0b-77d3-accd-5f0a9b96da8d
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0071 (PROJ-0041, IMMATURE-WEDGE: databases-and-storage-engines — fjall LSM journal recovery)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT (orchestrator-recovered from on-node results; researcher wedged then self-recovered; work verified real, no fabrication). Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge.
+
+## ★★★ THE #1 STRESS-TEST (orchestrator flags FRONT-AND-CENTER — the two killers this claim must beat):
+A. GATE-4 FOLKLORE: a reviewer will say "single-file WALs losing data after a hole/torn write is known." THE DECISIVE QUESTION: is the contribution genuinely above that? It is NOT "WALs lose data." It is the LOUD-vs-SILENT recovery ASYMMETRY by corruption LOCATION under the DEFAULT durability mode: in-DATA corruption -> loud Err(ChecksumMismatch) (the per-batch xxh3 guards only the in-data case); FRAMING corruption (torn/missing-End/lost-Start) -> silent truncate_to(last_valid_pos)+return None, recovery loop ends NORMALLY, DB OPENS CLEAN with NO Err, discarding committed data EVEN PHYSICALLY PRESENT AFTER THE HOLE. fjall-specific, source-verified, un-owned (#53 = cosmetic trailing-batch warning; #112/#113 = a DIFFERENT fixed clean-path bug; no CVE/Jepsen/paper). Is the location-asymmetry + clean-open a genuine publishable finding (SUPPORT) or folklore-dressed-up (YELLOW/RED)?
+B. ★ THE DURABILITY-CONTRACT BOUNDARY (the honest L1 gap — judge whether it caps this): the silent-loss is demonstrated for FRAMING corruption + for a real dm-flakey dropped-WRITEBACK crash of UN-fsync'd Buffer-mode data (documented loss) + a faithful labeled reorder-SIM that discards acked data present after an interior hole. NOT yet achieved: a REAL reordered DEVICE write dropping data whose SyncAll fsync ALREADY COMPLETED (dm-log-writes barrier-reorder replay / power-cut crossing an unhonored fsync barrier). So the claim's teeth depend on: does fjall's framing-desync recovery silently drop data that was ACKNOWLEDGED-DURABLE (SyncAll returned Ok), or only in-flight/post-ack-pre-durable data? The committee must decide if the demonstrated form (framing corruption + dropped-writeback + faithful sim on real journal bytes) is sufficient, or if GREEN requires the real post-fsync reordered-write (L1).
+
+## CLAIM
+In fjall 3.1.4 (young Rust LSM embedded KV; real adoption brk/atproto; no Jepsen/CVE/paper), journal FRAMING corruption (default PersistMode::Buffer's natural crash signature) is silently treated as an incomplete trailing batch -> DB opens with NO error while discarding committed data after the corruption point, WHEREAS in-DATA corruption (same byte budget) is caught by xxh3 checksum and surfaced as a loud Err. WHERE the corruption lands, not how much, decides loud-fail vs silent-loss. NULL EXIT: open fails loudly OR all keys present on framing corruption -> did NOT happen (triggered only on the in-data control).
+
+## L0 RESULT (EXP-0084; cli:devvm14382; pinned fjall =3.1.4 / lsm-tree 3.1.4 / Rust 1.96.0; root)
+SOURCE-VERIFIED (installed 3.1.4 journal/): default PersistMode::Buffer = literal no-op (writer.rs:232, no fsync). Recovery routes by LOCATION: SILENT framing-desync -> truncate_to(last_valid_pos)+return None, logged only debug/trace ("missing terminator... discarding to keep atomicity"), recovery loop ends normally -> clean open no Err. LOUD in-data -> End-marker got_checksum != expected -> ERROR + Err(JournalRecovery(ChecksumMismatch)). Distinct from FIXED #112/#113.
+ASYMMETRY TABLE (50 keys, each db.persist(SyncAll)->Ok, corrupt journal, reopen): data_flip DATA (CONTROL) -> open_ok=FALSE, 0/50, LOUD ChecksumMismatch. trailing framing -> true, 49/50, none. mid_truncate -> true, 25/50, SILENT. mid_zero -> true, 16/50, SILENT. mid_flip -> true, 25/50, SILENT. early_trunc -> true, 2/50, SILENT. In-data control LOUD; all 5 framing modes open clean 0<keys<50 no error. NULL triggered ONLY on the control (as predicted). IT-MATTERS met.
+★ REAL-CRASH HARNESS: (a) dm-flakey v1.5.0 root device-level dropped-writeback crash (loop-backed ext4, drop_writes drops dirty journal-page writeback): OPEN_OK=true ERR=none silent loss (Case A 5/50; Case B data-already-in-SST 50/50 correct). HONEST LIMIT: dm-flakey only drops UN-fsync'd Buffer data (documented loss); cannot drop post-SyncAll-fsync-completed data. (b) FAITHFUL labeled reorder-SIM on the REAL fjall journal bytes (zero one interior 4KiB page = a dropped page-writeback, later acked batches intact): drop_page=1 -> OPEN_OK=true, 38/50, ERR=none -> 12 SyncAll-acked keys physically present after the hole SILENTLY discarded; recovery log debug-level "truncating/missing terminator/discarding" then clean open.
+
+## NOVELTY / PRIOR-ART: not folklore "WALs lose data after a hole." The loud-vs-silent-by-LOCATION asymmetry + clean-open-while-discarding-data-present-after-the-hole is fjall-specific + source-verified + un-owned (#53 cosmetic trailing; #112/#113 different fixed bug; no CVE/Jepsen/paper). Committee scrutinize: is there a fjall issue / LSM-recovery paper that owns the LOCATION-asymmetry? (If yes -> RED.)
+
+## ORCHESTRATOR NOTE (NOT advocacy; this claim was orchestrator-RECOVERED from a wedged researcher — work file-transferred + verified real, no fabrication): clean L0 (source-verified mechanism, in-data control held LOUD as the discriminator, real dm-flakey root crash + faithful reorder-sim). The make-or-break is the durability-contract boundary (stress-test B): does the silent recovery drop ACKNOWLEDGED-DURABLE (post-SyncAll-fsync) data, or only in-flight/post-ack-pre-durable? If the demonstrated form is a genuine silent-acked-loss finding -> advance to an L1 (dm-log-writes barrier-reorder replay to drop post-fsush-completed data) toward green. If the silent loss is only for un-fsync'd Buffer data (= documented PersistMode::Buffer behavior) -> the location-asymmetry + clean-open is still novel but the severity caps lower -> YELLOW. Judge honestly. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
