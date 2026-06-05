@@ -1,0 +1,103 @@
+verdict_id: VERDICT-0070
+claim_id: CLAIM-0071
+project_id: PROJ-0041
+date: '2026-06-05'
+experiment_ids:
+- EXP-0084
+experiment_paths:
+- experiments/2026-06-05/EXP-0084
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- 'Mechanism-novelty framing DEAD: RocksDB WAL Recovery Modes + LevelDB log_reader
+  document+parameterize the loud-vs-silent-by-location dichotomy (>=2 sources). The
+  reorder-SIM creates a POSIX-impossible crash state for SyncAll users (fsync(N+1)
+  completed => N on disk'
+- zeroed-interior+valid-subsequent unreachable via barrier-honoring crash) -> post-fsync
+  silent-loss is an injection artifact. The only real crash (dm-flakey) drops contractually-lossy
+  un-fsync'd Buffer data.
+required_evidence:
+- 'dm-log-writes BARRIER-REORDER replay: record a real SyncAll workload, replay to
+  every crash point, demonstrate a point where SyncAll returned Ok for a key but recovery
+  silently opens without it (THE L1 gate, crosses the durability-contract boundary
+  -- without it the post-fsync severity is unsubstantiated)'
+- 'PEER-LSM DIFFERENTIAL: identical injection harness vs RocksDB (kPointInTimeRecovery)
+  + sled/redb -- if the asymmetry table is indistinguishable the ''fjall-specific''
+  claim collapses to ''known WAL behavior, fjall instance'''
+- if fjall is uniquely silent where peers are loud/offer-opt-out THAT is the delta
+- REPETITION+VARIANCE (n=1/mode insufficient -- sweep corruption offset/post-hole-batch-count/journal-size
+  + CIs)
+- FRAMING-CHECKSUM-SCOPE comparison (do RocksDB/LevelDB/etcd checksum FRAMING metadata,
+  not just data? if peers checksum framing + fjall doesn't, THAT is the mechanism
+  delta)
+map_delta_proposals:
+- 'CLAIM-0071 -> HOLD at YELLOW, do NOT advance to L1-GREEN without the 3 gates. Reclassify
+  contribution_type ''novel mechanism'' -> ''un-owned INSTANTIATION of known WAL recovery
+  behavior in a specific adopted system (fjall): ships the silent-truncate default
+  with no AbsoluteConsistency opt-out + no error surface''. Severity capped at ''silent
+  default without opt-out'' until dm-log-writes crosses the durability boundary. add
+  required_prior_art [RocksDB WAL Recovery Modes, LevelDB log_format, ALICE OSDI''14,
+  Ganesan FAST''17].'
+baseline_requirements:
+- RocksDB kPointInTimeRecovery under identical framing-corruption injection (closest
+  behavioral analog)
+- LevelDB log_reader paranoid_checks=false under identical injection (ancestral format)
+- fjall SyncAll under dm-log-writes barrier-reorder (the severity-escalation test)
+- 'REQUIRED prior-art: RocksDB WAL Recovery Modes + LevelDB log_format + Pillai OSDI''14
+  ALICE + Ganesan FAST''17'
+committee_run_dir: experiments/2026-06-05/EXP-0084/committee1
+verbatim_votes_summary: 'novelty_killer(Y): RocksDB WAL Recovery Modes + LevelDB log_reader
+  document the loud-vs-silent-by-location dichotomy (>=2 sources) -> mechanism-novelty
+  dead. systems_reviewer(Y): corroborates the WAL-family prior art; the delta is at
+  most ''fjall hardwires the silent mode, no opt-out''. evaluation_prosecutor(Y, DECISIVE):
+  reorder-SIM is POSIX-impossible for SyncAll users (fsync(N+1) Ok => N on disk);
+  the post-hole silent-loss is an injection artifact, not a crash vuln. theory_skeptic(Y):
+  the sim can''t distinguish ''fjall violates its durability contract'' from ''we
+  zeroed a page the device would never lose post-fsync''; dm-flakey drops only contractually-lossy
+  Buffer data. product_realist(Y): actionable for fjall maintainers (an issue/advisory)
+  but not a publishable novel finding; needs the AbsoluteConsistency-opt-out-absence
+  framing + peer differential. area_chair(Y): both stress-tests resolved against the
+  strong form; survives as a narrow un-owned instantiation; GREEN needs reframe +
+  mandatory prior-art + the dm-log-writes L1 + peer-LSM differential.'
+key_structural_finding: 'MECHANISM-NOVELTY DEAD (gate-4): the loud-vs-silent-by-LOCATION
+  asymmetry is documented WAL-format-family behavior -- RocksDB WAL Recovery Modes
+  PARAMETERIZES exactly this (kPointInTimeRecovery = stop-at-first-corruption/open-clean/discard-rest;
+  tail-tolerant vs absolute-consistency), a configurable API in a mature peer; LevelDB
+  log_reader same shape (truncated->EOF, checksum->error). >=2-source collision, anti-hallucination
+  satisfied. DURABILITY-BOUNDARY = HARD CAP (stress-test B, decisive+unrebutted):
+  if SyncAll fsync completed for batch N+1, POSIX guarantees batch N on stable storage
+  -> the reorder-SIM''s zeroed-interior-page+valid-subsequent-data state is UNREACHABLE
+  via OS crash on barrier-honoring hardware -> the ''12 SyncAll-acked keys silently
+  discarded'' is an INJECTION ARTIFACT, not a crash vuln. The only REAL crash evidence
+  (dm-flakey) drops un-fsync''d Buffer data (writer.rs:232 no-op) = contractually-ALLOWED
+  loss = contract working as specified. WHAT SURVIVES (narrower, un-owned, actionable):
+  fjall 3.1.4 HARDWIRES the silent-truncate-on-framing-corruption as the ONLY recovery
+  mode, with NO AbsoluteConsistency opt-out + NO error surface, with a clean discriminating
+  control (in-data->loud). = an INSTANTIATION of a known phenomenon in one real young
+  system (un-owned in fjall: #53 cosmetic, #112/#113 different fixed bug, no CVE/Jepsen/paper)
+  -- worth a fjall issue/advisory, NOT a publishable novel finding without reframe
+  + prior-art + L1.'
+disposition: 'committee#1 UNANIMOUS 6/6 YELLOW (no RED). Both orchestrator-flagged
+  stress-tests RESOLVED AGAINST the strong form: (A) mechanism-novelty DEAD (documented
+  WAL-family behavior; RocksDB parameterizes it), (B) durability-contract boundary
+  is the HARD CAP (POSIX barrier makes the reorder-sim''s post-fsync silent-loss state
+  unreachable via real crash; dm-flakey only drops un-fsync''d Buffer = contractually-allowed
+  loss). Survives as a narrower un-owned finding. Gate to a heavy L1 (dm-log-writes
+  + peer-LSM differential) OR converge.'
+created_at: '2026-06-05T17:39:56Z'

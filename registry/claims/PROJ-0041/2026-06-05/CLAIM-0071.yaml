@@ -102,13 +102,16 @@ supporting_evidence:
     \ different fixed bug, no CVE/Jepsen/paper). DISPOSITION: SUPPORT."
   data_path: experiments/2026-06-05/EXP-0084/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0070
+  date: '2026-06-05'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r10-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0084; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0070=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-05T16:10:56Z'
-last_updated: '2026-06-05T17:19:12Z'
+last_updated: '2026-06-05T17:39:56Z'
