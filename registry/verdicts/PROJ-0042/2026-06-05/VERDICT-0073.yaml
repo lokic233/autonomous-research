@@ -1,0 +1,67 @@
+verdict_id: VERDICT-0073
+claim_id: CLAIM-0072
+project_id: PROJ-0042
+date: '2026-06-05'
+experiment_ids:
+- EXP-0087
+experiment_paths:
+- experiments/2026-06-05/EXP-0087
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- "Per-hop\u2260end-to-end is the DEFAULT PREDICTION for any hop-by-hop overlay without\
+  \ E2E credit/ack (Saltzer/Reed/Clark 1984)"
+- the 3-node result confirms standard queueing, does not falsify a contract or reveal
+  a new mechanism. MQTT QoS0/1 + DDS Best-Effort both drop at intermediate nodes ->
+  the lineage is mixed, not uniformly E2E.
+required_evidence:
+- NONE (YELLOW-terminal
+- the Saltzer-1984 mechanism-known-ceiling + the mixed lineage settles it. The finding
+  merits a zenoh issue/docs-PR but not further investment toward GREEN.)
+map_delta_proposals:
+- 'CLAIM-0072 -> YELLOW-TERMINAL. Downgrade mechanism-discovery -> undocumented-UX/API-hazard-characterization.
+  Narrow: ''silent put-Ok + zero log + get/put contract-flip = uncharacterized ROS
+  2 hazard'' (a docs-PR), not a novel mechanism.'
+baseline_requirements:
+- Saltzer/Reed/Clark 1984 end-to-end argument (the foundational paper predicting per-hop!=E2E)
+- MQTT QoS 0/1 broker-drop (mixed lineage)
+- DDS Best-Effort (mixed lineage)
+committee_run_dir: experiments/2026-06-05/EXP-0087/committee1
+verbatim_votes_summary: "All 5+AC converge: per-hop overlay lacking E2E backpressure\
+  \ is Saltzer-1984 (predicted); Block is local-only by design (not a failure); MQTT/DDS\
+  \ lineage is mixed (not uniformly E2E); PRIOR_ART_ADEQUATE:no (search tools blocked).\
+  \ The un-owned part is the silent-put-Ok+zero-log+contract-flip COMPOSITION as a\
+  \ ROS-2-adopter hazard \u2014 a docs-PR/issue, not GREEN."
+key_structural_finding: "The 3-node router proof is clean and the measurement is sound,\
+  \ BUT: (1) per-hop overlay lacking end-to-end backpressure is PREDICTED by Saltzer-1984\
+  \ (the foundational paper for this exact property) -> the mechanism is NOT novel,\
+  \ it's the expected behavior of the system's class; (2) the mature-lineage inversion\
+  \ is OVERSTATED (MQTT QoS 0/1 drops at broker, DDS Best-Effort drops \u2014 the\
+  \ lineage is MIXED, not uniformly end-to-end); (3) the 'Block fails end-to-end'\
+  \ framing is incorrect \u2014 Block's local/per-hop semantics are its documented\
+  \ design, and CongestionControl+Reliability are orthogonal knobs; (4) PRIOR_ART_ADEQUATE:no\
+  \ (both search tools permission-denied). What SURVIVES: the COMPOSITION of (a) silent\
+  \ put-Ok on drop + (b) zero log instrumentation + (c) undocumented get/put default-contract-flip\
+  \ = an uncharacterized hazard for ROS 2 adopters \u2014 a docs-PR/zenoh-issue, not\
+  \ a publishable GREEN."
+disposition: 'committee#1 YELLOW (6/6, no RED). Gate-4 resolved AGAINST: per-hop!=end-to-end
+  is the DEFAULT PREDICTION for any hop-by-hop overlay (Saltzer/Reed/Clark 1984);
+  the 3-node result confirms standard queueing behavior, not a new mechanism. Downgraded
+  from mechanism-discovery to undocumented-UX/API-hazard-characterization. YELLOW-terminal.'
+created_at: '2026-06-05T19:08:56Z'
