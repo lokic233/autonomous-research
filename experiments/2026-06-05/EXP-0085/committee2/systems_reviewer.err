@@ -156,3 +156,1033 @@ hook: PostToolUse
  exited -1 in 22678ms:
  succeeded in 212ms:
 hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find autonomous-research autonomous-research-v3 green_thesis_factory public_agent_infra_research_engagement research-os -name _committee_common_v001.md -o -path '*/_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc 'find . -maxdepth 4 -type d -name prompts 2>/dev/null | head -50' in /Users/dengcchi
+ succeeded in 5691ms:
+./autonomous-research-e2e/.research-os/prompts
+./research-os/prompts
+
+hook: PostToolUse
+ succeeded in 8223ms:
+research-os/prompts/committee/_committee_common_v001.md
+research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+I found the committee files in `research-os/prompts`. Next I’m reading only those rules, then I’ll check upstream source/docs for overlap rather than relying on the packet’s summary.
+exec
+/bin/zsh -lc "sed -n '1,260p' research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+exec
+/bin/zsh -lc "sed -n '1,220p' research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The initial web hits show the relevant overlap is in WASI runtimes themselves, not in LLM inference stacks. I’m checking upstream docs/source for `wazero`, `wasmtime`, `wasmer`, plus known practitioner fixes to decide whether this is an already-shipping mechanism or a synthesis over existing behavior.
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/WebAssembly/wasi-random/main/wit/random.wit | sed -n '1,180p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/config.go | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/imports/wasi_snapshot_preview1/random.go | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/WebAssembly/WASI/main/legacy/preview1/docs.md | grep -A12 -B4 'random_get'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ exited 1 in 375ms:
+ succeeded in 409ms:
+package wazero
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"io"
+	"io/fs"
+	"math"
+	"net"
+	"time"
+
+	"github.com/tetratelabs/wazero/api"
+	experimentalsys "github.com/tetratelabs/wazero/experimental/sys"
+	"github.com/tetratelabs/wazero/internal/filecache"
+	"github.com/tetratelabs/wazero/internal/internalapi"
+	"github.com/tetratelabs/wazero/internal/platform"
+	internalsock "github.com/tetratelabs/wazero/internal/sock"
+	internalsys "github.com/tetratelabs/wazero/internal/sys"
+	"github.com/tetratelabs/wazero/internal/wasm"
+	"github.com/tetratelabs/wazero/sys"
+)
+
+// RuntimeConfig controls runtime behavior, with the default implementation as
+// NewRuntimeConfig
+//
+// The example below explicitly limits to Wasm Core 1.0 features as opposed to
+// relying on defaults:
+//
+//	rConfig = wazero.NewRuntimeConfig().WithCoreFeatures(api.CoreFeaturesV1)
+//
+// # Notes
+//
+//   - This is an interface for decoupling, not third-party implementations.
+//     All implementations are in wazero.
+//   - RuntimeConfig is immutable. Each WithXXX function returns a new instance
+//     including the corresponding change.
+type RuntimeConfig interface {
+	// WithCoreFeatures sets the WebAssembly Core specification features this
+	// runtime supports. Defaults to api.CoreFeaturesV2.
+	//
+	// Example of disabling a specific feature:
+	//	features := api.CoreFeaturesV2.SetEnabled(api.CoreFeatureMutableGlobal, false)
+	//	rConfig = wazero.NewRuntimeConfig().WithCoreFeatures(features)
+	//
+	// # Why default to version 2.0?
+	//
+	// Many compilers that target WebAssembly require features after
+	// api.CoreFeaturesV1 by default. For example, TinyGo v0.24+ requires
+	// api.CoreFeatureBulkMemoryOperations. To avoid runtime errors, wazero
+	// defaults to api.CoreFeaturesV2, even though it is not yet a Web
+	// Standard (REC).
+	WithCoreFeatures(api.CoreFeatures) RuntimeConfig
+
+	// WithMemoryLimitPages overrides the maximum pages allowed per memory. The
+	// default is 65536, allowing 4GB total memory per instance if the maximum is
+	// not encoded in a Wasm binary. Setting a value larger than default will panic.
+	//
+	// This example reduces the largest possible memory size from 4GB to 128KB:
+	//	rConfig = wazero.NewRuntimeConfig().WithMemoryLimitPages(2)
+	//
+	// Note: Wasm has 32-bit memory and each page is 65536 (2^16) bytes. This
+	// implies a max of 65536 (2^16) addressable pages.
+	// See https://www.w3.org/TR/2019/REC-wasm-core-1-20191205/#grow-mem
+	WithMemoryLimitPages(memoryLimitPages uint32) RuntimeConfig
+
+	// WithMemoryCapacityFromMax eagerly allocates max memory, unless max is
+	// not defined. The default is false, which means minimum memory is
+	// allocated and any call to grow memory results in re-allocations.
+	//
+	// This example ensures any memory.grow instruction will never re-allocate:
+	//	rConfig = wazero.NewRuntimeConfig().WithMemoryCapacityFromMax(true)
+	//
+	// See https://www.w3.org/TR/2019/REC-wasm-core-1-20191205/#grow-mem
+	//
+	// Note: if the memory maximum is not encoded in a Wasm binary, this
+	// results in allocating 4GB. See the doc on WithMemoryLimitPages for detail.
+	WithMemoryCapacityFromMax(memoryCapacityFromMax bool) RuntimeConfig
+
+	// WithDebugInfoEnabled toggles DWARF based stack traces in the face of
+	// runtime errors. Defaults to true.
+	//
+	// Those who wish to disable this, can like so:
+	//
+	//	r := wazero.NewRuntimeWithConfig(wazero.NewRuntimeConfig().WithDebugInfoEnabled(false)
+	//
+	// When disabled, a stack trace message looks like:
+	//
+	//	wasm stack trace:
+	//		.runtime._panic(i32)
+	//		.myFunc()
+	//		.main.main()
+	//		.runtime.run()
+	//		._start()
+	//
+	// When enabled, the stack trace includes source code information:
+	//
+	//	wasm stack trace:
+	//		.runtime._panic(i32)
+	//		  0x16e2: /opt/homebrew/Cellar/tinygo/0.26.0/src/runtime/runtime_tinygowasm.go:73:6
+	//		.myFunc()
+	//		  0x190b: /Users/XXXXX/wazero/internal/testing/dwarftestdata/testdata/main.go:19:7
+	//		.main.main()
+	//		  0x18ed: /Users/XXXXX/wazero/internal/testing/dwarftestdata/testdata/main.go:4:3
+	//		.runtime.run()
+	//		  0x18cc: /opt/homebrew/Cellar/tinygo/0.26.0/src/runtime/scheduler_none.go:26:10
+	//		._start()
+	//		  0x18b6: /opt/homebrew/Cellar/tinygo/0.26.0/src/runtime/runtime_wasm_wasi.go:22:5
+	//
+	// Note: This only takes into effect when the original Wasm binary has the
+	// DWARF "custom sections" that are often stripped, depending on
+	// optimization flags passed to the compiler.
+	WithDebugInfoEnabled(bool) RuntimeConfig
+
+	// WithCompilationCache configures how runtime caches the compiled modules. In the default configuration, compilation results are
+	// only in-memory until Runtime.Close is closed, and not shareable by multiple Runtime.
+	//
+	// Below defines the shared cache across multiple instances of Runtime:
+	//
+	//	// Creates the new Cache and the runtime configuration with it.
+	//	cache := wazero.NewCompilationCache()
+	//	defer cache.Close()
+	//	config := wazero.NewRuntimeConfig().WithCompilationCache(c)
+	//
+	//	// Creates two runtimes while sharing compilation caches.
+	//	foo := wazero.NewRuntimeWithConfig(context.Background(), config)
+	// 	bar := wazero.NewRuntimeWithConfig(context.Background(), config)
+	//
+	// # Cache Key
+	//
+	// Cached files are keyed on the version of wazero. This is obtained from go.mod of your application,
+	// and we use it to verify the compatibility of caches against the currently-running wazero.
+	// However, if you use this in tests of a package not named as `main`, then wazero cannot obtain the correct
+	// version of wazero due to the known issue of debug.BuildInfo function: https://github.com/golang/go/issues/33976.
+	// As a consequence, your cache won't contain the correct version information and always be treated as `dev` version.
+	// To avoid this issue, you can pass -ldflags "-X github.com/tetratelabs/wazero/internal/version.version=foo" when running tests.
+	WithCompilationCache(CompilationCache) RuntimeConfig
+
+	// WithCustomSections toggles parsing of "custom sections". Defaults to false.
+	//
+	// When enabled, it is possible to retrieve custom sections from a CompiledModule:
+	//
+	//	config := wazero.NewRuntimeConfig().WithCustomSections(true)
+	//	r := wazero.NewRuntimeWithConfig(ctx, config)
+	//	c, err := r.CompileModule(ctx, wasm)
+	//	customSections := c.CustomSections()
+	WithCustomSections(bool) RuntimeConfig
+
+	// WithCloseOnContextDone ensures the executions of functions to be terminated under one of the following circumstances:
+	//
+	// 	- context.Context passed to the Call method of api.Function is canceled during execution. (i.e. ctx by context.WithCancel)
+	// 	- context.Context passed to the Call method of api.Function reaches timeout during execution. (i.e. ctx by context.WithTimeout or context.WithDeadline)
+	// 	- Close or CloseWithExitCode of api.Module is explicitly called during execution.
+	//
+	// This is especially useful when one wants to run untrusted Wasm binaries since otherwise, any invocation of
+	// api.Function can potentially block the corresponding Goroutine forever. Moreover, it might block the
+	// entire underlying OS thread which runs the api.Function call. See "Why it's safe to execute runtime-generated
+	// machine codes against async Goroutine preemption" section in RATIONALE.md for detail.
+	//
+	// Upon the termination of the function executions, api.Module is closed.
+	//
+	// Note that this comes with a bit of extra cost when enabled. The reason is that internally this forces
+	// interpreter and compiler runtimes to insert the periodical checks on the conditions above. For that reason,
+	// this is disabled by default.
+	//
+	// See examples in context_done_example_test.go for the end-to-end demonstrations.
+	//
+	// When the invocations of api.Function are closed due to this, sys.ExitError is raised to the callers and
+	// the api.Module from which the functions are derived is made closed.
+	WithCloseOnContextDone(bool) RuntimeConfig
+}
+
+// NewRuntimeConfig returns a RuntimeConfig using the compiler if it is supported in this environment,
+// or the interpreter otherwise.
+func NewRuntimeConfig() RuntimeConfig {
+	ret := engineLessConfig.clone()
+	ret.engineKind = engineKindAuto
+	return ret
+}
+
+type newEngine func(context.Context, api.CoreFeatures, filecache.Cache) wasm.Engine
+
+type runtimeConfig struct {
+	enabledFeatures       api.CoreFeatures
+	memoryLimitPages      uint32
+	memoryCapacityFromMax bool
+	engineKind            engineKind
+	dwarfDisabled         bool // negative as defaults to enabled
+	newEngine             newEngine
+	cache                 CompilationCache
+	storeCustomSections   bool
+	ensureTermination     bool
+}
+
+// engineLessConfig helps avoid copy/pasting the wrong defaults.
+var engineLessConfig = &runtimeConfig{
+	enabledFeatures:       api.CoreFeaturesV2,
+	memoryLimitPages:      wasm.MemoryLimitPages,
+	memoryCapacityFromMax: false,
+	dwarfDisabled:         false,
+}
+
+type engineKind int
+
+const (
+	engineKindAuto engineKind = iota - 1
+	engineKindCompiler
+	engineKindInterpreter
+	engineKindCount
+)
+
+// NewRuntimeConfigCompiler compiles WebAssembly modules into
+// runtime.GOARCH-specific assembly for optimal performance.
+//
+// The default implementation is AOT (Ahead of Time) compilation, applied at
+// Runtime.CompileModule. This allows consistent runtime performance, as well
+// the ability to reduce any first request penalty.
+//
+// Note: While this is technically AOT, this does not imply any action on your
+// part. wazero automatically performs ahead-of-time compilation as needed when
+// Runtime.CompileModule is invoked.
+//
+// # Warning
+//
+//   - This panics at runtime if the runtime.GOOS or runtime.GOARCH does not
+//     support compiler. Use NewRuntimeConfig to safely detect and fallback to
+//     NewRuntimeConfigInterpreter if needed.
+//
+//   - If you are using wazero in buildmode=c-archive or c-shared, make sure that you set up the alternate signal stack
+//     by using, e.g. `sigaltstack` combined with `SA_ONSTACK` flag on `sigaction` on Linux,
+//     before calling any api.Function. This is because the Go runtime does not set up the alternate signal stack
+//     for c-archive or c-shared modes, and wazero uses the different stack than the calling Goroutine.
+//     Hence, the signal handler might get invoked on the wazero's stack, which may cause a stack overflow.
+//     https://github.com/tetratelabs/wazero/blob/2092c0a879f30d49d7b37f333f4547574b8afe0d/internal/integration_test/fuzz/fuzz/tests/sigstack.rs#L19-L36
+func NewRuntimeConfigCompiler() RuntimeConfig {
+	ret := engineLessConfig.clone()
+	ret.engineKind = engineKindCompiler
+	return ret
+}
+
+// NewRuntimeConfigInterpreter interprets WebAssembly modules instead of compiling them into assembly.
+func NewRuntimeConfigInterpreter() RuntimeConfig {
+	ret := engineLessConfig.clone()
+	ret.engineKind = engineKindInterpreter
+	return ret
+}
+
+// clone makes a deep copy of this runtime config.
+func (c *runtimeConfig) clone() *runtimeConfig {
+	ret := *c // copy except maps which share a ref
+	return &ret
+}
+
+// WithCoreFeatures implements RuntimeConfig.WithCoreFeatures
+func (c *runtimeConfig) WithCoreFeatures(features api.CoreFeatures) RuntimeConfig {
+	ret := c.clone()
+	ret.enabledFeatures = features
+	return ret
+}
+
+
+hook: PostToolUse
+ succeeded in 418ms:
+package wasi_snapshot_preview1
+
+import (
+	"context"
+	"io"
+
+	"github.com/tetratelabs/wazero/api"
+	"github.com/tetratelabs/wazero/experimental/sys"
+	"github.com/tetratelabs/wazero/internal/wasip1"
+	"github.com/tetratelabs/wazero/internal/wasm"
+)
+
+// randomGet is the WASI function named RandomGetName which writes random
+// data to a buffer.
+//
+// # Parameters
+//
+//   - buf: api.Memory offset to write random values
+//   - bufLen: size of random data in bytes
+//
+// Result (Errno)
+//
+// The return value is ErrnoSuccess except the following error conditions:
+//   - sys.EFAULT: `buf` or `bufLen` point to an offset out of memory
+//   - sys.EIO: a file system error
+//
+// For example, if underlying random source was seeded like
+// `rand.NewSource(42)`, we expect api.Memory to contain:
+//
+//	                   bufLen (5)
+//	          +--------------------------+
+//	          |                        	 |
+//	[]byte{?, 0x53, 0x8c, 0x7f, 0x96, 0xb1, ?}
+//	    buf --^
+//
+// See https://github.com/WebAssembly/WASI/blob/snapshot-01/phases/snapshot/docs.md#-random_getbuf-pointeru8-bufLen-size---errno
+var randomGet = newHostFunc(wasip1.RandomGetName, randomGetFn, []wasm.ValueType{i32, i32}, "buf", "buf_len")
+
+func randomGetFn(_ context.Context, mod api.Module, params []uint64) sys.Errno {
+	sysCtx := mod.(*wasm.ModuleInstance).Sys
+	randSource := sysCtx.RandSource()
+	buf, bufLen := uint32(params[0]), uint32(params[1])
+
+	randomBytes, ok := mod.Memory().Read(buf, bufLen)
+	if !ok { // out-of-range
+		return sys.EFAULT
+	}
+
+	// We can ignore the returned n as it only != byteCount on error
+	if _, err := io.ReadAtLeast(randSource, randomBytes, int(bufLen)); err != nil {
+		return sys.EIO
+	}
+
+	return 0
+}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 511ms:
+package wasi:random@0.2.8;
+/// WASI Random is a random data API.
+///
+/// It is intended to be portable at least between Unix-family platforms and
+/// Windows.
+@since(version = 0.2.0)
+interface random {
+    /// Return `len` cryptographically-secure random or pseudo-random bytes.
+    ///
+    /// This function must produce data at least as cryptographically secure and
+    /// fast as an adequately seeded cryptographically-secure pseudo-random
+    /// number generator (CSPRNG). It must not block, from the perspective of
+    /// the calling program, under any circumstances, including on the first
+    /// request and on requests for numbers of bytes. The returned data must
+    /// always be unpredictable.
+    ///
+    /// This function must always return fresh data. Deterministic environments
+    /// must omit this function, rather than implementing it with deterministic
+    /// data.
+    @since(version = 0.2.0)
+    get-random-bytes: func(len: u64) -> list<u8>;
+
+    /// Return a cryptographically-secure random or pseudo-random `u64` value.
+    ///
+    /// This function returns the same type of data as `get-random-bytes`,
+    /// represented as a `u64`.
+    @since(version = 0.2.0)
+    get-random-u64: func() -> u64;
+}
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/config.go | grep -n -A35 -B5 'WithRandSource\\|WithWalltime\\|WithNanotime\\|WithNanosleep'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/WebAssembly/WASI/snapshot-01/phases/snapshot/docs.md | grep -n -A10 -B4 'random_get'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/WebAssembly/WASI/main/legacy/preview1/witx/wasi_snapshot_preview1.witx | grep -n -A8 -B4 'random_get'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 303ms:
+565-	//   - This does not default to os.Stdout as that both violates sandboxing and prevents concurrent modules.
+566-	//
+567-	// See https://linux.die.net/man/3/stdout
+568-	WithStdout(io.Writer) ModuleConfig
+569-
+570:	// WithWalltime configures the wall clock, sometimes referred to as the
+571-	// real time clock. sys.Walltime returns the current unix/epoch time,
+572-	// seconds since midnight UTC 1 January 1970, with a nanosecond fraction.
+573-	// This defaults to a fake result that increases by 1ms on each reading.
+574-	//
+575-	// Here's an example that uses a custom clock:
+576-	//	moduleConfig = moduleConfig.
+577:	//		WithWalltime(func(context.Context) (sec int64, nsec int32) {
+578-	//			return clock.walltime()
+579-	//		}, sys.ClockResolution(time.Microsecond.Nanoseconds()))
+580-	//
+581-	// # Notes:
+582-	//   - This does not default to time.Now as that violates sandboxing.
+583-	//   - This is used to implement host functions such as WASI
+584-	//     `clock_time_get` with the `realtime` clock ID.
+585-	//   - Use WithSysWalltime for a usable implementation.
+586:	WithWalltime(sys.Walltime, sys.ClockResolution) ModuleConfig
+587-
+588-	// WithSysWalltime uses time.Now for sys.Walltime with a resolution of 1us
+589-	// (1000ns).
+590-	//
+591:	// See WithWalltime
+592-	WithSysWalltime() ModuleConfig
+593-
+594:	// WithNanotime configures the monotonic clock, used to measure elapsed
+595-	// time in nanoseconds. Defaults to a fake result that increases by 1ms
+596-	// on each reading.
+597-	//
+598-	// Here's an example that uses a custom clock:
+599-	//	moduleConfig = moduleConfig.
+600:	//		WithNanotime(func(context.Context) int64 {
+601-	//			return clock.nanotime()
+602-	//		}, sys.ClockResolution(time.Microsecond.Nanoseconds()))
+603-	//
+604-	// # Notes:
+605-	//   - This does not default to time.Since as that violates sandboxing.
+606-	//   - This is used to implement host functions such as WASI
+607-	//     `clock_time_get` with the `monotonic` clock ID.
+608-	//   - Some compilers implement sleep by looping on sys.Nanotime (e.g. Go).
+609:	//   - If you set this, you should probably set WithNanosleep also.
+610-	//   - Use WithSysNanotime for a usable implementation.
+611:	WithNanotime(sys.Nanotime, sys.ClockResolution) ModuleConfig
+612-
+613-	// WithSysNanotime uses time.Now for sys.Nanotime with a resolution of 1us.
+614-	//
+615:	// See WithNanotime
+616-	WithSysNanotime() ModuleConfig
+617-
+618:	// WithNanosleep configures the how to pause the current goroutine for at
+619-	// least the configured nanoseconds. Defaults to return immediately.
+620-	//
+621-	// This example uses a custom sleep function:
+622-	//	moduleConfig = moduleConfig.
+623:	//		WithNanosleep(func(ns int64) {
+624-	//			rel := unix.NsecToTimespec(ns)
+625-	//			remain := unix.Timespec{}
+626-	//			for { // loop until no more time remaining
+627-	//				err := unix.ClockNanosleep(unix.CLOCK_MONOTONIC, 0, &rel, &remain)
+628-	//			--snip--
+629-	//
+630-	// # Notes:
+631-	//   - This does not default to time.Sleep as that violates sandboxing.
+632-	//   - This is used to implement host functions such as WASI `poll_oneoff`.
+633-	//   - Some compilers implement sleep by looping on sys.Nanotime (e.g. Go).
+634:	//   - If you set this, you should probably set WithNanotime also.
+635-	//   - Use WithSysNanosleep for a usable implementation.
+636:	WithNanosleep(sys.Nanosleep) ModuleConfig
+637-
+638-	// WithOsyield yields the processor, typically to implement spin-wait
+639-	// loops. Defaults to return immediately.
+640-	//
+641-	// # Notes:
+642-	//   - This primarily supports `sched_yield` in WASI
+643-	//   - This does not default to runtime.osyield as that violates sandboxing.
+644-	WithOsyield(sys.Osyield) ModuleConfig
+645-
+646-	// WithSysNanosleep uses time.Sleep for sys.Nanosleep.
+647-	//
+648:	// See WithNanosleep
+649-	WithSysNanosleep() ModuleConfig
+650-
+651:	// WithRandSource configures a source of random bytes. Defaults to return a
+652-	// deterministic source. You might override this with crypto/rand.Reader
+653-	//
+654-	// This reader is most commonly used by the functions like "random_get" in
+655-	// "wasi_snapshot_preview1", "seed" in AssemblyScript standard "env", and
+656-	// "getRandomData" when runtime.GOOS is "js".
+657-	//
+658-	// Note: The caller is responsible to close any io.Reader they supply: It
+659-	// is not closed on api.Module Close.
+660:	WithRandSource(io.Reader) ModuleConfig
+661-}
+662-
+663-type moduleConfig struct {
+664-	name               string
+665-	nameSet            bool
+666-	startFunctions     []string
+667-	stdin              io.Reader
+668-	stdout             io.Writer
+669-	stderr             io.Writer
+670-	randSource         io.Reader
+671-	walltime           sys.Walltime
+672-	walltimeResolution sys.ClockResolution
+673-	nanotime           sys.Nanotime
+674-	nanotimeResolution sys.ClockResolution
+675-	nanosleep          sys.Nanosleep
+676-	osyield            sys.Osyield
+677-	args               [][]byte
+678-	// environ is pair-indexed to retain order similar to os.Environ.
+679-	environ [][]byte
+680-	// environKeys allow overwriting of existing values.
+681-	environKeys map[string]int
+682-	// fsConfig is the file system configuration for ABI like WASI.
+683-	fsConfig FSConfig
+684-	// sockConfig is the network listener configuration for ABI like WASI.
+685-	sockConfig *internalsock.Config
+686-}
+687-
+688-// NewModuleConfig returns a ModuleConfig that can be used for configuring module instantiation.
+689-func NewModuleConfig() ModuleConfig {
+690-	return &moduleConfig{
+691-		startFunctions: []string{"_start"},
+692-		environKeys:    map[string]int{},
+693-	}
+694-}
+695-
+--
+784-	ret := c.clone()
+785-	ret.stdout = stdout
+786-	return ret
+787-}
+788-
+789:// WithWalltime implements ModuleConfig.WithWalltime
+790:func (c *moduleConfig) WithWalltime(walltime sys.Walltime, resolution sys.ClockResolution) ModuleConfig {
+791-	ret := c.clone()
+792-	ret.walltime = walltime
+793-	ret.walltimeResolution = resolution
+794-	return ret
+795-}
+796-
+797-// We choose arbitrary resolutions here because there's no perfect alternative. For example, according to the
+798-// source in time.go, windows monotonic resolution can be 15ms. This chooses arbitrarily 1us for wall time and
+799-// 1ns for monotonic. See RATIONALE.md for more context.
+800-
+801-// WithSysWalltime implements ModuleConfig.WithSysWalltime
+802-func (c *moduleConfig) WithSysWalltime() ModuleConfig {
+803:	return c.WithWalltime(platform.Walltime, sys.ClockResolution(time.Microsecond.Nanoseconds()))
+804-}
+805-
+806:// WithNanotime implements ModuleConfig.WithNanotime
+807:func (c *moduleConfig) WithNanotime(nanotime sys.Nanotime, resolution sys.ClockResolution) ModuleConfig {
+808-	ret := c.clone()
+809-	ret.nanotime = nanotime
+810-	ret.nanotimeResolution = resolution
+811-	return ret
+812-}
+813-
+814-// WithSysNanotime implements ModuleConfig.WithSysNanotime
+815-func (c *moduleConfig) WithSysNanotime() ModuleConfig {
+816:	return c.WithNanotime(platform.Nanotime, sys.ClockResolution(1))
+817-}
+818-
+819:// WithNanosleep implements ModuleConfig.WithNanosleep
+820:func (c *moduleConfig) WithNanosleep(nanosleep sys.Nanosleep) ModuleConfig {
+821-	ret := *c // copy
+822-	ret.nanosleep = nanosleep
+823-	return &ret
+824-}
+825-
+826-// WithOsyield implements ModuleConfig.WithOsyield
+827-func (c *moduleConfig) WithOsyield(osyield sys.Osyield) ModuleConfig {
+828-	ret := *c // copy
+829-	ret.osyield = osyield
+830-	return &ret
+831-}
+832-
+833-// WithSysNanosleep implements ModuleConfig.WithSysNanosleep
+834-func (c *moduleConfig) WithSysNanosleep() ModuleConfig {
+835:	return c.WithNanosleep(platform.Nanosleep)
+836-}
+837-
+838:// WithRandSource implements ModuleConfig.WithRandSource
+839:func (c *moduleConfig) WithRandSource(source io.Reader) ModuleConfig {
+840-	ret := c.clone()
+841-	ret.randSource = source
+842-	return ret
+843-}
+844-
+845-// toSysContext creates a baseline wasm.Context configured by ModuleConfig.
+846-func (c *moduleConfig) toSysContext() (sysCtx *internalsys.Context, err error) {
+847-	var environ [][]byte // Intentionally doesn't pre-allocate to reduce logic to default to nil.
+848-	// Same validation as syscall.Setenv for Linux
+849-	for i := 0; i < len(c.environ); i += 2 {
+850-		key, value := c.environ[i], c.environ[i+1]
+851-		keyLen := len(key)
+852-		if keyLen == 0 {
+853-			err = errors.New("environ invalid: empty key")
+854-			return
+855-		}
+856-		valueLen := len(value)
+857-		result := make([]byte, keyLen+valueLen+1)
+858-		j := 0
+859-		for ; j < keyLen; j++ {
+860-			if k := key[j]; k == '=' { // NUL enforced in NewContext
+861-				err = errors.New("environ invalid: key contains '=' character")
+862-				return
+863-			} else {
+864-				result[j] = k
+865-			}
+866-		}
+867-		result[j] = '='
+868-		copy(result[j+1:], value)
+869-		environ = append(environ, result)
+870-	}
+871-
+872-	var fs []experimentalsys.FS
+873-	var guestPaths []string
+874-	if f, ok := c.fsConfig.(*fsConfig); ok {
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ exited 1 in 458ms:
+hook: PostToolUse Completed
+ succeeded in 512ms:
+1951-
+1952-
+1953----
+1954-
+1955:#### <a href="#random_get" name="random_get"></a> `random_get(buf: Pointer<u8>, buf_len: size) -> errno`
+1956-Write high-quality random data into a buffer.
+1957-This function blocks when the implementation is unable to immediately
+1958-provide sufficient high-quality random data.
+1959-This function may execute slowly, so when large mounts of random data are
+1960-required, it's advisable to use this function to seed a pseudo-random
+1961-number generator, rather than to provide the random data directly.
+1962-
+1963-##### Params
+1964:- <a href="#random_get.buf" name="random_get.buf"></a> `buf`: `Pointer<u8>`
+1965-The buffer to fill with random data.
+1966-
+1967:- <a href="#random_get.buf_len" name="random_get.buf_len"></a> `buf_len`: [`size`](#size)
+1968-
+1969-##### Results
+1970:- <a href="#random_get.error" name="random_get.error"></a> `error`: [`errno`](#errno)
+1971-
+1972-
+1973----
+1974-
+1975-#### <a href="#sock_recv" name="sock_recv"></a> `sock_recv(fd: fd, ri_data: iovec_array, ri_flags: riflags) -> (errno, size, roflags)`
+1976-Receive a message from a socket.
+1977-Note: This is similar to `recv` in POSIX, though it also supports reading
+1978-the data into multiple buffers in the manner of `readv`.
+1979-
+1980-##### Params
+
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/internal/sys/sys.go | grep -n -A40 -B10 'RandSource\\|rand'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --silent https://api.github.com/search/code?q=%22rand.NewSource(42)%22+repo:tetratelabs/wazero' in /Users/dengcchi
+ exited 1 in 0ms:
+zsh:1: no matches found: https://api.github.com/search/code?q=%22rand.NewSource(42)%22+repo:tetratelabs/wazero
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/internal/sys/context.go | grep -n -A50 -B10 'RandSource\\|rand'" in /Users/dengcchi
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ exited 1 in 366ms:
+ succeeded in 401ms:
+17-type Context struct {
+18-	args, environ         [][]byte
+19-	argsSize, environSize uint32
+20-
+21-	walltime           sys.Walltime
+22-	walltimeResolution sys.ClockResolution
+23-	nanotime           sys.Nanotime
+24-	nanotimeResolution sys.ClockResolution
+25-	nanosleep          sys.Nanosleep
+26-	osyield            sys.Osyield
+27:	randSource         io.Reader
+28-	fsc                FSContext
+29-}
+30-
+31-// Args is like os.Args and defaults to nil.
+32-//
+33-// Note: The count will never be more than math.MaxUint32.
+34-// See wazero.ModuleConfig WithArgs
+35-func (c *Context) Args() [][]byte {
+36-	return c.args
+37-}
+38-
+39-// ArgsSize is the size to encode Args as Null-terminated strings.
+40-//
+41-// Note: To get the size without null-terminators, subtract the length of Args from this value.
+42-// See wazero.ModuleConfig WithArgs
+43-// See https://en.wikipedia.org/wiki/Null-terminated_string
+44-func (c *Context) ArgsSize() uint32 {
+45-	return c.argsSize
+46-}
+47-
+48-// Environ are "key=value" entries like os.Environ and default to nil.
+49-//
+50-// Note: The count will never be more than math.MaxUint32.
+51-// See wazero.ModuleConfig WithEnv
+52-func (c *Context) Environ() [][]byte {
+53-	return c.environ
+54-}
+55-
+56-// EnvironSize is the size to encode Environ as Null-terminated strings.
+57-//
+58-// Note: To get the size without null-terminators, subtract the length of Environ from this value.
+59-// See wazero.ModuleConfig WithEnv
+60-// See https://en.wikipedia.org/wiki/Null-terminated_string
+61-func (c *Context) EnvironSize() uint32 {
+62-	return c.environSize
+63-}
+64-
+65-// Walltime implements platform.Walltime.
+66-func (c *Context) Walltime() (sec int64, nsec int32) {
+67-	return c.walltime()
+--
+96-// Osyield implements sys.Osyield.
+97-func (c *Context) Osyield() {
+98-	c.osyield()
+99-}
+100-
+101-// FS returns the possibly empty (UnimplementedFS) file system context.
+102-func (c *Context) FS() *FSContext {
+103-	return &c.fsc
+104-}
+105-
+106:// RandSource is a source of random bytes and defaults to a deterministic source.
+107:// see wazero.ModuleConfig WithRandSource
+108:func (c *Context) RandSource() io.Reader {
+109:	return c.randSource
+110-}
+111-
+112-// DefaultContext returns Context with no values set except a possible nil
+113-// sys.FS.
+114-//
+115-// Note: This is only used for testing.
+116-func DefaultContext(fs experimentalsys.FS) *Context {
+117-	if sysCtx, err := NewContext(0, nil, nil, nil, nil, nil, nil, nil, 0, nil, 0, nil, nil, []experimentalsys.FS{fs}, []string{""}, nil); err != nil {
+118-		panic(fmt.Errorf("BUG: DefaultContext should never error: %w", err))
+119-	} else {
+120-		return sysCtx
+121-	}
+122-}
+123-
+124-// NewContext is a factory function which helps avoid needing to know defaults or exporting all fields.
+125-// Note: max is exposed for testing. max is only used for env/args validation.
+126-func NewContext(
+127-	max uint32,
+128-	args, environ [][]byte,
+129-	stdin io.Reader,
+130-	stdout, stderr io.Writer,
+131:	randSource io.Reader,
+132-	walltime sys.Walltime,
+133-	walltimeResolution sys.ClockResolution,
+134-	nanotime sys.Nanotime,
+135-	nanotimeResolution sys.ClockResolution,
+136-	nanosleep sys.Nanosleep,
+137-	osyield sys.Osyield,
+138-	fs []experimentalsys.FS, guestPaths []string,
+139-	tcpListeners []*net.TCPListener,
+140-) (sysCtx *Context, err error) {
+141-	sysCtx = &Context{args: args, environ: environ}
+142-
+143-	if sysCtx.argsSize, err = nullTerminatedByteCount(max, args); err != nil {
+144-		return nil, fmt.Errorf("args invalid: %w", err)
+145-	}
+146-
+147-	if sysCtx.environSize, err = nullTerminatedByteCount(max, environ); err != nil {
+148-		return nil, fmt.Errorf("environ invalid: %w", err)
+149-	}
+150-
+151:	if randSource == nil {
+152:		sysCtx.randSource = platform.NewFakeRandSource()
+153-	} else {
+154:		sysCtx.randSource = randSource
+155-	}
+156-
+157-	if walltime != nil {
+158-		if clockResolutionInvalid(walltimeResolution) {
+159-			return nil, fmt.Errorf("invalid Walltime resolution: %d", walltimeResolution)
+160-		}
+161-		sysCtx.walltime = walltime
+162-		sysCtx.walltimeResolution = walltimeResolution
+163-	} else {
+164-		sysCtx.walltime = platform.NewFakeWalltime()
+165-		sysCtx.walltimeResolution = sys.ClockResolution(time.Microsecond.Nanoseconds())
+166-	}
+167-
+168-	if nanotime != nil {
+169-		if clockResolutionInvalid(nanotimeResolution) {
+170-			return nil, fmt.Errorf("invalid Nanotime resolution: %d", nanotimeResolution)
+171-		}
+172-		sysCtx.nanotime = nanotime
+173-		sysCtx.nanotimeResolution = nanotimeResolution
+174-	} else {
+175-		sysCtx.nanotime = platform.NewFakeNanotime()
+176-		sysCtx.nanotimeResolution = sys.ClockResolution(time.Nanosecond)
+177-	}
+178-
+179-	if nanosleep != nil {
+180-		sysCtx.nanosleep = nanosleep
+181-	} else {
+182-		sysCtx.nanosleep = platform.FakeNanosleep
+183-	}
+184-
+185-	if osyield != nil {
+186-		sysCtx.osyield = osyield
+187-	} else {
+188-		sysCtx.osyield = platform.FakeOsyield
+189-	}
+190-
+191-	err = sysCtx.InitFSContext(stdin, stdout, stderr, fs, guestPaths, tcpListeners)
+192-
+193-	return
+194-}
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/internal/platform/random.go | sed -n '1,180p'; curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/internal/platform/time.go | sed -n '1,220p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 424ms:
+404: Not Foundpackage platform
+
+import (
+	"sync/atomic"
+	"time"
+
+	"github.com/tetratelabs/wazero/sys"
+)
+
+const (
+	ms = int64(time.Millisecond)
+	// FakeEpochNanos is midnight UTC 2022-01-01 and exposed for testing
+	FakeEpochNanos = 1640995200000 * ms
+)
+
+// NewFakeWalltime implements sys.Walltime with FakeEpochNanos that increases by 1ms each reading.
+// See /RATIONALE.md
+func NewFakeWalltime() sys.Walltime {
+	// AddInt64 returns the new value. Adjust so the first reading will be FakeEpochNanos
+	t := FakeEpochNanos - ms
+	return func() (sec int64, nsec int32) {
+		wt := atomic.AddInt64(&t, ms)
+		return wt / 1e9, int32(wt % 1e9)
+	}
+}
+
+// NewFakeNanotime implements sys.Nanotime that increases by 1ms each reading.
+// See /RATIONALE.md
+func NewFakeNanotime() sys.Nanotime {
+	// AddInt64 returns the new value. Adjust so the first reading will be zero.
+	t := int64(0) - ms
+	return func() int64 {
+		return atomic.AddInt64(&t, ms)
+	}
+}
+
+// FakeNanosleep implements sys.Nanosleep by returning without sleeping.
+var FakeNanosleep = sys.Nanosleep(func(int64) {})
+
+// FakeOsyield implements sys.Osyield by returning without yielding.
+var FakeOsyield = sys.Osyield(func() {})
+
+// Walltime implements sys.Walltime with time.Now.
+//
+// Note: This is only notably less efficient than it could be is reading
+// runtime.walltime(). time.Now defensively reads nanotime also, just in case
+// time.Since is used. This doubles the performance impact. However, wall time
+// is likely to be read less frequently than Nanotime. Also, doubling the cost
+// matters less on fast platforms that can return both in <=100ns.
+func Walltime() (sec int64, nsec int32) {
+	t := time.Now()
+	return t.Unix(), int32(t.Nanosecond())
+}
+
+// nanoBase uses time.Now to ensure a monotonic clock reading on all platforms
+// via time.Since.
+var nanoBase = time.Now()
+
+// nanotimePortable implements sys.Nanotime with time.Since.
+//
+// Note: This is less efficient than it could be is reading runtime.nanotime(),
+// Just to do that requires CGO.
+func nanotimePortable() int64 {
+	return time.Since(nanoBase).Nanoseconds()
+}
+
+// Nanotime implements sys.Nanotime with runtime.nanotime() if CGO is available
+// and time.Since if not.
+func Nanotime() int64 {
+	return nanotime()
+}
+
+// Nanosleep implements sys.Nanosleep with time.Sleep.
+func Nanosleep(ns int64) {
+	time.Sleep(time.Duration(ns))
+}
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/tetratelabs/wazero/contents/internal/platform?ref=v1.12.0 | grep '\"name\"'" in /Users/dengcchi
+ exited 1 in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/tetratelabs/wazero/contents/internal/platform?ref=v1.12.0
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/tetratelabs/wazero/contents/internal/platform?ref=v1.12.0' | grep '\"name\"'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 448ms:
+    "name": "cpuid.go",
+    "name": "cpuid_amd64.go",
+    "name": "cpuid_arm64.go",
+    "name": "cpuid_unsupported.go",
+    "name": "crypto.go",
+    "name": "mmap_linux.go",
+    "name": "mmap_linux_test.go",
+    "name": "mmap_other.go",
+    "name": "mmap_test.go",
+    "name": "mmap_unix.go",
+    "name": "mmap_unsupported.go",
+    "name": "mmap_windows.go",
+    "name": "path.go",
+    "name": "path_test.go",
+    "name": "path_windows.go",
+    "name": "platform.go",
+    "name": "testdata",
+    "name": "time.go",
+    "name": "time_notwindows.go",
+    "name": "time_test.go",
+    "name": "time_windows.go",
+
+hook: PostToolUse Completed

@@ -1,0 +1,8 @@
+```
+ROLE: evaluation_prosecutor  VOTE: yellow
+MANDATORY_BASELINES: [{"name": "Node.js (V8) WASI", "why": "To establish if deterministic defaults exist in other non-Rust dominant runtimes, avoiding a biased Wasmtime/Wasmer-only comparison.", "repo_or_cite": "https://nodejs.org/api/wasi.html"}]
+STRAWMAN_RISKS: ["Evaluating 'bare default' hazard on general-purpose hosts without verifying if these hosts actually execute crypto-dependent WASM guests.", "Assuming a known practitioner issue (e.g., CrowdSec) implies widespread vulnerability, when it could imply widespread mitigation by mature users."]
+MISSING_METRICS: ["Quantitative blast radius: exact percentage of top Go projects importing wazero that use bare NewModuleConfig() vs explicitly providing a CSPRNG.", "Frequency of WASI guests executing crypto operations in these specific vulnerable host environments."]
+KILLER_EXPERIMENT: Authenticated AST scan across the top 500 Go repositories importing wazero to measure the precise ratio of unmitigated bare defaults to safely overridden instantiations (using `WithRandSource`), proving actual production prevalence rather than theoretical signal.
+RATIONALE: The cross-runtime (Wasmtime/Wasmer) evaluation is fair and establishes the anomaly. The spec violation via the "blocking" clause is a strong read. However, the evaluation of *impact* relies on an unmeasured signal (RE-2 auth-gated). Because practitioners have independently found and fixed this (CrowdSec, wapc), there is a high risk that mature production systems already override the default, making the vulnerability a strawman in practice. The evaluation cannot be GREEN until the prevalence/blast-radius metric is actually executed and quantified.
+```
