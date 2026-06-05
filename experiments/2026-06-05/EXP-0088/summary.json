@@ -1,0 +1,18 @@
+{
+  "duckdb": "1.5.3",
+  "pandas": "3.0.3",
+  "m1_default": {"dtype": "BIGINT", "loaded": 3, "stderr": "", "null_count": 0, "csv_value": "3.14", "row": 30000},
+  "m2_loud_error": "ConversionException: Conversion Error: CSV Error on Line: 30001 / Could not convert string \"hello\" to 'BIGINT'",
+  "m3_insample": {"dtype": "DOUBLE", "loaded": 3.14, "row": 5},
+  "m4_fullscan": {"dtype": "DOUBLE", "loaded": 3.14, "sample_size": -1},
+  "m5_pandas": {"dtype": "float64", "loaded": 3.14},
+  "m6_sweep": [
+    {"row": 20481, "dtype": "BIGINT", "loaded": 3, "no_diag": true, "truncated": true},
+    {"row": 25000, "dtype": "BIGINT", "loaded": 3, "no_diag": true, "truncated": true},
+    {"row": 30000, "dtype": "BIGINT", "loaded": 3, "no_diag": true, "truncated": true},
+    {"row": 39000, "dtype": "BIGINT", "loaded": 3, "no_diag": true, "truncated": true}
+  ],
+  "sweep_truncated_pct": 100.0,
+  "routes_confirmed": ["read_csv", "read_csv_auto", "CREATE TABLE AS SELECT"],
+  "duckdb_full_version": "v1.5.3 14eca11bd9 Variegata"
+}

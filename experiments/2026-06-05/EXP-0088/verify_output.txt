@@ -1,0 +1,22 @@
+=== Full loud-error text (non-numeric 'hello' at row 30000) ===
+ConversionException
+Conversion Error: CSV Error on Line: 30001
+Original Line: 
+hello
+Error when converting column "val". Could not convert string "hello" to 'BIGINT'
+
+Column val is being converted as type BIGINT
+This type was auto-detected from the CSV file.
+Possible solutions:
+* Override the type for this column manually by setting the type explicitly, e.g., types={'val': 'VARCHAR'}
+* Set the sample size to a larger value to enable the auto-detection to scan more values, e.g., sample_size=-1
+* Use a COPY statement to automatically derive types from an existing table.
+* Check whether the null string value is set 
+
+=== CREATE TABLE path: 3.14 at row 30000 (default) ===
+   typeof=BIGINT  value_at_30000=3  null_count=0  stderr=''
+
+=== read_csv_auto (default) ===
+   read_csv_auto dtype=BIGINT  value=3
+
+=== version === ('v1.5.3', '14eca11bd9', 'Variegata')
