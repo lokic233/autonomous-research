@@ -12,12 +12,22 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'Mechanism FULLY reproduced on pinned pandas 3.0.3/pyarrow 24.0.0/duckdb
+  1.5.3/polars 1.41.2: ordered Categorical -> Arrow dictionary<...ordered=1> (schema
+  confirmed); pandas MIN/MAX=trace/fatal (domain) vs DuckDB & Polars=debug/warn (lexical)
+  with ZERO warnings; pyarrow min_max=ArrowNotImplementedError (only pandas honors
+  it). GROUPBY-MAX pandas-vs-DuckDB = 100% (2000/2000) disagree, silent. Plain-string
+  control = 100% agreement (isolates ordered=1 as sole cause). BUT prevalence load-bearing:
+  scanned 500 real public HF parquet files / 14,781 cols (top-downloaded + tabular/survey/census/clinical
+  targeted) -> 40 dictionary cols, 0 ordered=1, 0 ordered+non-alphabetical = ~0% at-risk
+  population in the wild (even survey/Likert data is ordered=False). Real-but-rare.
+  DISPOSITION: WEAKEN per pre-registered could-it-fail branch (disagreement>0% holds,
+  prevalence non-trivial FAILS).'
+result_effect: weaken
 artifacts_path: experiments/2026-06-04/EXP-0082/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-05T00:06:23Z'
 prompt_version: ''

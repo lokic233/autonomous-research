@@ -1,7 +1,7 @@
 claim_id: CLAIM-0069
 project_id: PROJ-0039
 stage: seed
-status: seed
+status: weakened
 claim: 'A pandas-written ORDERED Categorical column is encoded in Parquet as an Arrow
   dictionary<values=string, indices=int8, ordered=1>; pandas honors that domain ordering
   for MIN/MAX/sort/comparison, but DuckDB (and Polars) SILENTLY DROP the ordered flag
@@ -51,16 +51,27 @@ novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
 supporting_evidence: []
-negative_evidence: []
+negative_evidence:
+- exp_id: EXP-0082
+  summary: 'Mechanism FULLY reproduced on pinned pandas 3.0.3/pyarrow 24.0.0/duckdb
+    1.5.3/polars 1.41.2: ordered Categorical -> Arrow dictionary<...ordered=1> (schema
+    confirmed); pandas MIN/MAX=trace/fatal (domain) vs DuckDB & Polars=debug/warn
+    (lexical) with ZERO warnings; pyarrow min_max=ArrowNotImplementedError (only pandas
+    honors it). GROUPBY-MAX pandas-vs-DuckDB = 100% (2000/2000) disagree, silent.
+    Plain-string control = 100% agreement (isolates ordered=1 as sole cause). BUT
+    prevalence load-bearing: scanned 500 real public HF parquet files / 14,781 cols
+    (top-downloaded + tabular/survey/census/clinical targeted) -> 40 dictionary cols,
+    0 ordered=1, 0 ordered+non-alphabetical = ~0% at-risk population in the wild (even
+    survey/Likert data is ordered=False). Real-but-rare. DISPOSITION: WEAKEN per pre-registered
+    could-it-fail branch (disagreement>0% holds, prevalence non-trivial FAILS).'
+  data_path: experiments/2026-06-04/EXP-0082/
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r8-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0082 result, then ros exp complete --exp EXP-0082 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0082; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0082
+active_experiments: []
 created_at: '2026-06-04T23:42:25Z'
-last_updated: '2026-06-04T23:43:15Z'
+last_updated: '2026-06-05T00:06:32Z'

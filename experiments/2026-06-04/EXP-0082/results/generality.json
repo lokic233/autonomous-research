@@ -1,0 +1,81 @@
+{
+  "severity": {
+    "ordered_flag": true,
+    "domain": [
+      "trace",
+      "debug",
+      "info",
+      "warn",
+      "error",
+      "fatal"
+    ],
+    "pandas_min": "trace",
+    "pandas_max": "fatal",
+    "duckdb_min": "debug",
+    "duckdb_max": "warn",
+    "expected_lexical_min": "debug",
+    "expected_lexical_max": "warn",
+    "duckdb_is_lexical": true,
+    "max_flipped": true,
+    "duckdb_warnings": []
+  },
+  "tshirt": {
+    "ordered_flag": true,
+    "domain": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "pandas_min": "XS",
+    "pandas_max": "XXL",
+    "duckdb_min": "L",
+    "duckdb_max": "XXL",
+    "expected_lexical_min": "L",
+    "expected_lexical_max": "XXL",
+    "duckdb_is_lexical": true,
+    "max_flipped": false,
+    "duckdb_warnings": []
+  },
+  "education": {
+    "ordered_flag": true,
+    "domain": [
+      "primary",
+      "secondary",
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "pandas_min": "primary",
+    "pandas_max": "phd",
+    "duckdb_min": "bachelor",
+    "duckdb_max": "secondary",
+    "expected_lexical_min": "bachelor",
+    "expected_lexical_max": "secondary",
+    "duckdb_is_lexical": true,
+    "max_flipped": true,
+    "duckdb_warnings": []
+  },
+  "alphabetical_control": {
+    "ordered_flag": true,
+    "domain": [
+      "alpha",
+      "bravo",
+      "charlie",
+      "delta",
+      "echo"
+    ],
+    "pandas_min": "alpha",
+    "pandas_max": "echo",
+    "duckdb_min": "alpha",
+    "duckdb_max": "echo",
+    "expected_lexical_min": "alpha",
+    "expected_lexical_max": "echo",
+    "duckdb_is_lexical": true,
+    "max_flipped": false,
+    "duckdb_warnings": []
+  },
+  "unordered_pandas_refuses_min": true
+}
