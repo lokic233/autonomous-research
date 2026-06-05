@@ -65,13 +65,16 @@ negative_evidence:
     survey/Likert data is ordered=False). Real-but-rare. DISPOSITION: WEAKEN per pre-registered
     could-it-fail branch (disagreement>0% holds, prevalence non-trivial FAILS).'
   data_path: experiments/2026-06-04/EXP-0082/
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0067
+  date: '2026-06-05'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r8-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0082; convene committee if candidate-grade
+lifecycle_state: verdict_recorded
+next_action: 'VERDICT-0067=yellow: address required_evidence to advance'
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-04T23:42:25Z'
-last_updated: '2026-06-05T00:06:32Z'
+last_updated: '2026-06-05T00:08:10Z'

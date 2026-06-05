@@ -1,0 +1,36 @@
+verdict_id: VERDICT-0067
+claim_id: CLAIM-0069
+project_id: PROJ-0039
+date: '2026-06-05'
+experiment_ids:
+- EXP-0082
+experiment_paths:
+- experiments/2026-06-04/EXP-0082
+committee_version: v001
+prompt_versions: {}
+reviewer_votes: []
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections: []
+required_evidence:
+- Find a measurable real-world parquet population carrying ordered=1 non-alphabetical
+  categoricals (e.g. a pandas-heavy feature-store/data-lake convention) to make prevalence
+  non-trivial
+- then re-promote.
+map_delta_proposals: []
+baseline_requirements: []
+committee_run_dir: ''
+verbatim_votes_summary: ''
+key_structural_finding: 'Mechanism FULLY reproduced & novel, but real-world prevalence
+  ~0% -> real-but-rare. Pinned pandas 3.0.3/pyarrow 24.0.0/duckdb 1.5.3/polars 1.41.2:
+  ordered Categorical->Arrow dictionary<ordered=1> (schema confirmed); pandas MIN/MAX=trace/fatal
+  (domain) vs DuckDB+Polars=debug/warn (lexical), ZERO warnings; pyarrow min_max=ArrowNotImplementedError
+  (only pandas honors ordered=1). GROUPBY-MAX pandas-vs-DuckDB=100% (2000/2000) disagree
+  silent. Plain-string control=100% agreement (isolates ordered=1 flag). Alphabetical-domain
+  control=no flip. PREVALENCE (load-bearing): 500 real public HF parquet files / 14781
+  cols (top-downloaded + tabular/survey/census/clinical targeted) -> 40 dictionary
+  cols, 0 ordered=1, 0 ordered+non-alphabetical. Even survey/Likert data is ordered=False.
+  At-risk population in the wild ~empty.'
+disposition: weaken
+created_at: '2026-06-05T00:08:09Z'
