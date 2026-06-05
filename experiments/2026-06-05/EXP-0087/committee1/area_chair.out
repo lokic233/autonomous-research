@@ -1,0 +1,48 @@
+```
+ROLE: area_chair
+FINAL_VERDICT: yellow
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: [
+  "Block-not-end-to-end framing attacks an undocumented contract. Zenoh docs say 'the node will wait' (singular, local); CongestionControl and Reliability are separate orthogonal knobs. The packet frames Block as a promised end-to-end anti-drop guarantee that 'measurably fails' — but 4/5 reviewers independently concluded that promise was never made, making this partly a strawman (novelty_killer, evaluation_prosecutor, theory_skeptic, product_realist all flag this).",
+  "Per-hop≠end-to-end is the DEFAULT prediction for any hop-by-hop overlay without an explicit end-to-end credit/ack protocol (Saltzer/Reed/Clark 1984). The 3-node router result confirms standard queueing behavior — it does not falsify a documented contract or reveal a new mechanism. This is the gate-4 threat and it is NOT rebutted by evidence in the packet. The packet's counter ('genuinely novel per-hop fabric, not inherited DDS/TCP') is assertion, not argument — hop-by-hop overlays with per-link backpressure predate zenoh by decades.",
+  "The mature-lineage inversion argument ('DDS/MQTT are end-to-end; zenoh inverted to per-hop') is overstated. MQTT QoS 0/1 drops at broker; DDS Best-Effort drops. The lineage is mixed, not uniformly end-to-end, weakening the 'novel inversion' claim (theory_skeptic)."
+]
+
+REQUIRED_EVIDENCE: [
+  "Reframe against Saltzer-1984: explicitly state what is non-obvious BEYOND 'per-hop overlay lacks end-to-end backpressure.' The 3-node result must be positioned as confirming a predicted-but-uncharacterized hazard, not as discovering a new mechanism.",
+  "Correct Block-vs-Reliability framing: cite zenoh's own docs showing CongestionControl and Reliability are orthogonal knobs; reposition the claim as 'Block's local-only semantics are not surfaced to users' rather than 'Block fails its end-to-end contract.'",
+  "Run the evaluation_prosecutor's killer experiment: 4-node topology (1 pub → 1 router → [1 slow sub + 1 fast sub]). If the router maintains throughput to the fast sub while dropping for the slow sub, per-hop isolation is a deliberate feature, not a defect. This experiment disambiguates 'failure' from 'design.'",
+  "Statistical rigor: ≥3 independent trials per condition with CIs; explain the 41-64% variance across runs; sweep N in the 3-node test to characterize buffer-fill threshold; decompose per-hop loss (pub→router vs router→sub) with counters, not inference.",
+  "Check zenoh internal stats counters (not just RUST_LOG) for drop metrics — the silence claim currently covers only log output, not programmatic counters.",
+  "Check whether zenoh has an opt-in end-to-end mode (Reliability=Reliable + conduit/queue config) that the tests left at defaults. 'Block doesn't propagate at defaults' ≠ 'no end-to-end config exists.'"
+]
+
+MANDATORY_BASELINES: [
+  "DDS Reliable (CycloneDDS or FastDDS) on the same 3-node topology with identical sustained load — to anchor what end-to-end backpressure looks like and whether the comparison is fair.",
+  "MQTT QoS 0 and QoS 1 via Mosquitto broker on the same 3-node topology — to establish whether intermediate broker/router drop-without-propagation is the norm or zenoh-specific.",
+  "NATS core (no JetStream) on the same topology — another hop-by-hop pub/sub for direct comparison of slow-consumer behavior.",
+  "ROS 2 rmw_zenoh with RELIABLE QoS setting on the 3-node topology — to determine whether ROS 2's Reliability knob (mapped to zenoh's Reliability, not CongestionControl) actually delivers end-to-end semantics, which would reframe the deployment-severity claim."
+]
+
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0072",
+  change: "Downgrade from 'empirical cross-area phenomenon / mechanism discovery' to 'empirical characterization of undocumented UX/API hazard in zenoh 1.9.0.' Narrow the novelty anchor from 'per-hop split-default fabric is genuinely novel' to 'the composition of (a) silent put-Ok return on drop, (b) zero log/error instrumentation, and (c) undocumented get/put default contract-flip creates an uncharacterized hazard for ROS 2 adopters.' Remove the 'Block fails end-to-end' framing; replace with 'Block's per-hop semantics are not surfaced to users, creating a gap between reasonable developer expectation and actual behavior.' Tag as YELLOW-ACTIONABLE: the finding merits a zenoh issue/docs PR but does not clear GREEN without the reframing, baselines, and killer experiment."
+}
+
+PRIOR_ART_ADEQUATE: no
+  — novelty_killer explicitly reports both external search tools were permission-denied; no live prior-art search was completed. Domain-knowledge-based assessment was substituted but does not meet the ≥2 independent retrievable sources standard for certifying collision OR clearance. Saltzer-1984 collision is conceptually identified but not verified against the specific zenoh composition in retrievable sources. Per committee rules, GREEN cannot be emitted without adequate prior-art search.
+
+RATIONALE:
+Unanimous YELLOW across all 5 reviewers. No reviewer found a fatal collision with ≥2 retrievable sources (RED barred), but no reviewer found the contribution clears GREEN either. The committee converges on a consistent diagnosis:
+
+(1) THE GENUINE CONTRIBUTION IS REAL BUT THIN. The composition — silent put-Ok + zero debug logs (logger-proven-functional) + split-default contract-flip between get(Block) and put(Drop) — is an undocumented UX/API hazard in a tool that is now the default ROS 2 transport. This is operationally meaningful, especially for safety-critical robotics where silent data loss is unacceptable. No reviewer disputes this leg.
+
+(2) THE MECHANISM FRAMING OVERCLAIMS. The marquee finding — "Block measurably fails end-to-end, proven with 3-node router topology" — is rebutted by 4/5 reviewers on two independent grounds: (a) Block was never documented as end-to-end (zenoh separates CongestionControl from Reliability as orthogonal knobs), so "fails its contract" attacks a contract that was not made; (b) per-hop backpressure not propagating through an intermediate router is the default prediction from Saltzer/Reed/Clark 1984 for any hop-by-hop overlay without explicit end-to-end credit, so the 3-node result confirms expected-by-architecture behavior rather than discovering a mechanism surprise. The packet's counter — "zenoh's genuinely novel per-hop fabric, not inherited DDS/TCP" — is assertion without argument; hop-by-hop overlays with per-link flow control predate zenoh by decades.
+
+(3) GATE-4 VERDICT: closer to "best-effort drops + hop-by-hop fabric, both predicted; the composition is a real docs/UX hazard but not a mechanism surprise." The 3-node proof is rigorous empirical work but it confirms a theoretical prediction, it does not overturn one. The contribution is a characterization-level finding — YELLOW, not GREEN.
+
+(4) PATH TO GREEN requires: (a) reframing against Saltzer-1984 with explicit non-obvious delta; (b) correcting Block-vs-Reliability framing against zenoh's own docs; (c) running the 4-node killer experiment to disambiguate "failure" from "deliberate isolation feature"; (d) mandatory baselines (DDS Reliable, MQTT QoS 0/1, NATS core) on the same topology; (e) statistical repeats with CIs; (f) completed live prior-art search. Without these, the claim remains a valid YELLOW-level characterization finding that merits a zenoh issue and docs PR, but does not clear the bar for a GREEN-level novel discovery.
+
+Prompt version: v001. Committee #1 complete; all 5 reviewer votes aggregated; no RED unrebutted; YELLOW sustained.
+```
