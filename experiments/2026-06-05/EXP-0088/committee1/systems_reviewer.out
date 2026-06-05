@@ -1,0 +1,15 @@
+```text
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "DuckDB CSV sniffer/read_csv", url: "https://duckdb.org/docs/current/data/csv/auto_detection.html", overlap: "Direct: sampled type detection, default sample_size=20480, sample_size=-1 full-file sniffing; claim is a behavioral failure in this shipping mechanism."},
+  {system: "DuckDB CSV sniffer blog", url: "https://duckdb.org/2023/10/27/csv-sniffer.html", overlap: "Direct design prior: type detection/refinement over a sequential sample; default 20,480 tuples; describes refinement to accommodate later values within the sample."},
+  {system: "readr", url: "https://readr.tidyverse.org/articles/column-types.html", overlap: "Adjacent: sampled CSV type guessing; legacy first-1000-row inference can misclassify later values, but emits parsing failure/NA rather than silent float-to-int truncation."},
+  {system: "pandas read_csv", url: "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html", overlap: "Adjacent: chunked/mixed type inference under low_memory; docs advise dtype/low_memory controls. Packet evidence says pandas 3.0.3 preserves 3.14 as float64 for this case."},
+  {system: "DuckDB GitHub issue #8649", url: "https://github.com/duckdb/duckdb/issues/8649", overlap: "Adjacent issue: string column incorrectly interpreted as integer even with SAMPLE_SIZE=-1; not the packet's post-sample fractional silent truncation."},
+  {system: "DuckDB GitHub PR #6756", url: "https://github.com/duckdb/duckdb/pull/6756", overlap: "Adjacent implementation: auto_type_candidates and note that smaller sample sizes increase mistyping risk; not the specific silent truncation asymmetry."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: L0 reproduction is credible for the single DuckDB mechanism, but realistic workload evidence is insufficient. The packet has synthetic row-position sweeps and controls, not a corpus showing frequency of integer-early/fractional-later CSV columns, blast radius, or impact under DuckDB's non-sequential sampling behavior for regular files described in the docs.
+RATIONALE: The specific loud-vs-silent asymmetry is a real systems mechanism bug if the packet is accurate: DuckDB documents sampled type detection with default sample_size=20480 and full scan via sample_size=-1, and its faulty-CSV docs say structural/conversion errors stop scanning and report detailed remediation including sample_size=-1. However, sampled CSV type inference hazards are already shipping and documented in DuckDB/readr/pandas, so the current artifact is not yet a systems design contribution; it is a precise DuckDB correctness failure in an existing mechanism. GitHub searches found adjacent DuckDB issues/PRs (#8649, #6756) but not an exact public report of post-sample fractional float silently truncated to BIGINT. That supports filing/replicating the bug and running L1 corpus prevalence, but not GREEN for a publishable systems insight on L0 alone.
+```

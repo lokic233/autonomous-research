@@ -316,3 +316,1203 @@ mcp: meta_core/three_pai_external_web_search started
 mcp: meta_core/three_pai_external_web_search (completed)
 hook: PostToolUse
 hook: PostToolUse Completed
+ succeeded in 41692ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/search/issues?q=repo:duckdb/duckdb%20read_csv%20sample_size%20float%20integer%20truncation' | sed -n '1,120p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/search/issues?q=repo:duckdb/duckdb%20CSV%20sniffer%20integer%20float' | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/search/issues?q=repo:duckdb/duckdb%20sample_size%20ConversionException%20read_csv' | sed -n '1,160p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 349ms:
+{
+  "total_count": 0,
+  "incomplete_results": false,
+  "items": [
+
+  ],
+  "search_type": "lexical"
+}
+
+hook: PostToolUse
+ succeeded in 534ms:
+{
+  "total_count": 0,
+  "incomplete_results": false,
+  "items": [
+
+  ],
+  "search_type": "lexical"
+}
+
+hook: PostToolUse Completed
+ succeeded in 541ms:
+{
+  "total_count": 1,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/duckdb/duckdb/issues/6756",
+      "repository_url": "https://api.github.com/repos/duckdb/duckdb",
+      "labels_url": "https://api.github.com/repos/duckdb/duckdb/issues/6756/labels{/name}",
+      "comments_url": "https://api.github.com/repos/duckdb/duckdb/issues/6756/comments",
+      "events_url": "https://api.github.com/repos/duckdb/duckdb/issues/6756/events",
+      "html_url": "https://github.com/duckdb/duckdb/pull/6756",
+      "id": 1627928216,
+      "node_id": "PR_kwDOCEU65s5MO-JI",
+      "number": 6756,
+      "title": "Adding the option for the user to specify the column types searched in the CSV Auto Detect",
+      "user": {
+        "login": "pdet",
+        "id": 7377477,
+        "node_id": "MDQ6VXNlcjczNzc0Nzc=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/7377477?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/pdet",
+        "html_url": "https://github.com/pdet",
+        "followers_url": "https://api.github.com/users/pdet/followers",
+        "following_url": "https://api.github.com/users/pdet/following{/other_user}",
+        "gists_url": "https://api.github.com/users/pdet/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/pdet/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/pdet/subscriptions",
+        "organizations_url": "https://api.github.com/users/pdet/orgs",
+        "repos_url": "https://api.github.com/users/pdet/repos",
+        "events_url": "https://api.github.com/users/pdet/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/pdet/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 3,
+      "created_at": "2023-03-16T17:08:55Z",
+      "updated_at": "2024-06-27T13:59:49Z",
+      "closed_at": "2023-03-22T11:49:21Z",
+      "assignee": null,
+      "author_association": "MEMBER",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "draft": false,
+      "pull_request": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/pulls/6756",
+        "html_url": "https://github.com/duckdb/duckdb/pull/6756",
+        "diff_url": "https://github.com/duckdb/duckdb/pull/6756.diff",
+        "patch_url": "https://github.com/duckdb/duckdb/pull/6756.patch",
+        "merged_at": "2023-03-22T11:49:21Z"
+      },
+      "body": "This PR adds a new parameter to `read_csv_auto`, the  `auto_type_candidates` that receives a list of types.\r\n\r\ne.g.,\r\n\r\n```sql \r\nSELECT * FROM read_csv_auto ('csv_file.csv', auto_type_candidates=['FLOAT','VARCHAR']); \r\n```\r\n\r\nWill only automatically test `FLOAT` and `VARCHAR` as possible columns in the CSV File.\r\n\r\nBy default, `auto_type_candidates` will always attempt to detect the following column types: \r\n```\r\nVARCHAR\r\nTIMESTAMP\r\nDATE\r\nTIME\r\nDOUBLE\r\nBIGINT\r\nBOOLEAN\r\nSQLNULL \r\n```\r\n\r\nIf a column has a type that can not be deduced to one of the set `auto_type_candidates`, an error is thrown.\r\n\r\nAlso important to notice that mistyping might be more frequent with smaller sample sizes if more specialized types are used (e.g., TINYINT might be detected to a column, because the sample did not pick an Integer).\r\n\r\nFix: #6742 ",
+      "reactions": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/issues/6756/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/duckdb/duckdb/issues/6756/timeline",
+      "performed_via_github_app": null,
+      "state_reason": null,
+      "score": 1.0
+    }
+  ],
+  "search_type": "lexical"
+}
+
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/repos/duckdb/duckdb/issues/8649' | sed -n '1,180p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/search/issues?q=repo:duckdb/duckdb%20%22Could%20not%20convert%20string%22%20%22sample_size=-1%22' | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -s 'https://duckdb.org/docs/current/data/csv/auto_detection' | sed -n '1,140p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 321ms:
+{
+  "url": "https://api.github.com/repos/duckdb/duckdb/issues/8649",
+  "repository_url": "https://api.github.com/repos/duckdb/duckdb",
+  "labels_url": "https://api.github.com/repos/duckdb/duckdb/issues/8649/labels{/name}",
+  "comments_url": "https://api.github.com/repos/duckdb/duckdb/issues/8649/comments",
+  "events_url": "https://api.github.com/repos/duckdb/duckdb/issues/8649/events",
+  "html_url": "https://github.com/duckdb/duckdb/issues/8649",
+  "id": 1860252946,
+  "node_id": "I_kwDOCEU65s5u4TUS",
+  "number": 8649,
+  "title": "DuckDB read_csv incorrectly interpreting string column as integer after specifying SAMPLE_SIZE=-1",
+  "user": {
+    "login": "aarati-K",
+    "id": 3882964,
+    "node_id": "MDQ6VXNlcjM4ODI5NjQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3882964?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/aarati-K",
+    "html_url": "https://github.com/aarati-K",
+    "followers_url": "https://api.github.com/users/aarati-K/followers",
+    "following_url": "https://api.github.com/users/aarati-K/following{/other_user}",
+    "gists_url": "https://api.github.com/users/aarati-K/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/aarati-K/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/aarati-K/subscriptions",
+    "organizations_url": "https://api.github.com/users/aarati-K/orgs",
+    "repos_url": "https://api.github.com/users/aarati-K/repos",
+    "events_url": "https://api.github.com/users/aarati-K/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/aarati-K/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 5778180827,
+      "node_id": "LA_kwDOCEU65s8AAAABWGgK2w",
+      "url": "https://api.github.com/repos/duckdb/duckdb/labels/reproduced",
+      "name": "reproduced",
+      "color": "0E8A16",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-08-21T22:23:05Z",
+  "updated_at": "2023-09-06T10:35:35Z",
+  "closed_at": "2023-09-06T10:35:35Z",
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### What happens?\n\n`read_csv` routine throws the following error for the attached file:\r\n\r\n```\r\nD SELECT * FROM read_csv(\"dim0.csv\", AUTO_DETECT=TRUE, SAMPLE_SIZE=-1) ;\r\nError: Invalid Input Error: Could not convert string 'T' to INT64 in column \"Violation Legal Code\", at line 1.\r\n\r\nParser options:\r\n  file=nyc-parking-tickets/nyc_parking_tickets_split/Parking_Violations_Issued_-_Fiscal_Year_2017/dim0.csv\r\n  delimiter=',' (auto detected)\r\n  quote='\"' (auto detected)\r\n  escape='\"' (auto detected)\r\n  header=1 (auto detected)\r\n  sample_size=18446744073709549568\r\n  ignore_errors=0\r\n  all_varchar=0.\r\n\r\nConsider either increasing the sample size (SAMPLE_SIZE=X [X rows] or SAMPLE_SIZE=-1 [all rows]), or skipping column conversion (ALL_VARCHAR=1)\r\n```\r\n\r\n[dim0.csv](https://github.com/duckdb/duckdb/files/12403024/dim0.csv)\r\n\n\n### To Reproduce\n\n```SELECT * FROM read_csv(\"dim0.csv\", AUTO_DETECT=TRUE, SAMPLE_SIZE=-1) ;```\n\n### OS:\n\nUbuntu 20.04 x64\n\n### DuckDB Version:\n\nv0.8.1\n\n### DuckDB Client:\n\nCLI, Python\n\n### Full Name:\n\nAarati Kakaraparthy\n\n### Affiliation:\n\nUniversity of Wisconsin, Madison\n\n### Have you tried this on the latest `main` branch?\n\nI have tested with a main build\n\n### Have you tried the steps to reproduce? Do they include all relevant data and configuration? Does the issue you report still appear there?\n\n- [X] Yes, I have",
+  "closed_by": {
+    "login": "pdet",
+    "id": 7377477,
+    "node_id": "MDQ6VXNlcjczNzc0Nzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/7377477?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/pdet",
+    "html_url": "https://github.com/pdet",
+    "followers_url": "https://api.github.com/users/pdet/followers",
+    "following_url": "https://api.github.com/users/pdet/following{/other_user}",
+    "gists_url": "https://api.github.com/users/pdet/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/pdet/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/pdet/subscriptions",
+    "organizations_url": "https://api.github.com/users/pdet/orgs",
+    "repos_url": "https://api.github.com/users/pdet/repos",
+    "events_url": "https://api.github.com/users/pdet/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/pdet/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/duckdb/duckdb/issues/8649/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/duckdb/duckdb/issues/8649/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "completed",
+  "pinned_comment": null
+}
+
+hook: PostToolUse Completed
+ succeeded in 404ms:
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	
+	<title>CSV Auto Detection – DuckDB</title>
+	
+
+	<script data-cfasync="false">
+(function() {
+	function setDarkMode() {
+		document.documentElement.classList.add("darkmode");
+		document.documentElement.classList.add('disable-transitions');
+		document.documentElement.style.backgroundColor = '#0d0d0d';
+		document.documentElement.style.colorScheme = 'dark';
+	}
+	function setLightMode() {
+		document.documentElement.classList.remove("darkmode");
+		document.documentElement.style.backgroundColor = '';
+		document.documentElement.style.colorScheme = '';
+	}
+	
+	try {
+		var userColorSchemePref = localStorage.getItem("mode");
+		if (userColorSchemePref !== null) {
+			if (userColorSchemePref === 'dark') {
+				setDarkMode();
+			} else {
+				setLightMode();
+			}
+			return;
+		}
+	} catch (e) {}
+	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		setDarkMode();
+	} else {
+		setLightMode();
+	}
+})();
+</script>
+
+
+	<script src="/js/jquery-3.5.1.min.js" defer></script>
+
+	<link rel="stylesheet" href="/css/main.css?1780671058">
+	<link rel="preload" href="/css/webfont/SuisseIntl-Regular-WebXL.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/css/webfont/JetBrainsMono/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+	
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">	
+	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+	<link rel="manifest" href="/images/favicon/site.webmanifest">
+	<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/images/favicon/favicon.ico">
+	<meta name="msapplication-TileColor" content="#000000">
+	<meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
+	<!-- Begin Jekyll SEO tag v2.9.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="CSV Auto Detection" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…" />
+<meta name="twitter:description" property="og:description" content="When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…" />
+<link rel="canonical" href="https://duckdb.org/docs/current/data/csv/auto_detection.html" />
+<meta property="og:url" content="https://duckdb.org/docs/current/data/csv/auto_detection.html" />
+<meta property="og:site_name" content="DuckDB" />
+<meta property="og:image" content="https://duckdb.org/images/sharingduckdb.jpg" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://duckdb.org/images/sharingduckdb.jpg" />
+<meta name="twitter:title" content="CSV Auto Detection" />
+<meta name="twitter:site" content="@DuckDB" />
+<meta name="twitter:creator" content="@GitHub User" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"GitHub User"},"description":"When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…","headline":"CSV Auto Detection","image":"https://duckdb.org/images/sharingduckdb.jpg","url":"https://duckdb.org/docs/current/data/csv/auto_detection.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body class="documentation layout_docucurrent
+{-% elsif version_viewed == "lts" %}lts
+{-% else %}outdated
+{-% endif %}">
+
+	<header>
+		<div class="headerline">
+			<div class="headercontent">
+				<div class="duckdbhome">
+					<a href="/docs/current/"><img src="/images/logo-dl/DuckDB_Logo-horizontal.svg" alt="DuckDB Logo for Download" class="downloadlogo"></a>
+					<div id="duckdb_logo"></div>
+				</div>
+				<div class="landingmenu">
+					<nav class="mobile">
+						<div class="hamburger hamburger--squeeze">
+							<div class="hamburger-box">
+								<div class="hamburger-inner"></div>
+							</div>
+						</div>
+					</nav>
+				</div>
+				<div class="options">
+					<div class="opensearch">
+						<svg class="icon"><use href="#search-md"></use></svg>
+						<span class="mac shortcut">⌘+k</span>
+						<span class="win shortcut">ctrl+k</span>
+					</div>
+					
+					
+					
+
+					
+	<!-- this is the default and recommended version - do not show any extra warning -->
+
+
+					<div class="versionselect">
+						<div class="version">
+							
+
+							<div><span class="selectedversion" data-current="1.5 (current)">1.5 (current)</span><svg class="arrow"><use href="#chevron-down"></use></svg></div>
+							<div class="versionsidebar">
+								<ul>
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 760ms:
+{
+  "total_count": 16,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/duckdb/duckdb/issues/1450",
+      "repository_url": "https://api.github.com/repos/duckdb/duckdb",
+      "labels_url": "https://api.github.com/repos/duckdb/duckdb/issues/1450/labels{/name}",
+      "comments_url": "https://api.github.com/repos/duckdb/duckdb/issues/1450/comments",
+      "events_url": "https://api.github.com/repos/duckdb/duckdb/issues/1450/events",
+      "html_url": "https://github.com/duckdb/duckdb/issues/1450",
+      "id": 817068641,
+      "node_id": "MDU6SXNzdWU4MTcwNjg2NDE=",
+      "number": 1450,
+      "title": "Support string to float casting of decimal numbers with exponents",
+      "user": {
+        "login": "demitri",
+        "id": 64314,
+        "node_id": "MDQ6VXNlcjY0MzE0",
+        "avatar_url": "https://avatars.githubusercontent.com/u/64314?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/demitri",
+        "html_url": "https://github.com/demitri",
+        "followers_url": "https://api.github.com/users/demitri/followers",
+        "following_url": "https://api.github.com/users/demitri/following{/other_user}",
+        "gists_url": "https://api.github.com/users/demitri/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/demitri/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/demitri/subscriptions",
+        "organizations_url": "https://api.github.com/users/demitri/orgs",
+        "repos_url": "https://api.github.com/users/demitri/repos",
+        "events_url": "https://api.github.com/users/demitri/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/demitri/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 5,
+      "created_at": "2021-02-26T06:01:42Z",
+      "updated_at": "2025-05-19T16:37:56Z",
+      "closed_at": "2021-07-26T18:14:51Z",
+      "assignee": null,
+      "author_association": "NONE",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "I received this error on a `COPY FROM` CSV import. The table was predefined.\r\n\r\n```\r\nError: Invalid Input Error: Conversion Error: Could not convert string \"1.5007635628272106E-4\" to DECIMAL(18,3) in column \"parallax\", between line 2 and 1025. Parser options: DELIMITER=',' (auto detected), QUOTE='\"' (auto detected), ESCAPE='' (auto detected), HEADER=1 (auto detected), SAMPLE_SIZE=10240, ALL_VARCHAR=0. Consider either increasing the sample size (SAMPLE_SIZE=X [X rows] or SAMPLE_SIZE=-1 [all rows]), or skipping column conversion (ALL_VARCHAR=1)\r\nv0.2.5-dev385 26d882c85\r\n```\r\n\r\n`1.5007635628272106E-4` should be convertible to a decimal.",
+      "reactions": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/issues/1450/reactions",
+        "total_count": 1,
+        "+1": 1,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/duckdb/duckdb/issues/1450/timeline",
+      "performed_via_github_app": null,
+      "state_reason": "completed",
+      "pinned_comment": null,
+      "score": 1.0
+    },
+    {
+      "url": "https://api.github.com/repos/duckdb/duckdb/issues/16571",
+      "repository_url": "https://api.github.com/repos/duckdb/duckdb",
+      "labels_url": "https://api.github.com/repos/duckdb/duckdb/issues/16571/labels{/name}",
+      "comments_url": "https://api.github.com/repos/duckdb/duckdb/issues/16571/comments",
+      "events_url": "https://api.github.com/repos/duckdb/duckdb/issues/16571/events",
+      "html_url": "https://github.com/duckdb/duckdb/issues/16571",
+      "id": 2905515763,
+      "node_id": "I_kwDOCEU65s6tLqbz",
+      "number": 16571,
+      "title": "Conversion Error of a DATE column when reading a file to insert in table",
+      "user": {
+        "login": "mpg-data",
+        "id": 101218767,
+        "node_id": "U_kgDOBgh5zw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/101218767?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mpg-data",
+        "html_url": "https://github.com/mpg-data",
+        "followers_url": "https://api.github.com/users/mpg-data/followers",
+        "following_url": "https://api.github.com/users/mpg-data/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mpg-data/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mpg-data/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mpg-data/subscriptions",
+        "organizations_url": "https://api.github.com/users/mpg-data/orgs",
+        "repos_url": "https://api.github.com/users/mpg-data/repos",
+        "events_url": "https://api.github.com/users/mpg-data/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mpg-data/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 5778180827,
+          "node_id": "LA_kwDOCEU65s8AAAABWGgK2w",
+          "url": "https://api.github.com/repos/duckdb/duckdb/labels/reproduced",
+          "name": "reproduced",
+          "color": "0E8A16",
+          "default": false,
+          "description": ""
+        }
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 2,
+      "created_at": "2025-03-09T16:06:05Z",
+      "updated_at": "2025-03-10T15:29:52Z",
+      "closed_at": "2025-03-10T15:29:30Z",
+      "assignee": null,
+      "author_association": "NONE",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "### What happens?\n\nError similar to issue #13660.\n\nI created an empty table in DuckDB and tried to upload a CSV to it, which contains the valid ISO 8601 date (2022-03-05). It threw the following exception:\n\n```python\nConversionException                       Traceback (most recent call last)\nCell In[9], line 2\n      1 source = \"data/bug report\"\n----> 2 duckdb.sql(f\"\"\"\n      3            COPY df_input\n      4            FROM \"{source}\"\n      5            (\n      6                AUTO_DETECT FALSE,\n      7                DATE_FORMAT \"YYYY-MM-DD\",\n      8                DELIMITER '|',\n      9                HEADER FALSE\n     10             );\n     11            \"\"\")\n \nConversionException: Conversion Error: CSV Error on Line: 1\nOriginal Line: XX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-03-25|48396|RETIRO CORRESPONSAL|debit|||||||||||||||||||||\nError when converting column \"date_tx\". Could not convert string \"2022-03-25\" to 'DATE'\n\nColumn date_tx is being converted as type DATE\nThis type was auto-detected from the CSV file.\nPossible solutions:\n* Override the type for this column manually by setting the type explicitly, e.g. types={'date_tx': 'VARCHAR'}\n* Set the sample size to a larger value to enable the auto-detection to scan more values, e.g. sample_size=-1\n* Use a COPY statement to automatically derive types from an existing table.\n* Check whether the null string value is set correctly (e.g., nullstr = 'N/A')\n\n  file = data/bug report\n  delimiter = | (Set By User)\n  quote = \" (Auto-Detected)\n  escape = \\0 (Auto-Detected)\n  new_line = \\r\\n (Auto-Detected)\n  header = false (Set By User)\n  skip_rows = 0 (Auto-Detected)\n  comment = \\0 (Auto-Detected)\n  strict_mode = true (Auto-Detected)\n  date_format = YYYY-MM-DD (Set By User)\n  timestamp_format =  (Auto-Detected)\n  null_padding = 0\n  sample_size = 20480\n  ignore_errors = false\n  all_varchar = 0\n```\n\n### To Reproduce\n\n### File\n\n`my.csv`:\n\n```\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-03-25|48396|RETIRO CORRESPONSAL|debit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-02-12|36486|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-08-20|17848|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-09-11|41051|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-07-16|29621|RETIRO CORRESPONSAL|debit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-10-21|25258|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-04-14|170137|RETIRO CORRESPONSAL|debit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-11-09|14817|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-06-06|88758|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\nXX|1|123456789|1111111|USD|BILLETERA|3000000000|2022-03-05|99663|RETIRO CORRESPONSAL|credit|||||||||||||||||||||\n```\n\n### Code:\n\n\n```sql\nCREATE TABLE df_input (\n  country CHAR(2),\n  Idtype INT NOT NULL,\n  Idnumber INT NOT NULL,\n  transaction_id INT NOT NULL,\n  currency_type CHAR(3),\n  product_type VARCHAR(50),\n  accountNumber CHAR(10) NOT NULL,\n  date_tx DATE NOT NULL,\n  amount FLOAT NOT NULL,\n  description VARCHAR(254) NOT NULL,\n  transaction_class VARCHAR(8) NOT NULL,\n  card_number INT,\n  card_type VARCHAR(7),\n  initial_card_quote BOOLEAN,\n  issuing_bank INT,\n  franchise VARCHAR(16),\n  private_brand VARCHAR(100),\n  card_product VARCHAR(12),\n  transaction_type VARCHAR(50),\n  business_name VARCHAR(150),\n  transaction_state VARCHAR(10),\n  denial_grounds VARCHAR(100),\n  purchasing_channel VARCHAR(50),\n  purchasing_country VARCHAR(15),\n  number_installments INT,\n  initial_balance DOUBLE,\n  final_balance DOUBLE NOT NULL,\n  authorization_copy INT,\n  authorization_date TIMESTAMP,\n  authorization_channel VARCHAR(50),\n  authorization_type VARCHAR(8)\n  );\ncopy df_input\nfrom 'my.csv' (\n                       AUTO_DETECT FALSE,\n                       DATE_FORMAT \"YYYY-MM-DD\",\n                       DELIMITER '|',\n                       HEADER FALSE\n                    );\n```\n\n### OS:\n\nWindows 10 22H2 (10.0.19045) x64\n\n### DuckDB Version:\n\nv1.2.1\n\n### DuckDB Client:\n\nPython\n\n### Hardware:\n\n_No response_\n\n### Full Name:\n\nMarcio Padilla\n\n### Affiliation:\n\nExperian Colombia\n\n### What is the latest build you tested with? If possible, we recommend testing with the latest nightly build.\n\nI have tested with a stable release\n\n### Did you include all relevant data sets for reproducing the issue?\n\nYes\n\n### Did you include all code required to reproduce the issue?\n\n- [x] Yes, I have\n\n### Did you include all relevant configuration (e.g., CPU architecture, Python version, Linux distribution) to reproduce the issue?\n\n- [x] Yes, I have",
+      "reactions": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/issues/16571/reactions",
+
+exec
+/bin/zsh -lc "curl -Ls 'https://duckdb.org/docs/current/data/csv/auto_detection.html' | grep -i -A3 -B3 'sample_size\\|type detection\\|auto_type_candidates\\|sniffer' | head -120" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -Ls 'https://duckdb.org/docs/current/data/csv/reading_faulty_csv_files.html' | grep -i -A4 -B4 'immediately stop\\|throw the error\\|structural errors\\|sample_size' | head -120" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -Ls 'https://duckdb.org/2023/10/27/csv-sniffer.html' | grep -i -A4 -B4 'sample\\|type detection\\|sniff\\|auto' | head -120" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 216ms:
+<meta property="og:title" content="CSV Auto Detection" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…" />
+<meta name="twitter:description" property="og:description" content="When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…" />
+<link rel="canonical" href="https://duckdb.org/docs/current/data/csv/auto_detection.html" />
+<meta property="og:url" content="https://duckdb.org/docs/current/data/csv/auto_detection.html" />
+<meta property="og:site_name" content="DuckDB" />
+--
+<meta name="twitter:site" content="@DuckDB" />
+<meta name="twitter:creator" content="@GitHub User" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"GitHub User"},"description":"When using read_csv, the system tries to automatically infer how to read the CSV file using the CSV sniffer. This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows: Detect the dialect of the CSV file (delimiter, quoting rule, escape). Detect the types of each of the columns. Detect whether or not the file has a header row. By default the system will try to auto-detect all options. However, options can be individually overridden by the user. This can be useful in case the system makes a mistake.…","headline":"CSV Auto Detection","image":"https://duckdb.org/images/sharingduckdb.jpg","url":"https://duckdb.org/docs/current/data/csv/auto_detection.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+--
+				</div>
+				
+				
+				<p>When using <code class="language-plaintext highlighter-rouge">read_csv</code>, the system tries to automatically infer how to read the CSV file using the <a href="/2023/10/27/csv-sniffer.html">CSV sniffer</a>.
+This step is necessary because CSV files are not self-describing and come in many different dialects. The auto-detection works roughly as follows:</p>
+
+<ul>
+--
+      </h2>
+    
+
+<p>The type detection works by operating on a sample of the file.
+The size of the sample can be modified by setting the <code class="language-plaintext highlighter-rouge">sample_size</code> parameter.
+The default sample size is 20,480 rows.
+Setting the <code class="language-plaintext highlighter-rouge">sample_size</code> parameter to <code class="language-plaintext highlighter-rouge">-1</code> means the entire file is read for sampling:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nf">read_csv</span><span class="p">(</span><span class="s1">'my_csv_file.csv'</span><span class="p">,</span> <span class="k">sample_size</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>The way sampling is performed depends on the type of file. If we are reading from a regular file on disk, we will jump into the file and try to sample from different locations in the file.
+--
+      </h2>
+    
+
+<p>It is possible to run the CSV sniffer as a separate step using the <code class="language-plaintext highlighter-rouge">sniff_csv(filename)</code> function, which returns the detected CSV properties as a table with a single row.
+The <code class="language-plaintext highlighter-rouge">sniff_csv</code> function accepts an optional <code class="language-plaintext highlighter-rouge">sample_size</code> parameter to configure the number of rows sampled.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span> <span class="nf">sniff_csv</span><span class="p">(</span><span class="s1">'my_file.csv'</span><span class="p">);</span>
+<span class="k">FROM</span> <span class="nf">sniff_csv</span><span class="p">(</span><span class="s1">'my_file.csv'</span><span class="p">,</span> <span class="k">sample_size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">);</span>
+</code></pre></div></div>
+
+<table>
+--
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">UserArguments</code></td>
+      <td>Arguments used to invoke <code class="language-plaintext highlighter-rouge">sniff_csv</code></td>
+      <td><code class="language-plaintext highlighter-rouge">sample_size = 1000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Prompt</code></td>
+--
+      </h3>
+    
+
+<p>The <code class="language-plaintext highlighter-rouge">Prompt</code> column contains a SQL command with the configurations detected by the sniffer.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- use line mode in CLI to get the full command</span>
+<span class="k">.mode</span> <span class="n">line</span>
+--
+<p>In this example – the system selects the <code class="language-plaintext highlighter-rouge">|</code> as the delimiter. All rows are split into the same amount of columns, and there is more than one column per row meaning the delimiter was actually found in the CSV file.</p>
+      <h3 id="type-detection">
+        
+        <a style="text-decoration: none;" href="#type-detection">Type Detection</a>
+        
+      </h3>
+    
+
+<p>After detecting the dialect, the system will attempt to figure out the types of each of the columns. Note that this step is only performed if we are calling <code class="language-plaintext highlighter-rouge">read_csv</code>. In case of the <code class="language-plaintext highlighter-rouge">COPY</code> statement the types of the table that we are copying into will be used instead.</p>
+
+<p>The type detection works by attempting to convert the values in each column to the candidate types. If the conversion is unsuccessful, the candidate type is removed from the set of candidate types for that column. After all samples have been handled – the remaining candidate type with the highest priority is chosen. The default set of candidate types is given below, in order of priority:</p>
+
+<div class="monospace_table"></div>
+
+--
+<p>Everything can be cast to <code class="language-plaintext highlighter-rouge">VARCHAR</code>, therefore, this type has the lowest priority meaning that all columns are converted to <code class="language-plaintext highlighter-rouge">VARCHAR</code> as a fallback if they cannot be cast to anything else.
+In <a href="/data/flights.csv"><code class="language-plaintext highlighter-rouge">flights.csv</code></a> the <code class="language-plaintext highlighter-rouge">FlightDate</code> column will be cast to a <code class="language-plaintext highlighter-rouge">DATE</code>, while the other columns will be cast to <code class="language-plaintext highlighter-rouge">VARCHAR</code>.</p>
+
+<p>The set of candidate types that should be considered by the CSV reader can be specified explicitly using the <a href="/docs/current/data/csv/overview.html#auto_type_candidates-details"><code class="language-plaintext highlighter-rouge">auto_type_candidates</code></a> option. <code class="language-plaintext highlighter-rouge">VARCHAR</code> as the fallback type will always be considered as a candidate type whether you specify it or not.</p>
+
+<p>Here are all additional candidate types that may be specified using the <code class="language-plaintext highlighter-rouge">auto_type_candidates</code> option, in order of priority:</p>
+
+<div class="monospace_table"></div>
+
+--
+
+<p>Even though the set of data types that can be automatically detected may appear quite limited, the CSV reader can be configured to read arbitrarily complex types by using the <code class="language-plaintext highlighter-rouge">types</code>-option described in the next section.</p>
+
+<p>Type detection can be entirely disabled by using the <code class="language-plaintext highlighter-rouge">all_varchar</code> option. If this is set all columns will remain as <code class="language-plaintext highlighter-rouge">VARCHAR</code> (as they originally occur in the CSV file).</p>
+
+<p>Note that using quote characters vs. no quote characters (e.g., <code class="language-plaintext highlighter-rouge">"42"</code> and <code class="language-plaintext highlighter-rouge">42</code>) does not make a difference for type detection.
+Quoted fields will not be converted to <code class="language-plaintext highlighter-rouge">VARCHAR</code>, instead, the sniffer will try to find the type candidate with the highest priority.</p>
+      <h4 id="overriding-type-detection">
+        
+        <a style="text-decoration: none;" href="#overriding-type-detection">Overriding Type Detection</a>
+        
+      </h4>
+    
+--
+  <li>Alternatively, <code class="language-plaintext highlighter-rouge">types</code> takes a <code class="language-plaintext highlighter-rouge">name</code> → <code class="language-plaintext highlighter-rouge">type</code> map which overrides options of individual columns (e.g., <code class="language-plaintext highlighter-rouge">types = {'quarter': 'INTEGER'}</code>).</li>
+</ul>
+
+<p>The set of column types that may be specified using the <code class="language-plaintext highlighter-rouge">types</code> option is not as limited as the types available for the <code class="language-plaintext highlighter-rouge">auto_type_candidates</code> option: any valid type definition is acceptable to the <code class="language-plaintext highlighter-rouge">types</code>-option. (To get a valid type definition, use the <a href="/docs/current/sql/functions/utility.html#typeofexpression"><code class="language-plaintext highlighter-rouge">typeof()</code></a> function, or use the <code class="language-plaintext highlighter-rouge">column_type</code> column of the <a href="/docs/current/guides/meta/describe.html"><code class="language-plaintext highlighter-rouge">DESCRIBE</code></a> result.)</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">sniff_csv()</code> function's <code class="language-plaintext highlighter-rouge">Column</code> field returns a struct with column names and types that can be used as a basis for overriding types.</p>
+      <h2 id="header-detection">
+--
+<li class="toc-entry toc-h2"><a href="#detection-steps">Detection Steps</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#dialect-detection">Dialect Detection</a></li>
+<li class="toc-entry toc-h3"><a href="#type-detection">Type Detection</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#header-detection">Header Detection</a>
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 291ms:
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Reading Faulty CSV Files" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="CSV files can come in all shapes and forms, with some presenting many errors that make the process of cleanly reading them inherently difficult. To help users read these files, DuckDB supports detailed error messages, the ability to skip faulty lines and the possibility of storing faulty lines in a temporary table to assist users with a data cleaning step. Structural Errors DuckDB supports the detection and skipping of several different structural errors. In this section, we will go over each error with an example. For the examples, consider the following table: CREATE TABLE people (name VARCHAR, birth_date DATE); DuckDB…" />
+<meta name="twitter:description" property="og:description" content="CSV files can come in all shapes and forms, with some presenting many errors that make the process of cleanly reading them inherently difficult. To help users read these files, DuckDB supports detailed error messages, the ability to skip faulty lines and the possibility of storing faulty lines in a temporary table to assist users with a data cleaning step. Structural Errors DuckDB supports the detection and skipping of several different structural errors. In this section, we will go over each error with an example. For the examples, consider the following table: CREATE TABLE people (name VARCHAR, birth_date DATE); DuckDB…" />
+<link rel="canonical" href="https://duckdb.org/docs/current/data/csv/reading_faulty_csv_files.html" />
+<meta property="og:url" content="https://duckdb.org/docs/current/data/csv/reading_faulty_csv_files.html" />
+<meta property="og:site_name" content="DuckDB" />
+<meta property="og:image" content="https://duckdb.org/images/sharingduckdb.jpg" />
+--
+<meta name="twitter:title" content="Reading Faulty CSV Files" />
+<meta name="twitter:site" content="@DuckDB" />
+<meta name="twitter:creator" content="@GitHub User" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"GitHub User"},"description":"CSV files can come in all shapes and forms, with some presenting many errors that make the process of cleanly reading them inherently difficult. To help users read these files, DuckDB supports detailed error messages, the ability to skip faulty lines and the possibility of storing faulty lines in a temporary table to assist users with a data cleaning step. Structural Errors DuckDB supports the detection and skipping of several different structural errors. In this section, we will go over each error with an example. For the examples, consider the following table: CREATE TABLE people (name VARCHAR, birth_date DATE); DuckDB…","headline":"Reading Faulty CSV Files","image":"https://duckdb.org/images/sharingduckdb.jpg","url":"https://duckdb.org/docs/current/data/csv/reading_faulty_csv_files.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+--
+				
+				<p>CSV files can come in all shapes and forms, with some presenting many errors that make the process of cleanly reading them inherently difficult. To help users read these files, DuckDB supports detailed error messages, the ability to skip faulty lines and the possibility of storing faulty lines in a temporary table to assist users with a data cleaning step.</p>
+      <h2 id="structural-errors">
+        
+        <a style="text-decoration: none;" href="#structural-errors">Structural Errors</a>
+        
+      </h2>
+    
+
+<p>DuckDB supports the detection and skipping of several different structural errors. In this section, we will go over each error with an example.
+For the examples, consider the following table:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">people</span> <span class="p">(</span><span class="k">name</span> <span class="nb">VARCHAR</span><span class="p">,</span> <span class="n">birth_date</span> <span class="nb">DATE</span><span class="p">);</span>
+</code></pre></div></div>
+--
+        
+      </h3>
+    
+
+<p>By default, when performing a CSV read, if any structural errors are encountered, the scanner will immediately stop the scanning process and throw the error to the user.
+These errors are designed to provide as much information as possible to allow users to evaluate them directly in their CSV file.</p>
+
+<p>This is an example for a full error message:</p>
+
+--
+Column date is being converted as type DATE
+This type was auto-detected from the CSV file.
+Possible solutions:
+* Override the type for this column manually by setting the type explicitly, e.g., types={'birth_date': 'VARCHAR'}
+* Set the sample size to a larger value to enable the auto-detection to scan more values, e.g., sample_size=-1
+* Use a COPY statement to automatically derive types from an existing table.
+
+  file= people.csv
+  delimiter = , (Auto-Detected)
+--
+  skip_rows = 0 (Auto-Detected)
+  date_format = (DD-MM-YYYY) (Auto-Detected)
+  timestamp_format =  (Auto-Detected)
+  null_padding=0
+  sample_size=20480
+  ignore_errors=false
+  all_varchar=0
+</code></pre></div></div>
+
+--
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Column date is being converted as type DATE
+This type was auto-detected from the CSV file.
+Possible solutions:
+* Override the type for this column manually by setting the type explicitly, e.g., types={'birth_date': 'VARCHAR'}
+* Set the sample size to a larger value to enable the auto-detection to scan more values, e.g., sample_size=-1
+* Use a COPY statement to automatically derive types from an existing table.
+</code></pre></div></div>
+
+<p>Since the type of this field was auto-detected, it suggests defining the field as a <code class="language-plaintext highlighter-rouge">VARCHAR</code> or fully utilizing the dataset for type detection.</p>
+--
+        
+      </h2>
+    
+
+<p>There are cases where CSV files may have multiple structural errors, and users simply wish to skip these and read the correct data. Reading erroneous CSV files is possible by utilizing the <code class="language-plaintext highlighter-rouge">ignore_errors</code> option. With this option set, rows containing data that would otherwise cause the CSV parser to generate an error will be ignored. In our example, we will demonstrate a CAST error, but note that any of the errors described in our Structural Error section would cause the faulty line to be skipped.</p>
+
+<p>For example, consider the following CSV file, <a href="/data/faulty.csv"><code class="language-plaintext highlighter-rouge">faulty.csv</code></a>:</p>
+
+<pre><code class="language-csv">Pedro,31
+--
+				
+					<div class="toc_menu">
+						<h5>In this article</h5>
+						<ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#structural-errors">Structural Errors</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#anatomy-of-a-csv-error">Anatomy of a CSV Error</a></li>
+</ul>
+</li>
+
+ succeeded in 295ms:
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	
+	<title>DuckDB's CSV Sniffer: Automatic Detection of Types and Dialects – DuckDB</title>
+	
+
+	<script data-cfasync="false">
+(function() {
+--
+
+	
+		<!-- Begin Jekyll SEO tag v2.9.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="DuckDB&#39;s CSV Sniffer: Automatic Detection of Types and Dialects" />
+<meta name="author" content="Pedro Holanda" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="DuckDB is primarily focused on performance, leveraging the capabilities of modern file formats. At the same time, we also pay attention to flexible, non-performance-driven formats like CSV files. To create a nice and pleasant experience when reading from CSV files, DuckDB implements a CSV sniffer that automatically detects CSV dialect options, column types, and even skips dirty data. The sniffing process allows users to efficiently explore CSV files without needing to provide any input about the file format." />
+<meta name="twitter:description" property="og:description" content="DuckDB is primarily focused on performance, leveraging the capabilities of modern file formats. At the same time, we also pay attention to flexible, non-performance-driven formats like CSV files. To create a nice and pleasant experience when reading from CSV files, DuckDB implements a CSV sniffer that automatically detects CSV dialect options, column types, and even skips dirty data. The sniffing process allows users to efficiently explore CSV files without needing to provide any input about the file format." />
+<link rel="canonical" href="https://duckdb.org/2023/10/27/csv-sniffer.html" />
+<meta property="og:url" content="https://duckdb.org/2023/10/27/csv-sniffer.html" />
+<meta property="og:site_name" content="DuckDB" />
+<meta property="og:image" content="https://duckdb.org/images/blog/thumbs/csv.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-10-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-10-27T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://duckdb.org/images/blog/thumbs/csv.png" />
+<meta name="twitter:title" content="DuckDB&#39;s CSV Sniffer: Automatic Detection of Types and Dialects" />
+<meta name="twitter:site" content="@DuckDB" />
+<meta name="twitter:creator" content="@holanda_pe" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Pedro Holanda"},"dateModified":"2023-10-27T00:00:00+00:00","datePublished":"2023-10-27T00:00:00+00:00","description":"DuckDB is primarily focused on performance, leveraging the capabilities of modern file formats. At the same time, we also pay attention to flexible, non-performance-driven formats like CSV files. To create a nice and pleasant experience when reading from CSV files, DuckDB implements a CSV sniffer that automatically detects CSV dialect options, column types, and even skips dirty data. The sniffing process allows users to efficiently explore CSV files without needing to provide any input about the file format.","headline":"DuckDB&#39;s CSV Sniffer: Automatic Detection of Types and Dialects","image":"https://duckdb.org/images/blog/thumbs/csv.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://duckdb.org/2023/10/27/csv-sniffer.html"},"url":"https://duckdb.org/2023/10/27/csv-sniffer.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+	
+--
+				<div class="postcontent">
+					<div class="singleentry singleentry-posts contains_toc">
+						<div class="content">
+							<div class="contentwidth">
+								<h1>DuckDB's CSV Sniffer: Automatic Detection of Types and Dialects</h1>
+								
+								
+								
+									<div class="infoline">
+--
+								
+								
+								
+									<div class="excerpt">
+										<p><em>TL;DR: DuckDB is primarily focused on performance, leveraging the capabilities of modern file formats. At the same time, we also pay attention to flexible, non-performance-driven formats like CSV files. To create a nice and pleasant experience when reading from CSV files, DuckDB implements a CSV sniffer that automatically detects CSV dialect options, column types, and even skips dirty data. The sniffing process allows users to efficiently explore CSV files without needing to provide any input about the file format.</em></p>
+
+									</div>
+								
+								
+								<p><img src="/images/blog/csv-sniffer/ducktetive.jpg" alt="ducktetive" width="300" /></p>
+
+<p>There are many different file formats that users can choose from when storing their data. For example, there are performance-oriented binary formats like Parquet, where data is stored in a columnar format, partitioned into row groups, and heavily compressed. However, Parquet is known for its rigidity, requiring specialized systems to read and write these files.</p>
+
+<p>On the other side of the spectrum, there are files with the CSV (comma-separated values) format, which I like to refer to as the 'Woodstock of data'. CSV files offer the advantage of flexibility; they are structured as text files, allowing users to manipulate them with any text editor, and nearly any data system can read and execute queries on them.</p>
+--
+<p>However, this flexibility comes at a cost. Reading a CSV file is not a trivial task, as users need a significant amount of prior knowledge about the file. For instance, <a href="/docs/current/data/csv/overview.html">DuckDB's CSV reader</a> offers more than 25 configuration options. I've found that people tend to think I'm not working hard enough if I don't introduce at least three new options with each release. <em>Just kidding.</em> These options include specifying the delimiter, quote and escape characters, determining the number of columns in the CSV file, and identifying whether a header is present while also defining column types. This can slow down an interactive data exploration process, and make analyzing new datasets a cumbersome and less enjoyable task.</p>
+
+<p>One of the raison d'être of DuckDB is to be pleasant and easy to use, so we don't want our users to have to fiddle with CSV files and input options manually. Manual input should be reserved only for files with rather unusual choices for their CSV dialect (where a dialect comprises the combination of the delimiter, quote, escape, and newline values used to create that file) or for specifying column types.</p>
+
+<p>Automatically detecting CSV options can be a daunting process. Not only are there many options to investigate, but their combinations can easily lead to a search space explosion. This is especially the case for CSV files that are not well-structured. Some might argue that CSV files have a <a href="https://datatracker.ietf.org/doc/html/rfc4180">specification</a>, but the truth of the matter is that the "specification" changes as soon as a single system is capable of reading a flawed file. And, oh boy, I've encountered my fair share of semi-broken CSV files that people wanted DuckDB to read in the past few months.</p>
+
+<p>DuckDB implements a <a href="https://hannes.muehleisen.org/publications/ssdbm2017-muehleisen-csvs.pdf">multi-hypothesis CSV sniffer</a> that automatically detects dialects, headers, date/time formats, column types, and identifies dirty rows to be skipped. Our ultimate goal is to automatically read anything resembling a CSV file, to never give up and never let you down! All of this is achieved without incurring a substantial initial cost when reading CSV files. In the bleeding edge version, the sniffer runs when reading a CSV file by default. Note that the sniffer will always prioritize any options set by the user (e.g., if the user sets <code class="language-plaintext highlighter-rouge">,</code> as the delimiter, the sniffer won't try any other options and will assume that the user input is correct).</p>
+
+<p>In this blog post, I will explain how the current implementation works, discuss its performance, and provide insights into what comes next!</p>
+      <h2 id="duckdbs-automatic-detection">
+        
+        <a style="text-decoration: none;" href="#duckdbs-automatic-detection">DuckDB's Automatic Detection</a>
+        
+      </h2>
+    
+
+--
+... imagine 2048 consistent rows ...
+"Mark", 1.72, N/A, 20-09-92
+</code></pre>
+
+<p><img src="/images/blog/csv-sniffer/sniffer.png" alt="sniffing overview" width="680" /></p>
+
+<p>In the first phase, we perform <em>Dialect Detection</em>, where we select the dialect candidates that generate the most per-row columns in the CSV file while maintaining consistency (i.e., not exhibiting significant variations in the number of columns throughout the file). In our example, we can observe that, after this phase, the sniffer successfully detects the necessary options for the delimiter, quotes, escapes, and new line delimiters.</p>
+
+<p>The second phase, referred to as <em>Type Detection</em>, involves identifying the data types for each column in our CSV file. In our example, our sniffer recognizes four column types: <code class="language-plaintext highlighter-rouge">VARCHAR</code>, <code class="language-plaintext highlighter-rouge">DOUBLE</code>, <code class="language-plaintext highlighter-rouge">BOOL</code>, and <code class="language-plaintext highlighter-rouge">DATE</code>.</p>
+
+<p>The third step, known as <em>Header Detection</em>, is employed to ascertain whether our file includes a header. If a header is present, we use it to set the column names; otherwise, we generate them automatically. In our example, there is a header, and each column gets its name defined in there.</p>
+
+<p>Now that our columns have names, we move on to the fourth, optional phase: <em>Type Replacement</em>. DuckDB's CSV reader provides users with the option to specify column types by name. If these types are specified, we replace the detected types with the user's specifications.</p>
+
+<p>Finally, we progress to our last phase, <em>Type Refinement</em>. In this phase, we analyze additional sections of the file to validate the accuracy of the types determined during the initial type detection phase. If necessary, we refine them. In our example, we can see that the <code class="language-plaintext highlighter-rouge">Vegetarian</code> column was initially categorized as <code class="language-plaintext highlighter-rouge">BOOL</code>. However, upon further examination, it was found to contain the string <code class="language-plaintext highlighter-rouge">N/A</code>, leading to an upgrade of the column type to <code class="language-plaintext highlighter-rouge">VARCHAR</code> to accommodate all possible values.</p>
+
+<p>The automatic detection is only executed on a sequential sample of the CSV file. By default, the size of the sample is 20,480 tuples (i.e., 10 DuckDB execution chunks). This can be configured via the <code class="language-plaintext highlighter-rouge">sample_size</code> option, and can be set to -1 in case the user wants to sniff the complete file. Since the same data is repeatedly read with various options, and users can scan the entire file, all CSV buffers generated during sniffing are cached and efficiently managed to ensure high performance.</p>
+
+<p>Of course, running the CSV Sniffer on very large files will have a drastic impact on the overall performance (see our <a href="#varying-sampling-size">benchmark section below</a>). In these cases, the sample size should be kept at a reasonable level.</p>
+
+<p>In the next subsections, I will describe each phase in detail.</p>
+      <h3 id="dialect-detection">
+        
+--
+1,2,3
+4,5,6
+</code></pre>
+
+<p>Here the sniffer would detect that with the delimiter set to <code class="language-plaintext highlighter-rouge">,</code> the first row has one column, the second has two, but the remaining rows have 3 columns. Hence, if <code class="language-plaintext highlighter-rouge">null_padding</code> is set to false, it would still select <code class="language-plaintext highlighter-rouge">,</code> as a delimiter candidate, by assuming the top rows are dirty notes. (Believe me, CSV notes are a thing!). Resulting in the following table:</p>
+
+<pre><code class="language-csv">A,B,C
+1, 2, 3
+4, 5, 6
+--
+
+<p>If the <code class="language-plaintext highlighter-rouge">ignore_errors</code> option is set, then the configuration that yields the most columns with the least inconsistent rows will be picked.</p>
+      <h3 id="type-detection">
+        
+        <a style="text-decoration: none;" href="#type-detection">Type Detection</a>
+        
+
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -Ls 'https://readr.tidyverse.org/articles/column-types.html' | grep -i -A4 -B4 'guess_max\\|problems\\|1000\\|warning' | head -160" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -s 'https://api.github.com/search/issues?q=repo:duckdb/duckdb%20%22silent%22%20%22trunc%22%20csv' | sed -n '1,120p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -Ls 'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html' | grep -i -A3 -B3 'low_memory\\|dtype\\|mixed types' | head -120" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 273ms:
+<h2 id="automatic-guessing">Automatic guessing<a class="anchor" aria-label="anchor" href="#automatic-guessing"></a>
+</h2>
+<p>If you don’t explicit specify column types with the
+<code>col_types</code> argument, readr will attempt to guess them using
+some simple heuristics. By default, it will inspect 1000 values, evenly
+spaced from the first to the last row. This is a heuristic designed to
+always be fast (no matter how large your file is) and, in our
+experience, does a good job in most cases.</p>
+<p>If needed, you can request that readr use more rows by supplying the
+<code>guess_max</code> argument. You can even supply
+<code>guess_max = Inf</code> to use every row to guess the column types.
+You might wonder why this isn’t the default. That’s because it’s slow:
+it has to look at every column twice, once to determine the type and
+once to parse the value. In most cases, you’re best off supplying
+<code>col_types</code> yourself.</p>
+--
+<h3 id="legacy-behavior">Legacy behavior<a class="anchor" aria-label="anchor" href="#legacy-behavior"></a>
+</h3>
+<p>Column type guessing was substantially worse in the first edition of
+readr (meaning, prior to v2.0.0), because it always looked at the first
+1000 rows, and through some application of Murphy’s Law, it appears that
+many real csv files have lots of empty values at the start, followed by
+more “excitement” later in the file. Let’s demonstrate the problem with
+a slightly tricky file: the column <code>x</code> is mostly empty, but
+has some numeric data at the very end, in row 1001.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tricky_dat</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"2"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="st">"y"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">tfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"tricky-column-type-guessing-"</span>, fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">tricky_dat</span>, <span class="va">tfile</span><span class="op">)</span></span></code></pre></div>
+--
+<span><span class="co">#&gt; cols(</span></span>
+<span><span class="co">#&gt;   x = <span style="color: #BBBB00;">col_logical()</span>,</span></span>
+<span><span class="co">#&gt;   y = <span style="color: #BB0000;">col_character()</span></span></span>
+<span><span class="co">#&gt; )</span></span>
+<span><span class="co">#&gt; Warning: 1 parsing failure.</span></span>
+<span><span class="co">#&gt;  row col           expected actual                                                           file</span></span>
+<span><span class="co">#&gt; 1001   x 1/0/T/F/TRUE/FALSE      2 '/tmp/RtmpiozYCv/tricky-column-type-guessing-23a66fbd608e.csv'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
+--
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> <span style="color: #BB0000;">NA</span>    y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> <span style="color: #BB0000;">NA</span>    y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> <span style="color: #BB0000;">NA</span>    y</span></span></code></pre></div>
+<p>For this specific case, we can fix the problem by marginally
+increasing <code>guess_max</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/with_edition.html">with_edition</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="../reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">tfile</span>, guess_max <span class="op">=</span> <span class="fl">1001</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">───────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; cols(</span></span>
+<span><span class="co">#&gt;   x = <span style="color: #00BB00;">col_double()</span>,</span></span>
+--
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    <span style="color: #BB0000;">NA</span> y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    <span style="color: #BB0000;">NA</span> y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     2 y</span></span></code></pre></div>
+<p>Unlike the second edition, we don’t recommend using
+<code>guess_max = Inf</code> with the legacy parser, because the engine
+pre-allocates a large amount of memory in the face of this uncertainty.
+This means that reading with <code>guess_max = Inf</code> can be
+extremely slow and might even crash your R session. Instead specify the
+<code>col_types</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/with_edition.html">with_edition</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="../reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">tfile</span>, col_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="../reference/parse_atomic.html">col_double</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+
+hook: PostToolUse Completed
+ succeeded in 318ms:
+<h1>pandas.read_csv<a class="headerlink" href="#pandas-read-csv" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pandas.read_csv">
+<span class="sig-prename descclassname"><span class="pre">pandas.</span></span><span class="sig-name descname"><span class="pre">read_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath_or_buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;no_default&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'infer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;no_default&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipinitialspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipfooter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">na_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_default_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">na_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_blank_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_dates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dayfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'infer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thousands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineterminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quotechar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&quot;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doublequote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escapechar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'strict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_bad_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;no_default&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pandas-dev/pandas/blob/v3.0.3/pandas/io/parsers/readers.py#L349-L873"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pandas.read_csv" title="Link to this definition">#</a></dt>
+<dd><p>Read a comma-separated values (csv) file into DataFrame.</p>
+<p>Also supports optionally iterating or breaking of the file
+into chunks.</p>
+--
+<span class="pre">['AAA',</span> <span class="pre">'BBB',</span> <span class="pre">'DDD']</span></code>. Using this parameter results in much faster
+parsing time and lower memory usage.</p>
+</dd>
+<dt><strong>dtype</strong><span class="classifier">dtype or dict of {Hashable</span><span class="classifier">dtype}, optional</span></dt><dd><p>Data type(s) to apply to either the whole dataset or individual columns.
+E.g., <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">np.float64,</span> <span class="pre">'b':</span> <span class="pre">np.int32,</span> <span class="pre">'c':</span> <span class="pre">'Int64'}</span></code>
+Use <code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">object</span></code> together with suitable <code class="docutils literal notranslate"><span class="pre">na_values</span></code> settings
+to preserve and not interpret <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">converters</span></code> are specified, they will be applied INSTEAD
+of <code class="docutils literal notranslate"><span class="pre">dtype</span></code> conversion. Specify a <code class="docutils literal notranslate"><span class="pre">defaultdict</span></code> as input where
+the default determines the <code class="docutils literal notranslate"><span class="pre">dtype</span></code>
+of the columns which are not explicitly
+listed.</p>
+</dd>
+--
+<p><span class="versionmodified changed">Changed in version 2.2.0: </span>Callable for <code class="docutils literal notranslate"><span class="pre">engine='pyarrow'</span></code></p>
+</div>
+</dd>
+<dt><strong>low_memory</strong><span class="classifier">bool, default True</span></dt><dd><p>Internally process the file in chunks, resulting in lower memory use
+while parsing, but possibly mixed type inference.  To ensure no mixed
+types either set <code class="docutils literal notranslate"><span class="pre">False</span></code>, or specify the type with the <code class="docutils literal notranslate"><span class="pre">dtype</span></code> parameter.
+Note that the entire file is read into a single <a class="reference internal" href="pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>
+regardless, use the <code class="docutils literal notranslate"><span class="pre">chunksize</span></code> or <code class="docutils literal notranslate"><span class="pre">iterator</span></code>
+parameter to return the data in
+--
+forwarded to <code class="docutils literal notranslate"><span class="pre">fsspec.open</span></code>. Please see <code class="docutils literal notranslate"><span class="pre">fsspec</span></code> and <code class="docutils literal notranslate"><span class="pre">urllib</span></code> for more
+details, and for more examples on storage options refer <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/io.html?highlight=storage_options#reading-writing-remote-files">here</a>.</p>
+</dd>
+<dt><strong>dtype_backend</strong><span class="classifier">{‘numpy_nullable’, ‘pyarrow’}</span></dt><dd><p>Back-end data type applied to the resultant <a class="reference internal" href="pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>
+(still experimental). If not specified, the default behavior
+is to not use nullable data types. If specified, the behavior
+is as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;numpy_nullable&quot;</span></code>: returns nullable-dtype-backed <a class="reference internal" href="pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;pyarrow&quot;</span></code>: returns
+pyarrow-backed nullable <a class="reference internal" href="pandas.ArrowDtype.html#pandas.ArrowDtype" title="pandas.ArrowDtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrowDtype</span></code></a> <a class="reference internal" href="pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.</span></p>
+--
+<span class="go">3      #baz</span>
+</pre></div>
+</div>
+<p>Column types are inferred but can be explicitly specified using the dtype argument.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data.csv&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">})</span>
+<span class="go">   Name  Value</span>
+<span class="go">0   foo    1.0</span>
+<span class="go">1   bar    2.0</span>
+--
+<span class="go">1     20  15/04/2018  Fri 12 May 2023</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="go">col 1     int64</span>
+<span class="go">col 2    object</span>
+<span class="go">col 3    object</span>
+<span class="go">dtype: object</span>
+</pre></div>
+</div>
+<p>Specific columns can be parsed as dates by using the <cite>parse_dates</cite> and
+--
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="go">col 1             int64</span>
+<span class="go">col 2    datetime64[ns]</span>
+<span class="go">col 3    datetime64[ns]</span>
+<span class="go">dtype: object</span>
+</pre></div>
+</div>
+</dd></dl>
+
+hook: PostToolUse
+ succeeded in 429ms:
+{
+  "total_count": 1,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/duckdb/duckdb/issues/22286",
+      "repository_url": "https://api.github.com/repos/duckdb/duckdb",
+      "labels_url": "https://api.github.com/repos/duckdb/duckdb/issues/22286/labels{/name}",
+      "comments_url": "https://api.github.com/repos/duckdb/duckdb/issues/22286/comments",
+      "events_url": "https://api.github.com/repos/duckdb/duckdb/issues/22286/events",
+      "html_url": "https://github.com/duckdb/duckdb/pull/22286",
+      "id": 4329577001,
+      "node_id": "PR_kwDOCEU65s7VqRAG",
+      "number": 22286,
+      "title": "Fold MIN/MAX through monotonic wrappers and invertible casts",
+      "user": {
+        "login": "J-Meyers",
+        "id": 54123965,
+        "node_id": "MDQ6VXNlcjU0MTIzOTY1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/54123965?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/J-Meyers",
+        "html_url": "https://github.com/J-Meyers",
+        "followers_url": "https://api.github.com/users/J-Meyers/followers",
+        "following_url": "https://api.github.com/users/J-Meyers/following{/other_user}",
+        "gists_url": "https://api.github.com/users/J-Meyers/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/J-Meyers/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/J-Meyers/subscriptions",
+        "organizations_url": "https://api.github.com/users/J-Meyers/orgs",
+        "repos_url": "https://api.github.com/users/J-Meyers/repos",
+        "events_url": "https://api.github.com/users/J-Meyers/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/J-Meyers/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+        {
+          "id": 5783321126,
+          "node_id": "LA_kwDOCEU65s8AAAABWLZ6Jg",
+          "url": "https://api.github.com/repos/duckdb/duckdb/labels/stale",
+          "name": "stale",
+          "color": "ededed",
+          "default": false,
+          "description": ""
+        },
+        {
+          "id": 6180654083,
+          "node_id": "LA_kwDOCEU65s8AAAABcGVMAw",
+          "url": "https://api.github.com/repos/duckdb/duckdb/labels/Changes%20Requested",
+          "name": "Changes Requested",
+          "color": "B92F0B",
+          "default": false,
+          "description": ""
+        }
+      ],
+      "state": "open",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 6,
+      "created_at": "2026-04-26T00:08:20Z",
+      "updated_at": "2026-06-02T01:26:26Z",
+      "closed_at": null,
+      "assignee": null,
+      "author_association": "CONTRIBUTOR",
+      "issue_field_values": [
+
+      ],
+      "type": null,
+      "active_lock_reason": null,
+      "draft": true,
+      "pull_request": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/pulls/22286",
+        "html_url": "https://github.com/duckdb/duckdb/pull/22286",
+        "diff_url": "https://github.com/duckdb/duckdb/pull/22286.diff",
+        "patch_url": "https://github.com/duckdb/duckdb/pull/22286.patch",
+        "merged_at": null
+      },
+      "body": "\r\nThe optimization is split across two cooperating paths:\r\n\r\n- **Structural peel** (`MonotonicPeelRule`, sibling of `AvgRewriteRule` etc.) — at plan time, lifts wrappers off `MIN(f(g(col)))` into a `LogicalProjection` above the aggregate, leaving bare `MIN(col)` for the existing stats-fold rule. Works on any source — CSV, range, in-memory CTEs — because the rewrite is structural and doesn't require row-group stats. MIN↔MAX flips on odd inversion parity (rebound through the catalog like `AvgRewriteRule`'s AVG → SUM swap).\r\n- **Stats fold** (`StatisticsPropagator::TryExecuteAggregates`) — same shape as the existing bare-MIN/MAX fold, extended to walk through wrapper chains. Each per-row wrapper application is gated on `!IsNull()`, so a row-group bound of `±infinity` that produces NULL through `year`/`decade`/etc. silently abandons the optimization (the aggregate runs and gets the correct answer).\r\n\r\nBoth paths share `TryPeelMonotonicLevel` in `src/optimizer/monotonic_peel.cpp`. The structural path refuses to peel any wrapper whose argument is annotated `RequiresFinite()`; the stats-fold path with the IsNull guard handles those.\r\n\r\n### Per-arg `ArgProperties` on `ScalarFunction`\r\n\r\nFunction metadata is stored per-argument on `ScalarFunction`. Each `ArgProperties` carries:\r\n\r\n- `monotonicity` — `STRICTLY_INCREASING` / `NON_DECREASING` / `STRICTLY_DECREASING` / `NON_INCREASING` / `CONSTANT` / `UNKNOWN`. Step functions (`floor`, `round`, `year`, `date_trunc`, …) use the non-strict variants.\r\n- `requires_finite_input` — gates the structural-peel path; functions like `year(infinity) → NULL` set this and only the stats-fold path with the IsNull guard handles them.\r\n- `injective` — declared but currently unused; for follow-on consumers (e.g. `COUNT(DISTINCT f(col))` rewrites).\r\n- `refine_monotonicity` callback — narrows monotonicity given the actual value range of this arg. Used for ICU `year`/`decade`/etc., which are monotonic only when the input range stays within a single era (BC vs AD).\r\n- `preimage` callback — declared, currently unused; intended for filter pushdown through monotonic wrappers.\r\n\r\nPlus a function-level slot:\r\n\r\n- `codomain_bounds` — output range regardless of input (e.g. `month` is in `[1, 13)`); declared, currently unused.\r\n\r\nEach registration site opts in through builders:\r\n\r\n```cpp\r\ndate_diff.SetArgProperties({ArgProperties{},                                              // part literal\r\n                            ArgProperties().Decreasing(false).RequiresFinite(),           // start\r\n                            ArgProperties().Increasing(false).RequiresFinite()});         // end\r\nyear_set.SetUnaryArgProperties(ArgProperties().Increasing(false).RequiresFinite()\r\n                                              .WithMonotonicityRefiner(IcuYearRefiner));\r\ndate_trunc.SetArgProperties(1, ArgProperties().Increasing(false));\r\nunary_minus.SetUnaryArgProperties(ArgProperties().Decreasing());\r\n```\r\n\r\n### Output statistics derivation (falls out of the per-arg model) and was requested\r\n\r\n`StatisticsPropagator` for `BoundFunctionExpression` now derives output min/max via corner evaluation when a function has no custom stats callback but has annotated `ArgProperties`: evaluate `f(lo_args...)` and `f(hi_args...)` with decreasing args flipped. This subsumes the hand-rolled `NegateBindStatistics` (deleted) and gives every annotated unary/binary monotonic function downstream stats for free.\r\n\r\n### Adjacent fix in `parquet_reader.cpp::MinMaxIsExact`\r\n\r\nDefault to `true` for fixed-width physical types when the column chunk omits `is_min_value_exact` / `is_max_value_exact`. Pre-PARQUET-2352 (Oct 2023) the spec required min/max (when present) to be exact; in practice some writers truncated long binary values, which is what motivated the flag. Fixed-width physical types are not subject to that truncation, so when the flag is missing we treat them as exact. Without the fix, every parquet from a pre-PARQUET-2352 writer fails the exactness gate and the optimization can't fire. No parquet files written before Oct 2023 (including ClickHouse's clickbench parquet files) will have this field present, so on all old data this effectively eliminates this field of parquet stats related optimizations.\r\n\r\n### Benchmarks\r\n\r\nEach query is run in one session as 1 untimed warmup + 3 timed hot runs (page-cache resident); the table reports the median of the 3 hot runs. Default thread count (32 cores on the test machine), `PRAGMA disable_progress_bar`, `SET parquet_metadata_cache=true` (matches the canonical ClickBench `run.sh` so the thrift footer isn't reparsed per query). Comparison is against `main` (`9017a272ae`), built `release` from the same toolchain. For row E, ClickBench's `create.sql` is loaded via `-init` so it runs before `.timer on` and is excluded from per-query timing — same handling as the canonical bench's separate \"Load time\" measurement.\r\n\r\nOne synthetic dataset covers rows A–D — written once as parquet (256M rows for the parquet benches) and CSV (64M rows for the no-stats bench). ClickBench's `hits.parquet` covers row E.\r\n\r\n```sql\r\n-- Synthetic dataset. ORDER BY hash(i) defeats dictionary encoding so the\r\n-- without-side parquet scan reflects realistic per-row decompression cost\r\n-- instead of trivially compressed sequential data.\r\nCOPY (SELECT\r\n        (TIMESTAMP '2000-01-01' + INTERVAL ((i % 2900000)::INTEGER) DAY) AS dt,\r\n        i::BIGINT                                                        AS bi,\r\n        (i + (i % 7))::BIGINT                                            AS other_col\r\n      FROM range(256000000) _(i)\r\n      ORDER BY hash(i))\r\n  TO '/tmp/bench_minmax.parquet' (FORMAT PARQUET);\r\n\r\nCOPY (SELECT ... FROM range(64000000) ... ORDER BY hash(i))\r\n  TO '/tmp/bench_minmax.csv' (FORMAT CSV, HEADER);\r\n```\r\n\r\n| # | Feature exercised | Query | Effective rewrite | main | this PR | Speedup |\r\n|---|---|---|---|---|---|---|\r\n| A | Tier-1 parquet stats fold | `MIN(date_trunc('month', dt)), MAX(date_trunc('month', dt))` from `bench_minmax.parquet` | `date_trunc('month', MIN(dt)), date_trunc('month', MAX(dt))` → both bare aggregates fold to row-group constants → projection wraps with `date_trunc` at plan time | 423 ms | **3 ms** | ~141× |\r\n| B | Tier-2 (domain-restricted) stats fold only — structural peel refuses because `year(infinity)→NULL` | `MIN(year(dt)), MAX(year(dt))` from `bench_minmax.parquet` | `year(MIN(dt)), year(MAX(dt))` collapsed at fold time via stats-walk + IsNull guard | 204 ms | **3 ms** | ~68× |\r\n| C | Structural peel only (CSV — no row-group stats) | `MIN(date_trunc('month', dt)), MAX(date_trunc('month', dt))` from `read_csv('bench_minmax.csv')` | aggregate becomes bare `MIN(dt), MAX(dt)`; `date_trunc` lifted into a single post-aggregate projection. The scan still runs, but per-row `date_trunc` evaluations drop to one each | 415 ms | 334 ms | 1.2× |\r\n| D | Partial peel — chain bottoms out at non-foldable expression | `MIN(round(cbrt((bi - other_col)::DOUBLE)) - 100)` from `bench_minmax.parquet` | `round(cbrt(MIN((bi - other_col)::DOUBLE))) - 100` — `bi - other_col` has two non-foldable args and stays inside the aggregate; `round`/`cbrt`/`-100` lift above | 423 ms | 332 ms | 1.3× |\r\n| E | Tier-1 (ClickBench Q7, `hits.parquet` ~100M rows; view applies `make_date(EventDate)`) | `SELECT MIN(EventDate), MAX(EventDate) FROM hits;` | `make_date(MIN(raw_date_int)), make_date(MAX(raw_date_int))` → constants from row-group stats | 22 ms | 10 ms | ~2.2× |\r\n\r\n<details>\r\n<summary>Cross-reader <strong>AI Assisted</strong> survey for absent <code>is_*_value_exact</code></summary>\r\n\r\nFour distinct strategies across the parquet ecosystem when the flag is missing in the thrift message. Categories:\r\n\r\n- **Strict** — only treat min/max as exact when the flag is explicitly `true`; otherwise refuse the optimization\r\n- **Type-aware** — treat fixed-width physical types as exact when the flag is absent, variable-length as inexact (PARQUET-2352-aware)\r\n- **Trust unconditionally** — never read the flag on the read path; treat min/max as exact regardless\r\n- **Pass-through** — library faithfully exposes the optional; no policy decision (no query engine attached)\r\n\r\n| Reader | Category | Fixed-width prims | BYTE_ARRAY / FIXED_LEN_BYTE_ARRAY | Source |\r\n|---|---|---|---|---|\r\n| **DuckDB (pre this PR)** | Strict | requires explicit `true` | requires explicit `true` | bails unless both `__isset` and both flags `true` ([parquet_reader.cpp#L1405-L1421](https://github.com/duckdb/duckdb/blob/8b2e995727c39f314459e58930281298b6ee0484/extension/parquet/parquet_reader.cpp#L1405-L1421)) |\r\n| **DuckDB (this PR)** | Type-aware | exact when absent | inexact when absent | `t != BYTE_ARRAY && t != FIXED_LEN_BYTE_ARRAY` |\r\n| **arrow-rs** | Type-aware | exact when absent | inexact when absent | `ValueStatistics::new` defaults `is_*_value_exact: max.is_some()` for fixed-width arms ([statistics.rs#L530-L543](https://github.com/apache/arrow-rs/blob/4fa8d2ff5f18f2d773f9642631715509f844a062/parquet/src/file/statistics.rs#L530-L543)); BYTE_ARRAY / FIXED_LEN_BYTE_ARRAY arms override with `unwrap_or(false)` ([L247-L269](https://github.com/apache/arrow-rs/blob/4fa8d2ff5f18f2d773f9642631715509f844a062/parquet/src/file/statistics.rs#L247-L269)) |\r\n| **DataFusion** | Type-aware (via arrow-rs) | exact when absent | inexact when absent | `Some(true)` → `Precision::Exact`, `Some(false)`/`None` → `Precision::Inexact` ([metadata.rs#L460-L490](https://github.com/apache/datafusion/blob/65f337d6637aa069012e0e9286f859fb3a743253/datafusion/datasource-parquet/src/metadata.rs#L460-L490)) |\r\n| **Apache Arrow C++** | Pass-through | `std::nullopt` (unknown) | `std::nullopt` (unknown) | `FromThrift` only copies the bool when `__isset`; otherwise leaves it unset for every physical type ([thrift_internal.h#L255-L275](https://github.com/apache/arrow/blob/cc15bf1e839ea31f018a82a325eca906b32c86fe/cpp/src/parquet/thrift_internal.h#L255-L275)) |\r\n| **parquet-java** (parquet-mr) | Trust unconditionally | trusted | trusted | flags never read anywhere in the repo (0 hits at [b8f4dda](https://github.com/apache/parquet-java/tree/b8f4dda5d8492904bff33e3774a2de57f172e967)); `StatisticsFilter` and `ColumnIndexFilter` consume min/max with no exactness gate |\r\n| **Apache Spark** | Trust unconditionally (with one prefix-aware exception) | trusted (via parquet-java) | trusted; `StringStartsWith` slices min/max to the prefix length ([ParquetFilters.scala#L818-L849](https://github.com/apache/spark/blob/9ca391927d15412fc3399117a7a1f9a74e7bdf81/sql/core/src/main/scala/org/apache/spark/sql/execution/datasources/parquet/ParquetFilters.scala#L818-L849)) | flags never read on read path |\r\n| **Trino** | Trust unconditionally | trusted | trusted | `fromParquetStatistics` reads `min_value`/`max_value` and never consults the exact flags ([ParquetMetadataConverter.java#L308](https://github.com/trinodb/trino/blob/ba02373d539e809bf56aa7698af50c0d502b2124/lib/trino-parquet/src/main/java/io/trino/parquet/ParquetMetadataConverter.java#L308)); they are only set on the write path ([L296](https://github.com/trinodb/trino/blob/ba02373d539e809bf56aa7698af50c0d502b2124/lib/trino-parquet/src/main/java/io/trino/parquet/ParquetMetadataConverter.java#L296)) |\r\n| **ClickHouse** | Trust unconditionally | trusted | trusted | only set on the write path: `Write.cpp` for fixed-width ([L75-L76](https://github.com/ClickHouse/ClickHouse/blob/7fc29dcb1a1ba3a789dfeab9255f597040c682ea/src/Processors/Formats/Impl/Parquet/Write.cpp#L75-L76)) and BYTE_ARRAY ([L220](https://github.com/ClickHouse/ClickHouse/blob/7fc29dcb1a1ba3a789dfeab9255f597040c682ea/src/Processors/Formats/Impl/Parquet/Write.cpp#L220)); read side has zero references |\r\n\r\n</details>",
+      "reactions": {
+        "url": "https://api.github.com/repos/duckdb/duckdb/issues/22286/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/duckdb/duckdb/issues/22286/timeline",
+      "performed_via_github_app": null,
+      "state_reason": null,
+      "score": 1.0
+    }
+  ],
+  "search_type": "lexical"
+}
+
+hook: PostToolUse Completed
+codex
+```text
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "DuckDB CSV sniffer/read_csv", url: "https://duckdb.org/docs/current/data/csv/auto_detection.html", overlap: "Direct: sampled type detection, default sample_size=20480, sample_size=-1 full-file sniffing; claim is a behavioral failure in this shipping mechanism."},
+  {system: "DuckDB CSV sniffer blog", url: "https://duckdb.org/2023/10/27/csv-sniffer.html", overlap: "Direct design prior: type detection/refinement over a sequential sample; default 20,480 tuples; describes refinement to accommodate later values within the sample."},
+  {system: "readr", url: "https://readr.tidyverse.org/articles/column-types.html", overlap: "Adjacent: sampled CSV type guessing; legacy first-1000-row inference can misclassify later values, but emits parsing failure/NA rather than silent float-to-int truncation."},
+  {system: "pandas read_csv", url: "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html", overlap: "Adjacent: chunked/mixed type inference under low_memory; docs advise dtype/low_memory controls. Packet evidence says pandas 3.0.3 preserves 3.14 as float64 for this case."},
+  {system: "DuckDB GitHub issue #8649", url: "https://github.com/duckdb/duckdb/issues/8649", overlap: "Adjacent issue: string column incorrectly interpreted as integer even with SAMPLE_SIZE=-1; not the packet's post-sample fractional silent truncation."},
+  {system: "DuckDB GitHub PR #6756", url: "https://github.com/duckdb/duckdb/pull/6756", overlap: "Adjacent implementation: auto_type_candidates and note that smaller sample sizes increase mistyping risk; not the specific silent truncation asymmetry."}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: L0 reproduction is credible for the single DuckDB mechanism, but realistic workload evidence is insufficient. The packet has synthetic row-position sweeps and controls, not a corpus showing frequency of integer-early/fractional-later CSV columns, blast radius, or impact under DuckDB's non-sequential sampling behavior for regular files described in the docs.
+RATIONALE: The specific loud-vs-silent asymmetry is a real systems mechanism bug if the packet is accurate: DuckDB documents sampled type detection with default sample_size=20480 and full scan via sample_size=-1, and its faulty-CSV docs say structural/conversion errors stop scanning and report detailed remediation including sample_size=-1. However, sampled CSV type inference hazards are already shipping and documented in DuckDB/readr/pandas, so the current artifact is not yet a systems design contribution; it is a precise DuckDB correctness failure in an existing mechanism. GitHub searches found adjacent DuckDB issues/PRs (#8649, #6756) but not an exact public report of post-sample fractional float silently truncated to BIGINT. That supports filing/replicating the bug and running L1 corpus prevalence, but not GREEN for a publishable systems insight on L0 alone.
+```
+tokens used
+74,063
