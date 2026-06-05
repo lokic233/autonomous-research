@@ -244,3 +244,2288 @@ VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: G
 
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+codex
+The tooling file is generic and lists LLM serving repos, but this packet is about LSM/WAL recovery. I’m searching both the directly relevant database/WAL systems and the named OSS systems enough to establish overlap or non-overlap.
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 21503ms:
+research-os/prompts/committee/_committee_common_v001.md
+research-os/prompts/_shared/TOOLING_v001.md
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 29693ms:
+autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+research-os/prompts/committee/_committee_common_v001.md
+research-os/prompts/_shared/TOOLING_v001.md
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'command -v git || true' in /Users/dengcchi
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc 'command -v curl || true' in /Users/dengcchi
+ succeeded in 0ms:
+/usr/bin/curl
+
+hook: PostToolUse
+ succeeded in 210ms:
+/usr/local/bin/git
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+Initial search found fjall docs/source, RocksDB’s lost-buffered-write recovery work, and LevelDB log-reader behavior as the closest systems prior art. I’m checking source-level details now because the decision turns on whether anyone already owns the exact framing-location silent-open mechanism.
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/google/leveldb/main/db/log_reader.cc | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/fjall-rs/lsm-tree/v3.1.4/src/journal/writer.rs | sed -n '190,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebook/rocksdb/main/HISTORY.md | grep -i -n \"lost buffered\\|wal\" | head -30" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/fjall-rs/lsm-tree/v3.1.4/src/journal/reader.rs | sed -n '1,260p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/fjall-rs/lsm-tree/v3.1.4/src/journal/mod.rs | sed -n '1,160p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 426ms:
+ succeeded in 415ms:
+404: Not Found
+ succeeded in 454ms:
+// Copyright (c) 2011 The LevelDB Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file. See the AUTHORS file for names of contributors.
+
+#include "db/log_reader.h"
+
+#include <cstdio>
+
+#include "leveldb/env.h"
+#include "util/coding.h"
+#include "util/crc32c.h"
+
+namespace leveldb {
+namespace log {
+
+Reader::Reporter::~Reporter() = default;
+
+Reader::Reader(SequentialFile* file, Reporter* reporter, bool checksum,
+               uint64_t initial_offset)
+    : file_(file),
+      reporter_(reporter),
+      checksum_(checksum),
+      backing_store_(new char[kBlockSize]),
+      buffer_(),
+      eof_(false),
+      last_record_offset_(0),
+      end_of_buffer_offset_(0),
+      initial_offset_(initial_offset),
+      resyncing_(initial_offset > 0) {}
+
+Reader::~Reader() { delete[] backing_store_; }
+
+bool Reader::SkipToInitialBlock() {
+  const size_t offset_in_block = initial_offset_ % kBlockSize;
+  uint64_t block_start_location = initial_offset_ - offset_in_block;
+
+  // Don't search a block if we'd be in the trailer
+  if (offset_in_block > kBlockSize - 6) {
+    block_start_location += kBlockSize;
+  }
+
+  end_of_buffer_offset_ = block_start_location;
+
+  // Skip to start of first block that can contain the initial record
+  if (block_start_location > 0) {
+    Status skip_status = file_->Skip(block_start_location);
+    if (!skip_status.ok()) {
+      ReportDrop(block_start_location, skip_status);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool Reader::ReadRecord(Slice* record, std::string* scratch) {
+  if (last_record_offset_ < initial_offset_) {
+    if (!SkipToInitialBlock()) {
+      return false;
+    }
+  }
+
+  scratch->clear();
+  record->clear();
+  bool in_fragmented_record = false;
+  // Record offset of the logical record that we're reading
+  // 0 is a dummy value to make compilers happy
+  uint64_t prospective_record_offset = 0;
+
+  Slice fragment;
+  while (true) {
+    const unsigned int record_type = ReadPhysicalRecord(&fragment);
+
+    // ReadPhysicalRecord may have only had an empty trailer remaining in its
+    // internal buffer. Calculate the offset of the next physical record now
+    // that it has returned, properly accounting for its header size.
+    uint64_t physical_record_offset =
+        end_of_buffer_offset_ - buffer_.size() - kHeaderSize - fragment.size();
+
+    if (resyncing_) {
+      if (record_type == kMiddleType) {
+        continue;
+      } else if (record_type == kLastType) {
+        resyncing_ = false;
+        continue;
+      } else {
+        resyncing_ = false;
+      }
+    }
+
+    switch (record_type) {
+      case kFullType:
+        if (in_fragmented_record) {
+          // Handle bug in earlier versions of log::Writer where
+          // it could emit an empty kFirstType record at the tail end
+          // of a block followed by a kFullType or kFirstType record
+          // at the beginning of the next block.
+          if (!scratch->empty()) {
+            ReportCorruption(scratch->size(), "partial record without end(1)");
+          }
+        }
+        prospective_record_offset = physical_record_offset;
+        scratch->clear();
+        *record = fragment;
+        last_record_offset_ = prospective_record_offset;
+        return true;
+
+      case kFirstType:
+        if (in_fragmented_record) {
+          // Handle bug in earlier versions of log::Writer where
+          // it could emit an empty kFirstType record at the tail end
+          // of a block followed by a kFullType or kFirstType record
+          // at the beginning of the next block.
+          if (!scratch->empty()) {
+            ReportCorruption(scratch->size(), "partial record without end(2)");
+          }
+        }
+        prospective_record_offset = physical_record_offset;
+        scratch->assign(fragment.data(), fragment.size());
+        in_fragmented_record = true;
+        break;
+
+      case kMiddleType:
+        if (!in_fragmented_record) {
+          ReportCorruption(fragment.size(),
+                           "missing start of fragmented record(1)");
+        } else {
+          scratch->append(fragment.data(), fragment.size());
+        }
+        break;
+
+      case kLastType:
+        if (!in_fragmented_record) {
+          ReportCorruption(fragment.size(),
+                           "missing start of fragmented record(2)");
+        } else {
+          scratch->append(fragment.data(), fragment.size());
+          *record = Slice(*scratch);
+          last_record_offset_ = prospective_record_offset;
+          return true;
+        }
+        break;
+
+      case kEof:
+        if (in_fragmented_record) {
+          // This can be caused by the writer dying immediately after
+          // writing a physical record but before completing the next; don't
+          // treat it as a corruption, just ignore the entire logical record.
+          scratch->clear();
+        }
+        return false;
+
+      case kBadRecord:
+        if (in_fragmented_record) {
+          ReportCorruption(scratch->size(), "error in middle of record");
+          in_fragmented_record = false;
+          scratch->clear();
+        }
+        break;
+
+      default: {
+        char buf[40];
+        std::snprintf(buf, sizeof(buf), "unknown record type %u", record_type);
+        ReportCorruption(
+            (fragment.size() + (in_fragmented_record ? scratch->size() : 0)),
+            buf);
+        in_fragmented_record = false;
+        scratch->clear();
+        break;
+      }
+    }
+  }
+  return false;
+}
+
+uint64_t Reader::LastRecordOffset() { return last_record_offset_; }
+
+void Reader::ReportCorruption(uint64_t bytes, const char* reason) {
+  ReportDrop(bytes, Status::Corruption(reason));
+}
+
+void Reader::ReportDrop(uint64_t bytes, const Status& reason) {
+  if (reporter_ != nullptr &&
+      end_of_buffer_offset_ - buffer_.size() - bytes >= initial_offset_) {
+    reporter_->Corruption(static_cast<size_t>(bytes), reason);
+  }
+}
+
+unsigned int Reader::ReadPhysicalRecord(Slice* result) {
+  while (true) {
+    if (buffer_.size() < kHeaderSize) {
+      if (!eof_) {
+        // Last read was a full read, so this is a trailer to skip
+        buffer_.clear();
+        Status status = file_->Read(kBlockSize, &buffer_, backing_store_);
+        end_of_buffer_offset_ += buffer_.size();
+        if (!status.ok()) {
+          buffer_.clear();
+          ReportDrop(kBlockSize, status);
+          eof_ = true;
+          return kEof;
+        } else if (buffer_.size() < kBlockSize) {
+          eof_ = true;
+        }
+        continue;
+      } else {
+        // Note that if buffer_ is non-empty, we have a truncated header at the
+        // end of the file, which can be caused by the writer crashing in the
+        // middle of writing the header. Instead of considering this an error,
+        // just report EOF.
+        buffer_.clear();
+        return kEof;
+      }
+    }
+
+    // Parse the header
+    const char* header = buffer_.data();
+    const uint32_t a = static_cast<uint32_t>(header[4]) & 0xff;
+    const uint32_t b = static_cast<uint32_t>(header[5]) & 0xff;
+    const unsigned int type = header[6];
+    const uint32_t length = a | (b << 8);
+    if (kHeaderSize + length > buffer_.size()) {
+      size_t drop_size = buffer_.size();
+      buffer_.clear();
+      if (!eof_) {
+        ReportCorruption(drop_size, "bad record length");
+        return kBadRecord;
+      }
+      // If the end of the file has been reached without reading |length| bytes
+      // of payload, assume the writer died in the middle of writing the record.
+      // Don't report a corruption.
+      return kEof;
+    }
+
+    if (type == kZeroType && length == 0) {
+      // Skip zero length record without reporting any drops since
+      // such records are produced by the mmap based writing code in
+      // env_posix.cc that preallocates file regions.
+      buffer_.clear();
+      return kBadRecord;
+    }
+
+    // Check crc
+    if (checksum_) {
+      uint32_t expected_crc = crc32c::Unmask(DecodeFixed32(header));
+      uint32_t actual_crc = crc32c::Value(header + 6, 1 + length);
+      if (actual_crc != expected_crc) {
+        // Drop the rest of the buffer since "length" itself may have
+        // been corrupted and if we trust it, we could find some
+        // fragment of a real log record that just happens to look
+        // like a valid log record.
+        size_t drop_size = buffer_.size();
+        buffer_.clear();
+        ReportCorruption(drop_size, "checksum mismatch");
+        return kBadRecord;
+      }
+    }
+
+    buffer_.remove_prefix(kHeaderSize + length);
+
+
+hook: PostToolUse
+ succeeded in 522ms:
+404: Not Found
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 646ms:
+6:* Add experimental DB option `async_wal_precreate` to precreate the next WAL file in a background thread and reduce foreground WAL rotation latency. The option is sanitized to false when WAL recycling is enabled.
+13:* Read-only open with `error_if_wal_file_exists=true` now tolerates empty WAL files so empty precreated WALs do not prevent inspection.
+51:* Introduced enforce_write_buffer_manager_during_recovery option to allow WriteBufferManager to be enforced during WAL recovery. (Default: true)
+58:* Remote compaction workers now skip WAL recovery when opening the secondary DB instance, since only the LSM state from MANIFEST is needed for compaction. This reduces I/O and speeds up remote compaction startup.
+85:* Fix a bug where WritePrepared/WriteUnprepared TransactionDB with two_write_queues=true could experience "sequence number going backwards" corruption during recovery from a background error, due to allocated-but-not-published sequence numbers not being synced before creating new WAL files.
+125:* Fixed a bug where `DB::GetSortedWalFiles()` could hang when waiting for a purge operation that found nothing to do (potentially triggered by iterator release, flush, compaction, etc.).
+127:* Fixed a bug for `WAL_ttl_seconds > 0` use cases where the newest archived WAL files could be incorrectly deleted when the system clock moved backwards.
+139:* Added `DB::FlushWAL(const FlushWALOptions&)` as an alternative to `DB::FlushWAL(bool sync)`, where `FlushWALOptions` includes a new `rate_limiter_priority` field (default `Env::IO_TOTAL`) that allows rate limiting and priority passing of manual WAL flush's IO operations.
+170:* Reported numbers for compaction and flush CPU usage now include time spent by parallel compression worker threads. This now means compaction/flush CPU usage could exceed the wall clock time.
+330:* Provide a new option `track_and_verify_wals` to track and verify various information about WAL during WAL recovery. This is intended to be a better replacement to `track_and_verify_wals_in_manifest`.
+380:* Fix a bug for transaction db with 2pc where an old WAL may be retained longer than needed (#13127).
+382:* Fix a bug for replaying WALs for WriteCommitted transaction DB when its user-defined timestamps setting is toggled on/off between DB sessions.
+407:* Several DB option settings could be lost through `GetOptionsFromString()`, possibly elsewhere as well. Affected options, now fixed:`background_close_inactive_wals`, `write_dbid_to_manifest`, `write_identity_file`, `prefix_seek_opt_in_only`
+427:* Fix a bug with manual_wal_flush and auto error recovery from WAL failure that may cause CFs to be inconsistent (#12995). The fix will set potential WAL write failure as fatal error when manual_wal_flush is true, and disables auto error recovery from these errors.
+445:* Fixed a bug where successful write right after error recovery for last failed write finishes causes duplicate WAL entries
+480:* Deprecated names `LogFile` and `VectorLogPtr` in favor of new names `WalFile` and `VectorWalPtr`.
+484:* Inactive WALs are immediately closed upon being fully sync-ed rather than in a background thread. This is to ensure LinkFile() is not called on files still open for write, which might not be supported by some FileSystem implementations. This should not be a performance issue, but an opt-out is available with with new DB option `background_close_inactive_wals`.
+487:* Fix a rare case in which a hard-linked WAL in a Checkpoint is not fully synced (so might lose data on power loss).
+488:* Fixed the output of the `ldb dump_wal` command for `PutEntity` records so it prints the key and correctly resets the hexadecimal formatting flag after printing the wide-column entity.
+505:* Add a kAdmPolicyAllowAll option to TieredAdmissionPolicy that admits all blocks evicted from the primary block cache into the compressed secondary cache.
+512:* Fixed a bug for databases using `DBOptions::allow_2pc == true` (all `TransactionDB`s except `OptimisticTransactionDB`) that have exactly one column family. Due to a missing WAL sync, attempting to open the DB could have returned a `Status::Corruption` with a message like "SST file is ahead of WALs".
+516:* Fixed a false positive `Status::Corruption` reported when reopening a DB that used `DBOptions::recycle_log_file_num > 0` and `DBOptions::wal_compression != kNoCompression`.
+517:* While WAL is locked with LockWAL(), some operations like Flush() and IngestExternalFile() are now blocked as they should have been.
+554:* Fixed a bug when the recycle_log_file_num in DBOptions is changed from 0 to non-zero when a DB is reopened. On a subsequent reopen, if a log file created when recycle_log_file_num==0 was reused previously, is alive and is empty, we could end up inserting stale WAL records into the memtable.
+584:* Fixed a data race in WalManager that may affect how frequent PurgeObsoleteWALFiles() runs.
+585:* Re-enable the recycle_log_file_num option in DBOptions for kPointInTimeRecovery WAL recovery mode, which was previously disabled due to a bug in the recovery logic. This option is incompatible with WriteOptions::disableWAL. A Status::InvalidArgument() will be returned if disableWAL is specified.
+607:* Mark wal\_compression feature as production-ready. Currently only compatible with ZSTD compression.
+629:* Fix some perf context statistics error in write steps. which include missing write_memtable_time in unordered_write. missing write_memtable_time in PipelineWrite when Writer stat is STATE_PARALLEL_MEMTABLE_WRITER. missing write_delay_time when calling DelayWrite in WriteImplWALOnly function.
+712:* When `WAL_ttl_seconds > 0`, we now process archived WALs for deletion at least every `WAL_ttl_seconds / 2` seconds. Previously it could be less frequent in case of small `WAL_ttl_seconds` values when size-based expiration (`WAL_size_limit_MB > 0 `) was simultaneously enabled.
+754:* Add wide column support to ldb commands (scan, dump, idump, dump_wal) and sst_dump tool's scan command
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/lsm-tree/git/trees/v3.1.4?recursive=1 | grep -E '\"path\": \".*journal|\"path\": \".*writer|\"path\": \".*reader' | head -100" in /Users/dengcchi
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/fjall-rs/lsm-tree/git/trees/v3.1.4?recursive=1
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/git/trees/v3.1.4?recursive=1 | grep -E '\"path\": \".*journal|\"path\": \".*writer|\"path\": \".*reader' | head -100" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/issues/53 | sed -n '1,80p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/issues/112 | sed -n '1,80p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/issues/113 | sed -n '1,80p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 144ms:
+zsh:1: no matches found: https://api.github.com/repos/fjall-rs/fjall/git/trees/v3.1.4?recursive=1
+
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 747ms:
+{
+  "url": "https://api.github.com/repos/fjall-rs/fjall/issues/53",
+  "repository_url": "https://api.github.com/repos/fjall-rs/fjall",
+  "labels_url": "https://api.github.com/repos/fjall-rs/fjall/issues/53/labels{/name}",
+  "comments_url": "https://api.github.com/repos/fjall-rs/fjall/issues/53/comments",
+  "events_url": "https://api.github.com/repos/fjall-rs/fjall/issues/53/events",
+  "html_url": "https://github.com/fjall-rs/fjall/issues/53",
+  "id": 2307351298,
+  "node_id": "I_kwDOKuQLK86Jh2MC",
+  "number": 53,
+  "title": "unexpected warning ： shard.rs:106: Invalid batch: found batch start inside batch",
+  "user": {
+    "login": "i18nsite",
+    "id": 145643935,
+    "node_id": "U_kgDOCK5Znw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/145643935?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/i18nsite",
+    "html_url": "https://github.com/i18nsite",
+    "followers_url": "https://api.github.com/users/i18nsite/followers",
+    "following_url": "https://api.github.com/users/i18nsite/following{/other_user}",
+    "gists_url": "https://api.github.com/users/i18nsite/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/i18nsite/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/i18nsite/subscriptions",
+    "organizations_url": "https://api.github.com/users/i18nsite/orgs",
+    "repos_url": "https://api.github.com/users/i18nsite/repos",
+    "events_url": "https://api.github.com/users/i18nsite/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/i18nsite/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 6216453689,
+      "node_id": "LA_kwDOKuQLK88AAAABcoeOOQ",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/labels/question",
+      "name": "question",
+      "color": "d876e3",
+      "default": true,
+      "description": "Further information is requested"
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2024-05-21T05:43:45Z",
+  "updated_at": "2024-07-06T17:12:13Z",
+  "closed_at": "2024-05-21T12:45:06Z",
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I'm writing a command line application. When my program exits, I use keyspace.persist(FlushMode::SyncAll)?;\r\nI  not close the database (is there a shutdown function?)\r\n\r\nThe following warn occasionally appears at 2 times start my cli. ( video https://www.loom.com/share/c1c1a71d06fb495bad85bacda73b219e )\r\n\r\nIs there a way to block this warning?\r\n\r\n```\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:106: Invalid batch: found batch start inside batch\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 88\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:213: Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 88\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:106: Invalid batch: found batch start inside batch\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:213: Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:106: Invalid batch: found batch start inside batch\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:213: Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:106: Invalid batch: found batch start inside batch\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:213: Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity\r\n  WARN fjall::journal::shard: /Users/z/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fjall-1.0.3/src/journal/shard.rs:70: Truncating shard to 0\r\n```",
+  "closed_by": {
+    "login": "marvin-j97",
+    "id": 33938500,
+    "node_id": "MDQ6VXNlcjMzOTM4NTAw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33938500?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/marvin-j97",
+    "html_url": "https://github.com/marvin-j97",
+
+ succeeded in 779ms:
+{
+  "url": "https://api.github.com/repos/fjall-rs/fjall/issues/113",
+  "repository_url": "https://api.github.com/repos/fjall-rs/fjall",
+  "labels_url": "https://api.github.com/repos/fjall-rs/fjall/issues/113/labels{/name}",
+  "comments_url": "https://api.github.com/repos/fjall-rs/fjall/issues/113/comments",
+  "events_url": "https://api.github.com/repos/fjall-rs/fjall/issues/113/events",
+  "html_url": "https://github.com/fjall-rs/fjall/pull/113",
+  "id": 2748461701,
+  "node_id": "PR_kwDOKuQLK86FrvkZ",
+  "number": 113,
+  "title": "Fix: journal truncation",
+  "user": {
+    "login": "marvin-j97",
+    "id": 33938500,
+    "node_id": "MDQ6VXNlcjMzOTM4NTAw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33938500?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/marvin-j97",
+    "html_url": "https://github.com/marvin-j97",
+    "followers_url": "https://api.github.com/users/marvin-j97/followers",
+    "following_url": "https://api.github.com/users/marvin-j97/following{/other_user}",
+    "gists_url": "https://api.github.com/users/marvin-j97/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/marvin-j97/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/marvin-j97/subscriptions",
+    "organizations_url": "https://api.github.com/users/marvin-j97/orgs",
+    "repos_url": "https://api.github.com/users/marvin-j97/repos",
+    "events_url": "https://api.github.com/users/marvin-j97/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/marvin-j97/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 7179565229,
+      "node_id": "LA_kwDOKuQLK88AAAABq-94rQ",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/labels/fix",
+      "name": "fix",
+      "color": "92E99E",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+    {
+      "login": "marvin-j97",
+      "id": 33938500,
+      "node_id": "MDQ6VXNlcjMzOTM4NTAw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33938500?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/marvin-j97",
+      "html_url": "https://github.com/marvin-j97",
+      "followers_url": "https://api.github.com/users/marvin-j97/followers",
+      "following_url": "https://api.github.com/users/marvin-j97/following{/other_user}",
+      "gists_url": "https://api.github.com/users/marvin-j97/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/marvin-j97/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/marvin-j97/subscriptions",
+      "organizations_url": "https://api.github.com/users/marvin-j97/orgs",
+      "repos_url": "https://api.github.com/users/marvin-j97/repos",
+      "events_url": "https://api.github.com/users/marvin-j97/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/marvin-j97/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    }
+  ],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2024-12-18T18:17:02Z",
+  "updated_at": "2025-06-14T11:21:03Z",
+  "closed_at": "2024-12-19T18:16:15Z",
+  "assignee": {
+    "login": "marvin-j97",
+    "id": 33938500,
+    "node_id": "MDQ6VXNlcjMzOTM4NTAw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33938500?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/marvin-j97",
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 865ms:
+{
+  "url": "https://api.github.com/repos/fjall-rs/fjall/issues/112",
+  "repository_url": "https://api.github.com/repos/fjall-rs/fjall",
+  "labels_url": "https://api.github.com/repos/fjall-rs/fjall/issues/112/labels{/name}",
+  "comments_url": "https://api.github.com/repos/fjall-rs/fjall/issues/112/comments",
+  "events_url": "https://api.github.com/repos/fjall-rs/fjall/issues/112/events",
+  "html_url": "https://github.com/fjall-rs/fjall/issues/112",
+  "id": 2748287354,
+  "node_id": "I_kwDOKuQLK86jz4l6",
+  "number": 112,
+  "title": "Lost writes after 5M unique keys are inserted in two partions.",
+  "user": {
+    "login": "uniphil",
+    "id": 205128,
+    "node_id": "MDQ6VXNlcjIwNTEyOA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/205128?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/uniphil",
+    "html_url": "https://github.com/uniphil",
+    "followers_url": "https://api.github.com/users/uniphil/followers",
+    "following_url": "https://api.github.com/users/uniphil/following{/other_user}",
+    "gists_url": "https://api.github.com/users/uniphil/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/uniphil/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/uniphil/subscriptions",
+    "organizations_url": "https://api.github.com/users/uniphil/orgs",
+    "repos_url": "https://api.github.com/users/uniphil/repos",
+    "events_url": "https://api.github.com/users/uniphil/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/uniphil/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 6216453664,
+      "node_id": "LA_kwDOKuQLK88AAAABcoeOIA",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/labels/bug",
+      "name": "bug",
+      "color": "d73a4a",
+      "default": true,
+      "description": "Something isn't working"
+    },
+    {
+      "id": 7901466418,
+      "node_id": "LA_kwDOKuQLK88AAAAB1vbPMg",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/labels/reproduced",
+      "name": "reproduced",
+      "color": "bfd4f2",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2024-12-18T16:40:38Z",
+  "updated_at": "2024-12-19T18:40:15Z",
+  "closed_at": "2024-12-19T18:39:56Z",
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [
+
+  ],
+  "type": {
+    "id": 8061,
+    "node_id": "IT_kwDOCVlqNc0ffQ",
+    "name": "Bug",
+    "description": "An unexpected problem or behavior",
+    "color": "red",
+    "created_at": "2024-01-16T21:41:43Z",
+    "updated_at": "2024-07-26T10:03:50Z",
+    "is_enabled": true
+  },
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/fjall-rs/lsm-tree/git/trees/v3.1.4?recursive=1' | grep -E '\"path\": \".*journal|\"path\": \".*writer|\"path\": \".*reader' | head -100" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/issues/112 | grep -E '\"title\"|\"body\"|\"html_url\"' | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/repos/fjall-rs/fjall/git/trees/v3.1.4?recursive=1' | grep -E '\"path\": \".*journal|\"path\": \".*writer|\"path\": \".*reader' | head -100" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 148ms:
+  "html_url": "https://github.com/fjall-rs/fjall/issues/112",
+  "title": "Lost writes after 5M unique keys are inserted in two partions.",
+    "html_url": "https://github.com/uniphil",
+  "body": "**Describe the bug**\n\nFjall appears to sometimes lose writes after closing and reopening a keyspace with two partitions.\n\n**To Reproduce**\n\nMy repro is here: https://github.com/uniphil/kv-for-likes-test/blob/fjall-lost-write-repro/fjall/src/lost-write.rs\nWith data file here: https://github.com/uniphil/kv-for-likes-test/blob/fjall-lost-write-repro/likes5M-anon.txt\n\nIt has 5M entries total between the two partitions -- at 4M it wasn't reliably reproducing.\n\n- Run with `cargo run --release --bin lost-write`\n\n- It fails every time for me with an output like\n    ```\n    olde-mbp:fjall phil$ cargo run --release --bin lost-write\n       Compiling kv-for-likes_fjall v0.1.0 (/Users/phil/code/kv-for-likes/fjall)\n        Finished `release` profile [optimized] target(s) in 2.06s\n         Running `target/release/lost-write`\n    done in 24.8s. likes: 4932348, unlikes: 67652\n    checking likes: OK:   4932348 == 4932348\n    checking unlikes: OK:   67652 == 67652\n    reopening keyspace...\n    checking likes: OK:   4932348 == 4932348\n    checking unlikes: FAIL: 67004 != 67652\n    ```\n\nwith this size of data file, it's always the `unlikes` count that's wrong after reopening. with the full 17.5M set i think both were wrong (but i'd need to confirm). The number of lost writes to `unlikes` varies across runs.\n\nI wasn't seeing this issue before when I had set a larger block size.\n\n**Expected behavior**\n\nThe number of keys in a partition shouldn't change after closing and reopening it.\n\n**Screenshots**\n\nn/a\n\n**Desktop (please complete the following information):**\n - OS: macOS 10.15.7 (yeah i know)\n - cargo/rust: 1.82.0\n - fjall: 2.4.1\n\n",
+    "html_url": "https://github.com/marvin-j97",
+
+ succeeded in 302ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 296ms:
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/pulls/113 | grep -E '\"title\"|\"body\"|\"html_url\"|\"merged_at\"' | head -30" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 606ms:
+  "html_url": "https://github.com/fjall-rs/fjall/pull/113",
+  "title": "Fix: journal truncation",
+    "html_url": "https://github.com/marvin-j97",
+  "body": null,
+  "merged_at": "2024-12-19T18:16:14Z",
+      "html_url": "https://github.com/marvin-j97",
+      "html_url": "https://github.com/fjall-rs",
+        "html_url": "https://github.com/fjall-rs",
+      "html_url": "https://github.com/fjall-rs/fjall",
+      "html_url": "https://github.com/fjall-rs",
+        "html_url": "https://github.com/fjall-rs",
+      "html_url": "https://github.com/fjall-rs/fjall",
+    "html_url": "https://github.com/marvin-j97",
+    "html_url": "https://github.com/marvin-j97",
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/contents/src/journal?ref=main | grep '\"name\"'" in /Users/dengcchi
+ exited 1 in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/fjall-rs/fjall/contents/src/journal?ref=main
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/fjall/tags | sed -n '1,160p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/lsm-tree/tags | sed -n '1,120p'" in /Users/dengcchi
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 374ms:
+[
+  {
+    "name": "3.1.4",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.1.4",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.4",
+    "commit": {
+      "sha": "e36524a314c3b8bf471a17b8127fc2f04c9b16f6",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/e36524a314c3b8bf471a17b8127fc2f04c9b16f6"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4xLjQ"
+  },
+  {
+    "name": "3.1.3",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.1.3",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.3",
+    "commit": {
+      "sha": "95ca4ae55c0be54eb16383cbaad12c9e0cc5045e",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/95ca4ae55c0be54eb16383cbaad12c9e0cc5045e"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4xLjM"
+  },
+  {
+    "name": "3.1.2",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.1.2",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.2",
+    "commit": {
+      "sha": "b50309b16127655e6d9b1743b5dbfb020efc6dd4",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/b50309b16127655e6d9b1743b5dbfb020efc6dd4"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4xLjI"
+  },
+  {
+    "name": "3.1.1",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.1.1",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.1",
+    "commit": {
+      "sha": "04d7f9a0b5a25a6db74b953f2f7d2a1d7df16868",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/04d7f9a0b5a25a6db74b953f2f7d2a1d7df16868"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4xLjE"
+  },
+  {
+    "name": "3.1.0",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.1.0",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.0",
+    "commit": {
+      "sha": "78bdf7e3e52f761870d3a3588c5ddfc239207465",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/78bdf7e3e52f761870d3a3588c5ddfc239207465"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4xLjA"
+  },
+  {
+    "name": "3.0.4",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.4",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.4",
+    "commit": {
+      "sha": "c3506c925c565c9a89d13f31cab6324ce5780759",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/c3506c925c565c9a89d13f31cab6324ce5780759"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4wLjQ"
+  },
+  {
+    "name": "3.0.3",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.3",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.3",
+    "commit": {
+      "sha": "3aabb2132e41229e3a2a9fea9ef53f350940054b",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/3aabb2132e41229e3a2a9fea9ef53f350940054b"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4wLjM"
+  },
+  {
+    "name": "3.0.2",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.2",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.2",
+    "commit": {
+      "sha": "6920f4e5c97973c4b92b3bd38fbfa7143763e5c8",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/6920f4e5c97973c4b92b3bd38fbfa7143763e5c8"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4wLjI"
+  },
+  {
+    "name": "3.0.1",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.1",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.1",
+    "commit": {
+      "sha": "108366189bf9a4471af03043acf25b0004987df2",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/108366189bf9a4471af03043acf25b0004987df2"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4wLjE"
+  },
+  {
+    "name": "3.0.0",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0",
+    "commit": {
+      "sha": "34a3498407248a15f6159cb8834728a1fe8b84d2",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/34a3498407248a15f6159cb8834728a1fe8b84d2"
+    },
+    "node_id": "REF_kwDOKuQLK69yZWZzL3RhZ3MvMy4wLjA"
+  },
+  {
+    "name": "3.0.0-rc.6",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.6",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.6",
+    "commit": {
+      "sha": "7225214a4125f2390acc1489e6554a7db93a974f",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/7225214a4125f2390acc1489e6554a7db93a974f"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuNg"
+  },
+  {
+    "name": "3.0.0-rc.5",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.5",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.5",
+    "commit": {
+      "sha": "c78491b19dc1af99e4d8d91f2098de2fc065da27",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/c78491b19dc1af99e4d8d91f2098de2fc065da27"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuNQ"
+  },
+  {
+    "name": "3.0.0-rc.4",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.4",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.4",
+    "commit": {
+      "sha": "d9a8fcae358b0d2ce9b8b22a2ce39869be60027d",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/d9a8fcae358b0d2ce9b8b22a2ce39869be60027d"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuNA"
+  },
+  {
+    "name": "3.0.0-rc.3",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.3",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.3",
+    "commit": {
+      "sha": "c014054245babfbf34a685e72addf4ffd679f9af",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/c014054245babfbf34a685e72addf4ffd679f9af"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuMw"
+  },
+  {
+    "name": "3.0.0-rc.2",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.2",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.2",
+    "commit": {
+      "sha": "561377f8071e12845e89b107a28924aa847d66cf",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/561377f8071e12845e89b107a28924aa847d66cf"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuMg"
+  },
+  {
+    "name": "3.0.0-rc.1",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/fjall/zipball/refs/tags/3.0.0-rc.1",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.0.0-rc.1",
+    "commit": {
+      "sha": "f7e12c1c77768590fe9fd249936b8b39727a97cc",
+      "url": "https://api.github.com/repos/fjall-rs/fjall/commits/f7e12c1c77768590fe9fd249936b8b39727a97cc"
+    },
+    "node_id": "REF_kwDOKuQLK7RyZWZzL3RhZ3MvMy4wLjAtcmMuMQ"
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 420ms:
+[
+  {
+    "name": "3.1.4",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.1.4",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.4",
+    "commit": {
+      "sha": "319c1f704c22998c58147bdb754e167ae6bcd571",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/319c1f704c22998c58147bdb754e167ae6bcd571"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4xLjQ"
+  },
+  {
+    "name": "3.1.3",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.1.3",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.3",
+    "commit": {
+      "sha": "8e2bb5a155c3f543a832901f774dd6d5e97a280b",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/8e2bb5a155c3f543a832901f774dd6d5e97a280b"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4xLjM"
+  },
+  {
+    "name": "3.1.2",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.1.2",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.2",
+    "commit": {
+      "sha": "fe706dfff11e2d2881f794976f693e0f9d4853b8",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/fe706dfff11e2d2881f794976f693e0f9d4853b8"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4xLjI"
+  },
+  {
+    "name": "3.1.1",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.1.1",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.1",
+    "commit": {
+      "sha": "aae89a00f802424a421f4c9f6d5da3422e42fe04",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/aae89a00f802424a421f4c9f6d5da3422e42fe04"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4xLjE"
+  },
+  {
+    "name": "3.1.0",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.1.0",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.0",
+    "commit": {
+      "sha": "b05bad1164765c01974ae095d2cae4b4269c779f",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/b05bad1164765c01974ae095d2cae4b4269c779f"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4xLjA"
+  },
+  {
+    "name": "3.0.4",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.4",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.4",
+    "commit": {
+      "sha": "72f0f16ebd20ae50b085effb5499ed0aa13d5e65",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/72f0f16ebd20ae50b085effb5499ed0aa13d5e65"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4wLjQ"
+  },
+  {
+    "name": "3.0.3",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.3",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.3",
+    "commit": {
+      "sha": "50a282aa5061f009a1c8073ffdd710e2216984e7",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/50a282aa5061f009a1c8073ffdd710e2216984e7"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4wLjM"
+  },
+  {
+    "name": "3.0.2",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.2",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.2",
+    "commit": {
+      "sha": "634f3ee6c57ec90c1324afc69592ef69dcca837c",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/634f3ee6c57ec90c1324afc69592ef69dcca837c"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4wLjI"
+  },
+  {
+    "name": "3.0.1",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.1",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.1",
+    "commit": {
+      "sha": "674178f47898ece1a5b747ff577c1af8153e7cae",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/674178f47898ece1a5b747ff577c1af8153e7cae"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4wLjE"
+  },
+  {
+    "name": "3.0.0",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.0",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.0",
+    "commit": {
+      "sha": "4c026472c69869f28785f4409b30beb919aae6a6",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/4c026472c69869f28785f4409b30beb919aae6a6"
+    },
+    "node_id": "REF_kwDOLGHphK9yZWZzL3RhZ3MvMy4wLjA"
+  },
+  {
+    "name": "3.0.0-rc.9",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.0-rc.9",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.0-rc.9",
+    "commit": {
+      "sha": "f9c6250c88c33db24d8d53f2c968517b928078e0",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/f9c6250c88c33db24d8d53f2c968517b928078e0"
+    },
+    "node_id": "REF_kwDOLGHphLRyZWZzL3RhZ3MvMy4wLjAtcmMuOQ"
+  },
+  {
+    "name": "3.0.0-rc.8",
+    "zipball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/zipball/refs/tags/3.0.0-rc.8",
+    "tarball_url": "https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.0.0-rc.8",
+    "commit": {
+      "sha": "0bae8f3d377d3b41eebdb5fe40a880ded8b11e25",
+      "url": "https://api.github.com/repos/fjall-rs/lsm-tree/commits/0bae8f3d377d3b41eebdb5fe40a880ded8b11e25"
+    },
+    "node_id": "REF_kwDOLGHphLRyZWZzL3RhZ3MvMy4wLjAtcmMuOA"
+
+2026-06-05T17:25:41.866740Z ERROR codex_core::tools::router: error=exec_command failed for `/bin/zsh -lc "rm -rf /tmp/fjall314 /tmp/lsmtree314; mkdir -p /tmp/fjall314 /tmp/lsmtree314; curl -L --silent https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.4 | tar -xz -C /tmp/fjall314 --strip-components=1; find /tmp/fjall314 -path '*journal*' -o -name '*writer*' -o -name '*reader*' | head -80"`: CreateProcess { message: "Rejected(\"`/bin/zsh -lc \\\"rm -rf /tmp/fjall314 /tmp/lsmtree314; mkdir -p /tmp/fjall314 /tmp/lsmtree314; curl -L --silent https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.4 | tar -xz -C /tmp/fjall314 --strip-components=1; find /tmp/fjall314 -path '*journal*' -o -name '*writer*' -o -name '*reader*' | head -80\\\"` rejected: policy forbids commands starting with `rm -rf`\")" }
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.4 | tar -xz -C /tmp/lsmtree314 --strip-components=1; find /tmp/lsmtree314 -path '*journal*' -o -name '*writer*' -o -name '*reader*' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/code?q=%22missing+terminator%22+repo:fjall-rs/fjall' | sed -n '1,120p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22missing+terminator%22+repo:fjall-rs/fjall' | grep -E '\"html_url\"|\"title\"' | head -20" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 366ms:
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 534ms:
+      "html_url": "https://github.com/fjall-rs/fjall/issues/53",
+      "title": "unexpected warning ： shard.rs:106: Invalid batch: found batch start inside batch",
+        "html_url": "https://github.com/i18nsite",
+
+ succeeded in 1291ms:
+tar: could not chdir to '/tmp/lsmtree314'
+
+find: /tmp/lsmtree314: No such file or directory
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'd=$(mktemp -d /tmp/fjall314.XXXXXX) && curl -L --silent https://api.github.com/repos/fjall-rs/fjall/tarball/refs/tags/3.1.4 | tar -xz -C "$d" --strip-components=1 && find "$d" '"\\( -path '*journal*' -o -name '*writer*' -o -name '*reader*' \\) | head -100 && printf '\\nDIR=%s\\n' \""'$d"' in /Users/dengcchi
+exec
+/bin/zsh -lc 'd=$(mktemp -d /tmp/lsmtree314.XXXXXX) && curl -L --silent https://api.github.com/repos/fjall-rs/lsm-tree/tarball/refs/tags/3.1.4 | tar -xz -C "$d" --strip-components=1 && find "$d" '"\\( -path '*journal*' -o -name '*writer*' -o -name '*reader*' \\) | head -100 && printf '\\nDIR=%s\\n' \""'$d"' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebook/rocksdb/main/db/log_reader.cc | grep -n \"checksum\\|kTolerateCorruptedTailRecords\\|WALRecoveryMode\" | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebook/rocksdb/main/include/rocksdb/options.h | grep -n \"WALRecoveryMode\\|TolerateCorruptedTail\\|PointInTime\" | head -80" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 393ms:
+27:               Reporter* reporter, bool checksum, uint64_t log_num,
+34:      checksum_(checksum),
+76:                        WALRecoveryMode wal_recovery_mode,
+77:                        uint64_t* record_checksum) {
+80:  if (record_checksum != nullptr) {
+99:        ReadPhysicalRecord(&fragment, &drop_size, record_checksum);
+110:        // No need to compute record_checksum since the record
+111:        // consists of a single fragment and the checksum is computed
+113:        if (record_checksum != nullptr && uncompress_ == nullptr) {
+115:          *record_checksum = XXH3_64bits(fragment.data(), fragment.size());
+134:        if (record_checksum != nullptr) {
+148:          if (record_checksum != nullptr) {
+161:          if (record_checksum != nullptr) {
+163:            *record_checksum = XXH3_64bits_digest(hash_state_);
+239:        if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+240:            wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+252:          if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+253:              wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+271:        if (wal_recovery_mode != WALRecoveryMode::kSkipAnyCorruptedRecords) {
+274:            if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+275:                wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+290:            if (wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+308:          if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+309:              wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+323:                             WALRecoveryMode::kTolerateCorruptedTailRecords) {
+330:          ReportCorruption(drop_size, "checksum mismatch");
+357:    WALRecoveryMode wal_recovery_mode, Slice fragment,
+360:      wal_recovery_mode == WALRecoveryMode::kSkipAnyCorruptedRecords ||
+550:                                   uint64_t* fragment_checksum) {
+622:    if (checksum_) {
+648:      if (fragment_checksum != nullptr) {
+667:          if (fragment_checksum != nullptr) {
+676:      if (fragment_checksum != nullptr) {
+682:        *fragment_checksum = XXH3_64bits_digest(uncompress_hash_state_);
+683:        uint64_t actual_checksum = XXH3_64bits(uncompressed_record_.data(),
+685:        if (*fragment_checksum != actual_checksum) {
+730:                                        WALRecoveryMode wal_recovery_mode
+733:                                        uint64_t* /* checksum */) {
+883:        ReportCorruption(drop_size, "checksum mismatch");
+1023:  if (checksum_) {
+
+hook: PostToolUse
+ succeeded in 341ms:
+418:enum class WALRecoveryMode : char {
+434:  // This differs from `kPointInTimeRecovery` in that, in case a corruption is
+436:  // `kPointInTimeRecovery` will stop recovery just before the corruption since
+438:  kTolerateCorruptedTailRecords = 0x00,
+448:  kPointInTimeRecovery = 0x02,
+1442:  // Default: kPointInTimeRecovery
+1443:  WALRecoveryMode wal_recovery_mode = WALRecoveryMode::kPointInTimeRecovery;
+1622:  // is like applying WALRecoveryMode::kPointInTimeRecovery to each column
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 996ms:
+/tmp/lsmtree314.68qDtb/tests/compaction_readers_grouping.rs
+/tmp/lsmtree314.68qDtb/src/run_reader.rs
+/tmp/lsmtree314.68qDtb/src/table/multi_writer.rs
+/tmp/lsmtree314.68qDtb/src/table/writer
+/tmp/lsmtree314.68qDtb/src/table/filter/bit_array/reader.rs
+/tmp/lsmtree314.68qDtb/src/table/block/binary_index/reader.rs
+/tmp/lsmtree314.68qDtb/src/table/block/hash_index/reader.rs
+/tmp/lsmtree314.68qDtb/src/vlog/blob_file/multi_writer.rs
+/tmp/lsmtree314.68qDtb/src/vlog/blob_file/writer.rs
+/tmp/lsmtree314.68qDtb/src/vlog/blob_file/reader.rs
+
+DIR=/tmp/lsmtree314.68qDtb
+
+hook: PostToolUse Completed
+ succeeded in 1672ms:
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a/config
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a/version
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a/levels
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a/segments
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/a/segments/0
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/c
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/c/config
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/c/version
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/c/levels
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b/config
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b/version
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b/levels
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b/segments
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/partitions/b/segments/1
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals/2
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals/2/0
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals/2/1
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals/2/3
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/journals/2/2
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace_corrupt_journal/version
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals/2
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals/2/0
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals/2/1
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals/2/3
+/tmp/fjall314.NNduXH/test_fixture/v1_keyspace/journals/2/2
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/partitions
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/partitions/default
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/partitions/default/config
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/partitions/default/manifest
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/partitions/default/levels
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/journals
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/journals/0.sealed
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/journals/1.sealed
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/journals/3
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/journals/2
+/tmp/fjall314.NNduXH/test_fixture/v2_sealed_journal_shenanigans/version
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/config
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/manifest
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/blobs
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/blobs/vlog_manifest
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/blobs/.vlog
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/blobs/segments
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/blobs/segments/0
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/levels
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/segments
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default2/segments/0
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1/config
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1/manifest
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1/levels
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1/segments
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/partitions/default1/segments/0
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/journals
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/journals/2
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace_corrupt_journal/version
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace/journals
+/tmp/fjall314.NNduXH/test_fixture/v2_keyspace/journals/2
+/tmp/fjall314.NNduXH/tests/recovery_journal_mac.rs
+/tmp/fjall314.NNduXH/tests/journal_large_value.rs
+/tmp/fjall314.NNduXH/src/journal
+/tmp/fjall314.NNduXH/src/journal/test.rs
+/tmp/fjall314.NNduXH/src/journal/error.rs
+/tmp/fjall314.NNduXH/src/journal/recovery.rs
+/tmp/fjall314.NNduXH/src/journal/manager.rs
+/tmp/fjall314.NNduXH/src/journal/mod.rs
+/tmp/fjall314.NNduXH/src/journal/entry.rs
+/tmp/fjall314.NNduXH/src/journal/writer.rs
+/tmp/fjall314.NNduXH/src/journal/reader.rs
+/tmp/fjall314.NNduXH/src/journal/batch_reader.rs
+/tmp/fjall314.NNduXH/src/tx/single_writer
+
+DIR=/tmp/fjall314.NNduXH
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,260p' /tmp/fjall314.NNduXH/src/journal/reader.rs" in /Users/dengcchi
+ succeeded in 0ms:
+// Copyright (c) 2024-present, fjall-rs
+// This source code is licensed under both the Apache 2.0 and MIT License
+// (found in the LICENSE-* files in the repository)
+
+use super::entry::Entry;
+use std::{
+    fs::{File, OpenOptions},
+    io::{BufReader, Seek},
+    path::{Path, PathBuf},
+};
+
+/// Reads and emits through the entries in a journal file, but doesn't
+/// check the validity of batches
+///
+/// Will truncate the file to the last valid position to prevent corrupt
+/// bytes at the end of the file, which would jeopardize future writes into the file.
+#[expect(clippy::module_name_repetitions)]
+pub struct JournalReader {
+    pub(crate) path: PathBuf,
+    pub(crate) reader: BufReader<File>,
+    pub(crate) last_valid_pos: u64,
+}
+
+impl JournalReader {
+    pub fn new<P: AsRef<Path>>(path: P) -> crate::Result<Self> {
+        let file = OpenOptions::new().read(true).write(true).open(&path)?;
+
+        Ok(Self {
+            path: path.as_ref().into(),
+            reader: BufReader::new(file),
+            last_valid_pos: 0,
+        })
+    }
+
+    fn truncate_file(&mut self, pos: u64) -> crate::Result<()> {
+        log::debug!("truncating journal to {pos}");
+        self.reader.get_mut().set_len(pos)?;
+        self.reader.get_mut().sync_all()?;
+        Ok(())
+    }
+
+    fn maybe_truncate_file_to_last_valid_pos(&mut self) -> crate::Result<()> {
+        let stream_pos = self.reader.stream_position()?;
+
+        if stream_pos > self.last_valid_pos {
+            self.truncate_file(self.last_valid_pos)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl Iterator for JournalReader {
+    type Item = crate::Result<Entry>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match Entry::decode_from(&mut self.reader) {
+            Ok(item) => {
+                self.last_valid_pos = fail_iter!(self.reader.stream_position());
+                Some(Ok(item))
+            }
+            Err(e) => {
+                if let crate::Error::Io(e) = e {
+                    match e.kind() {
+                        std::io::ErrorKind::UnexpectedEof | std::io::ErrorKind::Other => {
+                            fail_iter!(self.maybe_truncate_file_to_last_valid_pos());
+                            None
+                        }
+                        _ => Some(Err(crate::Error::Io(e))),
+                    }
+                } else {
+                    fail_iter!(self.maybe_truncate_file_to_last_valid_pos());
+                    None
+                }
+            }
+        }
+    }
+}
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '200,255p' /tmp/fjall314.NNduXH/src/journal/writer.rs" in /Users/dengcchi
+ succeeded in 0ms:
+    }
+
+    /// Persists the journal file.
+    pub(crate) fn persist(&mut self, mode: PersistMode) -> std::io::Result<()> {
+        log::trace!(
+            "Persisting journal at {} with mode={mode:?}",
+            self.path.display(),
+        );
+
+        if self.is_buffer_dirty {
+            self.file.flush().inspect_err(|e| {
+                log::error!(
+                    "Failed to flush journal IO buffers at {}: {e:?}",
+                    self.path.display(),
+                );
+            })?;
+            self.is_buffer_dirty = false;
+        }
+
+        match mode {
+            PersistMode::SyncAll => self.file.get_mut().sync_all().inspect_err(|e| {
+                log::error!(
+                    "Failed to fsync journal file at {}: {e:?}",
+                    self.path.display(),
+                );
+            }),
+            PersistMode::SyncData => self.file.get_mut().sync_data().inspect_err(|e| {
+                log::error!(
+                    "Failed to fsyncdata journal file at {}: {e:?}",
+                    self.path.display(),
+                );
+            }),
+            PersistMode::Buffer => Ok(()),
+        }
+    }
+
+    /// Writes a batch start marker to the journal
+    fn write_start(&mut self, item_count: u32, seqno: SeqNo) -> Result<usize, crate::Error> {
+        debug_assert!(self.buf.is_empty());
+
+        Entry::Start { item_count, seqno }.encode_into(&mut self.buf)?;
+
+        self.file.write_all(&self.buf)?;
+
+        Ok(self.buf.len())
+    }
+
+    /// Writes a batch end marker to the journal
+    fn write_end(&mut self, checksum: u64) -> Result<usize, crate::Error> {
+        debug_assert!(self.buf.is_empty());
+
+        Entry::End(checksum).encode_into(&mut self.buf)?;
+
+        self.file.write_all(&self.buf)?;
+
+        Ok(self.buf.len())
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,260p' /tmp/fjall314.NNduXH/src/journal/batch_reader.rs" in /Users/dengcchi
+ succeeded in 0ms:
+// Copyright (c) 2024-present, fjall-rs
+// This source code is licensed under both the Apache 2.0 and MIT License
+// (found in the LICENSE-* files in the repository)
+
+use super::reader::JournalReader;
+use crate::{journal::entry::Entry, keyspace::InternalKeyspaceId, JournalRecoveryError};
+use lsm_tree::{SeqNo, UserKey, UserValue, ValueType};
+use std::{fs::OpenOptions, hash::Hasher};
+
+#[derive(Debug)]
+pub struct ReadBatchItem {
+    pub keyspace_id: InternalKeyspaceId,
+    pub key: UserKey,
+    pub value: UserValue,
+    pub value_type: ValueType,
+}
+
+#[derive(Debug)]
+pub struct Batch {
+    pub(crate) seqno: SeqNo,
+    pub(crate) items: Vec<ReadBatchItem>,
+    pub(crate) cleared_keyspaces: Vec<InternalKeyspaceId>,
+}
+
+#[expect(clippy::module_name_repetitions)]
+pub struct JournalBatchReader {
+    reader: JournalReader,
+    items: Vec<ReadBatchItem>,
+    cleared_keyspaces: Vec<InternalKeyspaceId>,
+    is_in_batch: bool,
+    batch_counter: u32,
+    batch_seqno: SeqNo,
+    last_valid_pos: u64,
+    checksum_builder: xxhash_rust::xxh3::Xxh3,
+}
+
+impl JournalBatchReader {
+    pub fn new(reader: JournalReader) -> Self {
+        Self {
+            reader,
+            items: Vec::with_capacity(10),
+            cleared_keyspaces: Vec::new(),
+            checksum_builder: xxhash_rust::xxh3::Xxh3::new(),
+            is_in_batch: false,
+            batch_seqno: 0,
+            last_valid_pos: 0,
+            batch_counter: 0,
+        }
+    }
+
+    // TODO: reallocate space
+    fn truncate_to(&self, last_valid_pos: u64) -> crate::Result<()> {
+        log::trace!("Truncating journal to {last_valid_pos}");
+
+        // TODO: on windows, reading file probably needs to be closed first...?
+
+        let file = OpenOptions::new().write(true).open(&self.reader.path)?;
+        file.set_len(last_valid_pos)?;
+        file.sync_all()?;
+
+        Ok(())
+    }
+
+    fn on_close(&self) -> crate::Result<()> {
+        if self.is_in_batch {
+            log::debug!("Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity");
+
+            // Discard batch
+            self.truncate_to(self.last_valid_pos)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl Iterator for JournalBatchReader {
+    type Item = crate::Result<Batch>;
+
+    #[expect(clippy::too_many_lines)]
+    fn next(&mut self) -> Option<Self::Item> {
+        use crate::Error::JournalRecovery;
+
+        loop {
+            let Some(item) = self.reader.next() else {
+                fail_iter!(self.on_close());
+                return None;
+            };
+            let item = fail_iter!(item);
+
+            let journal_file_pos = self.reader.last_valid_pos;
+
+            match item {
+                Entry::Start { item_count, seqno } => {
+                    if self.is_in_batch {
+                        log::debug!("Invalid batch: found batch start inside batch");
+
+                        // Discard batch
+                        fail_iter!(self.truncate_to(self.last_valid_pos));
+
+                        return None;
+                    }
+
+                    self.is_in_batch = true;
+                    self.batch_counter = item_count;
+                    self.batch_seqno = seqno;
+                }
+                Entry::End(expected_checksum) => {
+                    if self.batch_counter > 0 {
+                        log::error!("Invalid batch: insufficient length");
+                        return Some(Err(JournalRecovery(
+                            JournalRecoveryError::InsufficientLength,
+                        )));
+                    }
+
+                    if !self.is_in_batch {
+                        log::error!("Invalid batch: found end marker without start marker");
+
+                        // Discard batch
+                        fail_iter!(self.truncate_to(self.last_valid_pos));
+
+                        return None;
+                    }
+
+                    let got_checksum = self.checksum_builder.finish();
+                    self.checksum_builder = xxhash_rust::xxh3::Xxh3::new();
+
+                    if got_checksum != expected_checksum {
+                        log::error!("Invalid batch: checksum check failed, expected: {expected_checksum}, got: {got_checksum}");
+                        return Some(Err(JournalRecovery(JournalRecoveryError::ChecksumMismatch)));
+                    }
+
+                    // Reset all variables
+                    self.is_in_batch = false;
+                    self.batch_counter = 0;
+
+                    self.last_valid_pos = journal_file_pos;
+
+                    let items = std::mem::take(&mut self.items);
+                    let cleared_keyspaces = std::mem::take(&mut self.cleared_keyspaces);
+                    return Some(Ok(Batch {
+                        seqno: self.batch_seqno,
+                        items,
+                        cleared_keyspaces,
+                    }));
+                }
+                Entry::Item {
+                    keyspace_id,
+                    key,
+                    value,
+                    value_type,
+                    compression,
+                } => {
+                    let item = Entry::Item {
+                        keyspace_id,
+                        key: key.clone(),
+                        value: value.clone(),
+                        value_type,
+                        compression,
+                    };
+                    let mut bytes = Vec::with_capacity(100);
+                    fail_iter!(item.encode_into(&mut bytes));
+
+                    self.checksum_builder.update(&bytes);
+
+                    if !self.is_in_batch {
+                        log::debug!("Invalid batch: found end marker without start marker");
+
+                        // Discard batch
+                        fail_iter!(self.truncate_to(self.last_valid_pos));
+
+                        return None;
+                    }
+
+                    if self.batch_counter == 0 {
+                        log::error!("Invalid batch: Expected end marker (too many items in batch)");
+                        return Some(Err(JournalRecovery(JournalRecoveryError::TooManyItems)));
+                    }
+
+                    self.batch_counter -= 1;
+
+                    self.items.push(ReadBatchItem {
+                        keyspace_id,
+                        key,
+                        value,
+                        value_type,
+                    });
+                }
+                Entry::Clear { keyspace_id } => {
+                    let entry = Entry::Clear { keyspace_id };
+                    let mut bytes = Vec::with_capacity(16);
+                    fail_iter!(entry.encode_into(&mut bytes));
+
+                    self.checksum_builder.update(&bytes);
+
+                    if !self.is_in_batch {
+                        log::debug!("Invalid batch: found clear marker without start marker");
+
+                        // Discard batch
+                        fail_iter!(self.truncate_to(self.last_valid_pos));
+
+                        return None;
+                    }
+
+                    if self.batch_counter == 0 {
+                        log::error!("Invalid batch: Expected end marker (too many items in batch)");
+                        return Some(Err(JournalRecovery(JournalRecoveryError::TooManyItems)));
+                    }
+
+                    self.batch_counter -= 1;
+
+                    self.cleared_keyspaces.push(keyspace_id);
+                }
+            }
+        }
+    }
+}
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/fjall314.NNduXH/src/journal/recovery.rs" in /Users/dengcchi
+ succeeded in 0ms:
+// Copyright (c) 2024-present, fjall-rs
+// This source code is licensed under both the Apache 2.0 and MIT License
+// (found in the LICENSE-* files in the repository)
+
+use super::Journal;
+use lsm_tree::CompressionType;
+use std::path::{Path, PathBuf};
+
+pub type JournalId = u64;
+
+#[derive(Debug)]
+pub struct RecoveryResult {
+    pub(crate) active: Journal,
+    pub(crate) sealed: Vec<(JournalId, PathBuf)>,
+    pub(crate) was_active_created: bool,
+}
+
+pub fn recover_journals<P: AsRef<Path>>(
+    path: P,
+    compression: CompressionType,
+    compression_threshold: usize,
+) -> crate::Result<RecoveryResult> {
+    let path = path.as_ref();
+
+    let mut max_journal_id: JournalId = 0;
+    let mut journal_fragments = Vec::<(JournalId, PathBuf)>::new();
+
+    log::trace!("Got journal fragments: {journal_fragments:#?}");
+
+    for dirent in std::fs::read_dir(path)? {
+        let dirent = dirent?;
+        let path = dirent.path();
+        let filename = dirent.file_name();
+
+        let Some(filename) = filename.to_str() else {
+            log::error!("Invalid journal file name: {}", filename.display());
+            return Err(crate::Error::JournalRecovery(
+                crate::JournalRecoveryError::InvalidFileName,
+            ));
+        };
+
+        if !std::path::Path::new(filename)
+            .extension()
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("jnl"))
+        {
+            continue;
+        }
+
+        assert!(dirent.file_type()?.is_file());
+
+        let Some(basename) = filename.strip_suffix(".jnl") else {
+            log::error!("Invalid journal file name: {filename}");
+            return Err(crate::Error::JournalRecovery(
+                crate::JournalRecoveryError::InvalidFileName,
+            ));
+        };
+
+        let journal_id = basename.parse::<JournalId>().map_err(|_| {
+            log::error!("Invalid journal file name: {filename}");
+            crate::Error::JournalRecovery(crate::JournalRecoveryError::InvalidFileName)
+        })?;
+
+        max_journal_id = max_journal_id.max(journal_id);
+
+        journal_fragments.push((journal_id, path));
+    }
+
+    // NOTE: Sort ascending, so the last item is the active journal
+    journal_fragments.sort_by(|(a, _), (b, _)| a.cmp(b));
+
+    log::trace!("Recovered {journal_fragments:#?}");
+
+    Ok(match journal_fragments.pop() {
+        Some((_, active)) => RecoveryResult {
+            active: Journal::from_file(active)?
+                .with_compression(compression, compression_threshold),
+            sealed: journal_fragments,
+            was_active_created: false,
+        },
+        None => RecoveryResult {
+            active: {
+                let id: JournalId = max_journal_id + 1;
+
+                Journal::create_new(path.join(id.to_string()))?
+                    .with_compression(compression, compression_threshold)
+            },
+            sealed: vec![],
+            was_active_created: true,
+        },
+    })
+}
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '418,452p' /tmp/fjall314.NNduXH/Cargo.toml 2>/dev/null || true; grep -R \"enum PersistMode\\|PersistMode::Buffer\\|SyncAll\" -n /tmp/fjall314.NNduXH/src | head -80" in /Users/dengcchi
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+ succeeded in 328ms:
+/tmp/fjall314.NNduXH/src/journal/mod.rs:42:        match self.persist(PersistMode::SyncAll) {
+/tmp/fjall314.NNduXH/src/journal/writer.rs:35:pub enum PersistMode {
+/tmp/fjall314.NNduXH/src/journal/writer.rs:49:    SyncAll,
+/tmp/fjall314.NNduXH/src/journal/writer.rs:67:        self.persist(PersistMode::SyncAll)?;
+/tmp/fjall314.NNduXH/src/journal/writer.rs:220:            PersistMode::SyncAll => self.file.get_mut().sync_all().inspect_err(|e| {
+/tmp/fjall314.NNduXH/src/journal/writer.rs:232:            PersistMode::Buffer => Ok(()),
+/tmp/fjall314.NNduXH/src/keyspace/mod.rs:252:                .persist(crate::PersistMode::Buffer)
+/tmp/fjall314.NNduXH/src/keyspace/mod.rs:932:                .persist(crate::PersistMode::Buffer)
+/tmp/fjall314.NNduXH/src/keyspace/mod.rs:1003:                .persist(crate::PersistMode::Buffer)
+/tmp/fjall314.NNduXH/src/keyspace/mod.rs:1092:                .persist(crate::PersistMode::Buffer)
+/tmp/fjall314.NNduXH/src/lib.rs:66://! // When the database is dropped, it will try to persist with `PersistMode::SyncAll` as well
+/tmp/fjall314.NNduXH/src/lib.rs:67://! db.persist(PersistMode::SyncAll)?;
+/tmp/fjall314.NNduXH/src/db.rs:194:            batch = batch.durability(Some(PersistMode::Buffer));
+/tmp/fjall314.NNduXH/src/db.rs:345:    /// db.persist(PersistMode::SyncAll)?;
+/tmp/fjall314.NNduXH/src/db.rs:590:        active_journal.get_writer().persist(PersistMode::SyncAll)?;
+/tmp/fjall314.NNduXH/src/tx/optimistic/mod.rs:79:            write_tx = write_tx.durability(Some(PersistMode::Buffer));
+/tmp/fjall314.NNduXH/src/tx/optimistic/mod.rs:107:    /// db.persist(PersistMode::SyncAll)?;
+/tmp/fjall314.NNduXH/src/tx/single_writer/mod.rs:70:            write_tx = write_tx.durability(Some(PersistMode::Buffer));
+/tmp/fjall314.NNduXH/src/tx/single_writer/mod.rs:98:    /// db.persist(PersistMode::SyncAll)?;
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '35,55p' /tmp/fjall314.NNduXH/src/journal/writer.rs" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebook/rocksdb/main/include/rocksdb/options.h | sed -n '418,450p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/fjall314.NNduXH/src/journal/entry.rs" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/facebook/rocksdb/main/db/log_reader.cc | sed -n '230,335p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/google/leveldb/main/db/log_reader.cc | sed -n '160,230p'" in /Users/dengcchi
+ succeeded in 160ms:
+pub enum PersistMode {
+    /// Flushes data to OS buffers. This allows the OS to write out data in case of an
+    /// application crash.
+    ///
+    /// When this function returns, data is **not** guaranteed to be persisted in case
+    /// of a power loss event or OS crash.
+    Buffer,
+
+    /// Flushes data using `fdatasync`.
+    ///
+    /// Use if you know that `fdatasync` is sufficient for your file system and/or operating system.
+    SyncData,
+
+    /// Flushes data + metadata using `fsync`.
+    SyncAll,
+}
+
+impl Writer {
+    pub fn set_compression(&mut self, comp: CompressionType, threshold: usize) {
+        self.compression = comp;
+        self.compression_threshold = threshold;
+
+ succeeded in 168ms:
+// Copyright (c) 2024-present, fjall-rs
+// This source code is licensed under both the Apache 2.0 and MIT License
+// (found in the LICENSE-* files in the repository)
+
+use crate::{file::MAGIC_BYTES, keyspace::InternalKeyspaceId, Slice};
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use lsm_tree::{
+    coding::{Decode, Encode},
+    CompressionType, SeqNo, UserKey, UserValue, ValueType,
+};
+use std::io::{Read, Write};
+
+/// Journal entry. Every batch is composed as a Start, followed by N items, followed by an End.
+///
+/// - The start entry contains the numbers of items. If the numbers of items following doesn't match, the batch is broken.
+///
+/// - The end entry contains a checksum value. If the checksum of the items doesn't match that, the batch is broken.
+///
+/// - The end entry terminates each batch with the magic string: [`TRAILER_MAGIC`].
+///
+/// - If a start entry is detected, while inside a batch, the batch is broken.
+#[derive(Debug, Eq, PartialEq)]
+pub enum Entry {
+    Start {
+        item_count: u32,
+        seqno: SeqNo,
+    },
+    Item {
+        keyspace_id: InternalKeyspaceId,
+        key: UserKey,
+        value: UserValue,
+        value_type: ValueType,
+        compression: CompressionType,
+    },
+    End(u64),
+    Clear {
+        keyspace_id: InternalKeyspaceId,
+    },
+}
+
+pub fn serialize_marker_item<W: Write>(
+    writer: &mut W,
+    keyspace_id: InternalKeyspaceId,
+    key: &[u8],
+    value: &[u8],
+    value_type: ValueType,
+    compression: CompressionType,
+) -> Result<(), lsm_tree::Error> {
+    writer.write_u8(Tag::Item.into())?;
+
+    writer.write_u8(u8::from(value_type))?;
+
+    compression.encode_into(writer)?;
+
+    let compressed_value = match compression {
+        CompressionType::None => std::borrow::Cow::Borrowed(value),
+
+        #[cfg(feature = "lz4")]
+        CompressionType::Lz4 => {
+            let compressed = lz4_flex::compress(value);
+            std::borrow::Cow::Owned(compressed)
+        }
+    };
+
+    // NOTE: Truncation is okay and actually needed
+    writer.write_u64::<LittleEndian>(keyspace_id)?;
+
+    // NOTE: Truncation is okay and actually needed
+    #[expect(clippy::cast_possible_truncation)]
+    writer.write_u16::<LittleEndian>(key.len() as u16)?;
+
+    // NOTE: Truncation is okay and actually needed
+    #[expect(clippy::cast_possible_truncation)]
+    writer.write_u32::<LittleEndian>(value.len() as u32)?;
+
+    // NOTE: Truncation is okay and actually needed
+    #[expect(clippy::cast_possible_truncation)]
+    writer.write_u32::<LittleEndian>(compressed_value.len() as u32)?;
+
+    writer.write_all(key)?;
+
+    writer.write_all(&compressed_value)?;
+
+    Ok(())
+}
+
+pub enum Tag {
+    Start = 1,
+    Item = 2,
+    End = 3,
+    Clear = 4,
+}
+
+impl TryFrom<u8> for Tag {
+    type Error = crate::Error;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        use Tag::{Clear, End, Item, Start};
+
+        match value {
+            1 => Ok(Start),
+            2 => Ok(Item),
+            3 => Ok(End),
+            4 => Ok(Clear),
+            _ => Err(crate::Error::InvalidTag(("JournalMarkerTag", value))),
+        }
+    }
+}
+
+impl From<Tag> for u8 {
+    fn from(val: Tag) -> Self {
+        val as Self
+    }
+}
+
+impl Entry {
+    #[cfg(test)]
+    pub fn encode_into_vec(&self) -> Vec<u8> {
+        let mut buf = Vec::new();
+        self.encode_into(&mut buf).expect("should encode");
+        buf
+    }
+
+    pub(crate) fn encode_into<W: Write>(&self, writer: &mut W) -> Result<(), crate::Error> {
+        use Entry::{Clear, End, Item, Start};
+
+        match self {
+            Start { item_count, seqno } => {
+                writer.write_u8(Tag::Start.into())?;
+                writer.write_u32::<LittleEndian>(*item_count)?;
+                writer.write_u64::<LittleEndian>(*seqno)?;
+            }
+            Item {
+                keyspace_id,
+                key,
+                value,
+                value_type,
+                compression,
+            } => {
+                serialize_marker_item(writer, *keyspace_id, key, value, *value_type, *compression)?;
+            }
+            End(val) => {
+                writer.write_u8(Tag::End.into())?;
+                writer.write_u64::<LittleEndian>(*val)?;
+
+                // NOTE: Write some fixed trailer bytes so we know the end marker is fully written
+                // Otherwise we couldn't know if the checksum value is maybe mangled
+                // (only partially written, with the rest being padding zeroes)
+                writer.write_all(MAGIC_BYTES)?;
+            }
+            Clear { keyspace_id } => {
+                writer.write_u8(Tag::Clear.into())?;
+                writer.write_u64::<LittleEndian>(*keyspace_id)?;
+            }
+        }
+        Ok(())
+    }
+
+    pub(crate) fn decode_from<R: Read>(reader: &mut R) -> Result<Self, crate::Error> {
+        match reader.read_u8()?.try_into()? {
+            Tag::Start => {
+                let item_count = reader.read_u32::<LittleEndian>()?;
+                let seqno = reader.read_u64::<LittleEndian>()?;
+                Ok(Self::Start { item_count, seqno })
+            }
+            Tag::Item => {
+                let value_type = reader.read_u8()?;
+                let value_type = value_type
+                    .try_into()
+                    .map_err(|()| lsm_tree::Error::InvalidTag(("ValueType", value_type)))?;
+
+                let compression = CompressionType::decode_from(reader)?;
+
+                // Read keyspace ID
+                let keyspace_id = reader.read_u64::<LittleEndian>()?;
+
+                // Read key len
+                let key_len = reader.read_u16::<LittleEndian>()?;
+
+                // Read real value size
+                let value_len = reader.read_u32::<LittleEndian>()?;
+
+                // Read on-disk value size
+                let on_disk_value_len = reader.read_u32::<LittleEndian>()?;
+
+                let key = Slice::from_reader(reader, usize::from(key_len))?;
+
+                let value = match compression {
+                    CompressionType::None => {
+                        debug_assert_eq!(value_len, on_disk_value_len);
+                        Slice::from_reader(reader, on_disk_value_len as usize)?
+                    }
+
+                    #[cfg(feature = "lz4")]
+                    CompressionType::Lz4 => {
+                        let compressed_value =
+                            Slice::from_reader(reader, on_disk_value_len as usize)?;
+
+                        #[warn(unsafe_code)]
+                        let mut value = unsafe { Slice::builder_unzeroed(value_len as usize) };
+
+                        let size = lz4_flex::decompress_into(&compressed_value, &mut value)
+                            .map_err(|e| {
+                                log::error!("LZ4 decompression failed: {e}");
+                                crate::Error::Decompress(CompressionType::Lz4)
+                            })?;
+
+                        if size != value.len() {
+                            log::error!("Decompressed size does not match expected value size");
+                            return Err(crate::Error::Decompress(CompressionType::Lz4));
+                        }
+
+                        Slice::from(value.freeze())
+                    }
+                };
+
+                Ok(Self::Item {
+                    keyspace_id,
+                    key,
+                    value,
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 331ms:
+              ts_record.GetUserDefinedTimestampSize());
+          if (!s.ok()) {
+            ReportCorruption(fragment.size(), s.getState());
+          }
+        }
+        break;  // switch
+      }
+
+      case kBadHeader:
+        if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+            wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+          // In clean shutdown we don't expect any error in the log files.
+          // In point-in-time recovery an incomplete record at the end could
+          // produce a hole in the recovered data. Report an error here, which
+          // higher layers can choose to ignore when it's provable there is no
+          // hole.
+          ReportCorruption(drop_size, "truncated header");
+        }
+        FALLTHROUGH_INTENDED;
+
+      case kEof:
+        if (in_fragmented_record) {
+          if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+              wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+            // In clean shutdown we don't expect any error in the log files.
+            // In point-in-time recovery an incomplete record at the end could
+            // produce a hole in the recovered data. Report an error here, which
+            // higher layers can choose to ignore when it's provable there is no
+            // hole.
+            ReportCorruption(
+                scratch->size(),
+                "error reading trailing data due to encountering EOF");
+          }
+          // This can be caused by the writer dying immediately after
+          //  writing a physical record but before completing the next; don't
+          //  treat it as a corruption, just ignore the entire logical record.
+          scratch->clear();
+        }
+        return false;
+
+      case kOldRecord:
+        if (wal_recovery_mode != WALRecoveryMode::kSkipAnyCorruptedRecords) {
+          // Treat a record from a previous instance of the log as EOF.
+          if (in_fragmented_record) {
+            if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+                wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+              // In clean shutdown we don't expect any error in the log files.
+              // In point-in-time recovery an incomplete record at the end could
+              // produce a hole in the recovered data. Report an error here,
+              // which higher layers can choose to ignore when it's provable
+              // there is no hole.
+              ReportCorruption(
+                  scratch->size(),
+                  "error reading trailing data due to encountering old record");
+            }
+            // This can be caused by the writer dying immediately after
+            //  writing a physical record but before completing the next; don't
+            //  treat it as a corruption, just ignore the entire logical record.
+            scratch->clear();
+          } else {
+            if (wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+              ReportOldLogRecord(scratch->size());
+            }
+          }
+          return false;
+        }
+        FALLTHROUGH_INTENDED;
+
+      case kBadRecord:
+        if (in_fragmented_record) {
+          ReportCorruption(scratch->size(), "error in middle of record");
+          in_fragmented_record = false;
+          scratch->clear();
+        }
+        break;  // switch
+
+      case kBadRecordLen:
+        if (eof_) {
+          if (wal_recovery_mode == WALRecoveryMode::kAbsoluteConsistency ||
+              wal_recovery_mode == WALRecoveryMode::kPointInTimeRecovery) {
+            // In clean shutdown we don't expect any error in the log files.
+            // In point-in-time recovery an incomplete record at the end could
+            // produce a hole in the recovered data. Report an error here, which
+            // higher layers can choose to ignore when it's provable there is no
+            // hole.
+            ReportCorruption(drop_size, "truncated record body");
+          }
+          return false;
+        }
+        FALLTHROUGH_INTENDED;
+
+      case kBadRecordChecksum:
+        if (recycled_ && wal_recovery_mode ==
+                             WALRecoveryMode::kTolerateCorruptedTailRecords) {
+          scratch->clear();
+          return false;
+        }
+        if (record_type == kBadRecordLen) {
+          ReportCorruption(drop_size, "bad record length");
+        } else {
+          ReportCorruption(drop_size, "checksum mismatch");
+        }
+        if (in_fragmented_record) {
+          ReportCorruption(scratch->size(), "error in middle of record");
+          in_fragmented_record = false;
+          scratch->clear();
+
+ succeeded in 355ms:
+enum class WALRecoveryMode : char {
+  // Original levelDB recovery
+  //
+  // We tolerate the last record in any log to be incomplete due to a crash
+  // while writing it. Zeroed bytes from preallocation are also tolerated in the
+  // trailing data of any log.
+  //
+  // Use case: Applications for which updates, once applied, must not be rolled
+  // back even after a crash-recovery. In this recovery mode, RocksDB guarantees
+  // this as long as `WritableFile::Append()` writes are durable. In case the
+  // user needs the guarantee in more situations (e.g., when
+  // `WritableFile::Append()` writes to page cache, but the user desires this
+  // guarantee in face of power-loss crash-recovery), RocksDB offers various
+  // mechanisms to additionally invoke `WritableFile::Sync()` in order to
+  // strengthen the guarantee.
+  //
+  // This differs from `kPointInTimeRecovery` in that, in case a corruption is
+  // detected during recovery, this mode will refuse to open the DB. Whereas,
+  // `kPointInTimeRecovery` will stop recovery just before the corruption since
+  // that is a valid point-in-time to which to recover.
+  kTolerateCorruptedTailRecords = 0x00,
+  // Recover from clean shutdown
+  // We don't expect to find any corruption in the WAL
+  // Use case : This is ideal for unit tests and rare applications that
+  // can require high consistency guarantee
+  kAbsoluteConsistency = 0x01,
+  // Recover to point-in-time consistency (default)
+  // We stop the WAL playback on discovering WAL inconsistency
+  // Use case : Ideal for systems that have disk controller cache like
+  // hard disk, SSD without super capacitor that store related data
+  kPointInTimeRecovery = 0x02,
+  // Recovery after a disaster
+  // We ignore any corruption in the WAL and try to salvage as much data as
+
+ succeeded in 279ms:
+
+      default: {
+        char buf[40];
+        std::snprintf(buf, sizeof(buf), "unknown record type %u", record_type);
+        ReportCorruption(
+            (fragment.size() + (in_fragmented_record ? scratch->size() : 0)),
+            buf);
+        in_fragmented_record = false;
+        scratch->clear();
+        break;
+      }
+    }
+  }
+  return false;
+}
+
+uint64_t Reader::LastRecordOffset() { return last_record_offset_; }
+
+void Reader::ReportCorruption(uint64_t bytes, const char* reason) {
+  ReportDrop(bytes, Status::Corruption(reason));
+}
+
+void Reader::ReportDrop(uint64_t bytes, const Status& reason) {
+  if (reporter_ != nullptr &&
+      end_of_buffer_offset_ - buffer_.size() - bytes >= initial_offset_) {
+    reporter_->Corruption(static_cast<size_t>(bytes), reason);
+  }
+}
+
+unsigned int Reader::ReadPhysicalRecord(Slice* result) {
+  while (true) {
+    if (buffer_.size() < kHeaderSize) {
+      if (!eof_) {
+        // Last read was a full read, so this is a trailer to skip
+        buffer_.clear();
+        Status status = file_->Read(kBlockSize, &buffer_, backing_store_);
+        end_of_buffer_offset_ += buffer_.size();
+        if (!status.ok()) {
+          buffer_.clear();
+          ReportDrop(kBlockSize, status);
+          eof_ = true;
+          return kEof;
+        } else if (buffer_.size() < kBlockSize) {
+          eof_ = true;
+        }
+        continue;
+      } else {
+        // Note that if buffer_ is non-empty, we have a truncated header at the
+        // end of the file, which can be caused by the writer crashing in the
+        // middle of writing the header. Instead of considering this an error,
+        // just report EOF.
+        buffer_.clear();
+        return kEof;
+      }
+    }
+
+    // Parse the header
+    const char* header = buffer_.data();
+    const uint32_t a = static_cast<uint32_t>(header[4]) & 0xff;
+    const uint32_t b = static_cast<uint32_t>(header[5]) & 0xff;
+    const unsigned int type = header[6];
+    const uint32_t length = a | (b << 8);
+    if (kHeaderSize + length > buffer_.size()) {
+      size_t drop_size = buffer_.size();
+      buffer_.clear();
+      if (!eof_) {
+        ReportCorruption(drop_size, "bad record length");
+        return kBadRecord;
+      }
+      // If the end of the file has been reached without reading |length| bytes
+      // of payload, assume the writer died in the middle of writing the record.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '220,340p' /tmp/fjall314.NNduXH/src/journal/entry.rs" in /Users/dengcchi
+ succeeded in 0ms:
+                    value,
+                    value_type,
+                    compression,
+                })
+            }
+            Tag::End => {
+                let checksum = reader.read_u64::<LittleEndian>()?;
+
+                // Check trailer
+                let mut magic = [0u8; MAGIC_BYTES.len()];
+                reader.read_exact(&mut magic)?;
+
+                if magic != MAGIC_BYTES {
+                    return Err(crate::Error::InvalidTrailer);
+                }
+
+                Ok(Self::End(checksum))
+            }
+            Tag::Clear => {
+                let keyspace_id = reader.read_u64::<LittleEndian>()?;
+                Ok(Self::Clear { keyspace_id })
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test_log::test;
+
+    #[test]
+    fn test_serialize_and_deserialize_success() -> crate::Result<()> {
+        let item = Entry::Item {
+            keyspace_id: 0,
+            key: vec![1, 2, 3].into(),
+            value: vec![].into(),
+            value_type: ValueType::Value,
+            compression: CompressionType::None,
+        };
+
+        let serialized_data = item.encode_into_vec();
+        let mut reader = &serialized_data[..];
+        let deserialized_item = Entry::decode_from(&mut reader)?;
+
+        assert_eq!(item, deserialized_item);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_invalid_deserialize() {
+        let invalid_data = [Tag::Start as u8; 1]; // Should be followed by a u32
+
+        // Try to deserialize with invalid data
+        let mut reader = &invalid_data[..];
+        let result = Entry::decode_from(&mut reader);
+
+        match result {
+            Ok(_) => panic!("should error"),
+            Err(error) => match error {
+                crate::Error::Io(e) => match e.kind() {
+                    std::io::ErrorKind::UnexpectedEof => {}
+                    _ => panic!("should throw UnexpectedEof"),
+                },
+                _ => panic!("should throw UnexpectedEof"),
+            },
+        }
+    }
+
+    #[test]
+    fn test_invalid_tag() {
+        let invalid_data = [5u8; 1]; // Invalid tag
+
+        // Try to deserialize with invalid data
+        let mut reader = &invalid_data[..];
+        let result = Entry::decode_from(&mut reader);
+
+        match result {
+            Ok(_) => panic!("should error"),
+            Err(error) => match error {
+                crate::Error::InvalidTag(("JournalMarkerTag", 5)) => {}
+                _ => panic!("should throw InvalidTag"),
+            },
+        }
+    }
+}
+
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 136636ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "fjall 3.1.4", url: "https://github.com/fjall-rs/fjall/blob/3.1.4/src/journal/batch_reader.rs", overlap: "shipping target implements the claimed mechanism: missing terminator/start-inside-batch paths truncate to last_valid_pos and return None, while End checksum mismatch returns JournalRecovery(ChecksumMismatch)"},
+  {system: "RocksDB WAL recovery", url: "https://github.com/facebook/rocksdb/blob/main/include/rocksdb/options.h", overlap: "partial prior art: explicit WALRecoveryMode distinguishes tolerate-corrupted-tail, absolute consistency, point-in-time stop-before-corruption; this owns the broader design space of tail/inconsistency recovery policy, but not the fjall-specific location asymmetry"},
+  {system: "RocksDB lost buffered write recovery", url: "https://rocksdb.org/blog/2022/10/05/lost-buffered-write-recovery.html", overlap: "partial prior art: crash-recovery/lost-buffered-write validation for WALs; does not appear to claim fjall's framing-vs-data loud/silent discriminator"},
+  {system: "LevelDB log reader", url: "https://github.com/google/leveldb/blob/main/db/log_reader.cc", overlap: "partial prior art: truncated header/trailing incomplete record can be treated as EOF while checksum/type corruption is reported through Reporter; supports folklore baseline but not fjall clean-open data-present-after-hole finding"},
+  {system: "vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM targeted search", url: "https://github.com/vllm-project/vllm", overlap: "no relevant WAL/journal recovery mechanism found in targeted searches; these are LLM serving/kernel/KV-cache systems, not durable LSM journal recovery systems"}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: L0 evidence is enough for a real fjall mechanism bug and a realistic un-fsync'd Buffer-mode crash signature, but insufficient for GREEN. The packet has 50-key corruption tests, one dm-flakey dropped-writeback crash, and a labeled reorder simulation on real journal bytes. It does not yet demonstrate real post-SyncAll-fsync-completed loss under a reordered device/barrier violation, so the strongest durability-contract claim remains unproven at realistic storage-failure scale.
+RATIONALE: Prompt version v001. The exact fjall source path supports the location-dependent behavior: JournalReader truncates to last_valid_pos and returns None on decode errors/EOF-like framing failures, JournalBatchReader on_close silently discards an unterminated batch, and only End checksum mismatch returns JournalRecovery(ChecksumMismatch) (https://github.com/fjall-rs/fjall/blob/3.1.4/src/journal/reader.rs, https://github.com/fjall-rs/fjall/blob/3.1.4/src/journal/batch_reader.rs). PersistMode::Buffer is documented as not power-loss durable and implemented as Ok(()) after flushing only process buffers when dirty; SyncAll calls fsync (https://github.com/fjall-rs/fjall/blob/3.1.4/src/journal/writer.rs). Fjall issue #53 already reports truncating/missing-terminator warnings, but as a cosmetic/user-warning issue, not the clean-open location-asymmetry claim (https://github.com/fjall-rs/fjall/issues/53). Issues #112/#113 cover a different lost-write/journal-truncation bug path (https://github.com/fjall-rs/fjall/issues/112, https://github.com/fjall-rs/fjall/pull/113). Existing systems show this is not a systems design insight by itself: RocksDB explicitly exposes WAL recovery policy and warns corruption can stop/open differently by mode, while LevelDB has long tolerated incomplete trailing records. The fjall-specific mechanism is real, but the artifact currently reads as a bug/mechanism report with an important missing L1 proof, not a fully demonstrated systems insight/design.
+tokens used
+98,704

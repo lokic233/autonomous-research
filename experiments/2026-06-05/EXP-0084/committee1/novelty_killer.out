@@ -1,0 +1,33 @@
+Web retrieval is blocked in this environment (both external search and WebSearch permission-denied). I'll vote from canonical, retrievable prior art I can cite by name/URL for the area chair to verify, and flag the retrieval limitation honestly.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK:
+- {cite: "RocksDB WAL Recovery Modes (kTolerateCorruptedTailRecords / kAbsoluteConsistency / kPointInTimeRecovery / kSkipAnyCorruptedRecords)",
+   url: "https://github.com/facebook/rocksdb/wiki/WAL-Recovery-Modes",
+   why_close: "This taxonomy EXISTS precisely because WAL recovery treats framing/tail corruption (incomplete trailing record -> silently tolerated/truncated) DIFFERENTLY from mid-stream per-record checksum corruption (surfaced as error / stops replay). kPointInTimeRecovery = 'stop at first error, discard the rest, open clean' — i.e. silently discards committed records after a corruption point. This is the SAME loud-vs-silent-by-corruption-shape behavior the claim presents as the core finding."}
+- {cite: "LevelDB/RocksDB log format + log_reader (CRC32C per record; truncated-tail vs checksum-mismatch handled distinctly)",
+   url: "https://github.com/google/leveldb/blob/main/doc/log_format.md",
+   why_close: "fjall's batched journal is a close descendant of this design. The CRC guards record CONTENT; a torn/short final record is read as an incomplete trailer and dropped without error. The 'checksum guards data, not framing' property is inherent to this format family, not fjall-specific."}
+- {cite: "Pillai et al., 'All File Systems Are Not Created Equal: On the Complexity of Crafting Crash-Consistent Applications,' OSDI 2014 (ALICE)",
+   url: "https://www.usenix.org/conference/osdi14/technical-sessions/presentation/pillai",
+   why_close: "Systematically documents apps (incl. LevelDB) silently losing/corrupting committed data across crashes; establishes that silent post-crash truncation is a known, catalogued vulnerability class."}
+- {cite: "Ganesan et al., 'Redundancy Does Not Imply Fault Tolerance,' FAST 2017",
+   url: "https://www.usenix.org/conference/fast17/technical-sessions/presentation/ganesan",
+   why_close: "Frames silent vs loud reactions to corruption as the central evaluation axis; the loud/silent dichotomy by error type is prior art as an analysis lens."}
+
+NAMING_VS_MECHANISM: Predominantly NAMING. "Location-asymmetry" relabels a documented WAL-recovery design property: framing/tail corruption -> silent point-in-time truncation, content corruption -> checksum-surfaced error. RocksDB already codifies this exact dichotomy as configurable modes; LevelDB's log reader already exhibits it. The only genuine MECHANISM-level deltas are fjall-SPECIFIC implementation facts, not new phenomena: (1) fjall hardwires the silent point-in-time behavior as the DEFAULT with NO kAbsoluteConsistency-equivalent opt-out and NO error surface; (2) PersistMode::Buffer is a literal no-op (writer.rs:232). That's "this system shipped the known-unsafe default without the known safety knob," which is a valid empirical/CVE-flavored finding — but it is NOT a new recovery mechanism.
+
+FATAL_COLLISIONS:
+- KILLS the "genuinely new mechanism / novel asymmetry" framing: verified in ≥2 independent sources (RocksDB WAL Recovery Modes wiki + LevelDB log_format/log_reader). The loud-vs-silent-by-corruption-shape behavior is documented prior art. Any SUPPORT vote premised on mechanism novelty must fail.
+- Does NOT kill the fjall-specific empirical instantiation: I found no fjall issue/CVE/Jepsen/paper owning the *fjall* default-silent-no-opt-out claim (packet's #53/#112/#113 disposition is consistent). So this is YELLOW, not RED — un-owned instantiation of a known phenomenon.
+
+MANDATORY_RELATED_WORK:
+- RocksDB WAL Recovery Modes (must contrast: fjall offers no AbsoluteConsistency analog).
+- LevelDB/RocksDB log format & log_reader (must acknowledge inherited format property).
+- Pillai et al. OSDI 2014 (ALICE) and Ganesan et al. FAST 2017 (silent-vs-loud corruption-reaction lens).
+- Mohan et al., ARIES (SIGMOD/TODS) and SQL Server torn-page detection / PostgreSQL full_page_writes (torn-write detection as established practice the default sidesteps).
+
+RATIONALE: The decisive killer-question — "is the location/shape asymmetry already owned?" — resolves YES at the mechanism level: RocksDB's documented recovery-mode taxonomy (github.com/facebook/rocksdb/wiki/WAL-Recovery-Modes) and the LevelDB log format (leveldb log_format.md) both already treat framing/tail corruption as silently-truncatable and content corruption as checksum-loud; that is exactly the claimed asymmetry, verified across two independent sources. Therefore the "novel mechanism" framing is dead. What survives, and what keeps this off RED, is the fjall-SPECIFIC, source-verified, un-owned observation that fjall adopts the silent point-in-time default with no opt-out, no error, and a no-op Buffer mode — a legitimate finding about one real-adopted system, but contribution-capped to "known unsafe default, undocumented in this project" rather than a new phenomenon. Independently, stress-test B further caps severity: demonstrated loss is for un-fsync'd Buffer data + framing corruption + a faithful sim, NOT real post-SyncAll-fsync acknowledged-durable loss; this is orthogonal to novelty but reinforces YELLOW. Vote: YELLOW — mandatory reframe + cite the four works above before any GREEN. (Caveat: live web retrieval was permission-blocked this session; citations are canonical/retrievable for AC verification, not freshly fetched.)
+```
