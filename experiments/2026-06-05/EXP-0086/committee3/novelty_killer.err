@@ -1,0 +1,23 @@
+Claude Code at Meta (https://fburl.com/claude.code.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using AI Gateway (Vertex upstream)
+
+WARNING: The following plugins are installed in dev mode.
+If you've finished testing, switch to the production version.
+
+  - code_provenance@Meta
+  - llm-rules@Meta
+  - meta@Meta
+  - meta_codesearch@Meta
+  - meta_knowledge@Meta
+  - sl@Meta
+  - tracing@Meta
+  - trajectory@Meta
+
+To fix, run one of:
+  agent-market dev-cleanup     Remove dev plugins
+  agent-market update          Re-install from production
+
+Warning: failed to run agent-market for plugins 'gojira-session': No such file or directory (os error 2)
+Installing diff-shuttle@claude-templates for preset diff_shuttle (GK 'diff_shuttle_opt_in' passed)
+Warning: failed to run agent-market for plugins 'diff-shuttle': No such file or directory (os error 2)
