@@ -1,0 +1,318 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e9917-7667-7972-9f36-a22ebfe023a7
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0073 (PROJ-0043, IMMATURE-WEDGE: databases — DuckDB CSV-sniffer silent float→int truncation)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT. Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge.
+
+## ★★★ THE #1 STRESS-TEST (the killer this claim must beat):
+GATE-4 FOLKLORE-ADJACENCY: "sampling picks the wrong type" IS a known general hazard in type-inference systems. THE DECISIVE QUESTION: is the SPECIFIC composition (DuckDB's LOUD-vs-SILENT asymmetry by VALUE TYPE + the NO-WIDEN-AFTER-SAMPLE design + the DOCUMENTED-PROMISE VIOLATION) genuinely above the folklore, or just "known-hazard instance N"? (a) The LOUD arm (non-numeric "hello" → ConversionException with a fix suggestion — DuckDB KNOWS how to error here) vs the SILENT arm (fractional 3.14 → truncated to 3, zero diagnostic) is an ASYMMETRY the committee must judge: is "errors for strings but silently truncates for floats" a genuine, publishable, un-owned contract-violation finding, or an expected type-system edge case? (b) The docs PROMISE "the scanner will immediately stop and throw the error" for structural errors — the silence is a demonstrated violation of the tool's OWN documented contract. Is that sufficient for GREEN, or is it a documentation-gap bug (an issue to file, not a paper)?
+
+## CLAIM
+In DuckDB ≥1.x (v1.5.3), read_csv default sample_size=20480 sniffs a column as BIGINT from integer-valued early rows; any LATER fractional value is SILENTLY TRUNCATED to an integer (no error/NULL/warning/re-widen) while a non-numeric value errors LOUDLY (ConversionException). The default sample_size silently sets a data-fidelity correctness property neither the sniffer (which promises loud errors) nor the user (who sees a clean load) predict. NULL EXIT: DuckDB errors or preserves (pandas lineage) → did NOT happen (silent truncation).
+
+## L0 RESULT (EXP-0088; cli:devvm14382; pinned DuckDB 1.5.3 14eca11bd9 "Variegata" / pandas 3.0.3)
+LOUD-vs-SILENT ASYMMETRY TABLE: DEFAULT read_csv, val=3.14 at row 30000 (past sample=20480) → dtype BIGINT, value=3, null_count=0, zero stderr/diagnostic (SILENT). Same column, "hello" at row 30000 → LOUD ConversionException ("Could not convert string 'hello' to INT64… Try setting sample_size=-1"). DuckDB CAN diagnose a post-sample mismatch — it just DOESN'T for floats.
+IN-SAMPLE CONTROL: 3.14 at row 5 → sniffs DOUBLE, preserves 3.14 (the sample boundary IS the cause).
+FULL-SCAN FIX: sample_size=-1 → DOUBLE, preserved (the default is the silent knob).
+LINEAGE CONTROL: pandas read_csv → float64, 3.14 preserved (DuckDB's behavior is novel, not inherited).
+SWEEP: 4/4 = 100% of post-sample fractional positions (20481/25000/30000/39000) silently truncated.
+DOCUMENTED-PROMISE VIOLATION: DuckDB docs "Reading Faulty CSV Files": "if any structural errors are encountered, the scanner will immediately stop and throw the error" — silence on float truncation violates this.
+ALL pre-registered nulls did NOT fire (no auto-widen, no error, no NULL). Controls clean.
+
+## 6-GATE SCREEN (claimed by scout+researcher, for scrutiny):
+#1 incremental-composition (docs promise loud errors; truncation silent). #2 verify (installed+probed DuckDB 1.5.3). #3 issue-tracker: no DuckDB issue for the SPECIFIC silent float→int truncation past sample (adjacent sniffer issues exist: dialect/column-count/enum); mechanism novel-not-inherited (lineage control: pandas preserves); no ≥3 practitioner find-fix. #4 not-folklore: the SPECIFIC loud-vs-silent-by-VALUE-TYPE asymmetry + the no-widen + the doc-promise-violation is undocumented; folklore says "it'll error or guess wrong" not "it'll silently round your floats while loudly erroring your strings." #5 prevalence: the unsafe default IS the only default; trigger = integer-valued-early + fractional-later = generic file shape (IDs/counts early, measurements/prices later; sorted/append-only; sparse decimals). #6 not-tautology: in-sample control preserves (null CAN fire); scout killed 3 other DuckDB angles that DID null.
+
+## PRIOR-ART / ISSUE-TRACKER: no CVE; DuckDB docs describe sample_size knob but DON'T warn about silent truncation; the "CSV Sniffer" 2023 blog + the "Reading Faulty CSV Files" page both promise loud errors and don't describe this. No ≥3 practitioner find-fix. Scrutinize: is there a DuckDB GitHub issue reporting float→int silent truncation past the sample? (If yes → RED like CLAIM-0066's pandas-issue kill.)
+
+## ORCHESTRATOR NOTE (NOT advocacy): clean, well-controlled L0 with a sharp asymmetry (DuckDB KNOWS how to error for post-sample mismatches — it does for strings but silently truncates floats), a lineage control (pandas preserves), a causation chain (in-sample→preserves), and a documented-promise violation. The make-or-break is gate-4: is the loud-vs-silent asymmetry + doc-violation a genuine publishable finding, or a documentation-gap/bug-report (file an issue, not a paper)? If genuine → advance to an L1 (real-world CSV corpus with the integer-early/float-later shape + blast-radius). If a bug-report → YELLOW/converge. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' /Users/dengcchi 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi
+ succeeded in 0ms:
+/Users/dengcchi
+Applications
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Public
+afar-src
+agent_infra_committee_code_20260529T083946Z.tar.gz
+agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+ar-private-src
+audit-post-export
+audit-post-export.tar.gz
+autonomous-research
+autonomous-research-e2e
+autonomous-research-v3
+axon
+axon-chat-export-CLEAN.tar.gz
+axon-chat-export-WITH-overrides.tar.gz
+axon-chat-export-e2e.tar.gz
+axon-chat-export.tar.gz
+axon-chat-external
+axon-chat-external-build.tar.gz
+axon-deploy
+axon-export
+axon-export-v2
+axon-export.tar.gz
+axon_vercel.tar.gz
+axon_vercel_20260423_1852.tar.gz
+branchable_replay_R1
+branchable_replay_R2
+branchable_replay_R3
+branchable_replay_review
+cert-work
+exp0072_work
+exp0073_work
+generate_ifm.par
+gpu_pipeline_changes
+green_thesis_factory
+mrs-tpu-devserver-handoff.md
+package-lock.json
+public_agent_infra_research_engagement
+research-os
+research-os-meta
+research-os-venv
+ros-poc
+ros_venv_0067
+scikit_learn_data
+vision_tax_investigation_report.md
+weave
+weave-dev
+work
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'find /Users/dengcchi -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null | head -50' in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 4 -iname '*CLAIM*0073*' -o -iname '*committee*' 2>/dev/null | head -50" in /Users/dengcchi
+ succeeded in 4062ms:
+/Users/dengcchi/agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+/Users/dengcchi/agent_infra_committee_code_20260529T083946Z.tar.gz
+/Users/dengcchi/.gemini/history/committee
+/Users/dengcchi/.gemini/history/green-direction-committee
+/Users/dengcchi/.gemini/history/committee-r1
+/Users/dengcchi/.gemini/history/rescue-committee
+/Users/dengcchi/.gemini/history/committee-r3
+/Users/dengcchi/.gemini/history/committee-r2
+/Users/dengcchi/.gemini/tmp/committee
+/Users/dengcchi/.gemini/tmp/green-direction-committee
+/Users/dengcchi/.gemini/tmp/committee-r1
+/Users/dengcchi/.gemini/tmp/rescue-committee
+/Users/dengcchi/.gemini/tmp/committee-r3
+/Users/dengcchi/.gemini/tmp/committee-r2
+/Users/dengcchi/ros-poc/runtime/run_committee_b32.sh
+/Users/dengcchi/ros-poc/runtime/committee_run_1
+/Users/dengcchi/branchable_replay_review/committee
+/Users/dengcchi/branchable_replay_review/committee_R2
+/Users/dengcchi/branchable_replay_review/committee_R3
+/Users/dengcchi/branchable_replay_review/rescue_committee
+/Users/dengcchi/branchable_replay_review/committee_R1
+/Users/dengcchi/branchable_replay_review/green_direction_committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R3
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R2
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-rescue-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-green-direction-committee
+/Users/dengcchi/.claude/projects/-Users-dengcchi-branchable-replay-review-committee-R1
+/Users/dengcchi/Library/LaunchAgents/com.researchos.v3.committee_health.plist
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-committee
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-committee-R3
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-committee-R2
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-rescue-committee
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-green-direction-committee
+/Users/dengcchi/Library/Caches/claude-cli-nodejs/-Users-dengcchi-branchable-replay-review-committee-R1
+/Users/dengcchi/afar-src/committees
+/Users/dengcchi/afar-src/scripts/premium_committee_orchestrator.py
+/Users/dengcchi/afar-src/scripts/honest_committee_v1.md
+/Users/dengcchi/autonomous-research-v3/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-v3/runtime/orchestrator/committee_queue.yaml
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.log
+/Users/dengcchi/autonomous-research-v3/runtime/cron/committee_health.alive
+/Users/dengcchi/autonomous-research-e2e/learning/roles/committee.md
+/Users/dengcchi/autonomous-research-e2e/runtime/committee_run_CLAIM-0001-pass2
+/Users/dengcchi/autonomous-research-e2e/runtime/committee_run_CLAIM-0001-pass1
+/Users/dengcchi/autonomous-research-e2e/runtime/orchestrator/committee_queue.yaml
+/Users/dengcchi/autonomous-research-e2e/runtime/cron/committee_health.alive
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee
+/Users/dengcchi/green_thesis_factory/repos/agent-failure-attribution-research/committees
+/Users/dengcchi/research-os/prompts/monitors/committee_monitor_v001.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3 /Users/dengcchi/research-os /Users/dengcchi/branchable_replay_review /Users/dengcchi/afar-src -path '*_committee_common_v001.md' -o -path '*TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-v3/.research-os /Users/dengcchi/research-os -maxdepth 5 -type f | grep -E '(_committee_common_v001.md|TOOLING_v001.md)"'$'"'" in /Users/dengcchi
+ succeeded in 0ms:
+find: /Users/dengcchi/autonomous-research-v3/.research-os: No such file or directory
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 1984ms:
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "gh search issues 'repo:duckdb/duckdb read_csv sample_size float integer truncation' --limit 20 --json title,url,state,createdAt 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+exec
+/bin/zsh -lc "gh search issues 'repo:duckdb/duckdb sample_size ConversionException read_csv' --limit 20 --json title,url,state,createdAt 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/zsh -lc "gh search issues 'repo:duckdb/duckdb CSV sniffer integer float' --limit 20 --json title,url,state,createdAt 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed

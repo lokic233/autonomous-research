@@ -1,0 +1,17 @@
+===== CLEAN 2-SESSION SWEEP (default Drop) =====
+########## slow_us=0 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=false
+SUB_RESULT received=50000 n=50000 delivery_ratio=1.0000 loss_pct=0.00 last_seq=49999
+########## slow_us=50 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=false
+SUB_RESULT received=50000 n=50000 delivery_ratio=1.0000 loss_pct=0.00 last_seq=49999
+########## slow_us=100 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=false
+SUB_RESULT received=41515 n=50000 delivery_ratio=0.8303 loss_pct=16.97 last_seq=41514
+########## slow_us=200 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=false
+SUB_RESULT received=25518 n=50000 delivery_ratio=0.5104 loss_pct=48.96 last_seq=25517
+########## slow_us=500 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=false
+SUB_RESULT received=21004 n=50000 delivery_ratio=0.4201 loss_pct=57.99 last_seq=21003
+SWEEP_DONE

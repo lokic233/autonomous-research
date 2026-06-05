@@ -1,0 +1,24 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+MUNDANE_EXPLANATIONS: [
+  "Sample-based type inference is a textbook hazard: any finite-sample type sniffer that commits to a narrowest-fitting type without a re-widen pass will, by construction, silently coerce out-of-sample values that fit the inferred storage type (int accepts 3 via truncation of 3.14 at the C cast level). The loud-vs-silent asymmetry is the trivial consequence of CAST<INT64>(double) being a defined lossy operation in C/SQL semantics while CAST<INT64>('hello') is undefined → throws. No novel mechanism: it is the expected behavior of strtoll-style parsing composed with a non-revising sniffer.",
+  "The 4/4 sweep at positions {20481, 25000, 30000, 39000} is not independent evidence of prevalence — it is one phenomenon (post-sample boundary) probed four times; n_effective ≈ 1."
+]
+CONFOUNDS: [
+  "Documented-promise-violation framing conflates 'structural errors' (row/column/dialect) with 'value-domain errors' (float-in-int-column). The doc quote is about structural parsing; truncation is a value cast, arguably outside the promised scope. Without a doc quote that explicitly covers value-cast fidelity, the 'contract violation' claim is overstated.",
+  "Lineage control vs pandas is weak: pandas uses a two-pass / chunked inference with upcasting; comparing a one-pass sniffer to a multi-pass inferencer doesn't isolate 'DuckDB-novel' — it isolates 'one-pass vs multi-pass,' a known design-axis difference.",
+  "Asymmetry attributed to 'DuckDB knows how to error' may actually be 'libc/Arrow/duckdb's numeric cast path silently truncates by default while the string→int path raises' — i.e., asymmetry lives in the cast layer, not a deliberate sniffer policy choice."
+]
+ASSUMPTIONS_UNTESTED: [
+  "Not tested: behavior with sample_size set to non-default-but-finite values (e.g., 100k, 1M) — does the silent-truncation regime persist proportionally, or is 20480 special? Without this, 'the default IS the silent knob' is under-supported.",
+  "Not tested: HUGEINT, DECIMAL, DATE, TIMESTAMP columns under the same shape — is the asymmetry float-specific or general to all narrowing casts? Generality claim needs ≥2 more dtypes.",
+  "Not tested: whether `auto_detect=false` with explicit BIGINT reproduces identical silent truncation (would prove the sniffer is irrelevant and the issue is cast semantics, demoting the finding to 'CAST is lossy, news at 11').",
+  "Not tested: prior DuckDB versions (1.0/1.1/1.2/1.3/1.4) — is this a regression, longstanding, or recently introduced? Affects novelty and whether it's already on a fix track."
+]
+STATISTICAL_GAPS: [
+  "n=1 per condition; no repeat trials, no variance bars (deterministic outcome expected, but should be stated, not assumed).",
+  "No corpus-level prevalence estimate. 'Generic file shape' is asserted, not measured. A real prevalence claim requires sampling N public CSVs and measuring frequency of (integer-early, fractional-late) pattern — this is L1 work, but the L0 prevalence prose currently outruns the L0 evidence.",
+  "Issue-tracker search reported as null but the search query/scope is not in-packet; a single missed GitHub issue (e.g., titled 'sniffer narrows to BIGINT, later doubles silently rounded') would collapse this to RED. The negative-search needs to be auditable."
+]
+RATIONALE: The L0 is clean and the asymmetry is real, but two things keep this off GREEN: (1) the loud-vs-silent asymmetry is mechanically the expected behavior of CAST<int64>(double) vs CAST<int64>(string) composed with a non-re-widening sniffer — i.e., predicted by basic type-system theory, not an emergent surprise; the assumption-untested probe `auto_detect=false` with explicit BIGINT would discriminate 'sniffer bug' from 'cast semantics' and is the cheapest decisive experiment. (2) The 'documented-promise violation' rests on reading 'structural errors' to cover value-cast fidelity, which is a stretch without a tighter doc citation. Advance to L1 ONLY if: (a) the auto_detect=false probe shows silent truncation persists (then it's a cast-layer issue, downgrade), or fails to reproduce (then sniffer-specific, upgrade); (b) generality across ≥1 other narrowing cast (DECIMAL, DATE) is shown; (c) a tighter doc quote covering value-fidelity is found, OR the framing is moved from 'contract violation' to 'undocumented-behavior-with-asymmetric-diagnostics.' Without these, this is a well-characterized known hazard with a specific instantiation — file an issue, write a short note, but not yet a publishable cross-area phenomenon. Prompt v001.
+```

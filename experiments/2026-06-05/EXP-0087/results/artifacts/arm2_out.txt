@@ -1,0 +1,8 @@
+===== ARM2: BLOCK KNOB on publisher (2-session), slow_us=200 =====
+########## slow_us=200 BLOCK=1 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=true
+SUB_RESULT received=21916 n=50000 delivery_ratio=0.4383 loss_pct=56.17 last_seq=21915
+########## slow_us=500 BLOCK=1 ##########
+PUB_RESULT put_ok=50000 put_err=0 n=50000 block=true
+SUB_RESULT received=17942 n=50000 delivery_ratio=0.3588 loss_pct=64.12 last_seq=17941
+ARM2_DONE

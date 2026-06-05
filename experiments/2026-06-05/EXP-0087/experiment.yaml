@@ -12,12 +12,26 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: 'SUPPORT. zenoh 1.9.0 (pinned, verified). Split-default confirmed
+  in installed source (zenoh-protocol core/mod.rs): DEFAULT_PUSH=Drop / DEFAULT_REQUEST/DECLARE/INTEREST/OAM=Block.
+  2-session sweep (N=50000,8B,tcp,multicast off): put_ok=N put_err=0 EVERY case while
+  silent loss monotone 0us=0% (null fires) 100us=17% 200us=49% 500us=58%. Block knob:
+  does NOT prevent loss (50.5% vs 40.8%) and does NOT backpressure (pub_wall identical
+  5.0s) = per-hop not end-to-end. 3-NODE ROUTER (pub->zenohd-mode router->slow sub):
+  at N=200000 (overflow router buffers) Drop=51.0% loss, PUBLISHER-BLOCK=63.8% loss
+  (put_ok=200000 put_err=0) = unambiguous per-hop proof, publisher Block does not
+  propagate through router. Controls: fast=0% (null fires); SILENT (0 zenoh log lines
+  at zenoh=debug, logger proven functional via smoke test + router INFO); offload->0%
+  (HONEST DIVERGENCE from scout 68.7%: zenoh uses SYNCHRONOUS RX callback so offloading
+  removes backpressure that causes drop -> localizes drop to transport-congestion
+  driven by blocked receive dispatch). Source: is_droppable=!reliable||CC==Drop; push_network_message
+  returns Ok(false) on congestion with NO log. Honest weakenings: loss 41-64% vs scout
+  68-77%; 3-node needs sustained load to overflow router; offload diverges.'
+result_effect: support
 artifacts_path: experiments/2026-06-05/EXP-0087/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-05T18:42:22Z'
 prompt_version: ''

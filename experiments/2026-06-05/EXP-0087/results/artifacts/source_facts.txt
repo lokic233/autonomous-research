@@ -1,0 +1,90 @@
+### zenoh version (Cargo.lock) ###
+name = "zenoh"
+version = "1.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+### rustc/cargo ###
+rustc 1.96.0 (ac68faa20 2026-05-25)
+cargo 1.96.0 (30a34c682 2026-05-25)
+
+### split-default constants (zenoh-protocol-1.9.0/src/core/mod.rs) ###
+
+impl CongestionControl {
+    pub const DEFAULT: Self = Self::Drop;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_PUSH: Self = Self::Drop;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_PUSH: Self = Self::Drop;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_REQUEST: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_REQUEST: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_DECLARE: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_DECLARE: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_INTEREST: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_INTEREST: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_OAM: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_OAM: Self = Self::Block;
+}
+
+### is_droppable (zenoh-protocol/src/network/mod.rs:190) ###
+    #[inline]
+    fn is_droppable(&self) -> bool {
+        !self.is_reliable() || self.congestion_control() == CongestionControl::Drop
+    }
+
+### Reliability default (core/mod.rs:508-517) ###
+pub enum Reliability {
+    /// Messages may be lost.
+    BestEffort = 0,
+    /// Messages are guaranteed to be delivered.
+    #[default]
+    Reliable = 1,
+}
+
+impl Reliability {
+    pub const DEFAULT: Self = Self::Reliable;
+
+### push_network_message silent drop (zenoh-transport/.../pipeline.rs:880-905) ###
+
+        // If message is droppable, compute a deadline after which the sample could be dropped
+        let (wait_time, max_wait_time) = if msg.is_droppable() {
+            // Checked if we are blocked on the priority queue and we drop directly the message
+            if self.status.is_congested(priority) {
+                return Ok(false);
+            }
+            (
+                self.status.waits.wait_before_drop,
+                Some(self.status.waits.max_wait_before_drop_fragments),
+            )
+        } else {
+            (self.status.waits.wait_before_close, None)
+        };
+        let mut deadline = Deadline::new(wait_time, max_wait_time);
+        // Lock the channel. We are the only one that will be writing on it.
+        let mut queue = zlock!(self.stage_in[idx]);
+        // Check again for congestion in case it happens when blocking on the mutex.
+        if msg.is_droppable() && self.status.is_congested(priority) {
+            return Ok(false);
+        }
+        let mut sent = queue.push_network_message(msg, priority, &mut deadline)?;
+        // If the message cannot be sent, mark the pipeline as congested.
+        if !sent {
+
+### QoS unicast default enabled (zenoh-config/src/defaults.rs:224) ###
+impl Default for QoSUnicastConf {
+    fn default() -> Self {
+        Self { enabled: true }
+    }
+}
