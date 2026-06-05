@@ -1,0 +1,88 @@
+verdict_id: VERDICT-0068
+claim_id: CLAIM-0070
+project_id: PROJ-0040
+date: '2026-06-05'
+experiment_ids:
+- EXP-0083
+experiment_paths:
+- experiments/2026-06-05/EXP-0083
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED
+- the ABI-boundary cross-language arm cleared the folklore gate from RED)
+required_evidence:
+- "RE-1 (decisive, cheap): cite WASI preview1 random_get entropy contract \u2014 CSPRNG\
+  \ mandate (=spec violation, strong) vs silent/permissive (=documented design, weak)"
+- "RE-3 (cheap): document Wasmtime (WasiCtxBuilder secure_random) + Wasmer WASI RNG/clock\
+  \ defaults \u2014 is wazero the anomaly?"
+- 'RE-2 (expensive, gated on RE-1+RE-3): GitHub/AST prevalence scan of public wazero-dependents
+  using NewModuleConfig() without WithRandSource for crypto-calling guests (>5% =
+  real, ~0% = synthetic)'
+- 'RE-4: quote the actual config.go doc strings for WithRandSource/WithSysWalltime/Nanotime/Nanosleep
+  and SHOW no single surface warns the COMPOUND effect (assert->demonstrate)'
+- CITE SWC-120 + CWE-330/338 + CrowdSec PR#4495 + wetware issue#106 as prior art
+map_delta_proposals:
+- CLAIM-0070 -> HOLD at L0-YELLOW
+- do NOT advance to L1 until RE-1..RE-4 resolved. RE-1 (1 doc read) + RE-3 (2 doc
+  reads) FIRST -- they determine spec-violation-vs-design-choice, which GATES whether
+  the expensive RE-2 prevalence scan is worth running. If RE-1=CSPRNG-mandate AND
+  RE-2>5% prevalence AND RE-3=wazero-anomalous -> L1 (prevalence + blast-radius +
+  responsible-disclosure). If RE-1=no-mandate AND RE-2~0 -> converge as documentation-quality
+  finding (YELLOW-terminal).
+baseline_requirements:
+- Wasmtime WASI defaults (secure_random/clock) = primary comparator
+- Wasmer WASI defaults = secondary
+- SWC-120/Consensys deterministic-VM-demotes-RNG guidance (must cite, biggest gap)
+- CWE-330/338
+- wazero ModuleConfig GoDoc per-knob docs
+committee_run_dir: experiments/2026-06-05/EXP-0083/committee1
+verbatim_votes_summary: 'novelty_killer(Y): live search permission-denied -> prior-art
+  inadequate; SWC-120/deterministic-VM-demotes-RNG parallel must be cited (biggest
+  gap). systems_reviewer(Y): Wasmtime WasiCtxBuilder secure_random per-context ->
+  wazero may be the anomaly; found CrowdSec PR#4495 + wetware issue#106 = downstream
+  independently hit+fixed this exact composition (validates + narrows novelty). evaluation_prosecutor(Y):
+  bare NewModuleConfig() to a security-sensitive guest is a STRAWMAN without prevalence
+  evidence. theory_skeptic(Y): the ''silent demotion'' framing DEPENDS on whether
+  WASI random_get carries a CSPRNG contract (RE-1) -- the single most load-bearing
+  unresolved question; ''none warns the composition'' asserted not shown (RE-4). product_realist(Y):
+  production guidance already prescribes overriding the knobs; real but needs prevalence.
+  area_chair(Y): clean cross-language L0 lifts it above CWE-330 folklore (the real
+  delta, unrebutted), but 5 distinct unrebutted reservations + PRIOR_ART_ADEQUATE:no
+  -> YELLOW; resolve RE-1+RE-3 (3 doc reads) before the expensive RE-2.'
+key_structural_finding: 'The ABI-boundary composition is REAL, cross-language (Rust
+  getrandom 10/10 demoted identically -> not a Go quirk), cross-process (30/30), both
+  controls held, source-verified defaults, clock-half independent. BUT GREEN blocked
+  by 4 unrebutted concerns: (RE-1, decisive) does WASI preview1 random_get MANDATE
+  CSPRNG-quality entropy? If yes -> wazero default is a SPEC VIOLATION (strong); if
+  spec is silent/permits deterministic -> ''demotion'' is editorial not technical
+  (weak). (RE-3) Wasmtime WasiCtxBuilder provides secure_random per-context (systems_reviewer)
+  -> if wazero is the ANOMALY it strengthens; if all runtimes default deterministic
+  it''s ecosystem-normal -> shrinks to a doc gap. (RE-2) prevalence ZERO-evidence:
+  bare NewModuleConfig() to a crypto-calling guest may be a strawman -- though systems_reviewer
+  found CrowdSec PR#4495 + wetware issue#106 = downstream practitioners independently
+  HIT + FIXED this exact composition (validates hazard, narrows novelty: found+fixed
+  without a CVE/paper). (prior-art) SWC-120/deterministic-VM-demotes-RNG must be cited
+  (biggest gap); novelty_killer''s live search was permission-denied so PRIOR_ART_ADEQUATE:no.'
+disposition: committee#1 UNANIMOUS 6/6 YELLOW (no RED). The cross-language ABI-boundary
+  arm GENUINELY lifts it above single-runtime CWE-330 folklore (all 5 reviewers acknowledge
+  the real delta). Gate to a CHEAP decisive L1 (RE-1 WASI-spec + RE-3 Wasmtime/Wasmer
+  comparison, 3 doc-reads) that determines spec-violation-vs-documented-design BEFORE
+  the expensive prevalence scan.
+created_at: '2026-06-05T16:40:08Z'

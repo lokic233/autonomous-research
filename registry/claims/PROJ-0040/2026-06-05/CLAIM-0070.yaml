@@ -72,13 +72,18 @@ supporting_evidence:
     HELD.'
   data_path: experiments/2026-06-05/EXP-0083/
 negative_evidence: []
-verdict_history: []
+verdict_history:
+- verdict_id: VERDICT-0068
+  date: '2026-06-05'
+  result: yellow
 revival_conditions: ''
 owner: orchestrator-r10-001
 prompt_version: ''
-lifecycle_state: evidence_ready
-next_action: review evidence from EXP-0083; convene committee if candidate-grade
+lifecycle_state: experiment_running
+next_action: await EXP-0085 result, then ros exp complete --exp EXP-0085 --effect
+  ...
 blocking_on: ''
-active_experiments: []
+active_experiments:
+- EXP-0085
 created_at: '2026-06-05T16:08:36Z'
-last_updated: '2026-06-05T16:27:44Z'
+last_updated: '2026-06-05T16:40:53Z'
