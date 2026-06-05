@@ -1,0 +1,151 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e989f-b786-7263-be5b-e92ddd85889d
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0070 (PROJ-0040, IMMATURE-WEDGE: OS-runtimes/security — wazero WASI ABI boundary)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT. Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge. First fresh-domain (post-frontier-resume) claim — judge on the merits.
+
+## ★★★ THE #1 STRESS-TEST (orchestrator flags FRONT-AND-CENTER — the killer this claim must beat):
+GATE-4 FOLKLORE: a hostile reviewer will say "predictable RNG -> identical keys is CWE-330/338 folklore, and wazero's default-deterministic-rand is DOCUMENTED per-knob — this is dressed-up folklore." THE DECISIVE QUESTION: is the contribution genuinely ABOVE that? The claimed-novel part is NOT "wazero default rand is deterministic" (documented + folklore = DEAD). It is the COMPOSITION / ABSTRACTION-LEAK: the GOLD-STANDARD secure pattern (a guest calling crypto/rand.Reader — the explicitly-CSPRNG API) is SILENTLY DEMOTED to a fixed-seed PRNG ACROSS THE WASI ABI BOUNDARY by a DEFAULT host config, so a guest author who did everything right still ships identical global secrets — AND this is an ABI-boundary property (proven cross-language: a Rust/getrandom guest is demoted identically), NOT a single-runtime quirk — AND it is UN-OWNED (no wazero issue/CVE/paper). PLUS a second, independent half (NOT RNG folklore): the default clock config decouples context.WithTimeout/time.After deadlines from real wall-clock (~31x), silently misfiring rate-limiters/retries/circuit-breakers. (a) If the committee judges the composition + ABI-boundary + clock-half a genuine, publishable, un-owned hazard -> SUPPORT toward L1. (b) If it collapses to "predictable RNG is bad, and the default is documented" -> YELLOW/RED. Judge honestly. Per-knob docs warn EACH default individually; the question is whether NO surface warns the COMPOSITION (that crypto/rand is demoted), which is the seam.
+
+## CLAIM
+Under wazero v1.12.0 DEFAULT NewModuleConfig(): a Go-WASI guest's crypto/rand-derived secrets become globally identical/predictable across processes, and its context/time deadlines decouple from real time — silently, no error, at the host<->WASI ABI boundary that neither the guest author (gold-standard crypto/rand) nor the host author (minimal documented config) treats as load-bearing. NULL EXIT: keys differ across processes, or wazero errors on random_get, or crypto/rand bypasses WASI, or deadline ratio ~1.0 -> none happened.
+
+## L0 RESULT (EXP-0083; cli:devvm14382; pinned wazero v1.12.0 / Go 1.26.2 / Rust 1.96.0 wasm32-wasip1; SOURCE-VERIFIED defaults)
+SOURCE-VERIFIED (installed wazero): NewModuleConfig() random_get -> NewFakeRandSource() = rand.New(rand.NewSource(42)) fixed-seed PRNG; walltime frozen 2022-01-01 +1ms/read; nanotime +1ms/read; nanosleep instant. config.go documents each knob INDIVIDUALLY; NONE warns the composition.
+CROSS-PROCESS SECRET-COLLISION (primary): DEFAULT, 30 SEPARATE OS processes -> 100% collision (1 unique (pubkey,token)/30), byte-identical ed25519 pubkey 46a4405f...641cb876 + token; two DIFFERENT Go binaries produced the SAME key under default. Control WithRandSource(crypto/rand.Reader): 30/30 DISTINCT. (control held)
+★ CROSS-LANGUAGE ARM (the ABI-boundary proof, the gate-4 lift): Rust guest (getrandom 0.2.17 -> wasi 0.11.1 random_get), 10 separate processes -> DEFAULT 10/10 byte-identical (538c7f96...09dd9d52); control 10/10 distinct. Rust bytes differ from Go's (different consumption of the SAME seed-42 stream) but BOTH 100% deterministic under default -> HOST/ABI-BOUNDARY property, NOT a Go-runtime quirk.
+CLOCK-DECOUPLING: DEFAULT 150ms guest-perceived wait (time.After(100ms)+context.WithTimeout(50ms)) -> ~4.8ms real wall (~31x faster); deadline fires but decoupled. Control WithSysWalltime/Nanotime/Nanosleep -> ~155.5ms real, ratio ~1.0. (control held)
+NULLS: none triggered (keys identical across processes in BOTH languages; no error on random_get; crypto/rand routed through WASI — proven by the Rust arm hitting the same host PRNG; ratio grossly != 1.0). Composition re-confirmed UN-OWNED (no wazero issue/CVE/paper; only per-knob docs + generic RNG-CWE folklore).
+
+## PRIOR-ART / ISSUE-TRACKER: wazero issue tracker + CVE/NVD + Go issues + blogs searched. Per-knob defaults documented in config.go; predictable-RNG->collision is CWE-330/338 folklore. The COMPOSITION (gold-standard crypto/rand silently demoted across the WASI ABI by a default, cross-language, + the clock-decoupling half) returned NO owner. Committee scrutinize: is there a wazero issue / a WASI-security paper / a sandbox-determinism advisory that owns the composition? (If yes -> RED like the prior frontier's CLAIM-0066.)
+
+## ORCHESTRATOR NOTE (NOT advocacy): clean, well-controlled L0 — source-verified defaults, cross-PROCESS + cross-LANGUAGE arms (the ABI-boundary proof that lifts it over the folklore gate), both controls held, nulls clean, composition re-confirmed un-owned. The make-or-break is stress-test #1: is the composition/abstraction-leak (+ ABI-boundary + clock-half) a genuine publishable hazard, or documented-folklore-dressed-up? If genuine -> advance to an L1 (real-world prevalence: do real wazero hosts ship NewModuleConfig() defaults to guests that call crypto/rand? + the security blast-radius + maybe more guest languages). If folklore -> YELLOW/converge. Judge honestly. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling instructions first, then do a targeted prior-art search across wazero and adjacent WASI/runtime systems before voting.
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' /Users/dengcchi 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi
+ succeeded in 0ms:
+/Users/dengcchi
+Applications
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Public
+afar-src
+agent_infra_committee_code_20260529T083946Z.tar.gz
+agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+ar-private-src
+audit-post-export
+audit-post-export.tar.gz
+autonomous-research
+autonomous-research-e2e
+autonomous-research-v3
+axon
+axon-chat-export-CLEAN.tar.gz
+axon-chat-export-WITH-overrides.tar.gz
+axon-chat-export-e2e.tar.gz
+axon-chat-export.tar.gz
+axon-chat-external
+axon-chat-external-build.tar.gz
+axon-deploy
+axon-export
+axon-export-v2
+axon-export.tar.gz
+axon_vercel.tar.gz
+axon_vercel_20260423_1852.tar.gz
+branchable_replay_R1
+branchable_replay_R2
+branchable_replay_R3
+branchable_replay_review
+cert-work
+exp0072_work
+exp0073_work
+generate_ifm.par
+gpu_pipeline_changes
+green_thesis_factory
+mrs-tpu-devserver-handoff.md
+package-lock.json
+public_agent_infra_research_engagement
+research-os
+research-os-meta
+research-os-venv
+ros-poc
+ros_venv_0067
+scikit_learn_data
+vision_tax_investigation_report.md
+weave
+weave-dev
+work
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not available in this shell, so I’m falling back to `find` and then I’ll read only the two requested instruction files.
+exec
+/bin/zsh -lc 'find /Users/dengcchi -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null | head -50' in /Users/dengcchi
