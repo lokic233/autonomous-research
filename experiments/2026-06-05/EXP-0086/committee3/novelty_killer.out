@@ -1,0 +1,28 @@
+I attempted live prior-art search via two web tools; both are permission-blocked in this environment (consistent with the packet's noted auth-block escalation). I therefore reason from the packet's own cited prior work plus my own knowledge of wazero's documented defaults.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "wazero ModuleConfig / NewModuleConfig docs (tetratelabs/wazero)", url: "https://pkg.go.dev/github.com/tetratelabs/wazero#ModuleConfig (WithRandSource)", why_close: "The VENDOR ITSELF documents that random_get defaults to a deterministic source for reproducibility and that WithRandSource(crypto/rand.Reader) must be set for real entropy. This is the single most fatal item for MECHANISM novelty and is NOT in the packet's prior-work list — the hazard is documented behavior, not a hidden flaw."},
+  {cite: "CrowdSec PR#4495", url: "(packet-cited)", why_close: "Independently found+fixed the exact deterministic-random composition in a production consumer."},
+  {cite: "wetware#106", url: "(packet-cited)", why_close: "Same hazard found+fixed independently in a second, unrelated project."},
+  {cite: "wapc-go / wazero#620", url: "(packet-cited)", why_close: "Explicit override + an upstream issue on the same default — multiple independent rediscoveries."}
+]
+
+NAMING_VS_MECHANISM: The MECHANISM (deterministic fixed-seed default at WASI random_get demoting a guest CSPRNG) is NOT new. It is vendor-documented behavior and was independently rediscovered+patched ≥4 times (CrowdSec, wetware, wapc-go, wazero#620) — the packet honestly concedes "validates hazard, narrows novelty." What is claimed as new is a SYNTHESIS/positioning delta (cross-language ABI-boundary + cross-runtime-anomaly across 4 runtimes + un-defendable-by-correct-guest + spec-conformance against the successor spec + clock-decoupling + generator-propagated blast-radius). That synthesis is genuinely un-owned as a written artifact (no paper/CVE binds all axes together), but it is a systematization of known facts, not a mechanism invention. This is SoK-altitude novelty, not new-mechanism novelty.
+
+FATAL_COLLISIONS: [
+  "None on the SYNTHESIS — the cited prior works are piecemeal fixes (PRs/issues), none publishes the combined cross-runtime + spec-conformance + un-defendable framing. So no RED-grade undisclosed collision.",
+  "DECISIVE collisions on the MECHANISM (≥2 independent: CrowdSec PR#4495 + wetware#106, plus wapc-go/wazero#620 and the vendor docs) — these are disclosed by the packet, which is why this is YELLOW not GREEN rather than RED not GREEN."
+]
+
+MANDATORY_RELATED_WORK: [
+  "wazero's own ModuleConfig/WithRandSource documentation (must cite — the default is documented, not silent at the source-of-truth level; the 'silent/invisible' claim is true only for the downstream guest, not for a runtime integrator reading the docs).",
+  "CWE-330 (Use of Insufficiently Random Values) / CWE-338 (Weak PRNG for crypto) — the established hazard class this instantiates.",
+  "Prior WASM/WASI sandbox-determinism & reproducible-execution literature (e.g. 'Everything Old is New Again: Binary Security of WebAssembly', USENIX 2020) — to position determinism-vs-entropy as a known tension.",
+  "The four packet-cited fixes (CrowdSec PR#4495, wetware#106, wapc-go, wazero#620) must be cited explicitly as concurrent independent discovery."
+]
+
+RATIONALE: A novelty_killer's GREEN gate is 'is the mechanism genuinely new?' — and the answer is no: the deterministic-default demotion is vendor-DOCUMENTED behavior (wazero WithRandSource docs) and was independently found+fixed ≥4 times per the packet's own evidence (CrowdSec PR#4495, wetware#106, wapc-go, wazero#620 — well past the ≥2-source bar). That kills mechanism novelty outright. The claim survives RED because it does not pretend the mechanism is new — it explicitly reframes the contribution as a conformance-synthesis and discloses the collisions honestly; and no single prior source owns the combined synthesis (cross-runtime anomaly across all 4 runtimes + successor-spec conformance + un-defendable-by-correct-guest). That residual synthesis is real but SoK/systematization-grade, not the new-mechanism altitude GREEN asserts. Two further drags: (a) the 'silent' framing must be narrowed — it is invisible to the GUEST but documented to the integrator, which weakens the 'no defense possible' novelty edge; (b) I could not run live ≥2-source verification (web search auth-blocked), so my collision count rests on packet citations + vendor-documented behavior from prior knowledge rather than fresh independent retrieval. Net: honest YELLOW — strong, well-evidenced, un-owned synthesis of a known, vendor-documented, repeatedly-rediscovered mechanism. Not a 6/6-GREEN novelty.
+```

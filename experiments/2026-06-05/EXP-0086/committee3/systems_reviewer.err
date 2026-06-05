@@ -219,3 +219,633 @@ exec
 /bin/zsh -lc "find /Users/dengcchi -name 'TOOLING_v001.md' 2>/dev/null | head -20" in /Users/dengcchi
 exec
 /bin/zsh -lc "find /Users/dengcchi/autonomous-research /Users/dengcchi/autonomous-research-v3 /Users/dengcchi/green_thesis_factory /Users/dengcchi/research-os /Users/dengcchi/research-os-meta -name 'TOOLING_v001.md' 2>/dev/null | head -50" in /Users/dengcchi
+ succeeded in 2514ms:
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+ succeeded in 49747ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-e2e/.research-os -type f | grep '_shared' | head -50" in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc "find /Users/dengcchi/autonomous-research-e2e/.research-os -type f | grep 'TOOLING' | head -20" in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The local `_shared/TOOLING_v001.md` path is not present under the discovered prompt tree so far; I have the common rules loaded and am applying the requested prior-art search directly against upstream docs/source URLs.
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/tetratelabs/wazero/main/config.go | grep -n \"RandSource\\|seed\\|42\" | head -30" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://api.github.com/repos/crowdsecurity/crowdsec/pulls/4495 | grep -E '\"html_url\"|\"title\"|\"state\"' | head -10" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --max-time 15 -s https://raw.githubusercontent.com/wasmerio/wasmer/main/lib/wasix/src/syscalls/wasi/random_get.rs | head -80' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://api.github.com/repos/tetratelabs/wazero/issues/620 | grep -E '\"html_url\"|\"title\"|\"state\"' | head -10" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --max-time 15 -s https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/crates/wasi/src/p2/random.rs | head -80' in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 336ms:
+651:	// WithRandSource configures a source of random bytes. Defaults to return a
+655:	// "wasi_snapshot_preview1", "seed" in AssemblyScript standard "env", and
+660:	WithRandSource(io.Reader) ModuleConfig
+838:// WithRandSource implements ModuleConfig.WithRandSource
+839:func (c *moduleConfig) WithRandSource(source io.Reader) ModuleConfig {
+
+ succeeded in 209ms:
+use super::*;
+use crate::syscalls::*;
+
+/// ### `random_get()`
+/// Fill buffer with high-quality random data.  This function may be slow and block
+/// Inputs:
+/// - `void *buf`
+///     A pointer to a buffer where the random bytes will be written
+/// - `size_t buf_len`
+///     The number of bytes that will be written
+#[instrument(level = "trace", skip_all, fields(%buf_len), ret)]
+pub fn random_get<M: MemorySize>(
+    ctx: FunctionEnvMut<'_, WasiEnv>,
+    buf: WasmPtr<u8, M>,
+    buf_len: M::Offset,
+) -> Errno {
+    let env = ctx.data();
+    let memory = unsafe { env.memory_view(&ctx) };
+    let buf_len64: u64 = buf_len.into();
+    let mut u8_buffer = vec![0; buf_len64 as usize];
+    let res = getrandom::fill(&mut u8_buffer);
+    match res {
+        Ok(()) => {
+            let buf = wasi_try_mem!(buf.slice(&memory, buf_len));
+            wasi_try_mem!(buf.write_slice(&u8_buffer));
+            Errno::Success
+        }
+        Err(_) => Errno::Io,
+    }
+}
+
+ succeeded in 207ms:
+404: Not Found
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 526ms:
+  "html_url": "https://github.com/wazero/wazero/issues/620",
+  "title": "Evaluate the correct built-in RNG implementation ",
+    "html_url": "https://github.com/codefromthecrypt",
+  "state": "closed",
+    "html_url": "https://github.com/codefromthecrypt",
+
+ succeeded in 727ms:
+  "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4495",
+  "state": "closed",
+  "title": "Fix obfuscator prng",
+    "html_url": "https://github.com/buixor",
+      "html_url": "https://github.com/crowdsecurity",
+        "html_url": "https://github.com/crowdsecurity",
+      "html_url": "https://github.com/crowdsecurity/crowdsec",
+      "html_url": "https://github.com/crowdsecurity",
+        "html_url": "https://github.com/crowdsecurity",
+      "html_url": "https://github.com/crowdsecurity/crowdsec",
+
+ succeeded in 35613ms:
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://api.github.com/repos/wapc/wapc-go/pulls?state=all\\&per_page=100 | grep -i -B2 -A3 \"wazero\\|rand\\|random\" | head -80" in /Users/dengcchi
+ succeeded in 0ms:
+zsh:1: no matches found: https://api.github.com/repos/wapc/wapc-go/pulls?state=all&per_page=100
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/tetratelabs/wazero/main/config.go | sed -n '640,670p;820,850p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/tetratelabs/wazero/main/config.go | grep -n \"rand.NewSource\\|42\\|defaultRand\" | head -50" in /Users/dengcchi
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/nodejs/uvwasi/main/src/wasi.c | grep -n \"random_get\\|uv_random\\|getrandom\" | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --max-time 15 -s https://raw.githubusercontent.com/WebAssembly/WASI/main/legacy/preview1/docs.md | grep -n -A5 "random_get" | head -20' in /Users/dengcchi
+ succeeded in 115ms:
+	//
+	// # Notes:
+	//   - This primarily supports `sched_yield` in WASI
+	//   - This does not default to runtime.osyield as that violates sandboxing.
+	WithOsyield(sys.Osyield) ModuleConfig
+
+	// WithSysNanosleep uses time.Sleep for sys.Nanosleep.
+	//
+	// See WithNanosleep
+	WithSysNanosleep() ModuleConfig
+
+	// WithRandSource configures a source of random bytes. Defaults to return a
+	// deterministic source. You might override this with crypto/rand.Reader
+	//
+	// This reader is most commonly used by the functions like "random_get" in
+	// "wasi_snapshot_preview1", "seed" in AssemblyScript standard "env", and
+	// "getRandomData" when runtime.GOOS is "js".
+	//
+	// Note: The caller is responsible to close any io.Reader they supply: It
+	// is not closed on api.Module Close.
+	WithRandSource(io.Reader) ModuleConfig
+}
+
+type moduleConfig struct {
+	name               string
+	nameSet            bool
+	startFunctions     []string
+	stdin              io.Reader
+	stdout             io.Writer
+	stderr             io.Writer
+	randSource         io.Reader
+func (c *moduleConfig) WithNanosleep(nanosleep sys.Nanosleep) ModuleConfig {
+	ret := *c // copy
+	ret.nanosleep = nanosleep
+	return &ret
+}
+
+// WithOsyield implements ModuleConfig.WithOsyield
+func (c *moduleConfig) WithOsyield(osyield sys.Osyield) ModuleConfig {
+	ret := *c // copy
+	ret.osyield = osyield
+	return &ret
+}
+
+// WithSysNanosleep implements ModuleConfig.WithSysNanosleep
+func (c *moduleConfig) WithSysNanosleep() ModuleConfig {
+	return c.WithNanosleep(platform.Nanosleep)
+}
+
+// WithRandSource implements ModuleConfig.WithRandSource
+func (c *moduleConfig) WithRandSource(source io.Reader) ModuleConfig {
+	ret := c.clone()
+	ret.randSource = source
+	return ret
+}
+
+// toSysContext creates a baseline wasm.Context configured by ModuleConfig.
+func (c *moduleConfig) toSysContext() (sysCtx *internalsys.Context, err error) {
+	var environ [][]byte // Intentionally doesn't pre-allocate to reduce logic to default to nil.
+	// Same validation as syscall.Setenv for Linux
+	for i := 0; i < len(c.environ); i += 2 {
+		key, value := c.environ[i], c.environ[i+1]
+
+ succeeded in 115ms:
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 186ms:
+ succeeded in 205ms:
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/tetratelabs/wazero.git "$tmp/wazero" >/dev/null 2>&1 && grep -R "rand.NewSource'"\\|seed.*42\\|deterministic source\\|WithRandSource\" -n \""'$tmp/wazero" | head -80' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s 'https://api.github.com/repos/wapc/wapc-go/pulls?state=all&per_page=100' | grep -i -B2 -A3 \"random\\|rand\\|wazero\" | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/nodejs/uvwasi/main/src/wasi.c | grep -n \"random\\|Random\" | head -80" in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/WebAssembly/WASI/main/proposals/random/README.md | grep -n -A8 -i \"cryptographic\\|unpredictable\\|deterministic\\|omit\" | head -80" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 280ms:
+82:deterministic data. It is intended to be usable in use cases where determinism
+83-would break application assumptions. Implementations may have debugging
+84:facilities which make this API deterministic, however these should only be
+85-used for debugging, and not production use.
+86-
+87-### API walk-through
+88-
+89:#### Main API: getting cryptographically-secure pseudo-random bytes
+90-
+91:Return a list of cryptographically-secure pseudo-random bytes:
+92-
+93-```rust
+94-    let len: u32 = your_own_code_to_decide_how_many_bytes_you_want();
+95-
+96-    let bytes: Vec<u8> = get_random_bytes(len);
+97-```
+98-
+99:#### Main API: getting cryptographically-secure pseudo-random bytes faster
+100-
+101-Sometimes the bindings for `list<u8>` can have some overhead, so
+102-another function is available which returns the same data but as a
+103-`u64`:
+104-
+105-```rust
+106-    let data: u64 = get_random_u64();
+107-```
+
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/WebAssembly/WASI/main/legacy/preview1/docs.md | grep -n -A8 -i \"random_get\\|high-quality\\|block\" | head -80" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 141ms:
+ succeeded in 1186ms:
+    "state": "open",
+    "locked": false,
+    "title": "Bump github.com/tetratelabs/wazero from 1.9.0 to 1.12.0",
+    "user": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+--
+      "site_admin": false
+    },
+    "body": "Bumps [github.com/tetratelabs/wazero](https://github.com/tetratelabs/wazero) from 1.9.0 to 1.12.0.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/tetratelabs/wazero/releases\">github.com/tetratelabs/wazero's releases</a>.</em></p>\n<blockquote>\n<h2>v1.12.0</h2>\n<p>Hi wazero friends! The new release of wazero v1.12.0 has arrived.</p>\n<p>This release advances us a few more steps towards Wasm 3.0!\nSee <a href=\"https://redirect.github.com/wazero/wazero/issues/2426#issuecomment-3538706451\">wazero/wazero#2426</a> for where we currently stand.</p>\n<h2>Behavioral changes</h2>\n<ul>\n<li>929e4000 Extended Constant Expressions (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2468\">#2468</a>) <a href=\"https://github.com/mpoindexter\"><code>@​mpoindexter</code></a></li>\n<li>bfb20e0b Exception handling (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2489\">#2489</a>) <a href=\"https://github.com/evacchi\"><code>@​evacchi</code></a></li>\n<li>2c14bbff Typed references (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2497\">#2497</a>) <a href=\"https://github.com/evacchi\"><code>@​evacchi</code></a></li>\n<li>8ee25086, a877b1b4 non-blocking IO on custom files (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2476\">#2476</a>, <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2479\">#2479</a>) <a href=\"https://github.com/paralin\"><code>@​paralin</code></a></li>\n</ul>\n<h2>Bug fixes</h2>\n<ul>\n<li>2bbd517b Fix <code>fd_prestat_get</code> integer overflow on 32-bit platforms (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2491\">#2491</a>) <a href=\"https://github.com/hanxi\"><code>@​hanxi</code></a></li>\n<li>0bcb5f2a Ensure <code>i32</code> operations are masked (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2488\">#2488</a>) <a href=\"https://github.com/evacchi\"><code>@​evacchi</code></a></li>\n<li>dafe2caa Fix error when attempting to invoke a start function imported from a host module (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2475\">#2475</a>) <a href=\"https://github.com/mpoindexter\"><code>@​mpoindexter</code></a></li>\n<li>f7cf1693 Fix error when importing functions which were re-exported (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2463\">#2463</a>) <a href=\"https://github.com/mpoindexter\"><code>@​mpoindexter</code></a></li>\n<li>aa7ebad5 Don't use compiler when executable mmap is disabled  (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2471\">#2471</a>) <a href=\"https://github.com/anuraaga\"><code>@​anuraaga</code></a></li>\n</ul>\n<h2>v1.11.0</h2>\n<p>Hi wazero friends! The new release of wazero v1.11.0 has arrived.</p>\n<p>This release is a small &quot;break with the past&quot; it the sense that we added one <code>go.mod</code> dependency to wazero: <code>golang.org/x/sys</code>; read the <a href=\"https://github.com/wazero/wazero/blob/main/RATIONALE.md#why-xsys\">rational</a> for why.</p>\n<h2>Behavioral changes</h2>\n<ul>\n<li>77db9681 Require Go 1.24 (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2448\">#2448</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n<li>fe2e7519 Use golang.org/x/sys (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2443\">#2443</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n</ul>\n<h2>Bug fixes</h2>\n<ul>\n<li>92864489 Update Wasm 2.0 spec tests. (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2458\">#2458</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n<li>5e7c35eb Fix race condition in refCount initialization (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2447\">#2447</a>) <a href=\"https://github.com/jackorse\"><code>@​jackorse</code></a></li>\n</ul>\n<h2>New Contributors</h2>\n<ul>\n<li><a href=\"https://github.com/jackorse\"><code>@​jackorse</code></a> made their first contribution in <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2447\">#2447</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/wazero/wazero/compare/v1.10.1...v1.11.0\">https://github.com/wazero/wazero/compare/v1.10.1...v1.11.0</a></p>\n<h2>v1.10.1</h2>\n<p>Hiya again! We're releasing wazero v1.10.1 to fix <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2444\">#2444</a>.</p>\n<p>This <a href=\"https://github.com/wazero/wazero/compare/866305b2afe377c982567a8ffaf55be4e1f632ee..ee3f9d9c5c6689bbf30824aec049371aaa239f4c\">small change</a> that was breaking the release process was picked up and flagged by <code>sum.golang.org</code>. We're sorry for any inconvenience this caused.</p>\n<p>There were no other changes, so the changelog since v1.9.0 covers everything that's relevant.</p>\n<h2>Experimental Features</h2>\n<!-- raw HTML omitted -->\n</blockquote>\n<p>... (truncated)</p>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/wazero/wazero/commit/2ab480b55fa408d6b35df97fe32a60d08bd6e201\"><code>2ab480b</code></a> Remove SQLite (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2502\">#2502</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/2c14bbff3d5e74784a7f964b2af4b232005539d8\"><code>2c14bbf</code></a> feat: typed function references spec (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2497\">#2497</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/475a1f8f0dc360830ae9cdbe9d08750d7b759bb4\"><code>475a1f8</code></a> fix: compilation cache should store catch clause table (EH) (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2498\">#2498</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/a3374cf27a3aa1838b3e540f2c8641891d5cb05a\"><code>a3374cf</code></a> refactor: wasm.ValueType as type definition + widening (uint64) (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2495\">#2495</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/8755611b7316b9e2ce62d98b2d3343ee812109c4\"><code>8755611</code></a> arm64: fix relocation bug when number of args &gt; 8 (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2492\">#2492</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/e6dd6c0c144f288230f2f168bbc4b2ee63793bbd\"><code>e6dd6c0</code></a> Update golang.org/x/sys (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2493\">#2493</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/2bbd517b7633bf6a126305a1644263416b978484\"><code>2bbd517</code></a> Fix fd_prestat_get integer overflow on 32-bit platforms (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2491\">#2491</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/bfb20e0ba7a3f315e283be23fc7fd2beaf3edc5f\"><code>bfb20e0</code></a> feat: exception handling spec (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2489\">#2489</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/5cb4bb3ec0c1c738e542753380bd3d717e58c811\"><code>5cb4bb3</code></a> Revert &quot;Added f4 to community/users.md&quot; (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2490\">#2490</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/1dc02f0c3514855de1503dc516a947440be77b9a\"><code>1dc02f0</code></a> Added f4 to community/users.md (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2485\">#2485</a>)</li>\n<li>Additional commits viewable in <a href=\"https://github.com/tetratelabs/wazero/compare/v1.9.0...v1.12.0\">compare view</a></li>\n</ul>\n</details>\n<br />\n\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=github.com/tetratelabs/wazero&package-manager=go_modules&previous-version=1.9.0&new-version=1.12.0)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency\n- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)\n\n\n</details>",
+    "created_at": "2026-06-01T18:56:19Z",
+    "updated_at": "2026-06-01T18:56:22Z",
+    "closed_at": null,
+--
+    "statuses_url": "https://api.github.com/repos/wapc/wapc-go/statuses/59023cda24680b6ac59683aa986e2a767bbad0b5",
+    "head": {
+      "label": "wapc:dependabot/go_modules/github.com/tetratelabs/wazero-1.12.0",
+      "ref": "dependabot/go_modules/github.com/tetratelabs/wazero-1.12.0",
+      "sha": "59023cda24680b6ac59683aa986e2a767bbad0b5",
+      "user": {
+        "login": "wapc",
+--
+    "state": "closed",
+    "locked": false,
+    "title": "Bump github.com/tetratelabs/wazero from 1.9.0 to 1.11.0",
+    "user": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+--
+      "site_admin": false
+    },
+    "body": "Bumps [github.com/tetratelabs/wazero](https://github.com/tetratelabs/wazero) from 1.9.0 to 1.11.0.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/tetratelabs/wazero/releases\">github.com/tetratelabs/wazero's releases</a>.</em></p>\n<blockquote>\n<h2>v1.11.0</h2>\n<p>Hi wazero friends! The new release of wazero v1.11.0 has arrived.</p>\n<p>This release is a small &quot;break with the past&quot; it the sense that we added one <code>go.mod</code> dependency to wazero: <code>golang.org/x/sys</code>; read the <a href=\"https://github.com/wazero/wazero/blob/main/RATIONALE.md#why-xsys\">rational</a> for why.</p>\n<h2>Behavioral changes</h2>\n<ul>\n<li>77db9681 Require Go 1.24 (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2448\">#2448</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n<li>fe2e7519 Use golang.org/x/sys (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2443\">#2443</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n</ul>\n<h2>Bug fixes</h2>\n<ul>\n<li>92864489 Update Wasm 2.0 spec tests. (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2458\">#2458</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n<li>5e7c35eb Fix race condition in refCount initialization (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2447\">#2447</a>) <a href=\"https://github.com/jackorse\"><code>@​jackorse</code></a></li>\n</ul>\n<h2>New Contributors</h2>\n<ul>\n<li><a href=\"https://github.com/jackorse\"><code>@​jackorse</code></a> made their first contribution in <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2447\">#2447</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/wazero/wazero/compare/v1.10.1...v1.11.0\">https://github.com/wazero/wazero/compare/v1.10.1...v1.11.0</a></p>\n<h2>v1.10.1</h2>\n<p>Hiya again! We're releasing wazero v1.10.1 to fix <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2444\">#2444</a>.</p>\n<p>This <a href=\"https://github.com/wazero/wazero/compare/866305b2afe377c982567a8ffaf55be4e1f632ee..ee3f9d9c5c6689bbf30824aec049371aaa239f4c\">small change</a> that was breaking the release process was picked up and flagged by <code>sum.golang.org</code>. We're sorry for any inconvenience this caused.</p>\n<p>There were no other changes, so the changelog since v1.9.0 covers everything that's relevant.</p>\n<h2>Experimental Features</h2>\n<ul>\n<li>5dd247b6 Concurrent Wasm compilation (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2381\">#2381</a>) <a href=\"https://github.com/davidmdm\"><code>@​davidmdm</code></a></li>\n<li>481bac90 Tail-call proposal (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2403\">#2403</a>) <a href=\"https://github.com/evacchi\"><code>@​evacchi</code></a></li>\n</ul>\n<h2>Behavioral changes</h2>\n<ul>\n<li>70ea0062 Use Go 1.25 and require Go 1.23 (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2419\">#2419</a>) <a href=\"https://github.com/mathetake\"><code>@​mathetake</code></a></li>\n<li>b94a4307 Always use W^X if possible for security (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2429\">#2429</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n</ul>\n<h2>Bug fixes</h2>\n<ul>\n<li>26d5f5eb arm64: Account for imported funcs in the branch to a relocation island (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2387\">#2387</a>) <a href=\"https://github.com/evacchi\"><code>@​evacchi</code></a></li>\n<li>82181973, fc438ce6 WASI fixes (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2412\">#2412</a>, <a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2415\">#2415</a>) <a href=\"https://github.com/QuLogic\"><code>@​QuLogic</code></a></li>\n<li>7d48ca57 Introduce reference counting for compiled modules (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2427\">#2427</a>) <a href=\"https://github.com/burak-ok\"><code>@​burak-ok</code></a></li>\n<li>514cdb33 Fix getisar0 SIGILL on old Linux kernels running on ARM64 (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2439\">#2439</a>) <a href=\"https://github.com/deluan\"><code>@​deluan</code></a></li>\n</ul>\n<h2>Optimizations</h2>\n<ul>\n<li>242ae911 Optimize/streamline fill operations (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2395\">#2395</a>) <a href=\"https://github.com/ncruces\"><code>@​ncruces</code></a></li>\n<li>7e756723 Eliminate repeated allocations in compiler (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2430\">#2430</a>) <a href=\"https://github.com/MaanasSathaye\"><code>@​MaanasSathaye</code></a></li>\n</ul>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/wazero/wazero/commit/fe2e75192a79e7ff9f583825ed92a6e1fa3293d8\"><code>fe2e751</code></a> Use golang.org/x/sys (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2443\">#2443</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/9286448974219ab3be09312bf029ebaf2ea0ee5b\"><code>9286448</code></a> Update Wasm 2.0 spec tests. (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2458\">#2458</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/af80797dba6f533cb4d54b39e5b2ac1e531082fa\"><code>af80797</code></a> Add go-libtiff to users.md (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2457\">#2457</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/77db9681ccf9329c055a1e138bb1f4161112180c\"><code>77db968</code></a> Change version policy to two versions. (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2448\">#2448</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/275c9a015bd61951d109b614e12a57bec34af560\"><code>275c9a0</code></a> Simplify utimens. (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2449\">#2449</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/5e7c35ebc109e1d1a1a4f81d823232460c0f5bf4\"><code>5e7c35e</code></a> Fix race condition in refCount initialization (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2447\">#2447</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/cc1ca4c601e37706d8636bef044ee8994e97d5e6\"><code>cc1ca4c</code></a> Streamline build tags: remove tinygo, cgo (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2446\">#2446</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/ee3f9d9c5c6689bbf30824aec049371aaa239f4c\"><code>ee3f9d9</code></a> Fix syntax in release workflow (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2442\">#2442</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/866305b2afe377c982567a8ffaf55be4e1f632ee\"><code>866305b</code></a> Update runners, remove signed MSI (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2441\">#2441</a>)</li>\n<li><a href=\"https://github.com/wazero/wazero/commit/7d48ca57367e477675f97fe9b495d523f367b591\"><code>7d48ca5</code></a> Introduce reference counting for compiled modules (<a href=\"https://redirect.github.com/tetratelabs/wazero/issues/2427\">#2427</a>)</li>\n<li>Additional commits viewable in <a href=\"https://github.com/tetratelabs/wazero/compare/v1.9.0...v1.11.0\">compare view</a></li>\n</ul>\n</details>\n<br />\n\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=github.com/tetratelabs/wazero&package-manager=go_modules&previous-version=1.9.0&new-version=1.11.0)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency\n- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)\n\n\n</details>",
+    "created_at": "2026-05-11T06:40:57Z",
+    "updated_at": "2026-06-01T18:56:27Z",
+    "closed_at": "2026-06-01T18:56:24Z",
+--
+    "statuses_url": "https://api.github.com/repos/wapc/wapc-go/statuses/5f1cb40049b5eaf2f1b136fe48c67cb879964030",
+    "head": {
+      "label": "wapc:dependabot/go_modules/github.com/tetratelabs/wazero-1.11.0",
+      "ref": "dependabot/go_modules/github.com/tetratelabs/wazero-1.11.0",
+      "sha": "5f1cb40049b5eaf2f1b136fe48c67cb879964030",
+      "user": {
+        "login": "wapc",
+--
+    "state": "closed",
+    "locked": false,
+    "title": "Wazero version bump",
+    "user": {
+      "login": "pkedy",
+      "id": 714039,
+--
+      "site_admin": false
+    },
+    "body": "Bumping to Wazero 1.9.0",
+    "created_at": "2025-02-20T02:04:22Z",
+    "updated_at": "2025-02-20T02:08:42Z",
+    "closed_at": "2025-02-20T02:08:31Z",
+--
+    "statuses_url": "https://api.github.com/repos/wapc/wapc-go/statuses/09abff7e88c087b0fe2d5388326f72b26b3a5c8d",
+    "head": {
+      "label": "wapc:wazero_version_bump",
+      "ref": "wazero_version_bump",
+      "sha": "09abff7e88c087b0fe2d5388326f72b26b3a5c8d",
+      "user": {
+        "login": "wapc",
+--
+    "state": "closed",
+    "locked": false,
+    "title": "Separate engine modules / Fix wazero engine for TinyGo 0.35.0",
+    "user": {
+      "login": "pkedy",
+      "id": 714039,
+--
+    "state": "closed",
+    "locked": false,
+    "title": "feat(syswall): Adding syswall capability to wazero",
+    "user": {
+      "login": "ritesh089",
+      "id": 25164825,
+--
+
+ succeeded in 6133ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/cmd/wazero/wazero.go:332:		WithRandSource(rand.Reader).
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config.go:651:	// WithRandSource configures a source of random bytes. Defaults to return a
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config.go:652:	// deterministic source. You might override this with crypto/rand.Reader
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config.go:660:	WithRandSource(io.Reader) ModuleConfig
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config.go:838:// WithRandSource implements ModuleConfig.WithRandSource
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config.go:839:func (c *moduleConfig) WithRandSource(source io.Reader) ModuleConfig {
+Binary file /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/integration_test/bench/testdata/case.wasm matches
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/integration_test/bench/bench_test.go:112:	config := wazero.NewModuleConfig().WithSysNanotime().WithSysWalltime().WithRandSource(rand.Reader).
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/integration_test/bench/bench_test.go:133:		WithRandSource(rand.Reader).
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/integration_test/libsodium/bench_test.go:120:				WithRandSource(rand.Reader).
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/integration_test/stdlibs/bench_test.go:185:		WithRandSource(rand.Reader).
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/platform/crypto.go:12:const seed = int64(42)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/platform/crypto.go:14:// NewFakeRandSource returns a deterministic source of random values.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/platform/crypto.go:16:	return rand.New(rand.NewSource(seed))
+Binary file /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/testing/dwarftestdata/testdata/tinygo/main.wasm matches
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/sys/sys.go:106:// RandSource is a source of random bytes and defaults to a deterministic source.
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/sys/sys.go:107:// see wazero.ModuleConfig WithRandSource
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/internal/engine/wazevo/wazevoapi/debug_options.go:108:	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/imports/wasi_snapshot_preview1/random_test.go:21:		0x53, 0x8c, 0x7f, 0x96, 0xb1, // random data from seed value of 42
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/imports/wasi_snapshot_preview1/random_test.go:113:				WithRandSource(tc.randSource))
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/imports/wasi_snapshot_preview1/random.go:28:// `rand.NewSource(42)`, we expect api.Memory to contain:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/imports/assemblyscript/assemblyscript_test.go:188:			mod, r, log := requireProxyModule(t, NewFunctionExporter(), wazero.NewModuleConfig().WithRandSource(tc.source), logging.LogScopeAll)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/imports/assemblyscript/assemblyscript.go:12://   - "seed" - uses wazero.ModuleConfig WithRandSource as the source of seed
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config_test.go:320:			name: "WithRandSource",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config_test.go:323:				config := base.WithRandSource(r)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config_test.go:331:			name: "WithRandSource nil",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.cnom2IYM6p/wazero/config_test.go:333:				config := base.WithRandSource(nil)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+2026-06-05T18:03:49.195314Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/nodejs/uvwasi.git "$tmp/uvwasi" >/dev/null 2>&1 && grep -R "random_get'"\\|uv_random\\|getrandom\" -n \""'$tmp/uvwasi" | head -80' in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 -s https://raw.githubusercontent.com/sgl-project/sglang/main/docs/advanced_features/deterministic_inference.md | sed -n '1,120p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'tmp=$(mktemp -d); git clone --depth 1 https://github.com/bytecodealliance/wasmtime.git "$tmp/wasmtime" >/dev/null 2>&1 && grep -R "random_get'"\\|getrandom::\\|OsRng\\|ChaCha\" -n \""'$tmp/wasmtime/crates/wasi" | head -100' in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 413ms:
+# Deterministic Inference
+
+## Why Deterministic Inference Matters
+
+Deterministic inference ensures consistent LLM outputs across runs, which is critical for:
+- **Reinforcement Learning**: Ensures consistent logprobs across runs, reducing stochastic noise and making RL training more stable, reproducible, and debuggable.
+- **Testing & Debugging**: Enables reproducible validation
+- **Production**: Improves reliability and user experience
+
+Even with `temperature=0`, standard LLM inference can produce different outputs due to dynamic batching and varying reduction orders in GPU kernels.
+
+## The Root Cause of Non-Determinism
+
+The main source is **varying batch sizes**. Different batch sizes cause GPU kernels to split reduction operations differently, leading to different addition orders. Due to floating-point non-associativity (`(a + b) + c ≠ a + (b + c)`), this produces different results even for identical inputs.
+
+
+## SGLang's Solution
+
+Building on [Thinking Machines Lab's batch-invariant operators](https://github.com/thinking-machines-lab/batch_invariant_ops), SGLang achieves fully deterministic inference while maintaining compatibility with chunked prefill, CUDA graphs, radix cache, and non-greedy sampling. The development roadmap for deterministic inference features can be found in this [issue](https://github.com/sgl-project/sglang/issues/10278).
+
+### Supported Backends
+
+Deterministic inference is only supported with the following three attention backends: **FlashInfer**, **FlashAttention 3 (FA3)**, and **Triton**.
+
+The following table shows feature compatibility for deterministic inference across different attention backends:
+
+| Attention Backend | CUDA Graph | Chunked Prefill | Radix Cache | Non-greedy Sampling (Temp > 0) |
+|-------------------|------------|-----------------|-------------|---------------------|
+| **FlashInfer** | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
+| **FlashAttention 3 (FA3)** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Triton** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+
+## Usage
+
+### Basic Usage
+
+Enable deterministic inference by adding the `--enable-deterministic-inference` flag:
+
+```bash
+python3 -m sglang.launch_server \
+    --model-path Qwen/Qwen3-8B \
+    --attention-backend fa3 \
+    --enable-deterministic-inference
+```
+
+### Server Arguments
+
+| Argument | Type/Default | Description |
+|----------|--------------|-------------|
+| `--enable-deterministic-inference` | flag; default: disabled | Enable deterministic inference with batch-invariant operations |
+| `--attention-backend` | string; default: fa3 | Choose attention backend (flashinfer, fa3, or triton) |
+
+### Example Configurations
+
+#### Qwen3-8B
+```bash
+python3 -m sglang.launch_server \
+    --model-path Qwen/Qwen3-8B \
+    --attention-backend flashinfer \
+    --enable-deterministic-inference
+```
+
+#### Llama Models
+```bash
+python3 -m sglang.launch_server \
+    --model-path meta-llama/Llama-3.1-8B-Instruct \
+    --attention-backend fa3 \
+    --enable-deterministic-inference
+```
+
+#### Qwen3-30B-A3B (MoE Model)
+```bash
+python3 -m sglang.launch_server \
+    --model-path Qwen/Qwen3-30B-A3B \
+    --attention-backend fa3 \
+    --enable-deterministic-inference
+```
+
+### Deterministic Inference with Non-Greedy Sampling (Temperature > 0)
+
+SGLang supports deterministic inference even with non-greedy sampling by using sampling seeds. This is particularly useful for reinforcement learning scenarios like GRPO (Group Relative Policy Optimization) where you need multiple diverse but reproducible responses.
+
+#### Default Behavior
+
+By default, SGLang uses a sampling seed of `42` for reproducible sampling:
+
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:30000/generate",
+    json={
+        "text": "Tell me a joke",
+        "sampling_params": {
+            "temperature": 0.8,  # Non-greedy sampling
+            "max_new_tokens": 128,
+        },
+    },
+)
+print(response.json())
+# This will always produce the same response across runs
+```
+
+#### Generating Multiple Reproducible Responses
+
+To sample different responses from the same prompt while maintaining reproducibility (e.g., for GRPO training), provide different sampling seeds in your requests:
+
+```python
+import requests
+
+# Prepare a list of sampling seeds for different responses
+sampling_seeds = [42, 43, 44, 45, 46]
+
+responses = []
+for seed in sampling_seeds:
+    response = requests.post(
+        "http://localhost:30000/generate",
+        json={
+            "text": "Tell me a joke",
+            "sampling_params": {
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 738ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/test/test-random-get.c:30:  err = uvwasi_random_get(&uvwasi, buf, BUFFER_SIZE);
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/test/test-einval-input-validation.c:161:  CHECK(uvwasi_random_get(NULL, test_void, 10));
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/test/test-einval-input-validation.c:162:  CHECK(uvwasi_random_get(&uvw, NULL, 10));
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/include/uvwasi.h:305:uvwasi_errno_t uvwasi_random_get(uvwasi_t* uvwasi,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/README.md:275:- [`uvwasi_random_get()`](#random_get)
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/README.md:1123:### <a href="#random_get" name="random_get"></a>`uvwasi_random_get()`
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/README.md:1137:- <a href="#random_get.buf" name="random_get.buf"></a><code>void \*<strong>buf</strong></code> and <a href="#random_get.buf_len" name="random_get.buf_len"></a><code>\_\_wasi\_size\_t <strong>buf\_len</strong></code>
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/src/uvwasi.c:2659:uvwasi_errno_t uvwasi_random_get(uvwasi_t* uvwasi,
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/src/uvwasi.c:2664:  UVWASI_DEBUG("uvwasi_random_get(uvwasi=%p, buf=%p, buf_len=%d)\n",
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.kSFTI0RZP6/uvwasi/src/uvwasi.c:2672:  r = uv_random(NULL, NULL, buf, buf_len, 0, NULL);
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 7198ms:
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/witx/p0/wasi_unstable.witx:472:  (@interface func (export "random_get")
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/witx/p1/wasi_snapshot_preview1.witx:469:  (@interface func (export "random_get")
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p0.rs:574:    fn random_get(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p0.rs:580:        Snapshot1::random_get(self, memory, buf, buf_len)?;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p1.rs:2630:    fn random_get(
+
+exec
+/bin/zsh -lc 'f=$(find /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T -path '"'*/wasmtime/crates/wasi/src/p1.rs' | tail -1); sed -n '2620,2655p' \""'$f"; grep -R "random_get" -n "$(dirname "$f")" | head -30' in /Users/dengcchi
+ succeeded in 2742ms:
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.syncdefaultsd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.systempreferences.SpotlightIndexExtension/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.transparencyd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.iconservicesagent/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.triald/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.ap.promotedcontentd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.imtransferservices.IMTransferAgent/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.parsec-fbf/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.tipsd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.fileproviderd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.news.widgetintents/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.passd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.chrono/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.calaccessd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.remindd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/duetexpertd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.studentd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.parsecd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.identityservicesd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.sharingd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/homed/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.quicklook.ThumbnailsAgent/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.pluginkit/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.donotdisturbd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.imagent/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.imdpersistence.IMDPersistenceAgent/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.amsengagementd/TemporaryItems: Operation not permitted
+find: /var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/com.apple.icloud.searchpartyuseragent/TemporaryItems: Operation not permitted
+        Err(types::Errno::Notsup.into())
+    }
+
+    #[instrument(skip(self, _memory))]
+    fn sched_yield(&mut self, _memory: &mut GuestMemory<'_>) -> Result<(), types::Error> {
+        // No such thing in preview 2. Intentionally left empty.
+        Ok(())
+    }
+
+    #[instrument(skip(self, memory))]
+    fn random_get(
+        &mut self,
+        memory: &mut GuestMemory<'_>,
+        buf: GuestPtr<u8>,
+        buf_len: types::Size,
+    ) -> Result<(), types::Error> {
+        let rand = self
+            .wasi
+            .random
+            .get_random_bytes(buf_len.into())
+            .context("failed to call `get-random-bytes`")
+            .map_err(types::Error::trap)?;
+        write_bytes(memory, buf, &rand)?;
+        Ok(())
+    }
+
+    #[instrument(skip(self, _memory))]
+    fn sock_accept(
+        &mut self,
+        _memory: &mut GuestMemory<'_>,
+        fd: types::Fd,
+        flags: types::Fdflags,
+    ) -> Result<types::Fd, types::Error> {
+        tracing::warn!("p1 sock_accept is not implemented");
+        self.transact()?.get_descriptor(fd)?;
+        Err(types::Errno::Notsock.into())
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p0.rs:574:    fn random_get(
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p0.rs:580:        Snapshot1::random_get(self, memory, buf, buf_len)?;
+/var/folders/xc/0r_c47w14qqf24dq6f0tgfq40000gn/T/tmp.WCTqHhusf2/wasmtime/crates/wasi/src/p1.rs:2630:    fn random_get(
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+EXISTING_IMPLEMENTATIONS: [
+  {system: "wazero", url: "https://github.com/tetratelabs/wazero/blob/main/config.go#L651-L660 and https://github.com/tetratelabs/wazero/blob/main/internal/platform/crypto.go#L12-L16", overlap: "exact shipping mechanism: default random source is documented deterministic, backed by fixed seed 42; can be overridden with crypto/rand.Reader"},
+  {system: "Wasmer", url: "https://github.com/wasmerio/wasmer/blob/main/lib/wasix/src/syscalls/wasi/random_get.rs", overlap: "same WASI random_get surface, but uses getrandom::fill; no CSPRNG demotion overlap"},
+  {system: "Node.js uvwasi", url: "https://github.com/nodejs/uvwasi/blob/main/src/uvwasi.c#L2659-L2672", overlap: "same WASI random_get surface, but calls uv_random; no fixed-seed default overlap"},
+  {system: "Wasmtime", url: "https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/src/p1.rs", overlap: "same WASI random_get surface, wired through get_random_bytes; no evidence of fixed-seed default in searched source"},
+  {system: "SGLang", url: "https://github.com/sgl-project/sglang/blob/main/docs/advanced_features/deterministic_inference.md", overlap: "deterministic inference uses default sampling seed 42 for reproducible generation; related determinism mechanism, but not WASI, not ABI CSPRNG, not silent secret demotion"},
+  {system: "vLLM", url: "https://github.com/vllm-project/vllm/blob/main/vllm/sampling_params.py", overlap: "sampling seed API only; no WASI/CSPRNG-boundary overlap found"},
+  {system: "FlashInfer", url: "https://github.com/flashinfer-ai/flashinfer/blob/main/flashinfer/sampling.py", overlap: "sampling kernel surface only; no WASI/CSPRNG-boundary overlap found"},
+  {system: "TensorRT-LLM", url: "https://github.com/NVIDIA/TensorRT-LLM/blob/main/examples/llm-api/llm_sampling.py", overlap: "LLM sampling controls only; no WASI/CSPRNG-boundary overlap found"},
+  {system: "LMCache", url: "https://github.com/LMCache/LMCache", overlap: "KV-cache system; no random_get/CSPRNG demotion overlap found"}
+]
+CONTRIBUTION_TYPE: mechanism
+SCALE_REALISM: The byte-identical key and cross-language ABI evidence supports the mechanism at the process/restart level, and the competitor comparison supports anomaly status. It does not yet fully hold at realistic ecosystem scale: prevalence is bounded to n=9 with 2 unmitigated exposures and no full-population denominator, so workload/adoption blast radius remains insufficiently evidenced for GREEN.
+RATIONALE: Prompt version v001. This is more than integration glue because the packet combines ABI-boundary invisibility, spec-contract analysis, cross-runtime differential behavior, and generator-propagated exposure. But the shipping mechanism itself already exists in wazero, and practitioners already found adjacent fixes such as CrowdSec PR#4495 (https://github.com/crowdsecurity/crowdsec/pull/4495) and wazero issue#620 (https://github.com/wazero/wazero/issues/620). The systems insight is the synthesis, not a new runtime design. Residual A matters: successor WASI random explicitly says cryptographically secure/unpredictable and deterministic facilities only for debugging (https://github.com/WebAssembly/WASI/blob/main/proposals/random/README.md), while preview1 wording is weaker. Residual B matters more for systems altitude: bounded prevalence plus a generator amplifier is enough for a strong bug/conformance paper direction, but insufficient evidence for GREEN-scale systems generality.
+tokens used
+81,320
