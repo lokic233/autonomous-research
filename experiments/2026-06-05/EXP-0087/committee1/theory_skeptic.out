@@ -1,0 +1,28 @@
+```
+ROLE: theory_skeptic  VOTE: yellow
+
+MUNDANE_EXPLANATIONS:
+- "Block is per-hop not end-to-end" is the DEFAULT prediction for any hop-by-hop pub/sub fabric without explicit credit-based or windowed end-to-end flow control (NATS core, AMQP without publisher-confirms, MQTT QoS<2, raw multicast). End-to-end backpressure requires a credit/ack loop the publisher participates in; zenoh's docs do not advertise one. Finding "publisher Block doesn't propagate through a router" is exactly what basic queueing theory predicts when intermediate buffers exist with no upstream signaling.
+- The cited doc string "the node will wait" uses the SINGULAR "the node" — a natural reading is local-socket wait, not fabric-wide. The "Block measurably fails end-to-end" framing presumes a contract the quoted doc does not actually make. Collapses partly toward "user assumed end-to-end semantics that were never promised."
+- Silent drop on a data-plane put() returning Ok() is the dominant pattern across high-throughput pub/sub (UDP, kernel SO_SNDBUF overflow on non-blocking sockets, NATS slow-consumer dropping). Logging every drop at debug would be a perf disaster; absence-of-log is the expected design choice, not a novel anti-feature.
+- 3-node N=200K result is a textbook "intermediate buffer overflows when sustained ingress > egress and upstream has no signal" — predicted by Little's Law + lack of end-to-end credit. The N=200K threshold IS the buffer-fill time; not a new phenomenon, just an instance of one.
+
+CONFOUNDS:
+- Synchronous-callback congestion (offload→0% loss) confirms the mechanism is "slow sub callback blocks the sub's receive thread, backpressure stops at the router's send queue to that sub." That is hop-by-hop flow control working AS DESIGNED at the router, not a router defect. The "Block doesn't propagate" finding is indistinguishable from "the router has no end-to-end credit protocol to relay back to the pub" — which would be true of ~every non-DDS-reliable fabric.
+- The "split default contract-flip" framing conflates an API-surface ergonomic hazard with a mechanism. Control-plane reliability (get/Block) and data-plane throughput (put/Drop) having different defaults is the standard pub/sub design choice (e.g. Kafka producer acks vs. consumer fetch). Whether it is "silent" is a docs question, not a theory question.
+- The claim "DDS/MQTT are end-to-end; zenoh inverted to per-hop" overstates the lineage cap: MQTT brokers can and do drop at QoS 0/1; only QoS 2 is end-to-end. DDS reliable is end-to-end inside a participant set but degraded reliability + RTPS heartbeat windows can also drop. Lineage is "mixed," not "uniformly end-to-end," so the inversion-novelty argument is thinner than presented.
+
+ASSUMPTIONS_UNTESTED:
+- That zenoh's PUBLIC documentation (user guide, not source comments) anywhere PROMISES Block as end-to-end. Without that, the "measurably fails end-to-end" claim is attacking an undocumented contract.
+- That the split default is actually undocumented as a hazard in zenoh user docs / migration guides (source-verified ≠ undocumented-to-users).
+- That the silence is uniform across log levels and metric counters (no zenoh internal stats counter for tx_dropped checked in the packet — only RUST_LOG).
+- That the 3-node router's forwarding mode does not have an opt-in end-to-end mode (Reliability=Reliable, conduit settings, batching/queue config) that the test left at defaults. "Block doesn't propagate at defaults" ≠ "no end-to-end config exists."
+
+STATISTICAL_GAPS:
+- Single-run percentages with no repeats, no CIs, no variance across independent trials at fixed slow_us. 41% vs 64% spread between runs is unexplained — could be coroutine scheduling jitter, could indicate a non-deterministic regime that undermines "monotone in slowness."
+- Only 4 slow_us points (0, 100, 200, 500); no asymptote or saturation characterized; no per-hop loss decomposition (router→sub vs pub→router) — without per-hop counters the "loss occurs at the router's forwarding hop" attribution is inferred, not measured.
+- 3-node test reported at a single N (200K); buffer-fill threshold not swept, so we cannot distinguish "per-hop architectural" from "particular default buffer size."
+- No comparison arm against a known end-to-end fabric (e.g. DDS Reliable, NATS JetStream with ack) on the same 3-node topology to anchor what "end-to-end backpressure looks like under identical synthetic load."
+
+RATIONALE: The empirical results reproduce cleanly and the silent-Ok+no-log behavior is a real ergonomic hazard worth a bug/docs report. But the theoretical framing overclaims. (1) Per-hop flow control with no end-to-end credit is the BASELINE prediction for any pub/sub fabric that doesn't advertise an end-to-end ack protocol — the 3-node result confirms standard queueing behavior, it does not falsify a documented contract because the cited doc ("the node will wait") never made one. (2) Split control/data defaults are standard pub/sub design (Kafka, NATS), the novelty is the docs-gap not the mechanism. (3) The mature-lineage inversion argument leans on a too-clean "DDS/MQTT are end-to-end" that ignores QoS 0/1 and Best-Effort modes. The genuine, defensible kernel is the COMPOSITION-as-UX-hazard (split default + put-returns-Ok + no log + Block's local-only semantics not surfaced) — that is a documentation/API-surface finding worth a YELLOW, not a theory-of-distributed-systems result worth GREEN. Gate-4 verdict: closer to "best-effort drops + hop-by-hop fabric, both predicted; the composition is a real docs hazard but not a mechanism surprise." YELLOW.
+```

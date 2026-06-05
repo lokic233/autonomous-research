@@ -1,0 +1,32 @@
+I attempted live prior-art search via two external search tools; both were permission-denied in this environment, so I could not certify a fatal collision in ≥2 independent retrievable sources. Per committee rules, that bars a RED-on-collision. My vote is grounded in the packet's cited evidence plus domain knowledge of zenoh's documented model and the relevant systems literature.
+
+```
+ROLE: novelty_killer  VOTE: yellow
+
+CLOSEST_PRIOR_WORK: [
+  {cite: "Saltzer, Reed, Clark — 'End-to-End Arguments in System Design' (ACM TOCS, 1984)",
+   url: "https://dl.acm.org/doi/10.1145/357401.357402",
+   why_close: "The result 'per-hop backpressure (Block) does not deliver an end-to-end guarantee across a router hop' is a direct corollary of this 1984 principle applied to a hop-by-hop routed overlay. A hostile reviewer WILL cite this to argue the 3-node finding is expected-by-construction, not a discovery. This is the gate-4 threat, stronger than 'best-effort drops folklore.'"},
+  {cite: "Eclipse Zenoh official docs — CongestionControl (Block/Drop) vs Reliability (Reliable/BestEffort), two orthogonal knobs",
+   url: "https://zenoh.io/docs/manual/congestion-control/",
+   why_close: "Zenoh documents CongestionControl as 'what to do when the local egress/transport queue is full' — NOT as an end-to-end reliability guarantee. Reliability is a SEPARATE knob. The claim frames Block as 'the documented anti-drop / wait-don't-drop knob that fails end-to-end' — but Block was never documented to be end-to-end, so the 'gap between documented and actual' is smaller than the packet asserts (mild strawman)."},
+  {cite: "zenoh GitHub issue #1494 (fragment drop under CC=Drop)",
+   url: "https://github.com/eclipse-zenoh/zenoh/issues",
+   why_close: "Packet concedes this is a different narrow mechanism — agreed; it does not collide with the composition, but it shows the drop-under-congestion surface is already on the tracker's radar."}
+]
+
+NAMING_VS_MECHANISM: Not a renaming — but NOT a new mechanism either. This is an empirical CHARACTERIZATION of an EXISTING, source-documented zenoh mechanism (split DEFAULT_PUSH=Drop / DEFAULT_REQUEST=Block; per-link congestion control). The packet's framing — "zenoh's GENUINELY NOVEL per-hop split-default data-centric routing fabric, NOT inherited DDS/TCP" — overclaims at the mechanism layer: hop-by-hop routed overlays with per-link backpressure are not novel (this is the End-to-End Arguments regime). The genuine delta is empirical/usability: (a) the get/put default contract-flip is silent and undocumented-as-a-hazard, and (c) drops are fully silent (no err, no log, no NULL) with put_ok=N/put_err=0. Those are real, but they are "an uncharacterized hazard in a specific widely-deployed tool," not "a new mechanism."
+
+FATAL_COLLISIONS: [
+  "NONE CERTIFIED — could not complete ≥2-source live search (tools denied), and I have no specific retrievable writeup of THIS exact composition (split-default flip + silent + 3-node proof) from memory. So no RED-on-collision. But also no clean novelty: the per-hop≠end-to-end leg collides conceptually with Saltzer-1984; only the silent + contract-flip legs survive as un-owned."
+]
+
+MANDATORY_RELATED_WORK: [
+  "Saltzer/Reed/Clark, End-to-End Arguments (1984) — authors MUST cite and explicitly argue what is non-obvious BEYOND it, or the 3-node result reads as a textbook corollary.",
+  "Eclipse Zenoh docs: CongestionControl AND Reliability as separate orthogonal knobs — required to avoid strawmanning Block as an end-to-end reliability promise.",
+  "rmw_zenoh / ROS 2 QoS-Reliability documentation — the 'default ROS 2 transport' impact hook must be tied to whether ROS2 RELIABLE QoS maps onto zenoh Reliability (not CongestionControl); otherwise the deployment-severity claim is unanchored.",
+  "zenoh #1494 + zenoh Discord/Discourse congestion/drop threads — to substantiate 'not in any tracker/paper/blog.'"
+]
+
+RATIONALE: Vote YELLOW, not green and not red. RED is barred: I could not verify a fatal collision in ≥2 independent sources (search tools permission-denied; no specific dual-source writeup of this composition in memory), and #1494 is genuinely distinct (packet honest here). GREEN is barred on novelty grounds: the central mechanism is not new — "Block is per-hop, not end-to-end" follows from the End-to-End Arguments (Saltzer 1984) applied to a hop-by-hop overlay, so the marquee 3-node proof characterizes expected-by-architecture behavior rather than discovering a new mechanism, and the packet's "genuinely novel per-hop fabric, not inherited DDS/TCP" framing over-rotates (the framing also mildly strawmans zenoh, whose docs separate CongestionControl from Reliability — Block never promised end-to-end). What genuinely survives as un-owned and useful: the SILENT failure mode (Ok(()) + zero logs at debug, logger-proven-functional) and the get/put split-DEFAULT contract-flip presented as an undocumented hazard in a tool that is the default rmw_zenoh transport. That is a real but THIN, characterization-level contribution on an existing mechanism — YELLOW. To move toward green, authors must (1) reposition against Saltzer-1984 and state the non-obvious delta explicitly, (2) stop framing per-hop routing as novel and instead anchor novelty on silence + contract-flip, (3) correct the Block-vs-Reliability framing against zenoh's own docs.
+```

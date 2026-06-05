@@ -688,3 +688,402 @@ The table below summarizes the default files and the environment variables for t
 
 hook: PostToolUse Completed
 hook: PostToolUse Completed
+2026-06-05T18:59:24.522670Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ exited 1 in 59465ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+
+exec
+/bin/zsh -lc "sed -n '1,240p' research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse
+exec
+/bin/zsh -lc "sed -n '1,220p' research-os/prompts/committee/systems_reviewer_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc 'command -v gh || true' in /Users/dengcchi
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/vllm-project/vllm/main/vllm/v1/core/sched/request_queue.py | sed -n '1,240p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/triton-inference-server/server/main/docs/user_guide/batcher.md | grep -i -n -E 'queue|reject|timeout|policy' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/triton-inference-server/server/main/docs/user_guide/model_execution.md | grep -i -n -E 'queue|reject|timeout|policy' | head -40" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 208ms:
+100 14180  100 14180    0     0  60145      0 --:--:-- --:--:-- --:--:-- 60340
+47:batch, and queue properties such a queue size, priorities, and
+137:    max_queue_delay_microseconds: 100
+141:The *max_queue_delay_microseconds* property setting changes the
+146:configured *max_queue_delay_microseconds* value. If a new request
+163:By default the dynamic batcher maintains a single queue that holds all
+172:### Queue Policy
+175:requests are queued for batching.
+177:When *priority_levels* is not defined, the *ModelQueuePolicy* for the
+178:single queue can be set with *default_queue_policy*.  When
+180:*ModelQueuePolicy* as specified by *default_queue_policy* and *priority_queue_policy*.
+182:The *ModelQueuePolicy* property allows a maximum queue size to be set
+183:using the *max_queue_size*. The *timeout_action*,
+184:*default_timeout_microseconds* and *allow_timeout_override* settings
+185:allow the queue to be configured so that individual requests are
+186:rejected or deferred if their time in the queue exceeds a specified
+187:timeout.
+224:configuration. These settings control the sequence timeout as well as
+
+ succeeded in 229ms:
+100  6989  100  6989    0     0  27606      0 --:--:-- --:--:-- --:--:-- 27624
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+
+import heapq
+from abc import ABC, abstractmethod
+from collections import deque
+from collections.abc import Iterable, Iterator
+from enum import Enum
+
+from vllm.v1.request import Request
+
+
+class SchedulingPolicy(Enum):
+    """Enum for scheduling policies."""
+
+    FCFS = "fcfs"
+    PRIORITY = "priority"
+
+
+class RequestQueue(ABC):
+    """Abstract base class for request queues."""
+
+    @abstractmethod
+    def add_request(self, request: Request) -> None:
+        """Add a request to the queue according to the policy."""
+        pass
+
+    @abstractmethod
+    def pop_request(self) -> Request:
+        """Pop a request from the queue according to the policy."""
+        pass
+
+    @abstractmethod
+    def peek_request(self) -> Request:
+        """Peek at the request at the front of the queue without removing it."""
+        pass
+
+    @abstractmethod
+    def prepend_request(self, request: Request) -> None:
+        """Prepend a request to the front of the queue."""
+        pass
+
+    @abstractmethod
+    def prepend_requests(self, requests: "RequestQueue") -> None:
+        """Prepend all requests from another queue to the front of this
+        queue."""
+        pass
+
+    @abstractmethod
+    def remove_request(self, request: Request) -> None:
+        """Remove a specific request from the queue."""
+        pass
+
+    @abstractmethod
+    def remove_requests(self, requests: Iterable[Request]) -> None:
+        """Remove multiple specific requests from the queue."""
+        pass
+
+    @abstractmethod
+    def __bool__(self) -> bool:
+        """Check if queue has any requests."""
+        pass
+
+    @abstractmethod
+    def __len__(self) -> int:
+        """Get number of requests in queue."""
+        pass
+
+    @abstractmethod
+    def __iter__(self) -> Iterator[Request]:
+        """Iterate over the queue according to the policy."""
+        pass
+
+
+class FCFSRequestQueue(deque[Request], RequestQueue):
+    """A first-come-first-served queue that supports deque operations."""
+
+    def add_request(self, request: Request) -> None:
+        """Add a request to the queue according to FCFS policy."""
+        self.append(request)
+
+    def pop_request(self) -> Request:
+        """Pop a request from the queue according to FCFS policy."""
+        return self.popleft()
+
+    def peek_request(self) -> Request:
+        """Peek at the next request in the queue without removing it."""
+        if not self:
+            raise IndexError("peek from an empty queue")
+        return self[0]
+
+    def prepend_request(self, request: Request) -> None:
+        """Prepend a request to the front of the queue."""
+        self.appendleft(request)
+
+    def prepend_requests(self, requests: RequestQueue) -> None:
+        """Prepend all requests from another queue to the front of this
+        queue.
+
+        Note: The requests will be prepended in reverse order of their
+        appearance in the `requests` queue.
+        """
+        self.extendleft(requests)
+
+    def remove_request(self, request: Request) -> None:
+        """Remove a specific request from the queue."""
+        self.remove(request)
+
+    def remove_requests(self, requests: Iterable[Request]) -> None:
+        """Remove multiple specific requests from the queue."""
+        requests_to_remove = set(requests)
+        filtered_requests = [req for req in self if req not in requests_to_remove]
+        # deque does not support in-place filtering, so we need to clear
+        # and extend
+        self.clear()
+        self.extend(filtered_requests)
+
+    def __bool__(self) -> bool:
+        """Check if queue has any requests."""
+        return len(self) > 0
+
+    def __len__(self) -> int:
+        """Get number of requests in queue."""
+        return super().__len__()
+
+    def __iter__(self) -> Iterator[Request]:
+        """Iterate over the queue according to FCFS policy."""
+        return super().__iter__()
+
+
+class PriorityRequestQueue(RequestQueue):
+    """
+    A priority queue that supports heap operations.
+
+    Respects the ordering defined in the Request class, where
+    requests with a smaller value of `priority` are processed first.
+    If multiple requests have the same priority, the one with the earlier
+    `arrival_time` is processed first.
+    """
+
+    def __init__(self) -> None:
+        self._heap: list[Request] = []
+
+    def add_request(self, request: Request) -> None:
+        """Add a request to the queue according to priority policy."""
+        heapq.heappush(self._heap, request)
+
+    def pop_request(self) -> Request:
+        """Pop a request from the queue according to priority policy."""
+        if not self._heap:
+            raise IndexError("pop from empty heap")
+        return heapq.heappop(self._heap)
+
+    def peek_request(self) -> Request:
+        """Peek at the next request in the queue without removing it."""
+        if not self._heap:
+            raise IndexError("peek from empty heap")
+        return self._heap[0]
+
+    def prepend_request(self, request: Request) -> None:
+        """Add a request to the queue according to priority policy.
+
+        Note: In a priority queue, there is no concept of prepending to the
+        front. Requests are ordered by (priority, arrival_time)."""
+        self.add_request(request)
+
+    def prepend_requests(self, requests: RequestQueue) -> None:
+        """Add all requests from another queue according to priority policy.
+
+        Note: In a priority queue, there is no concept of prepending to the
+        front. Requests are ordered by (priority, arrival_time)."""
+        for request in requests:
+            self.add_request(request)
+
+    def remove_request(self, request: Request) -> None:
+        """Remove a specific request from the queue."""
+        self._heap.remove(request)
+        heapq.heapify(self._heap)
+
+    def remove_requests(self, requests: Iterable[Request]) -> None:
+        """Remove multiple specific requests from the queue."""
+        requests_to_remove = requests if isinstance(requests, set) else set(requests)
+        self._heap = [r for r in self._heap if r not in requests_to_remove]
+        heapq.heapify(self._heap)
+
+    def __bool__(self) -> bool:
+        """Check if queue has any requests."""
+        return bool(self._heap)
+
+    def __len__(self) -> int:
+        """Get number of requests in queue."""
+        return len(self._heap)
+
+    def __iter__(self) -> Iterator[Request]:
+        """Iterate over the queue according to priority policy."""
+        heap_copy = self._heap[:]
+        while heap_copy:
+            yield heapq.heappop(heap_copy)
+
+
+def create_request_queue(policy: SchedulingPolicy) -> RequestQueue:
+    """Create request queue based on scheduling policy."""
+    if policy == SchedulingPolicy.PRIORITY:
+        return PriorityRequestQueue()
+    elif policy == SchedulingPolicy.FCFS:
+        return FCFSRequestQueue()
+    else:
+        raise ValueError(f"Unknown scheduling policy: {policy}")
+
+ succeeded in 214ms:
+100 10146  100 10146    0     0  42278      0 --:--:-- --:--:-- --:--:-- 42451
+
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://api.github.com/repos/eclipse-zenoh/zenoh/issues/1494 | grep -E '\"html_url\"|\"title\"|\"state\"' | head -20" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 310ms:
+100  7280  100  7280    0     0  21421      0 --:--:-- --:--:-- --:--:-- 21474
+  "html_url": "https://github.com/eclipse-zenoh/zenoh/issues/1494",
+  "title": "QoS: message fragments dropped",
+    "html_url": "https://github.com/yellowhatter",
+  "state": "closed",
+      "html_url": "https://github.com/yellowhatter",
+    "html_url": "https://github.com/yellowhatter",
+    "html_url": "https://github.com/yellowhatter",
+
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
