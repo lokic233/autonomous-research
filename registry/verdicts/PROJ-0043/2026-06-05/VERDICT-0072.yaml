@@ -1,0 +1,61 @@
+verdict_id: VERDICT-0072
+claim_id: CLAIM-0073
+project_id: PROJ-0043
+date: '2026-06-05'
+experiment_ids:
+- EXP-0088
+experiment_paths:
+- experiments/2026-06-05/EXP-0088
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE
+required_evidence:
+- 'CAST-SEMANTICS DISCRIMINATOR: SELECT CAST(3.14 AS BIGINT) and CAST(''3.14'' AS
+  BIGINT) in DuckDB 1.5.3 (if both truncate silently to 3 while CAST(''hello'' AS
+  BIGINT) throws -> cast-layer origin -> YELLOW-terminal)'
+- 'AUTO_DETECT=FALSE CONTROL: read_csv with auto_detect=false + explicit BIGINT dtype
+  (if truncation persists -> sniffer irrelevant, cast-path issue -> YELLOW-terminal)'
+map_delta_proposals:
+- CLAIM-0073 -> HOLD
+- run the 2 sub-L0 probes (seconds each)
+- if cast-layer-origin -> converge YELLOW-terminal (known SQL lossy-cast)
+- if sniffer-specific -> advance to L1 (strict-schema peer baselines + corpus prevalence)
+baseline_requirements:
+- DuckDB CAST layer behavior (the discriminator)
+- DuckDB read_csv auto_detect=false explicit-type path
+- PostgreSQL/SQLite CAST behavior (peer comparison)
+committee_run_dir: experiments/2026-06-05/EXP-0088/committee1
+verbatim_votes_summary: 'all 5 reviewers + area_chair converge: the loud-vs-silent
+  is well-demonstrated but the CAST-SEMANTICS DISCRIMINATOR was not run and is THE
+  decisive cheap experiment. If CAST itself truncates, the novelty collapses to standard
+  SQL behavior + inference = known-hazard instance.'
+key_structural_finding: 'The loud-vs-silent asymmetry is well-demonstrated and the
+  L0 is clean. BUT the committee identified a CHEAPER discriminator not yet run: if
+  DuckDB''s CAST layer itself silently truncates floats to int (standard SQL lossy-cast
+  behavior), then the sniffer merely inferred a type and the cast did what casts do
+  -> the novelty collapses to ''known SQL cast + sample inference, known-hazard instance.''
+  The sniffer contract-violation framing survives ONLY if the cast layer alone would
+  NOT truncate (or would error) -- making the sniffer''s silent-type-commitment the
+  load-bearing novel step.'
+disposition: 'committee#1 YELLOW (6/6, no RED). Gates on a CHEAP decisive probe: does
+  CAST(3.14 AS BIGINT) silently truncate? If yes -> the asymmetry is in the CAST LAYER
+  (known SQL behavior) -> YELLOW-terminal. If no (cast throws) -> sniffer-specific
+  anomaly -> upgrades toward L1.'
+created_at: '2026-06-05T18:48:45Z'
