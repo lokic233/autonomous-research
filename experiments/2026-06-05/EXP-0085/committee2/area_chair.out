@@ -1,0 +1,50 @@
+```
+ROLE: area_chair
+PROMPT_VERSION: v001
+FINAL_VERDICT: yellow
+
+REVIEWER_VOTES: {novelty_killer: yellow, systems_reviewer: yellow, evaluation_prosecutor: yellow, theory_skeptic: yellow, product_realist: yellow}
+
+FATAL_OBJECTIONS: []
+
+REQUIRED_EVIDENCE: [
+  "RE-2 authenticated AST prevalence scan: ratio of bare NewModuleConfig() to WithRandSource-overridden instantiations across top Go projects importing wazero, with denominator and CI",
+  "Explicit preview1 vs successor spec-violation framing: the claim must disambiguate whether preview1's 'high-quality' + blocking clause constitutes a CSPRNG normative requirement or only a strong-interpretation that becomes normative in the successor spec",
+  "Guest-side defensibility test: demonstrate whether a guest CAN detect or reject a deterministic host source (theory_skeptic's untested assumption — if guests can defend, the 'un-defendable' arm weakens)",
+  "Positioning against practitioner find-fix set: the contribution must explicitly frame itself as synthesis/characterization AGAINST CrowdSec PR#4495, wetware issue#106, wapc/wapc-go, and wazero issue#620, not as discovery"
+]
+
+MANDATORY_BASELINES: [
+  "Node.js (V8) WASI runtime random_get default behavior (evaluation_prosecutor — needed to confirm wazero is anomalous beyond the Rust-ecosystem runtimes)",
+  "wazero version trajectory: does any version after v1.12.0 change the default? (theory_skeptic — point-estimate vs trajectory)"
+]
+
+PRIOR_ART_ADEQUATE: yes
+
+MAP_DELTA_PROPOSAL: {
+  node: "CLAIM-0070",
+  change: "stage L1->L2 (YELLOW-advance); update claim_type from 'discovered hazard' to 'conformance-synthesis of known hazard'; add required_framing tag 'synthesis-over-practitioner-finds'; gate GREEN on L2 deliverables: authenticated prevalence with denominator, preview1-vs-successor spec-violation disambiguation, guest-defensibility test"
+}
+
+RATIONALE:
+Unanimous 5/5 YELLOW. No RED to adjudicate. The question is whether any reviewer's YELLOW can be overridden for GREEN — it cannot, and here is why.
+
+**What is settled (strong evidence, no dissent):**
+The mechanism is real and reproducible (30/30 cross-process, 10/10 cross-language, source-verified defaults). The cross-runtime anomaly is genuine: wazero v1.12.0 ships fixed-seed-42 math/rand + frozen clocks as defaults for WASI random_get, while Wasmtime provides per-context randomly-seeded ChaCha CSPRNG and Wasmer uses OS CSPRNG via getrandom::fill — both with host clocks. The spec-conformance argument clears the folklore gate: preview1's "high-quality" + blocking-on-insufficient-entropy clause plus the successor spec's explicit "cryptographically secure" + "deterministic environments MUST OMIT" create a defensible (though not airtight on preview1 alone) basis for calling wazero's default non-conforming. The clock-decoupling (~31x) and composition-warning absence (RE-4 config.go verbatim) are verified. All four RE items from committee#1 were resolved in the claim's favor.
+
+**What caps this at YELLOW (three convergent grounds):**
+
+1. **Mechanism novelty is capped by practitioner find-and-fix.** The novelty_killer correctly identifies that CrowdSec PR#4495, wetware issue#106, and wapc/wapc-go independently discovered AND remediated the identical wazero fixed-seed random_get composition. This is a ≥3-source collision against the MECHANISM (anti-hallucination rule satisfied). The un-owned contribution is the SYNTHESIS — ABI-boundary framing + cross-language + cross-runtime-anomaly + spec-conformance argument + clock-decoupling — but no reviewer judges synthesis alone sufficient for GREEN. The claim must be explicitly repositioned as conformance-synthesis, not hazard-discovery.
+
+2. **Prevalence is signal, not measurement.** All five reviewers converge on this: the curated 7/10 sample (knqyf263/go-plugin BARE default confirmed, wapc/wapc-go fix confirmed) provides real non-zero signal but is not a prevalence figure. RE-2 was auth-gated — the authenticated AST scan never ran. The evaluation_prosecutor's point is well-taken: if mature production systems already override the default (as CrowdSec and wapc demonstrate they do), the vulnerability may be a strawman in deployed practice. GREEN requires the L2 prevalence scan with a denominator.
+
+3. **Preview1 spec-violation strength is arguable.** The theory_skeptic correctly notes that preview1's prose says "high-quality," not "cryptographically secure" — the decisive CSPRNG language is in the successor spec. The blocking clause ("BLOCKS when... unable to immediately provide sufficient high-quality random data") supports the CSPRNG interpretation but is not a slam dunk; a fixed-seed PRNG never blocks because it always has data. The claim is strongest on the successor spec; on preview1 alone it is a strong-but-contestable reading. The claim must disambiguate which spec generation it claims violation of and at what strength.
+
+**Prior-art adequacy:** Adequate. The packet cites CWE-330, SWC-120, CrowdSec PR#4495, wetware issue#106, wapc/wapc-go, wazero issue#620, verbatim WASI spec text, and cross-runtime source. The novelty_killer's web-verify was permission-blocked but the packet-cited sources are treated as evidence of record and provide ≥2-source verification for the critical collisions. No GREEN is being issued, so the adequacy bar is met.
+
+**Anti-hallucination:** Honored. All mechanism collisions verified in ≥2 independent sources (CrowdSec + wetware + wapc-go for the wazero composition; CWE-330 + SWC-120 for the class). Spec text cited verbatim.
+
+**Path to GREEN:** L2 must deliver (a) authenticated prevalence scan with denominator and blast-radius quantification, (b) explicit preview1-vs-successor spec-violation framing, (c) guest-side defensibility test, (d) Node.js WASI baseline + wazero version trajectory check, (e) contribution positioned as conformance-synthesis against the practitioner find-fix set. If L2 shows non-trivial unmitigated prevalence AND the guest-defensibility test confirms un-defendable, the synthesis becomes a measured systemic finding and GREEN is reachable.
+
+**Verdict rationale:** An honest YELLOW-advance is the zero-false-green outcome. The L1 resolved committee#1's decisive gates (RE-1 CSPRNG-contract, RE-3 wazero-anomalous) in the claim's favor with strong evidence, but the three convergent altitude caps (practitioner-find-fix narrows novelty, prevalence unmeasured, preview1 spec-violation arguable) prevent GREEN without the L2 deliverables. This is a genuine finding at synthesis altitude — not folklore, not killed — awaiting the empirical work that would elevate it.
+```

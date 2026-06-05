@@ -1186,3 +1186,1371 @@ hook: PostToolUse
     "name": "time_windows.go",
 
 hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/tetratelabs/wazero/v1.12.0/internal/platform/crypto.go | sed -n '1,180p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 228ms:
+package platform
+
+import (
+	"io"
+	"math/rand"
+)
+
+// seed is a fixed seed value for NewFakeRandSource.
+//
+// Trivia: While arbitrary, 42 was chosen as it is the "Ultimate Answer" in
+// the Douglas Adams novel "The Hitchhiker's Guide to the Galaxy."
+const seed = int64(42)
+
+// NewFakeRandSource returns a deterministic source of random values.
+func NewFakeRandSource() io.Reader {
+	return rand.New(rand.NewSource(seed))
+}
+
+exec
+/bin/zsh -lc "curl -L --silent https://docs.rs/wasmtime-wasi/latest/wasmtime_wasi/struct.WasiCtxBuilder.html | grep -i -A3 -B3 'random' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/crates/wasi/src/random.rs | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/crates/wasi/src/p1.rs | grep -n -A20 -B8 'random_get\\|random' | head -120" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 280ms:
+</div><div class="rustdoc struct container-rustdoc" id="rustdoc_body_wrapper" tabindex="-1"><script async src="/-/static/menu.js?0-0-0-39849b9c22c419f6b690c8d2213455bc7426a6b8-2026-06-03"></script>
+<script async src="/-/static/index.js?0-0-0-39849b9c22c419f6b690c8d2213455bc7426a6b8-2026-06-03"></script>
+
+<iframe src="/-/storage-change-detection.html" width="0" height="0" style="display: none"></iframe><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">WasiCtxBuilder</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../wasmtime_wasi/index.html">wasmtime_<wbr>wasi</a><span class="version">45.0.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Wasi<wbr>CtxBuilder</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#examples" title="Examples">Examples</a></li></ul><h3><a href="#implementations">Associated Functions</a></h3><ul class="block method"><li><a href="#method.new" title="new">new</a></li></ul><h3><a href="#implementations">Methods</a></h3><ul class="block method"><li><a href="#method.allow_blocking_current_thread" title="allow_blocking_current_thread">allow_blocking_current_thread</a></li><li><a href="#method.allow_ip_name_lookup" title="allow_ip_name_lookup">allow_ip_name_lookup</a></li><li><a href="#method.allow_tcp" title="allow_tcp">allow_tcp</a></li><li><a href="#method.allow_udp" title="allow_udp">allow_udp</a></li><li><a href="#method.arg" title="arg">arg</a></li><li><a href="#method.args" title="args">args</a></li><li><a href="#method.build" title="build">build</a></li><li><a href="#method.build_p1" title="build_p1">build_p1</a></li><li><a href="#method.env" title="env">env</a></li><li><a href="#method.envs" title="envs">envs</a></li><li><a href="#method.inherit_args" title="inherit_args">inherit_args</a></li><li><a href="#method.inherit_env" title="inherit_env">inherit_env</a></li><li><a href="#method.inherit_network" title="inherit_network">inherit_network</a></li><li><a href="#method.inherit_stderr" title="inherit_stderr">inherit_stderr</a></li><li><a href="#method.inherit_stdin" title="inherit_stdin">inherit_stdin</a></li><li><a href="#method.inherit_stdio" title="inherit_stdio">inherit_stdio</a></li><li><a href="#method.inherit_stdout" title="inherit_stdout">inherit_stdout</a></li><li><a href="#method.insecure_random" title="insecure_random">insecure_random</a></li><li><a href="#method.insecure_random_seed" title="insecure_random_seed">insecure_random_seed</a></li><li><a href="#method.max_random_size" title="max_random_size">max_random_size</a></li><li><a href="#method.monotonic_clock" title="monotonic_clock">monotonic_clock</a></li><li><a href="#method.preopened_dir" title="preopened_dir">preopened_dir</a></li><li><a href="#method.secure_random" title="secure_random">secure_random</a></li><li><a href="#method.socket_addr_check" title="socket_addr_check">socket_addr_check</a></li><li><a href="#method.stderr" title="stderr">stderr</a></li><li><a href="#method.stdin" title="stdin">stdin</a></li><li><a href="#method.stdout" title="stdout">stdout</a></li><li><a href="#method.wall_clock" title="wall_clock">wall_clock</a></li></ul><h3><a href="#trait-implementations">Trait Implementations</a></h3><ul class="block trait-implementation"><li><a href="#impl-Default-for-WasiCtxBuilder" title="Default">Default</a></li></ul><h3><a href="#synthetic-implementations">Auto Trait Implementations</a></h3><ul class="block synthetic-implementation"><li><a href="#impl-RefUnwindSafe-for-WasiCtxBuilder" title="!RefUnwindSafe">!RefUnwindSafe</a></li><li><a href="#impl-Sync-for-WasiCtxBuilder" title="!Sync">!Sync</a></li><li><a href="#impl-UnwindSafe-for-WasiCtxBuilder" title="!UnwindSafe">!UnwindSafe</a></li><li><a href="#impl-Freeze-for-WasiCtxBuilder" title="Freeze">Freeze</a></li><li><a href="#impl-Send-for-WasiCtxBuilder" title="Send">Send</a></li><li><a href="#impl-Unpin-for-WasiCtxBuilder" title="Unpin">Unpin</a></li><li><a href="#impl-UnsafeUnpin-for-WasiCtxBuilder" title="UnsafeUnpin">UnsafeUnpin</a></li></ul><h3><a href="#blanket-implementations">Blanket Implementations</a></h3><ul class="block blanket-implementation"><li><a href="#impl-Any-for-T" title="Any">Any</a></li><li><a href="#impl-Borrow%3CT%3E-for-T" title="Borrow&#60;T&#62;">Borrow&#60;T&#62;</a></li><li><a href="#impl-BorrowMut%3CT%3E-for-T" title="BorrowMut&#60;T&#62;">BorrowMut&#60;T&#62;</a></li><li><a href="#impl-ErasedDestructor-for-T" title="ErasedDestructor">ErasedDestructor</a></li><li><a href="#impl-From%3CT%3E-for-T" title="From&#60;T&#62;">From&#60;T&#62;</a></li><li><a href="#impl-Instrument-for-T" title="Instrument">Instrument</a></li><li><a href="#impl-Into%3CU%3E-for-T" title="Into&#60;U&#62;">Into&#60;U&#62;</a></li><li><a href="#impl-MaybeSendSync-for-T" title="MaybeSendSync">MaybeSendSync</a></li><li><a href="#impl-Pointee-for-T" title="Pointee">Pointee</a></li><li><a href="#impl-TryFrom%3CU%3E-for-T" title="TryFrom&#60;U&#62;">TryFrom&#60;U&#62;</a></li><li><a href="#impl-TryInto%3CU%3E-for-T" title="TryInto&#60;U&#62;">TryInto&#60;U&#62;</a></li><li><a href="#impl-WithSubscriber-for-T" title="WithSubscriber">WithSubscriber</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate wasmtime_<wbr>wasi</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">wasmtime_wasi</a></div><h1>Struct <span class="struct">Wasi<wbr>CtxBuilder</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/wasmtime_wasi/ctx.rs.html#38-45">Source</a> </span></div><pre class="rust item-decl"><code>pub struct WasiCtxBuilder { <span class="comment">/* private fields */</span> }</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Builder-style structure used to create a <a href="struct.WasiCtx.html" title="struct wasmtime_wasi::WasiCtx"><code>WasiCtx</code></a>.</p>
+<p>This type is used to create a <a href="struct.WasiCtx.html" title="struct wasmtime_wasi::WasiCtx"><code>WasiCtx</code></a> that is considered per-<a href="https://docs.rs/wasmtime/45.0.1/x86_64-unknown-linux-gnu/wasmtime/runtime/store/struct.Store.html" title="struct wasmtime::runtime::store::Store"><code>Store</code></a>
+state. The <a href="struct.WasiCtxBuilder.html#method.build" title="method wasmtime_wasi::WasiCtxBuilder::build"><code>build</code></a> method is used to finish the
+building process and produce a finalized <a href="struct.WasiCtx.html" title="struct wasmtime_wasi::WasiCtx"><code>WasiCtx</code></a>.</p>
+--
+<li>no arguments</li>
+<li>no preopens</li>
+<li>clocks use the host implementation of wall/monotonic clocks</li>
+<li>RNGs are all initialized with random state and suitable generator
+quality to satisfy the requirements of WASI APIs.</li>
+<li>TCP/UDP are allowed but all addresses are denied by default.</li>
+<li><code>wasi:sockets/ip-name-lookup</code> is denied by default.</li>
+--
+</span>wasi.preopened_dir(<span class="string">"./host-directory"</span>, <span class="string">"."</span>, DirPerms::all(), FilePerms::all());
+
+<span class="comment">// Make `./readonly` available in the guest as `./ro`
+</span>wasi.preopened_dir(<span class="string">"./readonly"</span>, <span class="string">"./ro"</span>, DirPerms::READ, FilePerms::READ);</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="method.secure_random" class="method"><a class="src rightside" href="../src/wasmtime_wasi/ctx.rs.html#329-332">Source</a><h4 class="code-header">pub fn <a href="#method.secure_random" class="fn">secure_random</a>(&amp;mut self, random: impl <a class="trait" href="https://docs.rs/rand_core/0.10.0/x86_64-unknown-linux-gnu/rand_core/trait.Rng.html" title="trait rand_core::Rng">Rng</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static) -&gt; &amp;mut Self</h4></section></summary><div class="docblock"><p>Set the generator for the <code>wasi:random/random</code> number generator to the
+custom generator specified.</p>
+<p>Note that contexts have a default RNG configured which is a suitable
+generator for WASI and is configured with a random seed per-context.</p>
+<p>Guest code may rely on this random number generator to produce fresh
+unpredictable random data in order to maintain its security invariants,
+and ideally should use the insecure random API otherwise, so using any
+prerecorded or otherwise predictable data may compromise security.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="method.insecure_random" class="method"><a class="src rightside" href="../src/wasmtime_wasi/ctx.rs.html#338-341">Source</a><h4 class="code-header">pub fn <a href="#method.insecure_random" class="fn">insecure_random</a>(
+    &amp;mut self,
+    insecure_random: impl <a class="trait" href="https://docs.rs/rand_core/0.10.0/x86_64-unknown-linux-gnu/rand_core/trait.Rng.html" title="trait rand_core::Rng">Rng</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+) -&gt; &amp;mut Self</h4></section></summary><div class="docblock"><p>Configures the generator for <code>wasi:random/insecure</code>.</p>
+<p>The <code>insecure_random</code> generator provided will be used for all randomness
+requested by the <code>wasi:random/insecure</code> interface.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="method.insecure_random_seed" class="method"><a class="src rightside" href="../src/wasmtime_wasi/ctx.rs.html#347-350">Source</a><h4 class="code-header">pub fn <a href="#method.insecure_random_seed" class="fn">insecure_random_seed</a>(&amp;mut self, insecure_random_seed: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u128.html">u128</a>) -&gt; &amp;mut Self</h4></section></summary><div class="docblock"><p>Configures the seed to be returned from <code>wasi:random/insecure-seed</code> to
+the specified custom value.</p>
+<p>By default this number is randomly generated when a builder is created.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="method.max_random_size" class="method"><a class="src rightside" href="../src/wasmtime_wasi/ctx.rs.html#361-364">Source</a><h4 class="code-header">pub fn <a href="#method.max_random_size" class="fn">max_random_size</a>(&amp;mut self, max_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>) -&gt; &amp;mut Self</h4></section></summary><div class="docblock"><p>Configures the maximum len accepted by
+<code>wasi:random/random.get-random-bytes</code> and
+<code>wasi:random/insecure.get-insecure-random-bytes</code>. Calls with a len
+larger than this limit will trap.</p>
+<p>Limited to 64M by default. This limit protects the host implementation
+from memory exhaustion from untrusted guest input. A limit of <code>u64::MAX</code>
+
+hook: PostToolUse Completed
+ succeeded in 356ms:
+use rand::{Rng, SeedableRng as _, TryRng};
+use std::convert::Infallible;
+use wasmtime::component::HasData;
+
+/// A helper struct which implements [`HasData`] for the `wasi:random` APIs.
+///
+/// This can be useful when directly calling `add_to_linker` functions directly,
+/// such as [`wasmtime_wasi::p2::bindings::random::random::add_to_linker`] as
+/// the `D` type parameter. See [`HasData`] for more information about the type
+/// parameter's purpose.
+///
+/// When using this type you can skip the [`WasiRandomView`] trait, for
+/// example.
+///
+/// [`wasmtime_wasi::p2::bindings::random::random::add_to_linker`]: crate::p2::bindings::random::random::add_to_linker
+///
+/// # Examples
+///
+/// ```
+/// use wasmtime::component::Linker;
+/// use wasmtime::{Engine, Result};
+/// use wasmtime_wasi::random::*;
+///
+/// struct MyStoreState {
+///     random: WasiRandomCtx,
+/// }
+///
+/// fn main() -> Result<()> {
+///     let engine = Engine::default();
+///     let mut linker = Linker::new(&engine);
+///
+///     wasmtime_wasi::p2::bindings::random::random::add_to_linker::<MyStoreState, WasiRandom>(
+///         &mut linker,
+///         |state| &mut state.random,
+///     )?;
+///     Ok(())
+/// }
+/// ```
+pub struct WasiRandom;
+
+impl HasData for WasiRandom {
+    type Data<'a> = &'a mut WasiRandomCtx;
+}
+
+/// Default largest length accepted by wasi 0.2 `get-random-bytes` and
+/// `get-insecure-random-bytes` methods. This constant must match docs in
+/// cli-flags crate.
+pub const DEFAULT_MAX_SIZE: u64 = 64 << 20;
+
+pub struct WasiRandomCtx {
+    pub(crate) random: Box<dyn Rng + Send>,
+    pub(crate) insecure_random: Box<dyn Rng + Send>,
+    pub(crate) insecure_random_seed: u128,
+    pub(crate) max_size: u64,
+}
+
+impl Default for WasiRandomCtx {
+    fn default() -> Self {
+        // For the insecure random API, use `SmallRng`, which is fast. It's
+        // also insecure, but that's the deal here.
+        let insecure_random = Box::new(rand::rngs::SmallRng::from_rng(&mut rand::rng()));
+        // For the insecure random seed, use a `u128` generated from
+        // `rand::random()`, so that it's not guessable from the
+        // insecure_random API.
+        let insecure_random_seed = rand::random::<u128>();
+        let max_size = DEFAULT_MAX_SIZE;
+        Self {
+            random: thread_rng(),
+            insecure_random,
+            insecure_random_seed,
+            max_size,
+        }
+    }
+}
+
+pub trait WasiRandomView: Send {
+    fn random(&mut self) -> &mut WasiRandomCtx;
+}
+
+impl WasiRandomView for WasiRandomCtx {
+    fn random(&mut self) -> &mut WasiRandomCtx {
+        self
+    }
+}
+
+/// Implement `insecure-random` using a deterministic cycle of bytes.
+pub struct Deterministic {
+    cycle: std::iter::Cycle<std::vec::IntoIter<u8>>,
+}
+
+impl Deterministic {
+    pub fn new(bytes: Vec<u8>) -> Self {
+        Deterministic {
+            cycle: bytes.into_iter().cycle(),
+        }
+    }
+}
+
+impl TryRng for Deterministic {
+    type Error = Infallible;
+    fn try_next_u32(&mut self) -> Result<u32, Infallible> {
+        let b0 = self.cycle.next().expect("infinite sequence");
+        let b1 = self.cycle.next().expect("infinite sequence");
+        let b2 = self.cycle.next().expect("infinite sequence");
+        let b3 = self.cycle.next().expect("infinite sequence");
+        Ok(((b0 as u32) << 24) + ((b1 as u32) << 16) + ((b2 as u32) << 8) + (b3 as u32))
+    }
+    fn try_next_u64(&mut self) -> Result<u64, Infallible> {
+        let w0 = self.next_u32();
+        let w1 = self.next_u32();
+        Ok(((w0 as u64) << 32) + (w1 as u64))
+    }
+    fn try_fill_bytes(&mut self, buf: &mut [u8]) -> Result<(), Infallible> {
+        for b in buf.iter_mut() {
+            *b = self.cycle.next().expect("infinite sequence");
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn deterministic() {
+        let mut det = Deterministic::new(vec![1, 2, 3, 4]);
+        let mut buf = vec![0; 1024];
+        det.try_fill_bytes(&mut buf).expect("get randomness");
+        for (ix, b) in buf.iter().enumerate() {
+            assert_eq!(*b, (ix % 4) as u8 + 1)
+        }
+    }
+}
+
+pub fn thread_rng() -> Box<dyn Rng + Send> {
+    let mut rng = rand::rng();
+    Box::new(rand::rngs::StdRng::from_rng(&mut rng))
+}
+
+hook: PostToolUse
+ succeeded in 372ms:
+87-    streams::{StreamError, StreamResult},
+88-};
+89-use wiggle::tracing::instrument;
+90-use wiggle::{GuestError, GuestMemory, GuestPtr, GuestType};
+91-
+92-// Bring all WASI traits in scope that this implementation builds on.
+93-use crate::p2::bindings::cli::environment::Host as _;
+94-use crate::p2::bindings::filesystem::types::HostDescriptor as _;
+95:use crate::p2::bindings::random::random::Host as _;
+96-use wasmtime_wasi_io::bindings::wasi::io::poll::Host as _;
+97-
+98-/// Structure containing state for WASIp1.
+99-///
+100-/// This structure is created through [`WasiCtxBuilder::build_p1`] and is
+101-/// configured through the various methods of [`WasiCtxBuilder`]. This structure
+102-/// itself implements generated traits for WASIp1 as well as [`WasiView`] to
+103-/// have access to WASIp2.
+104-///
+105-/// Instances of [`WasiP1Ctx`] are typically stored within the `T` of
+106-/// [`Store<T>`](wasmtime::Store).
+107-///
+108-/// [`WasiCtxBuilder::build_p1`]: crate::WasiCtxBuilder::build_p1
+109-/// [`WasiCtxBuilder`]: crate::WasiCtxBuilder
+110-///
+111-/// # Examples
+112-///
+113-/// ```no_run
+114-/// use wasmtime::{Result, Linker};
+115-/// use wasmtime_wasi::p1::{self, WasiP1Ctx};
+--
+2622-
+2623-    #[instrument(skip(self, _memory))]
+2624-    fn sched_yield(&mut self, _memory: &mut GuestMemory<'_>) -> Result<(), types::Error> {
+2625-        // No such thing in preview 2. Intentionally left empty.
+2626-        Ok(())
+2627-    }
+2628-
+2629-    #[instrument(skip(self, memory))]
+2630:    fn random_get(
+2631-        &mut self,
+2632-        memory: &mut GuestMemory<'_>,
+2633-        buf: GuestPtr<u8>,
+2634-        buf_len: types::Size,
+2635-    ) -> Result<(), types::Error> {
+2636-        let rand = self
+2637-            .wasi
+2638:            .random
+2639:            .get_random_bytes(buf_len.into())
+2640:            .context("failed to call `get-random-bytes`")
+2641-            .map_err(types::Error::trap)?;
+2642-        write_bytes(memory, buf, &rand)?;
+2643-        Ok(())
+2644-    }
+2645-
+2646-    #[instrument(skip(self, _memory))]
+2647-    fn sock_accept(
+2648-        &mut self,
+2649-        _memory: &mut GuestMemory<'_>,
+2650-        fd: types::Fd,
+2651-        flags: types::Fdflags,
+2652-    ) -> Result<types::Fd, types::Error> {
+2653-        tracing::warn!("p1 sock_accept is not implemented");
+2654-        self.transact()?.get_descriptor(fd)?;
+2655-        Err(types::Errno::Notsock.into())
+2656-    }
+2657-
+2658-    #[instrument(skip(self, _memory))]
+2659-    fn sock_recv(
+2660-        &mut self,
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/wasmerio/wasmer/main/lib/wasix/src/syscalls/wasi/random_get.rs | sed -n '1,180p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://raw.githubusercontent.com/wasmerio/wasmer/main/lib/wasix/src/state/mod.rs | grep -n -A20 -B8 'random\\|getrandom' | head -160" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 222ms:
+use super::*;
+use crate::syscalls::*;
+
+/// ### `random_get()`
+/// Fill buffer with high-quality random data.  This function may be slow and block
+/// Inputs:
+/// - `void *buf`
+///     A pointer to a buffer where the random bytes will be written
+/// - `size_t buf_len`
+///     The number of bytes that will be written
+#[instrument(level = "trace", skip_all, fields(%buf_len), ret)]
+pub fn random_get<M: MemorySize>(
+    ctx: FunctionEnvMut<'_, WasiEnv>,
+    buf: WasmPtr<u8, M>,
+    buf_len: M::Offset,
+) -> Errno {
+    let env = ctx.data();
+    let memory = unsafe { env.memory_view(&ctx) };
+    let buf_len64: u64 = buf_len.into();
+    let mut u8_buffer = vec![0; buf_len64 as usize];
+    let res = getrandom::fill(&mut u8_buffer);
+    match res {
+        Ok(()) => {
+            let buf = wasi_try_mem!(buf.slice(&memory, buf_len));
+            wasi_try_mem!(buf.write_slice(&u8_buffer));
+            Errno::Success
+        }
+        Err(_) => Errno::Io,
+    }
+}
+
+ succeeded in 250ms:
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/tetratelabs/wazero/issues/620 | sed -n '1,160p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 449ms:
+{
+  "url": "https://api.github.com/repos/wazero/wazero/issues/620",
+  "repository_url": "https://api.github.com/repos/wazero/wazero",
+  "labels_url": "https://api.github.com/repos/wazero/wazero/issues/620/labels{/name}",
+  "comments_url": "https://api.github.com/repos/wazero/wazero/issues/620/comments",
+  "events_url": "https://api.github.com/repos/wazero/wazero/issues/620/events",
+  "html_url": "https://github.com/wazero/wazero/issues/620",
+  "id": 1260662897,
+  "node_id": "I_kwDOD5Cyw85LJDBx",
+  "number": 620,
+  "title": "Evaluate the correct built-in RNG implementation ",
+  "user": {
+    "login": "codefromthecrypt",
+    "id": 64215,
+    "node_id": "MDQ6VXNlcjY0MjE1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/64215?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/codefromthecrypt",
+    "html_url": "https://github.com/codefromthecrypt",
+    "followers_url": "https://api.github.com/users/codefromthecrypt/followers",
+    "following_url": "https://api.github.com/users/codefromthecrypt/following{/other_user}",
+    "gists_url": "https://api.github.com/users/codefromthecrypt/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/codefromthecrypt/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/codefromthecrypt/subscriptions",
+    "organizations_url": "https://api.github.com/users/codefromthecrypt/orgs",
+    "repos_url": "https://api.github.com/users/codefromthecrypt/repos",
+    "events_url": "https://api.github.com/users/codefromthecrypt/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/codefromthecrypt/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2035390972,
+      "node_id": "MDU6TGFiZWwyMDM1MzkwOTcy",
+      "url": "https://api.github.com/repos/wazero/wazero/labels/enhancement",
+      "name": "enhancement",
+      "color": "a2eeef",
+      "default": true,
+      "description": "New feature or request"
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-06-04T06:29:49Z",
+  "updated_at": "2023-03-06T04:44:31Z",
+  "closed_at": "2023-03-06T04:44:31Z",
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Is your feature request related to a problem? Please describe.**\r\nA while back, we switched from math to crypto [RNG](https://github.com/tetratelabs/wazero/pull/237#pullrequestreview-881293767). This seemed correct at the time, but go's docs hint at a sandbox problem\r\n\r\n```\r\n// Reader is a global, shared instance of a cryptographically\r\n// secure random number generator.\r\n//\r\n// On Linux and FreeBSD, Reader uses getrandom(2) if available, /dev/urandom otherwise.\r\n// On OpenBSD, Reader uses getentropy(2).\r\n// On other Unix-like systems, Reader reads from /dev/urandom.\r\n// On Windows systems, Reader uses the RtlGenRandom API.\r\n```\r\n\r\nWhat I'm concerned with is a WebAssembly module exhausting the host entropy source. Elsewhere, such as clocks (#616) we don't expose something that can be used as a covert channel, or break the sandbox.\r\n\r\nMoreover, there's a tacit \"capabilities\" approach in how people describe WASI, though implementation is very inconsistent across projects. A capabilities approach would default to a fake random, or at least something that can't exhaust the host.\r\n\r\n**Describe the solution you'd like**\r\n\r\nI'd like advice on if we should change the default and what it would change to. If we are to stay the same, that's also fine, but we should raise a PR to update RATIONALE.md on it.\r\n\r\nSo, I think we need to clarify for the API\r\n* what the value users should supply, which satisfies what imports need?\r\n  *  ex an adaquately seeded CSPRNG vs something else\r\n* what is the default when one was never supplied? \r\n\r\n**Related context**\r\n\r\nImports that will consume this:\r\n\r\n* \"wasi_snapshot_01\" \"random_get\r\n  *  https://github.com/WebAssembly/WASI/blob/snapshot-01/phases/snapshot/docs.md#-random_getbuf-pointeru8-buf_len-size---errno\r\n* \"wasi-random\" \"getrandom\"\r\n  * https://github.com/WebAssembly/wasi-random/blob/main/wasi-random.wit.md#getrandom\r\n* \"go\" \"runtime.getRandomData\"\r\n  * https://github.com/golang/go/blob/master/misc/wasm/wasm_exec.js#L286\r\n\r\nRelated imports we can address now or another way, possibly arch-specific, later:\r\n\r\n* \"env\" \"seed\"\r\n  * https://www.assemblyscript.org/concepts.html#special-imports\r\n* \"wasi-random\" \"insecure-random\"\r\n  * https://github.com/WebAssembly/wasi-random/blob/main/wasi-random.wit.md#insecure-random",
+  "closed_by": {
+    "login": "codefromthecrypt",
+    "id": 64215,
+    "node_id": "MDQ6VXNlcjY0MjE1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/64215?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/codefromthecrypt",
+    "html_url": "https://github.com/codefromthecrypt",
+    "followers_url": "https://api.github.com/users/codefromthecrypt/followers",
+    "following_url": "https://api.github.com/users/codefromthecrypt/following{/other_user}",
+    "gists_url": "https://api.github.com/users/codefromthecrypt/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/codefromthecrypt/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/codefromthecrypt/subscriptions",
+    "organizations_url": "https://api.github.com/users/codefromthecrypt/orgs",
+    "repos_url": "https://api.github.com/users/codefromthecrypt/repos",
+    "events_url": "https://api.github.com/users/codefromthecrypt/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/codefromthecrypt/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/wazero/wazero/issues/620/reactions",
+    "total_count": 1,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 1,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/wazero/wazero/issues/620/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "completed",
+  "pinned_comment": null
+}
+
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/wazero/wazero/issues/620/comments | sed -n '1,220p'" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 291ms:
+[
+  {
+    "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146549217",
+    "html_url": "https://github.com/wazero/wazero/issues/620#issuecomment-1146549217",
+    "issue_url": "https://api.github.com/repos/wazero/wazero/issues/620",
+    "id": 1146549217,
+    "node_id": "IC_kwDOD5Cyw85EVvPh",
+    "user": {
+      "login": "codefromthecrypt",
+      "id": 64215,
+      "node_id": "MDQ6VXNlcjY0MjE1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64215?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codefromthecrypt",
+      "html_url": "https://github.com/codefromthecrypt",
+      "followers_url": "https://api.github.com/users/codefromthecrypt/followers",
+      "following_url": "https://api.github.com/users/codefromthecrypt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codefromthecrypt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codefromthecrypt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codefromthecrypt/subscriptions",
+      "organizations_url": "https://api.github.com/users/codefromthecrypt/orgs",
+      "repos_url": "https://api.github.com/users/codefromthecrypt/repos",
+      "events_url": "https://api.github.com/users/codefromthecrypt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codefromthecrypt/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2022-06-04T06:30:37Z",
+    "updated_at": "2022-06-04T06:30:37Z",
+    "body": "@knqyf263 @sam-at-luther if both of you have time to contribute a suggestion, much obliged",
+    "author_association": "CONTRIBUTOR",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146549217/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  },
+  {
+    "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146556459",
+    "html_url": "https://github.com/wazero/wazero/issues/620#issuecomment-1146556459",
+    "issue_url": "https://api.github.com/repos/wazero/wazero/issues/620",
+    "id": 1146556459,
+    "node_id": "IC_kwDOD5Cyw85EVxAr",
+    "user": {
+      "login": "inkeliz",
+      "id": 4644332,
+      "node_id": "MDQ6VXNlcjQ2NDQzMzI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4644332?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/inkeliz",
+      "html_url": "https://github.com/inkeliz",
+      "followers_url": "https://api.github.com/users/inkeliz/followers",
+      "following_url": "https://api.github.com/users/inkeliz/following{/other_user}",
+      "gists_url": "https://api.github.com/users/inkeliz/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/inkeliz/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/inkeliz/subscriptions",
+      "organizations_url": "https://api.github.com/users/inkeliz/orgs",
+      "repos_url": "https://api.github.com/users/inkeliz/repos",
+      "events_url": "https://api.github.com/users/inkeliz/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/inkeliz/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2022-06-04T07:18:47Z",
+    "updated_at": "2022-06-04T07:39:00Z",
+    "body": "Maybe there's a better way, but an easy one is to use hashes. Hashes are PRF by default; In that particular cases seems that XOF (Extendable-Output Functions) can be used as \"DRBG\", and will do the job just fine.\r\n\r\nPersonally, I use that quite alot with Blake2, something like (error checks removed for simplicity):\r\n\r\n```\r\nimport (\r\n\t\"crypto/rand\"\r\n\t\"fmt\"\r\n\r\n\t\"golang.org/x/crypto/blake2b\"\r\n)\r\n\r\ntype rngGenerator struct {\r\n\tblake2b.XOF\r\n}\r\n\r\nfunc newRNGGenereator() (rng rngGenerator) {\r\n\tkey := make([]byte, 64)\r\n\trand.Read(key)\r\n\trng.XOF, _ = blake2b.NewXOF(blake2b.OutputLengthUnknown, key)\r\n\treturn rng\r\n}\r\n\r\nfunc main() {\r\n\r\n\trng := newRNGGenereator()\r\n\r\n\toutput := make([]byte, 123)\r\n\tfor i := 0; i < 10; i++ {\r\n\t\trng.Read(output) // can read many times, up to 256GiB, I think. The size can vary, it's not fixed.\r\n\t\tfmt.Printf(\"%X \\n\", output)\r\n\t}\r\n}\r\n```\r\n\r\nYou need `rand` for the initialization, but after that each `Read` is independent from the `rand` and the XOF is used to generate random data. In that case, the guest can request bunch for random data and that will be random and independent from the host entropy and others guests. _You may need to re-initialize the XOF once and while (due to 256Gib limits), but that still saving from reading `rand` everytime, it's also possible to extend itself, using the output as seed to the next XOF_.\r\n\r\nEDIT: To make it easier to undestand: `random_get` function will read from the XOF, instead of getting it from rand. On each new module, it will create one new XOF \"session\" and use `rand` just once.\r\n\r\n---------------\r\n\r\nIt's possible to use SHA-3 too. In that case it's ShakeHash (https://pkg.go.dev/golang.org/x/crypto/sha3#ShakeHash), same concept. _I'm not sure if SHA-3 have such limitation on the stream size._\r\n\r\nHowever, both imports packages from golang.org/x/crypto, _and maybe there's a simple and better way to do the thing_.",
+    "author_association": "CONTRIBUTOR",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146556459/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  },
+  {
+    "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146564714",
+    "html_url": "https://github.com/wazero/wazero/issues/620#issuecomment-1146564714",
+    "issue_url": "https://api.github.com/repos/wazero/wazero/issues/620",
+    "id": 1146564714,
+    "node_id": "IC_kwDOD5Cyw85EVzBq",
+    "user": {
+      "login": "codefromthecrypt",
+      "id": 64215,
+      "node_id": "MDQ6VXNlcjY0MjE1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64215?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codefromthecrypt",
+      "html_url": "https://github.com/codefromthecrypt",
+      "followers_url": "https://api.github.com/users/codefromthecrypt/followers",
+      "following_url": "https://api.github.com/users/codefromthecrypt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codefromthecrypt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codefromthecrypt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codefromthecrypt/subscriptions",
+      "organizations_url": "https://api.github.com/users/codefromthecrypt/orgs",
+      "repos_url": "https://api.github.com/users/codefromthecrypt/repos",
+      "events_url": "https://api.github.com/users/codefromthecrypt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codefromthecrypt/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2022-06-04T08:10:17Z",
+    "updated_at": "2022-06-04T08:10:17Z",
+    "body": "Thanks @inkeliz. I'll defer until other end users chime in. Commenting only because you mentioned something I left out of the desc. the consumers of this api (and we may need more than one, similar to how we have wall time and nanotime)\r\n\r\nSo, I think we need to clarify for the API\r\n* what the value users should supply, which satisfies what imports need?\r\n  *  ex an adaquately seeded CSPRNG vs something else\r\n* what is the default when one was never supplied? \r\n\r\nHere are the use cases I've added to the desc\r\n\r\n* \"wasi_snapshot_01\" \"random_get\r\n  *  https://github.com/WebAssembly/WASI/blob/snapshot-01/phases/snapshot/docs.md#-random_getbuf-pointeru8-buf_len-size---errno\r\n* \"wasi-random\" \"getrandom\"\r\n  * https://github.com/WebAssembly/wasi-random/blob/main/wasi-random.wit.md#getrandom\r\n* \"go\" \"runtime.getRandomData\"\r\n  * https://github.com/golang/go/blob/master/misc/wasm/wasm_exec.js#L286\r\n\r\nWe also have some related imports, too\r\n\r\n* \"env\" \"seed\"\r\n  * https://www.assemblyscript.org/concepts.html#special-imports\r\n* \"wasi-random\" \"insecure-random\"\r\n  * https://github.com/WebAssembly/wasi-random/blob/main/wasi-random.wit.md#insecure-random",
+    "author_association": "CONTRIBUTOR",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1146564714/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  },
+  {
+    "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1455391819",
+    "html_url": "https://github.com/wazero/wazero/issues/620#issuecomment-1455391819",
+    "issue_url": "https://api.github.com/repos/wazero/wazero/issues/620",
+    "id": 1455391819,
+    "node_id": "IC_kwDOD5Cyw85Wv4RL",
+    "user": {
+      "login": "mathetake",
+      "id": 13513977,
+      "node_id": "MDQ6VXNlcjEzNTEzOTc3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13513977?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mathetake",
+      "html_url": "https://github.com/mathetake",
+      "followers_url": "https://api.github.com/users/mathetake/followers",
+      "following_url": "https://api.github.com/users/mathetake/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mathetake/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mathetake/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mathetake/subscriptions",
+      "organizations_url": "https://api.github.com/users/mathetake/orgs",
+      "repos_url": "https://api.github.com/users/mathetake/repos",
+      "events_url": "https://api.github.com/users/mathetake/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mathetake/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2023-03-06T03:39:36Z",
+    "updated_at": "2023-03-06T03:39:36Z",
+    "body": "what's the next action on this issue, given that no one has chimed in since Jun 2022? ",
+    "author_association": "MEMBER",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wazero/wazero/issues/comments/1455391819/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  }
+]
+
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/crowdsecurity/crowdsec/pulls/4495 | sed -n '1,140p'; curl -L --silent https://api.github.com/repos/wetware/pkg/issues/106 | sed -n '1,120p'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 888ms:
+{
+  "url": "https://api.github.com/repos/crowdsecurity/crowdsec/pulls/4495",
+  "id": 3793654501,
+  "node_id": "PR_kwDOD76tIs7iHpLl",
+  "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4495",
+  "diff_url": "https://github.com/crowdsecurity/crowdsec/pull/4495.diff",
+  "patch_url": "https://github.com/crowdsecurity/crowdsec/pull/4495.patch",
+  "issue_url": "https://api.github.com/repos/crowdsecurity/crowdsec/issues/4495",
+  "number": 4495,
+  "state": "closed",
+  "locked": false,
+  "title": "Fix obfuscator prng",
+  "user": {
+    "login": "buixor",
+    "id": 990714,
+    "node_id": "MDQ6VXNlcjk5MDcxNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/990714?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/buixor",
+    "html_url": "https://github.com/buixor",
+    "followers_url": "https://api.github.com/users/buixor/followers",
+    "following_url": "https://api.github.com/users/buixor/following{/other_user}",
+    "gists_url": "https://api.github.com/users/buixor/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/buixor/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/buixor/subscriptions",
+    "organizations_url": "https://api.github.com/users/buixor/orgs",
+    "repos_url": "https://api.github.com/users/buixor/repos",
+    "events_url": "https://api.github.com/users/buixor/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/buixor/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "wazero's own config.go:651-652 docs are explicit:\r\n\r\n> WithRandSource configures a source of random bytes. Defaults to return a deterministic source. You might override this with crypto/rand.Reader.\r\n\r\n\r\nThis adds back a proper random source, else it would defeat the runtime obfuscation randomness",
+  "created_at": "2026-06-03T07:48:44Z",
+  "updated_at": "2026-06-03T07:52:29Z",
+  "closed_at": "2026-06-03T07:51:57Z",
+  "merged_at": null,
+  "merge_commit_sha": "571c97a60152edc7c0157b4f807cf8ef98db1516",
+  "assignees": [
+
+  ],
+  "requested_reviewers": [
+
+  ],
+  "requested_teams": [
+
+  ],
+  "labels": [
+    {
+      "id": 4878376037,
+      "node_id": "LA_kwDOD76tIs8AAAABIsYcZQ",
+      "url": "https://api.github.com/repos/crowdsecurity/crowdsec/labels/needs/kind",
+      "name": "needs/kind",
+      "color": "ededed",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 4879646411,
+      "node_id": "LA_kwDOD76tIs8AAAABItl-yw",
+      "url": "https://api.github.com/repos/crowdsecurity/crowdsec/labels/needs/area",
+      "name": "needs/area",
+      "color": "ededed",
+      "default": false,
+      "description": null
+    }
+  ],
+  "milestone": null,
+  "draft": false,
+  "commits_url": "https://api.github.com/repos/crowdsecurity/crowdsec/pulls/4495/commits",
+  "review_comments_url": "https://api.github.com/repos/crowdsecurity/crowdsec/pulls/4495/comments",
+  "review_comment_url": "https://api.github.com/repos/crowdsecurity/crowdsec/pulls/comments{/number}",
+  "comments_url": "https://api.github.com/repos/crowdsecurity/crowdsec/issues/4495/comments",
+  "statuses_url": "https://api.github.com/repos/crowdsecurity/crowdsec/statuses/bb160ede719ed70708a80ede08698f028002cae7",
+  "head": {
+    "label": "crowdsecurity:fix_obfuscator_prng",
+    "ref": "fix_obfuscator_prng",
+    "sha": "bb160ede719ed70708a80ede08698f028002cae7",
+    "user": {
+      "login": "crowdsecurity",
+      "id": 63284097,
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjYzMjg0MDk3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63284097?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/crowdsecurity",
+      "html_url": "https://github.com/crowdsecurity",
+      "followers_url": "https://api.github.com/users/crowdsecurity/followers",
+      "following_url": "https://api.github.com/users/crowdsecurity/following{/other_user}",
+      "gists_url": "https://api.github.com/users/crowdsecurity/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/crowdsecurity/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/crowdsecurity/subscriptions",
+      "organizations_url": "https://api.github.com/users/crowdsecurity/orgs",
+      "repos_url": "https://api.github.com/users/crowdsecurity/repos",
+      "events_url": "https://api.github.com/users/crowdsecurity/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/crowdsecurity/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "repo": {
+      "id": 264154402,
+      "node_id": "MDEwOlJlcG9zaXRvcnkyNjQxNTQ0MDI=",
+      "name": "crowdsec",
+      "full_name": "crowdsecurity/crowdsec",
+      "private": false,
+      "owner": {
+        "login": "crowdsecurity",
+        "id": 63284097,
+        "node_id": "MDEyOk9yZ2FuaXphdGlvbjYzMjg0MDk3",
+        "avatar_url": "https://avatars.githubusercontent.com/u/63284097?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/crowdsecurity",
+        "html_url": "https://github.com/crowdsecurity",
+        "followers_url": "https://api.github.com/users/crowdsecurity/followers",
+        "following_url": "https://api.github.com/users/crowdsecurity/following{/other_user}",
+        "gists_url": "https://api.github.com/users/crowdsecurity/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/crowdsecurity/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/crowdsecurity/subscriptions",
+        "organizations_url": "https://api.github.com/users/crowdsecurity/orgs",
+        "repos_url": "https://api.github.com/users/crowdsecurity/repos",
+        "events_url": "https://api.github.com/users/crowdsecurity/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/crowdsecurity/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/crowdsecurity/crowdsec",
+      "description": "CrowdSec - the open-source and participative security solution offering crowdsourced protection against malicious IPs and access to the most advanced real-world CTI.",
+      "fork": false,
+      "url": "https://api.github.com/repos/crowdsecurity/crowdsec",
+      "forks_url": "https://api.github.com/repos/crowdsecurity/crowdsec/forks",
+      "keys_url": "https://api.github.com/repos/crowdsecurity/crowdsec/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/crowdsecurity/crowdsec/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/crowdsecurity/crowdsec/teams",
+      "hooks_url": "https://api.github.com/repos/crowdsecurity/crowdsec/hooks",
+      "issue_events_url": "https://api.github.com/repos/crowdsecurity/crowdsec/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/crowdsecurity/crowdsec/events",
+      "assignees_url": "https://api.github.com/repos/crowdsecurity/crowdsec/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/crowdsecurity/crowdsec/branches{/branch}",
+{
+  "url": "https://api.github.com/repos/wetware/pkg/issues/106",
+  "repository_url": "https://api.github.com/repos/wetware/pkg",
+  "labels_url": "https://api.github.com/repos/wetware/pkg/issues/106/labels{/name}",
+  "comments_url": "https://api.github.com/repos/wetware/pkg/issues/106/comments",
+  "events_url": "https://api.github.com/repos/wetware/pkg/issues/106/events",
+  "html_url": "https://github.com/wetware/pkg/issues/106",
+  "id": 1664789911,
+  "node_id": "I_kwDOD41gcM5jOq2X",
+  "number": 106,
+  "title": "Use cryptographic PRNG with `WithRandSource` option",
+  "user": {
+    "login": "lthibault",
+    "id": 9452561,
+    "node_id": "MDQ6VXNlcjk0NTI1NjE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/9452561?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lthibault",
+    "html_url": "https://github.com/lthibault",
+    "followers_url": "https://api.github.com/users/lthibault/followers",
+    "following_url": "https://api.github.com/users/lthibault/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lthibault/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lthibault/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lthibault/subscriptions",
+    "organizations_url": "https://api.github.com/users/lthibault/orgs",
+    "repos_url": "https://api.github.com/users/lthibault/repos",
+    "events_url": "https://api.github.com/users/lthibault/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lthibault/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2033418880,
+      "node_id": "MDU6TGFiZWwyMDMzNDE4ODgw",
+      "url": "https://api.github.com/repos/wetware/pkg/labels/bug",
+      "name": "bug",
+      "color": "d73a4a",
+      "default": true,
+      "description": "Something isn't working"
+    },
+    {
+      "id": 4057793445,
+      "node_id": "LA_kwDOD41gcM7x3QOl",
+      "url": "https://api.github.com/repos/wetware/pkg/labels/security",
+      "name": "security",
+      "color": "FA9349",
+      "default": false,
+      "description": "Has security implications"
+    }
+  ],
+  "state": "closed",
+  "locked": true,
+  "assignees": [
+
+  ],
+  "milestone": {
+    "url": "https://api.github.com/repos/wetware/pkg/milestones/1",
+    "html_url": "https://github.com/wetware/pkg/milestone/1",
+    "labels_url": "https://api.github.com/repos/wetware/pkg/milestones/1/labels",
+    "id": 5743071,
+    "node_id": "MDk6TWlsZXN0b25lNTc0MzA3MQ==",
+    "number": 1,
+    "title": "v0.1.0",
+    "description": "First public beta for release in tech circles (e.g. Hacker News).\r\n\r\nObjectives:\r\n- early market feedback\r\n- community building",
+    "creator": {
+      "login": "lthibault",
+      "id": 9452561,
+      "node_id": "MDQ6VXNlcjk0NTI1NjE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9452561?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lthibault",
+      "html_url": "https://github.com/lthibault",
+      "followers_url": "https://api.github.com/users/lthibault/followers",
+      "following_url": "https://api.github.com/users/lthibault/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lthibault/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lthibault/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lthibault/subscriptions",
+      "organizations_url": "https://api.github.com/users/lthibault/orgs",
+      "repos_url": "https://api.github.com/users/lthibault/repos",
+      "events_url": "https://api.github.com/users/lthibault/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lthibault/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "open_issues": 8,
+    "closed_issues": 43,
+    "state": "open",
+    "created_at": "2020-08-07T10:26:31Z",
+    "updated_at": "2023-09-13T00:17:16Z",
+    "due_on": "2023-09-15T00:00:00Z",
+    "closed_at": null
+  },
+  "comments": 2,
+  "created_at": "2023-04-12T15:30:12Z",
+  "updated_at": "2023-04-16T18:27:04Z",
+  "closed_at": "2023-04-16T18:27:03Z",
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I just realized that [`WithRandSource`](https://pkg.go.dev/github.com/tetratelabs/wazero#ModuleConfig) maps onto `crypto/rand`, not `math/rand`.\r\n\r\nWazero is quite strict about not letting guest code make syscalls, so the value defaults to a (deterministic) stub.  We definitely want to provide guests with crypto-grade entropy, so two questions:\r\n\r\n1. What is the benefit (if any) of providing per-instance/isolated random readers?\r\n2. If there is a benefit, how can we implement a stand-alone `io.Reader` that is suitable for crypto?  (Maybe a stream cipher seeded with `crypto/rand`?)",
+  "closed_by": {
+    "login": "lthibault",
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://github.com/crowdsecurity/crowdsec/pull/4495.patch | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent https://api.github.com/repos/wetware/pkg/issues/106/comments | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --silent 'https://api.github.com/search/issues?q=%22WithRandSource%22+%22crypto%2Frand%22' | grep -E '\"html_url\"|\"title\"' | head -40" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 362ms:
+[
+  {
+    "url": "https://api.github.com/repos/wetware/pkg/issues/comments/1505479701",
+    "html_url": "https://github.com/wetware/pkg/issues/106#issuecomment-1505479701",
+    "issue_url": "https://api.github.com/repos/wetware/pkg/issues/106",
+    "id": 1505479701,
+    "node_id": "IC_kwDOD41gcM5Zu8wV",
+    "user": {
+      "login": "lthibault",
+      "id": 9452561,
+      "node_id": "MDQ6VXNlcjk0NTI1NjE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9452561?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lthibault",
+      "html_url": "https://github.com/lthibault",
+      "followers_url": "https://api.github.com/users/lthibault/followers",
+      "following_url": "https://api.github.com/users/lthibault/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lthibault/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lthibault/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lthibault/subscriptions",
+      "organizations_url": "https://api.github.com/users/lthibault/orgs",
+      "repos_url": "https://api.github.com/users/lthibault/repos",
+      "events_url": "https://api.github.com/users/lthibault/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lthibault/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2023-04-12T15:30:27Z",
+    "updated_at": "2023-04-12T15:30:27Z",
+    "body": "cc #103 ",
+    "author_association": "COLLABORATOR",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wetware/pkg/issues/comments/1505479701/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  },
+  {
+    "url": "https://api.github.com/repos/wetware/pkg/issues/comments/1506314150",
+    "html_url": "https://github.com/wetware/pkg/issues/106#issuecomment-1506314150",
+    "issue_url": "https://api.github.com/repos/wetware/pkg/issues/106",
+    "id": 1506314150,
+    "node_id": "IC_kwDOD41gcM5ZyIem",
+    "user": {
+      "login": "lthibault",
+      "id": 9452561,
+      "node_id": "MDQ6VXNlcjk0NTI1NjE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9452561?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lthibault",
+      "html_url": "https://github.com/lthibault",
+      "followers_url": "https://api.github.com/users/lthibault/followers",
+      "following_url": "https://api.github.com/users/lthibault/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lthibault/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lthibault/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lthibault/subscriptions",
+      "organizations_url": "https://api.github.com/users/lthibault/orgs",
+      "repos_url": "https://api.github.com/users/lthibault/repos",
+      "events_url": "https://api.github.com/users/lthibault/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lthibault/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2023-04-13T04:10:16Z",
+    "updated_at": "2023-04-13T04:10:16Z",
+    "body": "https://security.stackexchange.com/questions/86430/linux-kernel-entropy-does-it-matter-to-dev-urandom-and-what-is-a-minimum#86432\n\nThis has reassured me that there is no risk in sharing `crypto/rand.Reader` across many processes, at least from an entropy-depletion point of view.\n\nAt this point, I'm not certain why the Wazero folks have decided not to provide `crypto/rand.Reader` by default. I should make it a point to ask them. ",
+    "author_association": "COLLABORATOR",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/wetware/pkg/issues/comments/1506314150/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null
+  }
+]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 684ms:
+      "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4495",
+      "title": "Fix obfuscator prng",
+        "html_url": "https://github.com/buixor",
+        "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4495",
+      "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4496",
+      "title": "fix js obfuscator prng",
+        "html_url": "https://github.com/buixor",
+        "html_url": "https://github.com/crowdsecurity/crowdsec/pull/4496",
+      "html_url": "https://github.com/golang/go/issues/65178",
+      "title": "runtime: scheduler sometimes starves a runnable goroutine on wasm platforms",
+        "html_url": "https://github.com/bcmills",
+          "html_url": "https://github.com/prattmic",
+        "html_url": "https://github.com/golang/go/milestone/117",
+        "title": "Backlog",
+          "html_url": "https://github.com/rsc",
+        "html_url": "https://github.com/prattmic",
+      "html_url": "https://github.com/tinygo-org/tinygo/issues/4874",
+      "title": "[WASM] wasm export func block until other goroutinue exit, this behavior not same go,go will exit right now and not block other goroutinue",
+        "html_url": "https://github.com/labulakalia",
+      "html_url": "https://github.com/wazero/wazero/issues/2158",
+      "title": "compiler(arm64) overflow in call relocations",
+        "html_url": "https://github.com/davidmdm",
+      "html_url": "https://github.com/wetware/pkg/issues/106",
+      "title": "Use cryptographic PRNG with `WithRandSource` option",
+        "html_url": "https://github.com/lthibault",
+        "html_url": "https://github.com/wetware/pkg/milestone/1",
+        "title": "v0.1.0",
+          "html_url": "https://github.com/lthibault",
+      "html_url": "https://github.com/wazero/wazero/pull/1501",
+      "title": "engine: call FunctionListener.Abort in correct order",
+        "html_url": "https://github.com/chriso",
+        "html_url": "https://github.com/wazero/wazero/pull/1501",
+
+hook: PostToolUse
+ succeeded in 835ms:
+From 34273a050925bef0e017b1b763373d6e940fea63 Mon Sep 17 00:00:00 2001
+From: Thibault Koechlin <orixxx@gmail.com>
+Date: Tue, 2 Jun 2026 19:01:08 +0200
+Subject: [PATCH 1/3] DumpFingerPrint helper
+
+---
+ pkg/appsec/fingerprint_dump.go      | 134 ++++++++++++++
+ pkg/appsec/fingerprint_dump_test.go | 260 ++++++++++++++++++++++++++++
+ pkg/appsec/waf_helpers.go           |   6 +
+ 3 files changed, 400 insertions(+)
+ create mode 100644 pkg/appsec/fingerprint_dump.go
+ create mode 100644 pkg/appsec/fingerprint_dump_test.go
+
+diff --git a/pkg/appsec/fingerprint_dump.go b/pkg/appsec/fingerprint_dump.go
+new file mode 100644
+index 00000000000..bed4e54a0c1
+--- /dev/null
++++ b/pkg/appsec/fingerprint_dump.go
+@@ -0,0 +1,134 @@
++package appsec
++
++import (
++	"encoding/json"
++	"fmt"
++	"os"
++	"path/filepath"
++	"regexp"
++	"strings"
++	"sync"
++	"time"
++
++	log "github.com/sirupsen/logrus"
++
++	"github.com/crowdsecurity/crowdsec/pkg/appsec/challenge"
++)
++
++// Per-output-path mutexes so concurrent requests appending to the same
++// labeled JSONL file can't interleave half-lines, while distinct labels
++// never contend with each other. The outer mutex only guards the map
++// itself; the per-path mutex guards the actual write.
++var (
++	fpDumpMapMu sync.Mutex
++	fpDumpLocks = map[string]*sync.Mutex{}
++)
++
++func fpDumpLockFor(path string) *sync.Mutex {
++	fpDumpMapMu.Lock()
++	defer fpDumpMapMu.Unlock()
++	m, ok := fpDumpLocks[path]
++	if !ok {
++		m = &sync.Mutex{}
++		fpDumpLocks[path] = m
++	}
++	return m
++}
++
++var fpLabelSanitizer = regexp.MustCompile(`[^a-z0-9]+`)
++
++// sanitizeFpLabel returns a filesystem-safe slug for the supplied label:
++// lowercase, runs of non-alphanumerics collapsed to a single underscore,
++// leading/trailing underscores trimmed, capped at 40 chars. An empty or
++// all-junk label collapses to "unlabeled".
++//
++// Two labels that differ only in non-alphanumeric content (e.g. "bot-1"
++// and "bot_1") will share the same file; the original label is always
++// preserved verbatim inside every JSON line so disambiguation downstream
++// is still possible.
++func sanitizeFpLabel(label string) string {
++	s := fpLabelSanitizer.ReplaceAllString(strings.ToLower(label), "_")
++	s = strings.Trim(s, "_")
++	if s == "" {
++		return "unlabeled"
++	}
++	if len(s) > 40 {
++		s = strings.Trim(s[:40], "_")
++		if s == "" {
++			return "unlabeled"
++		}
++	}
++	return s
++}
++
++// fpDumpEntry is the on-disk record shape: one of these per line in the
++// labeled JSONL file. Field order is fixed by the struct so downstream
++// consumers can rely on the JSON layout.
++type fpDumpEntry struct {
++	Label       string                     `json:"label"`
++	Timestamp   time.Time                  `json:"timestamp"`
++	RemoteAddr  string                     `json:"remote_addr,omitempty"`
++	UserAgent   string                     `json:"user_agent,omitempty"`
++	Host        string                     `json:"host,omitempty"`
++	URI         string                     `json:"uri,omitempty"`
++	Method      string                     `json:"method,omitempty"`
++	Fingerprint *challenge.FingerprintData `json:"fingerprint"`
++}
++
++// DumpFingerprint appends one compact JSON object (JSONL) describing the
++// supplied human label, a server-side UTC timestamp, a minimal request
++// context block (remote addr, UA, host, URI, method), and the full
++// FingerprintData to <tmpdir>/crowdsec_fp_dump_<sanitized-label>.jsonl.
++//
++// Re-calling with the same label appends to the same file; different
++// labels produce different files. Designed for offline dataset collection
++// from on_challenge_submit and post_eval hooks.
++//
++// Returns the written path, or "" on error (always logged via logrus).
++// A nil fingerprint is treated as a soft no-op (warning logged) so a
++// rule firing in a hook before the fingerprint is populated doesn't
++// crash request processing.
++func DumpFingerprint(label string, fp *challenge.FingerprintData, req *ParsedRequest) string {
++	if fp == nil {
++		log.Warnf("DumpFingerprint(%q) called with nil fingerprint, skipping", label)
++		return ""
++	}
++
++	path := filepath.Join(os.TempDir(), fmt.Sprintf("crowdsec_fp_dump_%s.jsonl", sanitizeFpLabel(label)))
++
++	entry := fpDumpEntry{
++		Label:       label,
++		Timestamp:   time.Now().UTC(),
++		Fingerprint: fp,
++	}
++	if req != nil {
++		entry.RemoteAddr = req.RemoteAddr
++		entry.UserAgent = req.Headers.Get("User-Agent")
++		entry.Host = req.Host
++		entry.URI = req.URI
++		entry.Method = req.Method
++	}
++
++	line, err := json.Marshal(entry)
++	if err != nil {
++		log.Errorf("DumpFingerprint(%q): marshal: %s", label, err)
++		return ""
++	}
++
++	mu := fpDumpLockFor(path)
++	mu.Lock()
++	defer mu.Unlock()
++
++	fd, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600)
++	if err != nil {
++		log.Errorf("DumpFingerprint(%q): open %s: %s", label, path, err)
++		return ""
++	}
++	defer fd.Close()
++	if _, err := fd.Write(append(line, '\n')); err != nil {
++		log.Errorf("DumpFingerprint(%q): write %s: %s", label, path, err)
++		return ""
++	}
++	log.Infof("fingerprint dumped (label=%q) to %s", label, path)
++	return path
++}
+diff --git a/pkg/appsec/fingerprint_dump_test.go b/pkg/appsec/fingerprint_dump_test.go
+new file mode 100644
+index 00000000000..8e3d8b9305a
+--- /dev/null
++++ b/pkg/appsec/fingerprint_dump_test.go
+@@ -0,0 +1,260 @@
++package appsec
++
++import (
++	"bufio"
++	"encoding/json"
++	"net/http"
++	"os"
++	"path/filepath"
++	"strings"
++	"sync"
++	"testing"
++	"time"
++
++	"github.com/crowdsecurity/crowdsec/pkg/appsec/challenge"
++)
++
++// fakeFingerprint returns a minimal but distinguishable *challenge.FingerprintData
++// suitable for asserting that DumpFingerprint preserved the value end-to-end.
++func fakeFingerprint(fsid string) *challenge.FingerprintData {
++	return &challenge.FingerprintData{
++		FSID:  fsid,
++		Nonce: "test-nonce",
++		Time:  1717000000,
++		URL:   "https://example.test/path",
++	}
++}
++
++func fakeRequest() *ParsedRequest {
++	return &ParsedRequest{
++		RemoteAddr: "203.0.113.7:51234",
++		Host:       "example.test",
++		URI:        "/login",
++		Method:     "POST",
++		Headers:    http.Header{"User-Agent": []string{"Mozilla/5.0 (test)"}},
++	}
++}
++
++// readJSONL reads every line of the given path as a JSON object and returns them.
++func readJSONL(t *testing.T, path string) []map[string]any {
++	t.Helper()
++	fd, err := os.Open(path)
++	if err != nil {
++		t.Fatalf("open %s: %s", path, err)
++	}
++	defer fd.Close()
++	var out []map[string]any
++	sc := bufio.NewScanner(fd)
++	// Fingerprints with full signals can be large; bump the buffer to avoid
++	// false negatives on real-shape payloads, even though our test data is tiny.
++	sc.Buffer(make([]byte, 0, 64*1024), 16*1024*1024)
++	for sc.Scan() {
++		var m map[string]any
++		if err := json.Unmarshal(sc.Bytes(), &m); err != nil {
++			t.Fatalf("invalid JSON line %q: %s", sc.Text(), err)
++		}
++		out = append(out, m)
++	}
++	if err := sc.Err(); err != nil {
++		t.Fatalf("scan: %s", err)
++	}
++	return out
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "curl -L --silent https://github.com/crowdsecurity/crowdsec/pull/4495.patch | grep -n -A12 -B10 'WithRandSource\\|crypto/rand\\|rand.Reader'" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 589ms:
+565- 1 file changed, 17 insertions(+), 1 deletion(-)
+566-
+567-diff --git a/pkg/appsec/challenge/obfuscator.go b/pkg/appsec/challenge/obfuscator.go
+568-index 83006e837a8..83fffcb7fc2 100644
+569---- a/pkg/appsec/challenge/obfuscator.go
+570-+++ b/pkg/appsec/challenge/obfuscator.go
+571-@@ -9,6 +9,7 @@ package challenge
+572- import (
+573- 	"bytes"
+574- 	"context"
+575:+	crand "crypto/rand"
+576- 	_ "embed"
+577- 	"fmt"
+578- 	"sync"
+579-@@ -28,6 +29,18 @@ var (
+580- // wasm module and returns the obfuscated output. Thread-safe: wazero allows
+581- // concurrent module instantiations from the same compiled module, which is
+582- // what makes the dynamic-module singleflight pattern work.
+583-+//
+584-+// The wazero ModuleConfig must opt in to real entropy and real time:
+585:+// wazero defaults `WithRandSource` to a *deterministic* source and the
+586-+// walltime/nanotime to fixed values. javascript-obfuscator's high-
+587-+// obfuscation preset seeds its identifier mangler from QuickJS's
+588-+// `Math.random()` and `Date.now()`, both of which ultimately resolve to
+589-+// WASI calls into these host hooks. With the defaults, every invocation
+590-+// produces byte-identical output — silently collapsing the per-epoch
+591-+// variant pool (see TestCryptoObfuscationPoolSize) to a single variant
+592-+// regardless of the configured cryptoPoolSize, defeating the whole
+593:+// point of pooling. Use crypto/rand + real wall/nano time so each
+594-+// invocation gets distinct output.
+595- func (c *ChallengeRuntime) ObfuscateJS(ctx context.Context, inputJS string) (string, error) {
+596- 	stdin := bytes.NewReader([]byte(inputJS))
+597- 	var stdout bytes.Buffer
+598-@@ -36,7 +49,10 @@ func (c *ChallengeRuntime) ObfuscateJS(ctx context.Context, inputJS string) (str
+599- 	config := wazero.NewModuleConfig().
+600- 		WithStdin(stdin).
+601- 		WithStdout(&stdout).
+602--		WithStderr(&stderr)
+603-+		WithStderr(&stderr).
+604:+		WithRandSource(crand.Reader).
+605-+		WithSysWalltime().
+606-+		WithSysNanotime()
+607- 
+608- 	mod, err := c.r.InstantiateModule(ctx, c.obfuscatorMod, config)
+609- 	if err != nil {
+
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+ROLE: systems_reviewer  VOTE: yellow
+PROMPT_VERSION: v001
+EXISTING_IMPLEMENTATIONS: [
+  {system: "wazero v1.12.0", url: "https://github.com/tetratelabs/wazero/blob/v1.12.0/config.go#L651-L660 ; https://github.com/tetratelabs/wazero/blob/v1.12.0/internal/platform/crypto.go ; https://github.com/tetratelabs/wazero/blob/v1.12.0/internal/platform/time.go", overlap: "Ships the core mechanism: default deterministic RandSource, fixed seed 42, fake wall/nano clocks, instant nanosleep; WASI random_get reads this source."},
+  {system: "Wasmtime", url: "https://docs.rs/wasmtime-wasi/latest/wasmtime_wasi/struct.WasiCtxBuilder.html#method.secure_random ; https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/src/random.rs", overlap: "Contrasting implementation: default RNG is randomly seeded per context and documented as suitable for WASI security invariants; p1 random_get delegates to get-random-bytes."},
+  {system: "Wasmer", url: "https://github.com/wasmerio/wasmer/blob/main/lib/wasix/src/syscalls/wasi/random_get.rs", overlap: "Contrasting implementation: random_get fills bytes via getrandom::fill."},
+  {system: "wazero upstream issue #620", url: "https://github.com/wazero/wazero/issues/620", overlap: "Upstream already discussed whether default random_get should be an adequately seeded CSPRNG versus deterministic sandbox-preserving default."},
+  {system: "CrowdSec PR #4495", url: "https://github.com/crowdsecurity/crowdsec/pull/4495", overlap: "Practitioner fix adds WithRandSource(crypto/rand.Reader), WithSysWalltime, and WithSysNanotime because wazero defaults made obfuscation byte-identical."},
+  {system: "wetware/pkg issue #106", url: "https://github.com/wetware/pkg/issues/106", overlap: "Practitioner independently recognized WithRandSource needs crypto-grade entropy for guests."}
+]
+CONTRIBUTION_TYPE: insight
+SCALE_REALISM: The ABI-level differential holds for the packet’s demonstrated workload and is source-supported: preview1 random_get requires high-quality random data and blocking on insufficient high-quality data (https://github.com/WebAssembly/WASI/blob/snapshot-01/phases/snapshot/docs.md#random_get), while wasi:random 0.2 explicitly requires CSPRNG unpredictability and says deterministic environments must omit the secure API (https://github.com/WebAssembly/wasi-random/blob/main/wit/random.wit). The realistic-scale gap is prevalence/blast-radius: the packet has real non-zero examples but no authenticated broad code scan, no production incidence rate, and no measured distribution over plugin hosts. vLLM/SGLang/LMCache/FlashInfer/TensorRT-LLM searches produced no material WASI-random/clock overlap, so they do not supply a shipping duplicate or a required baseline for this claim.
+RATIONALE: Yellow, not green, because the systems fact pattern is strong but the contribution is a synthesis over already-shipping behavior and already-seen practitioner fixes. Wazero ships the problematic default; Wasmtime and Wasmer show it is a cross-runtime anomaly; WASI specs support the CSPRNG-contract interpretation. However, wazero issue #620, wetware issue #106, and CrowdSec PR #4495 show the mechanism and mitigation were already independently identified in OSS. The remaining contribution is the framed systems insight: ABI-boundary silent demotion plus cross-language/cross-runtime differential plus clock coupling. That is more than glue, but insufficient evidence for green without the L2 prevalence/blast-radius scan and artifact details beyond the summarized 30/30 and 10/10 reproducibility claims.
+tokens used
+105,198
