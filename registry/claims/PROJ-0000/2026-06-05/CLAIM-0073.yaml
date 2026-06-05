@@ -1,0 +1,58 @@
+claim_id: CLAIM-0073
+project_id: PROJ-0000
+stage: seed
+status: seed
+claim: 'In DuckDB >=1.x (v1.5.3, young: v1.0 June 2024, real adoption: pandas-adjacent/dbt/MotherDuck/Observable/duckplyr),
+  read_csv with all defaults sniffs a columns type from only the first sample_size
+  (=20480) rows; a column whose sampled rows are integer-valued is locked to BIGINT,
+  and any LATER fractional value is SILENTLY TRUNCATED to an integer (no error, no
+  NULL, no warning, no re-widen) -- while a non-numeric value in the same column errors
+  LOUDLY. The default sample_size silently sets a DATA-FIDELITY correctness property
+  neither the sniffers authors (who promise loud errors: "if any structural errors
+  are encountered, the scanner will immediately stop and throw the error") nor the
+  user (who sees a clean load) predict. VERIFIED on devvm14382 (DuckDB 1.5.3 via pip):
+  value 3.14 at row 30000 (past sample_size=20480) loaded as 3, dtype=BIGINT, zero
+  diagnostic; same 3.14 at row 5 (inside sample) -> sniffs DOUBLE, preserves 3.14;
+  sample_size=-1 (full scan) -> DOUBLE, preserved; pandas full-file read -> float64,
+  preserved. The LOUD-vs-SILENT asymmetry by value TYPE (non-numeric -> loud error;
+  fractional -> silent truncation) is the un-owned composition. NULL EXIT: DuckDB
+  errors or preserves (pandas lineage) -> did NOT happen (silent truncation).'
+why_it_matters: "FRESH-DOMAIN (databases-and-storage-engines), IMMATURE-WEDGE, scout-DD\
+  \ GO 7.0/10. CLAIM-0059/wazero/zenoh winning shape: a DEFAULT (sample_size=20480)\
+  \ silently SETS a correctness property (data fidelity of a column whose first 20480\
+  \ rows look integer) neither side predicts. \u2605 CLEARS ALL 3 YELLOW-CAP LESSONS:\
+  \ (1) mature-lineage: mechanism is DuckDBs GENUINELY NOVEL bounded-sample-non-widening-sniffer\
+  \ + silent integer-cast, NOT inherited (lineage control: pandas reads the whole\
+  \ file -> preserves 3.14); (2) practitioner-find-fix: searched DuckDB/duckdb-wasm/duckplyr\
+  \ trackers+blogs+forums, NO >=3-independent-fork remediation of THIS silent float->int\
+  \ truncation (adjacent sniffer issues exist: dialect/column-count/enum, but NOT\
+  \ this); (3) prevalence-without-auth: countable from DuckDBs own defaults (sample_size=20480\
+  \ is the ONLY default; every read_csv/read_csv_auto/COPY-FROM routes through it;\
+  \ trigger = integer-valued-early + fractional-later = a generic file shape: IDs/counts\
+  \ early, measurements/prices later; sorted/append-only logs; sparse decimals). 6-GATE:\
+  \ #1 incremental-composition (docs promise loud errors; truncation is silent --\
+  \ a genuine documented-promise-vs-reality contract violation). #2 verify (installed+probed\
+  \ DuckDB 1.5.3). #3 tracker/lineage/find-fix all PASS. #4 not-folklore (the SPECIFIC\
+  \ silent-truncate-vs-loud-error asymmetry + the no-widen-after-sample design is\
+  \ undocumented; folklore says \"it will error or guess wrong\" not \"it will silently\
+  \ round your floats\"). #5 structural-prevalence (defaults-only, generic file shape).\
+  \ #6 not-tautology (scout killed 3 other angles + showed the in-sample control preserves\
+  \ = the null CAN fire). LIVE RISK: folklore-adjacency (\"sampling picks wrong type\"\
+  \ is widely known) -> ANCHOR on the LOUD-vs-SILENT asymmetry (a non-numeric errors;\
+  \ a fractional silently truncates = un-owned) + the docs explicit loud-error promise\
+  \ being violated + the pandas lineage control (known tools preserve). scout-DD 7.0/10."
+novelty_hypothesis: ''
+mandatory_baselines: []
+academic_map_nodes: []
+supporting_evidence: []
+negative_evidence: []
+verdict_history: []
+revival_conditions: ''
+owner: orchestrator-r11-001
+prompt_version: ''
+lifecycle_state: drafted
+next_action: prior-art + skeptic check, then design a bounded probe
+blocking_on: ''
+active_experiments: []
+created_at: '2026-06-05T18:28:49Z'
+last_updated: '2026-06-05T18:28:49Z'
