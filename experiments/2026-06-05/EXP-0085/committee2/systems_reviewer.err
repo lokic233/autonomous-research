@@ -1,0 +1,158 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e98b7-7c86-7702-a5e8-d42ecae6993d
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#2 — CLAIM-0070 (PROJ-0040, wazero WASI-ABI CSPRNG-demotion + clock-decoupling) — the L1 GREEN GATE
+## committee#2 (L0->c1 YELLOW->L1->c2). effect=SUPPORT/elevated. Vote HONESTLY by role. GREEN requires real 6/6 by role. NOT advocacy — the L1 evidence + the residuals presented straight.
+
+## WHAT committee#1 SAID (VERDICT-0068, 6/6 YELLOW, no RED): cross-language ABI arm cleared the folklore gate; GREEN gated on 4 RE items, the decisive being RE-1 (WASI random_get CSPRNG contract?) + RE-3 (is wazero the cross-runtime anomaly?).
+
+## ★★★ THE L1 RESULTS (EXP-0085, all 4 RE items resolved):
+RE-1 (THE decisive read) -> CSPRNG-CONTRACT. Verbatim WASI preview1 random_get (wasi-0.1 witx + docs.md): "Write HIGH-QUALITY random data into a buffer" + "This function BLOCKS when the implementation is unable to immediately provide sufficient high-quality random data." The high-quality + blocking-on-insufficient-entropy clause IS the getrandom(2)/getentropy CSPRNG contract; a fixed-seed-42 PRNG can NEVER be "unable to provide sufficient high-quality data" -> provably cannot satisfy the blocking semantics -> NON-CONFORMING random_get. Successor spec EXPLICIT (wasi:random/random.get-random-bytes): "cryptographically-secure... at least as cryptographically secure as an adequately seeded CSPRNG... must always be unpredictable... Deterministic environments must OMIT this function, rather than implementing it with deterministic data" (insecure RNG quarantined to wasi:random/insecure). Rust getrandom (the L0's Rust guest path) routes random_get through an API doc'd "always provides high-quality, cryptographically secure random data." => 'silent demotion' is a TECHNICAL FACT, not editorial.
+RE-3 -> wazero is the ANOMALY. Wasmtime: per-context randomly-seeded CSPRNG (ChaCha; doc "Guest code may rely on this to maintain its security invariants"), host clocks. Wasmer: OS CSPRNG (getrandom::fill, unconditional, NO deterministic path), host clocks. wazero v1.12.0: fixed-seed-42 math/rand (const seed=int64(42)), frozen fake clocks +1ms/read, instant nanosleep. A guest portable across all three silently loses entropy + real-time ONLY on wazero -> genuine cross-runtime differential.
+RE-4 -> composition warning SHOWN ABSENT (verbatim config.go): WithRandSource doc "Defaults to return a deterministic source... most commonly used by random_get in wasi_snapshot_preview1" -- it KNOWS it backs the WASI entropy syscall yet frames the default only as "deterministic source," never "demotes the guest's CSPRNG"; WithWalltime/Nanotime/Nanosleep each describe their OWN knob; NONE warns the compound effect.
+L0 RECAP (EXP-0083): cross-PROCESS 30/30 byte-identical ed25519 keys under default; cross-LANGUAGE Rust getrandom 10/10 identical (ABI-boundary, not Go quirk); both controls held; clock-decoupling ~31x; source-verified defaults.
+
+## ★ THE RESIDUALS committee#2 MUST WEIGH (orchestrator surfaces straight, NO advocacy):
+1. SPEC-VIOLATION STRENGTH: the literal phrase "cryptographically secure" is in the SUCCESSOR spec; preview1's prose is "high-quality" + the blocking clause. Is the blocking-clause + universal-consumer-interpretation (Rust getrandom, etc.) a strong-enough basis to call wazero's default a preview1 SPEC VIOLATION, or only a successor-spec violation + a preview1 "high-quality" breach? (The claim's strength scales with this.)
+2. NOVELTY = THE SYNTHESIS: SWC-120/CWE-330 (deterministic-env-demotes-RNG, EVM analogue) + CrowdSec PR#4495 + wetware issue#106 (practitioners independently HIT + FIXED this exact wazero composition WITHOUT a paper/CVE) VALIDATE the hazard but NARROW the novelty. The un-owned contribution is the SYNTHESIS: ABI-boundary + cross-language + cross-runtime-anomaly + un-defendable-by-correct-guest-code + the clock-decoupling half. Is that synthesis a GREEN-worthy finding, or does the practitioner-find-and-fix evidence cap it at YELLOW (known-and-being-fixed)?
+3. PREVALENCE IS SIGNAL NOT MEASURED: RE-2 GitHub code-search is auth-gated (couldn't run the full AST scan). Bounded curated sample (7/10 cloned): knqyf263/go-plugin (mature general-purpose plugin host, BARE default, 25 NewModuleConfig sites, arbitrary-guest exposure = real non-strawman) + wapc/wapc-go (mature host that EXPLICITLY fixed this exact composition). Non-zero real signal, NOT a >5% figure. Full authenticated prevalence + blast-radius = the proper L2. Is signal-not-prevalence sufficient for GREEN, or does GREEN require the L2 prevalence?
+
+## ORCHESTRATOR NOTE (NOT advocacy): the L1 resolved both decisive gates IN the claim's favor (RE-1 CSPRNG-contract, RE-3 wazero-anomalous) with verbatim spec + cross-runtime evidence, and RE-4 shown. The cross-language + cross-runtime + spec-conformance arms are exactly what a green needs to clear the folklore gate. The 3 live questions are altitude: spec-violation strength (preview1 prose), synthesis-novelty vs practitioner-find-fix, and signal-vs-measured-prevalence. If the committee judges the synthesis a genuine spec-conformance + cross-runtime-anomaly finding -> GREEN (v3's 2nd, in fresh territory). If the practitioner-finds + signal-not-prevalence + preview1-prose cap it -> honest YELLOW (advance to an L2 prevalence/blast-radius). Real 6/6 by role for GREEN; if not unanimous, an honest YELLOW is the correct zero-false-green outcome. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the reviewer rules first, then do the OSS prior-art check against the runtimes and cache/inference systems named in the mandate.
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' -g '*.md'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi
+ exited 127 in 160ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 344ms:
+/Users/dengcchi
+Applications
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Public
+afar-src
+agent_infra_committee_code_20260529T083946Z.tar.gz
+agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+ar-private-src
+audit-post-export
+audit-post-export.tar.gz
+autonomous-research
+autonomous-research-e2e
+autonomous-research-v3
+axon
+axon-chat-export-CLEAN.tar.gz
+axon-chat-export-WITH-overrides.tar.gz
+axon-chat-export-e2e.tar.gz
+axon-chat-export.tar.gz
+axon-chat-external
+axon-chat-external-build.tar.gz
+axon-deploy
+axon-export
+axon-export-v2
+axon-export.tar.gz
+axon_vercel.tar.gz
+axon_vercel_20260423_1852.tar.gz
+branchable_replay_R1
+branchable_replay_R2
+branchable_replay_R3
+branchable_replay_review
+cert-work
+exp0072_work
+exp0073_work
+generate_ifm.par
+gpu_pipeline_changes
+green_thesis_factory
+mrs-tpu-devserver-handoff.md
+package-lock.json
+public_agent_infra_research_engagement
+research-os
+research-os-meta
+research-os-venv
+ros-poc
+ros_venv_0067
+scikit_learn_data
+vision_tax_investigation_report.md
+weave
+weave-dev
+work
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed in this environment, so I’m using `find`/targeted reads and then external source lookups for the implementation check.
+exec
+/bin/zsh -lc "find /Users/dengcchi -name _committee_common_v001.md -o -path '*/_shared/TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+2026-06-05T16:57:24.099573Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc 'pkill -f "find /Users/dengcchi -name _committee_common_v001.md" || true' in /Users/dengcchi
+hook: PostToolUse
+ exited -1 in 22678ms:
+ succeeded in 212ms:
+hook: PostToolUse Completed
