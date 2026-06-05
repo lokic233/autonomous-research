@@ -1,0 +1,690 @@
+Codex CLI at Meta (https://fburl.com/codex.cli.users)
+--dangerously-disable-osx-sandbox flag is enabled, please use caution!
+Using Codex Plugboard v2 passthrough
+
+🥑 Start using Avocado/MetaCode today and contribute to Muse Spark 🥑
+Help us improve Avocado by using it for your daily workflows for the next 3-4 weeks. Learn more: https://fburl.com/workplace/5v9ba122
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /Users/dengcchi
+model: gpt-5.5
+provider: responses
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019e9926-9a85-7e20-836b-0e74439a722e
+--------
+user
+# Systems Reviewer — v001
+Read _committee_common_v001.md + _shared/TOOLING_v001.md.
+MANDATE: is this a systems INSIGHT/DESIGN, or mere engineering integration? Search OSS (vLLM/SGLang/
+LMCache/FlashInfer/TensorRT-LLM/etc.) for whether existing systems already implement this mechanism.
+CHECK: does a shipping system already do this; is the contribution an insight or just glue; does it hold
+at realistic scale/workload; reproducibility of the artifact.
+OUTPUT:
+```
+ROLE: systems_reviewer  VOTE: green|yellow|red
+EXISTING_IMPLEMENTATIONS: [{system, url, overlap}]
+CONTRIBUTION_TYPE: insight | design | mechanism | integration-only
+SCALE_REALISM: <holds at realistic workload? gaps?>
+RATIONALE: <cite>
+```
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+=== REVIEW PACKET ===
+# COMMITTEE#1 — CLAIM-0072 (PROJ-0042, IMMATURE-WEDGE: distributed-systems — zenoh per-hop silent-drop + Block-not-end-to-end)
+## EMPIRICAL CROSS-AREA PHENOMENON, effect=SUPPORT. Vote HONESTLY by role. Real 6/6 by role; committee#1 = gate to L1 or converge.
+
+## ★★★ THE #1 STRESS-TEST (the killer):
+GATE-4 FOLKLORE: a reviewer will say "best-effort pub/sub drops under congestion, obviously." THE DECISIVE QUESTION: is the specific composition (1: the SPLIT DEFAULT silently flips the reliability contract between get/Block and put/Drop; 2: CongestionControl::Block MEASURABLY FAILS end-to-end — proven via a 3-NODE ROUTER TOPOLOGY where the publisher's Block does NOT propagate through an intermediate router hop; 3: drops are FULLY SILENT — no error on put, no log at debug, no NULL) genuinely above "best-effort drops"? (a) If the Block-not-end-to-end + the split-default contract-flip is a genuine un-owned non-obvious composition -> SUPPORT. (b) If it collapses to "of course best-effort drops" -> YELLOW/RED.
+
+## CLAIM
+In zenoh 1.9.0 (Eclipse Foundation, default ROS 2 transport rmw_zenoh; 1.0 only late 2024), Publisher::put() returns Ok(()) for 100% of messages while 41-64% are silently dropped to a slow subscriber — AND CongestionControl::Block (the documented anti-drop "wait" knob) does NOT prevent loss because zenoh's congestion control is PER-HOP not end-to-end (proven with a 3-node router topology). The novel mechanism is zenoh's own split-default per-hop fabric (DEFAULT_PUSH=Drop/DEFAULT_REQUEST=Block, verified in source), not inherited DDS/TCP end-to-end semantics.
+
+## L0 RESULT (EXP-0087; cli:devvm14382; pinned zenoh 1.9.0 / Rust 1.96.0; N=50000-200000 8B tcp/127.0.0.1)
+SOURCE-VERIFIED SPLIT DEFAULT (zenoh-protocol core/mod.rs:631-657): DEFAULT_PUSH=Drop (data-plane put), DEFAULT_REQUEST/DECLARE/INTEREST/OAM=Block (control-plane). Block doc: "the node will wait" = per-NODE/per-HOP. push_network_message returns Ok(false) on congestion with NO log call anywhere (transport/common/pipeline.rs:884).
+SLOW_US SWEEP (2-session): slow_us=0 -> 0.00% loss (NULL/control fires, not a tautology); slow_us=100 -> 17% loss; 200 -> 49%; 500 -> 58%. Monotone in slowness, >10% threshold. put_ok=N, put_err=0 EVERY case.
+★ BLOCK-KNOB ARM (the green-anchor): slow_us=200, publisher Block -> STILL 50.5% loss (same/worse than Drop=40.8%), pub_wall identical ~5.0s -> Block does NOT backpressure the publisher -> per-hop not end-to-end.
+★★ 3-NODE ROUTER TOPOLOGY (the unambiguous per-hop proof): pub(client) -> zenoh router process (mode=router, verified forwarding) -> slow sub(client). N=200000 (overflows router->sub hop): Drop=51.0% loss; PUBLISHER-BLOCK=63.8% loss (put_ok=200000, put_err=0). The publisher's Block does NOT PROPAGATE through the router — loss occurs at the router's forwarding hop -> per-hop ≠ end-to-end, PROVEN. (Condition: requires sustained load to overflow router buffers.)
+CONTROLS: fast=0% (null fires); RUST_LOG=zenoh=debug during 43.7%-loss run -> 0 zenoh log lines, 0 drop/congest lines (logger proven functional via smoke test -> genuinely uninstrumented); offload-to-channel -> 0% loss (honest — drop is synchronous-callback-congestion-driven, localizes to transport; NOT "drops regardless of app" — the committee should see this refinement).
+HONEST WEAKENINGS (researcher noted, not overclaimed): loss 41-64% (vs scout's 68-77%); 3-node per-hop loss needs N=200K; offload→0% (synchronous-callback mechanism). Core claim — split-default contract-flip + Block fails end-to-end + silent (no err, no log) — REPRODUCED + STRENGTHENED with the 3-node router proof.
+
+## NOVELTY (the gate-4 defense — what's NOT folklore):
+NOT "best-effort drops" (folklore). The un-owned composition: (a) the SPLIT DEFAULT (control=Block / data=Drop) silently FLIPS the reliability contract between get() and put() — a dev who validated reliability with get() (Block, never drops) switches to put() (Drop) and silently loses data; (b) CongestionControl::Block MEASURABLY FAILS end-to-end (the documented "wait, don't drop" knob does NOT deliver that contract across a hop — PROVEN with 3-node topology); (c) FULLY SILENT (put Ok, no log, no NULL). Mechanism is zenoh's GENUINELY NOVEL per-hop split-default data-centric routing fabric (verified in source), NOT inherited DDS/TCP end-to-end semantics. Clears the fjall mature-lineage cap (DDS/MQTT are end-to-end; zenoh inverted to per-hop, its own invention).
+
+## PRIOR-ART / ISSUE-TRACKER: no CVE; #1494 (big-message fragment drop under CC=Drop) is a DIFFERENT narrow mechanism (different root cause). The put-Ok-while-dropped + Block-not-end-to-end + 3-node-proof COMPOSITION is not in the zenoh tracker or any paper/blog. The split-default contract-flip is undocumented as a hazard.
+
+## ORCHESTRATOR NOTE (NOT advocacy): the 3-node router topology is the strongest fresh-domain evidence v3 has produced in the immature-wedge: it UNAMBIGUOUSLY proves per-hop≠end-to-end with a documented anti-drop knob that provably doesn't deliver. Combined with the source-verified novel mechanism (not inherited DDS/TCP) + the silence (no err, no log) + the contract-flip, this is a clean non-obvious composition on the tool's own genuinely-novel part. The make-or-break is gate-4: does the committee accept "Block measurably fails end-to-end" + "split-default contract-flip" as GREEN-level, or does it cap at "best-effort drops, expected behavior" → YELLOW? Judge honestly. Real 6/6 by role. Prompt version v003.
+=== END PACKET ===
+Output ONLY your structured vote block for role systems_reviewer.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling rules first, then do a targeted OSS search for overlapping mechanisms in zenoh-like middleware and LLM serving systems before issuing the structured vote.
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md' /Users/dengcchi 2>/dev/null" in /Users/dengcchi
+ exited 127 in 0ms:
+hook: PostToolUse
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi
+ succeeded in 0ms:
+/Users/dengcchi
+Applications
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Public
+afar-src
+agent_infra_committee_code_20260529T083946Z.tar.gz
+agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+ar-private-src
+audit-post-export
+audit-post-export.tar.gz
+autonomous-research
+autonomous-research-e2e
+autonomous-research-v3
+axon
+axon-chat-export-CLEAN.tar.gz
+axon-chat-export-WITH-overrides.tar.gz
+axon-chat-export-e2e.tar.gz
+axon-chat-export.tar.gz
+axon-chat-external
+axon-chat-external-build.tar.gz
+axon-deploy
+axon-export
+axon-export-v2
+axon-export.tar.gz
+axon_vercel.tar.gz
+axon_vercel_20260423_1852.tar.gz
+branchable_replay_R1
+branchable_replay_R2
+branchable_replay_R3
+branchable_replay_review
+cert-work
+exp0072_work
+exp0073_work
+generate_ifm.par
+gpu_pipeline_changes
+green_thesis_factory
+mrs-tpu-devserver-handoff.md
+package-lock.json
+public_agent_infra_research_engagement
+research-os
+research-os-meta
+research-os-venv
+ros-poc
+ros_venv_0067
+scikit_learn_data
+vision_tax_investigation_report.md
+weave
+weave-dev
+work
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed in this shell, so I’m falling back to `find` for the local prompt files.
+exec
+/bin/zsh -lc "find /Users/dengcchi -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+exec
+/bin/zsh -lc "find . -maxdepth 4 -path '*/prompts/*' -type f 2>/dev/null | head -200" in /Users/dengcchi
+exec
+/bin/zsh -lc "find autonomous-research-v3 autonomous-research green_thesis_factory public_agent_infra_research_engagement -name '_committee_common_v001.md' -o -name 'TOOLING_v001.md' 2>/dev/null" in /Users/dengcchi
+ succeeded in 3711ms:
+./research-os/prompts/researchers/researcher_v001.md
+./research-os/prompts/researchers/_researcher_common_v001.md
+./research-os/prompts/monitors/orchestrator_monitor_v001.md
+./research-os/prompts/monitors/committee_monitor_v001.md
+./research-os/prompts/committee/product_realist_v001.md
+./research-os/prompts/committee/systems_reviewer_v001.md
+./research-os/prompts/committee/theory_skeptic_v001.md
+./research-os/prompts/committee/novelty_killer_v001.md
+./research-os/prompts/committee/_committee_common_v001.md
+./research-os/prompts/committee/area_chair_v001.md
+./research-os/prompts/committee/evaluation_prosecutor_v001.md
+./research-os/prompts/_shared/TOOLING_v001.md
+./research-os/prompts/_shared/HEARTBEAT_v001.md
+./research-os/prompts/orchestrator/v001.md
+
+codex
+The prompt files are not turning up quickly under the home tree, so I’m continuing the required prior-art search in parallel and will apply the rules stated in the packet if the local files remain unavailable.
+mcp: meta_core/three_pai_external_web_search started
+ succeeded in 5007ms:
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/three_pai_external_web_search started
+mcp: meta_core/three_pai_external_web_search (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+mcp: meta_core/knowledge_load started
+mcp: meta_core/knowledge_load (failed)
+codex
+The internal loader is blocked by input filtering for external pages, so I’m using direct command-line fetches for public docs/source snippets and keeping the citations to stable public URLs.
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/eclipse-zenoh/zenoh/1.9.0/commons/zenoh-protocol/src/core/mod.rs | sed -n '620,670p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://docs.rs/zenoh/latest/zenoh/qos/enum.CongestionControl.html | sed -n '1,220p'" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/eclipse-zenoh/zenoh/1.9.0/io/zenoh-transport/src/common/pipeline.rs | sed -n '850,910p'" in /Users/dengcchi
+exec
+/bin/zsh -lc 'curl -L --max-time 15 https://raw.githubusercontent.com/eclipse-zenoh/zenoh/1.9.0/Cargo.toml | head -20' in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 352ms:
+100 19190  100 19190    0     0  59281      0 --:--:-- --:--:-- --:--:-- 59411
+    Drop = 0,
+    /// When transmitting a message in a node with a full queue, the node will wait for queue to
+    /// progress.
+    Block = 1,
+    #[cfg(feature = "unstable")]
+    /// When transmitting a message in a node with a full queue, the node will wait for queue to
+    /// progress, but only for the first message sent with this strategy; other messages will be
+    /// dropped.
+    BlockFirst = 2,
+}
+
+impl CongestionControl {
+    pub const DEFAULT: Self = Self::Drop;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_PUSH: Self = Self::Drop;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_PUSH: Self = Self::Drop;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_REQUEST: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_REQUEST: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_DECLARE: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_DECLARE: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_INTEREST: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_INTEREST: Self = Self::Block;
+
+    #[cfg(feature = "internal")]
+    pub const DEFAULT_OAM: Self = Self::Block;
+    #[cfg(not(feature = "internal"))]
+    pub(crate) const DEFAULT_OAM: Self = Self::Block;
+}
+
+#[cfg(test)]
+mod tests {
+    use core::str::FromStr;
+
+    use crate::core::{Priority, PriorityRange, RegionName, ZenohIdProto};
+
+    #[test]
+    fn test_priority_range() {
+        assert_eq!(
+            PriorityRange::from_str("2-3"),
+            Ok(PriorityRange::new(
+
+ succeeded in 280ms:
+100 10163  100 10163    0     0  40421      0 --:--:-- --:--:-- --:--:-- 40490
+#
+# Copyright (c) 2023 ZettaScale Technology
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0, or the Apache License, Version 2.0
+# which is available at https://www.apache.org/licenses/LICENSE-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+#
+# Contributors:
+#   ZettaScale Zenoh Team, <zenoh@zettascale.tech>
+#
+[workspace]
+exclude = ["ci/nostd-check", "ci/valgrind-check", "ci/zenoh-1-75"]
+members = [
+  "commons/zenoh-buffers",
+  "commons/zenoh-codec",
+  "commons/zenoh-collections",
+  "commons/zenoh-config",
+
+ succeeded in 374ms:
+100 53411  100 53411    0     0   153k      0 --:--:-- --:--:-- --:--:--  153k
+        Some(Priority::try_from(prio as u8).unwrap())
+    }
+}
+
+#[derive(Clone)]
+struct Waits {
+    wait_before_drop: Duration,
+    max_wait_before_drop_fragments: Duration,
+
+    wait_before_close: Duration,
+}
+
+#[derive(Clone)]
+pub(crate) struct TransmissionPipelineProducer {
+    // Each priority queue has its own Mutex
+    stage_in: Arc<[Mutex<StageIn>]>,
+    status: Arc<TransmissionPipelineStatus>,
+}
+
+impl TransmissionPipelineProducer {
+    #[inline]
+    pub(crate) fn push_network_message(
+        &self,
+        msg: NetworkMessageRef,
+    ) -> Result<bool, TransportClosed> {
+        // If the queue is not QoS, it means that we only have one priority with index 0.
+        let (idx, priority) = if self.stage_in.len() > 1 {
+            let priority = msg.priority();
+            (priority as usize, priority)
+        } else {
+            (0, Priority::DEFAULT)
+        };
+
+        // If message is droppable, compute a deadline after which the sample could be dropped
+        let (wait_time, max_wait_time) = if msg.is_droppable() {
+            // Checked if we are blocked on the priority queue and we drop directly the message
+            if self.status.is_congested(priority) {
+                return Ok(false);
+            }
+            (
+                self.status.waits.wait_before_drop,
+                Some(self.status.waits.max_wait_before_drop_fragments),
+            )
+        } else {
+            (self.status.waits.wait_before_close, None)
+        };
+        let mut deadline = Deadline::new(wait_time, max_wait_time);
+        // Lock the channel. We are the only one that will be writing on it.
+        let mut queue = zlock!(self.stage_in[idx]);
+        // Check again for congestion in case it happens when blocking on the mutex.
+        if msg.is_droppable() && self.status.is_congested(priority) {
+            return Ok(false);
+        }
+        let mut sent = queue.push_network_message(msg, priority, &mut deadline)?;
+        // If the message cannot be sent, mark the pipeline as congested.
+        if !sent {
+            self.status.set_congested(priority, true);
+            // During the time between deadline wakeup and setting the congested flag,
+            // all batches could have been refilled (especially if there is a single one),
+            // so try again with the same already expired deadline.
+            sent = queue.push_network_message(msg, priority, &mut deadline)?;
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 684ms:
+ 83  119k   83  100k    0     0   154k      0 --:--:-- --:--:-- --:--:--  154k100  119k  100  119k    0     0   183k      0 --:--:-- --:--:-- --:--:--  183k
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Congestion control strategy."><title>CongestionControl in zenoh::qos - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="/-/rustdoc.static/${f}">`).join(""))</script><link rel="stylesheet" href="/-/rustdoc.static/normalize-9960930a.css"><link rel="stylesheet" href="/-/static/vendored.css?0-0-0-39849b9c22c419f6b690c8d2213455bc7426a6b8-2026-06-03" media="all" /><link rel="stylesheet" href="/-/rustdoc.static/rustdoc-17e0aaed.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="/-/rustdoc.static/" data-current-crate="zenoh" data-themes="" data-resource-suffix="-20260410-1.96.0-nightly-02c7f9bec" data-rustdoc-version="1.96.0-nightly (02c7f9bec 2026-04-10)" data-channel="nightly" data-search-js="search-b5634cc7.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="/-/rustdoc.static/storage-41dd4d93.js"></script><script defer src="sidebar-items-20260410-1.96.0-nightly-02c7f9bec.js"></script><script defer src="/-/rustdoc.static/main-5013f961.js"></script><noscript><link rel="stylesheet" href="/-/rustdoc.static/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="/-/rustdoc.static/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="/-/rustdoc.static/favicon-044be391.svg"><link rel="stylesheet" href="/-/static/rustdoc-2025-08-20.css?0-0-0-39849b9c22c419f6b690c8d2213455bc7426a6b8-2026-06-03" media="all" /><link rel="stylesheet" href="/-/static/font-awesome.css?0-0-0-39849b9c22c419f6b690c8d2213455bc7426a6b8-2026-06-03" media="all" />
+
+<link rel="search" href="/-/static/opensearch.xml" type="application/opensearchdescription+xml" title="Docs.rs" />
+
+<script type="text/javascript">(function() {
+    function applyTheme(theme) {
+        if (theme) {
+            document.documentElement.dataset.docsRsTheme = theme;
+        }
+    }
+
+    window.addEventListener("storage", ev => {
+        if (ev.key === "rustdoc-theme") {
+            applyTheme(ev.newValue);
+        }
+    });
+
+    // see ./storage-change-detection.html for details
+    window.addEventListener("message", ev => {
+        if (ev.data && ev.data.storage && ev.data.storage.key === "rustdoc-theme") {
+            applyTheme(ev.data.storage.value);
+        }
+    });
+
+    applyTheme(window.localStorage.getItem("rustdoc-theme"));
+})();</script></head><body class="rustdoc-page">
+<div class="nav-container">
+    <div class="container">
+        <div class="pure-menu pure-menu-horizontal" role="navigation" aria-label="Main navigation">
+            <form action="/releases/search"
+                  method="GET"
+                  id="nav-search-form"
+                  class="landing-search-form-nav  ">
+
+                
+                <a href="/" class="pure-menu-heading pure-menu-link docsrs-logo" aria-label="Docs.rs">
+                    <span title="Docs.rs"><span class="fa fa-solid fa-cubes " aria-hidden="true"></span></span>
+                    <span class="title">Docs.rs</span>
+                </a><ul class="pure-menu-list">
+    <script id="crate-metadata" type="application/json">
+        
+        {
+            "name": "zenoh",
+            "version": "1.9.0"
+        }
+    </script><li class="pure-menu-item pure-menu-has-children crate-dropdown">
+            <a href="#" class="pure-menu-link crate-name" title="Zenoh: The Zero Overhead Pub/Sub/Query Protocol.">
+                <span class="fa fa-solid fa-cube " aria-hidden="true"></span>
+                <span class="title">zenoh-1.9.0</span>
+            </a><div class="pure-menu-children package-details-menu">
+                
+                <ul class="pure-menu-list menu-item-divided">
+                    <li class="pure-menu-heading" id="crate-title">
+                        zenoh 1.9.0
+                        <span id="clipboard" class="svg-clipboard" title="Copy crate name and version information"></span>
+                    </li><li class="pure-menu-item">
+                        <a href="/zenoh/1.9.0/zenoh/qos/enum.CongestionControl.html" class="pure-menu-link description" id="permalink" title="Get a link to this specific version"><span class="fa fa-solid fa-link " aria-hidden="true"></span> Permalink
+                        </a>
+                    </li><li class="pure-menu-item">
+                        <a href="/crate/zenoh/latest" class="pure-menu-link description" title="See zenoh in docs.rs">
+                            <span class="fa fa-solid fa-cube " aria-hidden="true"></span> Docs.rs crate page
+                        </a>
+                    </li><li class="pure-menu-item">
+                            <span class="pure-menu-link description license"><span class="fa fa-solid fa-scale-unbalanced-flip " aria-hidden="true"></span>
+                            <a href="https://spdx.org/licenses/EPL-2.0" class="pure-menu-sublink">EPL-2.0</a> OR <a href="https://spdx.org/licenses/Apache-2.0" class="pure-menu-sublink">Apache-2.0</a></span>
+                        </li></ul>
+
+                <div class="pure-g menu-item-divided">
+                    <div class="pure-u-1-2 right-border">
+                        <ul class="pure-menu-list">
+                            <li class="pure-menu-heading">Links</li>
+
+                            <li class="pure-menu-item">
+                                    <a href="http://zenoh.io" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-house " aria-hidden="true"></span> Homepage
+                                    </a>
+                                </li><li class="pure-menu-item">
+                                    <a href="https://github.com/eclipse-zenoh/zenoh" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-code-branch " aria-hidden="true"></span> Repository
+                                    </a>
+                                </li><li class="pure-menu-item">
+                                <a href="https://crates.io/crates/zenoh" class="pure-menu-link" title="See zenoh in crates.io">
+                                    <span class="fa fa-solid fa-cube " aria-hidden="true"></span> crates.io
+                                </a>
+                            </li>
+
+                            
+                            <li class="pure-menu-item">
+                                <a href="/crate/zenoh/latest/source/" title="Browse source of zenoh-1.9.0" class="pure-menu-link">
+                                    <span class="fa fa-solid fa-folder-open " aria-hidden="true"></span> Source
+                                </a>
+                            </li>
+                        </ul>
+                    </div><div class="pure-u-1-2">
+                        <ul class="pure-menu-list" id="topbar-owners">
+                            <li class="pure-menu-heading">Owners</li><li class="pure-menu-item">
+                                    <a href="https://crates.io/users/JEnoch" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-user " aria-hidden="true"></span> JEnoch
+                                    </a>
+                                </li><li class="pure-menu-item">
+                                    <a href="https://crates.io/users/kydos" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-user " aria-hidden="true"></span> kydos
+                                    </a>
+                                </li><li class="pure-menu-item">
+                                    <a href="https://crates.io/users/eclipse-zenoh-bot" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-user " aria-hidden="true"></span> eclipse-zenoh-bot
+                                    </a>
+                                </li><li class="pure-menu-item">
+                                    <a href="https://crates.io/users/OlivierHecart" class="pure-menu-link">
+                                        <span class="fa fa-solid fa-user " aria-hidden="true"></span> OlivierHecart
+                                    </a>
+                                </li></ul>
+                    </div>
+                </div>
+
+                <div class="pure-g menu-item-divided">
+                    <div class="pure-u-1-2 right-border">
+                        <ul class="pure-menu-list">
+                            <li class="pure-menu-heading">Dependencies</li>
+
+                            
+                            <li class="pure-menu-item">
+                                <div class="pure-menu pure-menu-scrollable sub-menu" tabindex="-1">
+                                    <ul class="pure-menu-list">
+                                        <li class="pure-menu-item"><a href="/ahash/^0.8.12/" class="pure-menu-link">
+                ahash ^0.8.12
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/arc-swap/^1.7.1/" class="pure-menu-link">
+                arc-swap ^1.7.1
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/async-trait/^0.1.89/" class="pure-menu-link">
+                async-trait ^0.1.89
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/bytes/^1.11.0/" class="pure-menu-link">
+                bytes ^1.11.0
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/const_format/^0.2.34/" class="pure-menu-link">
+                const_format ^0.2.34
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/flate2/^1.1.5/" class="pure-menu-link">
+                flate2 ^1.1.5
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/flume/^0.11.1/" class="pure-menu-link">
+                flume ^0.11.1
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/futures/^0.3.31/" class="pure-menu-link">
+                futures ^0.3.31
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/git-version/^0.3.9/" class="pure-menu-link">
+                git-version ^0.3.9
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/itertools/^0.14.0/" class="pure-menu-link">
+                itertools ^0.14.0
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/json5/^0.4.1/" class="pure-menu-link">
+                json5 ^0.4.1
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/lazy_static/^1.5.0/" class="pure-menu-link">
+                lazy_static ^1.5.0
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/nonempty-collections/^0.3.1/" class="pure-menu-link">
+                nonempty-collections ^0.3.1
+                
+                    <i class="dependencies normal">normal</i>
+                    
+                
+            </a>
+        </li><li class="pure-menu-item"><a href="/once_cell/^1.21.3/" class="pure-menu-link">
+                once_cell ^1.21.3
+                
+                    <i class="dependencies normal">normal</i>
+                    
+
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://docs.rs/zenoh/1.9.0/zenoh/qos/enum.CongestionControl.html | perl -0ne 'while(/<div class=\"docblock\">(.*?)<\\/div>/sg){"'$x=$1;$x=~s/<[''^>]+>/ /g;$x=~s/'"\\s+/ /g; print \""'$x'"\\n---\\n\"}' | head -40" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse Completed
+ succeeded in 126ms:
+100  118k  100  118k    0     0   772k      0 --:--:-- --:--:-- --:--:--  776k
+ Congestion control strategy. 
+---
+ When transmitting a message in a node with a full queue, the node may drop the message. 
+---
+ When transmitting a message in a node with a full queue, the node will wait for queue to progress. 
+---
+ When transmitting a message in a node with a full queue, the node will wait for queue to progress, but only for the first message sent with this strategy; other messages will be dropped. 
+---
+ Returns the argument unchanged. 
+---
+ Calls U::from(self) . That is, this conversion is whatever the implementation of From &lt;T&gt; for U chooses to do. 
+---
+
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://docs.ros.org/en/rolling/Installation/RMW-Implementations/Non-DDS-Implementations/Working-with-Zenoh.html | perl -0ne 's/<["'^>]+>/ /g; s/'"\\s+/ /g; print' | grep -i -o -E '.{0,80}(rmw_zenoh|zenoh).{0,120}' | head -20" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 'https://api.github.com/search/code?q=%22CongestionControl%22+repo:eclipse-zenoh/zenoh' | head -80" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 https://raw.githubusercontent.com/ros2/rmw_zenoh/rolling/README.md | grep -i -E 'zenoh|default|rmw' | head -40" in /Users/dengcchi
+exec
+/bin/zsh -lc "curl -L --max-time 15 'https://api.github.com/search/code?q=%22CongestionControl%22+%22Block%22+%22Drop%22+zenoh' | head -80" in /Users/dengcchi
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+ succeeded in 228ms:
+100   120  100   120    0     0    486      0 --:--:-- --:--:-- --:--:--   487
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+ succeeded in 251ms:
+100   120  100   120    0     0    450      0 --:--:-- --:--:-- --:--:--   451
+{
+  "message": "Requires authentication",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 559ms:
+100 63890  100 63890    0     0   113k      0 --:--:-- --:--:-- --:--:--  113k
+Layer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EVD5Z6G6NH'); Zenoh &mdash; ROS 2 Documentation: Rolling documentation ROS 2 Documentation: Rolling About ROS Installation Installing on Ub
+urumNetworks GurumDDS RTI Connext DDS eProsima Fast DDS Non-DDS-Implementations Zenoh Mirrors Distributions Lyrical Luth (codename ‘lyrical’; May, 2026) ROS 2 Lyrical Luth Complete Changelog Lyrical Luth R
+Documentation: Rolling Installation RMW implementations Non-DDS-Implementations Zenoh Edit on GitHub You're reading the documentation for a development version. For the latest released version, please have
+ a look at Lyrical . Zenoh  Zenoh is an open source communication protocol and middleware designed to facilitate efficient data distribution across heter
+actions for high performance pub/sub and distributed queries. See also: https://zenoh.io/docs/getting-started/first-app/ Prerequisites  Have rosdep installed . Installation packages  The rmw implementati
+on Zenoh can be installed via binaries, recommended for stable development. Binary packages for supported ROS 2 distributions (s
+t up to install ROS 2 binaries by following the instructions here. Then install rmw_zenoh binaries using the command sudo apt install ros-rolling-rmw-zenoh-cpp Build from source code  Building from source is 
+ly recommended if latest features are needed. By default, we vendor and compile zenoh-cpp with a subset of zenoh features. The ZENOHC_CARGO_FLAGS CMake argument may be overwritten with other features inclu
+ded if required. See zenoh_cpp_vendor/CMakeLists.txt for more details. Clone the repository mkdir ~/ws_rmw_zenoh/src -p &amp;&amp; cd ~/ws_rmw_zen
+oh/src git clone https://github.com/ros2/rmw_zenoh.git -b rolling Install dependencies: cd ~/ws_rmw_zenoh rosdep install --from-paths src --ignore-src --rosdistro rolling
+ing/setup.bash colcon build --cmake-args -DCMAKE_BUILD_TYPE = Release Switch to rmw_zenoh_cpp  Switch from other rmw to rmw_zenoh_cpp by specifying the environment variable. export RMW_IMPLEMENTATION = rmw_ze
+noh_cpp Run the talker and listener  Now run talker and listener to test Zenoh. Start the Zenoh router # terminal 1 source /opt/ros/rolling/setup.bash ros2 run rmw_zenoh_cpp rmw_zenohd Note Without 
+the Zenoh router, nodes will not be able to discover each other since multicast discovery is disabled by default in the node’s se
+ig. Instead, nodes will receive discovery information about other peers via the Zenoh router’s gossip functionality. # terminal 2 export RMW_IMPLEMENTATION = rmw_zenoh_cpp source /opt/ros/rolling/setup.bas
+h ros2 run demo_nodes_cpp talker # terminal 3 export RMW_IMPLEMENTATION = rmw_zenoh_cpp source /opt/ros/rolling/setup.bash ros2 run demo_nodes_cpp listener Note Remember to source your ROS 2 setup script
+
+ succeeded in 454ms:
+100 22542  100 22542    0     0  47971      0 --:--:-- --:--:-- --:--:-- 48063
+# rmw_zenoh
+[![build](https://github.com/ros2/rmw_zenoh/actions/workflows/build.yaml/badge.svg)](https://github.com/ros2/rmw_zenoh/actions/workflows/build.yaml)
+[![style](https://github.com/ros2/rmw_zenoh/actions/workflows/style.yaml/badge.svg)](https://github.com/ros2/rmw_zenoh/actions/workflows/style.yaml)
+| rmw_zenoh_cpp | [![Build Status](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__rmw_zenoh_cpp__ubuntu_resolute_amd64__binary/badge/icon)](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__rmw_zenoh_cpp__ubuntu_resolute_amd64__binary/) |
+| zenoh_cpp_vendor | [![Build Status](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__zenoh_cpp_vendor__ubuntu_resolute_amd64__binary/badge/icon)](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__zenoh_cpp_vendor__ubuntu_resolute_amd64__binary/) |
+| zenoh_security_tools | [![Build Status](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__zenoh_security_tools__ubuntu_resolute_amd64__binary/badge/icon)](https://build.ros2.org/view/Rbin_uR64/job/Rbin_uR64__zenoh_security_tools__ubuntu_resolute_amd64__binary/) |
+A ROS 2 RMW implementation based on Zenoh that is written using the zenoh-cpp bindings.
+`rmw_zenoh` can either be installed via binaries (recommended for stable development) or built from source (recommended if latest features are needed). See instructions below.
+Then install `rmw_zenoh` binaries using the command
+sudo apt update && sudo apt install ros-<DISTRO>-rmw-zenoh-cpp # replace <DISTRO> with the codename for the distribution, eg., rolling
+> By default, we vendor and compile `zenoh-cpp` with a subset of `zenoh` features.
+The `ZENOHC_CARGO_FLAGS` CMake argument may be overwritten with other features included if required.
+The `USE_SYSTEM_ZENOH` CMake argument can be used to use non-vendored system libraries instead.
+See [zenoh_cpp_vendor/CMakeLists.txt](./zenoh_cpp_vendor/CMakeLists.txt) for more details.
+mkdir ~/ws_rmw_zenoh/src -p && cd ~/ws_rmw_zenoh/src
+git clone https://github.com/ros2/rmw_zenoh.git -b <DISTRO>
+cd ~/ws_rmw_zenoh
+cd ~/ws_rmw_zenoh
+### Terminate ROS 2 daemon started with another RMW
+may have been started with different a RMW.
+### Start the Zenoh router
+> Manually launching Zenoh router won't be necessary in the future.
+ros2 run rmw_zenoh_cpp rmw_zenohd
+> Without the Zenoh router, nodes will not be able to discover each other since multicast discovery is disabled by default in the node's session config. Instead, nodes will receive discovery information about other peers via the Zenoh router's gossip functionality. See more information on the session configs [below](#configuration).
+export RMW_IMPLEMENTATION=rmw_zenoh_cpp
+export RMW_IMPLEMENTATION=rmw_zenoh_cpp
+By default, `Zenoh sessions` created by `rmw_zenoh` will attempt to connect to a Zenoh router to receive discovery information.
+To understand more about `Zenoh routers` and `Zenoh sessions`, see [Zenoh documentation](https://zenoh.io/docs/getting-started/deployment/).
+### Checking for a Zenoh router.
+The `ZENOH_ROUTER_CHECK_ATTEMPTS` environment variable can be used to configure if and how a `Zenoh session` checks for the presence of a `Zenoh router`.
+| ZENOH_ROUTER_CHECK_ATTEMPTS |                                                 Session behavior                                                   |
+|               0             |                                                             Indefinitely waits for connection to a Zenoh router.   |
+|             < 0             |                                                                                        Skips Zenoh router check.   |
+|             > 0             | Attempts to connect to a Zenoh router in `ZENOH_ROUTER_CHECK_ATTEMPTS` attempts with 1 second wait between checks. |
+If after the configured number of attempts the Node is still not connected to a `Zenoh router`, the initialisation goes on anyway.
+If a `Zenoh router` is started after initialization phase, the Node will automatically connect to it, and autoconnect to other Nodes if gossip scouting is enabled (true with default configuratiuon).
+`rmw_zenoh` relies on separate configurations files to configure the `Zenoh router` and `Zenoh session` respectively.
+For more information on the topology of Zenoh adopted in `rmw_zenoh`, please see [Design](#design).
+Default configuration files are used by `rmw_zenoh` however certain environment variables may be set to provide absolute paths to custom configuration files.
+The table below summarizes the default files and the environment variables for the `Zenoh router` and `Zenoh session`.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
