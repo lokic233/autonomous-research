@@ -81,6 +81,26 @@ supporting_evidence:
     \ default + clean-open, fjall-specific, un-owned (#53 cosmetic-trailing; #112/#113\
     \ different fixed bug)."
   data_path: experiments/2026-06-05/EXP-0084/
+- exp_id: EXP-0084
+  summary: "fjall=3.1.4 (exact pin). VERIFIED IN SOURCE: journal recovery routes corruption\
+    \ by LOCATION into two branches \u2014 framing desync -> truncate_to(last_valid_pos)+return\
+    \ None (debug/trace log, NO Err, clean open); in-data -> per-batch xxh3 mismatch\
+    \ -> loud Err(JournalRecovery(ChecksumMismatch)). ASYMMETRY REPRODUCED on 50 SyncAll-acked\
+    \ keys: data_flip(CONTROL)=open_ok=false 0/50 LOUD ChecksumMismatch; trailing=true\
+    \ 49/50; mid_truncate=true 25/50; mid_zero=true 16/50; mid_flip=true 25/50; early_trunc=true\
+    \ 2/50 \u2014 all framing modes open clean (open_ok=true, 0<keys<50, NO error).\
+    \ NULL did not trigger on framing; triggered only on in-data control as predicted.\
+    \ IT-MATTERS threshold met. REAL-CRASH HARNESS: dm-flakey v1.5.0 (root) real device-level\
+    \ dropped-writeback crash -> open_ok=true ERR=none, silent loss (Case A 5/50);\
+    \ HONEST: dm-flakey can only drop un-fsync'd Buffer data (documented loss), not\
+    \ post-SyncAll-fsync data. Faithful labeled reorder-sim on REAL fjall journal:\
+    \ interior page drop -> open_ok=true 38/50 ERR=none (12 acked keys after the hole\
+    \ silently discarded). L1 GAP flagged: real reordered device write dropping post-fsync\
+    \ acked data (dm-log-writes / power-cut harness). Novelty: loud-vs-silent recovery\
+    \ asymmetry by corruption LOCATION under DEFAULT Buffer mode + clean-open-no-error\
+    \ discarding committed data \u2014 fjall-specific, un-owned (#53 cosmetic, #112/#113\
+    \ different fixed bug, no CVE/Jepsen/paper). DISPOSITION: SUPPORT."
+  data_path: experiments/2026-06-05/EXP-0084/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
@@ -91,4 +111,4 @@ next_action: review evidence from EXP-0084; convene committee if candidate-grade
 blocking_on: ''
 active_experiments: []
 created_at: '2026-06-05T16:10:56Z'
-last_updated: '2026-06-05T17:18:23Z'
+last_updated: '2026-06-05T17:19:12Z'
