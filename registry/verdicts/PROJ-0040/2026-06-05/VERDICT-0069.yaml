@@ -1,0 +1,99 @@
+verdict_id: VERDICT-0069
+claim_id: CLAIM-0070
+project_id: PROJ-0040
+date: '2026-06-05'
+experiment_ids:
+- EXP-0083
+- EXP-0085
+experiment_paths:
+- experiments/2026-06-05/EXP-0083
+- experiments/2026-06-05/EXP-0085
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: yellow
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED
+- the L1 spec-conformance + cross-runtime arms cleared the folklore gate)
+required_evidence:
+- 'RE-2 AUTHENTICATED AST prevalence scan: ratio of bare NewModuleConfig() vs WithRandSource-overridden
+  across top Go wazero-importers, WITH denominator + CI + blast-radius'
+- PREVIEW1-vs-SUCCESSOR spec-violation disambiguation (does preview1 high-quality+blocking
+  constitute a CSPRNG normative requirement, or only strong-interpretation that becomes
+  normative in the successor?)
+- GUEST-SIDE DEFENSIBILITY test (CAN a guest detect/reject a deterministic host source?
+  if yes, the 'un-defendable' arm weakens -- theory_skeptic's untested assumption)
+- position contribution as SYNTHESIS/characterization AGAINST CrowdSec PR#4495 + wetware#106
+  + wapc-go + wazero issue#620, NOT discovery
+- 'baselines: Node.js(V8) WASI random_get default (confirm anomaly beyond Rust-ecosystem
+  runtimes) + wazero version trajectory (does any version after v1.12.0 change the
+  default?)'
+map_delta_proposals:
+- CLAIM-0070 -> stage L1->L2 (YELLOW-advance)
+- claim_type 'discovered hazard' -> 'conformance-synthesis of known hazard'
+- required_framing tag 'synthesis-over-practitioner-finds'
+- 'gate GREEN on L2: authenticated prevalence w/ denominator + blast-radius, preview1-vs-successor
+  spec disambiguation, guest-defensibility test, Node.js baseline + version trajectory.
+  If L2 shows non-trivial UNMITIGATED prevalence AND guest-defensibility confirms
+  un-defendable -> synthesis becomes a MEASURED systemic finding -> GREEN reachable.'
+baseline_requirements:
+- Wasmtime per-context ChaCha CSPRNG + host clocks (confirmed)
+- Wasmer OS getrandom::fill + host clocks (confirmed)
+- "Node.js(V8) WASI random_get default (NEEDED \u2014 confirm anomaly beyond Rust-ecosystem)"
+- wazero version trajectory post-1.12.0
+- CWE-330/SWC-120 + CrowdSec PR#4495 + wetware#106 + wapc-go + wazero#620 (the practitioner
+  find-fix set to position against)
+committee_run_dir: experiments/2026-06-05/EXP-0085/committee2
+verbatim_votes_summary: 'novelty_killer(Y): CrowdSec PR#4495 + wetware#106 + wapc-go
+  independently found AND fixed the identical wazero composition (>=3-source mechanism
+  collision) -> novelty is the synthesis not the hazard. systems_reviewer(Y): cross-runtime
+  anomaly genuine (Wasmtime ChaCha, Wasmer getrandom, wazero fixed-seed) but need
+  Node.js/V8 baseline to confirm anomaly beyond Rust-ecosystem. evaluation_prosecutor(Y):
+  prevalence is signal not measurement; if mature systems already override (CrowdSec/wapc
+  do), may be a deployed-practice strawman -> need authenticated AST scan w/ denominator.
+  theory_skeptic(Y): preview1 says ''high-quality'' not ''cryptographically secure''
+  (decisive language is successor); a fixed-seed PRNG never blocks -> blocking-clause
+  reading not a slam-dunk; guest-defensibility untested. product_realist(Y): real
+  synthesis finding but needs prevalence + the framing repositioned as conformance-synthesis.
+  area_chair(Y): L1 resolved the decisive gates in the claim''s favor, cleared folklore
+  -> genuine synthesis-altitude finding, NOT folklore/killed; 3 convergent caps (practitioner-find-fix,
+  unmeasured-prevalence, arguable-preview1) -> honest YELLOW-advance is the zero-false-green
+  outcome; L2 path defined.'
+key_structural_finding: 'MECHANISM SETTLED (no dissent): 30/30 cross-process + 10/10
+  cross-language byte-identical, source-verified defaults, cross-runtime anomaly genuine
+  (wazero fixed-seed-42 + frozen clocks vs Wasmtime per-context ChaCha CSPRNG + Wasmer
+  OS getrandom), clock-decoupling ~31x, RE-4 composition-warning-absent verbatim.
+  3 CONVERGENT GREEN-CAPS: (1) NOVELTY capped by practitioner FIND-AND-FIX -- CrowdSec
+  PR#4495 + wetware issue#106 + wapc/wapc-go independently discovered AND remediated
+  the identical wazero fixed-seed composition (>=3-source MECHANISM collision); the
+  un-owned contribution is the SYNTHESIS (ABI-boundary + cross-language + cross-runtime-anomaly
+  + spec-conformance + clock-decoupling), NOT hazard-discovery -> must reposition
+  claim_type ''discovered hazard'' -> ''conformance-synthesis of known hazard''. (2)
+  PREVALENCE is SIGNAL not MEASURED -- RE-2 auth-gated, never ran; curated 7/10 sample
+  (knqyf263/go-plugin BARE default confirmed; wapc/wapc-go fix confirmed) is real
+  signal but no denominator; if mature systems already override (CrowdSec/wapc do),
+  may be a deployed-practice strawman. (3) PREVIEW1 SPEC-VIOLATION ARGUABLE -- preview1
+  prose is ''high-quality'' + blocking clause (supports CSPRNG reading but a fixed-seed
+  PRNG never blocks because it always has data -> not a slam-dunk); the decisive ''cryptographically
+  secure'' + ''deterministic environments MUST OMIT'' is in the SUCCESSOR spec. Strongest
+  on successor; preview1-alone is strong-but-contestable.'
+disposition: committee#2 (GREEN GATE) YELLOW-advance (6/6, no RED). The L1 resolved
+  committee#1's decisive gates IN the claim's favor (RE-1 CSPRNG-contract, RE-3 wazero-anomalous)
+  + cleared the folklore gate -> a genuine finding at SYNTHESIS altitude, not folklore,
+  not killed. GREEN blocked by 3 convergent altitude caps; committee gave a concrete
+  L2 path. Gate to L2 OR converge.
+created_at: '2026-06-05T17:07:48Z'
