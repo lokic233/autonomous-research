@@ -6,38 +6,22 @@
     },
     "default_prompt_name": null,
     "A_plain": {
-      "10": 0.2356
+      "1": 0.050833333333333335,
+      "5": 0.1675,
+      "10": 0.23555555555555552,
+      "20": 0.35444444444444445
     },
     "B_encode_query": {
-      "10": 0.868
+      "1": 0.577611111111111,
+      "5": 0.8063888888888888,
+      "10": 0.8679999999999999,
+      "20": 0.9153333333333334
     },
     "AB_identical": false,
-    "delta_R10": 0.6324,
-    "note": "measured in prior run (1118s)"
-  },
-  "crossmodel__snowflake-arctic-embed-xs__scifact": {
-    "kind": "self-describing",
-    "prompts": {
-      "query": "Represent this sentence for searching relevant passages: "
-    },
-    "default_prompt_name": null,
-    "A_plain": {
-      "1": 0.3275,
-      "5": 0.5564444444444444,
-      "10": 0.6254444444444445,
-      "20": 0.6756666666666666
-    },
-    "B_encode_query": {
-      "1": 0.5069444444444444,
-      "5": 0.687,
-      "10": 0.7733333333333333,
-      "20": 0.8213333333333332
-    },
-    "AB_identical": false,
-    "delta_R10": 0.14788888888888885
+    "delta_R10": 0.6324444444444444
   },
   "crossmodel__mxbai-embed-large-v1__scifact": {
-    "kind": "self-describing-crossfamily",
+    "kind": "self-describing",
     "prompts": {
       "query": "Represent this sentence for searching relevant passages: ",
       "passage": ""
@@ -58,21 +42,21 @@
     "AB_identical": false,
     "delta_R10": 0.007333333333333414
   },
-  "crossmodel__bge-base-en-v1.5__scifact": {
+  "crossmodel__bge-large-en-v1.5__scifact": {
     "kind": "no-prompt-control",
     "prompts": null,
     "default_prompt_name": null,
     "A_plain": {
-      "1": 0.5809444444444444,
-      "5": 0.8209444444444445,
-      "10": 0.8658888888888888,
-      "20": 0.9132222222222223
+      "1": 0.5999444444444445,
+      "5": 0.7742777777777777,
+      "10": 0.8592222222222222,
+      "20": 0.913888888888889
     },
     "B_encode_query": {
-      "1": 0.5809444444444444,
-      "5": 0.8209444444444445,
-      "10": 0.8658888888888888,
-      "20": 0.9132222222222223
+      "1": 0.5999444444444445,
+      "5": 0.7742777777777777,
+      "10": 0.8592222222222222,
+      "20": 0.913888888888889
     },
     "AB_identical": true,
     "delta_R10": 0.0
