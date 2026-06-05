@@ -12,12 +12,30 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "SUPPORT (orchestrator-recovered from on-node results; researcher-0071\
+  \ wedged before exp-complete, work recovered via file-transfer). fjall 3.1.4 journal\
+  \ FRAMING corruption -> silent discard of SyncAll-acknowledged committed data with\
+  \ CLEAN OPEN (OPEN_OK=true, ERR=none); in-DATA corruption -> loud Err(ChecksumMismatch)\
+  \ (the control/discriminator). Hand-corruption table: data_flip DATA -> open_ok=false\
+  \ 0/50 LOUD (control); mid_truncate/mid_zero/mid_flip/early_trunc FRAMING -> open_ok=true\
+  \ 25/16/25/2-of-50 SILENT. \u2605 REAL dm-flakey v1.5.0 device-level crash (root,\
+  \ gold-standard): dmsetup drop_writes silently drops dirty-page writeback -> a real\
+  \ dropped-writeback crash SILENTLY LOSES up to 40 committed keys with a clean open\
+  \ (interior drop_page: 38/50, 12 acked keys silently lost; pages AFTER the dropped\
+  \ interior page were physically on disk yet discarded). Mechanism verified in source\
+  \ (JournalBatchReader framing-desync -> truncate_to+return None -> recovery loop\
+  \ ends normally -> clean open; checksum mismatch -> loud Err). Distinct from FIXED\
+  \ #112/#113. Honest L1 gap (RESULTS sec7): dm-flakey cannot drop data whose SyncAll\
+  \ fsync ALREADY completed -> the silent-loss is for in-flight Buffer-mode/post-ack-pre-durable\
+  \ writes; the precise durability-contract boundary is the committee/L1 question.\
+  \ NOVELTY = loud-vs-silent recovery ASYMMETRY by corruption LOCATION under the default\
+  \ + clean-open, fjall-specific, un-owned (#53 cosmetic-trailing; #112/#113 different\
+  \ fixed bug)."
+result_effect: support
 artifacts_path: experiments/2026-06-05/EXP-0084/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-05T17:18:22Z'
 prompt_version: ''

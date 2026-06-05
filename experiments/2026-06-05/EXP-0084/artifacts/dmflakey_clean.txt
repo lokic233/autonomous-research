@@ -1,0 +1,16 @@
+=== dm-flakey REAL DEVICE-LEVEL CRASH (root, kernel 6.13.2-fbk7, target flakey v1.5.0) ===
+Loop-backed ext4 on a dm-flakey device. Default PersistMode::Buffer appends sit in page
+cache (no fsync). dm-flakey drop_writes silently drops the writeback of dirty journal
+pages at the 'crash' instant = faithful lost/torn page writeback on power loss.
+
+--- Case A: data lives ONLY in the journal at crash (45 Buffer appends, no SST flush) ---
+=== Phase A: 5 SyncAll keys + clean close (durable baseline) ===
+=== Phase B: append 45 Buffer + 0 SyncAll-tail keys, NO clean close ===
+journal post-crash: JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=535
+CRASH_OPEN OPEN_OK=true KEYS=5/50 ERR=none
+
+--- Case B: same but +5 SyncAll-tail; baseline+appends may flush to SST before crash ---
+=== Phase A: 5 SyncAll keys + clean close (durable baseline) ===
+=== Phase B: append 40 Buffer + 5 SyncAll-tail keys, NO clean close ===
+journal post-crash: JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=5350
+CRASH_OPEN OPEN_OK=true KEYS=50/50 ERR=none

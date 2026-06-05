@@ -1,0 +1,17 @@
+loop=/dev/loop1
+sectors=524288
+device-mapper: create ioctl on flakey_jnl  failed: Device or resource busy
+Command failed.
+dmdev=/dev/mapper/flakey_jnl
+128-byte inodes cannot handle dates beyond 2038 and are deprecated
+=== writing 45 Buffer + 5 SyncAll keys (default-durability scenario) ===
+CRASH_WRITE done: 45 buffer + 5 sync keys written to /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db
+--- journal on device (in page cache + partially written) ---
+JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=67108864
+=== CRASH: switch dm-flakey to drop_writes (writeback silently dropped) ===
+=== abrupt teardown (no clean fjall close, drop caches) ===
+mount: /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt: /dev/mapper/flakey_jnl already mounted or mount point busy.
+--- journal AFTER crash (what survived to device) ---
+=== REOPEN fjall after crash ===
+CRASH_OPEN OPEN_OK=true KEYS=0/50 ERR=none
+--- recovery log (truncate / Recovery successful / checksum / ERROR) ---

@@ -1,0 +1,7 @@
+MODE=none OPEN_OK=true KEYS=50/50 (baseline)
+MODE=data_flip OPEN_OK=false KEYS=0/50 ERR=JournalRecovery(ChecksumMismatch)
+MODE=trailing OPEN_OK=true KEYS=49/50 ERR=none
+MODE=mid_truncate OPEN_OK=true KEYS=25/50 ERR=none
+MODE=mid_zero OPEN_OK=true KEYS=16/50 ERR=none
+MODE=mid_flip OPEN_OK=true KEYS=25/50 ERR=none
+MODE=early_trunc OPEN_OK=true KEYS=2/50 ERR=none

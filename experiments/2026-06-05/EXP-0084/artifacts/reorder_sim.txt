@@ -1,0 +1,12 @@
+=== REORDERED-WRITEBACK SIMULATION (option b) — real fjall 3.1.4 journal, interior page dropped ===
+(faithful model of fsync-less Buffer-mode out-of-order page writeback; NOT a real power cut)
+
+MODE=reorder_sim(drop_page=0) baseline=50 OPEN_OK=true KEYS=0/50 ERR=none
+MODE=reorder_sim(drop_page=1) baseline=50 OPEN_OK=true KEYS=38/50 ERR=none
+MODE=reorder_sim(drop_page=2) baseline=50 OPEN_OK=true KEYS=50/50 ERR=none
+MODE=reorder_sim(drop_page=3) baseline=50 OPEN_OK=true KEYS=50/50 ERR=none
+
+=== recovery log for drop_page=1 (the acked-data-loss case) ===
+[2026-06-05T16:44:10Z DEBUG fjall::journal::reader] truncating journal to 5350
+[2026-06-05T16:44:10Z DEBUG fjall::journal::reader] truncating journal to 4103
+[2026-06-05T16:44:10Z DEBUG fjall::journal::batch_reader] Invalid batch: missing terminator, but last batch, so probably incomplete, discarding to keep atomicity

@@ -1,0 +1,12 @@
+loop=/dev/loop0 sectors=524288 dm=flk469949
+128-byte inodes cannot handle dates beyond 2038 and are deprecated
+=== write 45 Buffer + 5 SyncAll keys (default-durability scenario), NO clean close ===
+CRASH_WRITE done: 45 buffer + 5 sync keys written to /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db
+journal pre-crash:
+JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=67108864
+=== CRASH (drop_writes): dirty journal-frontier writeback silently dropped ===
+journal post-crash (survived to device):
+JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=67108864
+=== REOPEN fjall after crash ===
+CRASH_OPEN OPEN_OK=false KEYS=0/50 ERR=Storage(Io(Os { code: 22, kind: InvalidInput, message: "Invalid argument" }))
+--- recovery log ---

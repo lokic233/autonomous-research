@@ -1,0 +1,13 @@
+loop=/dev/loop0 sectors=524288 dm=flk617387
+128-byte inodes cannot handle dates beyond 2038 and are deprecated
+=== Phase A: 5 SyncAll keys + clean close (durable baseline) ===
+CRASH_SETUP done: 5 SyncAll keys, clean close
+journal after baseline: JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=67108864
+=== Phase B: append 40 Buffer + 5 SyncAll-tail keys, NO clean close ===
+CRASH_APPEND done: start=5 +40 buffer +5 synctail
+=== CRASH (drop_writes): journal-frontier writeback silently dropped ===
+=== restore device, drop caches, remount (what survived) ===
+journal post-crash: JNL /home/dengcchi/fjall_exp/EXP-0084/dmflakey/mnt/db/0.jnl size=5350
+=== REOPEN fjall after crash ===
+CRASH_OPEN OPEN_OK=true KEYS=50/50 ERR=none
+--- recovery log ---
