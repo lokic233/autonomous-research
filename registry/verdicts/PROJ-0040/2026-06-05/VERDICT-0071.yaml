@@ -1,0 +1,84 @@
+verdict_id: VERDICT-0071
+claim_id: CLAIM-0070
+project_id: PROJ-0040
+date: '2026-06-05'
+experiment_ids:
+- EXP-0083
+- EXP-0085
+- EXP-0086
+experiment_paths:
+- experiments/2026-06-05/EXP-0083
+- experiments/2026-06-05/EXP-0085
+- experiments/2026-06-05/EXP-0086
+committee_version: v003
+prompt_versions: {}
+reviewer_votes:
+- role: novelty_killer
+  vote: yellow
+- role: systems_reviewer
+  vote: yellow
+- role: evaluation_prosecutor
+  vote: green
+- role: theory_skeptic
+  vote: yellow
+- role: product_realist
+  vote: yellow
+- role: area_chair
+  vote: yellow
+green_rule: unanimous
+final_verdict: yellow
+override_rule: false
+fatal_objections:
+- NONE (no RED
+- the L2 evidence cleared the folklore gate definitively)
+required_evidence:
+- "NONE (committee#3 TERMINAL \u2014 the claim has been fully adjudicated through\
+  \ 3 rounds. No further L3.)"
+map_delta_proposals:
+- CLAIM-0070 -> TERMINAL at committee#3 YELLOW. contribution_type = 'conformance-synthesis
+  of known-class hazard in a specific young runtime'. Altitude = synthesis/advisory,
+  sub-GREEN. PROJ-0040 -> converge. The honest-negative (not a second green) + the
+  complete evidence chain IS the durable output.
+baseline_requirements:
+- Wasmtime ChaCha CSPRNG (confirmed)
+- Wasmer OS getrandom (confirmed)
+- Node/V8 uvwasi secure (confirmed L2)
+- CWE-330/SWC-120 + CrowdSec PR#4495 + wetware#106 + wapc-go + wazero#620 (the practitioner
+  find-fix set, positioned against)
+committee_run_dir: experiments/2026-06-05/EXP-0086/committee3
+verbatim_votes_summary: 'novelty_killer(Y): >=3 practitioner find-fix collision (CrowdSec/wetware/wapc-go)
+  narrows to synthesis; preview1 ''high-quality'' is not ''cryptographically secure''.
+  systems_reviewer(Y): wazero anomalous x4 confirmed but the synthesis framing does
+  not reach GREEN altitude; bounded prevalence insufficient. evaluation_prosecutor(GREEN):
+  methodology/evidence quality is exemplary (cross-language, un-defendable, Node baseline,
+  clean controls -- the L2 answered every committee question) -> votes green on the
+  EVIDENCE not the altitude. theory_skeptic(Y): a fixed-seed PRNG never blocks ->
+  the blocking-clause reading is strong-but-not-conclusive; bounded prevalence without
+  denominator; contribution is synthesis. product_realist(Y): actionable advisory
+  to wazero maintainers + users; the generator-propagated amplifier is real blast-radius
+  -- but publishable as an advisory/blog, not a research finding. area_chair(Y): strongest-evidenced
+  claim of the run, L2 resolved the decisive gate in the claim''s favor, cleared the
+  folklore gate definitively, BUT the 3 convergent altitude caps (practitioner-find-fix,
+  preview1-contestable, bounded-prevalence) persist unrebutted from committee#2; evaluation_prosecutor''s
+  green is on evidence-quality not altitude and does not override; honest YELLOW-terminal
+  is the zero-false-green outcome.'
+key_structural_finding: "The L2 resolved the DECISIVE gate IN the claim's favor (guest\
+  \ CANNOT defend: no entropy-query API in preview1, demotion invisible to correct\
+  \ code). Node/V8 confirms wazero anomalous across all 4 major runtimes (beyond Rust-ecosystem).\
+  \ Version trajectory holds (1.12.0 latest, seed-42 persists). Bounded-prevalence\
+  \ shows real unmitigated usage incl a generator-propagated blast-radius amplifier.\
+  \ BUT GREEN capped by the SAME convergent grounds as committee#2 + the bounded-prevalence\
+  \ residual: (1) NOVELTY capped by practitioner find-and-fix (>=3-source collision);\
+  \ the contribution is the SYNTHESIS not hazard-discovery. (2) PREVALENCE bounded-signal\
+  \ not population-estimate (auth-blocked). (3) PREVIEW1 strong-but-contestable; unambiguous\
+  \ only vs the successor. The evaluation_prosecutor's green (on methodology/evidence\
+  \ quality) does not rebut the other 4 reviewers' altitude assessment. CONCLUSION:\
+  \ a genuine conformance-synthesis finding at a publishable but SUB-GREEN altitude\
+  \ \u2014 actionable as a responsible-disclosure advisory to wazero maintainers,\
+  \ NOT a novel-coupling at CLAIM-0059 altitude."
+disposition: committee#3 (GREEN VOTE) YELLOW (4Y+1G+AC-Y, not green-unanimous). The
+  strongest-evidenced claim of the entire r1-r11 run (cross-language ABI-boundary
+  + spec-conformance + un-defendable + cross-runtime-anomaly x4 + un-owned-novel-mechanism),
+  driven through 3 committees with rigorous evidence, caps at SYNTHESIS-ALTITUDE.
+  An honest yellow-converge is the zero-false-green outcome.
+created_at: '2026-06-05T18:08:09Z'
