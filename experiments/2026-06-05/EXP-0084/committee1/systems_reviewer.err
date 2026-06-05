@@ -72,3 +72,175 @@ ASYMMETRY TABLE (50 keys, each db.persist(SyncAll)->Ok, corrupt journal, reopen)
 Output ONLY your structured vote block for role systems_reviewer.
 hook: SessionStart
 hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+codex
+I’ll load the committee/tooling instructions first, then do a focused prior-art search across the named systems for WAL/journal recovery behavior and overlap.
+exec
+/bin/zsh -lc 'pwd && ls' in /Users/dengcchi
+exec
+/bin/zsh -lc "rg --files -g '_committee_common_v001.md' -g 'TOOLING_v001.md'" in /Users/dengcchi
+ exited 127 in 0ms:
+zsh:1: command not found: rg
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 158ms:
+/Users/dengcchi
+Applications
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Public
+afar-src
+agent_infra_committee_code_20260529T083946Z.tar.gz
+agent_infra_committee_snapshot_20260529T083946Z.tar.gz
+ar-private-src
+audit-post-export
+audit-post-export.tar.gz
+autonomous-research
+autonomous-research-e2e
+autonomous-research-v3
+axon
+axon-chat-export-CLEAN.tar.gz
+axon-chat-export-WITH-overrides.tar.gz
+axon-chat-export-e2e.tar.gz
+axon-chat-export.tar.gz
+axon-chat-external
+axon-chat-external-build.tar.gz
+axon-deploy
+axon-export
+axon-export-v2
+axon-export.tar.gz
+axon_vercel.tar.gz
+axon_vercel_20260423_1852.tar.gz
+branchable_replay_R1
+branchable_replay_R2
+branchable_replay_R3
+branchable_replay_review
+cert-work
+exp0072_work
+exp0073_work
+generate_ifm.par
+gpu_pipeline_changes
+green_thesis_factory
+mrs-tpu-devserver-handoff.md
+package-lock.json
+public_agent_infra_research_engagement
+research-os
+research-os-meta
+research-os-venv
+ros-poc
+ros_venv_0067
+scikit_learn_data
+vision_tax_investigation_report.md
+weave
+weave-dev
+work
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+`rg` is not installed here, so I’m falling back to `find`/shell reads. Next I’m locating the prompt files and then I’ll search upstream repositories/docs for overlap.
+exec
+/bin/zsh -lc "find /Users/dengcchi -maxdepth 4 -type d \\( -name prompts -o -name _shared \\) 2>/dev/null | head -50" in /Users/dengcchi
+exec
+/bin/zsh -lc 'find /Users/dengcchi -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null | head -50' in /Users/dengcchi
+2026-06-05T17:24:24.767130Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+2026-06-05T17:24:24.767997Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+exec
+/bin/zsh -lc 'find autonomous-research* research-os* public_agent_infra_research_engagement green_thesis_factory -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null' in /Users/dengcchi
+exec
+/bin/zsh -lc 'find work Documents Desktop -name _committee_common_v001.md -o -name TOOLING_v001.md 2>/dev/null' in /Users/dengcchi
+hook: PostToolUse
+ exited 1 in 743ms:
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "find autonomous-research autonomous-research-v3 research-os public_agent_infra_research_engagement green_thesis_factory \\( -name _committee_common_v001.md -o -name TOOLING_v001.md \\) -print 2>/dev/null | head -20" in /Users/dengcchi
+ succeeded in 30493ms:
+/Users/dengcchi/autonomous-research-e2e/.research-os/prompts
+/Users/dengcchi/research-os/prompts
+/Users/dengcchi/research-os/prompts/_shared
+
+exec
+/bin/zsh -lc "mdfind 'kMDItemFSName == \"_committee_common_v001.md\" || kMDItemFSName == \"TOOLING_v001.md\"' | head -50" in /Users/dengcchi
+hook: PostToolUse
+ succeeded in 328ms:
+/Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md
+/Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md
+
+hook: PostToolUse Completed
+exec
+/bin/zsh -lc "sed -n '1,220p' /Users/dengcchi/research-os/prompts/committee/_committee_common_v001.md" in /Users/dengcchi
+exec
+/bin/zsh -lc "sed -n '1,260p' /Users/dengcchi/research-os/prompts/_shared/TOOLING_v001.md" in /Users/dengcchi
+ succeeded in 0ms:
+# Shared Tooling & Prior-Art Sources — v001
+Referenced by committee + researcher prompts. The anti-hallucination defense: novelty/baseline claims
+MUST cite sources actually searched here. A "kill" citation counts only if verified in ≥2 independent sources.
+
+## How to actually search (commands available on nodes)
+- **Web**: `web_search` tool (titles/URLs/excerpts) — fast first pass for papers, repos, docs, blogs.
+- **Org/internal CLI** (if your environment provides one; see the instance's private config/bootstrap):
+  resolve internal short-links/docs, fetch internal task/diff context. Use for internal context, NOT public novelty.
+  (Engine stays platform-agnostic; any internal-tool wiring lives in your private instance bootstrap, never here.)
+- **GitHub**: `gh search repos/code/prs/issues "<query>"`, `gh repo view`, clone + grep for mechanism checks.
+- **arXiv / Semantic Scholar / OpenAlex / DBLP**: via `web_search` or direct HTTP (curl) to their public APIs.
+- **Papers with Code**: leaderboards + linked repos for baseline-state.
+- Record EVERY search (query, source, found, ruled-out) in the prior-art search_log (see template).
+
+## Required academic sources (Candidate / Paper-track)
+arXiv · Semantic Scholar · Google Scholar (if avail) · DBLP · ACM DL · USENIX (ATC/OSDI/NSDI/FAST) ·
+IEEE Xplore (if avail) · MLSys · ASPLOS · SOSP · EuroSys · ISCA/MICRO/HPCA (if HW-relevant) ·
+NeurIPS/ICML/ICLR (if ML-method-relevant).
+
+## Required OSS / implementation prior art
+GitHub · vLLM · SGLang · LMCache · FlashInfer · TensorRT-LLM · DeepSpeed · Megatron-LM · Ray ·
+KServe · Triton Inference Server · HF TGI · llama.cpp · KV-cache repos · CUDA/ROCm examples · NCCL/UCX/RDMA.
+
+## Required vendor / systems docs (when behavior depends on them)
+NVIDIA CUDA / NCCL / GPUDirect-RDMA / TensorRT-LLM · AMD ROCm / RCCL · Google TPU · PyTorch · XLA ·
+Linux kernel (HugeTLB/mmap/NUMA) where memory-relevant.
+
+## Emerging / unpublished prior art
+GitHub issues + PRs · project discussions · workshop papers · credible-lab blogs · benchmark leaderboards ·
+artifact-evaluation repos.
+
+## Prior-art freshness (re-search REQUIRED when)
+- promoting exploration→candidate or candidate→paper-track; before any full committee review;
+- a major new baseline appears; >14 days passed (fast-moving: LLM inference, KV-cache, vLLM/SGLang/
+  LMCache/FlashInfer/TensorRT-LLM, GPU memory, agent runtime); >30 days (slower systems topics).
+
+## Anti-hallucination rule (enforced)
+- Every "this is prior work" / "baseline X dominates" claim cites a real, retrievable source (URL/cite).
+- A novelty KILL requires the collision verified in ≥2 independent sources.
+- Separate NAMING novelty from MECHANISM novelty. Unverifiable citation = not admissible.
+
+hook: PostToolUse
+hook: PostToolUse
+ succeeded in 139ms:
+# Hostile Committee — common rules (v001)
+You are ONE reviewer in a 6-member hostile committee. You review a COMPRESSED review packet (claim,
+stage, hypothesis, evidence, negative evidence, closest prior work, mandatory baselines, artifacts,
+previous verdict summary, decision requested) — NOT long session logs. You have an INDEPENDENT context.
+
+RULES (all members):
+- Source of truth = the packet's cited evidence + your own prior-art search via prompts/_shared/TOOLING_v001.md.
+- ANTI-COPING: "novel/promising/significant/structural/impactful" FORBIDDEN unless immediately followed by a
+  cited metric or named prior work (with retrievable URL/citation).
+- Reason ONLY from evidence. If evidence is missing, say "insufficient evidence", do not assume.
+- Hostile, not cynical: a clean negative result or honest YELLOW is a valid, valuable outcome.
+- Output your vote in the structured block your role defines; the Area Chair aggregates. Do NOT mutate the
+  academic map directly — propose map deltas.
+- Record the prompt version you ran (v001) so verdicts are auditable.
+VOTE VALUES: green | yellow | red  (+ your role-specific findings). Consensus: GREEN=all green; any yellow
+(no red)=yellow; any red=red.
+
+hook: PostToolUse Completed
+hook: PostToolUse Completed
