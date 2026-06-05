@@ -54,17 +54,31 @@ why_it_matters: 'FRESH-DOMAIN (operating-systems-and-runtimes / security-crypto-
 novelty_hypothesis: ''
 mandatory_baselines: []
 academic_map_nodes: []
-supporting_evidence: []
+supporting_evidence:
+- exp_id: EXP-0083
+  summary: 'SUPPORT (strengthened to cross-language ABI-boundary property; both controls
+    held). wazero v1.12.0 default NewModuleConfig(): source-verified random_get=fixed-seed
+    math/rand(42), walltime=frozen 2022-01-01 +1ms/read, nanotime=+1ms/read, nanosleep=instant.
+    CROSS-PROCESS secret collision: 30/30 byte-identical ed25519 pubkey 46a4405f...641cb876
+    + token across SEPARATE OS processes under default (collision rate 100%); control
+    WithRandSource(crypto/rand.Reader)=30/30 distinct. CROSS-LANGUAGE: Rust(getrandom->WASI
+    random_get) 10/10 byte-identical 538c7f96...09dd9d52 under default, 10/10 distinct
+    under control => host/ABI-boundary property NOT a Go-runtime quirk. CLOCK DECOUPLING:
+    150ms guest-perceived wait (time.After 100ms + context.WithTimeout 50ms) collapses
+    to ~4.8ms real wall under default (~31x faster); control WithSysWalltime/Nanotime/Nanosleep
+    => ~155.5ms real, ratio~1.0. All pre-registered null exits checked, none triggered
+    (keys identical both languages, no error, crypto/rand routed through WASI not
+    internal entropy). Composition UN-OWNED (no wazero issue/CVE/paper). Both controls
+    HELD.'
+  data_path: experiments/2026-06-05/EXP-0083/
 negative_evidence: []
 verdict_history: []
 revival_conditions: ''
 owner: orchestrator-r10-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0083 result, then ros exp complete --exp EXP-0083 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0083; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0083
+active_experiments: []
 created_at: '2026-06-05T16:08:36Z'
-last_updated: '2026-06-05T16:09:40Z'
+last_updated: '2026-06-05T16:27:44Z'
