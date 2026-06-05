@@ -85,6 +85,23 @@ supporting_evidence:
     host; wapc-go fixed exactly this) but not a >5% figure - full AST scan deferred
     to L2. Disposition SUPPORT, elevated, submit committee#2.'
   data_path: experiments/2026-06-05/EXP-0085/
+- exp_id: EXP-0086
+  summary: "L2 GREEN-GATE for CLAIM-0070: DECISIVE guest-defensibility test confirms\
+    \ a correct Go-WASI guest (crypto/rand + ed25519.GenerateKey) CANNOT detect/reject\
+    \ wazero's seed-42 deterministic random_get \u2014 no error, no block, no WASI\
+    \ ABI to query entropy (preview1 has exactly ONE randomness fn), identical bytes/keys\
+    \ across restarts, self-test output byte-identical secure-vs-insecure (un-defendable\
+    \ arm HOLDS). Node.js/V8 (uvwasi) random_get defaults SECURE -> wazero anomalous\
+    \ beyond the Rust ecosystem (Wasmtime+Wasmer+Node all CSPRNG). Version trajectory:\
+    \ v1.12.0 is latest tag; seed=42 default persists at tip. Spec: unambiguous violation\
+    \ vs successor wasi:random ('deterministic environments must omit'); strong-but-contestable\
+    \ preview1 breach ('high-quality'+blocks, no literal 'cryptographically secure').\
+    \ Prevalence: AUTHENTICATED scan BLOCKED (no gh/GITHUB_TOKEN on either node \u2014\
+    \ ESCALATE to dengcchi); bounded n=9 sample shows 2 real bare-default+arbitrary-guest\
+    \ exposures incl a GENERATOR-PROPAGATED default (go-plugin codegen), 2 overrides,\
+    \ 4 low-risk. Repositioned as conformance-synthesis vs practitioner find-fix set.\
+    \ SUPPORT -> committee#3 with 2 residuals (auth-blocked prevalence, preview1 strength)."
+  data_path: experiments/2026-06-05/EXP-0086/
 negative_evidence: []
 verdict_history:
 - verdict_id: VERDICT-0068
@@ -96,11 +113,9 @@ verdict_history:
 revival_conditions: ''
 owner: orchestrator-r10-001
 prompt_version: ''
-lifecycle_state: experiment_running
-next_action: await EXP-0086 result, then ros exp complete --exp EXP-0086 --effect
-  ...
+lifecycle_state: evidence_ready
+next_action: review evidence from EXP-0086; convene committee if candidate-grade
 blocking_on: ''
-active_experiments:
-- EXP-0086
+active_experiments: []
 created_at: '2026-06-05T16:08:36Z'
-last_updated: '2026-06-05T17:24:44Z'
+last_updated: '2026-06-05T17:56:39Z'

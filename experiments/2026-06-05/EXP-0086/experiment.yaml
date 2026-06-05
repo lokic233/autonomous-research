@@ -12,12 +12,26 @@ resource_budget:
 needs_gpu: false
 dispatched_by: ''
 node_lease: ''
-status: pending
-result_summary: ''
-result_effect: ''
+status: completed
+result_summary: "L2 GREEN-GATE for CLAIM-0070: DECISIVE guest-defensibility test confirms\
+  \ a correct Go-WASI guest (crypto/rand + ed25519.GenerateKey) CANNOT detect/reject\
+  \ wazero's seed-42 deterministic random_get \u2014 no error, no block, no WASI ABI\
+  \ to query entropy (preview1 has exactly ONE randomness fn), identical bytes/keys\
+  \ across restarts, self-test output byte-identical secure-vs-insecure (un-defendable\
+  \ arm HOLDS). Node.js/V8 (uvwasi) random_get defaults SECURE -> wazero anomalous\
+  \ beyond the Rust ecosystem (Wasmtime+Wasmer+Node all CSPRNG). Version trajectory:\
+  \ v1.12.0 is latest tag; seed=42 default persists at tip. Spec: unambiguous violation\
+  \ vs successor wasi:random ('deterministic environments must omit'); strong-but-contestable\
+  \ preview1 breach ('high-quality'+blocks, no literal 'cryptographically secure').\
+  \ Prevalence: AUTHENTICATED scan BLOCKED (no gh/GITHUB_TOKEN on either node \u2014\
+  \ ESCALATE to dengcchi); bounded n=9 sample shows 2 real bare-default+arbitrary-guest\
+  \ exposures incl a GENERATOR-PROPAGATED default (go-plugin codegen), 2 overrides,\
+  \ 4 low-risk. Repositioned as conformance-synthesis vs practitioner find-fix set.\
+  \ SUPPORT -> committee#3 with 2 residuals (auth-blocked prevalence, preview1 strength)."
+result_effect: support
 artifacts_path: experiments/2026-06-05/EXP-0086/
 reproducibility: ''
 linked_verdicts: []
 started_at: ''
-completed_at: ''
+completed_at: '2026-06-05T17:56:39Z'
 prompt_version: ''
